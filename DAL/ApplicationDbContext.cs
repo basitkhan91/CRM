@@ -235,6 +235,12 @@ namespace DAL
         public DbSet<Exclusion> Exclusions { get; set; }
         public DbSet<WorkFlowExclusion> WorkFlowExclusion { get; set; }
         public DbSet<WorkflowMeasurement> WorkflowMeasurement { get; set; }
+
+      
+        public DbSet<VendorCapabilityAircraftType> vendorCapabilityAircraftType { get; set; }
+        public DbSet<VendorCapabilityType> vendorCapabilityType { get; set; }
+        public DbSet<VendorCapabiltiyAircraftModel> vendorCapabiltiyAircraftModel { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

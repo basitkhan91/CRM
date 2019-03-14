@@ -167,6 +167,8 @@ namespace DAL
 
         ICapabilityTypeRepository _capabilityTypeRepository;
 
+        
+
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
         public UnitOfWork(ApplicationDbContext context)

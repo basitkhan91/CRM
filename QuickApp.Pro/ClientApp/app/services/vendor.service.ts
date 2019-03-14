@@ -455,5 +455,12 @@ export class VendorService {
 	getATASubchapterData(AtaMainId: any)
 	{
 		return this.actionEndpoint.getATASubchapterDataEndpoint<ATASubChapter[]>(AtaMainId);
-	}
+    }
+
+    
+
+    newVendorCapability(action: any) {
+
+        return this.actionEndpoint.newVendorCapabilityEndPoint<any>(action);
+    }
 }

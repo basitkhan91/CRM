@@ -102,7 +102,9 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _deletePoPart: string = "/api/Vendor/deletePoPart";
 	private readonly _deleteRoPart: string = "/api/Vendor/deleteRoPart";
 	private readonly _actionsUrlNew2: string = "/api/Vendor/GetATASubchapter";
-	private readonly _capabilityListUrl: string = "/api/Vendor/capabilityTypeList";
+    private readonly _capabilityListUrl: string = "/api/Vendor/capabilityTypeList";
+
+    private readonly _vendorCapability: string = "/api/Vendor/vendorCapabilityPost";
 	
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -1003,5 +1005,16 @@ export class VendorEndpointService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getATASubchapterDataEndpoint(mainId));
 			});
-	}
+    }
+
+    
+
+    //for new Vendor Capability Post
+    newVendorCapabilityEndPoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._vendorCapability, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.newVendorCapabilityEndPoint(userObject));
+            });
+    }
 }

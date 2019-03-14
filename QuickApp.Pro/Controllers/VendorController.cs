@@ -2407,6 +2407,21 @@ namespace QuickApp.Pro.Controllers
         }
 
 
+        [HttpPost("vendorCapabilityPost")]
+        public IActionResult addCharges([FromBody] VendorCapabiliy caps) //it is for Model we will pass
+        {
+            if (caps != null)
+            {
+               // caps.WorkflowChargesListId = 0;
+                caps.MasterCompanyId = 1;
+                caps.CreatedDate = DateTime.Now;
+                _context.VendorCapabiliy.Add(caps);
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
+
+
     }
 
     

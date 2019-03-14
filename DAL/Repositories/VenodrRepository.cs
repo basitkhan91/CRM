@@ -350,6 +350,47 @@ namespace DAL.Repositories
 
         }
 
+        //get Vendor Capability List
+        public IEnumerable<object> GetvendorCapabilityList(long id)
+        {
+            {
+
+
+                var data = (from vc in _appContext.VendorCapabiliy
+                            join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                            join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
+                            join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
+
+                            where vc.VendorCapabilityId == id
+
+                            select new
+                            {
+                                vc.VendorCapabilityId,
+                                vc.VendorId,
+                                vc.VendorRanking,
+                                vc.PMA_DER,
+                                vc.ItemMasterId,
+                                vc.TAT,
+                                vc.Cost,
+                                vc.AlternatePartId,
+                                vc.ATAChapterId,
+                                vc.ATASubchapterId,
+                                vc.Memo,
+                                vct.CapabilityTypeId,
+
+                                vcat.AircraftTypeId,
+
+                                vcam.AircraftModelId
+
+
+                            }).ToList();
+                return data;
+
+            }
+
+
+        }
+
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

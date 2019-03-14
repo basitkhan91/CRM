@@ -82,6 +82,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     manufacturerdataError: boolean;
     display: boolean;
     modelValue: boolean;
+    collectionofVendorCapability: any;
     
 	/** add-vendor-capabilities ctor */
 	constructor(private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService,)
@@ -692,108 +693,159 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			this.selectedModels.push(selectedRow);
 		}
 		console.log(this.selectedModels);
-	}
+    }
+
+    saveAircraftmodelinfo(partid, itemid, data)
+    {
+
+        for (let i = 0; i < data.length; i++) {
+            data[i].itemMasterId = itemid;
+            //data[i].partId = partid;
+
+
+            this.itemser.saveAircraftinfo(data[i]).subscribe(aircraftdata => {
+                this.collectionofItemMaster = aircraftdata;
+            })
+
+        }
+    }
 
 
 	saveVendorCapsclose()//for Saving Vendor capability
 	{
-		if (!this.sourceVendorCap.vendorCode)
-		{
-			this.vendorCodeError = true;
-		}
-		else
-		{
-			this.vendorCodeError = false;
-		}
+		//if (!this.sourceVendorCap.vendorCode)
+		//{
+		//	this.vendorCodeError = true;
+		//}
+		//else
+		//{
+		//	this.vendorCodeError = false;
+		//}
 
-		if (!this.sourceVendorCap.vendorName)
-		{
-			this.vendorNameError = true;
-		}
-		else {
-			this.vendorNameError = false;
-		}
+		//if (!this.sourceVendorCap.vendorName)
+		//{
+		//	this.vendorNameError = true;
+		//}
+		//else {
+		//	this.vendorNameError = false;
+		//}
 
-		if (!this.sourceVendorCap.vendorRanking)
-		{
-			this.vendorRankingError = true;
-		}
-		else {
-			this.vendorRankingError = false;
-		}
+		//if (!this.sourceVendorCap.vendorRanking)
+		//{
+		//	this.vendorRankingError = true;
+		//}
+		//else {
+		//	this.vendorRankingError = false;
+		//}
 
-		if (!this.sourceVendorCap.partId) {
-			this.partIdError = true;
-		}
-		else {
-			this.partIdError = false;
-		}
+		//if (!this.sourceVendorCap.partId) {
+		//	this.partIdError = true;
+		//}
+		//else {
+		//	this.partIdError = false;
+		//}
 
 		
 
-		if (!this.sourceVendorCap.partDescription) {
-			this.partDescriptionError = true;
-		}
-		else {
-			this.partDescriptionError = false;
-		}
+		//if (!this.sourceVendorCap.partDescription) {
+		//	this.partDescriptionError = true;
+		//}
+		//else {
+		//	this.partDescriptionError = false;
+		//}
 
-		if (!this.sourceVendorCap.selectedCapabulityTypesListData) {
-			this.capabulityTypeListDataError = true;
-		}
-		else {
-			this.capabulityTypeListDataError = false;
-		}
+		//if (!this.sourceVendorCap.selectedCapabulityTypesListData) {
+		//	this.capabulityTypeListDataError = true;
+		//}
+		//else {
+		//	this.capabulityTypeListDataError = false;
+		//}
 
-		if (!this.sourceVendorCap.isPMADER) {
-			this.pmaDerError = true;
-		}
-		else {
-			this.pmaDerError = false;
-		}
+		//if (!this.sourceVendorCap.isPMADER) {
+		//	this.pmaDerError = true;
+		//}
+		//else {
+		//	this.pmaDerError = false;
+		//}
 
-		if (!this.sourceVendorCap.capDescription) {
-			this.capabulityDescError = true;
-		}
-		else {
-			this.capabulityDescError = false;
-		}
+		//if (!this.sourceVendorCap.capDescription) {
+		//	this.capabulityDescError = true;
+		//}
+		//else {
+		//	this.capabulityDescError = false;
+		//}
 
-		if (!this.sourceVendorCap.cost) {
-			this.costError = true;
-		}
-		else {
-			this.costError = false;
-		}
-		if (!this.sourceVendorCap.tat) {
-			this.tatError = true;
-		}
-		else {
-			this.tatError = false;
-		}
+		//if (!this.sourceVendorCap.cost) {
+		//	this.costError = true;
+		//}
+		//else {
+		//	this.costError = false;
+		//}
+		//if (!this.sourceVendorCap.tat) {
+		//	this.tatError = true;
+		//}
+		//else {
+		//	this.tatError = false;
+		//}
 
-		if (!this.sourceVendorCap.manufacturerId) {
-			this.manufacturerdataError = true;
-		}
-		else {
-			this.manufacturerdataError = false;
-		}
+		//if (!this.sourceVendorCap.manufacturerId) {
+		//	this.manufacturerdataError = true;
+		//}
+		//else {
+		//	this.manufacturerdataError = false;
+		//}
 
 
 
-		if (
-			(!this.sourceVendorCap.vendorCode) || (!this.sourceVendorCap.vendorName)
-			|| (!this.sourceVendorCap.vendorRanking) || (!this.sourceVendorCap.partId) 
-			|| (!this.sourceVendorCap.partDescription) || (!this.sourceVendorCap.selectedCapabulityTypesListData) || (!this.sourceVendorCap.isPMADER)
-			|| (!this.sourceVendorCap.capDescription) || (!this.sourceVendorCap.cost) || (!this.sourceVendorCap.tat) || (!this.sourceVendorCap.manufacturerId)
-		) {
-			this.display = true;
-			this.disableSave = true;
+		//if (
+		//	(!this.sourceVendorCap.vendorCode) || (!this.sourceVendorCap.vendorName)
+		//	|| (!this.sourceVendorCap.vendorRanking) || (!this.sourceVendorCap.partId) 
+		//	|| (!this.sourceVendorCap.partDescription) || (!this.sourceVendorCap.selectedCapabulityTypesListData) || (!this.sourceVendorCap.isPMADER)
+		//	|| (!this.sourceVendorCap.capDescription) || (!this.sourceVendorCap.cost) || (!this.sourceVendorCap.tat) || (!this.sourceVendorCap.manufacturerId)
+		//) {
+		//	this.display = true;
+		//	this.disableSave = true;
 
-			this.modelValue = true;
-		}
+		//	this.modelValue = true;
+		//}
+
+
+        if (!this.sourceVendorCap.itemMasterId) //for Edit Screen
+        {
+            
+            
+            this.sourceVendorCap.masterCompanyId = 1;
+            this.sourceVendorCap.itemTypeId = 1;
+
+            this.vendorService.newVendorCapability(this.sourceVendorCap).subscribe(data => {
+                this.collectionofVendorCapability = data;
+                this.savesuccessCompleted(this.sourceVendorCap);
+                if (data != null) {
+                    if (data.partId && data.itemMasterId)
+                    {
+                       
+                        if (this.selectedModels.length > 0) {
+
+                            this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
+
+                        }
+
+                    }
+                }
+                this.alertService.startLoadingMessage();
+
+            })
+
+            
+
+        }
 
 	}
 
-	
+    private savesuccessCompleted(user?: any)
+    {
+        this.isSaving = false;
+        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        this.loadData();
+    }
 }
