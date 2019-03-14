@@ -1,0 +1,61 @@
+
+ <div class="table-responsive custom-table">
+    <table class="table table-bordered ">
+            <tr>
+                <th ><label>Type </label></th>
+                <th ><label>Description</label></th>
+                <th ><label>Qty</label></th>
+                <th ><label>Unit Cost </label></th>
+                <th ><label>Extended Cost </label></th>
+                <th ><label> Unit Price</label></th>
+                <th ><label>Extended Price </label></th>
+                <th ><label>Curreny </label></th>
+                <th ><label>FX Rate </label></th>
+                <th ><label>Vendor Name</label></th>
+                <th ><label>Vendor Price/Unit </label></th>
+                <th ><label>Actions </label></th>
+            </tr>
+            <tr>
+                <td colspan="12" class="add-charges">
+                    <span (click)="addRow()" style="cursor: pointer;">Add New Charges</span>
+                    <i class="fa fa-plus-circle " style="cursor: pointer;" (click)="addRow()"></i>
+                </td>
+            </tr>
+            <tr [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
+              <td>
+                <!-- <input type="text" value="{{charges.Type}}"> -->
+                <select [disabled]="allowEdit(charge)"  class="form-control custom-select" id='dllChargesType' [(ngModel)]="charge.workflowChargeTypeId" >
+                  <option value="">Select</option>
+                  <option value={{ctype.id}} *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
+                </select>
+              </td>
+              <td><textarea [disabled]="allowEdit(charge)" rows="1" class="form-control" value="{{charge.description}}" [(ngModel)]="charge.description" ></textarea></td>
+              <td><input [disabled]="allowEdit(charge)" type="text" class="form-control"  value="{{charge.quantity}}" [(ngModel)]="charge.quantity" ></td>
+              <td><input [disabled]="allowEdit(charge)" type="text" class="form-control"  value="{{charge.unitCost}}" [(ngModel)]="charge.unitCost"></td>
+              <td><input [disabled]="allowEdit(charge)" type="text" class="form-control"  value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost"></td>
+              <td><input [disabled]="allowEdit(charge)" type="text" class="form-control"  value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice"> </td>
+              <td><input [disabled]="allowEdit(charge)" type="text" class="form-control"  value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice"></td>
+              <td><select [disabled]="allowEdit(charge)" class="form-control custom-select" id='dllChargesCurrency' [(ngModel)]="charge.currencyId" >
+                  <option value="">Select</option>  
+				  <option value={{currency.currencyId}} *ngFor="let currency of chargesCurrency">{{currency.symbol}}</option>
+                </select></td>
+              <td><input [disabled]="allowEdit(charge)" type="text" class="form-control" value="{{charge.forexRate}}" [(ngModel)]="charge.forexRate"></td>
+              <!--<td><input [disabled]="allowEdit(charge)" type="text" class="form-control" value="{{charge.vendorId}}" [(ngModel)]="charge.vendorId"></td>-->
+			  <td>
+				<p-autoComplete [disabled]="allowEdit(charge)" (onSelect)="onVendorCodeselected($event)" [(ngModel)]="charge.vendorName"  [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
+								[minLength]="1" [dropdown]="true">
+					<ng-template let-vendorCode pTemplate="item">
+						<div class="ui-helper-clearfix">{{vendorCode}}</div>
+					</ng-template>
+				</p-autoComplete>
+			  	</td>
+
+
+              <td><input [disabled]="allowEdit(charge)" type="text" class="form-control" value="{{charge.vendorUnitPrice}}" [(ngModel)]="charge.vendorUnitPrice"></td>
+              <td>
+                <span *ngIf="UpdateMode" style="font-size: 22px;cursor: pointer;" class="fa fa-pencil-square-o"  (click)="editRow(charge)"></span> 
+                <span class="fa fa-trash-o delete-btn" (click)="deleteRow(i)"></span>
+              </td>
+            </tr>
+          </table>  
+    </div>

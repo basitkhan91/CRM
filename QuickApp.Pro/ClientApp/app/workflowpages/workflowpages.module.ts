@@ -1,0 +1,107 @@
+﻿// ===============================
+// info@ebenmonney.com
+// www.ebenmonney.com/quickapp-pro
+// ===============================
+
+import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from '@angular/flex-layout'
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+//import { QuickAppProMaterialModule } from "../modules/material.module";
+//import { GroupByPipe } from '../pipes/group-by.pipe';
+
+//import { ReceivingPagesRoutingModule } from "./customerpages-routing.module";
+
+//import { CustomerPagesComponent } from "./customerpages.component";
+
+import { CommonModule } from '@angular/common'; //<-- This one
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { GMapModule } from 'primeng/gmap';
+import { FileUploadModule } from 'primeng/fileupload';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { StepsModule } from 'primeng/steps';//Prime Ng Steps
+import { DialogModule } from 'primeng/dialog'; //Prime Ng Dailog
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+
+
+import { CalendarModule } from "primeng/calendar";
+
+import { WorkflowListComponent } from "../components/workflow/workflow-list/workflow-list.component";
+import { WorkFlowPagesRoutingModule } from "./workflowpages-routing.module";
+
+import { WorkFlowPagesComponent } from "./workflowpages.component";
+import { WorkflowCreateComponent } from "../components/workflow/workflow-create/workflow-create.component";
+import { AccordionModule } from "primeng/accordion";
+
+import { TabViewModule } from 'primeng/tabview';
+import { WorkflowCreateTestComponent } from "../Workflow/Workflow-Create.component";
+import { ActionService } from "../Workflow/ActionService";
+import { ActionEndpoint } from "../Workflow/action-endpoint.service";
+import { ChargesCreateComponent } from "../shared/Charges-Create.component";
+import { DirectionsCreateComponent } from "../shared/Directions-Create.component";
+import { EquipmentCreateComponent } from "../shared/Equipment-Create.component";
+import { ExpertiseCreateComponent } from "../shared/Expertise-Create.component";
+import { MaterialListCreateComponent } from "../shared/Material-List-Create.component";
+import { PublicationCreateComponent } from "../shared/Publication-Create.component";
+import { ExclusionsCreateComponent } from "../shared/Exclusions-Create.component";
+import { MeasurementCreateComponent } from "../shared/Measurement-Create.component";
+import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
+import { MatIconModule } from "@angular/material";
+import { StarComponent } from "../shared/star.component";
+@NgModule({
+	imports: [
+		FlexLayoutModule,
+		FormsModule, ReactiveFormsModule,
+		//QuickAppProMaterialModule,
+		TranslateModule,
+		CommonModule,
+		TableModule,
+		ButtonModule,
+		SelectButtonModule,
+		InputTextModule,
+		MultiSelectModule,
+		WorkFlowPagesRoutingModule,
+		AutoCompleteModule,
+		MatIconModule,
+		GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule, AccordionModule, TabViewModule,
+		NgMultiSelectDropDownModule.forRoot()
+	],
+	declarations: [
+		WorkFlowPagesComponent,
+		WorkflowListComponent,
+		WorkflowCreateComponent,
+		WorkflowCreateTestComponent,
+		ChargesCreateComponent,
+		DirectionsCreateComponent,
+		EquipmentCreateComponent,
+		ExpertiseCreateComponent,
+		MaterialListCreateComponent,
+		PublicationCreateComponent,
+		ExclusionsCreateComponent,
+		MeasurementCreateComponent,
+		StarComponent
+	],
+	exports: [WorkflowCreateTestComponent,
+		ChargesCreateComponent,
+		DirectionsCreateComponent,
+		EquipmentCreateComponent,
+		ExpertiseCreateComponent,
+		MaterialListCreateComponent,
+		PublicationCreateComponent,
+		ExclusionsCreateComponent,
+		MeasurementCreateComponent],
+	providers: [
+		ActionService,
+		ActionEndpoint
+	],
+	entryComponents: [
+	]
+})
+export class WorkFlowPagesModule {
+
+}

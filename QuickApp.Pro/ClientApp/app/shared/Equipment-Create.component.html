@@ -1,0 +1,40 @@
+<div class="table-responsive custom-table">
+  <table class="table table-bordered ">
+    <tr>
+      <th><label> Asset Id </label></th>
+      <th><label>Asset Type </label></th>
+      <th><label>Asset Description</label></th>
+      <th><label>Quantity</label></th>
+      <th><label>Actions </label></th>
+    </tr>
+    <tr>
+        <td colspan="5" class="add-charges">
+            <span (click)="addRow()">Add New Equipments</span>
+            <i class="fa fa-plus-circle" (click)="addRow()"></i>
+        </td>
+    </tr>
+    <tr [hidden]="eqp.isDelete" *ngFor="let eqp of workFlow.equipments; let i = index">
+      <td>
+		<!--<input type="text" [disabled]="allowEdit(eqp)" class="form-control" value="{{eqp.assetId}}" [(ngModel)]="eqp.assetId"  ></td>-->
+		  <p-autoComplete (onSelect)="onPartSelect($event,eqp)"  [disabled]="allowEdit(eqp)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="eqp.partNumber"
+																				[minLength]="1" [dropdown]="true">
+																	<ng-template let-partName pTemplate="part">
+																		<div class="ui-helper-clearfix">{{partName}}</div>
+																	</ng-template>
+																</p-autoComplete>
+		  </td>
+      <td>
+        <select class="form-control custom-select" [disabled]="allowEdit(eqp)" id='dllEquipmentAssetTypes' [(ngModel)]="eqp.assetTypeId">
+          <option value="">select</option>
+          <option value={{assetType.id}} *ngFor="let assetType of equipmentAssetType">{{assetType.name}}</option>
+        </select>
+      </td>
+      <td><input type="text" [disabled]="allowEdit(eqp)" class="form-control" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" readonly/></td>
+      <td><input type="text" [disabled]="allowEdit(eqp)"  class="form-control" value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
+      <td>
+          <span *ngIf="UpdateMode" style="font-size: 22px;cursor: pointer;" class="fa fa-pencil-square-o"  (click)="editRow(eqp)"></span>
+          <i class="fa fa-trash-o delete-btn" (click)="deleteRow(i)" ></i>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,221 @@
+﻿
+<div class="x_panel" style="">
+	<div class="x_content">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item" aria-current="page">Receiving</li>
+				<li class="breadcrumb-item" aria-current="page">Purchase Order</li>
+				<li class="breadcrumb-item active" aria-current="page">Receiving PO</li>
+			</ol>
+		</nav>
+		<h4 class="page-heading">Receiving PO</h4>
+		<div class="clear"></div>
+		<form id="" class="form-horizontal ro-grid-form mtop10" name="" action="#" method="post" onsubmit="return false;">
+			<div class="col-sm-3">
+
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">PO Num</label>
+					<div class="col-sm-7">
+						<input class="form-control" type="text" value="Creating" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.purchaseOrderNumber">
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Open Date</label>
+					<div class="col-sm-7">
+						<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateRequested"></p-calendar>
+						<!--<input type="date" id="dp1547623339381" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateRequested">-->
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Need By</label>
+					<div class="col-sm-7">
+						<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.needByDate"></p-calendar>
+						<!--<input type="date" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.needByDate">-->
+					</div>
+				</div>
+				<div class="form-group col-sm-12 input-icon1 ">
+
+					<label class="control-label col-sm-4">Priority </label>
+
+					<div class="inner-addon right-addon inline-block col-sm-7">
+						<!--<i class="fa fa-caret-down"></i>-->
+						<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.priorityId">
+							<option *ngFor="let priorityName of allPriorityInfo" [ngValue]="priorityName.priorityId">{{priorityName.description}}</option>
+						</select>
+					</div>
+
+					<!--<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="priorty(modelEdits)"><i class="fa fa-plus"></i></a>-->
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Deferred Receiver</label>
+					<div class="col-sm-7">
+						<div class="inner-addon">
+							<input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Resale</label>
+					<div class="col-sm-7">
+						<div class="inner-addon">
+							<input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-3">
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Vendor Num</label>
+					<div class="col-sm-7">
+						<div class="inner-addon right-addon inline-block">
+
+							<p-autoComplete (onSelect)="onVendorCodeselected($event)" (onKeyUp)=eventvendorHandler($event) [(ngModel)]="sourcePoApproval.vendorCode" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
+											[minLength]="1" [dropdown]="true">
+								<ng-template let-vendorCode pTemplate="item">
+									<div class="ui-helper-clearfix">{{vendorCode}}</div>
+								</ng-template>
+							</p-autoComplete>
+							<!--<div *ngIf="disableSaveVenderCode" class="clr-red">Already Exists</div>-->
+						</div>
+
+					</div>
+				</div>
+
+				<div class="form-group col-sm-12 input-icon1">
+					<label for="vendorName" class="control-label col-sm-4">Vendor Name <span class="clr-red">*</span></label>
+					<div class="col-sm-7">
+						<div class="inner-addon right-addon inline-block">
+
+							<p-autoComplete (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+											[minLength]="1" [dropdown]="true">
+								<ng-template let-vendorName pTemplate="item">
+									<div class="ui-helper-clearfix">{{vendorName}}</div>
+								</ng-template>
+							</p-autoComplete>
+							<!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
+
+						</div>
+
+					</div>
+				</div>
+
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Vendor Contact</label>
+					<div class="col-sm-7">
+						<div class="inner-addon right-addon inline-block">
+							<i class="fa fa-search"></i>
+							<input type="text" class="form-control names ui-autocomplete-input" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.firstName" autocomplete="off">
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Contact Phone</label>
+					<div class="col-sm-7">
+						<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.workPhone">
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Credit Limit &amp; Terms</label>
+					<div class="col-sm-3">
+						<input class="form-control" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.terms">
+					</div>
+					<div class="col-sm-4">
+
+						<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.creditLimit">
+							<option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
+
+						</select>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col-sm-3">
+				<div class="form-group col-sm-12 input-icon1">
+					<label class="control-label col-sm-4">Requisitioner</label>
+					<div class="col-sm-7">
+						<div class="inner-addon right-addon inline-block">
+							<div class="inner-addon right-addon inline-block">
+								<p-autoComplete [(ngModel)]="sourcePoApproval.requestedBy" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+												[minLength]="1" [dropdown]="true">
+									<ng-template let-firstName pTemplate="item">
+										<div class="ui-helper-clearfix">{{firstName}}</div>
+									</ng-template>
+								</p-autoComplete>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Approver</label>
+					<div class="col-sm-7">
+						<div class="inner-addon ">
+							<input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.approver">
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Approved Date</label>
+					<div class="col-sm-7">
+						<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateApprovied"></p-calendar>
+
+						<!--<input class="form-control datepicker hasDatepicker" type="date"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateApprovied" >-->
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Status</label>
+					<div class="col-sm-7">
+						<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.statusId" value="1">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				
+
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Company</label>
+					<div class="col-sm-7">
+						<select [(ngModel)]="sourcePoApproval.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourcePoApproval.masterCompanyId)">
+							<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">BU</label>
+					<div class="col-sm-7">
+						<select [(ngModel)]="sourcePoApproval.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourcePoApproval.buid1)">
+							<option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Dept</label>
+					<div class="col-sm-7">
+						<select [(ngModel)]="sourcePoApproval.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourcePoApproval.depid1)">
+							<option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Division</label>
+					<div class="col-sm-7">
+						<div>
+							<select [(ngModel)]="sourcePoApproval.divid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(sourcePoApproval.divid1)">
+								<option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-sm-12">
+					<label class="control-label col-sm-4">Memo</label>
+					<div class="col-sm-7">
+						<textarea class="h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.notes"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<hr>
+		</form>
+	</div>
+</div>

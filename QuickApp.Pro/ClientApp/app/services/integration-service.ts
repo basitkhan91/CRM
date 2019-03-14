@@ -1,0 +1,68 @@
+﻿// ===============================
+// info@ebenmonney.com
+// www.ebenmonney.com/quickapp-pro
+// ===============================
+
+import { Injectable } from '@angular/core';
+import { Router, NavigationExtras } from "@angular/router";
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+
+
+import { AuthService } from './auth.service';
+import { User } from '../models/user.model';
+import { Role } from '../models/role.model';
+import { Action } from '../models/action.model';
+import { IntegrationEndpointService } from './integration.endpoint-service';
+import { Integration } from '../models/integration.model';
+import { AuditHistory } from '../models/audithistory.model';
+
+
+export type RolesChangedOperation = "add" | "delete" | "modify";
+export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
+
+@Injectable()
+export class IntegrationService {
+    public static readonly roleAddedOperation: RolesChangedOperation = "add";
+    public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
+    public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
+
+    private _rolesChanged = new Subject<RolesChangedEventArg>();
+
+    constructor(
+        private router: Router,
+        private http: HttpClient,
+        private authService: AuthService,
+        private integrationEndpointService: IntegrationEndpointService) { }
+
+    getWorkFlows() {
+        return Observable.forkJoin(
+            this.integrationEndpointService.getIntegrationEndpoint<Integration[]>());
+    }
+
+    newAction(action: Integration) {
+        return this.integrationEndpointService.getNewActionEndpoint<Integration>(action);
+    }
+
+    getAction(actionId?: number) {
+        return this.integrationEndpointService.getEditActionEndpoint<Integration>(actionId);
+    }
+
+    updateAction(action: Integration) {
+		return this.integrationEndpointService.getUpdateActionEndpoint(action, action.integrationPortalId);
+    }
+
+    deleteAcion(actionId: number) {
+
+        return this.integrationEndpointService.getDeleteActionEndpoint(actionId);
+
+	}
+	historyintegration(actionId: number) {
+		return Observable.forkJoin(this.integrationEndpointService.getHistoryintegrationEndpoint<AuditHistory[]>(actionId));
+	}
+
+}

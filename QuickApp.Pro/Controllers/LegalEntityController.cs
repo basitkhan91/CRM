@@ -1,0 +1,399 @@
+﻿using AutoMapper;
+using DAL;
+using DAL.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using QuickApp.Pro.Helpers;
+using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace QuickApp.Pro.Controllers
+{
+    [Route("api/[controller]")]
+        public class LegalEntityController : Controller
+        {
+
+        private IUnitOfWork _unitOfWork;
+        readonly ILogger _logger;
+        readonly IEmailer _emailer;
+        private readonly ApplicationDbContext _context;
+        public LegalEntityController(IUnitOfWork unitOfWork, ILogger<LegalEntityController> logger, IEmailer emailer,  ApplicationDbContext context)
+        {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+            _emailer = emailer;
+            _context = context;
+        }
+
+
+        [HttpGet("auditHistoryById/{id}")]
+        [Produces(typeof(List<AuditHistory>))]
+        public IActionResult GetAuditHostoryById(long id)
+        {
+            var result = _unitOfWork.AuditHistory.GetAllHistory("LegalEntity", id); //.GetAllCustomersData();
+
+
+            try
+            {
+                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+                return Ok(resul1);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
+
+        }
+
+        [HttpGet("Get")]
+        [Produces(typeof(List<LegalEntityViewModel>))]
+        public IActionResult Get()
+        {
+            var allentity = _unitOfWork.legalEntity.GetAllLegalEntityData();
+            //return Ok(Mapper.Map<IEnumerable<LegalEntityViewModel>>(allentity));
+            return Ok(allentity);
+
+        }
+        [HttpGet("GetforEdigt")]
+        [Produces(typeof(List<LegalEntityViewModel>))]
+        public IActionResult GetforEdigt()
+        {
+            var allentity = _unitOfWork.itemMaster.getLegalEntityData();
+            //return Ok(Mapper.Map<IEnumerable<LegalEntityViewModel>>(allentity));
+            return Ok(allentity);
+
+        }
+
+
+
+        [HttpPost("legalEntitypost")]
+        public IActionResult CreateAction([FromBody] LegalEntityViewModel legalEntityViewModel, Address address)
+        {
+            if (ModelState.IsValid)
+            {
+                if (legalEntityViewModel == null)
+                    return BadRequest($"{nameof(legalEntityViewModel)} cannot be null");
+                
+                DAL.Models.LegalEntity entityobject = new DAL.Models.LegalEntity();
+                DomesticWirePayment domesticWirePaymentObj = new DomesticWirePayment();
+                InternationalwirePayment internationalWirePaymentObj = new InternationalwirePayment();
+                ACH ach = new ACH();
+                entityobject.MasterCompanyId = 1;
+                entityobject.Name = legalEntityViewModel.Name;
+                entityobject.Description = legalEntityViewModel.Description;
+                entityobject.DoingLegalAs = legalEntityViewModel.DoingLegalAs;
+                entityobject.CageCode = legalEntityViewModel.CageCode;
+                //entityobject.DomesticWirePaymentId = legalEntityViewModel.DomesticWirePaymentId;
+                entityobject.FAALicense = legalEntityViewModel.FAALicense;
+                entityobject.FunctionalCurrencyId = legalEntityViewModel.FunctionalCurrencyId;
+                //entityobject.InternationalWirePaymentId = legalEntityViewModel.InternationalWirePaymentId;
+                entityobject.IsBalancingEntity = legalEntityViewModel.IsBalancingEntity;
+                entityobject.IsLastLevel = legalEntityViewModel.IsLastLevel;
+                entityobject.LegalEntityCode = legalEntityViewModel.LegalEntityCode;
+                entityobject.LegalEntityType = legalEntityViewModel.LegalEntityType;
+                entityobject.LockBoxAddressId = legalEntityViewModel.LockBoxAddressId;
+                entityobject.ReportingCurrencyId = legalEntityViewModel.ReportingCurrencyId;
+                entityobject.TaxId = legalEntityViewModel.TaxId;
+                entityobject.IsActive = legalEntityViewModel.IsActive;
+                entityobject.CreatedDate = DateTime.Now;
+                entityobject.UpdatedDate = DateTime.Now;
+                entityobject.CreatedBy = legalEntityViewModel.CreatedBy;
+                entityobject.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                if (legalEntityViewModel.AddressId == null)
+                {
+                    entityobject.AddressId = null;
+
+
+                }
+                if (legalEntityViewModel.ParentId == null)
+                {
+                    entityobject.ParentId = null;
+
+                }
+                entityobject.ParentId = legalEntityViewModel.ParentId;
+                AddAddress(legalEntityViewModel);
+                entityobject.AddressId = legalEntityViewModel.AddressId.Value;
+                address.Line1 = legalEntityViewModel.Address1;
+                address.Line2 = legalEntityViewModel.Address2;
+                address.PostalCode = legalEntityViewModel.PostalCode;
+                address.StateOrProvince = legalEntityViewModel.BankProvince;
+                address.IsActive = legalEntityViewModel.IsActive;
+                address.Country = legalEntityViewModel.Country;
+                address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
+                address.MasterCompanyId = 1;
+                address.RecordCreateDate = DateTime.Now;
+                address.CreatedBy = legalEntityViewModel.CreatedBy;
+                address.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                address.CreatedDate = DateTime.Now;
+                address.UpdatedDate = DateTime.Now;
+                address.PoBox = legalEntityViewModel.PoBox;
+                _unitOfWork.Address.Add(address);
+                _unitOfWork.SaveChanges();
+
+                entityobject.LockBoxAddressId = address.AddressId.Value;
+                if (legalEntityViewModel.DomesticABANumber != null)
+                {
+                    domesticWirePaymentObj.MasterCompanyId = 1;
+                    domesticWirePaymentObj.IsActive = legalEntityViewModel.IsActive;
+                    domesticWirePaymentObj.ABA = legalEntityViewModel.DomesticABANumber;
+                    domesticWirePaymentObj.AccountNumber = legalEntityViewModel.DomesticBankAccountNumber;
+                    domesticWirePaymentObj.BankName = legalEntityViewModel.DomesticBankName;
+                    domesticWirePaymentObj.CreatedDate = DateTime.Now;
+                    domesticWirePaymentObj.UpdatedDate = DateTime.Now;
+                    domesticWirePaymentObj.IntermediaryBankName = legalEntityViewModel.DomesticIntermediateBank;
+                    domesticWirePaymentObj.BenificiaryBankName = legalEntityViewModel.DomesticBenficiaryBankName;
+                    domesticWirePaymentObj.CreatedBy = legalEntityViewModel.CreatedBy;
+                    domesticWirePaymentObj.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                    _unitOfWork.vendorDomesticPaymentRepository.Add(domesticWirePaymentObj);
+                    _unitOfWork.SaveChanges();
+                    entityobject.DomesticWirePaymentId = domesticWirePaymentObj.DomesticWirePaymentId.Value;
+                }
+                if (legalEntityViewModel.InternationalBenficiaryBankName != null)
+                {
+                    internationalWirePaymentObj.IsActive = true;
+                    internationalWirePaymentObj.MasterCompanyId = 1;
+                    internationalWirePaymentObj.IsActive = legalEntityViewModel.IsActive;
+                    internationalWirePaymentObj.SwiftCode = legalEntityViewModel.InternationalSWIFTID;
+                    internationalWirePaymentObj.BeneficiaryBankAccount = legalEntityViewModel.InternationalBankAccountNumber.ToString();
+                    internationalWirePaymentObj.BeneficiaryBank = legalEntityViewModel.InternationalBankName;
+                    internationalWirePaymentObj.BeneficiaryCustomer = legalEntityViewModel.InternationalBenficiaryBankName;
+                    internationalWirePaymentObj.IntermediaryBank = legalEntityViewModel.InternationalIntermediateBank;
+                    internationalWirePaymentObj.BankName = legalEntityViewModel.InternationalBankName;
+                    internationalWirePaymentObj.CreatedDate = DateTime.Now;
+                    internationalWirePaymentObj.UpdatedDate = DateTime.Now;
+                    internationalWirePaymentObj.CreatedBy = legalEntityViewModel.CreatedBy;
+                    internationalWirePaymentObj.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                    _unitOfWork.vendorInternationalPaymentRepository.Add(internationalWirePaymentObj);
+                    _unitOfWork.SaveChanges();
+                    entityobject.InternationalWirePaymentId = internationalWirePaymentObj.InternationalWirePaymentId.Value;
+                }
+
+                if (legalEntityViewModel.AchBankName != null)
+                {
+                    ach.IsActive = true;
+                    ach.MasterCompanyId = 1;
+                    ach.ABA = legalEntityViewModel.AchABANumber;
+                    ach.AccountNumber = legalEntityViewModel.AchBankAccountNumber;
+                    ach.BankName = legalEntityViewModel.AchBankName;
+                    ach.BeneficiaryBankName = legalEntityViewModel.AchBenficiaryBankName;
+                    ach.IntermediateBankName = legalEntityViewModel.AchIntermediateBank;
+                    ach.SwiftCode = legalEntityViewModel.AchSWIFTID;
+                    ach.CreatedDate = DateTime.Now;
+                    ach.UpdatedDate = DateTime.Now;
+                    ach.CreatedBy = legalEntityViewModel.CreatedBy;
+                    ach.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                    _context.ACH.Add(ach);
+                    _unitOfWork.SaveChanges();
+                    entityobject.ACHId = ach.ACHId;
+                }
+
+                _unitOfWork.legalEntity.Add(entityobject);
+                _unitOfWork.SaveChanges();
+               // if (legalEntityViewModel.ParentId == null) { UpdateToParent(entityobject); }
+               
+            }
+
+            return Ok(ModelState);
+        }
+
+        public IActionResult AddAddress(LegalEntityViewModel legalEntityViewModel)
+        {
+            Address address = new Address();
+            address.Line1 = legalEntityViewModel.BankStreetaddress1;
+            address.Line2 = legalEntityViewModel.BankStreetaddress2;
+            address.PostalCode = legalEntityViewModel.PostalCode;
+            address.StateOrProvince = legalEntityViewModel.BankProvince;
+            address.IsActive = legalEntityViewModel.IsActive;
+            //address.City = legalEntityViewModel.BankCity;
+            address.Country = legalEntityViewModel.Country;
+            address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
+            address.MasterCompanyId = 1;
+            address.RecordCreateDate = DateTime.Now;
+            address.CreatedBy = legalEntityViewModel.CreatedBy;
+            address.UpdatedBy = legalEntityViewModel.UpdatedBy;
+            address.CreatedDate = DateTime.Now;
+            address.UpdatedDate = DateTime.Now;
+            _unitOfWork.Address.Add(address);
+            _unitOfWork.SaveChanges();
+            legalEntityViewModel.AddressId = address.AddressId.Value;
+            return Ok(ModelState);
+        }
+
+
+        public IActionResult UpdateToParent(LegalEntity legalEntityViewModel)
+        {
+            var existingresult = _context.LegalEntity.Where(a => a.LegalEntityId == legalEntityViewModel.LegalEntityId).SingleOrDefault();
+            existingresult.ParentId = legalEntityViewModel.LegalEntityId;
+            _context.LegalEntity.Update(existingresult);      
+            _context.SaveChanges();
+            return Ok(ModelState);
+
+
+        }
+        [HttpPut("legalEntitypost/{id}")]
+        public IActionResult UpdateLegalEntityDetails([FromBody] LegalEntityViewModel legalEntityViewModel)
+        {
+            if (legalEntityViewModel != null)
+            {
+                var entityobject = _context.LegalEntity.Where(a => a.LegalEntityId == legalEntityViewModel.LegalEntityId).SingleOrDefault();
+                if (entityobject != null)
+                {
+                    var domesticWirePaymentObj = _context.DomesticWirePayment.Where(a => a.DomesticWirePaymentId == entityobject.DomesticWirePaymentId).SingleOrDefault();
+                    var internationalWirePaymentObj = _context.InternationalWirePayment.Where(a => a.InternationalWirePaymentId == entityobject.InternationalWirePaymentId).SingleOrDefault();
+                    var address = _context.Address.Where(a => a.AddressId == entityobject.AddressId).SingleOrDefault();
+                    var ach = _context.ACH.Where(a => a.ACHId == entityobject.ACHId).SingleOrDefault();
+                    entityobject.MasterCompanyId = 1;
+                    entityobject.Name = legalEntityViewModel.Name;
+                    entityobject.Description = legalEntityViewModel.Description;
+                    entityobject.DoingLegalAs = legalEntityViewModel.DoingLegalAs;
+                    entityobject.CageCode = legalEntityViewModel.CageCode;
+                    //entityobject.DomesticWirePaymentId = legalEntityViewModel.DomesticWirePaymentId;
+                    entityobject.FAALicense = legalEntityViewModel.FAALicense;
+                    entityobject.FunctionalCurrencyId = legalEntityViewModel.FunctionalCurrencyId;
+                    entityobject.FaxNumber = legalEntityViewModel.FaxNumber;
+                    entityobject.PhoneNumber1 = legalEntityViewModel.PhoneNumber1;
+
+                    //entityobject.InternationalWirePaymentId = legalEntityViewModel.InternationalWirePaymentId;
+                    entityobject.IsBalancingEntity = legalEntityViewModel.IsBalancingEntity;
+                    entityobject.IsLastLevel = legalEntityViewModel.IsLastLevel;
+                    entityobject.LegalEntityCode = legalEntityViewModel.LegalEntityCode;
+                    entityobject.LegalEntityType = legalEntityViewModel.LegalEntityType;
+                    entityobject.LockBoxAddressId = legalEntityViewModel.LockBoxAddressId;
+                    entityobject.ReportingCurrencyId = legalEntityViewModel.ReportingCurrencyId;
+                    entityobject.TaxId = legalEntityViewModel.TaxId;
+                   // entityobject.IsActive = legalEntityViewModel.IsActive;
+                    entityobject.CreatedDate = DateTime.Now;
+                    entityobject.UpdatedDate = DateTime.Now;
+                    entityobject.CreatedBy = legalEntityViewModel.CreatedBy;
+                    entityobject.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                 
+                    if (address != null) {
+                        address.Line1 = legalEntityViewModel.Address1;
+                        address.Line2 = legalEntityViewModel.Address2;
+                        address.PostalCode = legalEntityViewModel.PostalCode;
+                        address.StateOrProvince = legalEntityViewModel.BankProvince;
+                        //address.IsActive = legalEntityViewModel.IsActive;
+                        address.Country = legalEntityViewModel.Country;
+                        address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
+                        address.MasterCompanyId = 1;
+                        address.RecordCreateDate = DateTime.Now;
+                        address.CreatedBy = legalEntityViewModel.CreatedBy;
+                        address.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                        address.CreatedDate = DateTime.Now;
+                        address.UpdatedDate = DateTime.Now;
+                        address.PoBox = legalEntityViewModel.PoBox;
+                        _unitOfWork.Address.Update(address);
+                        _unitOfWork.SaveChanges();
+                       
+                    }
+                    if (domesticWirePaymentObj != null)
+                    {
+                        domesticWirePaymentObj.MasterCompanyId = 1;
+                       // domesticWirePaymentObj.IsActive = legalEntityViewModel.IsActive;
+                        domesticWirePaymentObj.ABA = legalEntityViewModel.DomesticABANumber;
+                        domesticWirePaymentObj.AccountNumber = legalEntityViewModel.DomesticBankAccountNumber;
+                        domesticWirePaymentObj.BankName = legalEntityViewModel.DomesticBankName;
+                        domesticWirePaymentObj.CreatedDate = DateTime.Now;
+                        domesticWirePaymentObj.UpdatedDate = DateTime.Now;
+                        domesticWirePaymentObj.IntermediaryBankName = legalEntityViewModel.DomesticIntermediateBank;
+                        domesticWirePaymentObj.BenificiaryBankName = legalEntityViewModel.DomesticBenficiaryBankName;
+                        domesticWirePaymentObj.CreatedBy = legalEntityViewModel.CreatedBy;
+                        domesticWirePaymentObj.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                        _unitOfWork.vendorDomesticPaymentRepository.Update(domesticWirePaymentObj);
+                        _unitOfWork.SaveChanges();
+                        //entityobject.DomesticWirePaymentId = domesticWirePaymentObj.DomesticWirePaymentId.Value;
+                    }
+                    if (internationalWirePaymentObj != null)
+                    {
+                        internationalWirePaymentObj.IsActive = true;
+                        internationalWirePaymentObj.MasterCompanyId = 1;
+                       // internationalWirePaymentObj.IsActive = legalEntityViewModel.IsActive;
+                        internationalWirePaymentObj.SwiftCode = legalEntityViewModel.InternationalSWIFTID;
+                        internationalWirePaymentObj.BeneficiaryBankAccount = legalEntityViewModel.InternationalBankAccountNumber.ToString();
+                        internationalWirePaymentObj.BeneficiaryBank = legalEntityViewModel.InternationalBankName;
+                        internationalWirePaymentObj.BeneficiaryCustomer = legalEntityViewModel.InternationalBenficiaryBankName;
+                        internationalWirePaymentObj.CreatedDate = DateTime.Now;
+                        internationalWirePaymentObj.UpdatedDate = DateTime.Now;
+                        internationalWirePaymentObj.IntermediaryBank = legalEntityViewModel.InternationalIntermediateBank;
+                        internationalWirePaymentObj.BankName = legalEntityViewModel.InternationalBankName;
+                        internationalWirePaymentObj.CreatedBy = legalEntityViewModel.CreatedBy;
+                        internationalWirePaymentObj.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                        _unitOfWork.vendorInternationalPaymentRepository.Update(internationalWirePaymentObj);
+                        _unitOfWork.SaveChanges();
+                        // entityobject.InternationalWirePaymentId = internationalWirePaymentObj.InternationalWirePaymentId.Value;
+                    }
+                    if (ach != null)
+                   {
+                        ach.IsActive = true;
+                        ach.MasterCompanyId = 1;
+                        ach.ABA = legalEntityViewModel.AchABANumber;
+                        ach.AccountNumber = legalEntityViewModel.AchBankAccountNumber;
+                        ach.BankName = legalEntityViewModel.AchBankName;
+                        ach.BeneficiaryBankName = legalEntityViewModel.AchBenficiaryBankName;
+                        ach.IntermediateBankName = legalEntityViewModel.AchIntermediateBank;
+                        ach.SwiftCode = legalEntityViewModel.AchSWIFTID;
+                        ach.CreatedDate = DateTime.Now;
+                        ach.UpdatedDate = DateTime.Now;
+                        ach.CreatedBy = legalEntityViewModel.CreatedBy;
+                        ach.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                        _context.ACH.Update(ach);
+                        _unitOfWork.SaveChanges();
+                        
+                    }
+
+                    _context.LegalEntity.Update(entityobject);
+                    _context.SaveChanges();
+                }
+            }
+            return Ok(ModelState);
+        
+
+
+        
+         }
+        [HttpPost("managementEntitypost")]
+
+        public IActionResult CreateManagement([FromBody] ManagementStructureViewModel managementStructureViewModel, Address address)
+        {
+            ManagementStructure managementStructure = new ManagementStructure();
+            managementStructure.Code = managementStructureViewModel.Code;
+            managementStructure.Description = managementStructureViewModel.Description;
+
+            _context.ManagementStructure.Add(managementStructure);
+            _context.SaveChanges();
+
+            return Ok(ModelState);
+        }
+
+        [HttpPut("deleteLegalEntity/{id}")]
+        public IActionResult UpdateLegalEntiyStatus(long id)
+        {
+           
+                var entityobject = _context.LegalEntity.Where(a => a.LegalEntityId == id).SingleOrDefault();
+                if (entityobject != null)
+                {
+                    entityobject.IsActive = false;
+                    _context.LegalEntity.Update(entityobject);
+                    _context.SaveChanges();
+                }
+            
+            return Ok(ModelState);
+
+
+
+
+        }
+    }
+}
+
+    
+   
+
+

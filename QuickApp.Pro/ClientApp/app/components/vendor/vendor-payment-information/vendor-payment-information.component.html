@@ -1,0 +1,608 @@
+﻿<div [@fadeInOut] class="page-content">
+
+	<div class="right_col menu2" role="main">
+		<div class="x_panel" style="">
+			<div class="x_content">
+				<div class="form-group col-sm-4 vendor-details-heading marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
+					<p class="fs10">
+						<label class="control-label w100">Vendor Name:</label>
+						{{local?.vendorName}}
+					</p>
+				</div>
+				<div class="form-group col-sm-4 vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+					<p class="fs10">
+						<label class="control-label w100">Vendor Code:</label>
+						{{local?.vendorCode}}
+					</p>
+				</div>
+				<div class="table-responsive">
+					<p class="lead"></p>
+					<p-table #dt [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+						<ng-template pTemplate="caption">
+
+							<div style="text-align: right">
+								<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
+											   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+								<div class="inner-addon right-addon w200 inline-block">
+									<i class="fa fa-search"></i>
+									<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')">
+								</div>
+								<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+								<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+								<!--<a (click)="open(contentEdit)" matTooltip="Add Item Group" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
+								<div class="excel-upload">
+									<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+									<label for="upload">
+										<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+									</label>
+								</div>
+							</div>
+
+
+						</ng-template>
+
+						<ng-template pTemplate="header" let-columns>
+							<tr>
+
+								<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+									{{col.header}}
+									<p-sortIcon [field]="col.field"></p-sortIcon>
+								</th>
+
+								<th></th>
+
+							</tr>
+						</ng-template>
+
+						<ng-template pTemplate="body" let-rowData let-columns="columns">
+							<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+
+								<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+									{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+								</td>
+
+								<td>
+									<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+									<button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
+										<mat-icon>edit</mat-icon>
+									</button>
+
+									<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.checkPaymentId)">
+										<mat-icon color="warn">delete</mat-icon>
+									</button>
+
+									<button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+										<mat-icon color="green">history</mat-icon>
+									</button>
+
+								</td>
+
+							</tr>
+						</ng-template>
+
+					</p-table>
+					<div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
+
+						No Records
+
+
+					</div>
+				</div>
+				<div class="clear"></div>
+				<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
+					<div class="tab-content form-bg margin0 padding0">
+						<div class="" id="menu3">
+
+							<div class="clear"></div>
+							<div class="payment-info">
+								<div class="margin0">
+									<ul class="nav nav-pills">
+										<li><button class="btn my-btn" (click)="defaultPayment()" [class.extraclass]="defaultPaymentStyle">Default Payment Method</button></li>
+										<li><button class="btn my-btn" (click)="check()" [class.extraclass]="checkStyle">Check</button></li>
+										<li><button class="btn my-btn" (click)="domesticWire()" [class.extraclass]="domesticWireStyle">Domestic Wire</button></li>
+										<li><button class="btn my-btn" (click)="internationalWire()" [class.extraclass]="internationalStyle">International Wire</button></li>
+
+									</ul>
+								</div>
+								<div class="">
+									<div class="tab-content form-bg padding0" id="employee-block">
+										<div *ngIf="checkValue">
+											<div class="tab-pane active">
+												<div class="col-sm-12">
+													<div class="form-group row">
+														<!--<div class="form-group vendor-details-heading marginr50">
+												<p class="fs10">
+													<label class="control-label text-left">Vendor Name:</label>
+													{{local?.vendorName}}
+												</p>
+											</div>
+											<div class="form-group vendor-details-heading">
+												<p class="fs10">
+													<label class="control-label text-left">Vendor Code:</label>
+													{{local?.vendorCode}}
+												</p>
+											</div>-->
+													</div>
+													<h5 class="heading">{{viewName}} Check Payment </h5>
+													<div class="col-sm-6 w400 page-2blocks">
+														<div class="pay-check-details">
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">Site Name <strong class="clr-red">*</strong> </label>
+																<div class="col-sm-7 cust-name">
+																	<input class="form-control" type="text" id=""
+																		   [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.siteName">
+																</div>
+																<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showSiteName">
+																	<p class="fs10">
+																		Please Enter Required feilds
+
+																	</p>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">Address 1 <strong class="clr-red">*</strong> </label>
+																<div class="col-sm-7">
+																	<input class="form-control" type="text" id="vbaddress1" (keypress)="onBlurMethod('address1')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.address1">
+																</div>
+																<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showAddress1">
+																	<p class="fs10">
+																		Please Enter Required feilds
+
+																	</p>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">Address 2 </label>
+																<div class="col-sm-7">
+																	<input class="form-control" type="text" id="vbaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.address2">
+																</div>
+															</div>
+															<div class="form-group col-sm-126">
+																<label class="control-label col-sm-4">Address 3 </label>
+																<div class="col-sm-7">
+																	<input class="form-control" type="text" id="vbaddress3" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.address3">
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">City <strong class="clr-red">*</strong> </label>
+																<div class="col-sm-7">
+																	<input class="form-control" type="text" id="vbcity" (keypress)="onBlurMethod('city')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.city">
+																</div>
+																<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showCity">
+																	<p class="fs10">
+																		Please Enter Required feilds
+
+																	</p>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">State/Prov <strong class="clr-red">*</strong> </label>
+																<div class="col-sm-7">
+																	<input class="form-control" type="text" (keypress)="onBlurMethod('stateOrProvince')" id="vbstate" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.stateOrProvince">
+																</div>
+																<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showstateOrProvince">
+																	<p class="fs10">
+																		Please Enter Required feilds
+
+																	</p>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">Postal Code <strong class="clr-red">*</strong> </label>
+																<div class="col-sm-7">
+																	<input class="form-control" type="text" id="vbpostal" (keypress)="onBlurMethod('postalCode')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.postalCode">
+																</div>
+																<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showpostalCode">
+																	<p class="fs10">
+																		Please Enter Required feilds
+
+																	</p>
+																</div>
+															</div>
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">Country <strong class="clr-red">*</strong> </label>
+																<div class="col-sm-7">
+																	<div class="inner-addon right-addon inline-block">
+
+																		<p-autoComplete (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+																						[minLength]="1" [dropdown]="true">
+																			<ng-template let-nice_name pTemplate="item">
+																				<div class="ui-helper-clearfix">{{nice_name}}</div>
+																			</ng-template>
+																		</p-autoComplete>
+																	</div>
+																	<!--<input class="form-control" type="text" id="vbcountry" (keypress)="onBlurMethod('country')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.country">-->
+																</div>
+																<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showcountry">
+																	<p class="fs10">
+																		Please Enter Required feilds
+
+																	</p>
+																</div>
+															</div>
+															<!--<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Primary Payment</label>
+													<div class="col-sm-7">
+														<input type="checkbox" value="" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.isPrimaryPayment">
+													</div>
+												</div>-->
+															<div class="form-group col-sm-12">
+																<label class="control-label col-sm-4">&nbsp;</label>
+																<div class="checkbox col-sm-7">
+																	<button type="button" class="btn btn-warning map-check" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6 page-2blocks">
+														<div *ngIf="checkAddress">
+															<p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
+															<div class="checkbox col-sm-12">
+																<label class="w100">
+																	<input type="checkbox" value="" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.isvalidaddress">
+																	Validate Address
+																</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="clear"></div>
+												<hr class="hr-light-grey">
+												<button type="button" class="btn btn-success pull-right submit-btn" (click)="saveCheckPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showDomesticWire()">Go to Domestic Wire</button>
+												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showDefault()">Go to Default</button>
+
+												<div class="clear"></div>
+												<!--<form id="" class="filters" name="" action="#" method="post">
+										<div class="col-sm-12"> </div>
+										<div class="col-sm-2">
+											<label>Address </label>
+											<input type="text" name="" id="" placeholder="Enter Address" class="form-control">
+										</div>
+										<div class="col-sm-2">
+											<label>City</label>
+											<input type="text" name="" id="" placeholder="Enter City" class="form-control">
+										</div>
+										<div class="col-sm-2">
+											<label>State/Prov</label>
+											<input type="text" name="" id="" placeholder="Enter State/Prov" class="form-control">
+										</div>
+										<div class="col-sm-2">
+											<label>Postal Code</label>
+											<input type="text" name="" id="" placeholder="Enter Postal Code" class="form-control">
+										</div>
+										<div class="col-sm-2">
+											<label>Country</label>
+											<input type="text" name="" id="" placeholder="Enter Country" class="form-control">
+										</div>
+										<button type="button" class="btn btn-default height40 black-search-button btmargin"><i class="fa fa-search"></i></button>
+									</form>-->
+
+											</div>
+										</div>
+										<div *ngIf="domasticWireValue">
+											<div class="tab-pane">
+												<div class="clear"></div>
+												<div class="form-group row">
+													<!--<div class="form-group vendor-details-heading marginr50">
+														<p class="fs10">
+															<label class="control-label text-left">Vendor Name:</label>
+															{{local?.vendorName}}
+														</p>
+													</div>
+													<div class="form-group vendor-details-heading">
+														<p class="fs10">
+															<label class="control-label text-left">Vendor Code:</label>
+															{{local?.vendorCode}}
+														</p>
+													</div>-->
+												</div>
+												<h5 class="heading">Create Domestic Wire Payment</h5>
+												<div class="col-sm-6 w400">
+													<div class="pay-check-details">
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">ABA <strong class="clr-red">*</strong> </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.aba">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Account <strong class="clr-red">*</strong> </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.accountNumber">
+															</div>
+														</div>
+														<div class="form-group col-sm-126">
+															<label class="control-label col-sm-4">Bank Name <strong class="clr-red">*</strong> </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbaddress3" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.bankName">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank Address 1 </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcity" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.address1">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank Address 2 </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbstate" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.address2">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank Address 3 </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbstate" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.address2">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank City </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbpostal" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.city">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank State/Prov </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.stateOrProvince">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank Postal Code </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.postalCode">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank Country </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.country">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="clear"></div>
+												<hr class="hr-light-grey">
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="saveDomesticPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showInternational()">Go to International</button>
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showPament()">Go to Check</button>
+											</div>
+											<div class="clear"></div>
+										</div>
+
+										<div *ngIf="internationalValue">
+											<div class="tab-pane ">
+												<div class="clear"></div>
+												<div class="form-group row">
+													<!--<div class="form-group vendor-details-heading marginr50">
+														<p class="fs10">
+															<label class="control-label text-left">Vendor Name:</label>
+															{{local?.vendorName}}
+														</p>
+													</div>
+													<div class="form-group vendor-details-heading">
+														<p class="fs10">
+															<label class="control-label text-left">Vendor Code:</label>
+															{{local?.vendorCode}}
+														</p>
+													</div>-->
+												</div>
+												<h5 class="heading">Create International Wire Payment</h5>
+												<div class="col-sm-6 w400">
+													<div class="pay-check-details">
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank SWIFT <strong class="clr-red">*</strong> </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.swiftCode">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Beneficiary Bank Account </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.beneficiaryBankAccount">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Beneficiary Bank </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.beneficiaryBank">
+															</div>
+														</div>
+														<!--<div class="form-group col-sm-126">
+												<label class="control-label col-sm-4">Bank Address </label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" placeholder="Bank Address" id="vbaddress3"[ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.">
+												</div>
+											</div>
+											<div class="form-group col-sm-12">
+												<label class="control-label col-sm-4">Bank Address </label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" placeholder="Bank Address" id="vbstate"[ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.">
+												</div>
+											</div>-->
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank City </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbpostal" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.city">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank State/Prov </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.stateOrProvince">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank Postal Code </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.postalCode">
+															</div>
+														</div>
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Bank Country </label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.country">
+															</div>
+														</div>
+
+														<div class="form-group col-sm-12 input-icon1">
+															<label for="vendorName" class="control-label col-sm-4">Beneficiary Customer</label>
+															<div class="col-sm-7">
+																<div class="inner-addon right-addon inline-block">
+
+																	<p-autoComplete [(ngModel)]="internationalSaveObj.beneficiaryCustomer" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection"
+																					(completeMethod)="filterbencus($event)" [size]="30" [minLength]="1" [dropdown]="true">
+																		<ng-template let-actionName pTemplate="item">
+																			<div class="ui-helper-clearfix">{{actionName}}</div>
+																		</ng-template>
+																	</p-autoComplete>
+
+
+																</div>
+
+															</div>
+														</div>
+
+													</div>
+												</div>
+												<div class="clear"></div>
+												<hr class="hr-light-grey">
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="saveInternationalPaymentInfo()">Save</button>
+												<!--<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="nextClick()">Next</button>-->
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showDomesticWire()">Go to Domestic Wire</button>
+											</div>
+											<div class="clear"></div>
+										</div>
+
+										<div *ngIf="defaultPaymentValue">
+											<div class="tab-pane ">
+												<div class="clear"></div>
+												<div class="form-group row">
+													<!--<div class="form-group vendor-details-heading marginr50">
+														<p class="fs10">
+															<label class="control-label text-left">Vendor Name:</label>
+															{{local?.vendorName}}
+														</p>
+													</div>
+													<div class="form-group vendor-details-heading">
+														<p class="fs10">
+															<label class="control-label text-left">Vendor Code:</label>
+															{{local?.vendorCode}}
+														</p>
+													</div>-->
+												</div>
+												<h5 class="heading">Check Default Payment Method </h5>
+												<div class="col-sm-6 w400">
+													<div class="pay-check-details">
+														<div class="form-group col-sm-12">
+															<!--<label class="control-label col-sm-12 text-left">Default Payment Method </label>-->
+															<div class="col-sm-9 payment-checkboxes text-left">
+																<label class="wauto"><input type="radio" [value]="1" name="paymentradio" [(ngModel)]="defaultSaveObj.defaultPaymentMethod" [ngModelOptions]="{standalone: true}" checked="checked"> Check</label>
+																<label class="wauto"><input type="radio" [value]="2" name="paymentradio" [(ngModel)]="defaultSaveObj.defaultPaymentMethod" [ngModelOptions]="{standalone: true}"> Domestic Wire</label>
+																<label class="wauto"><input type="radio" [value]="3" name="paymentradio" [(ngModel)]="defaultSaveObj.defaultPaymentMethod" [ngModelOptions]="{standalone: true}"> International Wire</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="clear"></div>
+												<hr class="hr-light-grey">
+
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="saveDefaultPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showPament()">Go to Check</button>
+
+
+
+											</div>
+											<div class="clear"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="nextClick()">Next</button>
+		<button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+	</div>
+
+</div>
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+	<div class="modal-header">
+
+		<h4 class="modal-title">History of Action</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+
+
+	</div>
+	<div class="modal-body">
+
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>AID</th>
+						<th>Colum Name</th>
+						<th>Previous Value</th>
+						<th>New Value</th>
+						<th>Last Updated By</th>
+						<th>Last Updated Time</th>
+					</tr>
+				</thead>
+				<tr *ngFor="let audit of auditHisory">
+					<td>{{audit.auditHistoryId}}</td>
+					<td>{{audit.columnName}}</td>
+					<td>{{audit.previousValue}}</td>
+					<td>{{audit.newValue}}</td>
+					<td>{{audit.updatedBy}}</td>
+					<td>{{audit.updatedDate | date: 'MM/dd/yyyy'}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+	</div>
+</ng-template>
+
+<ng-template #view class="modal fade " id="view" role="dialog">
+
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+			<h4 class="modal-title">Vendor Details</h4>
+		</div>
+		<div class="modal-body viewform">
+			<p><span class="label"><b>site Name: </b></span><span class="value">{{siteName}}</span></p>
+			<p><span class="label"><b> address 1: </b></span><span class="value">{{address1}}</span></p>
+			<p><span class="label"><b> city </b></span><span class="value">{{city}}</span></p>
+			<p><span class="label"><b>state Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
+			<p><span class="label"><b>postal Code : </b></span><span class="value">{{postalCode}}</span></p>
+			<p><span class="label"><b>country : </b></span><span class="value">{{country}}</span></p>
+		
+			<div class="clear"></div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+		</div>
+	</div>
+
+</ng-template>
+
+
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+		  [width]="350" [minWidth]="200" [responsive]="true"
+		  [minY]="1050" [baseZIndex]="1100000">
+	<h5 [ngStyle]="{'color':'red'}">
+		Please Enter (*) Mandatory Fields
+	</h5>
+
+</p-dialog>

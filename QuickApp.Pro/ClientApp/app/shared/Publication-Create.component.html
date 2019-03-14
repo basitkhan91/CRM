@@ -1,0 +1,97 @@
+<div class="table-responsive custom-table">
+    <table class="table table-bordered ">
+  <tr>
+      <th ><label>Publication Id </label></th>
+      <th ><label>Publication Desc</label></th>
+      <th ><label>Publication Type</label></th>
+      <th ><label>Sequence </label></th>
+      <th ><label>Source </label></th>
+      <th ><label>Aircraft Manufact</label></th>
+      <th ><label>Model</label></th>
+      <th ><label>Location </label></th>
+      <th ><label>Revision </label></th>
+      <th ><label>Revision Date </label></th>
+      <th ><label>Verified By</label></th>
+      <th ><label>Verified Date </label></th>
+      <th ><label>Status </label></th>
+      <th ><label>Image </label></th>
+      <th ><label>Action </label></th>
+  </tr>
+  <tr>
+      <td colspan="15" class="add-charges">
+          <span (click)="addRow()">Add New Publication</span>
+          <i (click)="addRow()" class="fa fa-plus-circle"></i>
+      </td>
+  </tr>
+  <tr [hidden]="publ.IsDeleted" *ngFor="let publ of workFlow.publication;let i = index">
+  	<td><input [disabled]="allowEdit(publ)" type="text" class="form-control" [(ngModel)]="publ.publicationId" value="{{publ.publicationId}}"></td>
+  	<td><input [disabled]="allowEdit(publ)" type="text" class="form-control" [(ngModel)]="publ.publicationDescription" value="{{publ.publicationDescription}}"></td>
+  	<td>
+  		<select [disabled]="allowEdit(publ)" class="form-control custom-select" id="ddlPublicationTypes" [(ngModel)]="publ.publicationType">
+  			<option value="">Select</option>
+  			<option *ngFor="let type of publicationTypes" value="{{type.name}}">
+  				{{type.name}}
+  			</option>
+  		</select>
+
+  	</td>
+  	<td><input [disabled]="allowEdit(publ)" type="text" class="form-control" [(ngModel)]="publ.sequence" value="{{publ.sequence}}"></td>
+  	<td><input [disabled]="allowEdit(publ)" type="text" class="form-control" [(ngModel)]="publ.source" value="{{publ.source}}"></td>
+  	<td>
+  		<select [disabled]="allowEdit(publ)" class="form-control custom-select" id="ddlAircraftManufacturer" [(ngModel)]="publ.aircraftManufacturer" (change)="getAircraftModels(publ,publ.aircraftManufacturer)">
+  			<option value="">Select</option>
+  			<option *ngFor="let manufact of publicationAircraftManufacturers" value="{{manufact.aircraftTypeId}}">
+  				{{manufact.description}}
+  			</option>
+  		</select>
+
+  	</td>
+  	
+  	<td>
+  		<select [disabled]="allowEdit(publ)" class="form-control custom-select" id="ddlModel" [(ngModel)]="publ.model">
+  			<option value="">Select</option>
+  			<option *ngFor="let model of publ.publicationModels" value="{{model.aircraftModelId}}">
+  				{{model.modelName}}
+  			</option>
+  		</select>
+  	</td>
+  	<td>
+  		<!--<input [disabled]="allowEdit(publ)" type="text" class="form-control" [(ngModel)]="publ.location" value="{{publ.location}}">-->
+  		<select [disabled]="allowEdit(publ)" class="form-control custom-select" value="{{publ.location}}" [(ngModel)]="publ.location">
+  			<option value="">Select</option>
+  			<option *ngFor="let obj of locations" value="{{obj.name}}">
+  				{{obj.name}}
+  			</option>
+  		</select>
+  	</td>
+  	<td><input [disabled]="allowEdit(publ)" type="text" class="form-control" [(ngModel)]="publ.revision" value="{{publ.revision}}"></td>
+  	<td><input [disabled]="allowEdit(publ)" type="date" class="form-control" [(ngModel)]="publ.revisionDate" value="{{publ.revisionDate}}"></td>
+  	<td>
+		<p-autoComplete [disabled]="allowEdit(publ)" [(ngModel)]="publ.verifiedBy" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+						 [dropdown]="true">
+			<ng-template let-firstName pTemplate="item">
+				<div class="ui-helper-clearfix">{{firstName}}</div>
+			</ng-template>
+		</p-autoComplete>
+	  <!--<input [disabled]="allowEdit(publ)" type="text" class="form-control" [(ngModel)]="publ.verifiedBy" value="{{publ.verifiedBy}}">-->
+	  </td>
+  	<td><input [disabled]="allowEdit(publ)" type="date" class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></td>
+  	<td>
+  		<select [disabled]="allowEdit(publ)" class="form-control custom-select" id="ddlStatus" [(ngModel)]="publ.status">
+  			<option *ngFor="let status of publicationStatuses" value="{{status.name}}">
+  				{{status.name}}
+  			</option>
+  		</select>
+  	</td>
+  	<td><input [disabled]="allowEdit(publ)" type="file" id="myFile" value="{{publ.image}}" [(ngModel)]="publ.image"></td>
+  	<td>
+  		<span *ngIf="UpdateMode"
+				style="font-size: 22px;cursor: pointer;"
+				class="fa fa-pencil-square-o"
+				(click)="editRow(publ)"></span>
+  		<span class="fa fa-trash-o delete-btn"
+				(click)="deleteRow(i)"></span>
+  	</td>
+  </tr>
+</table>
+</div>

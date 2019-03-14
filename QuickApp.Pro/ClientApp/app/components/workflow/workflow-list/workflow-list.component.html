@@ -1,0 +1,158 @@
+﻿<div [@fadeInOut] class="page-content">
+
+	<div class="right_col" role="main">
+		<div class="x_content">
+
+
+
+			<div class="right_col" role="main">
+
+				<!--<p-table #dt [value]="allVendorList" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+		<ng-template pTemplate="caption">
+
+			<div style="text-align: right">
+				<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+							   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+
+
+				<div class="inner-addon right-addon w200 inline-block">
+					<i class="fa fa-search"></i>
+					<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+				</div>
+
+
+				<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+				<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+				<a matTooltip="Add Work Flow" (click)="AddPage()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+
+				<div class="excel-upload">
+					<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+					<label for="upload">
+						<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+					</label>
+				</div>
+			</div>
+
+
+		</ng-template>
+
+
+		<ng-template pTemplate="header" let-columns>
+			<tr>
+
+				<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+					{{col.header}}
+					<p-sortIcon [field]="col.field"></p-sortIcon>
+				</th>
+
+				<th style="width:200px"></th>
+
+			</tr>
+
+			<tr>
+				<th *ngFor="let col of columns" [ngSwitch]="col.field">
+					<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+
+				</th>
+				<th style="width:200px"></th>
+			</tr>
+		</ng-template>
+
+		<ng-template pTemplate="body" let-rowData let-columns="columns">
+			<tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+				<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+					{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+				</td>
+
+				<td>
+
+					<button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
+						<mat-icon>edit</mat-icon>
+					</button>
+
+
+				</td>
+			</tr>
+		</ng-template>
+
+	</p-table>-->
+
+
+				<p-table #dt [value]="allVendorList" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+					<ng-template pTemplate="caption">
+
+						<div style="text-align: right">
+							<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+										   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+
+
+							<div class="inner-addon right-addon w200 inline-block">
+								<i class="fa fa-search"></i>
+								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+							</div>
+
+
+							<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+							<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+							<a matTooltip="Add Work Flow" (click)="AddPage()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+
+							<div class="excel-upload">
+								<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+								<label for="upload">
+									<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+								</label>
+							</div>
+						</div>
+
+
+					</ng-template>
+					<ng-template pTemplate="header" let-columns>
+						<tr>
+
+							<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+								{{col.header}}
+								<p-sortIcon [field]="col.field"></p-sortIcon>
+							</th>
+
+							<th></th>
+
+						</tr>
+
+						<tr>
+							<th *ngFor="let col of columns" [ngSwitch]="col.field">
+								<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+
+							</th>
+							<th></th>
+						</tr>
+					</ng-template>
+
+					<ng-template pTemplate="body" let-rowData let-columns="columns">
+						<tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+							<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+								{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+							</td>
+
+							<td>
+								
+								<button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
+									<mat-icon>edit</mat-icon>
+								</button>
+
+								
+							</td>
+						</tr>
+					</ng-template>
+
+				</p-table>
+
+
+			</div>
+
+			</div>
+
+
+
+	</div>
+
+</div>

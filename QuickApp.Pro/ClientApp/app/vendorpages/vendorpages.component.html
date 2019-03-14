@@ -1,0 +1,23 @@
+﻿<!--<h3>Vendor Module</h3>
+<div *ngIf="showPTab">
+	<p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="false"></p-steps>
+</div>-->
+
+<p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+<app-vendor-steps-prime-ng></app-vendor-steps-prime-ng>
+<router-outlet></router-outlet>
+<!--<div *ngIf="matSpinner">
+	<mat-spinner [diameter]="100"></mat-spinner>
+</div>-->
+
+
+
+
+<!--<div class="row">
+	<div class="col-md-3">
+		<app-vendor-left-nav></app-vendor-left-nav>
+	</div>
+	<div class="col-md-9">
+		<router-outlet></router-outlet>
+	</div>
+</div>-->

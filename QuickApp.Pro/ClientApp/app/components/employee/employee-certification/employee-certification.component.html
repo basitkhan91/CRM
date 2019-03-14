@@ -1,0 +1,170 @@
+﻿<div [@fadeInOut] class="page-content">
+
+	<div class="right_col" role="main">
+		<div class="x_panel">
+			<div class="x_content">
+
+				<div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
+					<p class="fs10"> <label class="control-label col-sm-4">Emp First Name:</label> {{local?.firstName}}  </p>
+				</div>
+				<div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
+					<p class="fs10"><label class="control-label col-sm-4">Emp Last Name:</label>  {{local?.lastName}}</p>
+				</div>
+
+				<!--<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Employee Setup</li>
+		</ol>
+	</nav>-->
+				<h4 class="page-heading clr-green">Employee Setup</h4>
+				<div class="clear"></div><br>
+				<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
+
+					<div class="employee-setup">
+
+						<div class="col-12 employer-block">
+							<!--<div class="col-2">
+					<ul class="nav nav-pills tabs-left">
+						<li><a routerLink="/employeesmodule/employeepages/app-employee-general-information">General Information</a></li>
+						<li><a routerLink="/employeesmodule/employeepages/app-employee-certification" class="active">Certification</a></li>
+						<li><a routerLink="/employeesmodule/employeepages/app-employee-training">Training</a></li>
+					</ul>
+				</div>-->
+							<div class="col-12">
+								<div class="tab-content form-bg" id="employee-block">
+									<div class="tab-pane step-data active" id="step2">
+										<div class="tab-pane">
+											<div class="col-sm-12">
+
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-dark" />
+											<div class="col-sm-6 w400">
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification #</label>
+													<div class="col-sm-7">
+														<input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.licenseNumber">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification Type</label>
+													<div class="inner-addon col-sm-7 inline-block display-flex">
+														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLicenseTypeId">
+															<option *ngFor="let certificationtype of allCertification" [ngValue]="certificationtype.employeeLicenseTypeId">{{certificationtype.description}}</option>
+														</select>
+														<a href="#" data-toggle="modal" data-target="#addCertificationType" class="add-icon" (click)="openCertification(contentEdit)"><i class="fa fa-plus"></i></a>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certifying Institution</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.certifyingInstitution">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6 w400">
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification Date</label>
+													<div class="col-sm-7">
+														<!--<input class="form-control datepicker" type="date" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.certificationDate">-->
+
+														<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.certificationDate"></p-calendar>
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification In Force?</label>
+													<div class="col-sm-7">
+														<input class="form-control datepicker" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.isLicenseInForce">
+
+													</div>
+												</div>
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-light-grey" />
+											<button type="button" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+
+										</div>
+									</div>
+
+								</div>
+
+
+
+							</div>
+						</div>
+					</div>
+
+					<div class="clear"></div>
+
+
+
+
+
+				</form>
+				<!--Form End-->
+				<div class="pull-right"> &copy; 2018 <a>PAS</a> </div>
+
+
+			</div>
+
+
+
+
+		</div>
+		<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
+		<button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+	</div>
+
+</div>
+
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+	<div class="modal-header">
+		<h4 class="modal-title" *ngIf="isEditMode">Edit Certification Type</h4>
+		<h4 class="modal-title" *ngIf="!isEditMode">Add Certification Type</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCertification()">
+			<div class="form-group">
+				<label for="name" class="control-label">Certification Type<span class="clr-red">*</span></label>
+
+
+				<div class="inner-addon right-addon inline-block">
+
+					<p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" (onKeyUp)=certificationHandlerHandler($event) (onSelect)="certificationType($event)" [suggestions]="certificationtypeCollection" (completeMethod)="filtercertificationType($event)" [size]="30"
+									[minLength]="1" [dropdown]="true">
+						<ng-template let-description pTemplate="item">
+							<div class="ui-helper-clearfix">{{description}}</div>
+						</ng-template>
+					</p-autoComplete>
+					<div *ngIf="disablesave" class="clr-red">Entry Already Exists</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			
+			
+			<div class="form-group">
+				<div class="col-sm-6">
+					<label class="form-check-label" for="isActive">
+						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceEmployee.isActive"> Active
+					</label>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+
+			<div class="modal-footer">
+
+				<button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCreditTerms" (click)="saveCertification()">Submit</button>
+				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+			</div>
+		</form>
+	</div>
+
+</ng-template>
+
+

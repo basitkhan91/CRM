@@ -1,0 +1,335 @@
+﻿import { Injectable, Injector } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+
+import { EndpointFactory } from './endpoint-factory.service';
+import { ConfigurationService } from './configuration.service';
+
+@Injectable()
+export class StocklineEndpoint extends EndpointFactory
+{
+	private readonly _actionsUrlNew1: string = "/api/StockLine/stockLinepost1";
+
+	private readonly _deleteStockUrl: string = "/api/StockLine/deleteIntegration";
+	  
+	private readonly _actionsUrlNew: string = "/api/StockLine/stockLinepost";//which will be specified in the Controller
+
+	private readonly _actionsCompanyUrl: string = "/api/StockLine/GetCompanyData";//which will be specified in the Controller
+
+	private readonly _actionsAdjustmentToListEdit: string = "/api/StockLine/stockLineAdjustmentToListpost";//which will be specified in the Controller
+
+	private readonly _actionsAdjustmentToListIfExist: string = "/api/StockLine/stockLineAdjustmentToListpostIfExist";//which will be specified in the Controller
+
+	private readonly _actionsUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
+
+	private readonly _actionsUrl1: string = "/api/StocklineAdjustment/Get";//which will be specified in the Controller
+
+	private readonly _integrationPortalById: string = "/api/StockLine/IntegrationPortalGet";
+
+	private readonly _timeLifeGetById: string = "/api/StockLine/timeLifeGetById";
+
+	private readonly _adjustmentUrl: string = "/api/StockLine/AdjustmentGet";//which will be specified in the Controller
+
+	private readonly _adjustmentUrlNew: string = "/api/StockLine/stockLineAdjustmentpost";//which will be specified in the Controller 
+
+	private readonly _actionsTimeUrlNew: string = "/api/StockLine/PostTimeLine"; // Which will be specified in the Controller
+
+	private readonly _actionsStocklineIntegrationUrlNew: string = "/api/StockLine/PostIntegration"; // Which will be specified in the Controller
+
+	private readonly _stockLineItemMasterPart: string = "/api/StockLine/itemMasterPartUpdate"; // Which will be specified in the Controller
+
+	private readonly _stockLineTimeLifeUpdate: string = "/api/StockLine/timeLifeUpdate"; // Which will be specified in the Controller
+
+	private readonly _stockLineAdjustmentBinBeforeChange: string = "/api/StockLine/GetBinByShelfIdAdjustmentBeforeChange"; // for Stockline Adjustemnet Show Data before Select Site
+
+    private readonly _adjustmentReasonUrlNew: string = "/api/StockLine/stockLineAdjustmentReasonpost";//which will be specified in the Controller
+
+    private readonly _adjustmentReasonUrl: string = "/api/StockLine/GetAdjustmentReason";
+
+	private readonly _stockLineAdjustmentUpdate: string = "/api/StockLine/stockLineAdjustmentReasonPut";
+
+	private readonly _stockLinePOUnitCost: string = "/api/StockLine/stockLinePOUnitCostGet";
+
+	private readonly _stockLineROUnitCost: string = "/api/StockLine/stockLineROUnitCostGet";
+
+    private readonly _stockLineAdjustmentDelete: string = "/api/StockLine/stockLineAdjustmentReasonDelete";
+
+    get adjustmentReasonUrl() { return this.configurations.baseUrl + this._adjustmentReasonUrl; }
+
+
+
+	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+
+	//get adjustmentWarehouseUrl() { return this.configurations.baseUrl + this._stockLineAdjustmentWarehouseBeforeChange; }
+
+	get adjustmentUrl() { return this.configurations.baseUrl + this._actionsUrl1; }
+
+	get companyUrl() { return this.configurations.baseUrl + this._actionsCompanyUrl; }
+
+	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
+
+
+
+		super(http, configurations, injector);
+	}
+	//for getting stockline
+	getStockLineEndpoint<T>(): Observable<T> {
+
+		return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getStockLineEndpoint());
+			});
+	}
+
+
+	//for getting stocklineAdjustmentDatatype table Data
+	getStockLineAdjustmentDatatypeDataEndpoint<T>(): Observable<T> {
+
+		return this.http.get<T>(this.adjustmentUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getStockLineAdjustmentDatatypeDataEndpoint());
+			});
+	}
+
+	//for getting stocklineAdjustmentDatatype table Data
+	getStockLineCompanyListEndpoint<T>(): Observable<T> {
+
+		return this.http.get<T>(this.companyUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getStockLineCompanyListEndpoint());
+			});
+	}
+
+	//for getting new stockline Adjustment Datatype
+	getNewstockLineEndpoint<T>(userObject: any): Observable<T> {
+
+		return this.http.post<T>(this._actionsUrlNew1, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getNewstockLineEndpoint(userObject));
+			});
+	}
+
+	//for updating stockline
+	getBinDataFromShelfIdBeforeChange<T>(shelfId: number): Observable<T> {
+		
+		let endpointUrl = `${this._stockLineAdjustmentBinBeforeChange}/${shelfId}`;
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getBinDataFromShelfIdBeforeChange(shelfId));
+			});
+	}
+
+	//for updating stockline
+	getUpdatestockLineSetupEndpoint<T>(roleObject: any, stockLineId: number): Observable<T> {
+		let endpointUrl = `${this._actionsUrlNew}/${roleObject.stockLineId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdatestockLineSetupEndpoint(roleObject, stockLineId));
+			});
+	}
+
+	//For Updating Stockline TimeLife
+	getUpdatestockLineTimeLifeEndpoint<T>(roleObject: any, timeLifeCyclesId: number): Observable<T> {
+		let endpointUrl = `${this._stockLineTimeLifeUpdate}/${roleObject.timeLifeCyclesId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdatestockLineTimeLifeEndpoint(roleObject, timeLifeCyclesId));
+			});
+	}
+
+	//for updating stockline Adjustment to StockLine List
+	getUpdateStockLineAdjustmentToListEndpoint<T>(roleObject: any, stockLineId: number): Observable<T> {
+		let endpointUrl = `${this._actionsAdjustmentToListEdit}/${roleObject.StockLineId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdateStockLineAdjustmentToListEndpoint(roleObject, stockLineId));
+			});
+	}
+
+
+	//for updating stockline Adjustment to StockLine List if Already Exist
+	getUpdateStockAdjustmentToListIfExistEndpoint<T>(roleObject: any, stockLineId: number): Observable<T> {
+		let endpointUrl = `${this._actionsAdjustmentToListIfExist}/${roleObject.stockLineId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdateStockAdjustmentToListIfExistEndpoint(roleObject, stockLineId));
+			});
+	}
+
+	
+	//for getting IntegrationPortal Get
+	getStockLineIntegrationPortalByIdEndpoint<T>(stockLineId: any): Observable<T> {
+		let endpointUrl = `${this._integrationPortalById}/${stockLineId}`;
+
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getStockLineIntegrationPortalByIdEndpoint(stockLineId));
+			});
+	}
+
+	//for getting TieLife By Id Get
+	getStockLineTimeLifeByIdEndpoint<T>(timeLifeCycleId: any): Observable<T> {
+		let endpointUrl = `${this._timeLifeGetById}/${timeLifeCycleId}`;
+
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getStockLineTimeLifeByIdEndpoint(timeLifeCycleId));
+			});
+	}
+
+	//for getting stockline adjustment
+	getStockLineAdjustmentEndpoint<T>(stockLineId: any): Observable<T> {
+		let endpointUrl = `${this._adjustmentUrl}/${stockLineId}`;
+
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getStockLineAdjustmentEndpoint(stockLineId));
+			});
+	}
+
+	//for  new stocklineadjustment Data
+	getNewstockLineAdjustmentEndpoint<T>(userObject: any): Observable<T> {
+		
+		return this.http.post<T>(this._adjustmentUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getNewstockLineAdjustmentEndpoint(userObject));
+			});
+	}
+
+	//for updating stockline adjustment in Part-A
+	getUpdatestockLineAdjustmentEndpoint<T>(roleObject: any, stockLineId: number): Observable<T> {
+		let endpointUrl = `${this._adjustmentUrlNew}/${roleObject.stockLineId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdatestockLineAdjustmentEndpoint(roleObject, stockLineId));
+			});
+	}
+
+
+	getNewstockLineTimeAdjustmentEndpoint<T>(userObject: any): Observable<T> {
+
+		return this.http.post<T>(this._actionsTimeUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getNewstockLineTimeAdjustmentEndpoint(userObject));
+			});
+	}
+
+	
+
+	saveStocklineIntegrationPortalDataEndpoint<T>(userObject: any): Observable<T> {
+
+		return this.http.post<T>(this._actionsStocklineIntegrationUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.saveStocklineIntegrationPortalDataEndpoint(userObject));
+			});
+	}
+
+	getUpdatestockLineTimeAdjustmentEndpoint<T>(roleObject: any, stockLineId: number): Observable<T> {
+		let endpointUrl = `${this._adjustmentUrlNew}/${roleObject.stockLineId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdatestockLineTimeAdjustmentEndpoint(roleObject, stockLineId));
+			});
+	}
+
+	getUpdateItemMasterPartEndpoint<T>(roleObject: any): Observable<T> {
+		let endpointUrl = `${this._stockLineItemMasterPart}/${roleObject.itemMasterId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdateItemMasterPartEndpoint(roleObject));
+			});
+	}
+
+    //for Stockline Adjustment Reason
+
+    getStocklineAdjustmentReasonEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.adjustmentReasonUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getStocklineAdjustmentReasonEndpoint());
+            });
+    }
+
+    getNewstockLineAdjustmentReasonEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._adjustmentReasonUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewstockLineAdjustmentReasonEndpoint(userObject));
+            });
+    }
+
+    getUpdateStocklineAdjustmentReasonEndpoint<T>(roleObject: any): Observable<T> {
+		let endpointUrl = `${this._stockLineAdjustmentUpdate}/${roleObject.adjustmentReasonId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateStocklineAdjustmentReasonEndpoint(roleObject));
+            });
+    }
+
+	getDeleteStocklineAdjustmentReasonEndpoin<T>(roleObject: any): Observable<T> {
+		let endpointUrl = `${this._stockLineAdjustmentDelete}/${roleObject.adjustmentReasonId}`;
+
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDeleteStocklineAdjustmentReasonEndpoin(roleObject));
+            });
+	}
+
+	getPOUnitCostEndpoint<T>(roleObject: any): Observable<T> {
+		//let endpointUrl = `${this._stockLinePOUnitCost}/${roleObject.itemMasterId}`;
+
+		return this.http.post<T>(this._stockLinePOUnitCost, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getPOUnitCostEndpoint(roleObject));
+			});
+	}
+    
+	
+	getROUnitCostEndpoint<T>(roleObject: any): Observable<T> {
+		//let endpointUrl = `${this._stockLinePOUnitCost}/${roleObject.itemMasterId}`;
+
+		return this.http.post<T>(this._stockLineROUnitCost, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getROUnitCostEndpoint(roleObject));
+			});
+	}
+
+	//getDeleteIntegrationEndpoint
+
+	getDeleteIntegrationEndpoint<T>(actionId: number): Observable<T> {
+		let endpointUrl = `${this._deleteStockUrl}/${actionId}`;
+
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getDeleteIntegrationEndpoint(actionId));
+			});
+	}
+
+
+	//updatestocklinelistStattus<T>(rowData: any): Observable<T> {
+	//	let endpointUrl = `${this._updateliststatus}/${rowData.sourceStockLine}`;
+
+	//	return this.http.put<T>(endpointUrl, JSON.stringify(rowData), this.getRequestHeaders())
+	//		.catch(error => {
+	//			return this.handleError(error, () => this.updatestocklinelistStattus(rowData));
+	//		});
+	//}
+
+	//getdeleteStockLineAction<T>(roleObject: any): Observable<T> {
+	//	let endpointUrl = `${this._customerBillingUrlNew}/${roleObject.customerBillingId}`;
+	//	return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+	//		.catch(error => {
+	//			return this.handleError(error, () => this.getdeleteStockLineAction(roleObject));
+	//		});
+	//}
+
+}

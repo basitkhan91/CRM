@@ -1,0 +1,299 @@
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+        <div class="col-md-12">
+            <div class="x_panel" style="">
+                <div class="x_content">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a routerLink="/">WO Setup</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Main Component</li>
+                        </ol>
+                    </nav>
+                    <div class="pheading">
+                        <h4 class="page-heading clr-green">WO Setup - Main Component</h4>
+                    </div>
+                    <div class="cdetails-top">
+                        <div class="col-sm-12">
+                            <label>Company</label>
+                            <span>Silverxis</span>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>BU</label>
+                            <span>Adso</span>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>Division</label>
+                            <span>Development</span>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>Dept</label>
+                            <span>Java</span>
+                        </div>
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-12 po-ro-setup">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="employee-setup">
+                        <div class="col-md-12 col-sm-12 col-12 employer-block">
+                            <div class="col-2">
+                                <ul class="nav nav-pills tabs-left">
+                                    <li class="active"><a href="#step1" data-toggle="tab" aria-expanded="true">Repair</a></li>
+                                    <li><a href="#step2" data-toggle="tab" aria-expanded="false">RO for Main Component</a></li>
+                                    <li><a href="#step3" data-toggle="tab">Change from an Internal to External (or vice Versa)</a></li>
+                                    <li><a href="#step4" data-toggle="tab">Return Main Component to Customer (No Work Performed - no capes)</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-10">
+                                <div class="tab-content form-bg" id="employee-block">
+                                    <div class="tab-pane step-data active" id="step1">
+                                        <div class="col-sm-4">
+                                            <label class="wauto"><input type="radio" name="ro-type" id="existing-ro" value="existing-ro" checked /> Add to An Existing RO</label>
+                                            <label class="wauto"><input type="radio" name="ro-type" id="new-ro" value="new-ro" /> Create A New RO</label>
+                                            <div class="clear"></div>
+                                            <hr />
+
+                                        </div>
+                                        <div class="tab-content">
+                                            <div class="table-responsive default-bg clear ro-grid-table">
+                                                <div class="existing-ro">
+                                                    <p>Add to An Existing RO</p>
+                                                
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>WO Num</th>
+                                                                <th>RO Num</th>
+                                                                <th># of Items</th>
+                                                                <th>Unit Cost</th>
+                                                                <th>Extended Cost</th>
+                                                                <th>Currency</th>
+                                                                <th>Vendor</th>
+                                                                <th>Opened Date</th>
+                                                                <th>Need By Date</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="parent-data">
+                                                                <td></td>
+                                                                <td>12967</td>
+                                                                <td>2</td>
+                                                                <td> 3,455.00 </td>
+                                                                <td> 6,910.00 </td>
+                                                                <td>USD</td>
+                                                                <td>ABC Aero</td>
+                                                                <td>2/23/2018</td>
+                                                                <td>3/25/2018</td>
+                                                                <td>
+                                                                    <span data-toggle="modal" data-target="#">
+                                                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
+                                                                    </span>
+                                                                    <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
+                                                                    <span data-toggle="modal" data-target="#">
+                                                                        <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="parent-data">
+                                                                <td></td>
+                                                                <td>324566</td>
+                                                                <td>3</td>
+                                                                <td> 3,455.00 </td>
+                                                                <td> 10,365.00 </td>
+                                                                <td>USD</td>
+                                                                <td>ABC Aero</td>
+                                                                <td>2/20/2018</td>
+                                                                <td>3/18/2018</td>
+                                                                <td>
+                                                                    <span data-toggle="modal" data-target="#">
+                                                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
+                                                                    </span>
+                                                                    <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
+                                                                    <span data-toggle="modal" data-target="#">
+                                                                        <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="new-ro">
+                                                    <p>Create A New RO</p>
+                                                    
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>WO #</th>
+                                                                <th>PN</th>
+                                                                <th>Description</th>
+                                                                <th>Stock Line</th>
+                                                                <th>SN</th>
+                                                                <th>Qty to Repair</th>
+                                                                <th>Qty Reserved</th>
+                                                                <th colspan="3"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="child-data">
+                                                                <td>9675</td>
+                                                                <td>28B141</td>
+                                                                <td>Housing</td>
+                                                                <td>10</td>
+                                                                <td>67855</td>
+                                                                <td>1</td>
+                                                                <td>1</td>
+                                                                <td colspan="3">
+                                                                    <span data-toggle="modal" data-target="#">
+                                                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
+                                                                    </span>
+                                                                    <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
+                                                                    <span data-toggle="modal" data-target="#">
+                                                                        <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
+                                                                    </span>
+                                                                    <span data-toggle="modal" data-target="#">
+                                                                        <a routerLink="/app-receiving-po-ro-setup" class="btn btn-success nobg" data-toggle="tooltip" title="Create RO"><i class="fa fa-plus"></i></a>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane step-data" id="step2">
+                                        <div class="tab-content">
+                                            <div class="table-responsive default-bg clear ro-grid-table">
+
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>RO Num</th>
+                                                            <th># of Items</th>
+                                                            <th>Cost</th>
+                                                            <th>Extended Cost</th>
+                                                            <th>Currency</th>
+                                                            <th>Vendor</th>
+                                                            <th>Opened Date</th>
+                                                            <th>Need By Date</th>
+                                                            <th>Status</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="parent-data">
+                                                            <td>12967</td>
+                                                            <td>1</td>
+                                                            <td> 5,501.00 </td>
+                                                            <td> 5,501.00 </td>
+                                                            <td>USD</td>
+                                                            <td>ABC Aero</td>
+                                                            <td>2/23/2018</td>
+                                                            <td>3/25/2018</td>
+                                                            <td>Closed</td>
+                                                            <td>
+                                                                <span data-toggle="modal" data-target="#">
+                                                                    <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
+                                                                </span>
+
+                                                                <span data-toggle="modal" data-target="#">
+                                                                    <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="parent-data">
+                                                            <td>324566</td>
+                                                            <td>1</td>
+                                                            <td> 3,455.00 </td>
+                                                            <td> 3,455.00 </td>
+                                                            <td>USD</td>
+                                                            <td>Premier Turbine</td>
+                                                            <td>2/20/2018</td>
+                                                            <td>3/18/2018</td>
+                                                            <td>Open</td>
+                                                            <td>
+                                                                <span data-toggle="modal" data-target="#">
+                                                                    <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
+                                                                </span>
+                                                                <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
+                                                                <span data-toggle="modal" data-target="#">
+                                                                    <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane step-data" id="step3">
+                                        <p class="clr-red">Data not Provided</p>
+                                    </div>
+                                    <div class="tab-pane step-data" id="step4">
+                                        <div class="tab-content">
+                                            <div class="table-responsive default-bg clear ro-grid-table">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>WO #</th>
+                                                            <th>Customer</th>
+                                                            <th>PN</th>
+                                                            <th>Description</th>
+                                                            <th>Stock Line</th>
+                                                            <th>SN</th>
+                                                            <th>Qty to Return</th>
+                                                            <th>Qty Reserved</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="parent-data">
+                                                            <td>9675</td>
+                                                            <td>US Air</td>
+                                                            <td>28B141</td>
+                                                            <td>Housing</td>
+                                                            <td>10</td>
+                                                            <td>67855</td>
+                                                            <td>1</td>
+                                                            <td>1</td>
+                                                            <td>
+                                                                <span data-toggle="modal" data-target="#">
+                                                                    <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
+                                                                </span>
+                                                                <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
+                                                                <span data-toggle="modal" data-target="#">
+                                                                    <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
+                                                                </span>
+                                                                <span data-toggle="modal" data-target="#">
+                                                                    <a class="btn btn-success nobg" data-toggle="tooltip" title="Create Shipping"><i class="fa fa-plus"></i></a>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</div>

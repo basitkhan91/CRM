@@ -1,0 +1,710 @@
+﻿// ===============================
+// info@ebenmonney.com
+// www.ebenmonney.com/quickapp-pro
+// ===============================
+
+import { Component } from "@angular/core";
+import { MenuItem } from 'primeng/api';
+import { Message } from 'primeng/components/common/message';
+import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
+import { BreadcrumbModule } from 'primeng/breadcrumb'; //Bread Crumb
+import { SingleScreenBreadcrumbService } from "../services/single-screens-breadcrumb.service";
+@Component({
+	selector: "quickapp-pro-singlepages",
+	templateUrl: './singlepages.component.html'
+})
+export class SingleComponent {
+	otherurl: any;
+	currentUrl: string;
+
+	public items: MenuItem[];
+	home: MenuItem;
+
+	constructor(private router: ActivatedRoute, private route: Router, private singleScreenBreadCrumb: SingleScreenBreadcrumbService) {
+
+		this.singleScreenBreadCrumb.bredcrumbObjChangeObject$.subscribe(value => {
+			//debugger
+			this.otherurl = value;
+			this.loadmethod(this.otherurl);
+
+		});
+
+	}
+
+	ngOnInit() {
+
+
+
+		this.currentUrl = this.route.url;
+		//debugger
+		this.loadmethod(this.currentUrl)
+
+	}
+
+	loadmethod(url) {
+
+		this.currentUrl = url;
+		if (this.currentUrl) {
+			if (this.currentUrl == '/singlepages/singlepages/app-actions') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Actions' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-manufacturer') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Manufacturer' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-vendorcapabilities') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Vendor Capabilities' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-labor-and-overhead-cost-setup') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Labor And Overhead Cost Setup' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-glaccount-category') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Expenditure Type' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-certification-type') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Certification Type' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-action-attributes') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Actions Attributes' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-ata-main') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'ATA Chapter' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-charges') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Charges' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-conditions') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Condition' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-credit-terms') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Credit Terms' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-currency') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Currency' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-customer-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Customer Classification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-documents') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Documents' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-default-message') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Default Message' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-employee-expertise') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'EmployeeExpertise' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Expenditure' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-findings') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Finding' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-gate-code') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Status Code' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-integration') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Integration' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-item-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Item Classification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-item-group') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Item Group' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-job-title') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Job Titles' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-priority') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Priority' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-provision') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Provision' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-publication') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Publication' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-reason') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Reason' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-tax-type') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'TaxType' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-tax-rate') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'TaxRate' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-unit-of-measure') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'UnitOf Measure' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-vendor-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'VendorClassification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-work-performed') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'WorkPerformed' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-work-scope') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'WorkScope' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-action-attribute-mapping') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Action Attribute Mapping' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-ata-sub-chapter1') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'ATA Sub Chapter' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-ata-sub-chapter2') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'ATA Sub Chapter 2' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-capabilities') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Capabilities' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-financial-statement-mapping') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Financial Statement Mapping' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-gl-account-class') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'GL Account Class' }
+				];
+			}
+			
+			else if (this.currentUrl == '/singlepages/singlepages/app-gl-cash-flow-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'GlCashFlowClassification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-gl-financial-statement') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'GL Financial Statement' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-journal-approvals') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Journal Approvals' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-rfq-engine') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'RFQ Engine' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-site') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Site' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-warehouse') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'WareHouse' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-location') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Location' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-shelf') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Shelf' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-bin') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Bin' }
+				];
+			}
+		}
+
+		
+		if (this.otherurl) {
+			if (this.currentUrl == '/singlepages/singlepages/app-actions') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Actions' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-action-attributes') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Actions Attributes' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-ata-main') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'ATA Chapter' }
+				];
+			}
+
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-charges') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Charges' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-conditions') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Condition' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-credit-terms') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Credit Terms' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-currency') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Currency' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-customer-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Customer Classification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-documents') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Documents' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-default-message') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Default Message' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-employee-expertise') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'EmployeeExpertise' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Expenditure' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-findings') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Finding' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-gate-code') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Gate Code' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-integration') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Integration' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-item-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Item Classification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-item-group') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Item Group' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-job-title') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Job Titles' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-priority') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Priority' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-provision') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Provision' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-publication') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Publication' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-reason') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Reason' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-tax-type') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'TaxType' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-tax-rate') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'TaxRate' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-unit-of-measure') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'UnitOf Measure' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-vendor-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'VendorClassification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-work-performed') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'WorkPerformed' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-work-scope') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'WorkScope' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-action-attribute-mapping') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Action Attribute Mapping' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-ata-sub-chapter1') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'ATA Sub Chapter' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-ata-sub-chapter2') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'ATA Sub Chapter 2' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-capabilities') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Capabilities' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-financial-statement-mapping') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Financial Statement Mapping' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-gl-account-class') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'GL Account Class' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-glaccount-category') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Expenditure Type' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-app-certification-type') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Certification Type' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-gl-cash-flow-classification') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'GlCashFlowClassification' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-gl-financial-statement') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'GL Financial Statement' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-journal-approvals') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Journal Approvals' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-rfq-engine') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'RFQ Engine' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-site') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Site' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-labor-and-overhead-cost-setup') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Labor And Overhead Cost Setup' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-warehouse') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Warehouse' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-manufacturer') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Manufacturer' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/app-vendorcapabilities') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Vendor Capabilities' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-shelf') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Shelf' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-bin') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Bin' }
+				];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-location') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Location' }
+				];
+			}
+
+		}
+	}
+}

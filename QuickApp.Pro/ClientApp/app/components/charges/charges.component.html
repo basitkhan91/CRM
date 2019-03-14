@@ -1,0 +1,535 @@
+﻿<div [@fadeInOut] class="page-content">
+	<div class="right_col" role="main">
+		<div class="x_panel">
+			<div class="x_content">
+				<!--<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Charges</li>
+					</ol>
+				</nav>-->
+
+				<h4 class="page-heading clr-green">Charges</h4>
+
+				<span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
+				<p-table #dt [value]="allChargeinfo" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+					<ng-template pTemplate="caption">
+
+						<div style="text-align: right">
+							<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+										   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+
+							<div class="inner-addon right-addon w200 inline-block">
+								<i class="fa fa-search"></i>
+								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+							</div>
+							<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+							<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+							<a (click)="open(contentEdit)" matTooltip="Add Charges" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+							<div class="excel-upload">
+								<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+								<label for="upload">
+									<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+								</label>
+							</div>
+						</div>
+
+
+					</ng-template>
+					<ng-template pTemplate="colgroup" let-columns>
+						<colgroup>
+							<col *ngFor="let col of columns" style="width:130px">
+						</colgroup>
+					</ng-template>
+					<ng-template pTemplate="header" let-columns>
+						<tr>
+
+							<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+								{{col.header}}
+								<p-sortIcon [field]="col.field"></p-sortIcon>
+							</th>
+
+							<th style="width:200px"></th>
+
+						</tr>
+					</ng-template>
+
+					<ng-template pTemplate="body" let-rowData let-columns="columns">
+						<tr [pSelectableRow]="rowData">
+
+
+							<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+								{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+							</td>
+
+							<td style="width:200px">
+								<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+								<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+								<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+								<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+								<button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
+									<mat-icon>edit</mat-icon>
+								</button>
+
+								<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
+									<mat-icon color="warn">delete</mat-icon>
+								</button>
+
+								<button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+									<mat-icon color="green">history</mat-icon>
+								</button>
+
+							</td>
+
+						</tr>
+					</ng-template>
+
+
+
+
+
+				</p-table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Delete Contact Modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+	<div class="modal-header">
+		<h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+		<button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+	</div>
+</ng-template>
+
+
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+	<div class="modal-header">
+		<h4 class="modal-title" *ngIf="isEditMode">Edit Charges</h4>
+		<h4 class="modal-title" *ngIf="!isEditMode">Add Charges</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	<div class="modal-body">
+
+		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
+			<div class="row">
+			
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="chargeName" class="control-label">Charges <span class="clr-red">*</span></label>
+					<div class="inner-addon right-addon inline-block">
+
+						<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="chargeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterCharges($event)" [size]="30"
+										[minLength]="1" [dropdown]="true">
+							<ng-template let-chargeName pTemplate="item">
+								<div class="ui-helper-clearfix">{{chargeName}}</div>
+							</ng-template>
+						</p-autoComplete>
+						<div *ngIf="disableSave" style="color:red">Already Exist</div>
+					</div>
+					</div>
+					<div class="form-group">
+						<label for="quantity" class="control-label">QTY</label>
+						<div class="control-data">
+							<input name="quantity" #quantity="ngModel" id="quantity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.quantity">
+
+						</div>
+
+					</div>
+
+					<div class="form-group">
+						<label for="description" class="control-label">Description</label>
+						<div class="control-data">
+							<input name="description" #description="ngModel" id="description" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.description">
+						</div>
+
+					</div>
+
+					<div class="form-group">
+						<label class="control-label col-sm-4">Currency</label>
+						<div class="inner-addon right-addon autosuggesions-add inline-block">
+							<select [(ngModel)]="sourceAction.currencyId" [ngModelOptions]="{standalone: true}">
+								<option *ngFor="let currency of allCurrencyinfo" [ngValue]="currency.currencyId">{{currency.symbol}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="cost" class="control-label">Cost</label>
+						<div class="control-data">
+							<input name="cost" #cost="ngModel" id="cost" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.cost">
+
+						</div>
+
+					</div>
+					<!-- It will Be drop Down -->
+					<div class="form-group">
+						<label for="markUp" class="control-label">Mark Up</label>
+						<div class="control-data">
+							<!--<input name="markUp" #markUp="ngModel" id="markUp" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.markUp">-->
+							<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.markUp">
+								<option value="0">0%</option>
+								<option value="1">1%</option>
+								<option value="2">2%</option>
+								<option value="3">3%</option>
+								<option value="4">4%</option>
+								<option value="5">5%</option>
+								<option value="6">6%</option>
+								<option value="7">7%</option>
+								<option value="8">8%</option>
+								<option value="9">9%</option>
+								<option value="10">10%</option>
+								<option value="11">11%</option>
+								<option value="12">12%</option>
+								<option value="13">13%</option>
+								<option value="14">14%</option>
+								<option value="15">15%</option>
+								<option value="16">16%</option>
+								<option value="17">17%</option>
+								<option value="18">18%</option>
+								<option value="19">19%</option>
+								<option value="20">20%</option>
+								<option value="21">21%</option>
+								<option value="22">22%</option>
+								<option value="23">23%</option>
+								<option value="24">24%</option>
+								<option value="25">25%</option>
+								<option value="26">26%</option>
+								<option value="27">27%</option>
+								<option value="28">28%</option>
+								<option value="29">29%</option>
+								<option value="30">30%</option>
+								<option value="31">31%</option>
+								<option value="32">32%</option>
+								<option value="33">33%</option>
+								<option value="34">34%</option>
+								<option value="35">35%</option>
+								<option value="36">36%</option>
+								<option value="37">37%</option>
+								<option value="38">38%</option>
+								<option value="39">39%</option>
+								<option value="40">40%</option>
+								<option value="41">41%</option>
+								<option value="42">42%</option>
+								<option value="43">43%</option>
+								<option value="44">44%</option>
+								<option value="45">45%</option>
+								<option value="46">46%</option>
+								<option value="47">47%</option>
+								<option value="48">47%</option>
+								<option value="49">49%</option>
+								<option value="50">50%</option>
+								<option value="51">51%</option>
+								<option value="52">52%</option>
+								<option value="53">53%</option>
+								<option value="54">54%</option>
+								<option value="55">55%</option>
+								<option value="56">56%</option>
+								<option value="57">57%</option>
+								<option value="58">58%</option>
+								<option value="59">59%</option>
+								<option value="60">60%</option>
+								<option value="61">61%</option>
+								<option value="62">62%</option>
+								<option value="63">63%</option>
+								<option value="64">64%</option>
+								<option value="65">65%</option>
+								<option value="66">66%</option>
+								<option value="67">67%</option>
+								<option value="68">68%</option>
+								<option value="69">69%</option>
+								<option value="70">70%</option>
+								<option value="71">71%</option>
+								<option value="72">72%</option>
+								<option value="73">73%</option>
+								<option value="74">74%</option>
+								<option value="75">75%</option>
+								<option value="76">76%</option>
+								<option value="77">77%</option>
+								<option value="78">78%</option>
+								<option value="79">79%</option>
+								<option value="80">80%</option>
+								<option value="81">81%</option>
+								<option value="82">82%</option>
+								<option value="83">83%</option>
+								<option value="84">84%</option>
+								<option value="85">85%</option>
+								<option value="86">86%</option>
+								<option value="87">87%</option>
+								<option value="88">88%</option>
+								<option value="89">89%</option>
+								<option value="90">90%</option>
+								<option value="91">91%</option>
+								<option value="92">92%</option>
+								<option value="93">93%</option>
+								<option value="94">94%</option>
+								<option value="95">95%</option>
+								<option value="96">96%</option>
+								<option value="97">97%</option>
+								<option value="98">98%</option>
+								<option value="99">99%</option>
+								<option value="100">100%</option>
+							</select>
+						</div>
+
+					</div>
+
+					<div class="form-group">
+						<label for="cost" class="control-label">Billable Amount:</label>
+						<div class="control-data">
+							<input name="cost" #cost="ngModel" id="cost" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.billableAmount">
+
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label for="purchaseOrderId" class="control-label">PO</label>
+						<div class="control-data">
+							<div class="inner-addon right-addon autosuggesions-add inline-block">
+								<select [(ngModel)]="sourceAction.purchaseOrderId" [ngModelOptions]="{standalone: true}">
+									<option *ngFor="let po of allPOinfo" [ngValue]="po.purchaseOrderId">{{po.purchaseOrderNumber}}</option>
+								</select>
+							</div>
+							<!--<input name="purchaseOrderId" #purchaseOrderId="ngModel" id="purchaseOrderId" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.purchaseOrderId">-->
+
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label for="vendorId" class="control-label">Vendor Name</label>
+						<div class="control-data">
+							<div class="inner-addon right-addon autosuggesions-add inline-block">
+								<select [(ngModel)]="sourceAction.vendorId" [ngModelOptions]="{standalone: true}">
+									<option *ngFor="let vendor of allVendorinfo" [ngValue]="vendor.vendorId">{{vendor.vendorName}}</option>
+								</select>
+							</div>
+							<!--<input name="vendorId" #vendorId="ngModel" id="vendorId" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.vendorId">-->
+
+						</div>
+
+					</div>
+
+					<div class="form-group">
+						<label for="integrationPortalId" class="control-label">Integration</label>
+						<div class="control-data">
+							<div class="inner-addon right-addon autosuggesions-add inline-block">
+								<select [(ngModel)]="sourceAction.integrationPortalId" [ngModelOptions]="{standalone: true}">
+									<option *ngFor="let integration of copyOfAllIntegrationInfo" [ngValue]="integration.integrationPortalId">{{integration.description}}</option>
+								</select>
+							</div>
+							<!--<input name="integrationPortalId" #integrationPortalId="ngModel" id="integrationPortalId" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.integrationPortalId">-->
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label for="generalLedgerId" class="control-label">GL Acct</label>
+						<div class="control-data">
+							<input name="generalLedgerId" #generalLedgerId="ngModel" id="generalLedgerId" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.generalLedgerId">
+
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label for="description" class="control-label">Memo</label>
+						<div class="control-data">
+							<input name="description" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
+
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-4">Management Structure</label>
+						<div class="col-sm-7">
+							<select [(ngModel)]="sourceAction.managementStructureId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceAction.managementStructureId)">
+								<option *ngFor="let ataName of copyOfAllManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+			<div class="col-md-6">
+				<div  class="form-group col-sm-12" *ngIf="showManagement">
+					<p-treeTable [value]="gridData" [columns]="cols1" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedNode">
+
+						<ng-template pTemplate="header" let-columns>
+							<tr>
+								<th *ngFor="let col of columns">
+									{{col.header}}
+								</th>
+
+							</tr>
+						</ng-template>
+						<ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+
+							<tr [ttSelectableRow]="rowNode">
+								<td *ngFor="let col of columns; let i = index">
+									<p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+									{{rowData[col.field]}}
+								</td>
+								<!--<td>
+
+
+					<a (click)="openEdit(contentEdit,rowNode)" matTooltip="Add Child" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+
+					<button class="btn-edit" mat-icon-button (click)="openContentEdit(contentEdit,rowData)" matTooltip="Edit Entity">
+						<mat-icon>edit</mat-icon>
+					</button>
+					<button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+						<mat-icon color="warn">delete</mat-icon>
+					</button>
+					<button class="btn-history" mat-icon-button matTooltip="history">
+						<mat-icon color="green">history</mat-icon>
+					</button>
+				</td>-->
+							</tr>
+
+
+						</ng-template>
+					</p-treeTable>
+				</div>
+			</div>
+
+			</div>
+
+			<!--<div class="form-group">
+		<label for="functionalCurrencyId" class="control-label">FCI</label>
+		<div class="control-data">
+			<input name="functionalCurrencyId" #functionalCurrencyId="ngModel" id="functionalCurrencyId" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.functionalCurrencyId" required minlength="2">
+			<div *ngIf="functionalCurrencyId.dirty && functionalCurrencyId.errors?.required && functionalCurrencyId.errors" class="invalid-form-error-message">
+				Memo is required.
+			</div>
+			<div *ngIf="functionalCurrencyId.dirty && functionalCurrencyId.errors?.minlength && functionalCurrencyId.errors" class="invalid-form-error-message">
+				vendorId must be at least 2 characters long.
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>-->
+
+
+
+			<div class="form-group">
+				<div class="col-sm-6">
+					<label class="form-check-label" for="isActive">
+						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+					</label>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+
+			<div class="modal-footer">
+
+				<button class="btn btn-success" [disabled]="disableSave">Submit</button>
+				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+			</div>
+		</form>
+	</div>
+
+</ng-template>
+
+
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+	<div class="modal-header">
+
+		<h4 class="modal-title">History of Charges</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>AID</th>
+						<th>Charges Description</th>
+						<th>Previous Value</th>
+						<th>New Value</th>
+						<th>Last Updated By</th>
+						<th>Last Updated Time</th>
+					</tr>
+				</thead>
+				<tr *ngFor="let audit of auditHisory">
+					<td>{{audit.auditHistoryId}}</td>
+					<td>{{audit.columnName}}</td>
+					<td>{{audit.previousValue}}</td>
+					<td>{{audit.newValue}}</td>
+					<td>{{audit.updatedBy}}</td>
+					<td>{{audit.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+	</div>
+</ng-template>
+
+<ng-template #view class="modal fade" id="view" role="dialog">
+
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+			<h4 class="modal-title">Charges Details</h4>
+		</div>
+		<div class="modal-body viewform">
+			<div class="col-md-6">
+				<p><span class="label"><b>Charge Name: </b></span><span class="value">{{charge_Name}}</span></p>
+				<p><span class="label"><b>Quantity: </b></span><span class="value">{{quantity}}</span></p>
+				<p><span class="label"><b>Description: </b></span><span class="value">{{description}}</span></p>
+				<p><span class="label"><b>Currency: </b></span><span class="value">{{currencySymbol}}</span></p>
+				<p><span class="label"><b>Cost: </b></span><span class="value">{{cost}}</span></p>
+				<p><span class="label"><b>Mark Up (%): </b></span><span class="value">{{markUp}}</span></p>
+				<p><span class="label"><b>Billable Amount: </b></span><span class="value">{{billableAmount}}</span></p>
+				<p><span class="label"><b>PO : </b></span><span class="value">{{purchaseOrderNumber}}</span></p>
+				<p><span class="label"><b>Vendor Name: </b></span><span class="value">{{vendorName}}</span></p>
+			</div>
+			<div class="col-md-6">
+				<p><span class="label"><b>IntegrationPortalId: </b></span><span class="value">{{integrationPortalDescription}}</span></p>
+				<p><span class="label"><b>GeneralLedger Account: </b></span><span class="value">{{generalLedgerId}}</span></p>
+				<p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
+				<p><span class="label"><b>Status: </b></span><span class="value">{{isActive}}</span></p>
+			</div>
+
+			<div class="clear"></div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+		</div>
+	</div>
+
+</ng-template>
+
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
+
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+			<h4 class="modal-title">Help text about the page</h4>
+		</div>
+		<div class="modal-body">
+			<p>Sample Point 1 about Page Description</p>
+			<p>Sample Point 2 about Page Description</p>
+			<p>Sample Point 3 about Page Description</p>
+			<p>Sample Point 4 about Page Description</p>
+			<p>Sample Point 5 about Page Description</p>
+
+			<p><b>Excell format to upload the Data - <a href="documents/action-table-format.xlsx" class="clr-red">Download</a></b></p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-success" data-dismiss="modal" (click)="dismissModel()">Close</button>
+		</div>
+	</div>
+
+</ng-template>

@@ -1,0 +1,637 @@
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main" style="min-height: 629px;">
+        <div class="x_panel" style="">
+            <div class="x_content add-customer-work">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a routerLink="/app-customer-work-list">Receiving Customer Works</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Receiving Customer Unit</li>
+                    </ol>
+                </nav>
+                <div class="pheading">
+                    <h4 class="page-heading clr-green">Receiving </h4>
+                </div>
+                <div class="cdetails-top">
+                    <div class="col-sm-12">
+                        <label>Company</label>
+                        <span>
+                            <select>
+                                <option value="">Adso</option>
+                                <option value="">Aerospace</option>
+                                <option value="">ILS</option>
+                                <option value="">PArts Base</option>
+                                <option value="">PAS</option>
+                                <option value="">Silverxis</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>BU</label>
+                        <span>
+                            <select>
+                                <option value="">Adso</option>
+                                <option value="">Aerospace</option>
+                                <option value="">ILS</option>
+                                <option value="">PArts Base</option>
+                                <option value="">PAS</option>
+                                <option value="">Silverxis</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>Division</label>
+                        <span>
+                            <select>
+                                <option value="">Adso</option>
+                                <option value="">Aerospace</option>
+                                <option value="">ILS</option>
+                                <option value="">PArts Base</option>
+                                <option value="">PAS</option>
+                                <option value="">Silverxis</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>Dept</label>
+                        <span>
+                            <select>
+                                <option value="">Adso</option>
+                                <option value="">Aerospace</option>
+                                <option value="">ILS</option>
+                                <option value="">PArts Base</option>
+                                <option value="">PAS</option>
+                                <option value="">Silverxis</option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+                    <div class="col-md-12 col-sm-12 col-12">
+                        <div class="tab-content form-bg">
+                            <div class="tab-pane active" id="home">
+                                <div class="col-sm-4 blocks3">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Employee</label>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control names ui-autocomplete-input" name="" value="Satish" autocomplete="off">
+                                        </div>
+
+                                        <a routerLink="/app-employee-setup" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <hr class="hr-dark">
+                                <div class="col-sm-4 blocks3">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Name</label>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control names ui-autocomplete-input" id="custname" name="" value="Meghanadh" autocomplete="off">
+                                        </div>
+                                        <a routerLink="/app-customer-setup" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Ref</label>
+                                        <div class="col-sm-7">
+                                            <div class="inner-addon right-addon inline-block">
+                                                <i class="fa fa-search"></i>
+                                                <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" value="Shabbir" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Contact</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" value="125-256-8956">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Contact Phone</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" value="125-256-3685">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">PN</label>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control numberids blockhide ui-autocomplete-input" id="" name="pn" value="ABG456" autocomplete="off">
+                                        </div>
+                                        <a routerLink="/app-item-master-stock-setup" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">PN Description</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" value="Used for gears">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Change PN </label>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" value="564825" autocomplete="off">
+                                        </div>
+                                        <a routerLink="/app-item-master-stock-setup" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                    <!-- <div class="form-group col-sm-12">
+                                      <label class="control-label col-sm-4">Serial Number Available</label>
+                                      <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox" id="snumber-input">
+                                      </div>
+                                    </div>-->
+                                    <div class="form-group col-sm-7 col-offset-4 pndetails" style="display: none;">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Serial Number </label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="text" value="345">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Cert By</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="text" placeholder="Cert By">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Tag Date</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control datepicker hasDatepicker" type="text" placeholder="Tag Date" id="dp1522840464067">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Tag Type</label>
+                                            <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                <i class="fa fa-search"></i>
+                                                <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" value="DS67" autocomplete="off">
+                                            </div>
+                                            <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Parts Cert Num</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" value="DS67H7">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-4 blocks3">
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Expiration Date</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control datepicker hasDatepicker" type="text" value="05/12/2007" id="dp1522840464068">
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">QTY</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="number" value="1" placeholder="QTY">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Condtion</label>
+                                        <div class="col-sm-7">
+                                            <select>
+                                                <option>Select Condtion</option>
+                                                <option>AR</option>
+                                                <option>AS-IS</option>
+                                                <option selected="">NEW</option>
+                                                <option>OVH</option>
+                                                <option>REP</option>
+                                                <option>SRV</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Warehouse</label>
+                                        <div class="col-sm-7">
+                                            <select>
+                                                <option value="select" selected="">Warehouse</option>
+                                                <option value="Austin">Austin</option>
+                                                <option value="Bloomfield Hills">Bloomfield Hills</option>
+                                                <option value="Cupertino">Cupertino</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Location</label>
+                                        <div class="col-sm-7">
+                                            <select>
+                                                <option>Location</option>
+                                                <option selected="">Austin</option>
+                                                <option>Bloomfield Hills</option>
+                                                <option>Cupertino</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Owner</label>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control names ui-autocomplete-input" id="ownername" name="" value="Manoj" autocomplete="off">
+                                        </div>
+                                        <a routerLink="/app-owner" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Customer Stock</label>
+                                        <div class="col-sm-7">
+                                            <input class="" type="checkbox" id="" checked="checked" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Traceable to</label>
+                                        <div class="col-sm-7">
+                                            <select id="traceable-selection" name="" class="form-control">
+                                                <option value="">Select</option>
+                                                <option value="Customer" selected="">Customer</option>
+                                                <option value="Other">Other </option>
+                                                <option value="Vendor">Vendor</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class=" col-sm-8 col-offset-4 traceable-inputs" style="display: none;">
+                                        <div class="form-group col-sm-12">
+                                            <div class="col-sm-7 mleft25">
+                                                <div class="input-group">
+                                                    <div class="inner-addon right-addon inline-block">
+                                                        <i class="fa fa-search"></i>
+                                                        <input type="text" class="form-control names traceable-placeholder ui-autocomplete-input" id="" name="" placeholder="" autocomplete="off">
+                                                    </div>
+                                                    <div class="input-group-btn"> <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a> </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-4 blocks3">
+
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Obtain From</label>
+                                        <div class="col-sm-7">
+                                            <select id="obtain-selection" name="" class="form-control">
+                                                <option value="">Select</option>
+                                                <option value="Customer">Customer</option>
+                                                <option value="Other">Other </option>
+                                                <option value="Vendor">Vendor</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class=" col-sm-12 obtain-inputs-customer" style="display: none;">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4"></label>
+                                            <div class="col-sm-7">
+                                                <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                    <i class="fa fa-search"></i>
+                                                    <input type="text" class="form-control names ui-autocomplete-input" id="" name="" placeholder="Customer Name" autocomplete="off">
+                                                </div>
+                                                <a routerLink="/app-customer-setup" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class=" col-sm-12 obtain-inputs-other" style="display: none;">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4"></label>
+                                            <div class="col-sm-7">
+                                                <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                    <input type="text" class="form-control" id="" name="" placeholder="Other Name">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class=" col-sm-12 obtain-inputs-vendor" style="display: none;">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4"></label>
+                                            <div class="col-sm-7">
+                                                <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                    <i class="fa fa-search"></i>
+                                                    <input type="text" class="form-control names ui-autocomplete-input" id="" name="" placeholder="Vendor Name" autocomplete="off">
+                                                </div>
+                                                <a routerLink="/app-vendor-setup" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">MFG Date</label>
+                                        <div class="col-sm-1">
+                                            <input class="" type="checkbox" id="mfgdate-input">
+                                        </div>
+                                        <div class="col-sm-6 mfgdate-block" style="display: none;">
+                                            <input class="form-control datepicker hasDatepicker" type="text" value="02/25/1990" id="dp1522840464069">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Exp Date</label>
+                                        <div class="col-sm-1">
+                                            <input class="" type="checkbox" id="expdate-input">
+                                        </div>
+                                        <div class="col-sm-6 expdate-block" style="display: none;">
+                                            <input class="form-control datepicker hasDatepicker" type="text" value="01/15/2005" id="dp1522840464070">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Time Life</label>
+                                        <div class="col-sm-1">
+                                            <input class="" type="checkbox" id="timelife-input">
+                                        </div>
+                                    </div>
+                                    <div class="timelife-block" style="display: none;">
+                                        <hr>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Date</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control datepicker hasDatepicker" type="text" placeholder="Date" id="dp1522840464071">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Origin</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="text" placeholder="Origin">
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <div class="table-responsive form-group col-sm-12">
+                                            <table class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2" class="text-center">Cycles</th>
+                                                        <th colspan="2" class="text-center">Time</th>
+                                                        <th colspan="2" class="text-center">Last</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Remaining</td>
+                                                        <td><input type="text" class="w50" placeholder="7 Cycles"></td>
+                                                        <td>Remaining</td>
+                                                        <td><input type="text" class="w50" placeholder="22 Hours"></td>
+                                                        <td>Since New</td>
+                                                        <td><input type="text" class="w50" placeholder="13 Hours"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Since New</td>
+                                                        <td><input type="text" class="w50" placeholder="3 Cycles"></td>
+                                                        <td>Since New</td>
+                                                        <td><input type="text" class="w50" placeholder="4 Hours"></td>
+                                                        <td>Since Ovh</td>
+                                                        <td><input type="text" class="w50" placeholder="3 Hours"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Since Ovh</td>
+                                                        <td><input type="text" class="w50" placeholder="7 Cycles"></td>
+                                                        <td>Since Ovh</td>
+                                                        <td><input type="text" class="w50" placeholder="10 Hours"></td>
+                                                        <td>Since Insp</td>
+                                                        <td><input type="text" class="w50" placeholder="12 Hours"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Since Insp</td>
+                                                        <td><input type="text" class="w50" placeholder="2 Cycles"></td>
+                                                        <td>Since Insp</td>
+                                                        <td><input type="text" class="w50" placeholder="8 Hours"></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Since Repair</td>
+                                                        <td><input type="text" class="w50" placeholder="5 Cycles"></td>
+                                                        <td>Since Repair</td>
+                                                        <td><input type="text" class="w50" placeholder="2 Hours"></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Manufacturer</label>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" value="PAS" autocomplete="off">
+                                        </div>
+                                        <a routerLink="/app-manufacturer" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                    </div>
+
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">MFG Trace </label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" value="12345">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">MFG Lot </label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" value="50">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Changes Overview</label>
+                                        <div class="col-sm-7">
+                                            <textarea id="" name="" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="clear"></div>
+                                <hr>
+                                <a class="btn btn-success pull-right" data-toggle="modal" data-target="#createwo">Update</a>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+                <div class="pull-right"> © 2018 <a routerLink="/">PAS</a> </div>
+            </div>
+            <div class="x_content add-work-order" style="display: none;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a routerLink="/app-receiving-customer-work-list">Receiving Customer Works</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Receiving Customer Unit</li>
+                    </ol>
+                </nav>
+                <div class="pheading">
+                    <h4 class="page-heading clr-green">Receiving - Add Work Order</h4>
+                </div>
+                <div class="cdetails-top">
+                    <div class="col-sm-12">
+                        <label>Company</label>
+                        <span>Silverxis</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>BU</label>
+                        <span>Adso</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>Division</label>
+                        <span>Development</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>Dept</label>
+                        <span>Java</span>
+                    </div>
+
+                </div>
+                <div class="clear"></div>
+                <br>
+                <form action="#" method="post" id="add-workorder" name="" class="form-horizontal add-custustomer">
+                    <div class="col-md-12 col-sm-12 col-12">
+                        <div class="tab-content form-bg">
+                            <div class="tab-pane active" id="home">
+                                <div class="col-sm-4 blocks3">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Receiving Num</label>
+                                        <div class="col-sm-7">REC123</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 blocks3">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Department</label>
+                                        <div class="col-sm-7">Tech</div>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <hr class="hr-dark">
+                                <div class="col-sm-4 blocks3">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">WO Number</label>
+                                        <div class="col-sm-7">WO1251</div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Open Date</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control datepicker today hasDatepicker" type="text" placeholder="Open Date" id="dp1522840464072">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Request Date</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control datepicker hasDatepicker" type="text" placeholder="Request Date" id="dp1522840464073">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Promise Date</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control datepicker hasDatepicker" type="text" placeholder="Promise Date" id="dp1522840464074">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 blocks3">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Est Completion Date</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control datepicker hasDatepicker" type="text" placeholder="Est Completion Date" id="dp1522840464075">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Work Scope</label>
+                                        <div class="col-sm-7">
+                                            <select>
+                                                <option value="scope">Work scope</option>
+                                                <option value="BENCHTEST">BENCHTEST</option>
+                                                <option value="INSP">INSP</option>
+                                                <option value="MANU">MANU</option>
+                                                <option value="OVH">OVH</option>
+                                                <option value="REP">REP</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">WO Workflow ID</label>
+                                        <div class="col-sm-7">
+                                            <select>
+                                                <option value="">ACC123</option>
+                                                <option value="">ACC415</option>
+                                                <option value="">ACC452</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 blocks3">
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">CMM ID</label>
+                                        <div class="col-sm-7">
+                                            <div class="inner-addon right-addon inline-block">
+                                                <i class="fa fa-search"></i>
+                                                <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" placeholder="PN" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Priority</label>
+                                        <div class="col-sm-7">
+                                            <select>
+                                                <option value="AOG">AOG</option>
+                                                <option value="Critical">Critical</option>
+                                                <option value="Routine">Routine</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Gate Code</label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" id="" name="">
+                                                <option value="">select</option>
+                                                <option value="">Manual Review</option>
+                                                <option value="">Preliminary Inspection</option>
+                                                <option value="">Teardown Evaluation</option>
+                                                <option value="">Quoting</option>
+                                                <option value="">Awaiting Approval</option>
+                                                <option value="">Long Term Waiting on Approval</option>
+                                                <option value="">Approved Pull Parts</option>
+                                                <option value="">Parts Ordered</option>
+                                                <option value="">Ready to Build</option>
+                                                <option value="">In Assembly</option>
+                                                <option value="">Final Testing</option>
+                                                <option value="">Inspection</option>
+                                                <option value="">Invoicing</option>
+                                                <option value="">Work Order Closed</option>
+                                                <option value="">Awaiting Shipping instructions</option>
+                                                <option value="">Awaiting payment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <hr>
+                                <a routerLink="/app-receiving-customer-work-list" class="btn btn-success pull-right">Submit</a>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+                <div class="pull-right"> © 2018 <a routerLink="/">PAS</a> </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createwo" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" id="" name="">&times;</button>
+                    <h4 class="modal-title">Customer Work is saved. Would you like to create Work Order ?</h4>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-success cwo-btn" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="myFunction()">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

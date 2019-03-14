@@ -1,0 +1,715 @@
+﻿<div [@fadeInOut] class="page-content">
+
+	<div class="right_col" role="main">
+		<div class="x_panel">
+			<div class="x_content">
+				<!--<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Employee Setup</li>
+				</ol>
+			</nav>-->
+				<h4 class="page-heading clr-green">Employee Setup</h4>
+				<div class="clear"></div><br>
+				<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
+					<div class="employee-setup">
+						<div class="col-12 employer-block">
+							<div class="col-12">
+								<div class="tab-content form-bg" id="employee-block">
+									<div class="tab-pane step-data active" id="step1">
+										<div class="tab-pane active">
+											<div class="col-sm-12">
+												<div class="col-sm-6 w400">
+													<div class="form-group col-sm-12 input-icon1">
+														<label class="control-label col-sm-4">Emp First Name: </label>
+														<div class="col-sm-7">
+															<div class="inner-addon right-addon inline-block">
+																<p-autoComplete [(ngModel)]="sourceEmployee.firstName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+																				[minLength]="1" [dropdown]="true">
+																	<ng-template let-firstName pTemplate="item">
+																		<div class="ui-helper-clearfix">{{firstName}}</div>
+																	</ng-template>
+																</p-autoComplete>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-sm-12 input-icon1">
+														<label class="control-label col-sm-4">Emp Last Name: </label>
+														<div class="col-sm-7">
+															<div class="inner-addon right-addon inline-block">
+																<p-autoComplete [(ngModel)]="sourceEmployee.lastName" [ngModelOptions]="{standalone: true}" [suggestions]="lastNameCollection" (completeMethod)="filterlastName($event)" [size]="30"
+																				[minLength]="1" [dropdown]="true">
+																	<ng-template let-lastName pTemplate="item">
+																		<div class="ui-helper-clearfix">{{lastName}}</div>
+																	</ng-template>
+																</p-autoComplete>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-sm-12 input-icon1">
+														<label class="control-label col-sm-4">Emp Mid Name</label>
+														<div class="col-sm-7">
+															<div class="inner-addon right-addon inline-block">
+																<p-autoComplete [(ngModel)]="sourceEmployee.middleName" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
+																				[minLength]="1" [dropdown]="true">
+																	<ng-template let-middleName pTemplate="item">
+																		<div class="ui-helper-clearfix">{{middleName}}</div>
+																	</ng-template>
+																</p-autoComplete>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">Emp ID</label>
+														<div class="col-sm-7">
+																<!--<p-autoComplete [(ngModel)]="sourceEmployee.employeeId" [ngModelOptions]="{standalone: true}" [suggestions]="empIdCollection" (completeMethod)="filterempIdName($event)" [size]="30"
+																			[minLength]="1" [dropdown]="true">
+																<ng-template let-employeeId pTemplate="item">
+																	<div class="ui-helper-clearfix">{{employeeId}}</div>
+																</ng-template>
+															</p-autoComplete>-->
+																<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly>
+															
+														</div>
+													</div>
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">Emp ID (Per Payroll)</label>
+														<div class="col-sm-7">
+															<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeIdAsPerPayroll">
+														</div>
+													</div>
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">Job Title</label>
+														<div class="inner-addon col-sm-7 inline-block display-flex">
+															<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.jobTitleId">
+																<option *ngFor="let jobtitleName of allJobTitlesinfo" [ngValue]="jobtitleName.jobTitleId">{{jobtitleName.description}}</option>
+															</select>
+															<a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtitle(content)"><i class="fa fa-plus"></i></a>
+
+														</div>
+                                                     </div>
+
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">Emp Expertise</label>
+														<div class="inner-addon col-sm-7 inline-block display-flex">
+																<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeExpertiseId">
+																	<option *ngFor="let employeeName of allEmployeeExpertiseInfo" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
+																</select>
+																<a data-toggle="modal" data-target="#addEmpExprt" class="add-icon" (click)="openemployeeExpertise(contentEdit)"><i class="fa fa-plus"></i></a>
+															</div>
+														</div>
+
+														<div class="form-group col-sm-12">
+															<label class="control-label col-sm-4">Station ID</label>
+															<div class="col-sm-7">
+																<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.stationId">
+
+															</div>
+														</div>
+													</div>
+
+												<div class="col-sm-6 w400">
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">Company</label>
+														<div class="col-sm-7">
+															<select [(ngModel)]="sourceEmployee.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceEmployee.companyId)">
+																<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">BU</label>
+														<div class="col-sm-7">
+															<select [(ngModel)]="sourceEmployee.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceEmployee.businessUnitId)">
+																<option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">Dept</label>
+														<div class="col-sm-7">
+															<select [(ngModel)]="sourceEmployee.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceEmployee.departmentId)">
+																<option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group col-sm-12">
+														<label class="control-label col-sm-4">Division</label>
+														<div class="col-sm-7">
+																<select [(ngModel)]="sourceEmployee.divisionId" [ngModelOptions]="{standalone: true}">
+																	<option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+																</select>
+														</div>
+													</div>
+
+												</div>
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-dark" />
+
+											<div class="col-sm-6 w400">
+
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Date Of Birth</label>
+													<div class="col-sm-7">
+														<!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
+														<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateOfBirth"></p-calendar>
+
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Country of Origin</label>
+													<div class="col-sm-7">
+														<!--<input class="form-control datepicker" type="text"  id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.countryOfOrigin">-->
+														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.originatingCountryId">
+															<option *ngFor="let shift of allCountries" [ngValue]="shift.countries_id">{{shift.countries_name}}</option>
+
+														</select>
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Start Date</label>
+													<div class="col-sm-7">
+														<!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
+														<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
+
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Nationality</label>
+													<div class="col-sm-7">
+														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.nationalityCountryId">
+															<option *ngFor="let shift of allCountries" [ngValue]="shift.countries_id">{{shift.countries_name}}</option>
+
+														</select>
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Cell</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.mobilePhone">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Business Phone</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.workPhone">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Fax</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.fax">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Email</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.email">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">SS#</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.ssn">
+													</div>
+												</div>
+
+											</div>
+											<div class="col-sm-6 w400">
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Shift</label>
+													<div class="col-sm-7">
+														<!--<label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift">Single Shift</label>
+													<label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift">Multiple shifts</label>-->
+														<label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" value="singleShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift" (click)="singleClick('single')">Single Shift</label>
+														<label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" value="multiShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift" (click)="singleClick('multiple')">Multiple shifts</label>
+													</div>
+												</div>
+												<div class="form-group col-sm-12 shiftmultiple-block" *ngIf="showMultiple">
+													<label class="control-label col-sm-4">Shift Type</label>
+													<div class="col-sm-7">
+														<div class="input-group">
+															<p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedshiftValues" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+
+														</div>
+													</div>
+												</div>
+												<div class="form-group col-sm-12 shiftsingle-block" *ngIf="showsingle">
+													<label class="control-label col-sm-4">Shift Type</label>
+													<div class="col-sm-7">
+														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.shifId">
+															<option *ngFor="let shift of allShiftdetails" [ngValue]="shift.shiftId">{{shift.description}}</option>
+
+														</select>
+													</div>
+												</div>
+
+												<div class="form-horizontal col-sm-12">
+													<label class="control-label col-sm-4">Extra Hours</label>
+													<div class="col-sm-7">
+
+														<div>
+															<label class="checkbox-inline"> <input class="form-control " type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.allowOvertime">Allow Overtime</label>
+														</div>
+														<div>
+															<label class="checkbox-inline"> <input class="form-control " type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.allowDoubleTime">Allow Double-Time</label>
+														</div>
+
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Pay Type</label>
+													<div class="col-sm-7">
+														<label class="radio-inline"><input type="radio" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType" (click)="paytypeclick('hourly')">Hourly</label>
+														<label class="radio-inline"><input type="radio" name="paytype" id="salarypay" value="Yearly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType" (click)="paytypeclick('yearly')">Yearly</label>
+													</div>
+												</div>
+												<div class="form-group col-sm-12 hourpay-block" *ngIf="hourly">
+													<label class="control-label col-sm-4">Hourly Pay</label>
+													<div class="col-sm-7">
+														<input class="form-control amount" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
+													</div>
+												</div>
+												<div class="form-group col-sm-12 salarypay-block" *ngIf="yearly">
+													<label class="control-label col-sm-4">Yearly Salary</label>
+													<div class="col-sm-7">
+														<input class="form-control amount" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
+													</div>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Leave</label>
+													<div class="col-sm-6">
+														<p-multiSelect [options]="leavemultiValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedLeaveValues" [panelStyle]="{minWidth:'12em'}"></p-multiSelect></div>
+													<div class="col-sm-2">
+														<!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLeaveTypeId">
+		<option *ngFor="let employeeName of allLeaves" [ngValue]="employeeName.employeeLeaveTypeId">{{employeeName.description}}</option>
+	</select>-->
+														<a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openLeaveType(contentleave)"><i class="fa fa-plus"></i></a>
+													</div>
+													
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Emp Certifying Staff?</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="checkbox" id="certification-radio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeCertifyingStaff">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Supervisor Name</label>
+													<div class="inner-addon col-sm-7 inline-block display-flex">
+														<p-autoComplete [(ngModel)]="sourceEmployee.supervisorName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+																		[minLength]="1" [dropdown]="true">
+															<ng-template let-firstName pTemplate="item">
+																<div class="ui-helper-clearfix">{{firstName}}</div>
+															</ng-template>
+														</p-autoComplete>
+														<a class="add-icon"><i class="fa fa-plus"></i></a>
+
+													</div>
+
+												</div>
+
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-light-grey" />
+											<button type="button" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+
+
+										</div>
+									</div>
+									<div class="tab-pane step-data" id="step2">
+										<div class="tab-pane">
+											<div class="col-sm-12">
+												<div class="form-group col-sm-6 w400">
+													<p class="fs10"> <label class="control-label col-sm-4">Emp First Name</label> Meghanadh  </p>
+												</div>
+												<div class="form-group col-sm-6 w400">
+													<p class="fs10"><label class="control-label col-sm-4">Emp Last Name</label> Dondapati</p>
+												</div>
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-dark" />
+											<div class="col-sm-6 w400">
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification #</label>
+													<div class="col-sm-7">
+														<input type="text" class="form-control" id="" name="" />
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification Type</label>
+													<div class="inner-addon right-addon autosuggesions-add inline-block">
+														<i class="fa fa-caret-down"></i>
+														<select>
+															<option>Select</option>
+															<option>Limited Premium Endowment Plan</option>
+															<option>New Endowment Plan</option>
+															<option>New Money Back Plan</option>
+															<option>Single Premium Endowment Plan</option>
+														</select>
+													</div>
+													<a class="add-icon"><i class="fa fa-plus"></i></a>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certifying Institution</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6 w400">
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification Date</label>
+													<div class="col-sm-7">
+														<input class="form-control datepicker" type="datetime-local">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification In Force?</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text">
+													</div>
+												</div>
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-light-grey" />
+											<button type="button" class="btn btn-success pull-right nxt-btn">Next</button>
+										</div>
+									</div>
+									<div class="tab-pane step-data" id="step3">
+										<div class="tab-pane">
+											<div class="col-sm-12">
+												<div class="form-group col-sm-6 w400">
+													<p class="fs10"> <label class="control-label col-sm-4">Emp First Name</label> Meghanadh  </p>
+												</div>
+												<div class="form-group col-sm-6 w400">
+													<p class="fs10"><label class="control-label col-sm-4">Emp Last Name</label> Dondapati</p>
+												</div>
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-light-grey" />
+											<div class="col-sm-6 w400">
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Aircraft Model</label>
+													<div class="col-sm-7">
+														<input type="text" class="form-control" id="" name="" />
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Training Type</label>
+													<div class="col-sm-7">
+														<select>
+															<option>Training Type</option>
+															<option>A&amp;P</option>
+															<option>Forklift</option>
+															<option>NDT</option>
+															<option>Physical</option>
+															<option>PIC</option>
+															<option>Repair Station</option>
+															<option>Rigging</option>
+															<option>Safety</option>
+															<option>SIC</option>
+															<option>Simulator</option>
+															<option>SUP</option>
+															<option>Water</option>
+														</select>
+														<!--<a href="#" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Schedule Date</label>
+													<div class="col-sm-7">
+														<input class="form-control datepicker" type="text">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Frequency of Training</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Completion Date</label>
+													<div class="col-sm-7">
+														<input class="form-control datepicker" type="text">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Cost</label>
+													<div class="col-sm-7">
+														<input class="form-control cost" type="text">
+													</div>
+												</div>
+
+											</div>
+											<div class="col-sm-6 w400">
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Duration</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Provider</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Industry Code</label>
+													<div class="col-sm-7">
+														<input class="form-control" type="text">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Expiration Date</label>
+													<div class="col-sm-7">
+														<input class="form-control datepicker" type="text">
+													</div>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label col-sm-4">Certification Received</label>
+													<div class="col-sm-7 upload">
+														<input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple />
+														<label for="upload"><figure><i class="fa fa-upload"></i></figure> <span>Choose a file&hellip;</span></label>
+													</div>
+												</div>
+											</div>
+											<div class="clear"></div>
+											<hr class="hr-light-grey" />
+											<a><button type="button" class="btn btn-success pull-right">Submit</button></a>
+										</div>
+									</div>
+
+								</div>
+
+
+
+							</div>
+						</div>
+					</div>
+
+					<div class="clear"></div>
+
+
+
+
+
+				</form>
+				<!--Form End-->
+				<div class="pull-right"> &copy; 2018 <a>PAS</a> </div>
+
+
+			</div>
+
+
+
+
+		</div>
+		<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
+	</div>
+
+</div>
+
+
+<ng-template #content let-c="close" let-d="dismiss" style="width:auto">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isEditMode">Edit JobTitle</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add JobTitle</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemJobCloseModel()">
+
+
+			<div class="form-group">
+				<label for="description" class="control-label">Description<span class="clr-red">*</span></label>
+				<!--<div>
+		<input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description">
+	</div>-->
+				<div class="inner-addon right-addon inline-block">
+					<p-autoComplete [(ngModel)]="jobName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30"
+									[minLength]="1" [dropdown]="true">
+						<ng-template let-jobName pTemplate="item">
+							<div class="ui-helper-clearfix">{{jobName}}</div>
+						</ng-template>
+					</p-autoComplete>
+
+					<div class="clear"></div>
+				</div>
+				</div>
+				<div class="form-group">
+					<label for="description" class="control-label">Memo</label>
+					<div class="control-data">
+						<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+						<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+							Memo is required.
+						</div>
+						<div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+							Memo must be at least 2 characters long.
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<!--<div class="form-group">
+		<label for="masterCompanyId" class="control-label">Company</label>
+		<div class="">
+			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
+				<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
+			</select>
+		</div>
+		<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
+			Master company required.
+		</div>
+		<div class="clear"></div>
+	</div>-->
+				<div class="form-group">
+
+					<div class="col-sm-6">
+						<label class="form-check-label" for="isActive">
+							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+						</label>
+					</div>
+					<div class="clear"></div>
+				</div>
+
+
+				<div class="modal-footer">
+
+					<button class="btn btn-success" [disabled]="!userForm.valid">Submit</button>
+					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+				</div>
+</form>
+    </div>
+
+</ng-template>
+
+
+<ng-template #contentleave let-c="close" let-d="dismiss" style="width:auto">
+	<div class="modal-header">
+		<h4 class="modal-title" *ngIf="isEditMode">Edit Leave Type</h4>
+		<h4 class="modal-title" *ngIf="!isEditMode">Add Leave Type</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemLeaveCloseModel()">
+
+
+			<div class="form-group">
+				<label for="description" class="control-label">Description<span class="clr-red">*</span></label>
+				<div class="inner-addon right-addon inline-block">
+					<p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localleaveCollection" (completeMethod)="filterLeaves($event)" [size]="30"
+									[minLength]="1" [dropdown]="true">
+						<ng-template let-description pTemplate="item">
+							<div class="ui-helper-clearfix">{{description}}</div>
+						</ng-template>
+					</p-autoComplete>
+
+					<div class="clear"></div>
+				</div>
+				</div>
+				<div class="form-group">
+
+					<div class="col-sm-6">
+						<label class="form-check-label" for="isActive">
+							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+						</label>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer">
+
+					<button class="btn btn-success" [disabled]="!userForm.valid">Submit</button>
+					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+				</div>
+</form>
+	</div>
+</ng-template>
+
+
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Employee Expertise</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Employee Expertise</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemExpertiesCloseModel()">
+			<div class="form-group">
+				<label for="name" class="control-label">Employee Expertise<span class="clr-red">*</span></label>
+				<div class="inner-addon right-addon inline-block">
+					<!--<div class="control-data">
+			<input type="text" name="description" class="form-control" required minlength="5" #description="ngModel" [(ngModel)]="sourceAction.description">
+			<div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
+				Name required.
+			</div>
+			<div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
+				Name must be at least 5 characters long.
+			</div>
+		</div>-->
+					<p-autoComplete [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30"
+									[minLength]="1" [dropdown]="true">
+						<ng-template let-employeeName pTemplate="item">
+							<div class="ui-helper-clearfix">{{employeeName}}</div>
+						</ng-template>
+					</p-autoComplete>
+
+					<div class="clear"></div>
+				</div>
+				</div>
+				<div class="form-group">
+					<label for="description" class="control-label">Memo</label>
+					<div class="control-data">
+						<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+						<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+							Memo required.
+						</div>
+						<div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+							Memo must be at least 2 characters long.
+						</div>
+						
+
+					</div>
+					
+					<div class="clear"></div>
+				</div>
+				<!--<div class="form-group">
+		<label for="masterCompanyId" class="control-label">Company</label>
+		<div class="">
+			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
+				<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
+			</select>
+		</div>
+		<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
+			Master company required.
+		</div>
+		<div class="clear"></div>
+	</div>-->
+				<div class="form-group">
+					<div class="col-sm-6">
+						<label class="form-check-label" for="isActive">
+							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+						</label>
+					</div>
+					<div class="clear"></div>
+				</div>
+
+
+				<div class="modal-footer">
+
+					<button class="btn btn-success" [disabled]="!userForm.valid">Submit</button>
+					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+				</div>
+</form>
+    </div>
+
+</ng-template>

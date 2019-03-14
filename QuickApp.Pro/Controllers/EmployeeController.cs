@@ -1,0 +1,844 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using DAL;
+using DAL.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using QuickApp.Pro.Helpers;
+using QuickApp.Pro.ViewModels;
+namespace QuickApp.Pro.Controllers
+{
+
+
+    [Route("api/[controller]")]
+    public class EmployeeController : Controller
+    {
+        private IUnitOfWork _unitOfWork;
+
+        readonly ILogger _logger;
+        readonly IEmailer _emailer;
+        private readonly ApplicationDbContext _context;
+        private const string GetActionByIdActionName = "GetActionById";
+
+        public EmployeeController(ApplicationDbContext context, IUnitOfWork unitOfWork, ILogger<EmployeeController> logger, IEmailer emailer)
+        {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+            _emailer = emailer;
+            _context = context;
+        }
+
+        // GET: api/values
+        [HttpGet("Get")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+        public IActionResult Get()
+        {
+            var allEmployeeinfo = _unitOfWork.employee.GetAllEmployeeData(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+        [HttpGet("GetforView/{employeeId}")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+        public Object GetforView(long employeeId)
+        {
+            var allEmployeeinfo = _context.Employee.Include("EmployeeLicensure").Include("EmployeeTraining")
+
+                   .Where(a => a.EmployeeId == employeeId).ToList();
+            return allEmployeeinfo;
+
+
+        }
+        [HttpGet("RolesGet")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+        public IActionResult RolesGet()
+        {
+            var allEmployeeinfo = _context.UIRoleEntity.OrderByDescending(a => a.UIRoleEntityId).ToList(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+        [HttpGet("UserRolelevelList")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+        public IActionResult UserRolelevelList()
+        {
+            var allEmployeeinfo = _context.UserRoleLevel.OrderByDescending(a => a.UserRoleLevelId).ToList(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+        [HttpGet("shiftGet")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+
+        public IActionResult Getshift()
+        {
+            var allEmployeeinfo = _unitOfWork.shift.Getshift(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+
+        [HttpGet("CountriesGet")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+
+        public IActionResult GetCountries()
+        {
+            var allEmployeeinfo = _unitOfWork.Countries.GetCountries(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+
+        [HttpGet("EmployeeTrainingTypeGet")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+
+        public IActionResult GetemployeeTrainingType()
+        {
+            var allEmployeeinfo = _unitOfWork.EmployeeTrainingType.GetAllEmployeeTrainingType(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+
+        [HttpGet("EmployeeLeaveTypeGet")]
+        [Produces(typeof(List<EmployeeLeaveTypeViewModel>))]
+
+        public IActionResult GetEmployeeLeaveType()
+        {
+            var allEmployeeinfo = _unitOfWork.EmployeeLeaveType.GetAllEmployeeLeaveTypeData(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+        [HttpGet("empTrainingTypesGet")]
+        [Produces(typeof(List<EmployeeTrainingType>))]
+
+        public IActionResult empTrainingTypesGet()
+        {
+            var allEmployeeinfo = _unitOfWork.EmployeeTrainingType.GetAllEmployeeTrainingType(); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+
+        [HttpGet("EmpTrainingGet/{id}")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+        public IActionResult EmpTrainingGet(long id)
+        {
+            var allEmployeeinfo = _unitOfWork.employee.GetEmpTariningDetails(id); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+        [HttpGet("employeecertificationpost/{id}")]
+        [Produces(typeof(List<EmployeeViewModel>))]
+        public IActionResult employeecertificationpost(long id)
+        {
+            var allEmployeeinfo = _unitOfWork.employee.GetEMployeelicensuerDetails(id); //.GetAllCustomersData();
+            return Ok(allEmployeeinfo);
+
+        }
+
+
+        [HttpGet("auditHistoryById/{id}")]
+        [Produces(typeof(List<AuditHistory>))]
+        public IActionResult GetAuditHostoryById(long id)
+        {
+            var result = _unitOfWork.AuditHistory.GetAllHistory("Employee", id); //.GetAllCustomersData();
+
+
+            try
+            {
+                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+                return Ok(resul1);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
+
+        }
+        [HttpPost("employeepost")]
+
+        public IActionResult CreateAction([FromBody] EmployeeViewModel employeeViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (employeeViewModel == null)
+                    return BadRequest($"{nameof(employeeViewModel)} cannot be null");
+                DAL.Models.Employee employeeobject = new DAL.Models.Employee();
+
+                employeeobject.MasterCompanyId = employeeViewModel.MasterCompanyId;
+                // employeeobject.IsActive = employeeViewModel.IsActive;
+                employeeobject.IsActive = true;
+                employeeobject.FirstName = employeeViewModel.FirstName;
+                employeeobject.LastName = employeeViewModel.LastName;
+                employeeobject.MiddleName = employeeViewModel.MiddleName;
+                //employeeobject.EmployeeId = employeeViewModel.EmployeeId;
+                employeeobject.MobilePhone = employeeViewModel.MobilePhone;
+                employeeobject.JobTitleId = employeeViewModel.JobTitleId;
+                employeeobject.EmployeeIdAsPerPayroll = employeeViewModel.EmployeeIdAsPerPayroll;
+                employeeobject.StationId = employeeViewModel.StationId;
+                employeeobject.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
+                employeeobject.DateOfBirth = employeeViewModel.DateOfBirth;
+                employeeobject.CompanyId = 1;
+                employeeobject.BusinessUnitId = 1;
+                employeeobject.DepartmentId = 1;
+                employeeobject.OriginatingCountryId = employeeViewModel.OriginatingCountryId;
+                employeeobject.NationalityCountryId = employeeViewModel.NationalityCountryId;
+                employeeobject.StartDate = employeeViewModel.StartDate;
+                employeeobject.WorkPhone = employeeViewModel.WorkPhone;
+                employeeobject.Fax = employeeViewModel.Fax;
+                employeeobject.DivisionId = 1;
+                employeeobject.SSN = employeeViewModel.SSN;
+                employeeobject.Email = employeeViewModel.Email;
+                employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
+                employeeobject.AllowOvertime = employeeViewModel.AllowOvertime;
+                employeeobject.InMultipleShifts = employeeViewModel.InMultipleShifts;
+                employeeobject.IsHourly = employeeViewModel.IsHourly;
+                employeeobject.SupervisorId = employeeViewModel.SupervisorId;
+                employeeobject.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
+               // employeeobject.EmployeeLeaveTypeId = employeeViewModel.EmployeeLeaveTypeId;
+                employeeobject.CreatedDate = DateTime.Now;
+                employeeobject.UpdatedDate = DateTime.Now;
+                // employeeobject.SupervisorName = employeeViewModel.SupervisorName;
+                employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
+                if (employeeViewModel.EmployeeLeaveTypeId == null)
+                {
+                    employeeViewModel.EmployeeLeaveTypeId = null;
+                }
+                if (employeeViewModel.ShiftId == null)
+                {
+                    employeeViewModel.ShiftId = null;
+                }
+
+                //if (employeeViewModel.BusinessUnitId == null)
+                //{
+                //    employeeobject.BusinessUnitId = null;
+                //}
+                //if (employeeViewModel.DepartmentId == null)
+                //{
+                //    employeeobject.DepartmentId = null;
+                //}
+                //if (employeeViewModel.DivisionId == null)
+                //{
+                //    employeeobject.DivisionId = null;
+                //}
+                //if (employeeViewModel.CompanyId == null)
+                //{
+                //    employeeobject.CompanyId = null;
+
+                //}
+                _unitOfWork.employee.Add(employeeobject);
+                _unitOfWork.SaveChanges();
+                //addEmployeeShiftDetails(employeeobject.EmployeeId, employeeViewModel.shifId,employeeViewModel);
+
+                return Ok(employeeobject);
+            }
+            return Ok(ModelState);
+        }
+
+
+        [HttpPut("employeelistgpost/{id}")]
+        public IActionResult UpdateAction(long id, [FromBody] EmployeeViewModel employeeViewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (employeeViewModel == null)
+                    return BadRequest($"{nameof(EmployeeViewModel)} cannot be null");
+                var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == id);
+                existingResult.UpdatedDate = DateTime.Now;
+                existingResult.UpdatedBy = employeeViewModel.UpdatedBy;
+                existingResult.FirstName = employeeViewModel.FirstName;
+                existingResult.MobilePhone = employeeViewModel.MobilePhone;
+                existingResult.LastName = employeeViewModel.LastName;
+                existingResult.MiddleName = employeeViewModel.MiddleName;
+                existingResult.EmployeeIdAsPerPayroll = employeeViewModel.EmployeeIdAsPerPayroll;
+                existingResult.StationId = employeeViewModel.StationId;
+                // existingResult.EmployeeId = employeeViewModel.EmployeeId;
+                existingResult.JobTitleId = employeeViewModel.JobTitleId;
+                existingResult.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
+                existingResult.DateOfBirth = employeeViewModel.DateOfBirth;
+                existingResult.CompanyId = 1;
+                existingResult.BusinessUnitId = 1;
+                existingResult.DepartmentId = 1;
+                existingResult.OriginatingCountryId = employeeViewModel.OriginatingCountryId;
+                existingResult.NationalityCountryId = employeeViewModel.NationalityCountryId;
+                existingResult.StartDate = employeeViewModel.StartDate;
+                existingResult.WorkPhone = employeeViewModel.WorkPhone;
+                existingResult.Fax = employeeViewModel.Fax;
+                existingResult.DivisionId = 1;
+                existingResult.SSN = employeeViewModel.SSN;
+                existingResult.Email = employeeViewModel.Email;
+                existingResult.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
+                existingResult.AllowOvertime = employeeViewModel.AllowOvertime;
+                existingResult.InMultipleShifts = employeeViewModel.InMultipleShifts;
+                existingResult.IsHourly = employeeViewModel.IsHourly;
+                existingResult.HourlyPay = employeeViewModel.HourlyPay;
+
+                existingResult.SupervisorId = employeeViewModel.SupervisorId;
+                existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
+                //existingResult.EmployeeLeaveTypeId = employeeViewModel.EmployeeLeaveTypeId;
+                //existingResult.IsActive = employeeViewModel.IsActive;
+                existingResult.MasterCompanyId = employeeViewModel.MasterCompanyId;
+
+                if (employeeViewModel.EmployeeLeaveTypeId != null)
+                {
+                    var integrationList = _unitOfWork.EmployeeLeaveTypeMappingRepository.GetAllData().ToList();
+                    integrationList.Where(a => a.EmployeeId == id).ToList().ForEach(a => _unitOfWork.EmployeeLeaveTypeMappingRepository.Remove(a));
+                    _unitOfWork.SaveChanges();
+                    foreach (string s in employeeViewModel.EmployeeLeaveTypeId)
+                    {
+                        if (s != "")
+                        {
+                            var integrationTypes = new EmployeeLeaveTypeMapping();
+                            integrationTypes.EmployeeLeaveTypeId = Convert.ToByte(s);
+                            integrationTypes.EmployeeId = id;
+                            integrationTypes.MasterCompanyId = 1;
+                            integrationTypes.CreatedBy = employeeViewModel.CreatedBy;
+                            integrationTypes.UpdatedBy = employeeViewModel.UpdatedBy;
+                            integrationTypes.CreatedDate = DateTime.Now;
+                            integrationTypes.UpdatedDate = DateTime.Now;
+                            integrationTypes.IsActive = true;
+                            _unitOfWork.EmployeeLeaveTypeMappingRepository.Add(integrationTypes);
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+                }
+
+                if (employeeViewModel.ShiftId != null)
+                {
+                    var integrationList = _unitOfWork.EmployeeShiftMappingRepository.GetAllData().ToList();
+                    integrationList.Where(a => a.EmployeeId == id).ToList().ForEach(a => _unitOfWork.EmployeeShiftMappingRepository.Remove(a));
+                    _unitOfWork.SaveChanges();
+                    foreach (string s in employeeViewModel.ShiftId)
+                    {
+                        if (s != "") {
+                            var integrationTypes = new EmployeeShiftMapping();
+                            integrationTypes.ShiftId = Convert.ToByte(s);
+                            integrationTypes.EmployeeId = id;
+                            integrationTypes.MasterCompanyId = 1;
+                            integrationTypes.CreatedBy = employeeViewModel.CreatedBy;
+                            integrationTypes.UpdatedBy = employeeViewModel.UpdatedBy;
+                            integrationTypes.CreatedDate = DateTime.Now;
+                            integrationTypes.UpdatedDate = DateTime.Now;
+                            integrationTypes.IsActive = true;
+                            _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
+                            _unitOfWork.SaveChanges();
+                        }
+                        
+                    }
+                }
+
+                _unitOfWork.employee.Update(existingResult);
+
+                _unitOfWork.SaveChanges();
+                // updateShiftDetials(existingResult.EmployeeId, employeeViewModel.shifId, employeeViewModel);
+                //addEmployeeShiftDetails(existingResult.EmployeeId, employeeViewModel.shifId, employeeViewModel);
+            }
+            return Ok(ModelState);
+        }
+        //[HttpPost("employeecertifi")]
+        public IActionResult addEmployeeShiftDetails([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
+        {
+            EmployeeShift employeeLicensureViewModel = new EmployeeShift();
+
+            if (ModelState.IsValid)
+            {
+                if (employeeLicensureViewModel == null)
+                    return BadRequest($"{nameof(employeeLicensureViewModel)} cannot be null");
+                DAL.Models.EmployeeShift employeeobject = new DAL.Models.EmployeeShift();
+                employeeobject.MasterCompanyId = 1;
+
+                employeeobject.IsActive = employeeLicensureViewModel.IsActive;
+                employeeobject.EmployeeId = employeeid;
+                employeeobject.ShiftId = shifid;
+                employeeobject.CreatedBy = employeeViewModel.CreatedBy;
+                employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
+
+
+                employeeobject.CreatedDate = DateTime.Now;
+                employeeobject.UpdatedDate = DateTime.Now;
+
+                employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
+                _unitOfWork.employeeShift.Add(employeeobject);
+                _unitOfWork.SaveChanges();
+                return Ok(employeeobject);
+            }
+            return Ok(ModelState);
+        }
+        public IActionResult updateShiftDetials([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
+        {
+            EmployeeShift employeeLicensureViewModel = new EmployeeShift();
+
+            if (ModelState.IsValid)
+            {
+                var employeeobject = _unitOfWork.employeeShift.GetSingleOrDefault(a => a.EmployeeId == employeeid);
+                if (Convert.ToBoolean(employeeobject.EmployeeShiftId)) {
+                    employeeobject.MasterCompanyId = 1;
+
+                    employeeobject.IsActive = employeeLicensureViewModel.IsActive;
+                    employeeobject.EmployeeId = employeeid;
+                    employeeobject.ShiftId = shifid;
+                    employeeobject.CreatedBy = employeeViewModel.CreatedBy;
+                    employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
+
+
+                    employeeobject.CreatedDate = DateTime.Now;
+                    employeeobject.UpdatedDate = DateTime.Now;
+
+                    employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
+                    _unitOfWork.employeeShift.Add(employeeobject);
+                    _unitOfWork.SaveChanges();
+                    return Ok(employeeobject);
+                }
+
+
+
+
+
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpPost("newLeavepost")]
+        //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
+        public IActionResult CreateAction([FromBody] EmployeeLeaveTypeViewModel employeeLeaveTypeViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (employeeLeaveTypeViewModel == null)
+                    return BadRequest($"{nameof(employeeLeaveTypeViewModel)} cannot be null");
+
+                DAL.Models.EmployeeLeaveType jobTitleObj = new DAL.Models.EmployeeLeaveType();
+                jobTitleObj.Description = employeeLeaveTypeViewModel.Description;
+                jobTitleObj.IsActive = true;
+                _unitOfWork.EmployeeLeaveType.Add(jobTitleObj);
+                _unitOfWork.SaveChanges();
+                return Ok(jobTitleObj);
+
+            }
+
+            return Ok(ModelState);
+        }
+
+        [HttpPut("newLeavepost/{id}")]
+        public IActionResult UpdateAction(long id, [FromBody] EmployeeLeaveTypeViewModel employeeLeaveTypeViewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (employeeLeaveTypeViewModel == null)
+                    return BadRequest($"{nameof(employeeLeaveTypeViewModel)} cannot be null");
+
+                var existingResult = _unitOfWork.EmployeeLeaveType.GetSingleOrDefault(c => c.EmployeeLeaveTypeId == id);
+                existingResult.Description = employeeLeaveTypeViewModel.Description;
+                existingResult.IsActive = employeeLeaveTypeViewModel.IsActive;
+                _unitOfWork.EmployeeLeaveType.Update(existingResult);
+                _unitOfWork.SaveChanges();
+
+            }
+
+
+            return Ok(ModelState);
+        }
+
+        [HttpGet("getleavelistdata/{id}")]
+        [Produces(typeof(List<EmployeeLeaveTypeViewModel>))]
+        public IActionResult getleavelistdata(int id)
+        {
+            var leaves = _unitOfWork.EmployeeLeaveType.GetAllEmployeeLeaveTypeData(); //.GetAllCustomersData();
+            return Ok(leaves);
+        }
+
+
+        [HttpPost("saveShifts")]
+        public IActionResult createmultishifts([FromBody] EmployeeShiftMappingViewModel employeeShiftMappingViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.EmployeeShiftMapping.Any(o => o.ShiftId == employeeShiftMappingViewModel.ShiftId))
+                {
+                    // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
+                    var existingresule = _context.EmployeeLeaveTypeMapping.Where(c => c.EmployeeLeaveTypeId == employeeShiftMappingViewModel.ShiftId).FirstOrDefault();
+                    existingresule.EmployeeLeaveTypeId = employeeShiftMappingViewModel.ShiftId;
+
+                    existingresule.EmployeeId = employeeShiftMappingViewModel.EmployeeId;
+                    existingresule.CreatedBy = employeeShiftMappingViewModel.CreatedBy;
+                    existingresule.UpdatedBy = employeeShiftMappingViewModel.UpdatedBy;
+                    existingresule.MasterCompanyId = 1;
+                    existingresule.CreatedDate = DateTime.Now;
+                    existingresule.UpdatedDate = DateTime.Now;
+                    _context.EmployeeLeaveTypeMapping.Update(existingresule);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    EmployeeShiftMapping cp = new EmployeeShiftMapping();
+                    cp.ShiftId = employeeShiftMappingViewModel.ShiftId;
+                    cp.EmployeeId = employeeShiftMappingViewModel.EmployeeId;
+                    cp.MasterCompanyId = 1;
+                    cp.CreatedBy = employeeShiftMappingViewModel.CreatedBy;
+                    cp.UpdatedBy = employeeShiftMappingViewModel.UpdatedBy;
+                    cp.CreatedDate = DateTime.Now;
+                    cp.UpdatedDate = DateTime.Now;
+                    _context.EmployeeShiftMapping.Add(cp);
+                    _context.SaveChanges();
+                }
+            }
+            return Ok(employeeShiftMappingViewModel);
+            // return Ok(ModelState);
+        }
+
+
+
+        [HttpPost("saveLeavelist")]
+        public IActionResult saveLeavelist([FromBody]  EmployeeLeaveTypeViewModel employeeShiftViewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (employeeShiftViewModel == null)
+                    return BadRequest($"{nameof(employeeShiftViewModel)} cannot be null");
+                EmployeeLeaveType employeeshiftObj = new EmployeeLeaveType();
+
+                //employeeShiftViewModel.MasterCompanyId = 1;
+                employeeshiftObj.EmployeeLeaveTypeId = employeeShiftViewModel.EmployeeLeaveTypeId;
+              //  employeeshiftObj.ShiftId = employeeShiftViewModel.ShiftId;
+                employeeshiftObj.IsActive = employeeShiftViewModel.IsActive;
+               // employeeshiftObj.CreatedDate = DateTime.Now;
+              //  employeeshiftObj.UpdatedDate = DateTime.Now;
+               // employeeshiftObj.CreatedBy = employeeShiftViewModel.CreatedBy;
+               // employeeshiftObj.UpdatedBy = employeeShiftViewModel.UpdatedBy;
+                _unitOfWork.EmployeeLeaveType.Add(employeeshiftObj);
+                _unitOfWork.SaveChanges();
+                return Ok(employeeshiftObj);
+            }
+
+            return Ok(ModelState);
+        }
+
+
+        [HttpPost("employeecertifi")]
+        public IActionResult CreateCertificationAction([FromBody] EmployeeLicensureViewModel employeeLicensureViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (employeeLicensureViewModel == null)
+                    return BadRequest($"{nameof(employeeLicensureViewModel)} cannot be null");
+                DAL.Models.EmployeeLicensure employeeobject = new DAL.Models.EmployeeLicensure();
+
+                employeeobject.MasterCompanyId = 1;
+                employeeobject.IsActive = true;
+                employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
+                employeeobject.CertificationDate = employeeLicensureViewModel.CertificationDate;
+                employeeobject.CertifyingInstitution = employeeLicensureViewModel.CertifyingInstitution;
+                employeeobject.LicenseNumber = employeeLicensureViewModel.LicenseNumber;
+                employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
+                employeeobject.IsLicenseInForce = employeeLicensureViewModel.IsLicenseInForce;
+                employeeLicensureViewModel.EmployeeLicenseTypeId = employeeLicensureViewModel.EmployeeLicenseTypeId;
+                employeeobject.CreatedDate = DateTime.Now;
+                employeeobject.UpdatedDate = DateTime.Now;
+                employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
+                _unitOfWork.employeeLicensure.Add(employeeobject);
+                _unitOfWork.SaveChanges();
+                return Ok(employeeobject);
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpPut("certifilistgpost/{id}")]
+
+        public IActionResult UpdateCertificationAction(long id, [FromBody] EmployeeLicensureViewModel employeeLicensureViewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (employeeLicensureViewModel == null)
+                    return BadRequest($"{nameof(EmployeeLicensureViewModel)} cannot be null");
+                var existingResult = _unitOfWork.employeeLicensure.GetSingleOrDefault(c => c.EmployeeLicensureId == id);
+
+                existingResult.MasterCompanyId = 1;
+                existingResult.IsActive = employeeLicensureViewModel.IsActive;
+                existingResult.CertificationDate = employeeLicensureViewModel.CertificationDate;
+                existingResult.CertifyingInstitution = employeeLicensureViewModel.CertifyingInstitution;
+                existingResult.EmployeeId = employeeLicensureViewModel.EmployeeId;
+                existingResult.LicenseNumber = employeeLicensureViewModel.LicenseNumber;
+                existingResult.EmployeeLicenseTypeId = employeeLicensureViewModel.EmployeeLicenseTypeId;
+                existingResult.IsLicenseInForce = employeeLicensureViewModel.IsLicenseInForce;
+                existingResult.CreatedDate = DateTime.Now;
+                existingResult.UpdatedDate = DateTime.Now;
+                existingResult.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
+                _unitOfWork.employeeLicensure.Update(existingResult);
+                _unitOfWork.SaveChanges();
+                return Ok(existingResult);
+            }
+            return Ok(ModelState);
+        }
+
+
+        [HttpPost("employeetraingpost")]
+        public IActionResult TraingAction([FromBody] EmployeeTrainingViewModel employeeTrainingViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (employeeTrainingViewModel == null)
+                    return BadRequest($"{nameof(employeeTrainingViewModel)} cannot be null");
+                DAL.Models.EmployeeTraining employeeobject = new DAL.Models.EmployeeTraining();
+
+                employeeobject.MasterCompanyId = employeeTrainingViewModel.MasterCompanyId;
+                employeeobject.IsActive = true;
+                employeeobject.AircraftModelId = employeeTrainingViewModel.AircraftModelId;
+                employeeobject.EmployeeTrainingTypeId = employeeTrainingViewModel.EmployeeTrainingTypeId;
+                employeeobject.ScheduleDate = employeeTrainingViewModel.ScheduleDate;
+                employeeobject.EmployeeId = employeeTrainingViewModel.EmployeeId;
+                employeeobject.FrequencyOfTraining = employeeTrainingViewModel.FrequencyOfTraining;
+                employeeobject.CompletionDate = employeeTrainingViewModel.CompletionDate;
+                employeeobject.Provider = employeeTrainingViewModel.Provider;
+                employeeobject.Cost = employeeTrainingViewModel.Cost;
+                employeeobject.Duration = employeeTrainingViewModel.Duration;
+                employeeobject.IndustryCode = employeeTrainingViewModel.IndustryCode;
+                employeeobject.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
+                employeeobject.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
+                employeeobject.CreatedDate = DateTime.Now;
+                employeeobject.UpdatedDate = DateTime.Now;
+
+                employeeobject.UpdatedBy = employeeTrainingViewModel.UpdatedBy;
+                _unitOfWork.employeeTraining.Add(employeeobject);
+                _unitOfWork.SaveChanges();
+            }
+            return Ok(ModelState);
+        }
+
+
+        [HttpPut("traininglistgpost/{id}")]
+        public IActionResult UpdateTrainingAction(long id, [FromBody] EmployeeTrainingViewModel employeeTrainingViewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (employeeTrainingViewModel == null)
+                    return BadRequest($"{nameof(EmployeeTrainingViewModel)} cannot be null");
+                var existingResult = _unitOfWork.employeeTraining.GetSingleOrDefault(c => c.EmployeeTrainingId == id);
+
+                existingResult.MasterCompanyId = employeeTrainingViewModel.MasterCompanyId;
+               // existingResult.IsActive = employeeTrainingViewModel.IsActive;
+                existingResult.AircraftModelId = employeeTrainingViewModel.AircraftModelId;
+                existingResult.EmployeeTrainingTypeId = employeeTrainingViewModel.EmployeeTrainingTypeId;
+                existingResult.ScheduleDate = employeeTrainingViewModel.ScheduleDate;
+                
+                existingResult.FrequencyOfTraining = employeeTrainingViewModel.FrequencyOfTraining;
+                existingResult.CompletionDate = employeeTrainingViewModel.CompletionDate;
+                existingResult.Provider = employeeTrainingViewModel.Provider;
+                existingResult.Cost = employeeTrainingViewModel.Cost;
+                existingResult.Duration = employeeTrainingViewModel.Duration;
+                existingResult.IndustryCode = employeeTrainingViewModel.IndustryCode;
+                existingResult.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
+                existingResult.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
+                existingResult.CreatedDate = DateTime.Now;
+                existingResult.UpdatedDate = DateTime.Now;
+                existingResult.UpdatedBy = employeeTrainingViewModel.UpdatedBy;
+                _unitOfWork.employeeTraining.Update(existingResult);
+                _unitOfWork.SaveChanges();
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpPost("savemultileavetypes")]
+        public IActionResult createmultiLeaves([FromBody] EmployeeLeaveTypeMappingViewModel employeeLeaveTypeMappingViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.EmployeeLeaveTypeMapping.Any(o => o.EmployeeLeaveTypeId == employeeLeaveTypeMappingViewModel.EmployeeLeaveTypeId))
+                {
+                    // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
+                    var existingresule = _context.EmployeeLeaveTypeMapping.Where(c => c.EmployeeLeaveTypeId == employeeLeaveTypeMappingViewModel.EmployeeLeaveTypeId).FirstOrDefault();
+                    existingresule.EmployeeLeaveTypeId = employeeLeaveTypeMappingViewModel.EmployeeLeaveTypeId;
+
+                    existingresule.EmployeeId = employeeLeaveTypeMappingViewModel.EmployeeId;
+                    existingresule.CreatedBy = employeeLeaveTypeMappingViewModel.CreatedBy;
+                    existingresule.UpdatedBy = employeeLeaveTypeMappingViewModel.UpdatedBy;
+                    existingresule.MasterCompanyId = 1;
+                    existingresule.CreatedDate = DateTime.Now;
+                    existingresule.UpdatedDate = DateTime.Now;
+                    _context.EmployeeLeaveTypeMapping.Update(existingresule);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    EmployeeLeaveTypeMapping cp = new EmployeeLeaveTypeMapping();
+                    cp.EmployeeLeaveTypeId = employeeLeaveTypeMappingViewModel.EmployeeLeaveTypeId;
+                    cp.EmployeeId = employeeLeaveTypeMappingViewModel.EmployeeId;
+                    cp.MasterCompanyId = 1;
+                    cp.CreatedBy = employeeLeaveTypeMappingViewModel.CreatedBy;
+                    cp.UpdatedBy = employeeLeaveTypeMappingViewModel.UpdatedBy;
+                    cp.CreatedDate = DateTime.Now;
+                    cp.UpdatedDate = DateTime.Now;
+                    _context.EmployeeLeaveTypeMapping.Add(cp);
+                    _context.SaveChanges();
+                }
+            }
+            return Ok(employeeLeaveTypeMappingViewModel);
+            // return Ok(ModelState);
+        }
+
+        [HttpGet("GetLeaveData/{id}")]
+        [Produces(typeof(List<EmployeeLeaveTypeMappingViewModel>))]
+        public IActionResult integrationGet(int id)
+        {
+            var employeeleaveType = _unitOfWork.employee.getEmployeeLeaveData(id); //.GetAllCustomersData();
+            return Ok(employeeleaveType);
+
+        }
+
+
+        [HttpGet("getshiftdata/{id}")]
+        [Produces(typeof(List<EmployeeShiftMappingViewModel>))]
+        public IActionResult getShift(int id)
+        {
+            var employeeleaveType = _unitOfWork.employee.getEmployeeShiftData(id); //.GetAllCustomersData();
+            return Ok(employeeleaveType);
+
+        }
+
+
+
+        [HttpPut("employeeUpdateforActive/{id}")]
+        public IActionResult customersUpdateforActive(long id, [FromBody]EmployeeViewModel employee)
+        {
+            if (ModelState.IsValid)
+            {
+                var Empobi = _unitOfWork.employee.GetSingleOrDefault(a => a.EmployeeId == id);
+                employee.MasterCompanyId = 1;
+               Empobi.IsActive = employee.IsActive;
+                Empobi.UpdatedDate = DateTime.Now;
+                Empobi.UpdatedBy = employee.UpdatedBy;
+                Empobi.EmployeeId = employee.EmployeeId;
+                _unitOfWork.employee.Update(Empobi);
+                _unitOfWork.SaveChanges();
+                return Ok(Empobi);
+            }
+
+            return Ok(ModelState);
+        }
+
+
+        [HttpPut("employeepost/{id}")]
+        [Produces(typeof(EmployeeViewModel))]
+        public IActionResult DeleteAction(long id, [FromBody]EmployeeViewModel employee)
+        {
+            var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == id);
+            existingResult.IsDelete = employee.IsDelete;
+
+            _unitOfWork.employee.Update(existingResult);
+            _unitOfWork.SaveChanges();
+            return Ok(id);
+        }
+
+        [HttpPost("AddRolesData")]
+
+        public IActionResult AddRolesData([FromBody] UserRoleLevelEntityViewModel uirolelevEntity)
+        {
+            var existingobj = _context.UserRoleLevelEntity.Where(a => a.UserRoleLevelId == uirolelevEntity.UserRoleLevelId).ToList();
+
+            if (existingobj.Count > 0)
+            {
+                for(var i = 0; i < existingobj.Count; i++)
+                {
+                    _context.UserRoleLevelEntity.Remove(existingobj[i]);
+                    _context.SaveChanges();
+                }
+
+            }
+            //if (ModelState.IsValid)
+            //{
+            //    if (uirolelevEntity == null)
+            //        return BadRequest($"{nameof(uirolelevEntity)} cannot be null");
+            //    if (uirolelevEntity.isAdd == true)
+            //    {
+            //        DAL.Models.UserRoleLevelEntity employeeobject = new DAL.Models.UserRoleLevelEntity();
+            //        employeeobject.MasterCompanyId = uirolelevEntity.MasterCompanyId;
+            //        employeeobject.IsActive = uirolelevEntity.IsActive;
+            //        employeeobject.UserRoleLevelId = uirolelevEntity.UserRoleLevelId;
+            //        employeeobject.UIRoleEntityId = uirolelevEntity.UIRoleEntityId;
+            //        employeeobject.PermittedEditActionId =1;
+                   
+            //        employeeobject.CreatedDate = DateTime.Now;
+            //        employeeobject.UpdatedDate = DateTime.Now;
+
+            //        employeeobject.UpdatedBy = uirolelevEntity.UpdatedBy;
+            //        _context.UserRoleLevelEntity.Add(employeeobject);
+            //        _context.SaveChanges();
+            //    }
+
+            //    if (uirolelevEntity.isViewed == true)
+            //    {
+            //        DAL.Models.UserRoleLevelEntity employeeobject1 = new DAL.Models.UserRoleLevelEntity();
+            //        employeeobject1.MasterCompanyId = uirolelevEntity.MasterCompanyId;
+            //        employeeobject1.IsActive = uirolelevEntity.IsActive;
+            //        employeeobject1.UserRoleLevelId = uirolelevEntity.UserRoleLevelId;
+            //        employeeobject1.UIRoleEntityId = uirolelevEntity.UIRoleEntityId;
+            //        employeeobject1.PermittedEditActionId = 6;
+
+            //        employeeobject1.CreatedDate = DateTime.Now;
+            //        employeeobject1.UpdatedDate = DateTime.Now;
+
+            //        employeeobject1.UpdatedBy = uirolelevEntity.UpdatedBy;
+            //        _context.UserRoleLevelEntity.Add(employeeobject1);
+            //        _context.SaveChanges();
+            //    }
+            //     if (uirolelevEntity.isUpdate == true)
+            //    {
+            //        DAL.Models.UserRoleLevelEntity employeeobject2 = new DAL.Models.UserRoleLevelEntity();
+
+            //        employeeobject2.MasterCompanyId = uirolelevEntity.MasterCompanyId;
+            //        employeeobject2.IsActive = uirolelevEntity.IsActive;
+            //        employeeobject2.UserRoleLevelId = uirolelevEntity.UserRoleLevelId;
+            //        employeeobject2.UIRoleEntityId = uirolelevEntity.UIRoleEntityId;
+            //        employeeobject2.PermittedEditActionId = 2;
+
+            //        employeeobject2.CreatedDate = DateTime.Now;
+            //        employeeobject2.UpdatedDate = DateTime.Now;
+
+            //        employeeobject2.UpdatedBy = uirolelevEntity.UpdatedBy;
+            //        _context.UserRoleLevelEntity.Add(employeeobject2);
+            //        _context.SaveChanges();
+            //    }
+            //    if (uirolelevEntity.isDelete == true)
+            //    {
+            //        DAL.Models.UserRoleLevelEntity employeeobject3 = new DAL.Models.UserRoleLevelEntity();
+
+            //        employeeobject3.MasterCompanyId = uirolelevEntity.MasterCompanyId;
+            //        employeeobject3.IsActive = uirolelevEntity.IsActive;
+            //        employeeobject3.UserRoleLevelId = uirolelevEntity.UserRoleLevelId;
+            //        employeeobject3.UIRoleEntityId = uirolelevEntity.UIRoleEntityId;
+            //        employeeobject3.PermittedEditActionId = 3;
+
+            //        employeeobject3.CreatedDate = DateTime.Now;
+            //        employeeobject3.UpdatedDate = DateTime.Now;
+
+            //        employeeobject3.UpdatedBy = uirolelevEntity.UpdatedBy;
+            //        _context.UserRoleLevelEntity.Add(employeeobject3);
+            //        _context.SaveChanges();
+            //    }
+
+            //    return Ok(ModelState);
+            //}
+            return Ok(ModelState);
+        }
+    //    [HttpDelete("employeepost/{id}")]
+    //    [Produces(typeof(EmployeeViewModel))]
+    //    public IActionResult DeleteAction(long id)
+    //    {
+    //        var existingResult = _unitOfWork.Employee.GetSingleOrDefault(c => c.employeeId == id);
+    //        existingResult.IsDelete = true;
+    //        _unitOfWork.Employee.Update(existingResult);
+
+    //        //_unitOfWork.ActionAttribute.Remove(existingResult);
+
+    //        _unitOfWork.SaveChanges();
+
+    //        return Ok(id);
+    //    }
+    }
+}

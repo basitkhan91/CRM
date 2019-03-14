@@ -1,0 +1,532 @@
+﻿<div class="x_panel" style="">
+	<div class="x_content add-customer-work">
+		<!--<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item" aria-current="page">Vendor</li>
+				<li class="breadcrumb-item" aria-current="page">Purchases</li>
+				<li class="breadcrumb-item active" aria-current="page">PO Setup</li>
+			</ol>
+		</nav>-->
+		<div class="pheading">
+			<h4 class="page-heading">PO Setup</h4>
+		</div>
+		<div class="cdetails-top" style="display: none;">
+			<span class="cdetails-top-close"><i class="fa fa-times"></i></span>
+			<div class="col-sm-12">
+				<label>Company</label>
+				<span>
+					<select>
+						<option value="">Adso</option>
+						<option value="">Aerospace</option>
+						<option value="">ILS</option>
+						<option value="">PArts Base</option>
+						<option value="">PAS</option>
+						<option value="">Silverxis</option>
+					</select>
+				</span>
+			</div>
+			<div class="col-sm-12">
+				<label>BU</label>
+				<span>
+					<select>
+						<option value="">Adso</option>
+						<option value="">Aerospace</option>
+						<option value="">ILS</option>
+						<option value="">PArts Base</option>
+						<option value="">PAS</option>
+						<option value="">Silverxis</option>
+					</select>
+				</span>
+			</div>
+			<div class="col-sm-12">
+				<label>Division</label>
+				<span>
+					<select>
+						<option value="">Adso</option>
+						<option value="">Aerospace</option>
+						<option value="">ILS</option>
+						<option value="">PArts Base</option>
+						<option value="">PAS</option>
+						<option value="">Silverxis</option>
+					</select>
+				</span>
+			</div>
+			<div class="col-sm-12">
+				<label>Dept</label>
+				<span>
+					<select>
+						<option value="">Adso</option>
+						<option value="">Aerospace</option>
+						<option value="">ILS</option>
+						<option value="">PArts Base</option>
+						<option value="">PAS</option>
+						<option value="">Silverxis</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<form id="" class="lgrey-bg div7 filters" name="" action="#" method="post" onsubmit="return false;">
+			<div class="col-sm-2">
+				<label>Vendor Name</label>
+			
+				<div class="inner-addon right-addon inline-block">
+
+					<p-autoComplete (onSelect)="onVendorselected($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePo.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+									[minLength]="1" [dropdown]="true">
+						<ng-template let-vendorName pTemplate="item">
+							<div class="ui-helper-clearfix">{{vendorName}}</div>
+						</ng-template>
+					</p-autoComplete>
+					<!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
+
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<label class="">Vendor Code</label>
+				
+				<div class="inner-addon right-addon inline-block">
+					<p-autoComplete (onSelect)="onVendorCodeselected($event)" (onKeyUp)=eventvendorHandler($event) [(ngModel)]="sourcePo.vendorCode" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
+									[minLength]="1" [dropdown]="true">
+						<ng-template let-vendorCode pTemplate="item">
+							<div class="ui-helper-clearfix">{{vendorCode}}</div>
+						</ng-template>
+					</p-autoComplete>
+					<!--<div *ngIf="disableSaveVenderCode" class="clr-red">Already Exists</div>-->
+				</div>
+				<!--<a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+			</div>
+			<div class="col-sm-2">
+				<label>Vendor Contact</label>
+				<br>
+				<div class="inner-addon right-addon inline-block">
+					<i class="fa fa-search"></i>
+					<input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off" [(ngModel)]="sourcePo.vendorContact" [ngModelOptions]="{standalone: true}">
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<label>Contact Phone</label>
+				<br>
+				<input class="form-control" type="text" [(ngModel)]="sourcePo.contactPhone" [ngModelOptions]="{standalone: true}">
+			</div>
+			<div class="col-sm-2">
+				<label>City</label>
+				<br>
+				<input class="form-control" type="text" [(ngModel)]="sourcePo.city" [ngModelOptions]="{standalone: true}">
+			</div>
+			<div class="col-sm-2">
+				<label>State</label>
+				<br>
+				<input class="form-control" type="text" [(ngModel)]="sourcePo.state" [ngModelOptions]="{standalone: true}">
+			</div>
+			<div class="col-sm-2">
+				<label>Postal Code</label>
+				<br>
+				<input class="form-control" type="text" [(ngModel)]="sourcePo.postalCode" [ngModelOptions]="{standalone: true}">
+			</div>
+
+
+			<button type="button" class="btn btn-default height40 black-search-button btmargin" (click)="getListByDetails()"><i class="fa fa-search"></i></button>
+
+		</form>
+		<div class="clear"></div>
+		<div class="table-responsive default-bg clear table-data">
+			<div class="col-xs-12">
+				<table class="table table-bordered table-sorting table-striped">
+					<thead>
+						<tr>
+							<th>Vendor Code</th>
+							<th>Full Name</th>
+							<th>Vendor Type</th>
+							<th>Email</th>
+							<th>City</th>
+							<th>State</th>
+							<th class="events2"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let object of vendorList">
+							<td>{{object?.vendorName}}</td>
+							<td>{{object?.vendorCode}}</td>
+							<td>
+								<div *ngIf="object?.vendorTypeId==1">Internal</div>
+								<div *ngIf="object?.vendorTypeId==2">External</div>
+								<div *ngIf="object?.vendorTypeId==3">Affliate</div>
+								
+							</td>
+							<td>{{object?.email}}</td>
+							<td>{{object?.city}}</td>
+							<td>{{object?.stateOrProvince}}</td>
+							<td>
+								<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,object)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+								<!--<span data-toggle="modal" data-target="#viewvendor"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" (click)="openView(view,object)"><i class="fa fa-eye"></i></a> </span>-->
+								<!--<span data-toggle="modal" ><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="Contacts" (click)="openContactList(object)"><i class="fa fa-users"></i></a></span>-->
+								<i class="fa fa-users" mat-icon-button matTooltip="Contacts" (click)="openContactList(content,object)"></i>
+								<span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
+								<span data-toggle="modal" data-target="#po-list"> <a href="#" class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="PO's"><i class="fa fa-list"></i></a> </span>
+								<button data-toggle="tooltip" (click)="gotoCreatePO(object)" class="btn btn-primary boxed-float-btn nobg" data-original-title="Create PO" matTooltip="Create Po"><i class="fa fa-plus clr-green"></i></button>
+							</td>
+						</tr>
+					
+
+					</tbody>
+				</table>
+			</div>
+			<div class="clear"></div>
+			<br>
+			<!--<div class="padding5">
+				<ul class="pagination">
+					<li class="arrows disabled"><a href="#"> <i class="fa fa-angle-left"></i> </a></li>
+					<li class="active"><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li class="arrows"><a href="#"> <i class="fa fa-angle-right"></i> </a></li>
+				</ul>
+				<div class="pull-right"> © <span class="currentyear">2019</span> <a href="#">PAS</a> </div>
+			</div>-->
+		</div>
+
+
+	</div>
+</div>
+<ng-template #view class="modal fade " id="view" role="dialog">
+	<!--<div *ngIf="showGeneralData">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+				<h4 class="modal-title">Vendor Details</h4>
+
+			</div>
+			<div class="table-responsive default-bg clear">
+				<div class="col-sm-4">
+					<p><span class="label"><b>vendor Name: </b></span><span class="value">{{vendorName}}</span></p>
+					<p><span class="label"><b>vendor Code: </b></span><span class="value">{{vendorCode}}</span></p>
+					<p><span class="label"><b>Internal/External: </b></span><span class="value">{{vendorTypeId}}</span></p>
+					<p><span class="label"><b>d/b/a: </b></span><span class="value">{{doingBusinessAsName}}</span></p>
+					<p><span class="label"><b>Parent: </b></span><span class="value">{{parent}}</span></p>
+					<p><span class="label"><b>Address1: </b></span><span class="value">{{address1}}</span></p>
+					<p><span class="label"><b>Address2 : </b></span><span class="value">{{address2}}</span></p>
+					<p><span class="label"><b>Address3: </b></span><span class="value">{{address3}}</span></p>
+					<p><span class="label"><b>City: </b></span><span class="value">{{city}}</span></p>
+					<p><span class="label"><b>state Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
+					<p><span class="label"><b>postal: </b></span><span class="value">{{postalCode}}</span></p>
+					<p><span class="label"><b>country: </b></span><span class="value">{{country}}</span></p>
+				</div>
+				<div class="col-sm-4">
+					<p><span class="label"><b>Email: </b></span><span class="value">{{vendorEmail}}</span></p>
+					<p><span class="label"><b>Classification : </b></span><span class="value">{{vendorClassificationId}}</span></p>
+					<p><span class="label"><b>Contract Reference: </b></span><span class="value">{{vendorContractReference}}</span></p>
+					<p><span class="label"><b>Preferred Vendor: </b></span><span class="value">{{isPreferredVendor}}</span></p>
+					<p><span class="label"><b>license #:</b></span><span class="value">{{licenseNumber}}</span></p>
+					<p><span class="label"><b>Capability: </b></span><span class="value">{{capabilityId}}</span></p>
+					<p><span class="label"><b>URL to Vendor site: </b></span><span class="value">{{vendorURL}}</span></p>
+				</div>
+				<div class="=col-sm-12">
+					<p><span class="label"><b>Credit Limit: </b></span><span class="value">{{Creditlimit}}</span></p>
+					<p><span class="label"><b>Credit Terms: </b></span><span class="value">{{creditTermsId}}</span></p>
+					<p><span class="label"><b>Currency: </b></span><span class="value">{{currencyId}}</span></p>
+					<p><span class="label"><b>Discount Level: </b></span><span class="value">{{discountLevel}}</span></p>
+					<p><span class="label"><b>1099 Required: </b></span><span class="value">{{is1099Required}}</span></p>
+				</div>
+				<div class="modal-body viewform">
+					<p><span class="label"><b>First Name: </b></span><span class="value">{{firstName}}</span></p>
+					<p><span class="label"><b>Last Name: </b></span><span class="value">{{lastName}}</span></p>
+					<p><span class="label"><b>Contact Title </b></span><span class="value">{{contactTitle}}</span></p>
+					<p><span class="label"><b>Email: </b></span><span class="value">{{email}}</span></p>
+					<p><span class="label"><b>Mobile Phone : </b></span><span class="value">{{mobilePhone}}</span></p>
+					<p><span class="label"><b>Fax : </b></span><span class="value">{{fax}}</span></p>
+
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+			</div>
+		</div>
+	</div>-->
+	<div class="modal-body viewform">
+		<div id="adminsearchlocationajax" class="table-responsive default-bg clear">
+			<div class="modal-header">
+				<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+				<h4 class="modal-title">Details of Vendor</h4>
+
+			</div>
+			<!--<a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>-->
+			<hr>
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title"> <a data-toggle="collapse" href="#step1" aria-expanded="false" aria-controls="receive" class="collapsed">General Information</a> </h4>
+					</div>
+					<div id="step1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+						<div *ngIf="showGeneralData">
+							<div class="modal-content">
+
+								<div class="table-responsive default-bg clear">
+									<div class="col-sm-6">
+										<p><span class="label"><b>vendor Name: </b></span><span class="value">{{vendorName}}</span></p>
+										<p><span class="label"><b>vendor Code: </b></span><span class="value">{{vendorCode}}</span></p>
+										<p><span class="label"><b>Internal/External: </b></span><span class="value">{{vendorTypeId}}</span></p>
+										<p><span class="label"><b>d/b/a: </b></span><span class="value">{{doingBusinessAsName}}</span></p>
+										<p><span class="label"><b>Parent: </b></span><span class="value">{{parent}}</span></p>
+										<p><span class="label"><b>Address1: </b></span><span class="value">{{address1}}</span></p>
+										<p><span class="label"><b>Address2 : </b></span><span class="value">{{address2}}</span></p>
+										<p><span class="label"><b>Address3: </b></span><span class="value">{{address3}}</span></p>
+										<p><span class="label"><b>City: </b></span><span class="value">{{city}}</span></p>
+										<p><span class="label"><b>state Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
+										<p><span class="label"><b>postal: </b></span><span class="value">{{postalCode}}</span></p>
+										<p><span class="label"><b>country: </b></span><span class="value">{{country}}</span></p>
+									</div>
+									<div class="col-sm-6">
+										<p><span class="label"><b>Email: </b></span><span class="value">{{vendorEmail}}</span></p>
+										<p><span class="label"><b>Classification : </b></span><span class="value">{{vendorClassificationId}}</span></p>
+										<p><span class="label"><b>Contract Reference: </b></span><span class="value">{{vendorContractReference}}</span></p>
+										<p><span class="label"><b>Preferred Vendor: </b></span><span class="value">{{isPreferredVendor}}</span></p>
+										<p><span class="label"><b>license #:</b></span><span class="value">{{licenseNumber}}</span></p>
+										<p><span class="label"><b>Capability: </b></span><span class="value">{{capabilityId}}</span></p>
+										<p><span class="label"><b>URL to Vendor site: </b></span><span class="value">{{vendorURL}}</span></p>
+									</div>
+
+
+									<div class="clear"></div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title"> <a class="" data-toggle="collapse" href="#step2" aria-expanded="true">Contact</a> </h4>
+					</div>
+					<div id="step2" class="panel-collapse collapse in" aria-expanded="true" style="">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<p-table #dt [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns" [resizableColumns]="true" [reorderableColumns]="true">
+
+									<!--<ng-template pTemplate="caption">-->
+									<!--<div style="text-align: right">-->
+									<!--<p-multiSelect [options]="contactcols" [(ngModel)]="selectedContactColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
+									   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>-->
+									<!--<div class="inner-addon right-addon w200 inline-block">
+										<i class="fa fa-search"></i>
+										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+									</div>-->
+									<!--<button type="button" pButton icon="fa-download" iconPos="left" label="All Data" (click)="dt.exportCSV()"></button>
+									<button type="button" pButton icon="fa-download" iconPos="left" label="Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>-->
+									<!--<a (click)="open(contentEdit)" matTooltip="Add Item Group" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
+									<!--<div class="excel-upload">
+										<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+										<label for="upload">
+											<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+										</label>
+									</div>-->
+									<!--</div>-->
+									<!--</ng-template>-->
+
+									<ng-template pTemplate="header" let-columns>
+										<tr>
+
+											<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+												{{col.header}}
+												<p-sortIcon [field]="col.field"></p-sortIcon>
+											</th>
+
+											<!--<th></th>-->
+
+										</tr>
+									</ng-template>
+
+									<ng-template pTemplate="body" let-rowData let-columns="columns">
+										<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+
+											<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+												{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+											</td>
+
+											<!--<td>
+												<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+												<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+												<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+												<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="opencontactView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+												<button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
+													<mat-icon>edit</mat-icon>
+												</button>
+
+												<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.contactId)">
+													<mat-icon color="warn">delete</mat-icon>
+												</button>
+
+												<button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+													<mat-icon color="green">history</mat-icon>
+												</button>
+
+											</td>-->
+
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3" aria-expanded="false">Financial Information</a> </h4>
+					</div>
+					<div id="step3" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+						<div class="panel-body">
+							<div class="col-sm-6">
+								<div class="=col-sm-12">
+									<p><span class="label"><b>Credit Limit: </b></span><span class="value">{{creditlimit}}</span></p>
+									<p><span class="label"><b>Credit Terms: </b></span><span class="value">{{creditTermsId}}</span></p>
+									<p><span class="label"><b>Currency: </b></span><span class="value">{{currencyId}}</span></p>
+									<p><span class="label"><b>Discount Level: </b></span><span class="value">{{discountLevel}}</span></p>
+									<p><span class="label"><b>1099 Required: </b></span><span class="value">{{is1099Required}}</span></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4" aria-expanded="false">Payment Information</a> </h4>
+					</div>
+					<div id="step4" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<p-table #dt [value]="allpayments" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedPaymentColumns" [resizableColumns]="true" [reorderableColumns]="true">
+
+
+
+									<ng-template pTemplate="header" let-columns>
+										<tr>
+
+											<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+												{{col.header}}
+												<p-sortIcon [field]="col.field"></p-sortIcon>
+											</th>
+
+											<!--<th></th>-->
+
+										</tr>
+									</ng-template>
+
+									<ng-template pTemplate="body" let-rowData let-columns="columns">
+										<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+
+											<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+												{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+											</td>
+
+
+
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5" aria-expanded="false">Shipping Information</a> </h4>
+					</div>
+					<div id="step5" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<p-table #dt [value]="allShippings" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedShippingColumns" [resizableColumns]="true" [reorderableColumns]="true">
+
+
+
+									<ng-template pTemplate="header" let-columns>
+										<tr>
+
+											<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+												{{col.header}}
+												<p-sortIcon [field]="col.field"></p-sortIcon>
+											</th>
+
+											<!--<th></th>-->
+
+										</tr>
+									</ng-template>
+
+									<ng-template pTemplate="body" let-rowData let-columns="columns">
+										<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+
+											<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+												{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+											</td>
+
+
+
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #content class="modal fade " id="view" role="dialog">
+
+	<div class="modal-body viewform">
+		<div id="adminsearchlocationajax" class="table-responsive default-bg clear">
+			<div class="modal-header">
+				<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+				<h4 class="modal-title">Details of Vendor</h4>
+
+			</div>
+				<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<p-table #dt [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns" [resizableColumns]="true" [reorderableColumns]="true">
+
+									
+
+									<ng-template pTemplate="header" let-columns>
+										<tr>
+
+											<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+												{{col.header}}
+												<p-sortIcon [field]="col.field"></p-sortIcon>
+											</th>
+
+											
+
+										</tr>
+									</ng-template>
+
+									<ng-template pTemplate="body" let-rowData let-columns="columns">
+										<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+
+											<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+												{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+											</td>
+
+											
+
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		
+</ng-template>
