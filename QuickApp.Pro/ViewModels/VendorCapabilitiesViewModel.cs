@@ -15,8 +15,28 @@ namespace QuickApp.Pro.ViewModels
 
         public string CapabilityName { get; set; }
 
+        public long VendorId { get; set; }
+
+        public string VendorRanking { get; set; }
+
+        public string PMA_DER { get; set; }
+
+        public long ItemMasterId { get; set; }
+
+        public Int32? TAT { get; set; }
+
+        public Decimal Cost { get; set; }
+
+        public long AlternatePartId { get; set; }
+
+        public long ATAChapterId { get; set; }
+
+        public long ATASubchapterId { get; set; }
+
+        public string Memo { get; set; }
+
         [ForeignKey("MasterCompanyId")]
-        public Int32 MasterCompanyId { get; set; }
+        public Int32? MasterCompanyId { get; set; }
 
         public string CreatedBy { get; set; }
 

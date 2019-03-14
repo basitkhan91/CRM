@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class VendorCapabilityType 
+    public class VendorCapabilityType
     {
         public long VendorCapabilityTypeId { get; set; }
 

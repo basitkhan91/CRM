@@ -1,15 +1,14 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace DAL.Models
+namespace QuickApp.Pro.ViewModels
 {
-    public class VendorCapabilityAircraftType 
+    public class VendorCapabilityTypeViewModel
     {
-        [Key]
-
         public long VendorCapabilityAircraftTypeId { get; set; }
 
         public long VendorCapabilityId { get; set; }
