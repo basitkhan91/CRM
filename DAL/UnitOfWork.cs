@@ -1,0 +1,1461 @@
+﻿// ===============================
+// info@ebenmonney.com
+// www.ebenmonney.com/quickapp-pro
+// ===============================
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DAL.Models;
+using DAL.Repositories;
+using DAL.Repositories.Interfaces;
+
+namespace DAL
+{
+    public class UnitOfWork : IUnitOfWork
+    {
+        readonly ApplicationDbContext _context;
+
+        ICustomerRepository _customer;
+        ICustomerBillingInformationRepository _customerBillingInformation;
+        IProductRepository _products;
+        IOrdersRepository _orders;
+        IWorkflowActionRepository _workflowActions;
+        IActionRepository _actionRepository;
+        IATAMainRepository _aTAMainRepository;
+        IATASubChapter1Repository _aTASubChapter1Repository;
+        IATASubChapter2Repository _aTASubChapter2Repository;
+        ISiteRepository _siteRepository;
+        IWarehouseRepository _warehouseRepository;
+        ILocationRepository _locationRepository;
+        IShelfRepository _shelfRepository;
+        IBinRepository _binRepository;
+        ICurrencyRepository _currencyRepository;
+        IMasterCompanyRepository _masterCompanyRepository;
+        IActionAttributeRepository _actionAttributeRepository;
+        IGatecodeRepository _gateCodeRepository;
+        IIntegration _integrationRepository;
+        IPriority _priority;
+        ICreditTermsRepository _CreditTermsRepository;
+        ICustomerClassificationRepository _customerClassificationRepository;
+        IConditionRepository _conditionRepository;
+        IFindingRepository _findingRepository;
+        IProvisionRepository _provisionRepository;
+        IReasonRepository _reasonRepository;
+        IItemClassification _itemclassfifcation;
+        IItemgroup _itemgroup;
+        IPublication _publication;
+        ITaxRateRepository _taxRateRepository;
+        ITaxTypeRepository _taxTypeRepository;
+        IVendorClassificationRepository _vendorClassificationRepository;
+        IWorkPerformedRepository _workPerformedRepository;
+        IAuditHistoryRepository _auditHistoryRepository;
+        IUnitOfMeasureRepository _unitOfMeasureRepository;
+        IWorkScopeRepository _workScopeRepository;
+        IEmployeeExpertiseRepository _employeeExpertiseRepository;
+        IJobTitle _jobTitle;
+        IExpenditureCategory _expenditureCategory;
+        IDefaultMessage _defaultMessage;
+        IDocument _document;
+        IVendor _vendor;
+        ICharge _charge;
+        IAddress _address;
+        IContactRepository _contact;
+        IFinance _finance;
+        IPayment _payment;
+        IShipping _shipping;
+        IVendorContactRepository _vendorContactRepository;
+        IVendorPaymentRepository _vendorPaymentRepository;
+        IManufacturerRepository _manufacturerRepository;
+        IVendorCheckPaymentRepository _vendorCheckPaymentRepository;
+        IVendorCapabilitiesRepository _vendorCapabilitiesRepository;
+        IVendorDomesticPaymentRepository _vendorDomesticPaymentRepository;
+
+        IVendorDomesticWirePaymentRepository _vendorDomesticWirePaymentRepository;
+
+        IVendorInternationalPaymentRepository _vendorInternationalPaymentRepository;
+
+        IVendorInternationalWirePaymentRepository _vendorInternationalWirePaymentRepository;
+
+        IVendorShippingAddress _vendorShippingAddress;
+
+        IVendorShippingDetailsRepository _vendorShippingDetailsRepository;
+        IGLAccountClassRespository _gLAccountClassRespository;
+
+
+        IEmployee _employee;
+        IGlCashFlowRepository _glCashFlowRepository;
+        IEmployeeLeaveType _employeeLeaveType;
+        IEmployeeTrainingTypeRepository _EmployeeTrainingType;
+        ICompany _company;
+
+        IDivision _division;
+
+        IDepartment _department;
+
+        IBusinessUnit _businessUnit;
+
+        IEmployeeLicenseType _employeeLicenseType;
+
+        IEmployeeLicensure _employeeLicensure;
+
+        IEmployeeShift _employeeShift;
+
+        IEmployeeTraining _employeeTraining;
+        IShiftRepository _shift;
+        ICountriesRepository _Countries;
+        ICustomerWarning _CustomerWarning;
+        ICustomerContactRepository _CustomerContact;
+        ICustomerShippingAddress _CustomerShippingAddress;
+        ICustomerAffliationRepository _customerAffliationRepository;
+
+        ICustomerType _customerType;
+
+        IATAChapter _aTAChapter;
+
+        IAircraftType _aircraftType;
+
+        IAircraftModel _aircraftModel;
+
+        ICustomerAircraftModel _customerAircraftModel;
+
+        ICustomerAircraftType _customerAircraftType;
+
+        IItemMaster _itemMaster;
+       // IRepairOrder _repairOrder;
+
+        ITimeLife _timeLife;
+
+        IStockLineList _stockList;
+
+        ILegalEntity _legalEntity;
+
+        IReceivingCustomerWork _receivingCustomerWork;
+
+        IWarning _warning;
+        ILaborAndOverheadCostRepository _LaborAndOverheadCost;
+        IManagementSiteRepository _managementSite;
+        IManagementWarehouseRepository _managementWarehouse;
+        IManagementLocationRepository _managementLocation;
+        IManagementShelfRepository _managementShelf;
+        IManagementBinRepository _managementBin;
+        IUserRoleLevelMgmStructRepository _userRoleLevelMgmStruct;
+        IUserRoleLevelRepository _userRoleLevel;
+        IDiscountRepository _discount;
+        ICustomerShipping _customershipping;
+
+        IPurchaseOrder _purchaseOrder;
+        IStocklineAdjustmentRepository _stocklineAdjustmentRepository;
+        //IWarehouseRepository _warehouseRepository;
+        IGLAccountCategoriesRepository _GLAccountCategories;
+        ICertificationTypeRepository _ICertificationTypeRepository;
+        IStocklineAdjustmentReasonRepository _stocklineAdjustmentReason;
+
+        IItemMasterAircraftManafacturerRepository _itemMasterAircraftManafacturerRepository;
+
+        IItemMasterIntegrationPortalRepository _itemMasterIntegrationPortalRepository;
+
+        ICustomerIntegrationPortalRepository _customerIntegrationPortalRepository;
+
+        IEmployeeLeaveTypeMappingRepository _employeeLeaveTypeMappingRepository;
+
+        IEmployeeShiftRepository _employeeShiftmappingRepository;
+        IWorkFlowRepositoryTest _workFlowRepositoryTest;
+        IStocklineIntegrationPortalRepository _stocklineIntegrationPortalRepository;
+
+        ICapabilityTypeRepository _capabilityTypeRepository;
+
+        //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
+
+        public UnitOfWork(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+
+        IVendorWarning _vendorWarning;
+
+
+        public IVendorWarning VendorWarning
+        {
+            get
+            {
+                if (_vendorWarning == null)
+                    _vendorWarning = new VendorWarningRepository(_context);
+
+                return _vendorWarning;
+            }
+        }
+        public ICustomerShipping CustomerShipping
+        {
+            get
+            {
+                if (_customershipping == null)
+                    _customershipping = new CustomerShippingRepository(_context);
+
+                return _customershipping;
+            }
+        }
+        public ICustomerAffliationRepository CustomerAffliationRepository
+        {
+            get
+            {
+                if (_customerAffliationRepository == null)
+                    _customerAffliationRepository = new CustomerAffliateRepository(_context);
+
+                return _customerAffliationRepository;
+            }
+        }
+
+        public ICustomerRepository Customer
+        {
+            get
+            {
+                if (_customer == null)
+                    _customer = new CustomerRepository(_context);
+
+                return _customer;
+            }
+        }
+
+        public ICustomerBillingInformationRepository CustomerBillingInformation
+        {
+            get
+            {
+                if (_customerBillingInformation == null)
+                    _customerBillingInformation = new CustomerBillingInformationRepository(_context);
+
+                return _customerBillingInformation;
+            }
+        }
+
+
+
+        public IProductRepository Products
+        {
+            get
+            {
+                if (_products == null)
+                    _products = new ProductRepository(_context);
+
+                return _products;
+            }
+        }
+
+
+        public IGLAccountCategoriesRepository GLAccountCategories
+
+        {
+            get
+            {
+                if (_GLAccountCategories == null)
+                    _GLAccountCategories = new GLAccountCategoriesRepository(_context);
+                return _GLAccountCategories;
+            }
+        }
+
+       
+
+        public IVendorCapabilitiesRepository VendorCapabilities
+
+        {
+            get
+            {
+                if (_vendorCapabilitiesRepository == null)
+                    _vendorCapabilitiesRepository = new VendorCapabilitiesRepository(_context);
+                return _vendorCapabilitiesRepository;
+            }
+        }
+
+        public IOrdersRepository Orders
+        {
+            get
+            {
+                if (_orders == null)
+                    _orders = new OrdersRepository(_context);
+
+                return _orders;
+            }
+        }
+
+        public IWorkflowActionRepository WorkflowActions
+        {
+            get
+
+
+            {
+                if (_workflowActions == null)
+                    _workflowActions = new WorkflowActionRepository(_context);
+
+                return _workflowActions;
+            }
+        }
+
+        public IActionRepository Actions
+        {
+            get
+            {
+                if (_actionRepository == null)
+                    _actionRepository = new ActionRepository(_context);
+                return _actionRepository;
+            }
+        }
+
+        public IATAMainRepository ATAMains
+        {
+            get
+            {
+                if (_aTAMainRepository == null)
+                    _aTAMainRepository = new ATAMainRepository(_context);
+                return _aTAMainRepository;
+            }
+        }
+        public IATASubChapter1Repository ATASubChapter
+        {
+            get
+            {
+                if (_aTASubChapter1Repository == null)
+                    _aTASubChapter1Repository = new ATASubChapter1Repository(_context);
+                return _aTASubChapter1Repository;
+            }
+        }
+        public IATASubChapter1Repository ATASubChapter1s
+        {
+            get
+            {
+                if (_aTASubChapter1Repository == null)
+                    _aTASubChapter1Repository = new ATASubChapter1Repository(_context);
+                return _aTASubChapter1Repository;
+            }
+        }
+
+        public IATASubChapter2Repository ATASubChapter2s
+        {
+            get
+            {
+                if (_aTASubChapter2Repository == null)
+                    _aTASubChapter2Repository = new ATASubChapter2Repository(_context);
+                return _aTASubChapter2Repository;
+            }
+        }
+        public ISiteRepository Sites
+        {
+            get
+            {
+                if (_siteRepository == null)
+                    _siteRepository = new SiteRepository(_context);
+                return _siteRepository;
+            }
+        }
+        public IWarehouseRepository Warehouses
+        {
+            get
+            {
+                if (_warehouseRepository == null)
+                    _warehouseRepository = new WarehouseRepository(_context);
+                return _warehouseRepository;
+            }
+        }
+        public ILocationRepository Locations
+        {
+            get
+            {
+                if (_locationRepository == null)
+                    _locationRepository = new LocationRepository(_context);
+                return _locationRepository;
+            }
+        }
+        public IShelfRepository Shelfs
+        {
+            get
+            {
+                if (_shelfRepository == null)
+                    _shelfRepository = new ShelfRepository(_context);
+                return _shelfRepository;
+            }
+        }
+        public IBinRepository Bins
+        {
+            get
+            {
+                if (_binRepository == null)
+                    _binRepository = new BinRepository(_context);
+                return _binRepository;
+            }
+        }
+        public ICurrencyRepository Currencys
+        {
+            get
+            {
+                if (_currencyRepository == null)
+                    _currencyRepository = new CurrencyRepository(_context);
+                return _currencyRepository;
+            }
+        }
+
+
+        public IConditionRepository Conditions
+        {
+            get
+            {
+                if (_conditionRepository == null)
+                    _conditionRepository = new ConditionRepository(_context);
+                return _conditionRepository;
+            }
+        }
+
+
+
+        public ICreditTermsRepository CreditTerms
+        {
+            get
+            {
+                if (_CreditTermsRepository == null)
+                    _CreditTermsRepository = new CreditTermsRepository(_context);
+                return _CreditTermsRepository;
+            }
+        }
+
+
+        //public ICustomerClassificationRepository CustomerClassifications
+        //{
+        //    //get
+        //    //{
+        //    //    if (_customerClassificationRepository == null)
+        //    //        _customerClassificationRepository = new CustomerClassificationRepository(_context);
+        //    //    return _customerClassificationRepository;
+        //    //}
+        //}
+
+
+        public IFindingRepository Findings
+        {
+            get
+            {
+                if (_findingRepository == null)
+                    _findingRepository = new FindingRepository(_context);
+                return _findingRepository;
+            }
+        }
+
+
+
+        public int SaveChanges()
+        {
+            return _context.SaveChanges();
+        }
+
+        public void SaveChanges(Employee employeeobject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Customer> getAlldata()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IMasterCompanyRepository MasterCompanies
+        {
+            get
+            {
+                if (_masterCompanyRepository == null)
+                    _masterCompanyRepository = new MasterCompanyRepository(_context);
+                return _masterCompanyRepository;
+            }
+        }
+
+        ICustomerClassificationRepository IUnitOfWork.CustomerClassifications
+        {
+            get
+            {
+                if (_customerClassificationRepository == null)
+                    _customerClassificationRepository = new CustomerClassificationRepository(_context);
+                return _customerClassificationRepository;
+            }
+        }
+
+        IProvisionRepository IUnitOfWork.Provisions
+        {
+            get
+            {
+                if (_provisionRepository == null)
+                    _provisionRepository = new ProvisionRepository(_context);
+                return _provisionRepository;
+            }
+        }
+
+        public IReasonRepository Reasons
+        {
+            get
+            {
+                if (_reasonRepository == null)
+                    _reasonRepository = new ReasonRepository(_context);
+                return _reasonRepository;
+            }
+        }
+
+        public IActionAttributeRepository ActionAttribute
+        {
+            get
+            {
+                if (_actionAttributeRepository == null)
+                    _actionAttributeRepository = new ActionAttributeRepository(_context);
+                return _actionAttributeRepository;
+            }
+        }
+
+        public IGatecodeRepository Gatecode
+        {
+            get
+            {
+                if (_gateCodeRepository == null)
+                    _gateCodeRepository = new GatecodeRepository(_context);
+                return _gateCodeRepository;
+            }
+        }
+
+        public IIntegration Integration
+        {
+            get
+            {
+                if (_integrationRepository == null)
+                    _integrationRepository = new IntegrationRepository(_context);
+                return _integrationRepository;
+            }
+        }
+        public IPriority Priority
+        {
+            get
+            {
+                if (_priority == null)
+                    _priority = new PriorityRepository(_context);
+                return _priority;
+            }
+        }
+
+
+
+
+
+        public IItemClassification ItemClassification
+        {
+            get
+            {
+                if (_itemclassfifcation == null)
+                    _itemclassfifcation = new ItemClassificationRepository(_context);
+                return _itemclassfifcation;
+            }
+        }
+        public IItemgroup Itemgroup
+        {
+            get
+            {
+                if (_itemgroup == null)
+                    _itemgroup = new ItemgroupRepository(_context);
+                return _itemgroup;
+            }
+        }
+
+        public ITaxRateRepository TaxRates
+
+        {
+            get
+            {
+                if (_taxRateRepository == null)
+                    _taxRateRepository = new TaxRateRepository(_context);
+                return _taxRateRepository;
+
+            }
+        }
+
+        public ITaxTypeRepository TaxType
+
+        {
+            get
+            {
+                if (_taxTypeRepository == null)
+                    _taxTypeRepository = new TaxTypeRepository(_context);
+                return _taxTypeRepository;
+
+            }
+        }
+
+        public IVendorClassificationRepository VendorClassifications
+
+        {
+            get
+            {
+                if (_vendorClassificationRepository == null)
+                    _vendorClassificationRepository = new VendorClassificationRepository(_context);
+                return _vendorClassificationRepository;
+
+            }
+        }
+
+        public IWorkPerformedRepository WorkPerformed
+        {
+            get
+            {
+                if (_workPerformedRepository == null)
+                    _workPerformedRepository = new WorkPerformedRepository(_context);
+                return _workPerformedRepository;
+
+            }
+        }
+
+        public IPublication Publication
+        {
+            get
+            {
+                if (_publication == null)
+                    _publication = new PublicationRepository(_context);
+                return _publication;
+
+            }
+        }
+
+        public IAuditHistoryRepository AuditHistory
+        {
+            get
+            {
+                if (_auditHistoryRepository == null)
+                    _auditHistoryRepository = new AuditHistoryRepository(_context);
+                return _auditHistoryRepository;
+
+            }
+        }
+
+        public IUnitOfMeasureRepository UnitOfMeasure
+
+        {
+            get
+            {
+                if (_unitOfMeasureRepository == null)
+                    _unitOfMeasureRepository = new UnitOfMeasureRepository(_context);
+                return _unitOfMeasureRepository;
+
+            }
+        }
+
+        IWorkScopeRepository IUnitOfWork.WorkScope
+        {
+            get
+            {
+                if (_workScopeRepository == null)
+                    _workScopeRepository = new WorkScopeRepository(_context);
+                return _workScopeRepository;
+
+            }
+        }
+
+        public IEmployeeExpertiseRepository EmployeeExpertise
+        {
+            get
+            {
+                if (_employeeExpertiseRepository == null)
+                    _employeeExpertiseRepository = new EmployeeExpertiseRepository(_context);
+                return _employeeExpertiseRepository;
+            }
+        }
+        public IJobTitle JobTitle
+        {
+            get
+            {
+                if (_jobTitle == null)
+                    _jobTitle = new JobTitleRepository(_context);
+                return _jobTitle;
+            }
+        }
+
+        public IExpenditureCategory ExpenditureCategory
+        {
+            get
+            {
+                if (_expenditureCategory == null)
+                    _expenditureCategory = new ExpenditureCategoryRepository(_context);
+                return _expenditureCategory;
+            }
+        }
+
+        public IDefaultMessage DefaultMessage
+        {
+            get
+            {
+                if (_defaultMessage == null)
+                    _defaultMessage = new DefaultMessageRepository(_context);
+                return _defaultMessage;
+            }
+        }
+        public IDocument Document
+        {
+            get
+            {
+                if (_document == null)
+                    _document = new DocumentRepository(_context);
+                return _document;
+            }
+        }
+        public IVendor Vendor
+        {
+            get
+            {
+                if (_vendor == null)
+                    _vendor = new VenodrRepository(_context);
+                return _vendor;
+            }
+        }
+        public ICharge Charge
+
+        {
+            get
+            {
+                if (_charge == null)
+                    _charge = new ChargeRepository(_context);
+                return _charge;
+            }
+        }
+        public IAddress Address
+
+        {
+            get
+            {
+                if (_address == null)
+                    _address = new AddressRepository(_context);
+                return _address;
+            }
+        }
+        public IContactRepository ContactRepository
+
+        {
+            get
+            {
+                if (_contact == null)
+                    _contact = new ContactRepository(_context);
+                return _contact;
+            }
+        }
+        public IFinance Finance
+
+        {
+            get
+            {
+                if (_finance == null)
+                    _finance = new FinanceRepository(_context);
+                return _finance;
+            }
+        }
+        public IPayment Payment
+
+        {
+            get
+            {
+                if (_payment == null)
+                    _payment = new PaymentRepository(_context);
+                return _payment;
+            }
+        }
+        public IShipping Shipping
+
+        {
+            get
+            {
+                if (_shipping == null)
+                    _shipping = new ShippingRepository(_context);
+                return _shipping;
+            }
+        }
+        public IVendorContactRepository vendorContactRepository
+
+        {
+            get
+            {
+                if (_vendorContactRepository == null)
+                    _vendorContactRepository = new VendorContactRepository(_context);
+                return _vendorContactRepository;
+            }
+        }
+        public IVendorPaymentRepository vendorPaymentRepository
+
+        {
+            get
+            {
+                if (_vendorPaymentRepository == null)
+                    _vendorPaymentRepository = new VendorPaymentRepository(_context);
+                return _vendorPaymentRepository;
+            }
+        }
+        public IVendorCheckPaymentRepository vendorCheckPaymentRepository
+
+        {
+            get
+            {
+                if (_vendorCheckPaymentRepository == null)
+                    _vendorCheckPaymentRepository = new VendorCheckPaymentRepository(_context);
+                return _vendorCheckPaymentRepository;
+            }
+        }
+
+
+
+
+
+        public IVendorDomesticPaymentRepository vendorDomesticPaymentRepository
+        {
+            get
+            {
+                if (_vendorDomesticPaymentRepository == null)
+                    _vendorDomesticPaymentRepository = new VendorDomesticPaymentRepository(_context);
+                return _vendorDomesticPaymentRepository;
+            }
+        }
+
+        public IVendorInternationalPaymentRepository vendorInternationalPaymentRepository
+
+        {
+            get
+            {
+                if (_vendorInternationalPaymentRepository == null)
+                    _vendorInternationalPaymentRepository = new VendorInrernationalPaymentRepository(_context);
+                return _vendorInternationalPaymentRepository;
+            }
+        }
+
+        public IVendorDomesticWirePaymentRepository vendordomesticWirePaymentRepository
+        {
+            get
+            {
+                if (_vendorDomesticWirePaymentRepository == null)
+                    _vendorDomesticWirePaymentRepository = new VendorDomesticWirePaymentRepository(_context);
+                return _vendorDomesticWirePaymentRepository;
+            }
+        }
+
+        public IVendorInternationalWirePaymentRepository vendorInternationalWirePaymentRepository
+        {
+            get
+            {
+                if (_vendorInternationalWirePaymentRepository == null)
+                    _vendorInternationalWirePaymentRepository = new VendorInternationalWirePaymentRepository(_context);
+                return _vendorInternationalWirePaymentRepository;
+            }
+        }
+        public IVendorShippingAddress VendorShippingAddress
+
+        {
+            get
+            {
+                if (_vendorShippingAddress == null)
+                    _vendorShippingAddress = new VendorShippingAddressRepository(_context);
+                return _vendorShippingAddress;
+            }
+        }
+        public IVendorShippingDetailsRepository VendorShippingDetailsRepository
+
+        {
+            get
+            {
+                if (_vendorShippingDetailsRepository == null)
+                    _vendorShippingDetailsRepository = new VendorShippingDetailsRepository(_context);
+                return _vendorShippingDetailsRepository;
+            }
+        }
+
+        public IGLAccountClassRespository GLAccountClass
+
+        {
+            get
+            {
+                if (_gLAccountClassRespository == null)
+                    _gLAccountClassRespository = new GLAccountClassRepository(_context);
+                return _gLAccountClassRespository;
+            }
+        }
+
+
+
+        public IManufacturerRepository Manufacturer
+
+        {
+            get
+            {
+                if (_manufacturerRepository == null)
+                    _manufacturerRepository = new ManufacturerRepository(_context);
+                return _manufacturerRepository;
+            }
+        }
+
+        public IEmployee employee
+        {
+            get
+            {
+                if (_employee == null)
+                    _employee = new EmployeeRepository(_context);
+                return _employee;
+            }
+        }
+
+        public IShiftRepository shift
+        {
+            get
+            {
+                if (_shift == null)
+                    _shift = new ShiftRepository(_context);
+                return _shift;
+            }
+        }
+        public IEmployeeTrainingTypeRepository EmployeeTrainingType
+        {
+            get
+            {
+                if (_EmployeeTrainingType == null)
+                    _EmployeeTrainingType = new EmployeeTrainingTypeRepository(_context);
+                return _EmployeeTrainingType;
+            }
+        }
+        public IEmployeeLeaveType EmployeeLeaveType
+
+        {
+            get
+            {
+                if (_employeeLeaveType == null)
+                    _employeeLeaveType = new EmployeeLeaveTypeRepository(_context);
+                return _employeeLeaveType;
+            }
+        }
+
+        public ICustomerContactRepository CustomerContact
+
+        {
+            get
+            {
+                if (_CustomerContact == null)
+                    _CustomerContact = new CustomerContactRepository(_context);
+                return _CustomerContact;
+            }
+        }
+        public ICustomerShippingAddress CustomerShippingAddress
+
+        {
+            get
+            {
+                if (_CustomerShippingAddress == null)
+                    _CustomerShippingAddress = new CustomerShippingAddressRepository(_context);
+                return _CustomerShippingAddress;
+            }
+        }
+        public ICustomerWarning CustomerWarning
+
+        {
+            get
+            {
+                if (_CustomerWarning == null)
+                    _CustomerWarning = new CustomerWarningRepository(_context);
+                return _CustomerWarning;
+            }
+        }
+        public ICompany company
+        {
+            get
+            {
+                if (_company == null)
+                    _company = new CompanyRepository(_context);
+                return _company;
+
+            }
+        }
+
+        public IDivision division
+        {
+            get
+            {
+                if (_division == null)
+                    _division = new DivisionRepository(_context);
+                return _division;
+            }
+        }
+
+        public IDepartment department
+        {
+            get
+            {
+                if (_department == null)
+                    _department = new DepartmentRepository(_context);
+                return _department;
+            }
+        }
+
+        public ICountriesRepository Countries
+        {
+            get
+            {
+                if (_Countries == null)
+                    _Countries = new CountriesRepository(_context);
+                return _Countries;
+            }
+        }
+        public IBusinessUnit businessUnit
+        {
+            get
+            {
+                if (_businessUnit == null)
+                    _businessUnit = new BusinessUnitRepository(_context);
+                return _businessUnit;
+            }
+        }
+
+        public IEmployeeLicenseType employeeLicenseType
+        {
+            get
+            {
+                if (_employeeLicenseType == null)
+                    _employeeLicenseType = new EmployeeLicenseTypeRepository(_context);
+                return _employeeLicenseType;
+            }
+        }
+
+        public IEmployeeLicensure employeeLicensure
+        {
+            get
+            {
+                if (_employeeLicensure == null)
+                    _employeeLicensure = new EmployeeLicensureRepository(_context);
+                return _employeeLicensure;
+            }
+        }
+
+        public IEmployeeTraining employeeTraining
+        {
+            get
+            {
+                if (_employeeTraining == null)
+                    _employeeTraining = new EmployeeTrainingRepository(_context);
+                return _employeeTraining;
+            }
+        }
+
+        public IEmployeeShift employeeShift
+        {
+            get
+            {
+                if (_employeeShift == null)
+                    _employeeShift = new EmployeeShiftRepository(_context);
+                return _employeeShift;
+            }
+        }
+
+        public ICustomerType customerType
+        {
+            get
+            {
+                if (_customerType == null)
+                    _customerType = new CustomerTypeRepository(_context);
+                return _customerType;
+            }
+        }
+
+        public IATAChapter ATAChapter
+        {
+            get
+            {
+                if (_aTAChapter == null)
+                    _aTAChapter = new ATAChapterRepository(_context);
+                return _aTAChapter;
+            }
+        }
+
+        public IAircraftType aircraftType
+        {
+            get
+            {
+                if (_aircraftType == null)
+                    _aircraftType = new AircraftTypeRepository(_context);
+                return _aircraftType;
+            }
+        }
+
+        public IAircraftModel aircraftModel
+        {
+            get
+
+            {
+                if (_aircraftModel == null)
+                    _aircraftModel = new AircraftModelRepository(_context);
+                return _aircraftModel;
+            }
+        }
+
+        public ICustomerAircraftModel customerAircraftModel
+        {
+            get
+            {
+                if (_customerAircraftModel == null)
+                    _customerAircraftModel = new CustomerAircraftModelRepository(_context);
+                return _customerAircraftModel;
+            }
+        }
+
+        public ICustomerAircraftType customerAircraftType
+        {
+            get
+            {
+                if (_customerAircraftType == null)
+                    _customerAircraftType = new CustomerAircraftTypeRepository(_context);
+                return _customerAircraftType;
+            }
+        }
+
+        public IItemMaster itemMaster
+        {
+            get
+            {
+                if (_itemMaster == null)
+                    _itemMaster = new ItemMasterRepository(_context);
+                return _itemMaster;
+            }
+        }
+
+        public IWarning warning
+        {
+            get
+            {
+                if (_warning == null)
+                    _warning = new WarningRepository(_context);
+                return _warning;
+            }
+        }
+
+        public IStockLineList stockLineList
+        {
+            get
+            {
+                if (_stockList == null)
+                    _stockList = new StockLineListRepository(_context);
+                return _stockList;
+            }
+        }
+
+        public IReceivingCustomerWork receivingCustomerWork
+        {
+            get
+            {
+
+                if (_receivingCustomerWork == null)
+                    _receivingCustomerWork = new ReceivingCustomerWorkRepository(_context);
+                return _receivingCustomerWork;
+            }
+        }
+
+        public ITimeLife timeLife
+        {
+            get
+            {
+
+                if (_timeLife == null)
+                    _timeLife = new TimelifeRepository(_context);
+                return _timeLife;
+            }
+        }
+
+        public ILegalEntity legalEntity
+
+        {
+
+            get
+            {
+                if (_legalEntity == null)
+                    _legalEntity = new LegalEntityRepository(_context);
+                return _legalEntity;
+
+            }
+        }
+        public IGlCashFlowRepository GlClassFlowClassification
+        {
+            get
+            {
+                if (_glCashFlowRepository == null)
+                    _glCashFlowRepository = new GlCashFlowRepository(_context);
+                return _glCashFlowRepository;
+            }
+        }
+
+        public IGlCashFlowRepository GlClassFlowsClassification
+        {
+            get
+            {
+                if (_glCashFlowRepository == null)
+                    _glCashFlowRepository = new GlCashFlowRepository(_context);
+                return _glCashFlowRepository;
+            }
+        }
+
+        public IVendorCapabilitiesRepository vendorCapabilities
+        {
+            get
+            {
+                if (_vendorCapabilitiesRepository == null)
+                    _vendorCapabilitiesRepository = new VendorCapabilitiesRepository(_context);
+                return _vendorCapabilitiesRepository;
+            }
+        }
+
+
+
+        public ILaborAndOverheadCostRepository LaborAndOverheadCost
+
+        {
+            get
+            {
+                if (_LaborAndOverheadCost == null)
+                    _LaborAndOverheadCost = new LaborAndOverheadCostRepository(_context);
+                return _LaborAndOverheadCost;
+            }
+        }
+
+        public IManagementSiteRepository managementSite
+        {
+            get
+            {
+                if (_managementSite == null)
+                    _managementSite = new ManagementSiteRepository(_context);
+                return _managementSite;
+            }
+        }
+
+        public IManagementWarehouseRepository managementWarehouse
+        {
+            get
+            {
+                if (_managementWarehouse == null)
+                    _managementWarehouse = new ManagementWarehouseRepository(_context);
+                return _managementWarehouse;
+            }
+        }
+
+        public IManagementLocationRepository managementLocation
+        {
+            get
+            {
+                if (_managementLocation == null)
+                    _managementLocation = new ManagementLocationRepository(_context);
+                return _managementLocation;
+            }
+        }
+
+        public IManagementShelfRepository managementShelf
+        {
+            get
+            {
+                if (_managementShelf == null)
+                    _managementShelf = new ManagementShelfRepository(_context);
+                return _managementShelf;
+            }
+        }
+
+        public IManagementBinRepository managementBin
+        {
+            get
+            {
+                if (_managementBin == null)
+                    _managementBin = new ManagementBinRepository(_context);
+                return _managementBin;
+            }
+        }
+
+        public IUserRoleLevelMgmStructRepository userRoleLevelMgmStruct
+        {
+            get
+            {
+                if (_userRoleLevelMgmStruct == null)
+                    _userRoleLevelMgmStruct = new UserRoleLevelMgmStructRepository(_context);
+                return _userRoleLevelMgmStruct;
+            }
+        }
+
+        public IUserRoleLevelRepository userRoleLevel
+        {
+            get
+            {
+                if (_userRoleLevel == null)
+                    _userRoleLevel = new UserRoleLevelRepository(_context);
+                return _userRoleLevel;
+            }
+        }
+        public IDiscountRepository Discount
+        {
+
+            get
+            {
+                if (_discount == null)
+                    _discount = new DiscountRepository(_context);
+                return _discount;
+            }
+        }
+
+       
+        //public IStockLineAdjustmentDatatypeRepository StockLineAdjustmentDatatypeRepository
+        //{
+
+        //    get
+        //    {
+        //        if (_stockLineAdjustmentDatatypeRepository == null)
+        //            _stockLineAdjustmentDatatypeRepository = new StocklineAdjustementDataType(_context);
+        //        return _stockLineAdjustmentDatatypeRepository;
+        //    }
+        //}
+
+        public IGLAccountClassRespository gLAccountClass => throw new NotImplementedException();
+
+        public IGlCashFlowRepository glCashFlowRepository => throw new NotImplementedException();
+
+
+
+        public IPurchaseOrder purchaseOrder
+
+        {
+            get
+            {
+                if (_purchaseOrder == null)
+                    _purchaseOrder = new PurchaseOrderRepository(_context);
+                return _purchaseOrder;
+            }
+        }
+
+        public IStocklineAdjustmentRepository stocklineAdjustmentRepository
+        {
+            get
+            {
+                if (_stocklineAdjustmentRepository == null)
+                    _stocklineAdjustmentRepository = new StockLineAdjustmentRepository(_context);
+                return _stocklineAdjustmentRepository;
+            }
+        }
+
+        public IItemMasterAircraftManafacturerRepository ItemMasterAircraftManafacturerRepository
+        {
+            get
+            {
+                if (_itemMasterAircraftManafacturerRepository == null)
+                    _itemMasterAircraftManafacturerRepository = new ItemMasterAircraftManafacturerRepository(_context);
+                return _itemMasterAircraftManafacturerRepository;
+            }
+        }
+
+        public IVendorPaymentMethodRepository vendorPaymentMethodRepository => throw new NotImplementedException();
+
+
+
+        //public ICertificationTypeRepository CertificationTypeRepository {
+        //    get
+        //    {
+        //        if (_ICertificationTypeRepository == null)
+        //            _ICertificationTypeRepository = new CertificationTypeRepository(_context);
+        //        return _ICertificationTypeRepository;
+        //    }
+        //}
+
+        public IStocklineAdjustmentReasonRepository stocklineAdjustmentReasonRepository
+        {
+            get
+            {
+                if (_stocklineAdjustmentReason == null)
+                    _stocklineAdjustmentReason = new StocklineAdjustmentReasonRepository(_context);
+                return _stocklineAdjustmentReason;
+            }
+        }
+
+        public IItemMasterIntegrationPortalRepository ItemMasterIntegrationPortalRepository
+        {
+            get
+            {
+                if (_itemMasterIntegrationPortalRepository == null)
+                    _itemMasterIntegrationPortalRepository = new ItemMasterIntegrationPortalRepository(_context);
+                return _itemMasterIntegrationPortalRepository;
+            }
+        }
+
+        public ICustomerIntegrationPortalRepository CustomerIntegrationPortalRepository
+        {
+            get
+            {
+                if (_customerIntegrationPortalRepository == null)
+                    _customerIntegrationPortalRepository = new CustomerIntegrationportalRepository(_context);
+                return _customerIntegrationPortalRepository;
+            }
+        }
+
+        public IEmployeeLeaveTypeMappingRepository EmployeeLeaveTypeMappingRepository
+        {
+            get
+            {
+                if (_employeeLeaveTypeMappingRepository == null)
+                    _employeeLeaveTypeMappingRepository = new EmployeeLeaveTypeMappingRepository(_context);
+                return _employeeLeaveTypeMappingRepository;
+            }
+        }
+
+        public IEmployeeShiftRepository EmployeeShiftMappingRepository
+        {
+            get
+            {
+                if (_employeeShiftmappingRepository == null)
+                    _employeeShiftmappingRepository = new EmployeeShiftMappingRepository(_context);
+                return _employeeShiftmappingRepository;
+            }
+        }
+
+
+        public IWorkFlowRepositoryTest workFlowRepositoryTest
+        {
+            get
+            {
+                if (_workFlowRepositoryTest == null)
+                    _workFlowRepositoryTest = new WorkFlowRepositoryTest(_context);
+                return _workFlowRepositoryTest;
+            }
+        }
+
+        public IStocklineIntegrationPortalRepository StocklineIntegrationPortalRepository
+        {
+            get
+            {
+                if (_stocklineIntegrationPortalRepository == null)
+                    _stocklineIntegrationPortalRepository = new StocklineIntegrationPortalRepository(_context);
+                return _stocklineIntegrationPortalRepository;
+            }
+        }
+
+        public ICapabilityTypeRepository capabilityTypeRepository
+        {
+            get
+            {
+                if (_capabilityTypeRepository == null)
+                    _capabilityTypeRepository = new CapabilityTypeRepository(_context);
+                return _capabilityTypeRepository;
+            }
+        }
+
+
+        //IWorkFlowRepositoryTest IUnitOfWork.workFlowRepositoryTest => throw new NotImplementedException();
+
+        //public IPurchaseOrderPartRepository PurchaseOrderPartRepository
+        //{
+        //    get
+        //    {
+        //        if (_purchaseOrderPartRepository == null)
+        //            _purchaseOrderPartRepository = new PurchaseOrderPartRepository(_context);
+        //        return _purchaseOrderPartRepository;
+        //    }
+        //}
+
+        public IRepository<T> Repository<T>() where T : class
+        {
+            return new Repository<T>(_context);
+        }
+
+    }
+}
+
+    
