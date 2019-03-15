@@ -1,12 +1,15 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+
 
 namespace DAL.Models
 {
     public class VendorCapabiltiyAircraftModel
     {
+        [Key]
         public long VendorCapabilityAircraftModelId { get; set; }
 
         public long VendorCapabilityId { get; set; }
