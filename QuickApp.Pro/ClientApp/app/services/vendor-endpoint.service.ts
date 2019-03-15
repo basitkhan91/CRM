@@ -105,6 +105,9 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _capabilityListUrl: string = "/api/Vendor/capabilityTypeList";
 
     private readonly _vendorCapability: string = "/api/Vendor/vendorCapabilityPost";
+    private readonly _vendorCapabilityType: string = "/api/Vendor/vendorCapabilityTypePost";
+    private readonly _vendorCapabilityAircraftType: string = "/api/Vendor/vendorCapabilityAircraftTypePost";
+    private readonly _vendorCapabilityAircraftModel: string = "/api/Vendor/vendorCapabilityAircraftModelPost";
 	
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -1015,6 +1018,30 @@ export class VendorEndpointService extends EndpointFactory {
         return this.http.post<T>(this._vendorCapability, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.newVendorCapabilityEndPoint(userObject));
+            });
+    }
+
+    newVendorCapabilityTypeListEndPoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._vendorCapabilityType, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.newVendorCapabilityTypeListEndPoint(userObject));
+            });
+    }
+
+    newVendorCapabilityAircraftTypeEndPoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._vendorCapabilityAircraftType, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.newVendorCapabilityAircraftTypeEndPoint(userObject));
+            });
+    }
+
+    newVendorCapabiltiyAircraftModelEndPoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._vendorCapabilityAircraftModel, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.newVendorCapabiltiyAircraftModelEndPoint(userObject));
             });
     }
 }

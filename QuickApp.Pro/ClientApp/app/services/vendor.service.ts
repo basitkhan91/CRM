@@ -463,4 +463,18 @@ export class VendorService {
 
         return this.actionEndpoint.newVendorCapabilityEndPoint<any>(action);
     }
+
+    addVendorCapabilityTypeList(action: any) {
+
+        return this.actionEndpoint.newVendorCapabilityTypeListEndPoint<any>(action);
+    }
+
+    addVendorCapabilityAircraftType(action: any) {
+
+        return this.actionEndpoint.newVendorCapabilityAircraftTypeEndPoint<any>(action);
+    }
+    addVendorCapabiltiyAircraftModel(action: any) {
+
+        return this.actionEndpoint.newVendorCapabiltiyAircraftModelEndPoint<any>(action);
+    }
 }

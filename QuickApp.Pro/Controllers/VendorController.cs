@@ -2418,18 +2418,54 @@ namespace QuickApp.Pro.Controllers
                 _context.VendorCapabiliy.Add(caps);
                 _context.SaveChanges();
             }
-            return Ok();
+            return Ok(caps);
+        }
+
+        [HttpPost("_vendorCapabilityType")]
+        public IActionResult addCharges([FromBody] VendorCapabilityType caps) //it is for Model we will pass
+        {
+            if (caps != null)
+            {
+                // caps.WorkflowChargesListId = 0;
+                caps.MasterCompanyId = 1;
+                caps.CreatedDate = DateTime.Now;
+                _context.vendorCapabilityType.Add(caps);
+                _context.SaveChanges();
+            }
+            return Ok(caps);
+        }
+
+        [HttpPost("_vendorCapabilityAircraftType")]
+        public IActionResult addCharges([FromBody] VendorCapabilityAircraftType caps) //it is for Model we will pass
+        {
+            if (caps != null)
+            {
+                // caps.WorkflowChargesListId = 0;
+                caps.MasterCompanyId = 1;
+                caps.CreatedDate = DateTime.Now;
+                _context.vendorCapabilityAircraftType.Add(caps);
+                _context.SaveChanges();
+            }
+            return Ok(caps);
+        }
+
+        [HttpPost("_vendorCapabilityAircraftModel")]
+        public IActionResult addCharges([FromBody] VendorCapabiltiyAircraftModel caps) //it is for Model we will pass
+        {
+            if (caps != null)
+            {
+                // caps.WorkflowChargesListId = 0;
+                caps.MasterCompanyId = 1;
+                caps.CreatedDate = DateTime.Now;
+                _context.vendorCapabiltiyAircraftModel.Add(caps);
+                _context.SaveChanges();
+            }
+            return Ok(caps);
         }
 
 
+
     }
-
-    
-
-        
-
-
-
     //[HttpGet("GetvendorList/{vendorName}")]
     //[Produces(typeof(List<VendorViewModel>))]
     //public IActionResult Vendorlist(string value, VendorViewModel venlist)

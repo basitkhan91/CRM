@@ -83,6 +83,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     display: boolean;
     modelValue: boolean;
     collectionofVendorCapability: any;
+    collectionofItemMaster: any;
+    selectedCapabulityTypesListData: any;
+    collectionofVendorCapabilityTypeList: any;
     
 	/** add-vendor-capabilities ctor */
 	constructor(private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService,)
@@ -321,10 +324,12 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			let vendorName = this.allVendors[i].vendorName;
 			if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 				//this.vendorNames.push(vendorName);
+                this.sourceVendorCap.vendorId= this.allVendors[i].vendorId;
 				this.VendorNamecoll.push([{
 					"vendorId": this.allVendors[i].vendorClassificationId,
 					"vendorName": vendorName,
-					"vendorCode":this.allVendors[i].vendorCode
+                    "vendorCode": this.allVendors[i].vendorCode,
+                   
 				}]),
 					this.vendorNames.push(vendorName);
 			}
@@ -375,7 +380,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		{
 			let vendorCode = this.allVendors[i].vendorCode;
 
-			if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0)
+            {
+                this.sourceVendorCap.vendorId = this.allVendors[i].vendorId;
 				//this.vendorCodes.push(vendorCode);
 				this.VendorCodesColl.push([{
 					"vendorId": this.allVendors[i].vendorClassificationId,
@@ -437,7 +444,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		//
 		if (this.itemclaColl) {
 			for (let i = 0; i < this.itemclaColl.length; i++) {
-				if (event == this.itemclaColl[i][0].partName) {
+                if (event == this.itemclaColl[i][0].partName)
+                {
+
 					this.sourceVendorCap.partId = this.itemclaColl[i][0].partId;
 					this.disableSavepartNumber = true;
 					this.selectedActionName = event;
@@ -455,7 +464,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	{
 
 
-		this.descriptionbyPart = allWorkFlows[0]
+        this.sourceVendorCap.itemMasterId = allWorkFlows[0].itemMasterId;
 		//this.sourceAction = this.descriptionbyPart;
 		this.sourceVendorCap.partDescription = allWorkFlows[0].partDescription;
 		this.sourceVendorCap.manufacturerId= allWorkFlows[0].manufacturerId;
@@ -809,8 +818,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		//	this.modelValue = true;
 		//}
 
+       
 
-        if (!this.sourceVendorCap.itemMasterId) //for Edit Screen
+        if (!this.sourceVendorCap.vendorCapabilityId) //for Edit Screen
         {
             
             
@@ -820,17 +830,59 @@ export class AddVendorCapabilitiesComponent implements OnInit{
             this.vendorService.newVendorCapability(this.sourceVendorCap).subscribe(data => {
                 this.collectionofVendorCapability = data;
                 this.savesuccessCompleted(this.sourceVendorCap);
-                if (data != null) {
-                    if (data.partId && data.itemMasterId)
+
+                if (data != null)
+                {
+
+                    if (this.selectedCapabulityTypesListData)
                     {
-                       
-                        if (this.selectedModels.length > 0) {
+                        for (let i = 0; i < this.selectedCapabulityTypesListData.length; i++)
+                        {
+                            this.selectedCapabulityTypesListData[i].vendorCapabilityId = data.vendorCapabilityId;
 
-                            this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
-
+                            this.vendorService.addVendorCapabilityTypeList(this.selectedCapabulityTypesListData[i]).subscribe(aircraftdata => {
+                                this.collectionofVendorCapabilityTypeList = aircraftdata;
+                            })
                         }
-
+                        console.log(this.selectedCapabulityTypesListData);
                     }
+
+                    if (this.selectedAircraftTypes)
+                    {
+                        for (let i = 0; i < this.selectedAircraftTypes.length; i++)
+                        {
+                            this.selectedAircraftTypes[i].vendorCapabilityId = data.vendorCapabilityId;
+
+                            this.vendorService.addVendorCapabilityAircraftType(this.selectedAircraftTypes[i]).subscribe(aircraftdata => {
+                                this.collectionofVendorCapabilityTypeList = aircraftdata;
+                            })
+                        }
+                        console.log(this.selectedAircraftTypes);
+                    }
+                    //if (this.selectedModels)
+                    //{
+                    //    for (let i = 0; i < this.selectedModels.length; i++) {
+                    //        this.selectedModels[i].vendorCapabilityId = data.vendorCapabilityId;
+
+                    //        this.vendorService.addVendorCapabiltiyAircraftModel(this.selectedModels[i]).subscribe(aircraftdata => {
+                    //            this.collectionofVendorCapabilityTypeList = aircraftdata;
+                    //        })
+                    //    }
+                    //    console.log(this.selectedModels);
+                    //}
+
+                    //saving for CAPABILITY TYPE
+                   
+                    //if (data.partId && data.itemMasterId)
+                    //{
+                       
+                    //    if (this.selectedModels.length > 0) {
+
+                    //        this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
+
+                    //    }
+
+                    //}
                 }
                 this.alertService.startLoadingMessage();
 
@@ -846,6 +898,6 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-        this.loadData();
+        //this.loadData();
     }
 }

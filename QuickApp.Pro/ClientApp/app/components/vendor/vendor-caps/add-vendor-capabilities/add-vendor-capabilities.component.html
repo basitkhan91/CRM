@@ -71,7 +71,7 @@
 					<!--<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.conditionId">
 		<option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
 	</select>-->
-					<p-multiSelect [options]="capabilityTypeList" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.selectedCapabulityTypesListData" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+					<p-multiSelect [options]="capabilityTypeList" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedCapabulityTypesListData" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 				</div>
 			</div>
 
@@ -148,7 +148,7 @@
 			<div class="form-group col-sm-12">
 				<label class="control-label col-sm-4">ATA Chapter </label>
 				<div class="col-sm-7">
-					<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.ataMainId" (change)="getATASubChapterData(sourceVendorCap.ataMainId)">
+					<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.aTAChapterId" (change)="getATASubChapterData(sourceVendorCap.ataMainId)">
 						<option *ngFor="let ataName of allATAMaininfo1" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
 					</select>
 					<!--<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.ataChapterId">
@@ -159,7 +159,7 @@
 			<div class="form-group col-sm-12">
 				<label class="control-label col-sm-4">ATA Sub Chapter </label>
 				<div class="col-sm-7">
-					<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.ataSubChapterId">
+					<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.aTASubchapterId">
 						<option *ngFor="let condition of allATAMaininfo" [ngValue]="condition.ataSubChapterId">{{condition.description}}</option>
 					</select>
 				</div>
