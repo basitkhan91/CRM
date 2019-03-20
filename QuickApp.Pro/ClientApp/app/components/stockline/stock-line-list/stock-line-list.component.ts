@@ -106,7 +106,8 @@ export class StockLineListComponent implements OnInit {
     tagdate: any;
     idNumber: any;
     manufacturerId: any;
-	ngOnInit(): void {
+    ngOnInit(): void
+    {
 
 		this.loadData();
 		this.activeIndex = 0;
@@ -136,7 +137,8 @@ export class StockLineListComponent implements OnInit {
 	public allWorkFlows: StockLineListComponent[] = [];
 
 
-	private loadData() {
+    private loadData()
+    {
 		this.workFlowtService.getStockLineList().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -254,7 +256,8 @@ export class StockLineListComponent implements OnInit {
 	//}
 
 	//To Display all the values when clicked on view  
-	openView(content, row) {
+    openView(content, row)
+    {
 
 		this.sourceViewOptions = row;
 		//this.reason_Name = row.reasonCode;

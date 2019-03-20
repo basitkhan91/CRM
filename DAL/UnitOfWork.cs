@@ -71,6 +71,7 @@ namespace DAL
         IManufacturerRepository _manufacturerRepository;
         IVendorCheckPaymentRepository _vendorCheckPaymentRepository;
         IVendorCapabilitiesRepository _vendorCapabilitiesRepository;
+       
         IVendorDomesticPaymentRepository _vendorDomesticPaymentRepository;
 
         IVendorDomesticWirePaymentRepository _vendorDomesticWirePaymentRepository;

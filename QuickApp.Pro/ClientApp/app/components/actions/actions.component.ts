@@ -126,7 +126,9 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
-    handleChange(rowData,e) {
+
+    handleChange(rowData, e)
+    {
         if (e.checked == false) {
             this.sourceAction = rowData;
             this.sourceAction.updatedBy = this.userName;
@@ -149,6 +151,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
         }
         
     }
+
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {

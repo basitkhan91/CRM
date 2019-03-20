@@ -14,11 +14,16 @@ namespace DAL.Models
 
         public long VendorCapabilityId { get; set; }
 
-        public Int32 AircraftModelId { get; set; }
+        public long AircraftModelId { get; set; }
+
+        public Int32? DashNumber { get; set; }
 
         public Int32? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
+
+        public bool? isSelected { get; set; }
+
         public bool? IsDelete { get; set; }
 
         public string CreatedBy { get; set; }

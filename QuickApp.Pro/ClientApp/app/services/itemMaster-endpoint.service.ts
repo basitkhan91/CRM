@@ -11,7 +11,8 @@ import { ConfigurationService } from './configuration.service';
 export class ItemMasterEndpoint extends EndpointFactory {
 
 
-	private readonly _actionsUrl: string = "/api/ItemMaster/Get";
+    private readonly _actionsUrl: string = "/api/ItemMaster/Get";
+    private readonly _actionsCapsUrl: string = "/api/ItemMaster/GetListforCapes";
 	private readonly _aircraftmodelsurl: string = "/api/ItemMaster/GetAircarftmodelsdata";
 	private readonly _aircraftmanafacturerurl: string = "/api/ItemMaster/aircraftManufacturerGet";
 	private readonly _capesdata: string = "/api/ItemMaster/GetCapesDatawithMasterId";
@@ -46,7 +47,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
 	private readonly _multiintegrationurl: string = "/api/ItemMaster/savemultiintegrationTypes";
 
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
-	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+    get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+    get actionsUrlCaps() { return this.configurations.baseUrl + this._actionsCapsUrl; }
 	get aircraftmodelsurl() { return this.configurations.baseUrl + this._aircraftmodelsurl; }
 	get aircraftManafacturerurl() { return this.configurations.baseUrl + this._aircraftmanafacturerurl; }
 	get capesdata() { return this.configurations.baseUrl + this._capesdata; }
@@ -76,7 +78,15 @@ export class ItemMasterEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getitemMasterEndpoint());
             });
-	}
+    }
+
+    getitemMasterCapsDataEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.actionsUrlCaps, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getitemMasterCapsDataEndpoint());
+            });
+    }
 	
 
 	getAircraftManafacturerList<T>(itemid: any): Observable<T> {

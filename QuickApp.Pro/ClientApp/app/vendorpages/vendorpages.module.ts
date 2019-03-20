@@ -64,6 +64,7 @@ import { TreeModule } from 'primeng/tree';
 import { TreeTableModule } from 'primeng/treetable';
 import { VendorCapabilitiesListComponent } from "../components/vendor/vendor-caps/vendor-capabilities-list/vendor-capabilities-list.component";
 import { AddVendorCapabilitiesComponent } from "../components/vendor/vendor-caps/add-vendor-capabilities/add-vendor-capabilities.component";
+import { EditVendorCapabilitiesComponent } from "../components/vendor/vendor-caps/edit-vendor-capabilities/edit-vendor-capabilities.component";
 
 @NgModule({
 	imports: [
@@ -116,7 +117,8 @@ import { AddVendorCapabilitiesComponent } from "../components/vendor/vendor-caps
 		RoSetupComponent,
 
 		VendorCapabilitiesListComponent,
-		AddVendorCapabilitiesComponent
+        AddVendorCapabilitiesComponent,
+        EditVendorCapabilitiesComponent
 	
 	],
 	providers: [

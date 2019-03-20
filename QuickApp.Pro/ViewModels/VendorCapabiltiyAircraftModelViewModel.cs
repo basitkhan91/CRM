@@ -15,7 +15,11 @@ namespace QuickApp.Pro.ViewModels
 
         public Int32 AircraftModelId { get; set; }
 
+        public Int32? DashNumber { get; set; }
+
         public Int32? MasterCompanyId { get; set; }
+
+        public bool? isSelected { get; set; }
 
         public bool? IsActive { get; set; }
 

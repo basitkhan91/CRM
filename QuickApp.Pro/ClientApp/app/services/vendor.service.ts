@@ -75,10 +75,18 @@ export class VendorService {
 	//}
 	
 
-    getWorkFlows() {
+    getWorkFlows()
+    {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorEndpoint<any[]>());
-	}
+    }
+    
+    getVendorCapabilityList() {
+        return Observable.forkJoin(
+            this.actionEndpoint.getvendorCapabilityListEndpoint<any[]>());
+    }
+
+    
 	getcapabilityListData() {
 		return Observable.forkJoin(
 			this.actionEndpoint.getCapabilityTypeListEndpoint<any[]>());
@@ -476,5 +484,49 @@ export class VendorService {
     addVendorCapabiltiyAircraftModel(action: any) {
 
         return this.actionEndpoint.newVendorCapabiltiyAircraftModelEndPoint<any>(action);
+    }
+
+    getVendorCapabilityListById(vendorId: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorCapabilityListEndpoint<any[]>(vendorId));
+    }
+
+    getVendorCapabilityAircraftManafacturerList(vendorId: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorCapabilityAircraftManafacturerListEndpoint<any[]>(vendorId));
+    }
+
+    getVendorCapabilityAircraftManafacturerModelList(vendorId: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorCapabilityAircraftManafacturerModelListEndpoint<any[]>(vendorId));
+    }
+
+    //For updating the Vendor Capability
+    updateVendorCapability(sourceVendorCap: any) {
+        return this.actionEndpoint.getupdateVendorCapabilityEndpoint<any>(sourceVendorCap, sourceVendorCap.vendorCapabilityId);
+    }
+
+    DeletevendorCapability(actionId: any) {
+
+        return this.actionEndpoint.getDeletevendorCapabilityTypeEndpoint(actionId);
+
+    }
+
+    DeletevendorCapabilityAircraftManafacturer(actionId: any) {
+
+        return this.actionEndpoint.getDeletevendorCapabilityAircraftManafacturerEndpoint(actionId);
+
+    }
+
+    DeletevendorCapabilityAircraftModel(actionId: any) {
+
+        return this.actionEndpoint.getDeletevendorCapabilityAircraftModelEndpoint(actionId);
+
+    }
+
+    deleteVendorCapability(actionId: any) {
+
+        return this.actionEndpoint.deleteVendorCapabilityEndpoint(actionId);
+
     }
 }

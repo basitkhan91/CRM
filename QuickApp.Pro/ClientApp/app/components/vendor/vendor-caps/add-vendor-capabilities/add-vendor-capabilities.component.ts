@@ -16,7 +16,7 @@ import { ATAMain } from '../../../../models/atamain.model';
 import { ATASubChapter } from '../../../../models/atasubchapter.model';
 import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
 import { ATAChapter } from '../../../../models/atachapter.model';
-
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-add-vendor-capabilities',
     templateUrl: './add-vendor-capabilities.component.html',
@@ -86,19 +86,24 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     collectionofItemMaster: any;
     selectedCapabulityTypesListData: any;
     collectionofVendorCapabilityTypeList: any;
+    collectionofVendorCapabulityAircraftTypeList: any;
     
 	/** add-vendor-capabilities ctor */
-	constructor(private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService,)
+    constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService,)
 	{
-
+        this.vendorService.isEditMode = false;
 	}
 
 	ngOnInit(): void {
 		this.matSpinner = false;
 		//this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
 		// debugger;
-		//this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
-		//this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+
+        this.vendorService.ShowPtab = false;
+        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+
 		this.loadVendorData();
 		this.ptnumberlistdata();
 		this.atamaindata();
@@ -284,7 +289,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	{
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName)
-			{
+            {
+                this.sourceVendorCap.vendorId = this.VendorNamecoll[i][0].vendorId;
 				this.sourceVendorCap.vendorCode = this.VendorNamecoll[i][0].vendorCode
 				//alert("Action Name already Exists");
 				this.disableSaveVenName = true;
@@ -324,9 +330,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			let vendorName = this.allVendors[i].vendorName;
 			if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 				//this.vendorNames.push(vendorName);
-                this.sourceVendorCap.vendorId= this.allVendors[i].vendorId;
+              //  this.sourceVendorCap.vendorId= this.allVendors[i].vendorId;
 				this.VendorNamecoll.push([{
-					"vendorId": this.allVendors[i].vendorClassificationId,
+                    "vendorId": this.allVendors[i].vendorId,
 					"vendorName": vendorName,
                     "vendorCode": this.allVendors[i].vendorCode,
                    
@@ -342,7 +348,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		for (let i = 0; i < this.VendorCodesColl.length; i++)
 		{
 			if (event == this.VendorCodesColl[i][0].vendorCode)
-			{
+            {
+                this.sourceVendorCap.vendorId= this.VendorCodesColl[i][0].vendorId;
 				this.sourceVendorCap.vendorName = this.VendorCodesColl[i][0].vendorName; //passing Vendor Name
 				this.disableSaveVenCode = true;
 				this.disableSaveVenderCode = true;
@@ -382,10 +389,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
             if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0)
             {
-                this.sourceVendorCap.vendorId = this.allVendors[i].vendorId;
+               // this.sourceVendorCap.vendorId = this.allVendors[i].vendorId;
 				//this.vendorCodes.push(vendorCode);
 				this.VendorCodesColl.push([{
-					"vendorId": this.allVendors[i].vendorClassificationId,
+                    "vendorId": this.allVendors[i].vendorId,
 					"vendorName":this.allVendors[i].vendorName,
 					"vendorCode": vendorCode
 				}]),
@@ -446,7 +453,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			for (let i = 0; i < this.itemclaColl.length; i++) {
                 if (event == this.itemclaColl[i][0].partName)
                 {
-
+                    this.sourceVendorCap.partName = this.itemclaColl[i][0].partName;
 					this.sourceVendorCap.partId = this.itemclaColl[i][0].partId;
 					this.disableSavepartNumber = true;
 					this.selectedActionName = event;
@@ -693,7 +700,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			//praveen's code//
 			this.selectedModels.map((row) => {
 				if (selectedRow.aircraftModelId == row.aircraftModelId) {
-					row.priority = event.target.value;
+                    row.dashNumber = event.target.value;
 					ischange = true;
 				}
 			});
@@ -833,14 +840,17 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
                 if (data != null)
                 {
-
+                    //saving for Vendor capability Type Table
                     if (this.selectedCapabulityTypesListData)
                     {
+                        
                         for (let i = 0; i < this.selectedCapabulityTypesListData.length; i++)
                         {
-                            this.selectedCapabulityTypesListData[i].vendorCapabilityId = data.vendorCapabilityId;
-
-                            this.vendorService.addVendorCapabilityTypeList(this.selectedCapabulityTypesListData[i]).subscribe(aircraftdata => {
+                            let localCapabulityTypeColl = [{
+                                vendorCapabilityId: data.vendorCapabilityId,
+                                capabilityTypeId: this.selectedCapabulityTypesListData[i]
+                            }]
+                            this.vendorService.addVendorCapabilityTypeList(localCapabulityTypeColl[0]).subscribe(aircraftdata => {
                                 this.collectionofVendorCapabilityTypeList = aircraftdata;
                             })
                         }
@@ -851,25 +861,33 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                     {
                         for (let i = 0; i < this.selectedAircraftTypes.length; i++)
                         {
-                            this.selectedAircraftTypes[i].vendorCapabilityId = data.vendorCapabilityId;
-
-                            this.vendorService.addVendorCapabilityAircraftType(this.selectedAircraftTypes[i]).subscribe(aircraftdata => {
-                                this.collectionofVendorCapabilityTypeList = aircraftdata;
+                            //this.selectedAircraftTypes[i].push = data.vendorCapabilityId;
+                            let localCapabulityAircraftTypeColl = [{
+                                vendorCapabilityId: data.vendorCapabilityId,
+                                AircraftTypeId: this.selectedAircraftTypes[i]
+                            }]
+                            this.vendorService.addVendorCapabilityAircraftType(localCapabulityAircraftTypeColl[0]).subscribe(aircraftdata => {
+                                this.collectionofVendorCapabulityAircraftTypeList = aircraftdata;
                             })
                         }
                         console.log(this.selectedAircraftTypes);
                     }
-                    //if (this.selectedModels)
-                    //{
-                    //    for (let i = 0; i < this.selectedModels.length; i++) {
-                    //        this.selectedModels[i].vendorCapabilityId = data.vendorCapabilityId;
-
-                    //        this.vendorService.addVendorCapabiltiyAircraftModel(this.selectedModels[i]).subscribe(aircraftdata => {
-                    //            this.collectionofVendorCapabilityTypeList = aircraftdata;
-                    //        })
-                    //    }
-                    //    console.log(this.selectedModels);
-                    //}
+                    if (this.selectedModels)
+                    {
+                        for (let i = 0; i < this.selectedModels.length; i++) {
+                           // this.selectedModels[i].vendorCapabilityId = data.vendorCapabilityId;
+                            let localCapabulityAircraftModelColl = [{
+                                vendorCapabilityId: data.vendorCapabilityId,
+                                aircraftModelId: this.selectedModels[i].aircraftModelId,
+                                dashNumber: this.selectedModels[i].dashNumber,
+                                isSelected: true
+                            }]
+                            this.vendorService.addVendorCapabiltiyAircraftModel(localCapabulityAircraftModelColl[0]).subscribe(aircraftdata => {
+                                this.collectionofVendorCapabilityTypeList = aircraftdata;
+                            })
+                        }
+                        console.log(this.selectedModels);
+                    }
 
                     //saving for CAPABILITY TYPE
                    
@@ -885,12 +903,16 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                     //}
                 }
                 this.alertService.startLoadingMessage();
+                this.savesuccessCompleted(this.sourceVendorCap);
+                this._route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capabilities-list')
 
             })
 
             
 
         }
+
+       
 
 	}
 
@@ -899,5 +921,16 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
         //this.loadData();
+    }
+
+    isPMAorDER(value)
+    {
+        if (value == 'pma')
+        {
+            this.sourceVendorCap.isPMADER = 'PMA';
+        }
+        if (value == 'der') {
+            this.sourceVendorCap.isPMADER = 'DER';
+        }
     }
 }

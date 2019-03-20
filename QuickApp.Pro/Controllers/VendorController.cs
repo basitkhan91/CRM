@@ -255,16 +255,59 @@ namespace QuickApp.Pro.Controllers
 
                                   });
 
-
-
-
-
-
-
-
             _context.Site.Include("Address").OrderByDescending(c => c.SiteId).ToList(); ; //.GetAllCustomersData();
             return Ok(allPartDetails);
 
+        }
+
+        [HttpGet("getVendorCapabilityList")]
+        [Produces(typeof(List<VendorCapabiliy>))]
+        public IActionResult GetvendorCapabilityList()
+        {
+            {
+                var data = (from vc in _context.VendorCapabiliy
+                            join v in _context.Vendor on vc.VendorId equals v.VendorId
+                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
+                            //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                            //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
+                            //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
+                            select new
+                            {
+                                v.VendorName,
+                                v.VendorCode,
+
+                                im.PartNumber,
+                                im.PartDescription,
+
+                                im.ManufacturerId,
+                                manufacturerName = im.Manufacturer.Name,
+
+                                vc.VendorCapabilityId,
+                                vc.VendorId,
+                                vc.VendorRanking,
+                                vc.PMA_DER,
+                                vc.ItemMasterId,
+                                vc.TAT,
+                                vc.Cost,
+                                vc.AlternatePartId,
+                                vc.ATAChapterId,
+                                vc.ATASubchapterId,
+                                vc.Memo,
+                                vc.CreatedDate,
+                                vc.UpdatedDate,
+                                vc.capabilityDescription,
+                                vc.IsActive
+                                //vct.CapabilityTypeId,
+
+                                //vcat.AircraftTypeId,
+
+                                //vcam.AircraftModelId
+
+
+                            }).ToList();
+               // return data;
+                return Ok(data);
+            }
         }
 
 
@@ -2408,34 +2451,44 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPost("vendorCapabilityPost")]
-        public IActionResult addCharges([FromBody] VendorCapabiliy caps) //it is for Model we will pass
+        public IActionResult addCharges([FromBody] VendorCapabiliy vendorCapability) //it is for Model we will pass
         {
-            if (caps != null)
-            {
-               // caps.WorkflowChargesListId = 0;
-                caps.MasterCompanyId = 1;
-                caps.CreatedDate = DateTime.Now;
-                _context.VendorCapabiliy.Add(caps);
-                _context.SaveChanges();
-            }
-            return Ok(caps);
-        }
-
-        [HttpPost("_vendorCapabilityType")]
-        public IActionResult addCharges([FromBody] VendorCapabilityType caps) //it is for Model we will pass
-        {
-            if (caps != null)
+            if (vendorCapability != null)
             {
                 // caps.WorkflowChargesListId = 0;
-                caps.MasterCompanyId = 1;
-                caps.CreatedDate = DateTime.Now;
-                _context.vendorCapabilityType.Add(caps);
-                _context.SaveChanges();
+                vendorCapability.MasterCompanyId = 1;
+                vendorCapability.IsActive = true;
+                vendorCapability.CreatedDate = DateTime.Now;
+
+                _unitOfWork.Repository<VendorCapabiliy>().Add(vendorCapability);
+                updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
+                _unitOfWork.SaveChanges();
+                //_context.VendorCapabiliy.Add(caps);
+
+                //_context.SaveChanges();
             }
-            return Ok(caps);
+            return Ok(vendorCapability);
         }
 
-        [HttpPost("_vendorCapabilityAircraftType")]
+        
+
+        [HttpPost("vendorCapabilityTypePost")]
+        public IActionResult addCharges([FromBody] VendorCapabilityType vendorcaptype) //it is for Model we will pass
+        {
+            if (vendorcaptype != null)
+            {
+                // caps.WorkflowChargesListId = 0;
+
+                vendorcaptype.MasterCompanyId = 1;
+                vendorcaptype.CreatedDate = DateTime.Now;
+
+                _context.vendorCapabilityType.Add(vendorcaptype);
+                _context.SaveChanges();
+            }
+            return Ok(vendorcaptype);
+        }
+
+        [HttpPost("vendorCapabilityAircraftTypePost")]
         public IActionResult addCharges([FromBody] VendorCapabilityAircraftType caps) //it is for Model we will pass
         {
             if (caps != null)
@@ -2449,7 +2502,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(caps);
         }
 
-        [HttpPost("_vendorCapabilityAircraftModel")]
+        [HttpPost("vendorCapabilityAircraftModelPost")]
         public IActionResult addCharges([FromBody] VendorCapabiltiyAircraftModel caps) //it is for Model we will pass
         {
             if (caps != null)
@@ -2463,7 +2516,153 @@ namespace QuickApp.Pro.Controllers
             return Ok(caps);
         }
 
+        [HttpGet("vendorCapabilityTypeGet/{id}")]
+        [Produces(typeof(List<VendorCapabilityType>))]
+        public IActionResult vendorCapabilityTypeGet(int id)
+        {
+            var aircraft = _unitOfWork.Vendor.vendorCapabilityTypeGet(id); //.GetAllCustomersData();
+            return Ok(aircraft);
+        }
 
+        [HttpGet("vendorAircraftManufacturerGet/{id}")]
+        [Produces(typeof(List<VendorCapabilityAircraftType>))]
+        public IActionResult vendorAircraftManufacturerGet(int id)
+        {
+            var aircraft = _unitOfWork.Vendor.vendorAircraftManufacturerGet(id); //.GetAllCustomersData();
+            return Ok(aircraft);
+
+        }
+
+        [HttpGet("vendorAircraftManufacturerModelGet/{id}")]
+        [Produces(typeof(List<VendorCapabiltiyAircraftModel>))]
+        public IActionResult vendorAircraftManufacturerModelGet(int id)
+        {
+            var aircraft = _unitOfWork.Vendor.vendorAircraftManufacturerModelGet(id); //.GetAllCustomersData();
+            return Ok(aircraft);
+
+        }
+
+
+        [HttpPut("vendorCapabilityUpdate/{id}")]
+        public IActionResult UpdateVendorCapability(long id, [FromBody] VendorCapabiliy vendorCapability)
+        {
+            var disc = _unitOfWork.VendorCapabilities.GetSingleOrDefault(a => a.VendorCapabilityId == id);
+            //disk.State = EntityState.Detached;
+            //   var disc = _context.VendorCapabiliy.First(a => a.VendorCapabilityId == id);
+            disc.VendorId = vendorCapability.VendorId;
+            disc.capabilityDescription = vendorCapability.capabilityDescription;
+            disc.VendorRanking = vendorCapability.VendorRanking;
+            disc.PMA_DER = vendorCapability.PMA_DER;
+            disc.ItemMasterId = vendorCapability.ItemMasterId;
+            disc.TAT = vendorCapability.TAT;
+            disc.Cost = vendorCapability.Cost;
+            disc.AlternatePartId = vendorCapability.AlternatePartId;
+            disc.ATAChapterId = vendorCapability.ATAChapterId;
+            disc.ATASubchapterId = vendorCapability.ATASubchapterId;
+            disc.Memo = vendorCapability.Memo;
+            disc.IsActive = vendorCapability.IsActive;
+
+            _unitOfWork.Repository<VendorCapabiliy>().Update(disc);
+
+            if (Convert.ToInt32(disc.VendorRanking) != Convert.ToInt32( vendorCapability.VendorRanking))
+            {
+                updateRanking(Convert.ToInt32(disc.VendorRanking));
+            }
+            
+            //
+            _unitOfWork.SaveChanges();
+            //_context.VendorCapabiliy.Update(disc);
+            //_context.SaveChanges();
+            return Ok(vendorCapability);
+        }
+
+        [HttpDelete("deleteVendorCapabilityType/{capabilityid}")]
+        [Produces(typeof(List<VendorCapabilityTypeViewModel>))]
+        public IActionResult deleteVendorCapabilityType(long capabilityid)
+        {
+            var deleterecord = _context.vendorCapabilityType.Where(a => a.VendorCapabilityId == capabilityid).ToList();
+
+            for (var i = 0; i < deleterecord.Count; i++)
+            {
+                _context.Remove(deleterecord[i]);
+                _context.SaveChanges();
+
+               // _unitOfWork.vend.Remove(deleterecord[i]);
+                //_unitOfWork.SaveChanges();
+            }
+           // _context.Remove(deleterecord);
+           // _context.SaveChanges();
+            return Ok(capabilityid);
+
+        }
+
+        [HttpDelete("deleteVendorCapabilityAircraftManafacturer/{capabilityid}")]
+        [Produces(typeof(List<VendorCapabilityAircraftTypeViewModel>))]
+        public IActionResult deleteVendorCapabilityAircraftManafacturer(long capabilityid)
+        {
+            var deleterecord = _context.vendorCapabilityAircraftType.Where(a => a.VendorCapabilityId == capabilityid).ToList();
+
+            for (var i = 0; i < deleterecord.Count; i++)
+            {
+                _context.Remove(deleterecord[i]);
+                _context.SaveChanges();
+            }
+         //   _context.Remove(deleterecord);
+          //  _context.SaveChanges();
+            return Ok(deleterecord);
+
+        }
+
+        [HttpDelete("deleteVendorCapabilityAircraftModel/{capabilityid}")]
+        [Produces(typeof(List<VendorCapabiltiyAircraftModelViewModel>))]
+        public IActionResult deleteVendorCapabilityAircraftModel(long capabilityid)
+        {
+            var deleterecord = _context.vendorCapabiltiyAircraftModel.Where(a => a.VendorCapabilityId == capabilityid).ToList();
+
+            for (var i = 0; i < deleterecord.Count; i++)
+            {
+                _context.Remove(deleterecord[i]);
+                _context.SaveChanges();
+            }
+            //_context.Remove(deleterecord);
+           // _context.SaveChanges();
+            return Ok(deleterecord);
+        }
+
+        [HttpDelete("deleteVendorCapability/{capabilityid}")]
+        [Produces(typeof(List<VendorCapabiliy>))]
+        public IActionResult deleteVendorCapability(long capabilityid)
+        {
+            var deleterecord = _context.VendorCapabiliy.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            _context.Remove(deleterecord);
+            _context.SaveChanges();
+            return Ok(deleterecord);
+
+        }
+
+
+        #region Private Methods
+
+        private void updateRanking(int rankId)
+        {
+            
+            var vendorCapes = _unitOfWork.Repository<VendorCapabiliy>().GetAll().Where(x => Convert.ToInt32(x.VendorRanking) >= rankId).ToList();
+
+            if (vendorCapes != null && vendorCapes.Count > 0)
+            {
+                var vendorExists = vendorCapes.Any(X => Convert.ToInt32(X.VendorRanking) == rankId);
+                if (vendorExists) {
+                    foreach (var capes in vendorCapes)
+                    {
+                        capes.VendorRanking = (Convert.ToInt32(capes.VendorRanking) + 1).ToString();
+                        _unitOfWork.Repository<VendorCapabiliy>().Update(capes);
+                    }
+                }
+                
+            }
+        }
+
+        #endregion Private Methods
 
     }
     //[HttpGet("GetvendorList/{vendorName}")]
@@ -2476,4 +2675,5 @@ namespace QuickApp.Pro.Controllers
     //        return Ok(vendorlist);           
     //    }      
     //}
+
 }

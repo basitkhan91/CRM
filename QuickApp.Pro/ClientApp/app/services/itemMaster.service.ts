@@ -45,6 +45,7 @@ export class ItemMasterService {
 	public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
     public stockable = new Subject<any>();
     public stockableObjChangeObject$ = this.stockable.asObservable();
+    isCapsEditMode: boolean;
     constructor(
         private router: Router,
         private http: HttpClient,
@@ -55,6 +56,12 @@ export class ItemMasterService {
         return Observable.forkJoin(
             this.itemMasterEndpoint.getitemMasterEndpoint<any[]>());
     }
+
+    getItemMasterCapsList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemMasterCapsDataEndpoint<any[]>());
+    }
+
 	getAircaftManafacturerList(itemid:any) {
 		return Observable.forkJoin(
 			this.itemMasterEndpoint.getAircraftManafacturerList<any[]>(itemid));

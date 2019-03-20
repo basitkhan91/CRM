@@ -232,6 +232,8 @@ namespace DAL
 
 
         IRepository<T> Repository<T>() where T : class;
+
+        
         
 
         void SaveChanges(Employee employeeobject);

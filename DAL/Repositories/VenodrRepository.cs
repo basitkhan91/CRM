@@ -350,46 +350,64 @@ namespace DAL.Repositories
 
         }
 
-        //get Vendor Capability List
-        public IEnumerable<object> GetvendorCapabilityList(long id)
+        public IEnumerable<object> vendorCapabilityTypeGet(long id)
         {
+
             {
+                var data = (from vc in _appContext.vendorCapabilityType
+                            where vc.VendorCapabilityId == id
 
+                            select new
+                            {
+                               vc.VendorCapabilityId,
+                               vc.VendorCapabilityTypeId,
+                               vc.CapabilityTypeId
 
-                var data = (from vc in _appContext.VendorCapabiliy
-                            join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                            join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
-                            join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
+                            }).ToList();
+                return data;
+            }
+        }
 
+        public IEnumerable<object> vendorAircraftManufacturerGet(long id)
+        {
+
+            {
+                var data = (from vc in _appContext.vendorCapabilityAircraftType
                             where vc.VendorCapabilityId == id
 
                             select new
                             {
                                 vc.VendorCapabilityId,
-                                vc.VendorId,
-                                vc.VendorRanking,
-                                vc.PMA_DER,
-                                vc.ItemMasterId,
-                                vc.TAT,
-                                vc.Cost,
-                                vc.AlternatePartId,
-                                vc.ATAChapterId,
-                                vc.ATASubchapterId,
-                                vc.Memo,
-                                vct.CapabilityTypeId,
-
-                                vcat.AircraftTypeId,
-
-                                vcam.AircraftModelId
-
+                                vc.VendorCapabilityAircraftTypeId,
+                                vc.AircraftTypeId,
 
                             }).ToList();
                 return data;
-
             }
-
-
         }
+
+        public IEnumerable<object> vendorAircraftManufacturerModelGet(long id)
+        {
+
+            {
+                var data = (from vc in _appContext.vendorCapabiltiyAircraftModel
+                            where vc.VendorCapabilityId == id
+
+                            select new
+                            {
+                                vc.VendorCapabilityId,
+                                vc.VendorCapabilityAircraftModelId,
+                                vc.AircraftModelId,
+                                vc.DashNumber,
+                                vc.isSelected
+
+                            }).ToList();
+                return data;
+            }
+        }
+
+        //get Vendor Capability List
+
 
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

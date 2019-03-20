@@ -35,6 +35,8 @@ namespace QuickApp.Pro.ViewModels
 
         public string Memo { get; set; }
 
+        public string capabilityDescription { get; set; }
+
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
 

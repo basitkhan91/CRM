@@ -999,7 +999,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
-		this.allaircraftInfo = allWorkFlows; //Complete Aircraft Data
+		this.allaircraftInfo = allWorkFlows; //Complete Aircraft Manufacturer Data
 
 		this.completeAircraftModelData = allWorkFlows;
 

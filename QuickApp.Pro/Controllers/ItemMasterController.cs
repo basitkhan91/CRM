@@ -7,6 +7,7 @@ using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
@@ -1334,6 +1335,16 @@ namespace QuickApp.Pro.Controllers
             }
 
             return Ok(ModelState);
+        }
+
+        [HttpGet("GetListforCapes")]
+        [Produces(typeof(List<ItemMasterViewModel>))]
+        public IActionResult GetListforCapes()
+        {
+            //  var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a=>a.ItemTypeId==1 && a.IsActive == true || a.ItemTypeId==3  && a.IsActive == true).ToList(); //.GetAllCustomersData();
+            var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDelete == true || a.IsDelete == null) || a.ItemTypeId == 3 && (a.IsDelete == true || a.IsDelete == null)).ToList(); //.GetAllCustomersData();
+            return Ok(allTaxrateInfo);
+
         }
     }
 

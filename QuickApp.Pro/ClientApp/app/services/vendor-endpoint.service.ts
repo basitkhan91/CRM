@@ -14,7 +14,9 @@ export class VendorEndpointService extends EndpointFactory {
     localCollection: Response;
 
 
-	private readonly _vendorUrl: string = "/api/Vendor/Get";
+    private readonly _vendorUrl: string = "/api/Vendor/Get";
+    private readonly _vendorCapabilityUrl: string = "/api/Vendor/getVendorCapabilityList";
+    
 	private readonly _partDetails: string = "/api/Vendor/Getpartdetails";
 	private readonly _partDetailswithid: string = "/api/Vendor/GetpartdetailsWithid";
 	private readonly _partDetailswithidForsinglePart ="/api/Vendor/GetpartdetailsWithidForSinglePart"
@@ -108,12 +110,23 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _vendorCapabilityType: string = "/api/Vendor/vendorCapabilityTypePost";
     private readonly _vendorCapabilityAircraftType: string = "/api/Vendor/vendorCapabilityAircraftTypePost";
     private readonly _vendorCapabilityAircraftModel: string = "/api/Vendor/vendorCapabilityAircraftModelPost";
-	
+
+    private readonly _vendorCapabilityGet: string = "/api/Vendor/vendorCapabilityTypeGet";
+    private readonly _vendorManufacturer: string = "/api/Vendor/vendorAircraftManufacturerGet";
+    private readonly _vendorManufacturerModel: string = "/api/Vendor/vendorAircraftManufacturerModelGet";
+    private readonly _vendorCapabilityUpdate: string = "/api/Vendor/vendorCapabilityUpdate";//which will be specified in the Controller
+
+    private readonly _deleteVendorCapabilityTypeUrl: string = "/api/Vendor/deleteVendorCapabilityType";
+    private readonly _deleteVendorCapabilityAircraftManufacturer: string = "/api/Vendor/deleteVendorCapabilityAircraftManafacturer";
+    private readonly _deleteVendorCapabilityAircraftModel: string = "/api/Vendor/deleteVendorCapabilityAircraftModel";
+    private readonly _deleteVendorCapability: string = "/api/Vendor/deleteVendorCapability";
+    
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
 	get vendorListWithId() { return this.configurations.baseUrl + this._vendorsWithId; }
-	get vendorattributesUrl() { return this.configurations.baseUrl + this._vendorUrl; }
+    get vendorattributesUrl() { return this.configurations.baseUrl + this._vendorUrl; }
+    get vendorCapabilityListsUrl() { return this.configurations.baseUrl + this._vendorCapabilityUrl; }
 	get partDetails() { return this.configurations.baseUrl + this._partDetails; }
 	get partDetailswithid() { return this.configurations.baseUrl + this._partDetailswithid; }
 	get partDetailswithidForsinglePart() { return this.configurations.baseUrl + this._partDetailswithidForsinglePart; }
@@ -148,12 +161,24 @@ export class VendorEndpointService extends EndpointFactory {
 	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
 	get purchaseorderDetails() { return this.configurations.baseUrl + this._purchaseorderDetails; }
 	get managementSiteDetails() { return this.configurations.baseUrl + this._managementSiteDetails; }
-	get repaireorderDetails() { return this.configurations.baseUrl + this._repaireorderDetails; }
+    get repaireorderDetails() { return this.configurations.baseUrl + this._repaireorderDetails; }
+
+    get vendorCapabilityurl() { return this.configurations.baseUrl + this._vendorCapabilityGet; }
+    get vendorManufacturerurl() { return this.configurations.baseUrl + this._vendorManufacturer; }
+    get vendorManufacturerModelurl() { return this.configurations.baseUrl + this._vendorManufacturerModel; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
 	}
+
+   
+    getvendorCapabilityListEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this.vendorCapabilityListsUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getvendorEndpoint());
+            });
+    }
 
 
     getvendorEndpoint<T>(): Observable<T> {
@@ -1042,6 +1067,74 @@ export class VendorEndpointService extends EndpointFactory {
         return this.http.post<T>(this._vendorCapabilityAircraftModel, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.newVendorCapabiltiyAircraftModelEndPoint(userObject));
+            });
+    }
+
+    getVendorCapabilityListEndpoint<T>(vendorId: any): Observable<T>
+    {
+        let url = `${this.vendorCapabilityurl}/${vendorId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorCapabilityListEndpoint(vendorId));
+            });
+    }
+
+    getVendorCapabilityAircraftManafacturerListEndpoint<T>(vendorId: any): Observable<T> {
+        let url = `${this.vendorManufacturerurl}/${vendorId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorCapabilityAircraftManafacturerListEndpoint(vendorId));
+            });
+    }
+
+    getVendorCapabilityAircraftManafacturerModelListEndpoint<T>(vendorId: any): Observable<T> {
+        let url = `${this.vendorManufacturerModelurl}/${vendorId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorCapabilityAircraftManafacturerModelListEndpoint(vendorId));
+            });
+    }
+
+    
+    //for updating stockline
+    getupdateVendorCapabilityEndpoint<T>(roleObject: any, vendorCapabilityId: number): Observable<T> {
+        let endpointUrl = `${this._vendorCapabilityUpdate}/${roleObject.vendorCapabilityId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getupdateVendorCapabilityEndpoint(roleObject, vendorCapabilityId));
+            });
+    }
+
+
+    getDeletevendorCapabilityTypeEndpoint<T>(capabilityid: any): Observable<T>
+    {
+        let endpointUrl = `${this._deleteVendorCapabilityTypeUrl}/${capabilityid}`;
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDeletevendorCapabilityTypeEndpoint(capabilityid));
+            });
+    }
+    getDeletevendorCapabilityAircraftManafacturerEndpoint<T>(capabilityid: any): Observable<T> {
+        let endpointUrl = `${this._deleteVendorCapabilityAircraftManufacturer}/${capabilityid}`;
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDeletevendorCapabilityAircraftManafacturerEndpoint(capabilityid));
+            });
+    }
+    getDeletevendorCapabilityAircraftModelEndpoint<T>(capabilityid: any): Observable<T> {
+        let endpointUrl = `${this._deleteVendorCapabilityAircraftModel}/${capabilityid}`;
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDeletevendorCapabilityAircraftModelEndpoint(capabilityid));
+            });
+    }
+
+    deleteVendorCapabilityEndpoint<T>(capabilityid: any): Observable<T> {
+        let endpointUrl = `${this._deleteVendorCapability}/${capabilityid}`;
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deletePOPart(capabilityid));
             });
     }
 }

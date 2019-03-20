@@ -34,6 +34,7 @@ import { RoSetupComponent } from '../components/vendor/repaire-orders/ro-setup/r
 
 import { VendorCapabilitiesListComponent } from "../components/vendor/vendor-caps/vendor-capabilities-list/vendor-capabilities-list.component";
 import { AddVendorCapabilitiesComponent } from "../components/vendor/vendor-caps/add-vendor-capabilities/add-vendor-capabilities.component";
+import { EditVendorCapabilitiesComponent } from '../components/vendor/vendor-caps/edit-vendor-capabilities/edit-vendor-capabilities.component';
 
 
 const vendorPagesRoutes: Routes = [
@@ -63,7 +64,7 @@ const vendorPagesRoutes: Routes = [
 			{ path: "app-ro-setup", component: RoSetupComponent, data: { title: "RO-setup" } },
 			{ path: "app-vendor-capabilities-list", component: VendorCapabilitiesListComponent, data: { title: "capabilities-list" } },
 			{ path: "app-add-vendor-capabilities", component: AddVendorCapabilitiesComponent, data: { title: "capabilities-add" } },
-			
+            { path: "app-edit-vendor-capabilities", component: EditVendorCapabilitiesComponent, data: { title: "capabilities-edit" } },
 
 		]
 	}

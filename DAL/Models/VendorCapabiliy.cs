@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,8 @@ namespace DAL.Models
 {
    public class VendorCapabiliy
     {
+       // public EntityState State { get; set; }
+
         [Key]
         public long VendorCapabilityId { get; set; }
 
@@ -34,6 +37,8 @@ namespace DAL.Models
         public long ATASubchapterId { get; set; }
 
         public string Memo { get; set; }
+
+        public string capabilityDescription { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
