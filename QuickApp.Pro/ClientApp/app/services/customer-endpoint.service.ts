@@ -77,7 +77,8 @@ export class CustomerEndpoint extends EndpointFactory {
 	private readonly _updateActiveInactiveforshipping: string = "/api/Customer/shippingUpdateforActive";
 	private readonly _getAircraftManufacturerUrl: string = "/api/Customer/aircraftManufacturerGet";
 	private readonly _multiintegrationsdataUrl: string = "/api/Customer/savemultiIntegrations";
-	private readonly _getIntegrationUrl: string = "/api/Customer/IntegrationGet";
+    private readonly _getIntegrationUrl: string = "/api/Customer/IntegrationGet";
+    private readonly _listsUrl: string = "/api/Customer/GetDescriptionbypart";
 
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
 	get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
@@ -111,7 +112,8 @@ export class CustomerEndpoint extends EndpointFactory {
 	get aircraftmodelsurl() { return this.configurations.baseUrl + this._aircraftmodelsurl; }
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 	get getAircraftManufacturerUrl() { return this.configurations.baseUrl + this._getAircraftManufacturerUrl; }
-	get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
+    get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
+    get listsUrl() { return this.configurations.baseUrl + this._listsUrl; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -812,7 +814,14 @@ export class CustomerEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getIntegrationEndpoint(customerId));
 			});
-	}
+    }
+    getDescriptionbypart<T>(name): Observable<T> {
+        let url = `${this.listsUrl}/${name}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDescriptionbypart(name));
+            });
+    }
 }
 
 

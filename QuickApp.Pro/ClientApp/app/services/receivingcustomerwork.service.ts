@@ -33,7 +33,7 @@ export class ReceivingCustomerWorkService {
     private _rolesChanged = new Subject<RolesChangedEventArg>();
     isEditMode: boolean = false;
     enableExternal: boolean = false;
-    listCollection: any[];
+    listCollection: any;
 
 	constructor(
 		private router: Router,
@@ -43,7 +43,7 @@ export class ReceivingCustomerWorkService {
 
 	getReceiveCustomerList() {
 		return Observable.forkJoin(
-			this.receivingCustomerWorkEndpoint.getReasonEndpoint<any[]>());
+            this.receivingCustomerWorkEndpoint.getReasonEndpoint<any[]>());
 	}
 	newReason(receivingCustomerWork: any) {
 		return this.receivingCustomerWorkEndpoint.getNewReasonEndpoint<any>(receivingCustomerWork);
@@ -65,7 +65,13 @@ export class ReceivingCustomerWorkService {
 
 		return this.receivingCustomerWorkEndpoint.getDeleteReasonEndpoint(receivingCustomerWorkId);
 
-	}
+    }
+    newStockLineTimeLife(sourcereceving: any) {
+        return this.receivingCustomerWorkEndpoint.getNewTimeAdjustmentEndpoint<any>(sourcereceving);
+    }
+    updateStockLineTimelife(sourceTimeLife: any) {
+        return this.receivingCustomerWorkEndpoint.getUpdatestockLineTimeLifeEndpoint<any>(sourceTimeLife, sourceTimeLife.timeLifeCyclesId);
+    }
 
 }
 

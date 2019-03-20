@@ -382,5 +382,9 @@ export class CustomerService {
 	}
 	getintegrationtypes(customerId: any) {
 		return this.customerEndpoint.getIntegrationEndpoint<any[]>(customerId);
-	}
+    }
+    getDescriptionbypart(name) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getDescriptionbypart<any[]>(name));
+    }
 }

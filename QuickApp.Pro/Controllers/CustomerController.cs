@@ -262,6 +262,14 @@ namespace QuickApp.Pro.Controllers
 
 
 
+        [HttpGet("GetDescriptionbypart/{name}")]
+        [Produces(typeof(List<CustomerViewModel>))]
+        public IActionResult Getdescriptionbypart(string name, CustomerViewModel itemMasterViewModel)
+        {
+            var descriptionbypart = _unitOfWork.Customer.GetCustomerBynameList(name); //.GetAllCustomersData();
+            return Ok(descriptionbypart);
+
+        }
 
 
         [HttpPost("customers")]

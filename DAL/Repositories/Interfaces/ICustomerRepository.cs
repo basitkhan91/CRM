@@ -21,5 +21,6 @@ namespace DAL.Repositories.Interfaces
         //IEnumerable <object> GetCustomerBynameList(string name);
         IEnumerable<object> GetCustomerBynameList(string name);
         IEnumerable<object> getIntegrationData(long id);
+        IEnumerable<object> Getdescriptionbypart(string name);
     }
 }

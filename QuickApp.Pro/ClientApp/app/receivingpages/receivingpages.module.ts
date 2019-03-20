@@ -14,7 +14,7 @@ import { QuickAppProMaterialModule } from "../modules/material.module";
 
 //import { CustomerPagesComponent } from "./customerpages.component";
 
-import { CommonModule } from '@angular/common'; //<-- This one
+
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -27,6 +27,13 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';//Prime Ng Steps
 import { DialogModule } from 'primeng/dialog'; //Prime Ng Dailog
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { CommonModule } from '@angular/common'; //<-- This one
+
+
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TreeModule } from 'primeng/tree';
+import { TreeTableModule } from 'primeng/treetable';
 
 import { ReceivingPagesRoutingModule } from "./receivingpages-routing.module";
 import { CustomerWorksListComponent } from "../components/receiving/customer-work/customer-works-list/customer-works-list.component";
@@ -54,7 +61,7 @@ import { ReceivngPoComponent } from "../components/receiving/po-ro/receivng-po/r
 		MultiSelectModule,
 		ReceivingPagesRoutingModule,
 		AutoCompleteModule,
-		GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule
+        GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule, InputSwitchModule, CheckboxModule, TreeModule, TreeTableModule
 	],
 	declarations: [
 		CustomerWorksListComponent,

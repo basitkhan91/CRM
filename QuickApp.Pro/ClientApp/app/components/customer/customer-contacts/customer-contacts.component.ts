@@ -292,8 +292,6 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.alldata = allWorkFlows;
-
-
 	}
 
 	dismissModel() {

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using DAL.Models;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +26,17 @@ namespace QuickApp.Pro.ViewModels
 
         public Byte? StatusId { get; set; }
 
-        public long? CustomerContactId { get; set; }
+        public string ContactId { get; set; }
 
-        //public long? PartId { get; set; }
-
+        public Int32? ObtainFromType { get; set; }
+        public string PartDescription { get; set; }
         public string ChangePartNumber { get; set; }
 
         public string PartCertificationNumber { get; set; }
-
+        public string WorkPhone { get; set; }
         public Int16? Quantity { get; set; }
-
-        public Int16? ConditionCodeId { get; set; }
+        public Int32? TraceableToType { get; set; }
+        public long? ConditionId { get; set; }
         public long? SiteId { get; set; }
         public long? BinId { get; set; }
         public long? ShelfId { get; set; }
@@ -55,11 +56,11 @@ namespace QuickApp.Pro.ViewModels
 
         public string TraceableToOther { get; set; }
 
-        public DateTime ManufacturingDate { get; set; }
+        public DateTime? ManufacturingDate { get; set; }
 
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
-        public DateTime TimeLifeDate { get; set; }
+        public DateTime? TimeLifeDate { get; set; }
 
         public string TimeLifeOrigin { get; set; }
 
@@ -73,11 +74,13 @@ namespace QuickApp.Pro.ViewModels
 
         public long? EmployeeId { get; set; }
 
+        public long? ItemMasterId { get; set; }
+
         public string SerialNumber { get; set; }
 
         public string CertifiedBy { get; set; }
 
-        public DateTime TagDate { get; set; }
+        public DateTime? TagDate { get; set; }
 
         public string TagType { get; set; }
 
@@ -85,19 +88,19 @@ namespace QuickApp.Pro.ViewModels
 
         public string ObtainFrom { get; set; }
 
-        public bool? TimeLife { get; set; }
+        public bool? IsTimeLife { get; set; }
+
+
+        public bool? IsMFGDate { get; set; }
+
 
         public long? TimeLifeId { get; set; }
 
         public string Manufacturer { get; set; }
 
         public string ManufacturerLotNumber { get; set; }
-
-        public long? ObtainFromVendorId { get; set; }
-        public long? ObtainFromCustomerId { get; set; }
-        public string ObtainFromOther { get; set; }
         public Int16? CompanyId { get; set; }
-
+        public long? TimeLifeCyclesId { get; set; }
         public int? BusinessUnitId { get; set; }
 
         public int? DivisionId { get; set; }
@@ -112,8 +115,19 @@ namespace QuickApp.Pro.ViewModels
         public string PartNumber { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public virtual Condition Condition { get; set; }
+        public virtual ItemMaster ItemMaster { get; set; }
+        public virtual Company Company { get; set; }
+        public virtual Site Site { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
+        public virtual Customer Customer { get; set; }
+        public virtual Employee Employee { get; set; }
+        public virtual Location Location { get; set; }
+        public virtual Bin Bin { get; set; }
+        public virtual Shelf Shelf { get; set; }
+        public virtual TimeLife TimeLifes { get; set; }
         public class ReceivingCustomerWorkViewModelValidator : AbstractValidator<ReceivingCustomerWorkViewModel>
         {
             public ReceivingCustomerWorkViewModelValidator()
