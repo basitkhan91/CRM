@@ -3,46 +3,52 @@
 	<h4 class="page-heading clr-green">Item Master Capabilities</h4>
 	<div class="clear"></div>
 
-	<form action="#" method="post" id="" name="" class="form-horizontal ro-grid-form mtop10">
+	<div action="#" method="post" id="" name="" class="form-horizontal ro-grid-form mtop10">
 
 		<div class="modal-body">
-			
+
+			<div class="col-sm-6 w350">
+				<label class="label col-sm-2 w100">Item Category</label>
+				<div class="col-sm-8 ">
+					<label class="w60 disabled"><input type="radio" name="item-category" value="stock" checked="checked"
+							disabled=""> Stock</label>
+					<label class="w90 disabled"><input type="radio" name="item-category" value="equipment" disabled="">
+						Equipment</label>
+				</div>
+			</div>
+			<div class="col-xs-3 w250">
 				<div class="col-sm-6 w350">
-					<label class="label col-sm-2 w100">Item Category</label>
-					<div class="col-sm-8 ">
-						<label class="w60 disabled"><input type="radio" name="item-category" value="stock" checked="checked" disabled=""> Stock</label>
-						<label class="w90 disabled"><input type="radio" name="item-category" value="equipment" disabled=""> Equipment</label>
+					<div class="form-group col-sm-12">
+						<label for="customerName" class="control-label col-sm-4">PN <strong
+								style="color:red">*</strong></label>
+
+
+						<p-autoComplete [(ngModel)]="ItemMasterId" (onKeyUp)=partEventHandler($event)
+							(onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}"
+							[suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+							[minLength]="1" [dropdown]="true">
+							<ng-template let-partName pTemplate="part">
+								<div class="ui-helper-clearfix">{{partName}}</div>
+							</ng-template>
+						</p-autoComplete>
+
+
 					</div>
 				</div>
-				<div class="col-xs-3 w250">
-					<div class="col-sm-6 w350">
-						<div class="form-group col-sm-12">
-							<label for="customerName" class="control-label col-sm-4">PN <strong style="color:red">*</strong></label>
-							
-
-								<p-autoComplete [(ngModel)]="sourceItemMasterCap.partId" (onKeyUp)=partEventHandler($event) (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-												[minLength]="1" [dropdown]="true">
-									<ng-template let-partName pTemplate="part">
-										<div class="ui-helper-clearfix">{{partName}}</div>
-									</ng-template>
-								</p-autoComplete>
-
-							
-						</div>
-					</div>
-					<div class="col-sm-6 w250">
-						<span class="label"><b>PN Description:{{sourceItemMasterCap.partDescription}} </b></span>
-					</div>
+				<div class="col-sm-6 w250">
+					<span class="label"><b>PN Description:{{sourceItemMasterCap.partDescription}} </b></span>
 				</div>
-			
-				<!--<div class="col-xs-5 ">
+			</div>
+
+			<!--<div class="col-xs-5 ">
 					<p>
 						
 						
 					</p>
 				</div>-->
-				
-				<div id="" class="table-responsive default-bg clear">
+
+			<div id="" class="table-responsive default-bg clear">
+				<form [formGroup]="capabilitiesForm">
 					<table class="table table-bordered table-striped table-sorting">
 						<thead>
 							<tr>
@@ -65,115 +71,592 @@
 								<th class="events3"></th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr style="background: #a5a5a5;">
-								<td style="color: #fff; font-weight: bold;">MFG</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-                                    <div class="input-group">
-                                        <p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-                                        <!--<select class="multiselect" multiple="" style="display: none;">
-        <option value="AirBus">AirBus</option>
-        <option value="Boeing">Boeing</option>
-    </select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="AirBus"> AirBus</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing"> Boeing</label></a></li></ul></div>
-    <a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
-                                    </div>
-								</td>
-								<td>
-                                    <div class="input-group">
-                                        <p-multiSelect [options]="selectedAircraftDataModels" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftModelTypes" [panelStyle]="{minWidth:'12em'}" (click)="openModelPopups(contentModel)"></p-multiSelect>
-                                        <!--<select class="multiselect" id="" name="catadd" multiple="" style="display: none;">
-        <option value="Airbus-B767">AirBus - B767</option>
-        <option value="Airbus-A320">AirBus - A320</option>
-        <option value="Boeing-B767">Boeing - B767</option>
-        <option value="Boeing-A320">Boeing - A320</option>
-    </select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-B767"> AirBus - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-A320"> AirBus - A320</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-B767"> Boeing - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-A320"> Boeing - A320</label></a></li></ul></div>
-    <a href="aircraft-models.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
-                                    </div>
-								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title="" data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
+						<tbody *ngFor="let cap of capabilityTypeData;let a=index" [formArrayName]="cap.formArrayName">
 
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>
-									<select [(ngModel)]="sourceItemMasterCap.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceItemMasterCap.companyId)">
-										<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-									</select>
-								</td>
-								<td>
-									<select [(ngModel)]="sourceItemMasterCap.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceItemMasterCap.businessUnitId)">
-										<option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-									</select>
-								</td>
-								<td>
-									<select [(ngModel)]="sourceItemMasterCap.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceItemMasterCap.departmentId)">
-										<option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-									</select>
-								</td>
-								<td>
-									<select [(ngModel)]="sourceItemMasterCap.divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(sourceItemMasterCap.divisionId)">
-										<option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-									</select>
-								</td>
-								<td>
-                                    <div class="input-group">
-                                        <!--<select class="w100">
-        <option>-- Manufacturer --</option>
-        <option>ABC Company</option>
-        <option>XYZ Company</option>
-        <option>123 Company</option>
-        <option>456 Company</option>
-        <option>789 Company</option>
-    </select>-->
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="manufacturerId">
-                                            <option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
-                                        </select>
-                                        <a href="manufacturer.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-								</td>
-								<td>AirBus</td>
-								<td>B767</td>
-								<td><input type="text" class="form-control w100"></td>
-								<td>
-                                    <div class="input-group">
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="ataMainId">
-                                            <option *ngFor="let ataName of allATAMaininfo1" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-                                        </select>
-                                        <!--<select class="w70">
-        <option>-- ATA --</option>
-        <option value="AirBus">AirBus</option>
-        <option value="Boeing">Boeing</option>
-    </select>-->
-                                        <a href="add-ata.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-								</td>
-								<td><input type="text" class="form-control datepicker w70 hasDatepicker" id="dp1552359556396"></td>
-								<td><input type="text" class="form-control"></td>
-								<td><input type="checkbox" class="form-control"></td>
-								<td><input type="text" class="form-control w70"></td>
-								<td><input type="text" class="form-control datepicker w70 hasDatepicker" id="dp1552359556397"></td>
-								<td><input type="text" class="form-control w100"></td>
-								<td>
-									<span data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active">
-										<div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
-									</span> <span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
-									<span data-toggle="modal" data-target="#delete"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
-								</td>
-							</tr>
 							<tr style="background: #a5a5a5;">
+								<td style="color: #fff; font-weight: bold;">{{cap.Description}}</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>
+									<div class="input-group">
+										<p-multiSelect [options]="manufacturerData"
+											[ngModelOptions]="{standalone: true}" [(ngModel)]="cap.selectedAircraftTypes"
+											[panelStyle]="{minWidth:'12em'}" (onChange)="manufacturerChange($event,cap)">
+										</p-multiSelect>
+									</div>
+								</td>
+								<td>
+									<div class="input-group">
+										<p-multiSelect [options]="cap.selectedAircraftDataModels"
+											[ngModelOptions]="{standalone: true}"
+											[(ngModel)]="cap.selectedAircraftModelTypes" [panelStyle]="{minWidth:'12em'}"
+											(click)="openModelPopups(cap)"
+											(onChange)="aircraftModalChange($event,cap)">
+										</p-multiSelect>
+									</div>
+								</td>
+								<td><a class="btn btn-warning" data-toggle="tooltip" title=""
+										data-original-title="Add Models" (click)="addModels(cap)"><i
+											class="fa fa-plus clr-white"></i></a></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<!-- <tbody formArrayName="mfgForm"> -->
+							<!-- MfgForm Start -->
+							<ng-container *ngIf="cap.formArrayName == 'mfgForm'">
+								<tr *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
+									<td></td>
+									<td>
+										<select formControlName="companyId"
+											(change)="getBUList(mfgFormArray.controls[i].controls['companyId'].value)">
+											<option *ngFor="let ataName of maincompanylist"
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="buisinessUnitId"
+											(change)="getDepartmentlist(mfgFormArray.controls[i].controls['buisinessUnitId'].value)">
+											<option *ngFor="let ataName of bulist"
+												[ngValue]="ataName.managementStructureId">
+												{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="departmentId"
+											(change)="getDivisionlist(mfgFormArray.controls[i].controls['departmentId'].value)">
+											<option *ngFor="let ataName of departmentList "
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="divisionId"
+											(change)="getDivisionChangeManagementCode(mfgFormArray.controls[i].controls['divisionId'].value)">
+											<option *ngFor="let ataName of divisionlist "
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<div class="input-group">
+											<select formControlName="manufacturerId">
+												<option *ngFor="let name of allManufacturerInfo"
+													[ngValue]="name.manufacturerId">{{name.name}}</option>
+											</select>
+											<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a> -->
+										</div>
+									</td>
+									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
+									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
+									<td><input type="text" class="form-control w100" formControlName="description"></td>
+									<td>
+										<div class="input-group">
+											<select formControlName="ataChapterId">
+												<option *ngFor="let ataName of allATAMaininfo1"
+													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
+											</select>
+											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a> -->
+										</div>
+									</td>
+									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+											id="dp1552359556396" formControlName="entryDate"></td>
+									<td><input type="text" class="form-control"></td>
+									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
+									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
+									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+											id="dp1552359556397" formControlName="dateVerified"></td>
+									<td><input type="text" class="form-control w100" formControlName="memo"></td>
+									<td>
+										<span data-toggle="tooltip" class="status" title="" data-placement="right"
+											data-original-title="Active">
+											<div class="toggle btn btn-success" data-toggle="toggle"
+												style="width: 30px; height: 19px;"><input type="checkbox"
+													formControlName="isActive" data-toggle="toggle" data-width="30"
+													id="toggle-one" data-on="<i class='fa fa-check'></i>"
+													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
+													data-offstyle="danger">
+												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
+															class="fa fa-check"></i></label><label
+														class="btn btn-danger active toggle-off"><i
+															class="fa fa-times"></i></label><span
+														class="toggle-handle btn btn-default"></span></div>
+											</div>
+										</span> <span data-toggle="modal" data-target="#history"><a href="#"
+												class="btn btn-success nobg" data-toggle="tooltip" title=""
+												data-original-title="History"><i class="fa fa-history"></i></a></span>
+										<span data-toggle="modal" data-target="#delete"><a href="#"
+												class="btn btn-success nobg" data-toggle="tooltip" title=""
+												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
+									</td>
+								</tr>
+							</ng-container>
+							<!-- MfgForm End -->
+
+							<!-- overhaulForm Start *ngIf="cap.formArrayName == 'overhaulForm'" -->
+							<ng-container *ngIf="cap.formArrayName == 'overhaulForm'">
+								<tr *ngFor="let item of overhaulFormArray.controls;let j=index" [formGroupName]="j">
+									<td></td>
+									<td>
+										<select formControlName="companyId"
+											(change)="getBUList(overhaulFormArray.controls[j].controls['companyId'].value)">
+											<option *ngFor="let ataName of maincompanylist"
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="buisinessUnitId"
+											(change)="getDepartmentlist(overhaulFormArray.controls[j].controls['buisinessUnitId'].value)">
+											<option *ngFor="let ataName of bulist"
+												[ngValue]="ataName.managementStructureId">
+												{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="departmentId"
+											(change)="getDivisionlist(overhaulFormArray.controls[j].controls['departmentId'].value)">
+											<option *ngFor="let ataName of departmentList "
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="divisionId"
+											(change)="getDivisionChangeManagementCode(overhaulFormArray.controls[j].controls['divisionId'].value)">
+											<option *ngFor="let ataName of divisionlist "
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<div class="input-group">
+											<select formControlName="manufacturerId">
+												<option *ngFor="let name of allManufacturerInfo"
+													[ngValue]="name.manufacturerId">{{name.name}}</option>
+											</select>
+											<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
+													class="fa fa-plus"></i></a> -->
+										</div>
+									</td>
+									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
+									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
+									<td><input type="text" class="form-control w100" formControlName="description"></td>
+									<td>
+										<div class="input-group">
+											<select formControlName="ataChapterId">
+												<option *ngFor="let ataName of allATAMaininfo1"
+													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
+											</select>
+											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
+													class="fa fa-plus"></i></a> -->
+										</div>
+									</td>
+									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+											id="dp1552359556396" formControlName="entryDate"></td>
+									<td><input type="text" class="form-control"></td>
+									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
+									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
+									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+											id="dp1552359556397" formControlName="dateVerified"></td>
+									<td><input type="text" class="form-control w100" formControlName="memo"></td>
+									<td>
+										<span data-toggle="tooltip" class="status" title="" data-placement="right"
+											data-original-title="Active">
+											<div class="toggle btn btn-success" data-toggle="toggle"
+												style="width: 30px; height: 19px;"><input type="checkbox"
+													formControlName="isActive" data-toggle="toggle" data-width="30"
+													id="toggle-one" data-on="<i class='fa fa-check'></i>"
+													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
+													data-offstyle="danger">
+												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
+															class="fa fa-check"></i></label><label
+														class="btn btn-danger active toggle-off"><i
+															class="fa fa-times"></i></label><span
+														class="toggle-handle btn btn-default"></span></div>
+											</div>
+										</span> <span data-toggle="modal" data-target="#history"><a href="#"
+												class="btn btn-success nobg" data-toggle="tooltip" title=""
+												data-original-title="History"><i class="fa fa-history"></i></a></span>
+										<span data-toggle="modal" data-target="#delete"><a href="#"
+												class="btn btn-success nobg" data-toggle="tooltip" title=""
+												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
+									</td>
+								</tr>
+							</ng-container>
+							<!-- overhaulForm End -->
+
+
+
+							<!-- distributionForm Start *ngIf="cap.formArrayName == 'distributionForm'" -->
+							<ng-container *ngIf="cap.formArrayName == 'distributionForm'">
+								<tr *ngFor="let item of distributionFormArray.controls;let k=index" [formGroupName]="k">
+									<td></td>
+									<td>
+										<select formControlName="companyId"
+											(change)="getBUList(distributionFormArray.controls[k].controls['companyId'].value)">
+											<option *ngFor="let ataName of maincompanylist"
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="buisinessUnitId"
+											(change)="getDepartmentlist(distributionFormArray.controls[k].controls['buisinessUnitId'].value)">
+											<option *ngFor="let ataName of bulist"
+												[ngValue]="ataName.managementStructureId">
+												{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="departmentId"
+											(change)="getDivisionlist(distributionFormArray.controls[k].controls['departmentId'].value)">
+											<option *ngFor="let ataName of departmentList "
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<select formControlName="divisionId"
+											(change)="getDivisionChangeManagementCode(distributionFormArray.controls[k].controls['divisionId'].value)">
+											<option *ngFor="let ataName of divisionlist "
+												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										</select>
+									</td>
+									<td>
+										<div class="input-group">
+											<select formControlName="manufacturerId">
+												<option *ngFor="let name of allManufacturerInfo"
+													[ngValue]="name.manufacturerId">{{name.name}}</option>
+											</select>
+											<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
+													class="fa fa-plus"></i></a> -->
+										</div>
+									</td>
+									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
+									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
+									<td><input type="text" class="form-control w100" formControlName="description"></td>
+									<td>
+										<div class="input-group">
+											<select formControlName="ataChapterId">
+												<option *ngFor="let ataName of allATAMaininfo1"
+													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
+											</select>
+											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
+													class="fa fa-plus"></i></a> -->
+										</div>
+									</td>
+									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+											id="dp1552359556396" formControlName="entryDate"></td>
+									<td><input type="text" class="form-control"></td>
+									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
+									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
+									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+											id="dp1552359556397" formControlName="dateVerified"></td>
+									<td><input type="text" class="form-control w100" formControlName="memo"></td>
+									<td>
+										<span data-toggle="tooltip" class="status" title="" data-placement="right"
+											data-original-title="Active">
+											<div class="toggle btn btn-success" data-toggle="toggle"
+												style="width: 30px; height: 19px;"><input type="checkbox"
+													formControlName="isActive" data-toggle="toggle" data-width="30"
+													id="toggle-one" data-on="<i class='fa fa-check'></i>"
+													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
+													data-offstyle="danger">
+												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
+															class="fa fa-check"></i></label><label
+														class="btn btn-danger active toggle-off"><i
+															class="fa fa-times"></i></label><span
+														class="toggle-handle btn btn-default"></span></div>
+											</div>
+										</span> <span data-toggle="modal" data-target="#history"><a href="#"
+												class="btn btn-success nobg" data-toggle="tooltip" title=""
+												data-original-title="History"><i class="fa fa-history"></i></a></span>
+										<span data-toggle="modal" data-target="#delete"><a href="#"
+												class="btn btn-success nobg" data-toggle="tooltip" title=""
+												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
+									</td>
+								</tr>
+							</ng-container>
+							<!-- distributionForm End -->
+
+							<!-- certificationForm Start *ngIf="cap.formArrayName == 'certificationForm'" -->
+							<ng-container *ngIf="cap.formArrayName == 'certificationForm'">
+									<tr *ngFor="let item of certificationFormArray.controls;let k=index" [formGroupName]="k">
+										<td></td>
+										<td>
+											<select formControlName="companyId"
+												(change)="getBUList(certificationFormArray.controls[k].controls['companyId'].value)">
+												<option *ngFor="let ataName of maincompanylist"
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="buisinessUnitId"
+												(change)="getDepartmentlist(certificationFormArray.controls[k].controls['buisinessUnitId'].value)">
+												<option *ngFor="let ataName of bulist"
+													[ngValue]="ataName.managementStructureId">
+													{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="departmentId"
+												(change)="getDivisionlist(certificationFormArray.controls[k].controls['departmentId'].value)">
+												<option *ngFor="let ataName of departmentList "
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="divisionId"
+												(change)="getDivisionChangeManagementCode(certificationFormArray.controls[k].controls['divisionId'].value)">
+												<option *ngFor="let ataName of divisionlist "
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<div class="input-group">
+												<select formControlName="manufacturerId">
+													<option *ngFor="let name of allManufacturerInfo"
+														[ngValue]="name.manufacturerId">{{name.name}}</option>
+												</select>
+												<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
+														class="fa fa-plus"></i></a> -->
+											</div>
+										</td>
+										<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
+										<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
+										<td><input type="text" class="form-control w100" formControlName="description"></td>
+										<td>
+											<div class="input-group">
+												<select formControlName="ataChapterId">
+													<option *ngFor="let ataName of allATAMaininfo1"
+														[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
+												</select>
+												<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
+														class="fa fa-plus"></i></a> -->
+											</div>
+										</td>
+										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+												id="dp1552359556396" formControlName="entryDate"></td>
+										<td><input type="text" class="form-control"></td>
+										<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
+										<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
+										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+												id="dp1552359556397" formControlName="dateVerified"></td>
+										<td><input type="text" class="form-control w100" formControlName="memo"></td>
+										<td>
+											<span data-toggle="tooltip" class="status" title="" data-placement="right"
+												data-original-title="Active">
+												<div class="toggle btn btn-success" data-toggle="toggle"
+													style="width: 30px; height: 19px;"><input type="checkbox"
+														formControlName="isActive" data-toggle="toggle" data-width="30"
+														id="toggle-one" data-on="<i class='fa fa-check'></i>"
+														data-off="<i class='fa fa-times'></i>" data-onstyle="success"
+														data-offstyle="danger">
+													<div class="toggle-group"><label class="btn btn-success toggle-on"><i
+																class="fa fa-check"></i></label><label
+															class="btn btn-danger active toggle-off"><i
+																class="fa fa-times"></i></label><span
+															class="toggle-handle btn btn-default"></span></div>
+												</div>
+											</span> <span data-toggle="modal" data-target="#history"><a href="#"
+													class="btn btn-success nobg" data-toggle="tooltip" title=""
+													data-original-title="History"><i class="fa fa-history"></i></a></span>
+											<span data-toggle="modal" data-target="#delete"><a href="#"
+													class="btn btn-success nobg" data-toggle="tooltip" title=""
+													data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
+										</td>
+									</tr>
+								</ng-container>
+								<!-- certificationForm End -->
+
+
+								<!-- repairForm Start *ngIf="cap.formArrayName == 'repairForm'" -->
+							<ng-container *ngIf="cap.formArrayName == 'repairForm'">
+									<tr *ngFor="let item of repairFormArray.controls;let k=index" [formGroupName]="k">
+										<td></td>
+										<td>
+											<select formControlName="companyId"
+												(change)="getBUList(repairFormArray.controls[k].controls['companyId'].value)">
+												<option *ngFor="let ataName of maincompanylist"
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="buisinessUnitId"
+												(change)="getDepartmentlist(repairFormArray.controls[k].controls['buisinessUnitId'].value)">
+												<option *ngFor="let ataName of bulist"
+													[ngValue]="ataName.managementStructureId">
+													{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="departmentId"
+												(change)="getDivisionlist(repairFormArray.controls[k].controls['departmentId'].value)">
+												<option *ngFor="let ataName of departmentList "
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="divisionId"
+												(change)="getDivisionChangeManagementCode(repairFormArray.controls[k].controls['divisionId'].value)">
+												<option *ngFor="let ataName of divisionlist "
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<div class="input-group">
+												<select formControlName="manufacturerId">
+													<option *ngFor="let name of allManufacturerInfo"
+														[ngValue]="name.manufacturerId">{{name.name}}</option>
+												</select>
+												<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
+														class="fa fa-plus"></i></a> -->
+											</div>
+										</td>
+										<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
+										<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
+										<td><input type="text" class="form-control w100" formControlName="description"></td>
+										<td>
+											<div class="input-group">
+												<select formControlName="ataChapterId">
+													<option *ngFor="let ataName of allATAMaininfo1"
+														[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
+												</select>
+												<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
+														class="fa fa-plus"></i></a> -->
+											</div>
+										</td>
+										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+												id="dp1552359556396" formControlName="entryDate"></td>
+										<td><input type="text" class="form-control"></td>
+										<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
+										<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
+										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+												id="dp1552359556397" formControlName="dateVerified"></td>
+										<td><input type="text" class="form-control w100" formControlName="memo"></td>
+										<td>
+											<span data-toggle="tooltip" class="status" title="" data-placement="right"
+												data-original-title="Active">
+												<div class="toggle btn btn-success" data-toggle="toggle"
+													style="width: 30px; height: 19px;"><input type="checkbox"
+														formControlName="isActive" data-toggle="toggle" data-width="30"
+														id="toggle-one" data-on="<i class='fa fa-check'></i>"
+														data-off="<i class='fa fa-times'></i>" data-onstyle="success"
+														data-offstyle="danger">
+													<div class="toggle-group"><label class="btn btn-success toggle-on"><i
+																class="fa fa-check"></i></label><label
+															class="btn btn-danger active toggle-off"><i
+																class="fa fa-times"></i></label><span
+															class="toggle-handle btn btn-default"></span></div>
+												</div>
+											</span> <span data-toggle="modal" data-target="#history"><a href="#"
+													class="btn btn-success nobg" data-toggle="tooltip" title=""
+													data-original-title="History"><i class="fa fa-history"></i></a></span>
+											<span data-toggle="modal" data-target="#delete"><a href="#"
+													class="btn btn-success nobg" data-toggle="tooltip" title=""
+													data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
+										</td>
+									</tr>
+								</ng-container>
+								<!-- repairForm End -->
+
+
+								<!-- exchangeForm Start *ngIf="cap.formArrayName == 'exchangeForm'" -->
+							<ng-container *ngIf="cap.formArrayName == 'exchangeForm'">
+									<tr *ngFor="let item of exchangeFormArray.controls;let k=index" [formGroupName]="k">
+										<td></td>
+										<td>
+											<select formControlName="companyId"
+												(change)="getBUList(exchangeFormArray.controls[k].controls['companyId'].value)">
+												<option *ngFor="let ataName of maincompanylist"
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="buisinessUnitId"
+												(change)="getDepartmentlist(exchangeFormArray.controls[k].controls['buisinessUnitId'].value)">
+												<option *ngFor="let ataName of bulist"
+													[ngValue]="ataName.managementStructureId">
+													{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="departmentId"
+												(change)="getDivisionlist(exchangeFormArray.controls[k].controls['departmentId'].value)">
+												<option *ngFor="let ataName of departmentList "
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<select formControlName="divisionId"
+												(change)="getDivisionChangeManagementCode(exchangeFormArray.controls[k].controls['divisionId'].value)">
+												<option *ngFor="let ataName of divisionlist "
+													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+											</select>
+										</td>
+										<td>
+											<div class="input-group">
+												<select formControlName="manufacturerId">
+													<option *ngFor="let name of allManufacturerInfo"
+														[ngValue]="name.manufacturerId">{{name.name}}</option>
+												</select>
+												<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
+														class="fa fa-plus"></i></a> -->
+											</div>
+										</td>
+										<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
+										<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
+										<td><input type="text" class="form-control w100" formControlName="description"></td>
+										<td>
+											<div class="input-group">
+												<select formControlName="ataChapterId">
+													<option *ngFor="let ataName of allATAMaininfo1"
+														[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
+												</select>
+												<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
+														class="fa fa-plus"></i></a> -->
+											</div>
+										</td>
+										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+												id="dp1552359556396" formControlName="entryDate"></td>
+										<td><input type="text" class="form-control"></td>
+										<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
+										<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
+										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
+												id="dp1552359556397" formControlName="dateVerified"></td>
+										<td><input type="text" class="form-control w100" formControlName="memo"></td>
+										<td>
+											<span data-toggle="tooltip" class="status" title="" data-placement="right"
+												data-original-title="Active">
+												<div class="toggle btn btn-success" data-toggle="toggle"
+													style="width: 30px; height: 19px;"><input type="checkbox"
+														formControlName="isActive" data-toggle="toggle" data-width="30"
+														id="toggle-one" data-on="<i class='fa fa-check'></i>"
+														data-off="<i class='fa fa-times'></i>" data-onstyle="success"
+														data-offstyle="danger">
+													<div class="toggle-group"><label class="btn btn-success toggle-on"><i
+																class="fa fa-check"></i></label><label
+															class="btn btn-danger active toggle-off"><i
+																class="fa fa-times"></i></label><span
+															class="toggle-handle btn btn-default"></span></div>
+												</div>
+											</span> <span data-toggle="modal" data-target="#history"><a href="#"
+													class="btn btn-success nobg" data-toggle="tooltip" title=""
+													data-original-title="History"><i class="fa fa-history"></i></a></span>
+											<span data-toggle="modal" data-target="#delete"><a href="#"
+													class="btn btn-success nobg" data-toggle="tooltip" title=""
+													data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
+										</td>
+									</tr>
+								</ng-container>
+								<!-- distributionForm End -->
+							<!-- </tbody> -->
+						</tbody>
+						<!-- <tr style="background: #a5a5a5;">
 								<td style="color: #fff; font-weight: bold;">Overhaul</td>
 								<td></td>
 								<td></td>
@@ -185,22 +668,64 @@
 										<select class="multiselect" multiple="" style="display: none;">
 											<option value="AirBus">AirBus</option>
 											<option value="Boeing">Boeing</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="AirBus"> AirBus</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing"> Boeing</label></a></li></ul></div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="AirBus">
+															AirBus</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing">
+															Boeing</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
 								<td>
 									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple="" style="display: none;">
+										<select class="multiselect" id="" name="catadd" multiple=""
+											style="display: none;">
 											<option value="Airbus-B767">AirBus - B767</option>
 											<option value="Airbus-A320">AirBus - A320</option>
 											<option value="Boeing-B767">Boeing - B767</option>
 											<option value="Boeing-A320">Boeing - A320</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-B767"> AirBus - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-A320"> AirBus - A320</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-B767"> Boeing - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-A320"> Boeing - A320</label></a></li></ul></div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-B767"> AirBus - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-A320"> AirBus - A320</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-B767"> Boeing - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-A320"> Boeing - A320</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title="" data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
+								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
+										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -209,9 +734,9 @@
 								<td></td>
 								<td></td>
 								<td></td>
-							</tr>
+							</tr> -->
 
-							<tr style="background: #a5a5a5;">
+						<!-- <tr style="background: #a5a5a5;">
 								<td style="color: #fff; font-weight: bold;">Distribution</td>
 								<td></td>
 								<td></td>
@@ -223,22 +748,64 @@
 										<select class="multiselect" multiple="" style="display: none;">
 											<option value="AirBus">AirBus</option>
 											<option value="Boeing">Boeing</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="AirBus"> AirBus</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing"> Boeing</label></a></li></ul></div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="AirBus">
+															AirBus</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing">
+															Boeing</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
 								<td>
 									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple="" style="display: none;">
+										<select class="multiselect" id="" name="catadd" multiple=""
+											style="display: none;">
 											<option value="Airbus-B767">AirBus - B767</option>
 											<option value="Airbus-A320">AirBus - A320</option>
 											<option value="Boeing-B767">Boeing - B767</option>
 											<option value="Boeing-A320">Boeing - A320</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-B767"> AirBus - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-A320"> AirBus - A320</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-B767"> Boeing - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-A320"> Boeing - A320</label></a></li></ul></div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-B767"> AirBus - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-A320"> AirBus - A320</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-B767"> Boeing - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-A320"> Boeing - A320</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title="" data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
+								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
+										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -247,9 +814,9 @@
 								<td></td>
 								<td></td>
 								<td></td>
-							</tr>
+							</tr> -->
 
-							<tr style="background: #a5a5a5;">
+						<!-- <tr style="background: #a5a5a5;">
 								<td style="color: #fff; font-weight: bold;">Certification</td>
 								<td></td>
 								<td></td>
@@ -261,22 +828,64 @@
 										<select class="multiselect" multiple="" style="display: none;">
 											<option value="AirBus">AirBus</option>
 											<option value="Boeing">Boeing</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="AirBus"> AirBus</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing"> Boeing</label></a></li></ul></div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="AirBus">
+															AirBus</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing">
+															Boeing</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
 								<td>
 									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple="" style="display: none;">
+										<select class="multiselect" id="" name="catadd" multiple=""
+											style="display: none;">
 											<option value="Airbus-B767">AirBus - B767</option>
 											<option value="Airbus-A320">AirBus - A320</option>
 											<option value="Boeing-B767">Boeing - B767</option>
 											<option value="Boeing-A320">Boeing - A320</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-B767"> AirBus - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-A320"> AirBus - A320</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-B767"> Boeing - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-A320"> Boeing - A320</label></a></li></ul></div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-B767"> AirBus - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-A320"> AirBus - A320</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-B767"> Boeing - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-A320"> Boeing - A320</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title="" data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
+								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
+										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -285,9 +894,9 @@
 								<td></td>
 								<td></td>
 								<td></td>
-							</tr>
+							</tr> -->
 
-							<tr style="background: #a5a5a5;">
+						<!-- <tr style="background: #a5a5a5;">
 								<td style="color: #fff; font-weight: bold;">Repair</td>
 								<td></td>
 								<td></td>
@@ -299,22 +908,64 @@
 										<select class="multiselect" multiple="" style="display: none;">
 											<option value="AirBus">AirBus</option>
 											<option value="Boeing">Boeing</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="AirBus"> AirBus</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing"> Boeing</label></a></li></ul></div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="AirBus">
+															AirBus</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing">
+															Boeing</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
 								<td>
 									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple="" style="display: none;">
+										<select class="multiselect" id="" name="catadd" multiple=""
+											style="display: none;">
 											<option value="Airbus-B767">AirBus - B767</option>
 											<option value="Airbus-A320">AirBus - A320</option>
 											<option value="Boeing-B767">Boeing - B767</option>
 											<option value="Boeing-A320">Boeing - A320</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-B767"> AirBus - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-A320"> AirBus - A320</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-B767"> Boeing - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-A320"> Boeing - A320</label></a></li></ul></div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-B767"> AirBus - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-A320"> AirBus - A320</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-B767"> Boeing - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-A320"> Boeing - A320</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title="" data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
+								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
+										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -323,9 +974,9 @@
 								<td></td>
 								<td></td>
 								<td></td>
-							</tr>
+							</tr> -->
 
-							<tr style="background: #a5a5a5;">
+						<!-- <tr style="background: #a5a5a5;">
 								<td style="color: #fff; font-weight: bold;">Exchange</td>
 								<td></td>
 								<td></td>
@@ -337,22 +988,64 @@
 										<select class="multiselect" multiple="" style="display: none;">
 											<option value="AirBus">AirBus</option>
 											<option value="Boeing">Boeing</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="AirBus"> AirBus</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing"> Boeing</label></a></li></ul></div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="AirBus">
+															AirBus</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing">
+															Boeing</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
 								<td>
 									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple="" style="display: none;">
+										<select class="multiselect" id="" name="catadd" multiple=""
+											style="display: none;">
 											<option value="Airbus-B767">AirBus - B767</option>
 											<option value="Airbus-A320">AirBus - A320</option>
 											<option value="Boeing-B767">Boeing - B767</option>
 											<option value="Boeing-A320">Boeing - A320</option>
-										</select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-B767"> AirBus - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Airbus-A320"> AirBus - A320</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-B767"> Boeing - B767</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Boeing-A320"> Boeing - A320</label></a></li></ul></div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+										</select>
+										<div class="btn-group"><button type="button"
+												class="multiselect dropdown-toggle btn btn-default"
+												data-toggle="dropdown" title="None selected"><span
+													class="multiselect-selected-text">None
+													selected</span> <b class="caret"></b></button>
+											<ul class="multiselect-container dropdown-menu">
+												<li class="multiselect-item multiselect-all"><a tabindex="0"
+														class="multiselect-all"><label class="checkbox"><input
+																type="checkbox" value="multiselect-all"> Select
+															all</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-B767"> AirBus - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Airbus-A320"> AirBus - A320</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-B767"> Boeing - B767</label></a></li>
+												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
+																value="Boeing-A320"> Boeing - A320</label></a></li>
+											</ul>
+										</div>
+										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
+												class="fa fa-plus"></i></a>
 									</div>
 								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title="" data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
+								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
+										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -361,14 +1054,15 @@
 								<td></td>
 								<td></td>
 								<td></td>
-							</tr>
+							</tr> -->
 
-						</tbody>
+						<!-- </tbody> -->
 					</table>
-					<div class="clear"></div>
-					<br>
-				</div>
-			
+				</form>
+				<div class="clear"></div>
+				<br>
+			</div>
+
 		</div>
 		<div class="col-sm-4">
 
@@ -381,8 +1075,8 @@
 		</div>
 		<div class="clear"></div>
 		<hr>
-		<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveVendorCapsclose()">Save</button>
+		<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCapabilities()">Save</button>
 		<div class="clear"></div>
-	</form>
+	</div>
 	<div class="pull-right"> © 2019 <a href="#">PAS</a> </div>
 </div>

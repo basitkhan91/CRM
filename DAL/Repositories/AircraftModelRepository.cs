@@ -58,7 +58,7 @@ namespace DAL.Repositories
              join imc in _appContext.ItemMasterCapes on c.CapabilityId equals imc.CapabilityId
              join am in _appContext.AircraftModel on c.AircraftModelId equals am.AircraftModelId
              join at in  _appContext.AircraftType  on c.AircraftTypeId equals at.AircraftTypeId
-             join ata in _appContext.ATAMain  on c.ATAMainId equals ata.ATAMainId
+             join ata in _appContext.ATAMain  on c.ATAChapterId equals ata.ATAMainId
              where imc.ItemMasterId == id
 
 

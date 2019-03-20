@@ -355,86 +355,98 @@ namespace QuickApp.Pro.Controllers
                 return Ok(itemMasterAircraftModel);
                 // return Ok(ModelState);
             }
-        
 
+
+        //[HttpPost("Mancapespost")]
+        //public IActionResult CreateManCappost([FromBody] CapesInfoViewModel capesInfoViewModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (_context.Capability.Any(o => o.CapabilityId == capesInfoViewModel.CapabilityId))
+        //        {
+        //            // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
+        //            var existingresule = _context.Capability.Where(c => c.CapabilityId == capesInfoViewModel.CapabilityId).FirstOrDefault();
+        //            existingresule.AircraftManufacturer = capesInfoViewModel.AircraftManufacturer;
+        //            existingresule.AircraftModelId = capesInfoViewModel.AircraftModelId;
+        //            existingresule.AircraftTypeId = capesInfoViewModel.AircraftTypeId;
+        //            existingresule.ATAMainId = capesInfoViewModel.atcChapterId1;
+        //            existingresule.CapabilityTypeId = capesInfoViewModel.CapabilityTypeId;
+        //            existingresule.AircraftManufacturer = capesInfoViewModel.Description;
+        //            existingresule.MasterCompanyId = 1;
+        //            existingresule.CreatedDate = DateTime.Now;
+        //            existingresule.UpdatedDate = DateTime.Now;
+        //            existingresule.DateVerified = capesInfoViewModel.dateVerified1;
+        //            existingresule.Description = capesInfoViewModel.modelname1;
+        //            existingresule.EntryDate = capesInfoViewModel.dateVerified1;
+        //            existingresule.PartId = capesInfoViewModel.PartId;
+        //            existingresule.IsCMMExist = capesInfoViewModel.isCMMExist1;
+        //            existingresule.Memo = capesInfoViewModel.memo1;
+        //            existingresule.CompanyId = capesInfoViewModel.MasterComapnyId1;
+        //            existingresule.BuisinessUnitId = capesInfoViewModel.Buid1;
+        //            existingresule.DepartmentId = capesInfoViewModel.Depid1;
+        //            existingresule.DivisionId = capesInfoViewModel.Divid1;
+        //            existingresule.ManufacturerId = capesInfoViewModel.ManufacturerId;
+        //            existingresule.VerifiedBy = capesInfoViewModel.verifiedBy1;
+        //            existingresule.IsActive = true;
+        //            existingresule.IsDelete = true;
+        //            existingresule.IsVerified = capesInfoViewModel.isVerified1;
+        //            _context.Capability.Update(existingresule);
+        //            _context.SaveChanges();
+
+        //        }
+        //        else {
+
+
+        //            Capability cp = new Capability();
+        //            cp.AircraftManufacturer = capesInfoViewModel.AircraftManufacturer;
+        //            cp.AircraftModelId = capesInfoViewModel.AircraftModelId;
+        //            cp.AircraftTypeId = capesInfoViewModel.AircraftTypeId;
+        //            cp.ATAMainId = capesInfoViewModel.atcChapterId1;
+        //            cp.CapabilityTypeId = capesInfoViewModel.CapabilityTypeId;
+        //            cp.AircraftManufacturer = capesInfoViewModel.Description;
+        //            cp.MasterCompanyId = 1;
+        //            cp.CreatedDate = DateTime.Now;
+        //            cp.UpdatedDate = DateTime.Now;
+        //            cp.DateVerified = capesInfoViewModel.dateVerified1;
+        //            cp.Description = capesInfoViewModel.modelname1;
+        //            cp.EntryDate = capesInfoViewModel.dateVerified1;
+        //            cp.PartId = capesInfoViewModel.PartId;
+        //            cp.IsCMMExist = capesInfoViewModel.isCMMExist1;
+        //            cp.Memo = capesInfoViewModel.memo1;
+        //            cp.VerifiedBy = capesInfoViewModel.verifiedBy1;
+        //            cp.IsActive = true;
+        //            cp.IsDelete = true;
+        //            cp.CompanyId = capesInfoViewModel.MasterComapnyId1;
+        //            cp.BuisinessUnitId = capesInfoViewModel.Buid1;
+        //            cp.DepartmentId = capesInfoViewModel.Depid1;
+        //            cp.DivisionId = capesInfoViewModel.Divid1;
+        //            cp.IsVerified = capesInfoViewModel.isVerified1;
+        //            cp.ManufacturerId = capesInfoViewModel.ManufacturerId;
+        //            _context.Capability.Add(cp);
+        //            _context.SaveChanges();
+        //            long returnid = cp.CapabilityId;
+        //            saveItemcapes(returnid, capesInfoViewModel.itemId);
+        //            return Ok(capesInfoViewModel);
+
+
+        //        }
+        //    }
+        //    return Ok(capesInfoViewModel);
+        //    // return Ok(ModelState);
+        //}
         [HttpPost("Mancapespost")]
-        public IActionResult CreateManCappost([FromBody] CapesInfoViewModel capesInfoViewModel)
+        public IActionResult addCharges([FromBody] Capability capability)
         {
             if (ModelState.IsValid)
             {
-                if (_context.Capability.Any(o => o.CapabilityId == capesInfoViewModel.CapabilityId))
-                {
-                    // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
-                    var existingresule = _context.Capability.Where(c => c.CapabilityId == capesInfoViewModel.CapabilityId).FirstOrDefault();
-                    existingresule.AircraftManufacturer = capesInfoViewModel.AircraftManufacturer;
-                    existingresule.AircraftModelId = capesInfoViewModel.AircraftModelId;
-                    existingresule.AircraftTypeId = capesInfoViewModel.AircraftTypeId;
-                    existingresule.ATAMainId = capesInfoViewModel.atcChapterId1;
-                    existingresule.CapabilityTypeId = capesInfoViewModel.CapabilityTypeId;
-                    existingresule.AircraftManufacturer = capesInfoViewModel.Description;
-                    existingresule.MasterCompanyId = 1;
-                    existingresule.CreatedDate = DateTime.Now;
-                    existingresule.UpdatedDate = DateTime.Now;
-                    existingresule.DateVerified = capesInfoViewModel.dateVerified1;
-                    existingresule.Description = capesInfoViewModel.modelname1;
-                    existingresule.EntryDate = capesInfoViewModel.dateVerified1;
-                    existingresule.PartId = capesInfoViewModel.PartId;
-                    existingresule.IsCMMExist = capesInfoViewModel.isCMMExist1;
-                    existingresule.Memo = capesInfoViewModel.memo1;
-                    existingresule.CompanyId = capesInfoViewModel.MasterComapnyId1;
-                    existingresule.BuisinessUnitId = capesInfoViewModel.Buid1;
-                    existingresule.DepartmentId = capesInfoViewModel.Depid1;
-                    existingresule.DivisionId = capesInfoViewModel.Divid1;
-                    existingresule.ManufacturerId = capesInfoViewModel.ManufacturerId;
-                    existingresule.VerifiedBy = capesInfoViewModel.verifiedBy1;
-                    existingresule.IsActive = true;
-                    existingresule.IsDelete = true;
-                    existingresule.IsVerified = capesInfoViewModel.isVerified1;
-                    _context.Capability.Update(existingresule);
-                    _context.SaveChanges();
-
-                }
-                else {
-
-
-                    Capability cp = new Capability();
-                    cp.AircraftManufacturer = capesInfoViewModel.AircraftManufacturer;
-                    cp.AircraftModelId = capesInfoViewModel.AircraftModelId;
-                    cp.AircraftTypeId = capesInfoViewModel.AircraftTypeId;
-                    cp.ATAMainId = capesInfoViewModel.atcChapterId1;
-                    cp.CapabilityTypeId = capesInfoViewModel.CapabilityTypeId;
-                    cp.AircraftManufacturer = capesInfoViewModel.Description;
-                    cp.MasterCompanyId = 1;
-                    cp.CreatedDate = DateTime.Now;
-                    cp.UpdatedDate = DateTime.Now;
-                    cp.DateVerified = capesInfoViewModel.dateVerified1;
-                    cp.Description = capesInfoViewModel.modelname1;
-                    cp.EntryDate = capesInfoViewModel.dateVerified1;
-                    cp.PartId = capesInfoViewModel.PartId;
-                    cp.IsCMMExist = capesInfoViewModel.isCMMExist1;
-                    cp.Memo = capesInfoViewModel.memo1;
-                    cp.VerifiedBy = capesInfoViewModel.verifiedBy1;
-                    cp.IsActive = true;
-                    cp.IsDelete = true;
-                    cp.CompanyId = capesInfoViewModel.MasterComapnyId1;
-                    cp.BuisinessUnitId = capesInfoViewModel.Buid1;
-                    cp.DepartmentId = capesInfoViewModel.Depid1;
-                    cp.DivisionId = capesInfoViewModel.Divid1;
-                    cp.IsVerified = capesInfoViewModel.isVerified1;
-                    cp.ManufacturerId = capesInfoViewModel.ManufacturerId;
-                    _context.Capability.Add(cp);
-                    _context.SaveChanges();
-                    long returnid = cp.CapabilityId;
-                    saveItemcapes(returnid, capesInfoViewModel.itemId);
-                    return Ok(capesInfoViewModel);
-                  
-
-                }
+                capability.CapabilityId = 0;
+                capability.MasterCompanyId = 1;
+                capability.CreatedDate = DateTime.Now;
+                _unitOfWork.Repository<Capability>().Add(capability);
+                _unitOfWork.SaveChanges();
             }
-            return Ok(capesInfoViewModel);
-            // return Ok(ModelState);
+            return Ok();
         }
-
         public void saveItemcapes(long returnid,long itemid) {
 
             ItemMasterCapes imc = new ItemMasterCapes();

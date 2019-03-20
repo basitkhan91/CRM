@@ -28,8 +28,8 @@ namespace DAL.Models
         public Nullable<int> AircraftTypeId { get; set; }
         public Nullable<long> AircraftModelId { get; set; }
         public string AircraftManufacturer { get; set; }
-        public Nullable<long> PartId { get; set; }
-        public Nullable<long> ATAMainId { get; set; }
+        //public Nullable<long> PartId { get; set; }
+        public Nullable<long> ATAChapterId { get; set; }
         public Nullable<System.DateTime> EntryDate { get; set; }
         public Nullable<bool> IsCMMExist { get; set; }
         public Nullable<bool> IsVerified { get; set; }
@@ -51,6 +51,6 @@ namespace DAL.Models
         public Nullable<bool> IsDelete { get; set; }
         public long? ManufacturerId { get; set; }
 
-
+        public long? ItemMasterId { get; set; }
     }
 }
