@@ -16,7 +16,7 @@ namespace DAL.Models
         public string CapabilityName { get; set; }
 
         [ForeignKey("MasterCompanyId")]
-        public Int32 MasterCompanyId { get; set; }
+        public Int32? MasterCompanyId { get; set; }
 
         public string CreatedBy { get; set; }
 

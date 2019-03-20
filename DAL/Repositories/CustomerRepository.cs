@@ -223,6 +223,11 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> Getdescriptionbypart(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

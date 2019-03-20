@@ -65,6 +65,7 @@ export class CustomerWorkSetupComponent {
     disableSavepartDescription: boolean;
     descriptionbyPart: any[]=[];
     allConditionInfo: Condition[];
+    sourceTimeLife: any = {};
     allCustomer: any[];
     allVendorList: any[];
     chargeName: any;
@@ -72,7 +73,7 @@ export class CustomerWorkSetupComponent {
     sourceAction: any;
     showRestrictQuantity: boolean;
     showFreeQuantity: boolean;
-    showNormalQuantity: boolean;
+    showNormalQuantity: boolean = true;
     allWareHouses: any[];
     allLocations: any[];
     allShelfs: any[];
@@ -83,6 +84,24 @@ export class CustomerWorkSetupComponent {
     disableSaveCusCode: boolean;
     CustomerInfoByName: any[] = [];
     disableSaveCusName: boolean;
+    display: boolean;
+    modelValue: boolean;
+    alldata: any;
+    firstNames: any[];
+    workPhone: any[];
+    local: any;
+    collectionofstockLineTimeLife: any;
+    value: number;
+    collectionofstockLine: any;
+    showLable: boolean;
+    showCustomer: boolean;
+    showOther: boolean;
+    showVendor: boolean;
+    showCompany: boolean;
+    showCustomer1: boolean;
+    showOther1: boolean;
+    showVendor1: boolean;
+    showCompany1: boolean;
 	ngOnInit(): void {
 		this.sourcereceving.isCustomerStock = true;
 
@@ -94,7 +113,8 @@ export class CustomerWorkSetupComponent {
 		this.customerList();
 		this.loadItemmasterData();
 		this.vendorList();
-		this.loadSiteData();
+        this.loadSiteData();
+        this.loadDataCustomerconct();
         this.loadManagementdata();
         if (!this.sourcereceving.receivingCustomerWorkId) {
             this.sourcereceving.receivingCustomerNumber = 'Creating';
@@ -102,9 +122,84 @@ export class CustomerWorkSetupComponent {
 
 	}
 
-	constructor(private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
-		this.dataSource = new MatTableDataSource();
-            
+    constructor(public workFlowtService: CustomerService,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
+        this.dataSource = new MatTableDataSource();
+
+        if (this.receivingCustomerWorkService.listCollection && this.receivingCustomerWorkService.isEditMode == true) {
+
+            this.showLable = true;
+            this.sourcereceving = this.receivingCustomerWorkService.listCollection;
+            this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
+            if (this.receivingCustomerWorkService.listCollection.customer) {
+                this.sourcereceving.customerId = this.receivingCustomerWorkService.listCollection.customer.customerId;
+                this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
+            }
+            if (this.receivingCustomerWorkService.listCollection.employee) {
+                this.sourcereceving.firstName = this.receivingCustomerWorkService.listCollection.employee.firstName;
+            }
+            //this.sourcereceving.timeLifeCyclesId = this.collectionofstockLineTimeLife.timeLifeCyclesId;
+            if (this.receivingCustomerWorkService.listCollection.ti) {
+                this.sourceTimeLife = this.receivingCustomerWorkService.listCollection.ti;
+            }
+            if (this.sourcereceving.serialNumber) {
+                this.sourcereceving.isSerialized = true;
+            }
+
+            if (this.sourcereceving.serialNumber == null) {
+                this.sourcereceving.isSerialized = false;
+            }
+            if (this.sourcereceving.siteId) {
+                this.binService.getWareHouseDate(this.sourcereceving.siteId).subscribe(
+                    results => this.onDataLoadWareHouse(results), 
+                    error => this.onDataLoadFailed(error)
+                );
+            }
+            if (this.sourcereceving.warehouseId) {
+                this.binService.getLocationDate(this.sourcereceving.warehouseId).subscribe( 
+                    results => this.onDataLoadLocation(results),
+                    error => this.onDataLoadFailed(error)
+                );
+            }
+            if (this.sourcereceving.locationId) {
+                this.binService.getShelfDate(this.sourcereceving.locationId).subscribe( 
+                    results => this.onDataLoadShelf(results),
+                    error => this.onDataLoadFailed(error)
+                );
+            }
+
+            if (this.sourcereceving.shelfId) {
+                this.binService.getBinDataById(this.sourcereceving.shelfId).subscribe(
+                    results => this.onDataLoadBin(results),
+                    error => this.onDataLoadFailed(error));
+            }
+
+            if (this.sourcereceving.timeLifeDate) {
+                this.sourcereceving.timeLifeDate = new Date(this.sourcereceving.timeLifeDate);
+            }
+            else {
+                this.sourcereceving.timeLifeDate = new Date();
+            }
+
+            if (this.sourcereceving.manufacturingDate) {
+                this.sourcereceving.manufacturingDate = new Date(this.sourcereceving.manufacturingDate);
+            }
+            else {
+                this.sourcereceving.manufacturingDate = new Date();
+            }
+            if (this.sourcereceving.tagDate) {
+                this.sourcereceving.tagDate = new Date(this.sourcereceving.tagDate);
+            }
+            else {
+                this.sourcereceving.tagDate = new Date();
+            }
+
+            if (this.sourcereceving.expirationDate) {
+                this.sourcereceving.expirationDate = new Date(this.sourcereceving.expirationDate);
+            }
+            else {
+                this.sourcereceving.expirationDate = new Date();
+            }
+        }
 
 	}
 
@@ -270,53 +365,87 @@ export class CustomerWorkSetupComponent {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
+    
+    saveCustomerwork() {
+        
+       
+            this.isSaving = true;
 
+        if (!this.sourcereceving.receivingCustomerWorkId)
+        {
+                this.sourcereceving.createdBy = this.userName;
+                this.sourcereceving.updatedBy = this.userName;
+                this.sourcereceving.masterCompanyId = 1;
+                if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
+                    if (this.sourcereceving.isTimeLife)
+                    {
+                        this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
+                            this.collectionofstockLineTimeLife = data;
+                            this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
+                            this.value = 1;
+                            if (this.sourcereceving.isSerialized == null || this.sourcereceving.isSerialized == false) {
+                                this.sourcereceving.serialNumber = '';
+                                this.sourcereceving.certifiedBy = '';
+                                this.sourcereceving.tagDate = '';
+                                this.sourcereceving.tagType = '';
+                                this.sourcereceving.partCertificationNumber = '';
+                            }
+                            if (this.sourcereceving.isTimeLife == null || this.sourcereceving.isTimeLife == false) {
+                                this.sourcereceving.timeLifeDate = '';
+                                this.sourcereceving.timeLifeOrigin = '';
+                            }
+                            this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
+                                role => this.saveSuccessHelper(role),
+                                error => this.saveFailedHelper(error));
+                            this.sourcereceving = {};
+                        }
 
+                        )
+                    }
 
-	//openHist(content, row) {
-	//	this.alertService.startLoadingMessage();
-	//	this.loadingIndicator = true;
-	//	this.sourcereceving = row;
-	//	this.isSaving = true;
-	//	 debugger;
-	//	this.receivingCustomerWorkService.historyCharge(this.sourcereceving.chargeId).subscribe(
-	//		results => this.onHistoryLoadSuccessful(results[0], content),
-	//		error => this.saveFailedHelper(error));
+                    else
+                    {
+                        this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
+                            role => this.saveSuccessHelper(role),
+                            error => this.saveFailedHelper(error));
+                    }
+                }
+            }
 
+        else {
+            
+                this.sourcereceving.updatedBy = this.userName;
+                this.sourcereceving.createdBy = this.userName;
+                this.sourcereceving.masterCompanyId = 1;
+            if (this.sourcereceving.isTimeLife == null || this.sourcereceving.isTimeLife == false) {
+                this.sourcereceving.timeLifeDate = '';
+                this.sourcereceving.timeLifeOrigin = '';
+            }
+                this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+                    response => this.saveCompleted(this.sourcereceving),
+                    error => this.saveFailedHelper(error));
+            if (this.sourcereceving.timeLifeCyclesId)
+            {
+                    console.log("Update Timelife");
+                    this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
+                        this.collectionofstockLine = data;
 
-	//}
+                    })
+             }
+            else
+            {
+                this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+                    response => this.saveCompleted(this.sourcereceving),
+                    error => this.saveFailedHelper(error));
+                    this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
+                        this.collectionofstockLine = data;
+                        this.value = 1;
 
-
-	editItemAndCloseModel() {
-
-		 //debugger;
-
-		this.isSaving = true;
-
-		if (this.isEditMode == false) {
-			this.sourcereceving.createdBy = this.userName;
-            this.sourcereceving.updatedBy = this.userName;
-            this.sourcereceving.customerId = this.allCustomer[0].customerId;
-            this.sourcereceving.employeeId = this.allEmpActions[0].employeeId;
-            //this.sourcereceving.obtainFromCustomerId = this.allCustomer[0].customerId;
-            this.sourcereceving.obtainFromVendorId = this.allVendorList[0].vendorId;
-			this.sourcereceving.masterCompanyId = 1;
-			this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
-				role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-            //this.sourcereceving = {};
-		}
-		else {
-
-			this.sourcereceving.updatedBy = this.userName;
-			this.sourcereceving.createdBy = this.userName;
-			this.sourcereceving.masterCompanyId = 1;
-			this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-				response => this.saveCompleted(this.sourcereceving),
-                error => this.saveFailedHelper(error));
-            this.sourcereceving = {};
-		}
-	}
+                       
+                    })
+            }
+        }
+    }
 
 	deleteItemAndCloseModel() {
         this.isSaving = true;
@@ -460,26 +589,6 @@ export class CustomerWorkSetupComponent {
             }
         }
     }
-    //onCustomerNameselected(event) {
-    //    //debugger;
-    //    for (let i = 0; i < this.allCustomer.length; i++) {
-    //        if (event == this.allCustomer[i][0].name) {
-    //            //this.disableSaveCusName = true;
-    //            //this.disableSave = true;
-    //            this.selectedActionName = event;
-    //        }
-    //    }
-
-    //    this.customerservices.getcustomerByNameList(event).subscribe(
-    //    	results => this.oncustomerloadsuccessfull(results[0]),
-    //    	error => this.onDataLoadFailed(error)
-    //    );
-    //}
-    //private oncustomerloadsuccessfull(allWorkFlows: any[]) {
-    //    this.CustomerInfoByName = allWorkFlows[0];
-    //    this.sourcereceving.customerReference = this.allCustomer[0].contractReference;
-
-    //}
 	filterpartItems(event) {
 
 		this.partCollection = [];
@@ -502,7 +611,43 @@ export class CustomerWorkSetupComponent {
 				}
 			}
 		}
-	}
+    }
+
+    filterFirstNames(event) {
+
+        this.firstNames = [];
+        for (let i = 0; i < this.allActions.length; i++) {
+            let firstName = this.allActions[i].firstName;
+        
+            if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.firstNames.push(firstName);
+
+            }
+        }
+    }
+
+    filterContacts(event) {
+
+        this.workPhone = [];
+        for (let i = 0; i < this.allActions.length; i++) {
+            let workPhone = this.allActions[i].workPhone;
+            if (workPhone.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.workPhone.push(workPhone);
+
+            }
+        }
+    }
+
+    private onDataLoadSuccessfulCustomer(allWorkFlows: any[]) {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allActions = allWorkFlows;
+
+
+    }
+
 	private onitemmasterSuccessful(allWorkFlows: any[]) {
 
 		this.alertService.stopLoadingMessage();
@@ -518,16 +663,22 @@ export class CustomerWorkSetupComponent {
 			results => this.onitemmasterSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
+    }
+
+    private loadDataCustomerconct() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.workFlowtService.getContactsFirstName().subscribe(
+            results => this.onDataLoadSuccessfulCustomer(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+
 	partnmId(event) {
 		//
 		if (this.itemclaColl) {
-			//for (let i = 0; i < this.itemclaColl.length; i++) {
-			//	if (event == this.itemclaColl[i][0].partName) {
-			//		this.sourcereceving.partId = this.itemclaColl[i][0].partId;
-			//		this.selectedActionName = event;
-			//	}
-			//}
 			this.itemser.getDescriptionbypart(event).subscribe(
 				results => this.onpartnumberloadsuccessfull(results[0]),
 				error => this.onDataLoadFailed(error)
@@ -539,7 +690,6 @@ export class CustomerWorkSetupComponent {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
 				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSavepartNumber = true;
 
 				}
@@ -553,22 +703,57 @@ export class CustomerWorkSetupComponent {
 		}
 	}
 	private onpartnumberloadsuccessfull(allWorkFlows: any[]) {
-		//this.descriptionbyPart = allWorkFlows[0]
 		this.sourcereceving.partDescription = allWorkFlows[0].partDescription;
-		this.sourcereceving.isSerialized = allWorkFlows[0].isSerialized;
+        this.sourcereceving.isSerialized = allWorkFlows[0].isSerialized;
+
+        this.sourcereceving.isTimeLife = allWorkFlows[0].isTimeLife;
 		if (this.sourcereceving.isSerialized == true) {
 			this.showRestrictQuantity = true;
 			this.showFreeQuantity = false;
-			this.showNormalQuantity = false;
+            this.showNormalQuantity = false; 
+            this.showNormalQuantity = false;
 		}
 		else {
 			this.showRestrictQuantity = false;
 			this.showFreeQuantity = true;
-			this.showNormalQuantity = false;
+            this.showNormalQuantity = false;
+            this.showNormalQuantity = false;
+            this.sourcereceving.serialNumber = '';
+            this.sourcereceving.certifiedBy = '';
+            this.sourcereceving.tagDate = '';
+            this.sourcereceving.tagType = '';
+            this.sourcereceving.partCertificationNumber = '';
+        }
 
-		}
-		this.sourcereceving.timeLife = allWorkFlows[0].isTimeLife;
-	}
+        if (this.sourceTimeLife.timeLife == true) {
+            this.sourceTimeLife.timeLife = true;
+        }
+
+        else {
+            this.sourceTimeLife.timeLife = false;
+         
+        }
+
+
+        if (this.sourcereceving.isTimeLife == true) {
+           
+        }
+        else {
+            this.sourceTimeLife.timeLifeDate = '';
+            this.sourceTimeLife.timeLifeOrigin = '';
+        }
+
+        if (allWorkFlows[0].isTimeLife == null) {
+            this.sourcereceving.timeLife = false;
+            this.sourceTimeLife.timeLifeDate = '';
+            this.sourceTimeLife.timeLifeOrigin = '';
+         
+        }
+        else {
+            this.sourcereceving.timeLife = allWorkFlows[0].isTimeLife;
+        }
+    }
+
 
 	private onDataLoadSuccessfulForCondition(getConditionList: Condition[]) {
 		this.alertService.stopLoadingMessage();
@@ -731,5 +916,111 @@ export class CustomerWorkSetupComponent {
 			results => this.onManagemtntdataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
+    }
+
+    customerNameId(event) {
+        //
+        if (this.allCustomer) {
+            for (let i = 0; i < this.allCustomer.length; i++) {
+                if (event == this.allCustomer[i].name) {
+                    this.sourcereceving.customerId = this.allCustomer[i].customerId;
+                    this.selectedActionName = event;
+                }
+            }
+            this.customerservices.getDescriptionbypart(event).subscribe(
+                results => this.oncustomernumberloadsuccessfull(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+        }
+    }
+    customerContactId(event) {
+        //
+        if (this.allActions) {
+            for (let i = 0; i < this.allActions.length; i++) {
+                if (event == this.allActions[i].firstName) {
+                    this.sourcereceving.contactId = this.allActions[i].contactId;
+                    this.sourcereceving.customerContactName = this.allActions[i].firstName;
+                    this.selectedActionName = event;
+                }
+            }
+        }
+    }
+
+    empnameId(event) {
+        //
+        if (this.allEmployeeinfo) {
+            for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+                if (event == this.allEmployeeinfo[i].firstName) {
+                    this.sourcereceving.employeeId = this.allEmployeeinfo[i].employeeId;
+                    this.selectedActionName = event;
+                }
+            }
+            //this.customerservices.getDescriptionbypart(event).subscribe(
+            //    results => this.oncustomernumberloadsuccessfull(results[0]),
+            //    error => this.onDataLoadFailed(error)
+            //);
+        }
+    }
+
+    private oncustomernumberloadsuccessfull(allWorkFlows: any[]) {
+      // this.sourcereceving.customerReference = this.allCustomer[i][0].contractReference;
+        
+    }
+
+    getTracabletoType(value)
+    {
+        if (value == 1)
+        {
+            this.showCustomer = true;
+            this.showOther = false;
+            this.showVendor = false;
+            this.showCompany = false;
+        }
+        if (value == 2) {
+            this.showCustomer = false;
+            this.showOther = true;
+            this.showVendor = false;
+            this.showCompany = false;
+        }
+        if (value == 3) {
+            this.showCustomer = false;
+            this.showOther = false;
+            this.showVendor = true;
+            this.showCompany = false;
+        }
+        if (value == 4) {
+            this.showCustomer = false;
+            this.showOther = false;
+            this.showVendor = false;
+            this.showCompany = true;
+        }
+    }
+
+
+    getObtaintoType(value) {
+        if (value == 1) {
+            this.showCustomer1 = true;
+            this.showOther1 = false;
+            this.showVendor1 = false;
+            this.showCompany1 = false;
+        }
+        if (value == 2) {
+            this.showCustomer1 = false;
+            this.showOther1 = true;
+            this.showVendor1 = false;
+            this.showCompany1 = false;
+        }
+        if (value == 3) {
+            this.showCustomer1 = false;
+            this.showOther1 = false;
+            this.showVendor1 = true;
+            this.showCompany1 = false;
+        }
+        if (value == 4) {
+            this.showCustomer1 = false;
+            this.showOther1 = false;
+            this.showVendor1 = false;
+            this.showCompany1 = true;
+        }
+    }
 }

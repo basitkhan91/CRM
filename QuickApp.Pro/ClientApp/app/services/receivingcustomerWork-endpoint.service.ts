@@ -15,7 +15,9 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
 	private readonly _actionsUrlNew: string = "/api/ReceivingCustomerWork/receivingCustomerWork";
 	private readonly _actionsUpdateUrlNew: string = "/api/ReceivingCustomerWork/UpdatereceivingCustomerWork";
 	private readonly _actionDeleteUrlNew: string = "/api/ReceivingCustomerWork/deletereceivingCustomerWork";
-	private readonly _actionsUrlAuditHistory: string = "/api/ReceivingCustomerWork/auditHistoryById";
+    private readonly _actionsUrlAuditHistory: string = "/api/ReceivingCustomerWork/auditHistoryById";
+    private readonly _actionsTimeUrlNew: string = "/api/ReceivingCustomerWork/PostTimeLine";
+    private readonly _TimeLifeUpdate: string = "/api/ReceivingCustomerWork/timeLifeUpdate";
 
 	// private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
 	// private readonly _actionsUrlNew: string = "/api/Action/actions";
@@ -51,7 +53,7 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
 	}
 
 	getEditReasonEndpoint<T>(receivingCustomerWorkId?: number): Observable<T> {
-		let endpointUrl = receivingCustomerWorkId ? `${this._actionsUrlNew}/${receivingCustomerWorkId}` : this._actionsUrlNew;
+		let endpointUrl = receivingCustomerWorkId ? `${this._actionsUrl}/${receivingCustomerWorkId}` : this._actionsUrl;
 
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {
@@ -60,9 +62,77 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
 	}
 
 	getUpdateReasonEndpoint<T>(roleObject: any, receivingCustomerWorkId: number): Observable<T> {
-		let endpointUrl = `${this._actionsUpdateUrlNew}/${receivingCustomerWorkId}`;
+		//let endpointUrl = `${this._actionsUpdateUrlNew}/${receivingCustomerWorkId}`;
+        let json = {
+            "receivingCustomerWorkId": roleObject.receivingCustomerWorkId,
+            "customerId": roleObject.customerId,
+            "receivingCustomerNumber": roleObject.receivingCustomerNumber,
+            "customerReference": roleObject.customerReference,
+            "isSerialized": roleObject.isSerialized,
+            "itemMasterId": roleObject.itemMasterId,
+            "customerClassificationId": roleObject.customerClassificationId,
+            "scopeId": roleObject.scopeId,
+            "priorityId": roleObject.priorityId,
+            "statusId": roleObject.statusId,
+            "contactId": roleObject.contactId,
+            "changePartNumber": roleObject.changePartNumber,
+            "partCertificationNumber": roleObject.partCertificationNumber,
+            "quantity": roleObject.quantity,
+            "conditionId": roleObject.conditionId,
+            "siteId": roleObject.siteId,
+            "binId": roleObject.binId,
+            "shelfId": roleObject.shelfId,
+            "warehouseId": roleObject.warehouseId,
+            "workOrderId": roleObject.workOrderId,
+            "locationId": roleObject.locationId,
+            "owner": roleObject.owner,
+            "isMFGDate": roleObject.isMFGDate,
+            "isCustomerStock": roleObject.isCustomerStock,
+            "traceableToCustomerId": roleObject.traceableToCustomerId,
+            "traceableToVendorId": roleObject.traceableToVendorId,
+            "traceableToOther": roleObject.traceableToOther,
+            "manufacturingDate": roleObject.manufacturingDate,
+            "expirationDate": roleObject.expirationDate,
+            "timeLifeDate": roleObject.timeLifeDate,
+            "timeLifeOrigin": roleObject.timeLifeOrigin,
+            "timeLifeCyclesId": roleObject.timeLifeCyclesId,
+            "manufacturingTrace": roleObject.manufacturingTrace,
+            "manufacturingLotNumber": roleObject.manufacturingLotNumber,
+            "reasonForRemoval": roleObject.reasonForRemoval,
+            "employeeId": roleObject.employeeId,
+            "serialNumber": roleObject.serialNumber,
+            "certifiedBy": roleObject.certifiedBy,
+            "tagDate": roleObject.tagDate,
+            "tagType": roleObject.tagType,
+            "traceableTo": roleObject.traceableTo,
+            "obtainFrom": roleObject.obtainFrom,
+            "isTimeLife": roleObject.isTimeLife,
+            "timeLifeId": roleObject.timeLifeId,
+            "manufacturer": roleObject.manufacturer,
+            "manufacturerLotNumber": roleObject.manufacturerLotNumber,
+            "companyId": roleObject.companyId,
+            "businessUnitId": roleObject.businessUnitId,
+            "divisionId": roleObject.divisionId,
+            "departmentId": roleObject.departmentId,
+            "obtainFromVendorId": roleObject.obtainFromVendorId,
+            "obtainFromCustomerId": roleObject.obtainFromCustomerId,
+            "obtainFromOther": roleObject.obtainFromOther,
+            "masterCompanyId": roleObject.masterCompanyId ,
+            "isActive": roleObject.isActive,
+            "isDelete": roleObject.isDelete,
+            "isExpirationDate": roleObject.isExpirationDate,
+            "partNumber": roleObject.partNumber,
+            "partDescription": roleObject.partDescription,
+            "createdBy": roleObject.createdBy,
+            "updatedBy": roleObject.updatedBy,
+            "updatedDate": roleObject.updatedDate ,
+            "createdDate": roleObject.createdDate,
+            "name": roleObject.name,
+            "traceableToType": roleObject.traceableToType,
+            "workPhone": roleObject.workPhone
+        }
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+        return this.http.put<T>(this._actionsUpdateUrlNew, JSON.stringify(json), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getUpdateReasonEndpoint(roleObject, receivingCustomerWorkId));
 			});
@@ -76,8 +146,21 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
 				return this.handleError(error, () => this.getDeleteReasonEndpoint(receivingCustomerWorkId));
 			});
 	}
+    getNewTimeAdjustmentEndpoint<T>(userObject: any): Observable<T> {
 
+        return this.http.post<T>(this._actionsTimeUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewTimeAdjustmentEndpoint(userObject));
+            });
+    }
+    getUpdatestockLineTimeLifeEndpoint<T>(roleObject: any, timeLifeCyclesId: number): Observable<T> {
+        //let endpointUrl = `${this._TimeLifeUpdate}/${roleObject.timeLifeCyclesId}`;
 
+        return this.http.put<T>(this._TimeLifeUpdate, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdatestockLineTimeLifeEndpoint(roleObject, timeLifeCyclesId));
+            });
+    }
 }
 
 
