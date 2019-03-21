@@ -436,15 +436,18 @@ namespace QuickApp.Pro.Controllers
         //    // return Ok(ModelState);
         //}
         [HttpPost("Mancapespost")]
-        public IActionResult addCharges([FromBody] Capability capability)
+        public IActionResult addCharges([FromBody] List<Capability>  capability)
         {
             if (ModelState.IsValid)
             {
-                capability.CapabilityId = 0;
-                capability.MasterCompanyId = 1;
-                capability.CreatedDate = DateTime.Now;
-                _unitOfWork.Repository<Capability>().Add(capability);
-                _unitOfWork.SaveChanges();
+                for(var i=0;i< capability.Count(); i++)
+                {
+                    capability[i].CapabilityId = 0;
+                    capability[i].MasterCompanyId = 1;
+                    capability[i].CreatedDate = DateTime.Now;
+                    _unitOfWork.Repository<Capability>().Add(capability[i]);
+                    _unitOfWork.SaveChanges();
+                }
             }
             return Ok();
         }

@@ -14,6 +14,7 @@ import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AtaMainService } from '../../../../services/atamain.service';
 import { ATAMain } from '../../../../models/atamain.model';
 import { ItemMasterCapabilitiesModel } from '../../../../models/itemMasterCapabilities.model';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-item-master-create-capabilities',
@@ -57,7 +58,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     // itemMasterCreateCapabilitiesModel = new ItemMasterCapabilitiesModel()
     capabilitiesForm: FormGroup;
     constructor(public ataservice: AtaMainService, public workFlowtService1: LegalEntityService, private modalService: NgbModal, private alertService: AlertService, public itemser: ItemMasterService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: FormBuilder,private router: Router) {
         //this.dataSource = new MatTableDataSource();
     }
 
@@ -175,43 +176,75 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     }
 
 
-    getBUList(companyId) {
+    getBUList(companyId,formArray) {
         // this.sourceItemMasterCap.businessUnitId = "";
         // this.sourceItemMasterCap.managementStructureEntityId = companyId; //Saving Management Structure Id if there Company Id
 
-        this.bulist = [];
-        this.departmentList = [];
-        this.divisionlist = [];
+        // this.bulist = [];
+        formArray.controls['buisinessUnitId'].setValue("");
+        formArray.controls['departmentId'].setValue("");
+        formArray.controls['divisionId'].setValue("");
+        formArray.departmentList = [];
+        formArray.divisionlist = [];
+        formArray['buList'] = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == companyId) {
-                this.bulist.push(this.allManagemtninfo[i]);
+                // this.bulist.push(this.allManagemtninfo[i]);
+                formArray['buList'].push(this.allManagemtninfo[i])
             }
         }
-
+        
+        this.setValidations(formArray);
     }
 
-    getDepartmentlist(businessUnitId) {
+    setValidations(formArray){
+     //   formArray.controls['divisionId'].clearValidators();
+     //   formArray.controls['departmentId'].clearValidators();
+        formArray.controls['buisinessUnitId'].clearValidators();
+        formArray.updateValueAndValidity();
+        if(formArray['buList'].length == 0){
+            formArray.controls['buisinessUnitId'].setValidators([Validators.required]);
+            formArray.updateValueAndValidity();
+        }
+
+        // if(formArray['departmentList'].length == 0){
+        //     formArray.controls['departmentId'].setValidators([Validators.required]);
+        //     formArray.updateValueAndValidity();
+        // }
+        // if(formArray['divisionlist'].length == 0){
+        //     formArray.controls['divisionId'].setValidators([Validators.required]);
+        //     formArray.updateValueAndValidity();
+        // }
+    }
+
+    getDepartmentlist(businessUnitId,formArray) {
         // this.sourceItemMasterCap.managementStructureEntityId = businessUnitId; //Saving Management Structure Id if there businessUnitId
         // this.sourceItemMasterCap.departmentId = "";
-        this.departmentList = [];
-        this.divisionlist = [];
+        formArray.controls['departmentId'].setValue("");
+        formArray.controls['divisionId'].setValue("");
+        formArray.departmentList = [];
+        formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == businessUnitId) {
-                this.departmentList.push(this.allManagemtninfo[i]);
+                formArray.departmentList.push(this.allManagemtninfo[i]);
             }
         }
+
+        this.setValidations(formArray);
     }
 
-    getDivisionlist(departmentId) {
+    getDivisionlist(departmentId,formArray) {
         // this.sourceItemMasterCap.divisionId = "";
         // this.sourceItemMasterCap.managementStructureEntityId = departmentId; //Saving Management Structure Id if there departmentId
-
-        this.divisionlist = [];
+        formArray.controls['divisionId'].setValue("");
+        formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == departmentId) {
-                this.divisionlist.push(this.allManagemtninfo[i]);
+                formArray.divisionlist.push(this.allManagemtninfo[i]);
             }
         }
+
+        this.setValidations(formArray);
     }
 
 
@@ -516,6 +549,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
             capbilitiesObj.aircraftTypeId = element1.value;
             capbilitiesObj.aircraftTypeName = element1.label;
             capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
+            capbilitiesObj.aircraftManufacturer = element1.label;
             capData.selectedModel.forEach(element2 => {
                 if(element2.aircraftTypeId == element1.value){
                     capbilitiesObj.aircraftModelName = element2.label;
@@ -524,28 +558,49 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     switch(capData.formArrayName){
                         case "mfgForm":
                         this.mfgFormArray.push(mfObj);
+                        let mfgIndex = this.mfgFormArray.controls.length - 1;
+                        this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                        this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                        this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
                         break;
                         case "overhaulForm":
                         this.overhaulFormArray.push(mfObj);
+                        let overIndex = this.overhaulFormArray.controls.length - 1;
+                        this.overhaulFormArray.controls[overIndex]['buList'] = [];
+                        this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
+                        this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
                         break;
                         case "distributionForm":
                         this.distributionFormArray.push(mfObj);
+                        let distIndex = this.distributionFormArray.controls.length - 1;
+                        this.distributionFormArray.controls[distIndex]['buList'] = [];
+                        this.distributionFormArray.controls[distIndex]['departmentList'] = [];
+                        this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
                         break;
                         case "certificationForm":
                         this.certificationFormArray.push(mfObj);
+                        let certIndex = this.certificationFormArray.controls.length - 1;
+                        this.certificationFormArray.controls[certIndex]['buList'] = [];
+                        this.certificationFormArray.controls[certIndex]['departmentList'] = [];
+                        this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
                         break;
                         case "repairForm":
                         this.repairFormArray.push(mfObj);
+                        let repIndex = this.repairFormArray.controls.length - 1;
+                        this.repairFormArray.controls[repIndex]['buList'] = [];
+                        this.repairFormArray.controls[repIndex]['departmentList'] = [];
+                        this.repairFormArray.controls[repIndex]['divisionlist'] = [];
                         break;
                         case "exchangeForm":
                         this.exchangeFormArray.push(mfObj);
+                        let excngIndex = this.exchangeFormArray.controls.length - 1;
+                        this.exchangeFormArray.controls[excngIndex]['buList'] = [];
+                        this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
+                        this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
                         break;
                     }
                 }
                
-                
-                // this.overhaulFormArray.push(mfObj);
-                // this.overhaulFormArray.push(mfObj);
             });
         });
 
@@ -588,47 +643,88 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
     saveCapabilities() {
         let capbilitiesForm = this.capabilitiesForm.value;
+        let capabilityCollection:any = [];
         let mfgForm = capbilitiesForm.mfgForm;
         let overhaulForm = capbilitiesForm.overhaulForm;
         let distributionForm = capbilitiesForm.distributionForm;
         let certificationForm = capbilitiesForm.certificationForm;
         let repairForm = capbilitiesForm.repairForm;
         let exchangeForm = capbilitiesForm.exchangeForm;
-        for (let i = 0; i < mfgForm.length; i++) {
-            mfgForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(mfgForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < overhaulForm.length; i++) {
-            overhaulForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(overhaulForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < distributionForm.length; i++) {
-            distributionForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(distributionForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < certificationForm.length; i++) {
-            certificationForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(certificationForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < repairForm.length; i++) {
-            repairForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(repairForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < exchangeForm.length; i++) {
-            exchangeForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(exchangeForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
+        mfgForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        overhaulForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        distributionForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        certificationForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        repairForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        exchangeForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+           
+        this.itemser.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+            //this.collectionofItemMaster = data11;
+            this.router.navigateByUrl("/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list");
+            // alert("success");
+        })
+       
     }
+
+    /**disableAddButton() for diable Add Button*/
+    disableAddButton(item){
+       let isDisable = false;
+        if(this.ItemMasterId > 0 && (item.selectedAircraftTypes.length > 0 && item.selectedAircraftModelTypes.length > 0)){
+            isDisable = false;
+        }else{
+            isDisable = true;
+        }
+        return isDisable;
+    }
+
+    addBtnTitle(item){
+       let addBtnTitle = '';
+       if(this.ItemMasterId < 1){
+        addBtnTitle = "Please Select PN";
+       }else{
+        if(item.selectedAircraftTypes.length == 0){
+            addBtnTitle = "Please Select Aircraft Type";
+        }else if(item.selectedAircraftModelTypes.length == 0){
+            addBtnTitle = "Please Select Aircraft Modal";
+        }else{
+            addBtnTitle = 'Add ' + item.Description;
+        }
+       }
+        return addBtnTitle;
+    }
+
+    disableSaveBtn(){
+        let isDisable = false;
+        let capbilitiesForm = this.capabilitiesForm.value;
+        if(this.ItemMasterId > 0 && (capbilitiesForm.mfgForm.length > 0 || capbilitiesForm.overhaulForm.length || capbilitiesForm.distributionForm.length
+            || capbilitiesForm.certificationForm.length || capbilitiesForm.repairForm.length || capbilitiesForm.exchangeForm.length))
+            {
+                isDisable = false;
+            }else{
+                isDisable = true;
+            }
+            return isDisable;
+    }
+
+
+    validateForm(form,fieldName: any) {
+        let className = '';
+            if (form.get(fieldName).valid) {
+                // className = "form-validation-success";
+            } else {
+                className = 'form-validation-error';
+            }
+        return className;
+    };
 }

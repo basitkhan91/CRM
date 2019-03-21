@@ -1,9 +1,10 @@
+import { FormControl, Validators } from "@angular/forms";
 
 export class ItemMasterCapabilitiesModel {
 
     capabilityId: any;
     capabilityTypeId: any;
-    companyId: any = NaN;
+    companyId:FormControl = new FormControl("", [Validators.required])
     buisinessUnitId: any = NaN;
     departmentId: any = NaN;
     divisionId: any = NaN;
@@ -18,7 +19,7 @@ export class ItemMasterCapabilitiesModel {
     itemMasterId: any = NaN;
     entryDate: Date = new Date();
     isCMMExist: any;
-    isVerified:boolean = true;
+    isVerified:boolean = false;
 
     verifiedBy: any = "";
     dateVerified: Date = new Date();
