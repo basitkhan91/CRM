@@ -32,7 +32,7 @@
                                 <div class="col-sm-4 blocks3">
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Customer Name</label>
+                                        <label class="control-label col-sm-4">Customer Name<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
                                             <div class="inner-addon right-addon inline-block">
                                                 <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.name" (onSelect)="customerNameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
@@ -74,7 +74,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact</label>
                                        
-                                            <p-autoComplete [(ngModel)]="sourcereceving.contactId" [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                            <p-autoComplete [(ngModel)]="sourcereceving.firstNames" [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
                                                             [minLength]="1" [dropdown]="true">
                                                 <ng-template let-firstNames pTemplate="item">
                                                     <div class="ui-helper-clearfix">{{firstNames}}</div>
@@ -86,7 +86,7 @@
     </div>-->
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
-                                        <label class="control-label col-sm-4">PN </label>
+                                        <label class="control-label col-sm-4">PN<strong class="clr-red">*</strong> </label>
                                         <p-autoComplete [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-partName pTemplate="part">
@@ -95,7 +95,7 @@
                                         </p-autoComplete>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">PN Description</label>
+                                        <label class="control-label col-sm-4">PN Description<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
                                             <input class="form-control" [disabled]="true" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.partDescription">
                                         </div>

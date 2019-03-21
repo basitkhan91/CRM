@@ -96,7 +96,7 @@
 										<div class="cparent-input cust-name input-icon1" *ngIf="sourceVendor.parent">
 											<div class="inner-addon right-addon inline-block">
 												<i class="fa fa-search"></i>
-												<p-autoComplete (onSelect)="selectedValue(vendorParentName)" [(ngModel)]="vendorParentName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
+												<p-autoComplete (onSelect)="selectedValue(vendorParentName)" [(ngModel)]="sourceVendor.vendorParentName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
 																[minLength]="1" [dropdown]="true">
 													<ng-template let-vendorParentName pTemplate="item">
 														<div class="ui-helper-clearfix">{{vendorParentName}}</div>

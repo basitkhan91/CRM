@@ -31,10 +31,14 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.Vendor
                                   join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                   join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
+                                  join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId
+                                  join creditterms in _appContext .CreditTerms on t.CreditTermsId equals creditterms.CreditTermsId
                             where t.IsDelete==true || t.IsDelete==null
                                  // select new { t, ad, vt }).ToList();
                             select new { t.CreditTermsId,t.VendorId,t,t.VendorEmail,t.IsActive,
-                                Address1=ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode}).ToList();
+                                creditterms,
+                                currency,
+                                Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode}).ToList();
                 return data;
 
             }

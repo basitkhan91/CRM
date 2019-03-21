@@ -74,7 +74,7 @@ namespace DAL.Models
         public Nullable<bool> v1099GoldenParachuteDefault { get; set; }
         public Nullable<bool> v1099GrossProceedsPaidToAttorney { get; set; }
         public Nullable<bool> v1099GrossProceedsPaidToAttorneyDefault { get; set; }
-
+        public long? capabilityId { get; set; }
         //[ForeignKey("MasterCompanyId")]
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -83,8 +83,9 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
 
+        public string VendorParentName { get; set; }
 
-       // public virtual VendorCapabiliy VendorCapabiliy { get; set; }
+        // public virtual VendorCapabiliy VendorCapabiliy { get; set; }
 
         public virtual VendorContact VendorContact { get; set; }
 

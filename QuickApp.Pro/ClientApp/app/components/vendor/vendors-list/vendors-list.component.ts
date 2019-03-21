@@ -488,7 +488,19 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.vendorTypeId = row.t.vendorTypeId;
 			this.doingBusinessAsName = row.t.doingBusinessAsName;
 			this.parent = row.t.parent;
-
+        if (row.currency) {
+            this.currencyId = row.currency.symbol;
+        }
+        else {
+            this.currencyId = "";
+        }
+        
+        if (row.creditterms) {
+            this.creditTermsId = row.creditterms.name;
+        }
+        else {
+            this.creditTermsId = "";
+        }
 			this.address1 = row.address1;
 			this.address2 = row.address2;
 			this.address3 = row.address3;
@@ -505,8 +517,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.vendorURL = row.t.vendorURL;
 			//this.sourceVendor = row;
 			this.creditlimit = row.t.creditlimit;
-			this.creditTermsId = row.t.creditTermsId;
-			this.currencyId = row.t.currencyId;
 			this.discountLevel = row.t.discountLevel;
 			this.is1099Required = row.t.is1099Required;
 		this.loadContactDataData(row.vendorId);

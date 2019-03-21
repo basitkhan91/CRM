@@ -289,7 +289,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.CustomerPhone = customerViewModel.CustomerPhone;
                 actionobject.AnnualQuota = customerViewModel.AnnualQuota;
                 actionobject.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
-               // actionobject.ataMainId = customerViewModel.ataMainId;
+                actionobject.CustomerParentName = customerViewModel.CustomerParentName;
                 actionobject.ScanDocuments = customerViewModel.ScanDocuments;
                 actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
                 actionobject.RestrictPMA = customerViewModel.RestrictPMA;
@@ -350,7 +350,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.CustomerPhone = customerViewModel.CustomerPhone;
                 actionobject.AnnualQuota = customerViewModel.AnnualQuota;
                 actionobject.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
-                //actionobject.ataMainId = customerViewModel.AtaMainId;
+                actionobject.CustomerParentName = customerViewModel.CustomerParentName;
                 actionobject.ScanDocuments = customerViewModel.ScanDocuments;
                 actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
                 actionobject.RestrictPMA = customerViewModel.RestrictPMA;

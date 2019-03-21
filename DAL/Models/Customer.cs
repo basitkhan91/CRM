@@ -137,6 +137,8 @@ namespace DAL.Models
 
         public string AnnualRevenuePotential { get; set; }
 
+        public string CustomerParentName { get; set; }
+
         public string AnnualQuota { get; set; }
 
         public bool? ScanDocuments { get; set; }

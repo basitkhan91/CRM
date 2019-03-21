@@ -77,28 +77,28 @@ export class VendorpagesComponent {
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-contacts') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list'},
-					{ label: 'Vendor Contacts' }
+					{ label: 'Contacts' }
 				];
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-financial-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Financial Information' }
+					{ label: 'Financial Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-payment-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Payment Information' }
+					{ label: 'Payment Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-shipping-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Shipping Information' }
+					{ label: 'Shipping Information' }
 				];
 			}
 
@@ -106,14 +106,14 @@ export class VendorpagesComponent {
 			{
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Warnings' }
+					{ label: 'Warnings' }
 				];
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-memo') {
 				this.items = [
 					{ label: 'Vendor' },
-					{ label: 'Vendor Memo' }
+					{ label: 'Memo' }
 				];
 			}
 
@@ -127,7 +127,7 @@ export class VendorpagesComponent {
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-conversations') {
 				this.items = [
 					{ label: 'Vendor' },
-					{ label: 'Vendor Conversations' }
+					{ label: 'Conversations' }
 				];
 			}
 
@@ -180,56 +180,56 @@ export class VendorpagesComponent {
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-contacts') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Contacts' }
+					{ label: 'Contacts' }
 				];
 			}
 
 			else if (this.otherurl == 'vendorsmodule/vendorpages/app-vendor-financial-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Financial Information' }
+					{ label: 'Financial Information' }
 				];
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-payment-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Payment Information' }
+					{ label: 'Payment Information' }
 				];
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-shipping-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Shipping Information' }
+					{ label: 'Shipping Information' }
 				];
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-warnings') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor Warnings' }
+					{ label: 'Warnings' }
 				];
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-memo') {
 				this.items = [
 					{ label: 'Vendor' },
-					{ label: 'Vendor Memo' }
+					{ label: 'Memo' }
 				];
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-emails') {
 				this.items = [
 					{ label: 'Vendor' },
-					{ label: 'Vendor Emails' }
+					{ label: 'Emails' }
 				];
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-conversations') {
 				this.items = [
 					{ label: 'Vendor' },
-					{ label: 'Vendor Conversations' }
+					{ label: 'Conversations' }
 				];
 			}
 			else if (this.otherurl == 'vendorsmodule/vendorpages/app-create-po') {

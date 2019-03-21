@@ -690,8 +690,11 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
 				this.sourceVendor.masterCompanyId = 1;
 				this.sourceVendor.isActive=true;
 				//this.sourceVendor.vendorName = this.vendorName;
-				//this.sourceVendor.vendorCode = this.vendorCode;
+                //this.sourceVendor.vendorCode = this.vendorCode;
+                if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
+                    this.sourceVendor.vendorParentName = '';
 
+                }
 				this.workFlowtService.newAction(this.sourceVendor).subscribe(data => {
 					this.sourceVendor.updatedBy = this.userName;
 					this.localCollection = data;
@@ -723,7 +726,10 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
 
 			else {
 				this.sourceVendor.updatedBy = this.userName;
-			
+                if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
+                    this.sourceVendor.vendorParentName = '';
+
+                }
 				this.workFlowtService.updateVendorDetails(this.sourceVendor).subscribe(
 					data => {
 						this.sourceVendor.updatedBy = this.userName;

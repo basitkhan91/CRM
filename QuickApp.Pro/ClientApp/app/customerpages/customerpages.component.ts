@@ -47,49 +47,49 @@ export class CustomerPagesComponent {
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-general-information') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-General-Information' }
+					{ label: 'General-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-contacts') {
 				this.items = [
 					{ label: 'Customer'},
-					{ label: 'Customer-contacts' }
+					{ label: 'Contacts' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-financial-information') {
 				this.items = [
 					{ label: 'Customer'},
-					{ label: 'Customer-financial-information' }
+					{ label: 'Financial-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-billing-information') {
 				this.items = [
 					{ label: 'Customer'},
-					{ label: 'Customer-Billing-information' }
+					{ label: 'Billing-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-shipping-information') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-shipping-information' }
+					{ label: 'Shipping-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-sales-person') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-Sales-Person' }
+					{ label: 'Sales-Person' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-warnings') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-Warnings' }
+					{ label: 'Warnings' }
 				];
 			}
 		}
@@ -105,49 +105,49 @@ export class CustomerPagesComponent {
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-general-information') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-General-Information' }
+					{ label: 'General-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-contacts') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-contacts' }
+					{ label: 'Contacts' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-financial-information') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-financial-information' }
+					{ label: 'Financial-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-billing-information') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-Billing-information' }
+					{ label: 'Billing-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-shipping-information') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-shipping-information' }
+					{ label: 'Shipping-Information' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-sales-person') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-Sales-Person' }
+					{ label: 'Sales-Person' }
 				];
 			}
 
 			else if (this.currentUrl == '/customersmodule/customerpages/app-customer-warnings') {
 				this.items = [
 					{ label: 'Customer' },
-					{ label: 'Customer-Warnings' }
+					{ label: 'Warnings' }
 				];
 			}
 

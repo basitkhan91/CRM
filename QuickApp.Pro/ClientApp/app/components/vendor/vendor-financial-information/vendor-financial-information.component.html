@@ -221,36 +221,39 @@
 								</div>
 								<div class="form-group col-sm-12 input-icon2">
 									<label class="control-label col-sm-4">Credit Terms <strong class="clr-red">*</strong></label>
-									<div class="inner-addon col-sm-6 inline-block display-flex">
-										<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.creditTermsId">
-											<option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
-										</select>
-									</div>
-									<a href="#" data-toggle="modal" data-target="#addCurreny" class="add-icon" (click)="openCrediTerms(contenCreditTerms)"><i class="fa fa-plus"></i></a>
+                                    <div class="inner-addon col-sm-7 inline-block display-flex">
+                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.creditTermsId">
+                                            <option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
+                                        </select>
+                                        <a href="#" data-toggle="modal" data-target="#addCurreny" class="add-icon" (click)="openCrediTerms(contenCreditTerms)"><i class="fa fa-plus"></i></a>
+                                    </div>
+									
 								</div>
 
 								<div class="form-group col-sm-12  input-icon2">
 									<label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
-									<div class="inner-addon col-sm-6 inline-block display-flex">
-										<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.currencyId">
-											<option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
-												<!--{{currencyName.code}}-->
-												{{currencyName.symbol}}
-											</option>
-										</select>
-									</div>
+                                    <div class="inner-addon col-sm-7 inline-block display-flex">
+                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.currencyId">
+                                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
+                                                <!--{{currencyName.code}}-->
+                                                {{currencyName.symbol}}
+                                            </option>
+                                        </select>
+                                        <a href="#" data-toggle="modal" data-target="#addCurrency" class="add-icon" (click)="openCurrency(contentCurrency)"><i class="fa fa-plus"></i></a>
+                                    </div>
 									<div *ngIf="" style="color:Red">Already Exist</div>
-									<a href="#" data-toggle="modal" data-target="#addCurrency" class="add-icon" (click)="openCurrency(contentCurrency)"><i class="fa fa-plus"></i></a>
+									
 								</div>
 
 								<div class="form-group col-sm-12 input-icon1">
 									<label class="control-label col-sm-4">Discount</label>
-									<div class="inner-addon col-sm-6 inline-block display-flex">
-										<select (keypress)="onBlurMethod('discountId')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.discountId">
-											<option *ngFor="let discontValue of alldiscountvalueInfo" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
-										</select>
-									</div>
-									<a href="#" data-toggle="modal" data-target="#addDiscount" class="add-icon" (click)="openDiscount(contentEdits)"><i class="fa fa-plus"></i></a>
+                                    <div class="inner-addon col-sm-7 inline-block display-flex">
+                                        <select (keypress)="onBlurMethod('discountId')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.discountId">
+                                            <option *ngFor="let discontValue of alldiscountvalueInfo" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
+                                        </select>
+                                        <a href="#" data-toggle="modal" data-target="#addDiscount" class="add-icon" (click)="openDiscount(contentEdits)"><i class="fa fa-plus"></i></a>
+                                    </div>
+									
 								</div>
 								<!--<div class="form-group col-sm-12">
 						<label class="control-label col-sm-4">Discount Level </label>

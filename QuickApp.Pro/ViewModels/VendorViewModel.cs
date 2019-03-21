@@ -63,7 +63,7 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<bool> v1099RentDefault { get; set; }
         public Nullable<bool> v1099Royalties { get; set; }
         public Nullable<bool> v1099RoyaltiesDefault { get; set; }
-       // public long? capabilityId { get; set; }
+        public long? capabilityId { get; set; }
         public Nullable<bool> v1099OtherIncome { get; set; }
         public string v1099OtherIncomeDefault { get; set; }
         public Nullable<bool> v1099MedicalHealthPayments { get; set; }
@@ -75,7 +75,7 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<bool> v1099GrossProceedsPaidToAttorney { get; set; }
         public Nullable<bool> v1099GrossProceedsPaidToAttorneyDefault { get; set; }
 
-
+        public string VendorParentName { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

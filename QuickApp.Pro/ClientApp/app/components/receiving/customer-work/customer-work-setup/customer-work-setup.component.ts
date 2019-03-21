@@ -323,17 +323,20 @@ export class CustomerWorkSetupComponent {
     
     saveCustomerwork() {
         
-       
+        if (!(this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId) ) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        if ((this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId)) {
+
             this.isSaving = true;
 
-        if (!this.sourcereceving.receivingCustomerWorkId)
-        {
+            if (!this.sourcereceving.receivingCustomerWorkId) {
                 this.sourcereceving.createdBy = this.userName;
                 this.sourcereceving.updatedBy = this.userName;
                 this.sourcereceving.masterCompanyId = 1;
                 if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
-                    if (this.sourcereceving.isTimeLife)
-                    {
+                    if (this.sourcereceving.isTimeLife) {
                         this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                             this.collectionofstockLineTimeLife = data;
                             this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
@@ -358,8 +361,7 @@ export class CustomerWorkSetupComponent {
                         )
                     }
 
-                    else
-                    {
+                    else {
                         this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
                             role => this.saveSuccessHelper(role),
                             error => this.saveFailedHelper(error));
@@ -367,37 +369,36 @@ export class CustomerWorkSetupComponent {
                 }
             }
 
-        else {
-            
+            else {
+
                 this.sourcereceving.updatedBy = this.userName;
                 this.sourcereceving.createdBy = this.userName;
                 this.sourcereceving.masterCompanyId = 1;
-            if (this.sourcereceving.isTimeLife == null || this.sourcereceving.isTimeLife == false) {
-                this.sourcereceving.timeLifeDate = '';
-                this.sourcereceving.timeLifeOrigin = '';
-            }
+                if (this.sourcereceving.isTimeLife == null || this.sourcereceving.isTimeLife == false) {
+                    this.sourcereceving.timeLifeDate = '';
+                    this.sourcereceving.timeLifeOrigin = '';
+                }
                 this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                     response => this.saveCompleted(this.sourcereceving),
                     error => this.saveFailedHelper(error));
-            if (this.sourcereceving.timeLifeCyclesId)
-            {
+                if (this.sourcereceving.timeLifeCyclesId) {
                     console.log("Update Timelife");
                     this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
 
                     })
-             }
-            else
-            {
-                this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-                    response => this.saveCompleted(this.sourcereceving),
-                    error => this.saveFailedHelper(error));
+                }
+                else {
+                    this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+                        response => this.saveCompleted(this.sourcereceving),
+                        error => this.saveFailedHelper(error));
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
                         this.value = 1;
 
-                       
+
                     })
+                }
             }
         }
     }
@@ -575,11 +576,12 @@ export class CustomerWorkSetupComponent {
     filterContacts(event) {
 
         this.workPhone = [];
+        if (this.allActions) {
         for (let i = 0; i < this.allActions.length; i++) {
             let workPhone = this.allActions[i].workPhone;
             if (workPhone.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.workPhone.push(workPhone);
-
+            }
             }
         }
     }

@@ -89,7 +89,8 @@ import { EditVendorCapabilitiesComponent } from "../components/vendor/vendor-cap
 		StepsModule,
 		BreadcrumbModule, DialogModule, CalendarModule,
 		TreeModule,
-		TreeTableModule
+        TreeTableModule,
+
 
 	],
 	declarations: [

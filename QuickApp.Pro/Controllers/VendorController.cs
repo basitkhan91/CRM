@@ -1051,6 +1051,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.VendorName = vendorViewModel.VendorName;
                 actionobject.LicenseNumber = vendorViewModel.LicenseNumber;
                 actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
+                actionobject.capabilityId = vendorViewModel.capabilityId;
                 actionobject.VendorPhone = vendorViewModel.VendorPhone;
                 actionobject.VendorTypeId = vendorViewModel.VendorTypeId;
                 actionobject.IsPreferredVendor = vendorViewModel.IsPreferredVendor;
@@ -1149,6 +1150,8 @@ namespace QuickApp.Pro.Controllers
                 actionobject.LicenseNumber = vendorViewModel.LicenseNumber;
                 actionobject.VendorPhone = vendorViewModel.VendorPhone;
                 actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
+                actionobject.capabilityId = vendorViewModel.capabilityId;
+                actionobject.VendorParentName = vendorViewModel.VendorParentName;
                 actionobject.VendorTypeId = vendorViewModel.VendorTypeId;
                 actionobject.IsPreferredVendor = vendorViewModel.IsPreferredVendor;
                 actionobject.Parent = vendorViewModel.Parent;
@@ -1468,7 +1471,6 @@ namespace QuickApp.Pro.Controllers
                 vendorObj.v1099RentDefault = vendorViewModel.v1099RentDefault;
                 vendorObj.v1099Royalties = vendorViewModel.v1099Royalties;
                 vendorObj.v1099RoyaltiesDefault = vendorViewModel.v1099RoyaltiesDefault;
-                // vendorObj.capabilityId = vendorViewModel.capabilityId;
                 vendorObj.v1099OtherIncome = vendorViewModel.v1099OtherIncome;
                 vendorObj.v1099OtherIncomeDefault = vendorViewModel.v1099OtherIncomeDefault;
                 vendorObj.v1099MedicalHealthPayments = vendorViewModel.v1099MedicalHealthPayments;

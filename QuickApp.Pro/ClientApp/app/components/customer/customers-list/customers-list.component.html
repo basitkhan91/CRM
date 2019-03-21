@@ -21,7 +21,7 @@
 
 							<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
 							<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
-							<a matTooltip="Add Customer" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
+							<a matTooltip="Create Customer" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
 							<div class="excel-upload">
 								<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
 								<label for="upload">
@@ -201,7 +201,7 @@
 											<div class="col-sm-6">
 												<p><span class="label"><b>MarkUp %: </b></span><span class="value">{{customerVfinanceiewFeilds.markUpPercent}}</span></p>
 												<p><span class="label"><b>Credit Limit:: </b></span><span class="value">{{customerVfinanceiewFeilds.creditLimit}}</span></p>
-												<p><span class="label"><b>Credit Terms: </b></span><span class="value">{{customerVfinanceiewFeilds.creditTermsId}}</span></p>
+												<p><span class="label"><b>Credit Terms: </b></span><span class="value">{{creditTermsId}}</span></p>
 												<p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{customerVfinanceiewFeilds.allowNettingOfAPAR}}</span></p>
 												<p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{customerVfinanceiewFeilds.isTaxExempt}}</span></p>
 												<p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{customerVfinanceiewFeilds.taxRateStateOrProvince}}</span></p>
@@ -211,7 +211,7 @@
 												<p><span class="label"><b>EDI: </b></span><span class="value">{{customerVfinanceiewFeilds.ediDescription}}</span></p>
 												<!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
 												<p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
-												<p><span class="label"><b>Currency: </b></span><span class="value">{{customerVfinanceiewFeilds.currencyId}}</span></p>
+												<p><span class="label"><b>Currency: </b></span><span class="value">{{currencyId}}</span></p>
 											</div>
 										</div>
 									</div>

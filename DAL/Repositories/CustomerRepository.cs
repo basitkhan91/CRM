@@ -32,6 +32,8 @@ namespace DAL.Repositories
             var data = (from t in _appContext.Customer
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
+                        join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId
+                        join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId 
                         join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
                         where t.IsDelete == true || t.IsDelete==null
                         // select new { t, ad, vt }).ToList();
@@ -43,6 +45,11 @@ namespace DAL.Repositories
                             t.PrimarySalesPersonFirstName,
                             t.CustomerId,
                             t,
+                           // cc,
+                            creditTerms,
+                            currency,
+                            currency.Symbol,
+                            //creditTerms.Name,
                             t.Email,
                             t.IsActive,
                             Address1 = ad.Line1,
@@ -67,7 +74,8 @@ namespace DAL.Repositories
                             ad.Country,
                             ad.PostalCode,
                             vt.CustomerAffiliationId,
-                           cc.CustomerClassificationId
+                           cc.CustomerClassificationId,
+                           //cc.Description
                         }).OrderByDescending(a=>a.CustomerId).ToList();
             return data;
         }

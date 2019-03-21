@@ -61,7 +61,7 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     countryName: string;
 	allCountryinfo: any[];
 	allATAMaininfo: ATAChapter[] = [];
-	selectedAircraftTypes: any[];
+	selectedAircraftTypes: any[]=[];
 	//onRepositorySelected: any[];
 	activeIndex: number;
 	ATAChapterId: number;
@@ -268,7 +268,8 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 		if (this.vendorser.isVendorAlsoCustomer == true) {
 			this.sourceCustomer = this.vendorser.localCollectiontoCustomer;
 
-		}
+        }
+
 	}
 
 
@@ -1349,6 +1350,10 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
                 this.sourceCustomer.isActive = true;
+                if (this.sourceCustomer.parent == false || this.sourceCustomer.parent == null) {
+                    this.sourceCustomer.customerParentName = '';
+
+                }
                 this.workFlowtService.newAction(this.sourceCustomer).subscribe(data => {
                     this.sourceCustomer.updatedBy = this.userName;
 					this.localCollection = data;
@@ -1407,6 +1412,10 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 					this.sourceCustomer.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
 				}
                 this.sourceCustomer.updatedBy = this.userName;
+                if (this.sourceCustomer.parent == false || this.sourceCustomer.parent == null) {
+                    this.sourceCustomer.customerParentName = '';
+
+                }
 				this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data => {
 					this.sourceCustomer.updatedBy = this.userName;
 					this.localCollection = data;

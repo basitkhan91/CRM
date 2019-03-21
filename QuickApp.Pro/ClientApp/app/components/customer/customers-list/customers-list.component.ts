@@ -392,12 +392,25 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 		this.customerViewFeilds.country = row.country;
 		this.customerViewFeilds.email = row.email;
 		this.customerViewFeilds.customerClassificationId = row.t.customerClassificationId;
-		//if (row.customerClassification) {
-		//	this.customerClassificationId = row.t.customerClassification.description;
-		//}
-		//else {
-		//	this.customerClassificationId = "";
-		//}
+		if (row.currency) {
+            this.currencyId = row.currency.symbol;
+		}
+		else {
+            this.currencyId = "";
+        }
+        if (row.creditTerms) {
+            this.creditTermsId = row.creditTerms.name;
+        }
+        else {
+            this.creditTermsId = "";
+        }
+
+        if (row.cc) {
+            this.customerClassificationId = row.cc.description;
+        }
+        else {
+            this.customerClassificationId = "";
+        }
 		this.customerViewFeilds.contractReference = row.t.contractReference;
 		this.customerViewFeilds.pbhCustomerMemo = row.pbhCustomerMemo;
 		this.customerViewFeilds.restrictPMAMemo = row.restrictPMAMemo;
