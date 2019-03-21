@@ -103,7 +103,8 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
 
-		this.cols = [
+        this.cols = [
+            { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },
 			{ field: 'description', header: 'Description' },
 			//{ field: 'ataChapterName', header: 'ATA Chapter Name' },
 			//{ field: 'ataChapterCategory', header: 'ATA Chapter Category' },

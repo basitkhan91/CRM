@@ -102,7 +102,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
         );
 
         this.cols = [
-            //{ field: 'ataMainId', header: 'ATAMain Id' },
+            { field: 'ataChapterCode', header: 'ATA Chapter Code' },
             { field: 'ataChapterName', header: 'ATA Chapter Name' }, 
             { field: 'ataChapterCategory', header: 'ATA Chapter Category' },
             { field: 'memo', header: 'Memo' },
