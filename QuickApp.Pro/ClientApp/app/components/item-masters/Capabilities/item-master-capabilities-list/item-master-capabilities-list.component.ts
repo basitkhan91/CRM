@@ -41,7 +41,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     sourceAction: any;
     isSaving: boolean;
     allItemMasterCapsList: any[] = [];
-
+    selectedColumn: any;
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService)
     {

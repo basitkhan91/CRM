@@ -313,7 +313,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.BinId = stockLineViewModel.BinId;
                 actionobject1.WarehouseId = stockLineViewModel.WarehouseId;
                 actionobject1.LocationId = stockLineViewModel.LocationId;
-
+                actionobject1.QuantityToReceive = stockLineViewModel.QuantityToReceive;
                 if (stockLineViewModel.SiteId == 0)
                 {
                     actionobject1.SiteId = null;
@@ -474,7 +474,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.BinId = stockLineViewModel.BinId;
             actionobject.WarehouseId = stockLineViewModel.WarehouseId;
             actionobject.LocationId = stockLineViewModel.LocationId;
-
+            actionobject.QuantityToReceive = stockLineViewModel.QuantityToReceive;
             if (stockLineViewModel.SiteId == 0)
             {
                 actionobject.SiteId = null;

@@ -194,10 +194,11 @@
 						<div *ngIf="ispercent">
 							<div class="col-sm-12">
 								<label class="w90">Cost of New</label>
-								<input type="text" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70 amount" id="" name="">
+								<input type="text" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70 amount" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
 								<label class="w50">Percent</label>
 								<select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
-									<option value="0">0%</option>
+									<option value="">Select</option>
+                                    <option value="0">0%</option>
 									<option value="1">1%</option>
 									<option value="2">2%</option>
 									<option value="3">3%</option>
@@ -306,10 +307,11 @@
 						<div *ngIf="percentreplcae">
 							<div class="col-sm-12">
 								<label class="w90">Cost of Replace</label>
-								<input [(ngModel)]="sourceWorkFlow.costOfReplacement" class="form-control w70 amount" type="text">
+								<input [(ngModel)]="sourceWorkFlow.costOfReplacement" class="form-control w70 amount" type="text" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
 								<label class="w50">Percent</label>
 								<select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
-									<option value="0">0%</option>
+                                    <option value="">Select</option>
+                                    <option value="0">0%</option>
 									<option value="1">1%</option>
 									<option value="2">2%</option>
 									<option value="3">3%</option>
