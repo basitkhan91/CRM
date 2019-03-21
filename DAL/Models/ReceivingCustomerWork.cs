@@ -48,6 +48,7 @@ namespace DAL.Models
 
         public Int32? ObtainFromType { get; set; }
 
+        public Int32? OwnerType { get; set; }
         public string PartDescription { get; set; }
 
         public string Owner { get; set; }

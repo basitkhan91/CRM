@@ -88,6 +88,7 @@ namespace QuickApp.Pro.Controllers
                 curreobj.WarehouseId = receivingCustomerWorkViewModel.WarehouseId;
                 curreobj.CompanyId = receivingCustomerWorkViewModel.CompanyId;
                 curreobj.Owner = receivingCustomerWorkViewModel.Owner;
+                curreobj.OwnerType = receivingCustomerWorkViewModel.OwnerType;
                 curreobj.IsCustomerStock = receivingCustomerWorkViewModel.IsCustomerStock;
                 curreobj.ExpirationDate = receivingCustomerWorkViewModel.ExpirationDate;
                 curreobj.ManufacturingDate = receivingCustomerWorkViewModel.ManufacturingDate;

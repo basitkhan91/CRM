@@ -47,7 +47,7 @@ namespace QuickApp.Pro.ViewModels
         public long? LocationId { get; set; }
 
         public string Owner { get; set; }
-
+        public Int32? OwnerType { get; set; }
         public bool? IsCustomerStock { get; set; }
 
         public long? TraceableToCustomerId { get; set; }

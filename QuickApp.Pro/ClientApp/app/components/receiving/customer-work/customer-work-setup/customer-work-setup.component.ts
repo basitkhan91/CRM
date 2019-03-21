@@ -102,6 +102,10 @@ export class CustomerWorkSetupComponent {
     showOther1: boolean;
     showVendor1: boolean;
     showCompany1: boolean;
+    showCustomer2: boolean;
+    showOther2: boolean;
+    showVendor2: boolean;
+    showCompany2: boolean;
 	ngOnInit(): void {
 		this.sourcereceving.isCustomerStock = true;
 
@@ -126,7 +130,7 @@ export class CustomerWorkSetupComponent {
         this.dataSource = new MatTableDataSource();
 
         if (this.receivingCustomerWorkService.listCollection && this.receivingCustomerWorkService.isEditMode == true) {
-
+            
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
@@ -135,6 +139,7 @@ export class CustomerWorkSetupComponent {
                 this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
             }
             if (this.receivingCustomerWorkService.listCollection.employee) {
+                this.sourcereceving.employeeId = this.receivingCustomerWorkService.listCollection.employee.employeeId;
                 this.sourcereceving.firstName = this.receivingCustomerWorkService.listCollection.employee.firstName;
             }
             //this.sourcereceving.timeLifeCyclesId = this.collectionofstockLineTimeLife.timeLifeCyclesId;
@@ -150,18 +155,18 @@ export class CustomerWorkSetupComponent {
             }
             if (this.sourcereceving.siteId) {
                 this.binService.getWareHouseDate(this.sourcereceving.siteId).subscribe(
-                    results => this.onDataLoadWareHouse(results), 
+                    results => this.onDataLoadWareHouse(results),
                     error => this.onDataLoadFailed(error)
                 );
             }
             if (this.sourcereceving.warehouseId) {
-                this.binService.getLocationDate(this.sourcereceving.warehouseId).subscribe( 
+                this.binService.getLocationDate(this.sourcereceving.warehouseId).subscribe(
                     results => this.onDataLoadLocation(results),
                     error => this.onDataLoadFailed(error)
                 );
             }
             if (this.sourcereceving.locationId) {
-                this.binService.getShelfDate(this.sourcereceving.locationId).subscribe( 
+                this.binService.getShelfDate(this.sourcereceving.locationId).subscribe(
                     results => this.onDataLoadShelf(results),
                     error => this.onDataLoadFailed(error)
                 );
@@ -198,6 +203,64 @@ export class CustomerWorkSetupComponent {
             }
             else {
                 this.sourcereceving.expirationDate = new Date();
+            }
+
+            switch (this.sourcereceving.obtainFromType)
+            {
+                case 1: {
+                    this.showCustomer1 = true;
+                    break;
+                }
+                case 2: {
+                    this.showOther1 = true;
+                    break;
+                }
+                case 3: {
+                    this.showVendor1 = true;
+                    break;
+                }
+                case 4: {
+                    this.showCompany1 = true;
+                    break;
+                }
+            }
+
+            switch (this.sourcereceving.ownerType) {
+                case 1: {
+                    this.showCustomer2 = true;
+                    break;
+                }
+                case 2: {
+                    this.showOther2 = true;
+                    break;
+                }
+                case 3: {
+                    this.showVendor2 = true;
+                    break;
+                }
+                case 4: {
+                    this.showCompany2 = true;
+                    break;
+                }
+            }
+
+            switch (this.sourcereceving.traceableToType) {
+                case 1: {
+                    this.showCustomer = true;
+                    break;
+                }
+                case 2: {
+                    this.showOther = true;
+                    break;
+                }
+                case 3: {
+                    this.showVendor = true;
+                    break;
+                }
+                case 4: {
+                    this.showCompany = true;
+                    break;
+                }
             }
         }
 
@@ -238,127 +301,19 @@ export class CustomerWorkSetupComponent {
 	public applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue;
 	}
-
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-		 debugger;
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-
-		this.auditHisory = auditHistory;
-
-
-		this.modal = this.modalService.open(content, { size: 'lg' });
-
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-
-
-	}
-
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
 		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allComapnies = allComapnies;
-
 	}
-
 	private onDataLoadFailed(error: any) {
 		// alert(error);
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 
 	}
-	handleChange(rowData, e) {
-		if (e.checked == false) {
-			this.sourcereceving = rowData;
-			this.sourcereceving.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourcereceving.isActive == false;
-			this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-				response => this.saveCompleted(this.sourcereceving),
-				error => this.saveFailedHelper(error));
-			alert(e);
-		}
-		else {
-			this.sourcereceving = rowData;
-			this.sourcereceving.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourcereceving.isActive == true;
-			this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-				response => this.saveCompleted(this.sourcereceving),
-				error => this.saveFailedHelper(error));
-			alert(e);
-		}
-
-	}
-
-	open(content) {
-
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourcereceving.isActive = true;
-		this.chargeName = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-
-	openDelete(content, row) {
-
-		this.isEditMode = false;
-		this.isDeleteMode = true;
-		this.sourcereceving = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-	openEdit(content, row) {
-
-		this.isEditMode = true;
-
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourcereceving = row;
-		this.chargeName = this.sourcereceving.chargeName;
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-	openView(content, row) {
-
-		this.sourceAction = row;
-		//this.charge_Name = row.chargeName;
-		//this.cost = row.cost;
-		//this.description = row.description;
-		//this.purchaseOrderId = row.purchaseOrderId;
-		//this.generalLedgerId = row.generalLedgerId;
-		//this.integrationPortalId = row.integrationPortalId;
-		//this.vendorId = row.vendorId;
-		//this.functionalCurrencyId = row.functionalCurrencyId;
-		//this.currencyId = row.currencyId;
-		//this.memo = row.memo;
-		//this.createdBy = row.createdBy;
-		//this.updatedBy = row.updatedBy;
-		//this.createdDate = row.createdDate;
-		//this.updatedDate = row.updatedDate;
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+	
 	openHelpText(content) {
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -494,16 +449,7 @@ export class CustomerWorkSetupComponent {
 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
-
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
-		}
-	}
+    
 
 	private Receveingcustomerlist() {
 		this.alertService.startLoadingMessage();
@@ -711,12 +657,10 @@ export class CustomerWorkSetupComponent {
 			this.showRestrictQuantity = true;
 			this.showFreeQuantity = false;
             this.showNormalQuantity = false; 
-            this.showNormalQuantity = false;
 		}
 		else {
 			this.showRestrictQuantity = false;
 			this.showFreeQuantity = true;
-            this.showNormalQuantity = false;
             this.showNormalQuantity = false;
             this.sourcereceving.serialNumber = '';
             this.sourcereceving.certifiedBy = '';
@@ -1021,6 +965,32 @@ export class CustomerWorkSetupComponent {
             this.showOther1 = false;
             this.showVendor1 = false;
             this.showCompany1 = true;
+        }
+    }
+    getOwnerType(value) {
+        if (value == 1) {
+            this.showCustomer2 = true;
+            this.showOther2 = false;
+            this.showVendor2 = false;
+            this.showCompany2 = false;
+        }
+        if (value == 2) {
+            this.showCustomer2 = false;
+            this.showOther2= true;
+            this.showVendor2 = false;
+            this.showCompany2 = false;
+        }
+        if (value == 3) {
+            this.showCustomer2 = false;
+            this.showOther2 = false;
+            this.showVendor2 = true;
+            this.showCompany2 = false;
+        }
+        if (value == 4) {
+            this.showCustomer2 = false;
+            this.showOther2 = false;
+            this.showVendor2 = false;
+            this.showCompany2 = true;
         }
     }
 }

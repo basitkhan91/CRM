@@ -106,6 +106,7 @@ namespace DAL.Repositories
                                   locationId = stl.LocationId,
                                   stl.ObtainFrom,
                                   stl.Owner,
+                                  stl.OwnerType,
                                   stl.TraceableTo,
                                   stl.Manufacturer,
                                   stl.ManufacturerLotNumber,

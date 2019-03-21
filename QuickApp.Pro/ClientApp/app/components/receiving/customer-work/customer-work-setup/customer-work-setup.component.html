@@ -230,15 +230,48 @@
 											</select>
 										</div>
 									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Owner</label>
-										<p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.owner" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-														[minLength]="1" [dropdown]="true">
-											<ng-template let-name pTemplate="item">
-												<div class="ui-helper-clearfix">{{name}}</div>
-											</ng-template>
-										</p-autoComplete>
-									</div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Owner</label>
+                                        <div class="col-sm-7">
+                                            <select id="obtainFrom" [(ngModel)]="sourcereceving.ownerType" [ngModelOptions]="{standalone: true}" class="form-control" (change)="getOwnerType(sourcereceving.ownerType)">
+                                                <option>--Select--</option>
+                                                <option value="1">Customer</option>
+                                                <option value="2">Other </option>
+                                                <option value="3">Vendor</option>
+                                                <option value="4">Company</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-12" *ngIf="showCustomer2">
+                                            <label class="control-label col-sm-4"></label>
+                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.ownerType == 1">
+                                                <select [(ngModel)]="sourcereceving.owner" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12" *ngIf="showOther2">
+                                            <label class="control-label col-sm-4"></label>
+                                            <div class="col-sm-7" *ngIf="sourcereceving.ownerType == 2">
+                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.owner">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12" *ngIf="showVendor2">
+                                            <label class="control-label col-sm-4"></label>
+                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.ownerType == 3">
+                                                <select [(ngModel)]="sourcereceving.owner" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12" *ngIf="showCompany2">
+                                            <label class="control-label col-sm-4"></label>
+                                            <div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.ownerType == 4">
+                                                <select [(ngModel)]="sourcereceving.owner" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.code">{{ataName.code}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">Customer Stock</label>
 										<div class="col-sm-7">
@@ -260,7 +293,7 @@
 											<label class="control-label col-sm-4"></label>
 											<div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 1">
 												<select [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
-													<option *ngFor="let customer of allCustomer" [ngValue]="customer.customerId">{{customer.name}}</option>
+													<option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
 												</select>
 											</div>
 										</div>
@@ -274,7 +307,7 @@
 											<label class="control-label col-sm-4"></label>
 											<div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 3">
 												<select [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
-													<option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorId">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+													<option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
 												</select>
 											</div>
 										</div>
@@ -282,7 +315,7 @@
 											<label class="control-label col-sm-4"></label>
 											<div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 4">
 												<select [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
-													<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+													<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.code">{{ataName.code}}</option>
 												</select>
 											</div>
 										</div>
@@ -329,7 +362,7 @@
                                                 <label class="control-label col-sm-4"></label>
                                                 <div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 4">
                                                     <select [(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}">
-                                                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.code">{{ataName.code}}</option>
                                                     </select>
                                                 </div>
                                             </div>
