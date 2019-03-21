@@ -173,9 +173,12 @@ export class ReceivngPoComponent {
     actionamecolle: any[] = [];
     selectedSite: any;
     disableSaveManufacturer: boolean;
+    showDivError: boolean = false;
     sourceSplitShipment: any = {};
+    showDepError: boolean = false;
     name: any;
     orderQuantity: any;
+    showBuError: boolean = false;
     /** po-approval ctor */
     constructor(public stocklineser: StocklineService,public siteService: SiteService, public warehouseService: WarehouseService, public vendorService: VendorService, public customerService: CustomerService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService, public binservice: BinService, public manufacturerService: ManufacturerService) {
         //debugger;

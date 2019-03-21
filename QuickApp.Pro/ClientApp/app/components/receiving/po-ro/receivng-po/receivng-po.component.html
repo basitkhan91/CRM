@@ -458,7 +458,7 @@
                                                                             <div class="form-group col-sm-10" *ngIf="tabindex==0">
                                                                                 <label class="control-label col-sm-4">Same Details for all Parts</label>
                                                                                 <div class="col-sm-7">
-                                                                                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.resale" class="form-control names ui-autocomplete-input" autocomplete="off" (change)="sameDetailsforAllParts(partList)">
+                                                                                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.resale"  (change)="sameDetailsforAllParts(partList)">
                                                                                     <!--<input [(ngModel)]="obj.checkbox" [ngModelOptions]="{standalone: true}" type="checkbox" (change)="sameDetailsforAllParts(partList)">-->
                                                                                 </div>
                                                                             </div>
