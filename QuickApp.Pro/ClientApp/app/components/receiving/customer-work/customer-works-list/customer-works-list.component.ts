@@ -235,14 +235,6 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
   
-    //deleteItemAndCloseModel(row) {
-    //    this.isSaving = true;
-    //    this.isDeleteMode = true;
-    //    this.sourcereceving = row.receivingCustomerWorkId;
-    //    this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(data => { this.loadData(); })
-    
-    //}
-
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.isDeleteMode = true;
@@ -267,7 +259,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
-        //this.modal.close();
+        this.modal.close();
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
