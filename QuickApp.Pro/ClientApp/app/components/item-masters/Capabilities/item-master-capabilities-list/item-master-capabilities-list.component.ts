@@ -53,6 +53,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     {
         this.loadData();
         this.activeIndex = 0;
+        this.itemMasterService.capabilityCollection = [];
         //this.workFlowtService.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-list';
         // this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
     }
@@ -161,11 +162,11 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
             this.getSelectedCollection = data;
             this.itemMasterService.capabilityCollection = this.getSelectedCollection;
-
+            this._route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities');
         });
        
 
-        this._route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities');
+       
     }
 
     private saveCompleted(user?: any)

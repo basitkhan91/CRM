@@ -63,10 +63,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     {
         //this.dataSource = new MatTableDataSource();
 
-        if (this.itemser.capabilityCollection)
-        {
-            this.capabilityEditCollection = this.itemser.capabilityCollection;
-        }
+       
     }
 
     capabilityTypeData: any = [{ CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedAircraftDataModels : [],
@@ -104,10 +101,17 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
         this.manufacturerdata();
         this.atamaindata();
-
+        if (this.itemser.capabilityCollection)
+        {
+            this.capabilityEditCollection = this.itemser.capabilityCollection;
+            this.cunstructItemMastars()
+        }
+        
 
 
     }
+
+    
 
     get mfgFormArray(): FormArray {
         return this.capabilitiesForm.get('mfgForm') as FormArray;
@@ -548,6 +552,76 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
             })
         })
     }
+    cunstructItemMastars(){
+        let mfgData:any = [];
+        this.capabilityEditCollection.forEach(element => {
+            this.ItemMasterId = element.itemMasterId;
+            let index = element.capabilityTypeId-1;
+            let capData = this.capabilityTypeData[index];
+            capData.selectedAircraftTypes.push(element.aircraftTypeId);
+            capData.selectedAircraftModelTypes.push(element.aircraftModelId);
+            // capData.selectedManufacturer.push(element.aircraftTypeId);
+            this.addExistingData(capData,element)
+        });
+    }
+
+    addExistingData(capData,data){
+        let capbilitiesObj = data;
+        capbilitiesObj.aircraftTypeName = "";
+        capbilitiesObj.aircraftModelName = "";
+        capbilitiesObj.entryDate = new Date()
+        capbilitiesObj.isVerified = false;
+        capbilitiesObj.isActive = true;
+        capbilitiesObj.verifiedBy = "";
+        capbilitiesObj.dateVerified = new Date();
+        // capData.push(data);
+        let mfObj = this.formBuilder.group(capbilitiesObj);
+        switch(capData.formArrayName){
+            case "mfgForm":
+            this.mfgFormArray.push(mfObj);
+            let mfgIndex = this.mfgFormArray.controls.length - 1;
+            this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+            this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+            this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+            break;
+            case "overhaulForm":
+            this.overhaulFormArray.push(mfObj);
+            let overIndex = this.overhaulFormArray.controls.length - 1;
+            this.overhaulFormArray.controls[overIndex]['buList'] = [];
+            this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
+            this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
+            break;
+            case "distributionForm":
+            this.distributionFormArray.push(mfObj);
+            let distIndex = this.distributionFormArray.controls.length - 1;
+            this.distributionFormArray.controls[distIndex]['buList'] = [];
+            this.distributionFormArray.controls[distIndex]['departmentList'] = [];
+            this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
+            break;
+            case "certificationForm":
+            this.certificationFormArray.push(mfObj);
+            let certIndex = this.certificationFormArray.controls.length - 1;
+            this.certificationFormArray.controls[certIndex]['buList'] = [];
+            this.certificationFormArray.controls[certIndex]['departmentList'] = [];
+            this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
+            break;
+            case "repairForm":
+            this.repairFormArray.push(mfObj);
+            let repIndex = this.repairFormArray.controls.length - 1;
+            this.repairFormArray.controls[repIndex]['buList'] = [];
+            this.repairFormArray.controls[repIndex]['departmentList'] = [];
+            this.repairFormArray.controls[repIndex]['divisionlist'] = [];
+            break;
+            case "exchangeForm":
+            this.exchangeFormArray.push(mfObj);
+            let excngIndex = this.exchangeFormArray.controls.length - 1;
+            this.exchangeFormArray.controls[excngIndex]['buList'] = [];
+            this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
+            this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
+            break;
+        }
+    }
+
     addModels(capData)
     {
     this.capabilityTypeData.for

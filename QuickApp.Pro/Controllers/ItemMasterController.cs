@@ -442,7 +442,7 @@ namespace QuickApp.Pro.Controllers
             {
                 for(var i=0;i< capability.Count(); i++)
                 {
-                    capability[i].CapabilityId = 0;
+                   // capability[i].CapabilityId = 0;
                     capability[i].MasterCompanyId = 1;
                     capability[i].CreatedDate = DateTime.Now;
                     _unitOfWork.Repository<Capability>().Add(capability[i]);
