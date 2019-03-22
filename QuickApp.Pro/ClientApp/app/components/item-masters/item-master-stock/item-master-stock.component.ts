@@ -3793,7 +3793,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     saveCapabilitiesEnable() {
         this.isSaveCapes = true;
     }
-    saveCapabilities() {
+    saveCapabilities()
+    {
         let capbilitiesForm = this.capabilitiesForm.value;
         let capabilityCollection: any = [];
         let mfgForm = capbilitiesForm.mfgForm;
@@ -3829,6 +3830,3 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
     }
-
-	
-}
