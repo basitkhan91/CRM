@@ -149,7 +149,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">ATA Chapter </label>
                 <div class="col-sm-7">
-                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.aTAChapterId" (change)="getATASubChapterData(sourceVendorCap.ataMainId)">
+                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.aTAChapterId" (change)="getATASubChapterData(sourceVendorCap.aTAChapterId)">
                         <option *ngFor="let ataName of allATAMaininfo1" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
                     </select>
                     <!--<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.ataChapterId">

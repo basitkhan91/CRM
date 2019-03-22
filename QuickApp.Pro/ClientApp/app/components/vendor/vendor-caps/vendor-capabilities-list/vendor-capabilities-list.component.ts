@@ -41,7 +41,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     isSaving: boolean;
     allvendorCapsList: any[] = [];
     Active: string = "Active";
-
+    selectedColumn: any;
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,)
     {
         this.dataSource = new MatTableDataSource();

@@ -698,9 +698,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			let currAction = { workflowId: "", actionId: Number(this.actionValue), workflowActionAttributeIds: this.selectedActionAttributes.join(",") }
 			let selAction = this.workflowActions.find(obj => obj.actionId == this.actionValue)
 			if (selAction) {
-				//let selEle = selAction.workflowActionAttributeIds.split(",");
-				//let newEle = this.selectedActionAttributes.filter(ele => !selEle.includes(ele));
-				//selAction["workflowActionAttributeIds"] = selEle.push(newEle).join(",")
+				
 				selAction["workflowActionAttributeIds"] = currAction["workflowActionAttributeIds"]
 			} else {
 				this.workflowActions.push(currAction);
@@ -711,17 +709,21 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 		}
 
 	}
-	onPercentOfNew(myValue, percentValue) {
-		// this.sourceItemMaster.salesBaselineSalesPrice = "";
-		let afterpercent = percentValue / 100;
-		let test = afterpercent * myValue;
-		this.sourceWorkFlow.percentOfNew = myValue - test;
+    onPercentOfNew(myValue, percentValue) {
+        this.sourceWorkFlow.percentOfNew = "";
+        if (myValue && percentValue) {
+            let afterpercent = myValue / 100;
+            this.sourceWorkFlow.percentOfNew = afterpercent * percentValue;
+            
+        }
 	}
 	onPercentOfReplcaement(myValue, percentValue) {
-		// this.sourceItemMaster.salesBaselineSalesPrice = "";
-		let afterpercent = percentValue / 100;
-		let test = afterpercent * myValue;
-		this.sourceWorkFlow.percentOfReplaceMent = myValue - test;
+        this.sourceWorkFlow.percentOfReplaceMent = "";
+        if (myValue && percentValue) {
+            let afterpercent = myValue / 100;
+            this.sourceWorkFlow.percentOfReplaceMent = afterpercent * percentValue;
+          
+        }
 	}
 	private defualtChargesListobj() {
 		let partListObj = {
@@ -1490,8 +1492,10 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 
 	addWorkFlow(): void {
 		//debugger;
-		this.sourceWorkFlow.workflowId = undefined;
-		this.sourceWorkFlow.berThresholdAmount=(Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplaceMent, this.sourceWorkFlow.percentOfNew));
+        this.sourceWorkFlow.workflowId = undefined;
+        
+        this.sourceWorkFlow.berThresholdAmount = (Math.min((this.sourceWorkFlow.fixedAmount == undefined ? Infinity : this.sourceWorkFlow.fixedAmount), (this.sourceWorkFlow.percentOfNew == undefined ? Infinity : this.sourceWorkFlow.percentOfNew), (this.sourceWorkFlow.percentOfReplaceMent == undefined ? Infinity : this.sourceWorkFlow.percentOfReplaceMent)));
+       
 		this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
 			data => {
 				this.SaveWorkFlow(data);

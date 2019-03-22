@@ -51,7 +51,8 @@ import { AjaxError } from 'rxjs';
 import { LegalEntityService } from '../../../services/legalentity.service';
 import { forEach } from '@angular/router/src/utils/collection';
 import { ATAChapter } from '../../../models/atachapter.model';
-
+import {  FormArray } from '@angular/forms';
+import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilities.model';
 
 
 @Component({
@@ -236,9 +237,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     currentItemMasterModels: any[] = [];
     selectedIntegrationTypes: any[];
     selectedPartId: any;
-	
+    manufacturerData: any[] = [];
 
-	constructor(public workFlowtService1: LegalEntityService,private changeDetectorRef: ChangeDetectorRef,private router: Router, private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    capabilitiesForm: FormGroup;
+    sourceItemMasterCap: any = {};
+    completeAircraftManfacturerData: any[];
+    ItemMasterId: number = 0;
+    isSaveCapes: boolean;
+
+    constructor(private formBuilder: FormBuilder,public workFlowtService1: LegalEntityService,private changeDetectorRef: ChangeDetectorRef,private router: Router, private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
 		this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
 		this.displayedColumns.push('action');
@@ -343,9 +350,32 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 		}
 
+    }
 
-
-	}
+    capabilityTypeData: any = [{
+        CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
+    },
+    {
+        CapabilityTypeId: 2, Description: 'Overhaul', formArrayName: 'overhaulForm', selectedAircraftDataModels: []
+        , selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
+    },
+    {
+        CapabilityTypeId: 3, Description: 'Distribution', formArrayName: 'distributionForm', selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
+    },
+    {
+        CapabilityTypeId: 4, Description: 'Certification', formArrayName: 'certificationForm', selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
+    },
+    {
+        CapabilityTypeId: 5, Description: 'Repair', formArrayName: 'repairForm', selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
+    },
+    {
+        CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
+    }];
 
 
 	ngOnInit(): void {
@@ -372,12 +402,102 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		this.getAircraftModelsData();
 		this.getCpaesData();
 		this.activeIndex = 0;
-		this.Integration();
+        this.Integration();
+        this.aircraftManfacturerData();
 		//this.sourceAction.
 		this.sourceItemMaster.salesIsFixedPrice = true;
 		//this.workFlowtService.indexObj.next(this.activeIndex);
-		
-	}
+
+
+        this.capabilitiesForm = this.formBuilder.group({
+            mfgForm: this.formBuilder.array([]),
+            overhaulForm: this.formBuilder.array([]),
+            distributionForm: this.formBuilder.array([]),
+            certificationForm: this.formBuilder.array([]),
+            repairForm: this.formBuilder.array([]),
+            exchangeForm: this.formBuilder.array([])
+        });
+    }
+
+    //Adding
+    get mfgFormArray(): FormArray {
+        return this.capabilitiesForm.get('mfgForm') as FormArray;
+    }
+
+    get overhaulFormArray(): FormArray {
+        return this.capabilitiesForm.get('overhaulForm') as FormArray;
+    }
+
+
+    get distributionFormArray(): FormArray {
+        return this.capabilitiesForm.get('distributionForm') as FormArray;
+    }
+
+    get certificationFormArray(): FormArray {
+        return this.capabilitiesForm.get('certificationForm') as FormArray;
+    }
+
+    get repairFormArray(): FormArray {
+        return this.capabilitiesForm.get('repairForm') as FormArray;
+    }
+
+    get exchangeFormArray(): FormArray {
+        return this.capabilitiesForm.get('exchangeForm') as FormArray;
+    }
+
+    private aircraftManfacturerData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.itemser.getAircraft().subscribe(
+            results => this.onDataLoadaircraftManfacturerSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+
+    private onDataLoadaircraftManfacturerSuccessful(allWorkFlows: any[]) //While oading
+    {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        //this.dataSource.data = allWorkFlows;
+        this.allaircraftInfo = allWorkFlows; //Complete Aircraft Data
+
+        this.completeAircraftManfacturerData = allWorkFlows;
+
+        if (this.allaircraftInfo) {
+            if (this.allaircraftInfo.length > 0) {
+                for (let i = 0; i < this.allaircraftInfo.length; i++)
+                    this.manufacturerData.push(
+                        { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+
+                    );
+            }
+
+            //Adding
+
+            //	let valAirCraft = [];
+            //	//we are Passing Customer Id for getting Edit Data and make it check 
+            //	this.itemser.getAircaftManafacturerList(this.sourceItemMaster.itemMasterId)
+            //		.subscribe(results => {
+            //			this.allAircraftManufacturer = results[0];
+            //			if (results != null) {
+            //				for (let i = 0; i < this.allAircraftManufacturer.length; i++) {
+            //					valAirCraft.push(this.allAircraftManufacturer[i].aircraftTypeId);
+            //				}
+            //				this.selectedAircraftTypes = valAirCraft; //if there is Aircraft Data with ItemMasterId that will be Checked 
+            //				console.log(this.selectedAircraftTypes);
+            //			}
+
+            //		},
+            //			error => this.onDataLoadFailed(error)
+            //		);
+
+
+        }
+    }
+
 	// Temporery Item Master Radiuo Route
 
 	markupListPrice() {
@@ -485,7 +605,97 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			results => this.onmanufacturerSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
+    }
+
+    aircraftModalChange(event, capData) {
+        let selectedData = event.value;
+        capData.selectedModel = [];
+        selectedData.forEach(element1 => {
+            capData.selectedAircraftDataModels.forEach(element2 => {
+                if (element1 == element2.value) {
+                    capData.selectedModel.push(element2);
+                }
+            })
+        })
+    }
+
+    addModels(capData) {
+        let capbilitiesObj = new ItemMasterCapabilitiesModel;
+        this.resetFormArray(capData);
+        capData.selectedManufacturer.forEach(element1 => {
+            capbilitiesObj.itemMasterId = this.ItemMasterId;
+            capbilitiesObj.aircraftTypeId = element1.value;
+            capbilitiesObj.aircraftTypeName = element1.label;
+            capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
+            capData.selectedModel.forEach(element2 => {
+                if (element2.aircraftTypeId == element1.value) {
+                    capbilitiesObj.aircraftModelName = element2.label;
+                    capbilitiesObj.aircraftModelId = element2.value;
+                    let mfObj = this.formBuilder.group(capbilitiesObj);
+                    switch (capData.formArrayName) {
+                        case "mfgForm":
+                            this.mfgFormArray.push(mfObj);
+                            break;
+                        case "overhaulForm":
+                            this.overhaulFormArray.push(mfObj);
+                            break;
+                        case "distributionForm":
+                            this.distributionFormArray.push(mfObj);
+                            break;
+                        case "certificationForm":
+                            this.certificationFormArray.push(mfObj);
+                            break;
+                        case "repairForm":
+                            this.repairFormArray.push(mfObj);
+                            break;
+                        case "exchangeForm":
+                            this.exchangeFormArray.push(mfObj);
+                            break;
+                    }
+                }
+
+
+                // this.overhaulFormArray.push(mfObj);
+                // this.overhaulFormArray.push(mfObj);
+            });
+        });
+
+    }
+
+    manufacturerChange(event, capData) {
+        let selectedData = event.value;
+        capData.selectedManufacturer = [];
+        selectedData.forEach(element1 => {
+            this.manufacturerData.forEach(element2 => {
+                if (element1 == element2.value) {
+                    capData.selectedManufacturer.push(element2);
+                }
+            })
+        })
+    }
+
+    resetFormArray(capData) {
+        switch (capData.formArrayName) {
+            case "mfgForm":
+                this.mfgFormArray.controls = [];
+                break;
+            case "overhaulForm":
+                this.overhaulFormArray.controls = [];
+                break;
+            case "distributionForm":
+                this.distributionFormArray.controls = [];
+                break;
+            case "certificationForm":
+                this.certificationFormArray.controls = [];
+                break;
+            case "repairForm":
+                this.repairFormArray.controls = [];
+                break;
+            case "exchangeForm":
+                this.exchangeFormArray.controls = [];
+                break;
+        }
+    }
 
 	private onmanufacturerSuccessful(allWorkFlows: any[]) {
 
@@ -595,9 +805,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			for (let i = 0; i < this.allCapesData.length; i++) {
 				if (this.allCapesData[i].capabilityTypeId == 1) {
 					//this.manfacturerAircraftmodelsarray = [];
-					this.getBUList(this.allCapesData[i], this.allCapesData[i].masterComapnyId1);
-					this.getDepartmentlist(this.allCapesData[i], this.allCapesData[i].buid1);
-					this.getDivisionlist(this.allCapesData[i], this.allCapesData[i].depid1);
+					//this.getBUList(this.allCapesData[i], this.allCapesData[i].masterComapnyId1);
+					//this.getDepartmentlist(this.allCapesData[i], this.allCapesData[i].buid1);
+					//this.getDivisionlist(this.allCapesData[i], this.allCapesData[i].depid1);
 					this.manfacturerAircraftmodelsarray.push(JSON.parse(JSON.stringify(this.allCapesData[i])));
 					
 				}
@@ -1036,59 +1246,50 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 	}
 
-	openModelPopups(content) {
+    openModelPopups(capData) {
 
-		//alert(this.itemser.isEditMode);
-		if (this.itemser.isEditMode == false) {
-			this.modal = this.modalService.open(content, { size: 'sm' });
-			this.isSaving = true
-			this.modal.result.then(() => {
+        //alert(this.itemser.isEditMode);
+        if (this.itemser.isEditMode == false) {
 
+            //Adding for Aircraft manafacturer List Has empty then List Should be null
+            if (capData.selectedAircraftTypes.length > 0) {
+                var arr = capData.selectedAircraftTypes;
+                var selectedvalues = arr.join(",");
+                this.itemser.getAircraftTypes(selectedvalues).subscribe(
+                    results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),
+                    error => this.onDataLoadFailed(error)
+                );
+            }
+            else {
+                this.allAircraftinfo = []; //Making empty if selecting is null
+            }
+        }
+        //if (this.itemser.isEditMode == true)
+        //{
 
+        //	this.modal = this.modalService.open(content, { size: 'sm' });
+        //	this.modal.result.then(() => {
 
-				console.log('When user closes');
-			}, () => { console.log('Backdrop click') })
+        //		console.log('When user closes');
+        //	}, () => { console.log('Backdrop click') })
+        //	if (this.allAircraftinfo) {
+        //		if (this.allAircraftinfo.length >= 0) {
+        //			this.enablePopupData = true;
+        //			var arr = this.selectedAircraftTypes;
+        //			if (this.selectedAircraftTypes) {
+        //				var selectedvalues = arr.join(",");
+        //				//this.loadData();
+        //				this.itemser.getAircraftTypes(selectedvalues).subscribe(
+        //					results => this.onDataLoadaircrafttypeSuccessful(results[0]),
+        //					error => this.onDataLoadFailed(error)
 
-			var arr = this.selectedAircraftTypes;
-			var selectedvalues = arr.join(",");
-			this.itemser.getAircraftTypes(selectedvalues).subscribe(
-				results => this.onDataLoadaircrafttypeSuccessful(results[0]),
-				error => this.onDataLoadFailed(error)
-			);
-			this.cols = [
-				//{ field: 'customerClassificationId', header: 'Customer Classification ID' },
-				{ field: 'description', header: 'Aircraft Type' },
-				{ field: 'modelName', header: 'Model' },
+        //				)
+        //			}
+        //		}
+        //	}
+        //}
 
-
-			];
-			this.selectedColumns = this.cols;
-		}
-		if (this.itemser.isEditMode == true) {
-
-			this.modal = this.modalService.open(content, { size: 'sm' });
-			this.modal.result.then(() => {
-
-				console.log('When user closes');
-			}, () => { console.log('Backdrop click') })
-			if (this.allAircraftinfo) {
-				if (this.allAircraftinfo.length >= 0) {
-					this.enablePopupData = true;
-					var arr = this.selectedAircraftTypes;
-					if (this.selectedAircraftTypes) {
-						var selectedvalues = arr.join(",");
-						//this.loadData();
-						this.itemser.getAircraftTypes(selectedvalues).subscribe(
-							results => this.onDataLoadaircrafttypeSuccessful(results[0]),
-							error => this.onDataLoadFailed(error)
-
-						)
-					}
-				}
-			}
-		}
-
-	}
+    }
 	openCapes(content) {
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
@@ -1114,64 +1315,62 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		}
 
 	}
-	private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[])
-	{
+    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
+    {
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.selectedAircraftDataModels = allWorkFlows; //selected Aircraft Models based on Aircraft Data Selection
-
-		if (this.itemser.isEditMode == false) {
-			this.allAircraftinfo = allWorkFlows; //Totel Aircraft model Data Based on Aircraft Type
-		}
-		if (this.enablePopupData == true) 
-		{
-			this.allAircraftinfo = allWorkFlows;
-		}
-		//for Open Model for Edit Data
-		if (this.itemser.isEditMode == true) //in this we are Making all the Models and Getting Checked if data is thete with Item Master Id 
-		{
-			{
-				
-				for (let i = 0; i < this.currentItemMasterModels.length; i++) {
-					for (let j = 0; j < this.allAircraftinfo.length; j++) {
-						if (this.currentItemMasterModels[i].aircraftModelId == this.allAircraftinfo[j].aircraftModelId)
-						{
-							this.allAircraftinfo[j].priority = this.currentItemMasterModels[i].priority;
-							this.allAircraftinfo[j].checkbox = this.currentItemMasterModels[i].checkbox;
-
-						}
-						
-
-					}
-				}
-			}
-		}
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        //this.dataSource.data = allWorkFlows;
+        // this.selectedAircraftDataModels = allWorkFlows; //selected Aircraft Models based on Aircraft Data Selection
+        capData.selectedAircraftDataModels = [];
+        allWorkFlows.forEach(element => {
+            capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+        });
 
 
-		if (this.selectedModels.length > 0) {
+        //for Open Model for Edit Data
+        // if (this.itemser.isEditMode == true) //in this we are Making all the Models and Getting Checked if data is thete with Item Master Id 
+        // {
+        //     {
 
-			let ischange1 = false;
-			if (this.selectedModels.length > 0) {
-				this.selectedModels.map((row) => {
-					for (let i =0; i < this.allAircraftinfo.length; i++) {
-						if (this.allAircraftinfo[i].aircraftModelId == row.aircraftModelId) {
-							this.allAircraftinfo[i].priority = row.priority;
-							this.allAircraftinfo[i].checkbox = row.checkbox;
-							ischange1 = true;
-						}
-					}
+        //         for (let i = 0; i < this.currentVendorModels.length; i++) {
+        //             for (let j = 0; j < this.allAircraftinfo.length; j++) {
+        //                 if (this.currentVendorModels[i].aircraftModelId == this.allAircraftinfo[j].aircraftModelId) {
+        //                     this.allAircraftinfo[j].priority = this.currentVendorModels[i].priority;
+        //                     this.allAircraftinfo[j].checkbox = this.currentVendorModels[i].checkbox;
 
-				});
-			}
-			//if (!ischange1) {
-			//	this.selectedModels.push(selectedRow);
-			//}
+        //                 }
 
-		}
 
-	}
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        // if (this.selectedModels.length > 0)
+        // {
+
+        //     let ischange1 = false;
+        //     if (this.selectedModels.length > 0) {
+        //         this.selectedModels.map((row) => {
+        //             for (let i = 0; i < this.allAircraftinfo.length; i++) {
+        //                 if (this.allAircraftinfo[i].aircraftModelId == row.aircraftModelId) {
+        //                     this.allAircraftinfo[i].priority = row.priority;
+        //                     this.allAircraftinfo[i].checkbox = row.checkbox;
+        //                     ischange1 = true;
+        //                 }
+        //             }
+
+        //         });
+        //     }
+        //     //if (!ischange1) {
+        //     //	this.selectedModels.push(selectedRow);
+        //     //}
+
+        // }
+
+    }
 
 	itemclassification(content) {
 
@@ -1358,7 +1557,25 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			);
 			this.disableSavepartDescription = true;
 		}
-	}
+    }
+
+    partEventHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    //alert("Action Name already Exists");
+                    this.disableSavepartNumber = true;
+                }
+                else {
+                    this.disableSavepartNumber = false;
+                    this.sourceItemMasterCap.partDescription = "";
+                    this.disableSavepartDescription = false;
+                }
+            }
+
+        }
+    }
 
 	descriptionHandler(event) {
 		if (event.target.value != "") {
@@ -2267,17 +2484,33 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	}
 
 	
-	getBUList(selItem, masterCompanyId) {
-		let _bulist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == masterCompanyId) {
-				_bulist.push(this.allManagemtninfo[i]);
-			}
-		}
-		selItem["bulist"] = _bulist;
-		console.log(this.bulist);
+	//getBUList(selItem, masterCompanyId) {
+	//	let _bulist = [];
+	//	for (let i = 0; i < this.allManagemtninfo.length; i++) {
+	//		if (this.allManagemtninfo[i].parentId == masterCompanyId) {
+	//			_bulist.push(this.allManagemtninfo[i]);
+	//		}
+	//	}
+	//	selItem["bulist"] = _bulist;
+	//	console.log(this.bulist);
 		
-	}
+	//}
+
+    getBUList(companyId) {
+        // this.sourceItemMasterCap.businessUnitId = "";
+        // this.sourceItemMasterCap.managementStructureEntityId = companyId; //Saving Management Structure Id if there Company Id
+
+        this.bulist = [];
+        this.departmentList = [];
+        this.divisionlist = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == companyId) {
+                this.bulist.push(this.allManagemtninfo[i]);
+            }
+        }
+
+    }
+
 	getBUListovh(selItem, masterCompanyId) {
 		let _bulist = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -2342,16 +2575,27 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		selItem["departmentListrepair"] = _departmentList;
 		console.log(this.departmentList);
 	}
-	getDepartmentlist(selItem, buid) {
-		let _departmentList = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == buid) {
-				_departmentList.push(this.allManagemtninfo[i]);
-			}
-		}
-		selItem["departmentList"] = _departmentList;
-		console.log(this.departmentList);
-	}
+	//getDepartmentlist(selItem, buid) {
+	//	let _departmentList = [];
+	//	for (let i = 0; i < this.allManagemtninfo.length; i++) {
+	//		if (this.allManagemtninfo[i].parentId == buid) {
+	//			_departmentList.push(this.allManagemtninfo[i]);
+	//		}
+	//	}
+	//	selItem["departmentList"] = _departmentList;
+	//	console.log(this.departmentList);
+	//}
+    getDepartmentlist(businessUnitId) {
+        // this.sourceItemMasterCap.managementStructureEntityId = businessUnitId; //Saving Management Structure Id if there businessUnitId
+        // this.sourceItemMasterCap.departmentId = "";
+        this.departmentList = [];
+        this.divisionlist = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                this.departmentList.push(this.allManagemtninfo[i]);
+            }
+        }
+    }
 	getDepartmentlistdistribution(selItem, buid) {
 		let _departmentList = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -2395,16 +2639,27 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
-	getDivisionlist(selItem, depid) {
-		let _divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == depid) {
-				_divisionlist.push(this.allManagemtninfo[i]);
-			}
-		}
-		selItem["divisionlist"] = _divisionlist;
-		console.log(this.divisionlist);
-	}
+	//getDivisionlist(selItem, depid) {
+	//	let _divisionlist = [];
+	//	for (let i = 0; i < this.allManagemtninfo.length; i++) {
+	//		if (this.allManagemtninfo[i].parentId == depid) {
+	//			_divisionlist.push(this.allManagemtninfo[i]);
+	//		}
+	//	}
+	//	selItem["divisionlist"] = _divisionlist;
+	//	console.log(this.divisionlist);
+	//}
+    getDivisionlist(departmentId) {
+        // this.sourceItemMasterCap.divisionId = "";
+        // this.sourceItemMasterCap.managementStructureEntityId = departmentId; //Saving Management Structure Id if there departmentId
+
+        this.divisionlist = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == departmentId) {
+                this.divisionlist.push(this.allManagemtninfo[i]);
+            }
+        }
+    }
 	getDivisionlistcertificate(selItem, depid) {
 		let _divisionlist = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -2454,7 +2709,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		}
 		selItem["divisionlistrepair"] = _divisionlist;
 		console.log(this.divisionlist);
-	}
+    }
+
+    getDivisionChangeManagementCode(divisionId) {
+        // this.sourceItemMasterCap.managementStructureEntityId = divisionId; //Saving Management Structure Id if theredivisionId
+    }
 
 
 
@@ -3088,34 +3347,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 					this.collectionofItemMaster = data;
 					this.savesuccessCompleted(this.sourceItemMaster);
 					if (data != null) {
-						if (data.partId && data.itemMasterId) {
-							if (this.manfacturerAircraftmodelsarray.length >= 0) {
-								this.savemfginfo(data.partId, data.itemMasterId, this.manfacturerAircraftmodelsarray);
-							}
-							if (this.distributionAircraftmodelsarray.length >= 0) {
-								this.saveDistrbution(data.partId, data.itemMasterId, this.distributionAircraftmodelsarray);
-							}
-
-							if (this.overhaulAircraftmodelsarray.length >= 0) {
-								this.saveovhinfo(data.partId, data.itemMasterId, this.overhaulAircraftmodelsarray);
-							}
-							if (this.repairAircraftmodelsarray.length >= 0) {
-								this.saverepairinfo(data.partId, data.itemMasterId, this.repairAircraftmodelsarray);
-							}
-							if (this.certificationarrayAircraftmodelsarray.length >= 0) {
-								this.savecertification(data.partId, data.itemMasterId, this.certificationarrayAircraftmodelsarray);
-							}
-							if (this.exchangeAircraftmodelsarray.length >= 0) {
-								this.saveexcahneginfo(data.partId, data.itemMasterId, this.exchangeAircraftmodelsarray);
-							}
-							if (this.selectedModels.length > 0)
-							{
-
-								this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
-
-							}
-							
-						}
+                        this.ItemMasterId = data.itemMasterId;
+                        if (this.isSaveCapes == true) {
+                            this.saveCapabilities();
+                        }
 					}
 					this.alertService.startLoadingMessage();
 
@@ -3512,7 +3747,56 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			}
 		}
 
-	}
+    }
+    saveCapabilitiesEnable() {
+        this.isSaveCapes = true;
+    }
+    saveCapabilities()
+    {
+        let capbilitiesForm = this.capabilitiesForm.value;
+        let mfgForm = capbilitiesForm.mfgForm;
+        let overhaulForm = capbilitiesForm.overhaulForm;
+        let distributionForm = capbilitiesForm.distributionForm;
+        let certificationForm = capbilitiesForm.certificationForm;
+        let repairForm = capbilitiesForm.repairForm;
+        let exchangeForm = capbilitiesForm.exchangeForm;
+        for (let i = 0; i < mfgForm.length; i++) {
+            mfgForm[i].itemMasterId = this.ItemMasterId;
+            this.itemser.saveManfacturerinforcapes(mfgForm[i]).subscribe(data11 => {
+                //this.collectionofItemMaster = data11;
+            })
+        }
+        for (let i = 0; i < overhaulForm.length; i++) {
+            overhaulForm[i].itemMasterId = this.ItemMasterId;
+            this.itemser.saveManfacturerinforcapes(overhaulForm[i]).subscribe(data11 => {
+                //this.collectionofItemMaster = data11;
+            })
+        }
+        for (let i = 0; i < distributionForm.length; i++) {
+            distributionForm[i].itemMasterId = this.ItemMasterId;
+            this.itemser.saveManfacturerinforcapes(distributionForm[i]).subscribe(data11 => {
+                //this.collectionofItemMaster = data11;
+            })
+        }
+        for (let i = 0; i < certificationForm.length; i++) {
+            certificationForm[i].itemMasterId = this.ItemMasterId;
+            this.itemser.saveManfacturerinforcapes(certificationForm[i]).subscribe(data11 => {
+                //this.collectionofItemMaster = data11;
+            })
+        }
+        for (let i = 0; i < repairForm.length; i++) {
+            repairForm[i].itemMasterId = this.ItemMasterId;
+            this.itemser.saveManfacturerinforcapes(repairForm[i]).subscribe(data11 => {
+                //this.collectionofItemMaster = data11;
+            })
+        }
+        for (let i = 0; i < exchangeForm.length; i++) {
+            exchangeForm[i].itemMasterId = this.ItemMasterId;
+            this.itemser.saveManfacturerinforcapes(exchangeForm[i]).subscribe(data11 => {
+                //this.collectionofItemMaster = data11;
+            })
+        }
+    }
 
 	
 }
