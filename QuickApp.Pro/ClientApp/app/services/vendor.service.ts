@@ -461,8 +461,9 @@ export class VendorService {
 	}
 
 	getATASubchapterData(AtaMainId: any)
-	{
-		return this.actionEndpoint.getATASubchapterDataEndpoint<ATASubChapter[]>(AtaMainId);
+    {
+        return Observable.forkJoin( this.actionEndpoint.getATASubchapterDataEndpoint<any>(AtaMainId));
+		//return this.actionEndpoint.getATASubchapterDataEndpoint<ATASubChapter[]>(AtaMainId);
     }
 
     

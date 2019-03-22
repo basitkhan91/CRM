@@ -112,9 +112,13 @@ export class EditVendorCapabilitiesComponent implements OnInit
         this.sourceVendorCap.vendorName = this.vendorService.listCollection.vendorName
         this.sourceVendorCap.vendorRanking = this.vendorService.listCollection.vendorRanking
         this.sourceVendorCap.aTAChapterId = this.vendorService.listCollection.ataChapterId
+        if (this.sourceVendorCap.aTAChapterId)
+        {
+            this.getATASubChapterData(this.sourceVendorCap.aTAChapterId);
+        }
         this.sourceVendorCap.capabilityDescription = this.vendorService.listCollection.capabilityDescription
         this.sourceVendorCap.alternatePartId = this.vendorService.listCollection.alternatePartId
-        this.sourceVendorCap.ataSubchapterId = this.vendorService.listCollection.ataSubchapterId
+        this.sourceVendorCap.aTASubchapterId = this.vendorService.listCollection.ataSubchapterId
         this.sourceVendorCap.manufacturerName = this.vendorService.listCollection.manufacturerName
         this.sourceVendorCap.PMA_DER = this.vendorService.listCollection.pmA_DER
         

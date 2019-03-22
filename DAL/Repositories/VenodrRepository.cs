@@ -368,6 +368,25 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> getVendorCapabilityData(long id)
+        {
+
+            {
+                var data = (from vc in _appContext.ATASubChapter
+                            where vc.ATAChapterId == id
+
+                            select new
+                            {
+                                vc.ATASubChapterCode,
+                                vc.Description,
+                                vc.ATASubChapterId,
+                                vc.ATAChapterId
+
+                            }).ToList();
+                return data;
+            }
+        }
+
         public IEnumerable<object> vendorAircraftManufacturerGet(long id)
         {
 

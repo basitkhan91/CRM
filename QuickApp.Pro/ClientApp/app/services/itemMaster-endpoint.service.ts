@@ -627,7 +627,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
 			});
 	}
 
-	getMultiIntegrations<T>(userObject: any): Observable<T> {
+    getMultiIntegrations<T>(userObject: any): Observable<T>
+    {
 
 
 		return this.http.post<T>(this._multiintegrationsdataUrl, JSON.stringify(userObject), this.getRequestHeaders())

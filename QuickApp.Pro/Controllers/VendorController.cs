@@ -2438,9 +2438,12 @@ namespace QuickApp.Pro.Controllers
         {
             try
             {
-                var result = _unitOfWork.ATASubChapter.GetSingleOrDefault(c => c.ATAChapterId == id);
+                var aircraft = _unitOfWork.Vendor.getVendorCapabilityData(id); //.GetAllCustomersData();
+                return Ok(aircraft);
 
-                return Ok(result);
+               // var result = _unitOfWork.ATASubChapter.GetSingleOrDefault(c => c.ATAChapterId == id);
+
+              //  return Ok(result);
             }
             catch (Exception ex)
             {
@@ -2547,8 +2550,14 @@ namespace QuickApp.Pro.Controllers
         public IActionResult UpdateVendorCapability(long id, [FromBody] VendorCapabiliy vendorCapability)
         {
             var disc = _unitOfWork.VendorCapabilities.GetSingleOrDefault(a => a.VendorCapabilityId == id);
+            //var disc1 = _unitOfWork.VendorCapabilities.GetSingleOrDefault(a => a.VendorCapabilityId == id);
+
+            if (Convert.ToInt32(disc.VendorRanking) != Convert.ToInt32(vendorCapability.VendorRanking))
+            {
+                updateRanking(Convert.ToInt32(disc.VendorRanking));
+            }
             //disk.State = EntityState.Detached;
-            //   var disc = _context.VendorCapabiliy.First(a => a.VendorCapabilityId == id);
+            //var disc = _context.VendorCapabiliy.First(a => a.VendorCapabilityId == id);
             disc.VendorId = vendorCapability.VendorId;
             disc.capabilityDescription = vendorCapability.capabilityDescription;
             disc.VendorRanking = vendorCapability.VendorRanking;
@@ -2564,10 +2573,6 @@ namespace QuickApp.Pro.Controllers
 
             _unitOfWork.Repository<VendorCapabiliy>().Update(disc);
 
-            if (Convert.ToInt32(disc.VendorRanking) != Convert.ToInt32( vendorCapability.VendorRanking))
-            {
-                updateRanking(Convert.ToInt32(disc.VendorRanking));
-            }
             
             //
             _unitOfWork.SaveChanges();
@@ -2646,21 +2651,40 @@ namespace QuickApp.Pro.Controllers
         private void updateRanking(int rankId)
         {
             
-            var vendorCapes = _unitOfWork.Repository<VendorCapabiliy>().GetAll().Where(x => Convert.ToInt32(x.VendorRanking) >= rankId).ToList();
+            var vendorCapes = _unitOfWork.Repository<VendorCapabiliy>().GetAll().Where(x => Convert.ToInt32(x.VendorRanking) >= rankId).OrderBy(x => Convert.ToInt32(x.VendorRanking)).ToList();
 
             if (vendorCapes != null && vendorCapes.Count > 0)
             {
                 var vendorExists = vendorCapes.Any(X => Convert.ToInt32(X.VendorRanking) == rankId);
                 if (vendorExists) {
+                    var currentRank = 0;
+                    var index = 0;
                     foreach (var capes in vendorCapes)
                     {
-                        capes.VendorRanking = (Convert.ToInt32(capes.VendorRanking) + 1).ToString();
-                        _unitOfWork.Repository<VendorCapabiliy>().Update(capes);
+                        if (index < vendorCapes.Count)
+                        {
+                            currentRank = Convert.ToInt32(vendorCapes[0].VendorRanking);
+                            var nextRank = (index + 1 ) <= vendorCapes.Count ? Convert.ToInt32(vendorCapes[index + 1].VendorRanking) : 0;
+                            if ((nextRank - currentRank) == 1)
+                            {
+                                capes.VendorRanking = (Convert.ToInt32(capes.VendorRanking) + 1).ToString();
+                                _unitOfWork.Repository<VendorCapabiliy>().Update(capes);
+
+                            }
+                            else
+                            {
+                                capes.VendorRanking = (Convert.ToInt32(capes.VendorRanking) + 1).ToString();
+                                _unitOfWork.Repository<VendorCapabiliy>().Update(capes);
+                                break;
+                            }
+                            index++;
+                        }
+                      }
                     }
                 }
                 
             }
-        }
+        
 
         #endregion Private Methods
 
