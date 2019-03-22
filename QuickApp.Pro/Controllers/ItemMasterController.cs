@@ -1349,6 +1349,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(allTaxrateInfo);
 
         }
+
+        [HttpGet("capabilityGet/{id}")]
+        public IActionResult capabilityGet(int id)
+        {
+            var capabilityData = _unitOfWork.itemMaster.getCapabilityData(id); //.GetAllCustomersData();
+            return Ok(capabilityData);
+
+        }
     }
 
 

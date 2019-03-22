@@ -463,29 +463,33 @@
 
 									<td><input type="text" class="w100" [(ngModel)]="partList.memo"></td>
 								</tr>
-								<tr class="child-header splitship-head" *ngIf="partList.ifSplitShip" >
-									<th></th>
-									<th></th>
-									<th></th>
-									<th>PN</th>
-									<th>PN Des.</th>
-									<th>User Type</th>
-									<th>Name</th>
-									<th>Select Address</th>
-									<th>UOM</th>
-									<!--<th>Address 1</th>
-									<th>Address 2</th>
-									<th>Address 3</th>
-									<th>City</th>
-									<th>State/Prov</th>
-									<th>Postal Code</th>
-									<th>Country</th>-->
-									<!--<th>Item Type</th>-->
+                                <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>PN</th>
+                                    <th>PN Des.</th>
+                                    <th>User Type</th>
+                                    <th>Name</th>
+                                    <th>Select Address</th>
+                                    <th>UOM</th>
+                                    <!--<th>Address 1</th>
+    <th>Address 2</th>
+    <th>Address 3</th>
+    <th>City</th>
+    <th>State/Prov</th>
+    <th>Postal Code</th>
+    <th>Country</th>-->
+                                    <!--<th>Item Type</th>-->
 
-									<th>Order Qty</th>
-									<th>Need By </th>
-									<th colspan="20"><button type="button" class="btn btn-success btn-xs" (click)="addRow(partList)"><i class="fa fa-plus"></i></button></th>
-								</tr>
+                                    <th>Order Qty</th>
+                                    <th>Need By </th>
+                                    <th>Company </th>
+                                    <th>BU </th>
+                                    <th>Division</th>
+                                    <th>Dept</th>
+                                    <th colspan="20"><button type="button" class="btn btn-success btn-xs" (click)="addRow(partList)"><i class="fa fa-plus"></i></button></th>
+                                </tr>
 								<tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index" [hidden]="!partList.ifSplitShip">
 									<td></td>
 									<td></td>
@@ -553,6 +557,26 @@
 									<td><input type="number" min="1" max="1000" name="" id="" [(ngModel)]="partChildList.quantityOrdered" class="form-control"></td>
 									<!--<td><input type="date" name="" id="dp1547623339385" [(ngModel)]="partChildList.needByDate" class="form-control datepicker hasDatepicker"></td>-->
 									<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partChildList.masterCompanyId)">
+                                            <option *ngFor="let ataName of mainPartcompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.buid1" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partChildList.buid1)">
+                                            <option *ngFor="let ataName of partBulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.depid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionlist(partChildList.depid1)">
+                                            <option *ngFor="let ataName of partDepartmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.divid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionChangeManagementCode(partChildList.divid1)">
+                                            <option *ngFor="let ataName of partDivisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        </select>
+                                    </td>
 									<td colspan="20"><a  (click)="deleteSplitShipment(partChildList,row_no,row_index)"><i class="fa fa-trash"></i></a></td>
 								</tr>
 							</tbody>

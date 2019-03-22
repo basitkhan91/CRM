@@ -442,7 +442,39 @@ namespace DAL.Repositories
                 return data;
             }
         }
+        
 
+            public IEnumerable<object> getCapabilityData(long id)
+        {
+
+            {
+                var data = (from iM in _appContext.Capability
+                            where iM.ItemMasterId == id
+
+                            select new
+                            {
+                                iM.CapabilityId,
+                                iM.CapabilityTypeId,
+                                iM.Description,
+                                iM.AircraftTypeId,
+                                iM.AircraftModelId,
+                                iM.AircraftManufacturer,
+                                iM.ItemMasterId,
+                                iM.IsCMMExist,
+                                iM.IsVerified,
+                                iM.Memo,
+                                iM.ATAChapterId,
+                                iM.ManufacturerId,
+                                iM.CompanyId,
+                                iM.BuisinessUnitId,
+                                iM.DivisionId,
+                                iM.DepartmentId
+
+
+                            }).ToList();
+                return data;
+            }
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

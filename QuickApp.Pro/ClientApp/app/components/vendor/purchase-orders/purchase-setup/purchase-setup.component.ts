@@ -1355,7 +1355,8 @@ export class PurchaseSetupComponent {
 				this.divisionlist = [];
 
 				this.maincompanylist.push(this.allManagemtninfo[i]);
-				this.mainPartcompanylist.push(this.allManagemtninfo[i]);
+                this.mainPartcompanylist.push(this.allManagemtninfo[i]);
+                
 
 				this.sourcePoApproval.buid1 = null;
 				this.partList.buid1 = null;
@@ -1685,7 +1686,11 @@ export class PurchaseSetupComponent {
 			isActive: '',
 			isParent: isParent,
 			partListObj: this.allPartDetails,
-			itemTypeId: ''
+            itemTypeId: '',
+            companyList: [],
+            partBulist: [],
+            partDepartmentList: [],
+            partDivisionlist:[]
 		}
 		if (isParent) {
 			partListObj["childList"] = [];//this.emptyPartListObj(false)

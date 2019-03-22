@@ -26,5 +26,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> aircraftManufacturerData(long id);
 
         IEnumerable<object> getIntegrationData(long id);
+
+        IEnumerable<object> getCapabilityData(long id);
     }
 }

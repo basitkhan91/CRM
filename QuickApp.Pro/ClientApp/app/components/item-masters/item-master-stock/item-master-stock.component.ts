@@ -619,8 +619,45 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         })
     }
 
+    cunstructCapabilities(content)
+    {
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+
+        this.capabilityTypeData.forEach(item => {
+            item.selectedAircraftDataModels = this.allAircraftinfo;
+            item.selectedAircraftModelTypes = this.selectedModels;
+            item.selectedAircraftTypes = this.selectedAircraftTypes;
+            item.selectedAircraftModelTypes.forEach(value => {
+                item.selectedAircraftDataModels.forEach(value2 => {
+                    if (value.aircraftModelId == value2.aircraftModelId) {
+                        item.selectedModel.push(value2);
+                    }
+                })
+            })
+            item.selectedAircraftTypes.forEach(typeVal1 => {
+                this.manufacturerData.forEach(typeVal2 => {
+                    if (typeVal1 == typeVal2.value) {
+                        item.selectedManufacturer.push(typeVal2);
+                    }
+                    
+                })
+            })
+            this.addModels(item);
+            //this.modal = this.modalService.open(content, { size: 'sm' });
+            //this.modal.result.then(() => {
+
+            //    console.log('When user closes');
+            //}, () => { console.log('Backdrop click') })
+        })
+    }
+
     addModels(capData) {
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
+        
         this.resetFormArray(capData);
         capData.selectedManufacturer.forEach(element1 => {
             capbilitiesObj.itemMasterId = this.ItemMasterId;
@@ -1246,19 +1283,24 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 	}
 
-    openModelPopups(capData) {
+    openModelPopups(content) {
 
         //alert(this.itemser.isEditMode);
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
-            if (capData.selectedAircraftTypes.length > 0) {
-                var arr = capData.selectedAircraftTypes;
+            if (this.selectedAircraftTypes.length > 0) {
+                var arr = this.selectedAircraftTypes;
                 var selectedvalues = arr.join(",");
                 this.itemser.getAircraftTypes(selectedvalues).subscribe(
-                    results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),
+                    results => this.onDataLoadaircrafttypeSuccessful(results[0]),
                     error => this.onDataLoadFailed(error)
                 );
+                this.modal = this.modalService.open(content, { size: 'sm' });
+                this.modal.result.then(() => {
+
+                    console.log('When user closes');
+                }, () => { console.log('Backdrop click') })
             }
             else {
                 this.allAircraftinfo = []; //Making empty if selecting is null
@@ -1315,17 +1357,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		}
 
 	}
-    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
+    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[]) //getting Models Based on Manfacturer Selection
     {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        // this.selectedAircraftDataModels = allWorkFlows; //selected Aircraft Models based on Aircraft Data Selection
-        capData.selectedAircraftDataModels = [];
-        allWorkFlows.forEach(element => {
-            capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
-        });
+        //this.dataSource.data = allWorkFlows;cun
+        this.allAircraftinfo = allWorkFlows; //selected Aircraft Models based on Aircraft Data Selection
+        //this.selectedAircraftDataModels = [];
+        //allWorkFlows.forEach(element => {
+        //    capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+        //});
 
 
         //for Open Model for Edit Data
@@ -3751,51 +3793,41 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     saveCapabilitiesEnable() {
         this.isSaveCapes = true;
     }
-    saveCapabilities()
-    {
+    saveCapabilities() {
         let capbilitiesForm = this.capabilitiesForm.value;
+        let capabilityCollection: any = [];
         let mfgForm = capbilitiesForm.mfgForm;
         let overhaulForm = capbilitiesForm.overhaulForm;
         let distributionForm = capbilitiesForm.distributionForm;
         let certificationForm = capbilitiesForm.certificationForm;
         let repairForm = capbilitiesForm.repairForm;
         let exchangeForm = capbilitiesForm.exchangeForm;
-        for (let i = 0; i < mfgForm.length; i++) {
-            mfgForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(mfgForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < overhaulForm.length; i++) {
-            overhaulForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(overhaulForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < distributionForm.length; i++) {
-            distributionForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(distributionForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < certificationForm.length; i++) {
-            certificationForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(certificationForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < repairForm.length; i++) {
-            repairForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(repairForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
-        for (let i = 0; i < exchangeForm.length; i++) {
-            exchangeForm[i].itemMasterId = this.ItemMasterId;
-            this.itemser.saveManfacturerinforcapes(exchangeForm[i]).subscribe(data11 => {
-                //this.collectionofItemMaster = data11;
-            })
-        }
+        mfgForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        overhaulForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        distributionForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        certificationForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        repairForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        exchangeForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+
+        this.itemser.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+            //this.collectionofItemMaster = data11;
+           // this.router.navigateByUrl("/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list");
+            // alert("success");
+        })
+
+    }
     }
 
 	

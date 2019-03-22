@@ -433,7 +433,7 @@
                                     <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
                                         <input class="form-control inline-block" type="checkbox" id="capes-checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="isEnabeCapes">
                                         <i class="fa fa-eye capes-view-btn clr-blue" data-toggle="modal" title="View" *ngIf="isEnabeCapes" (click)="ViewFunction()"></i>
-                                        <i class="fa fa-edit capes-view-btn clr-blue" data-toggle="modal" title="Edit" data-target="#capes-block-edit" (click)="openCapes(contentCapes)" *ngIf="isEnabeCapes"></i>
+                                        <i class="fa fa-edit capes-view-btn clr-blue" data-toggle="modal" title="Edit" data-target="#capes-block-edit" (click)="cunstructCapabilities(contentCapes)" *ngIf="isEnabeCapes"></i>
                                     </div>
                                 </div>
                                 <!--<div class="form-group col-sm-12">

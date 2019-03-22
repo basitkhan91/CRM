@@ -46,6 +46,7 @@ export class ItemMasterService {
     public stockable = new Subject<any>();
     public stockableObjChangeObject$ = this.stockable.asObservable();
     isCapsEditMode: boolean;
+    capabilityCollection: any;
     constructor(
         private router: Router,
         private http: HttpClient,
@@ -219,7 +220,11 @@ export class ItemMasterService {
 	}
 	Addmultileaves(action: any) {
 		return this.itemMasterEndpoint.getMultileaves<any>(action);
-	}
+    }
+
+    getCapabilityData(itemMasterId?: number) {
+        return this.itemMasterEndpoint.getCapabilityDataEndpoint<any>(itemMasterId);
+    }
 
 }
 

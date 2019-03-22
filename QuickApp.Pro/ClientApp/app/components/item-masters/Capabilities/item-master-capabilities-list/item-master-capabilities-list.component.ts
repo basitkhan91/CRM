@@ -42,6 +42,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     isSaving: boolean;
     allItemMasterCapsList: any[] = [];
     selectedColumn: any;
+    getSelectedCollection: any;
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService)
     {
@@ -150,12 +151,21 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    openEdits(row)
+
+    openEdits(row) //this is for Edit Data get
     {
         this.itemMasterService.isCapsEditMode = true;
         this.isSaving = true;
         this.itemMasterService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
-        this._route.navigateByUrl('/vendorsmodule/vendorpages/app-edit-vendor-capabilities');
+
+        this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
+            this.getSelectedCollection = data;
+            this.itemMasterService.capabilityCollection = this.getSelectedCollection;
+
+        });
+       
+
+        this._route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities');
     }
 
     private saveCompleted(user?: any)

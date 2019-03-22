@@ -57,9 +57,16 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     selectedModel: any = [];//To Store selected Aircraft Modal Data
     // itemMasterCreateCapabilitiesModel = new ItemMasterCapabilitiesModel()
     capabilitiesForm: FormGroup;
+    capabilityEditCollection: any;
     constructor(public ataservice: AtaMainService, public workFlowtService1: LegalEntityService, private modalService: NgbModal, private alertService: AlertService, public itemser: ItemMasterService,
-        private formBuilder: FormBuilder,private router: Router) {
+        private formBuilder: FormBuilder, private router: Router)
+    {
         //this.dataSource = new MatTableDataSource();
+
+        if (this.itemser.capabilityCollection)
+        {
+            this.capabilityEditCollection = this.itemser.capabilityCollection;
+        }
     }
 
     capabilityTypeData: any = [{ CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedAircraftDataModels : [],
@@ -541,7 +548,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
             })
         })
     }
-    addModels(capData) {
+    addModels(capData)
+    {
+    this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
         this.resetFormArray(capData);
         capData.selectedManufacturer.forEach(element1 => {

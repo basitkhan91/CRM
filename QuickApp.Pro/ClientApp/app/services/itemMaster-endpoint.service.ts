@@ -44,7 +44,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
 	private readonly _getIntegrationUrl: string = "/api/ItemMaster/IntegrationGet";
 	private readonly _ItemMasterAircraftdataUrl: string = "/api/ItemMaster/saveItemmasteraircraftdata";
 	private readonly _multiintegrationsdataUrl: string = "/api/ItemMaster/savemultiIntegrations";
-	private readonly _multiintegrationurl: string = "/api/ItemMaster/savemultiintegrationTypes";
+    private readonly _multiintegrationurl: string = "/api/ItemMaster/savemultiintegrationTypes";
+    private readonly _getCapabilityUrl: string = "/api/ItemMaster/capabilityGet";
 
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -65,7 +66,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get liststockUrl() { return this.configurations.baseUrl + this._liststockUrl; }
     get listeqpmntUrl() { return this.configurations.baseUrl + this._listeqpmntUrl; }
 	get listsUrl() { return this.configurations.baseUrl + this._listsUrl; }
-	get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
+    get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
+    get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -653,5 +655,15 @@ export class ItemMasterEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getMultileaves(userObject));
 			});
-	}
+    }
+
+   
+
+    getCapabilityDataEndpoint<T>(ItemMasterId: any): Observable<T> {
+        let url = `${this.getCapabilityUrl}/${ItemMasterId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCapabilityDataEndpoint(ItemMasterId));
+            });
+    }
 }
