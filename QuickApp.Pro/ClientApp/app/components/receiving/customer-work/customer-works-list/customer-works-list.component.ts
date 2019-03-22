@@ -130,22 +130,14 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     openEdits(row) {
         //  debugger
         this.receivingCustomerWorkService.isEditMode = true;
+        
         //this.sourcereceving = row;
         this.isSaving = true;
         this.receivingCustomerWorkService.listCollection = row;
         //this.receivingCustomerWorkService.listCollection = this.sourcereceving;
         this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-work-setup');
     }
-    openDelete(content, row) {
-
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.sourcereceving = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+  
     openView(content, row) {
 
         this.sourceAction = row;
@@ -241,22 +233,35 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
-    //deleteItemAndCloseModel() {
+  
+    //deleteItemAndCloseModel(row) {
     //    this.isSaving = true;
-    //    this.sourcereceving.updatedBy = this.userName;
-    //    this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
-    //        response => this.saveCompleted(this.sourcereceving),
-    //        error => this.saveFailedHelper(error));
-    //    this.modal.close();
+    //    this.isDeleteMode = true;
+    //    this.sourcereceving = row.receivingCustomerWorkId;
+    //    this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(data => { this.loadData(); })
+    
     //}
-
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.isDeleteMode = true;
-        //this.sourcereceving.receivingCustomerWorkId = rowData.receivingCustomerWorkId;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving).subscribe(data => { this.loadData(); })
-       // this.modal.close();
+        this.sourcereceving.isdelete = false;
+        this.sourcereceving.updatedBy = this.userName;
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+            response => this.saveCompleted(this.sourcereceving),
+            error => this.saveFailedHelper(error));
+        this.modal.close();
+    }
+
+    openDelete(content, row) {
+
+        this.isEditMode = false;
+        this.isDeleteMode = true;
+        this.sourcereceving = row;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
     dismissModel() {
         this.isDeleteMode = false;

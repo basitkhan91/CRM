@@ -106,6 +106,7 @@ export class CustomerWorkSetupComponent {
     showOther2: boolean;
     showVendor2: boolean;
     showCompany2: boolean;
+    obtainFrom: string;
 	ngOnInit(): void {
 		this.sourcereceving.isCustomerStock = true;
 
@@ -369,36 +370,48 @@ export class CustomerWorkSetupComponent {
                 }
             }
 
+            //else {
+
+            //this.sourcereceving.updatedBy = this.userName;
+            //this.sourcereceving.createdBy = this.userName;
+            //this.sourcereceving.masterCompanyId = 1;
+            //if (this.sourcereceving.isTimeLife == null || this.sourcereceving.isTimeLife == false) {
+            //    this.sourcereceving.timeLifeDate = '';
+            //    this.sourcereceving.timeLifeOrigin = '';
+            //}
+            //this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+            //    response => this.saveCompleted(this.sourcereceving),
+            //    error => this.saveFailedHelper(error));
+            //if (this.sourcereceving.timeLifeCyclesId) {
+            //    console.log("Update Timelife");
+
+            //}
+
             else {
-
-                this.sourcereceving.updatedBy = this.userName;
-                this.sourcereceving.createdBy = this.userName;
-                this.sourcereceving.masterCompanyId = 1;
-                if (this.sourcereceving.isTimeLife == null || this.sourcereceving.isTimeLife == false) {
-                    this.sourcereceving.timeLifeDate = '';
-                    this.sourcereceving.timeLifeOrigin = '';
-                }
-                this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-                    response => this.saveCompleted(this.sourcereceving),
-                    error => this.saveFailedHelper(error));
-                if (this.sourcereceving.timeLifeCyclesId) {
-                    console.log("Update Timelife");
-                    this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
+                if ((this.sourcereceving.isTimeLife) && (this.sourcereceving.timeLifeCyclesId == null || this.sourcereceving.timeLifeCyclesId == undefined)) {
+                    this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
+                        this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
+                        this.value = 1;
+                        if (data != null) {
 
+                            this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+                                response => this.saveCompleted(this.sourcereceving),
+                                error => this.saveFailedHelper(error));
+                        }
                     })
                 }
                 else {
                     this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                         response => this.saveCompleted(this.sourcereceving),
                         error => this.saveFailedHelper(error));
-                    this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
+                    this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
-                        this.value = 1;
-
-
                     })
                 }
+
+                //    }
+                //}
             }
         }
     }
@@ -952,6 +965,7 @@ export class CustomerWorkSetupComponent {
         }
         if (value == 2) {
             this.showCustomer1 = false;
+            this.obtainFrom = '';
             this.showOther1 = true;
             this.showVendor1 = false;
             this.showCompany1 = false;

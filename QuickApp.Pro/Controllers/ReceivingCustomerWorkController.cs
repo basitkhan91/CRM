@@ -240,7 +240,8 @@ namespace QuickApp.Pro.Controllers
         [HttpPut("UpdatereceivingCustomerWork")]
         public IActionResult updatereceivingcustomer([FromBody] ReceivingCustomerWork rcwork)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
+                rcwork.MasterCompanyId = 1;
             _unitOfWork.Repository<ReceivingCustomerWork>().Update(rcwork);
             _unitOfWork.SaveChanges();
             return Ok();
@@ -289,14 +290,30 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(c => c.ReceivingCustomerWorkId == id);
-            var existingResultofstocklineList = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(c => c.ReceivingCustomerWorkId == id);
-            _unitOfWork.receivingCustomerWork.Remove(existingResultofstocklineList);
-            _unitOfWork.SaveChanges();
             _unitOfWork.receivingCustomerWork.Remove(existingResult);
             _unitOfWork.SaveChanges();
 
             return Ok(id);
         }
+
+        //[HttpPut("deletereceivingCustomerWork/{id}")]
+        //public IActionResult DeleteCustomerWork(long id, [FromBody]ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var CustomerObj = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(a => a.ReceivingCustomerWorkId == id);
+        //        receivingCustomerWorkViewModel.MasterCompanyId = 1;
+        //        CustomerObj.IsDelete = receivingCustomerWorkViewModel.IsDelete;
+        //        CustomerObj.UpdatedDate = DateTime.Now;
+        //        CustomerObj.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
+        //        CustomerObj.ReceivingCustomerWorkId = receivingCustomerWorkViewModel.ReceivingCustomerWorkId;
+        //        _unitOfWork.receivingCustomerWork.Update(CustomerObj);
+        //        _unitOfWork.SaveChanges();
+        //        return Ok(CustomerObj);
+        //    }
+
+        //    return Ok(ModelState);
+        //}
 
 
         [HttpPut("timeLifeUpdate")]
