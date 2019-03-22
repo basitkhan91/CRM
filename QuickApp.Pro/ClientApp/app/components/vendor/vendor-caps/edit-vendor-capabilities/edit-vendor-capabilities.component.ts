@@ -31,7 +31,7 @@ export class EditVendorCapabilitiesComponent implements OnInit
 
     matSpinner: boolean;
     loadingIndicator: boolean;
-
+    enablePlus: boolean = false;
     allATAMaininfo1: ATAMain[];
     allATAMaininfo: ATAChapter[];
     itemclaColl: any[];

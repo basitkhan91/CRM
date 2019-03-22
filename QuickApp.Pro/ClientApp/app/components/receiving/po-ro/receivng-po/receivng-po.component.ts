@@ -32,6 +32,11 @@ import { StocklineService } from '../../../../services/stockline.service';
 })
 /** purchase-setup component*/
 export class ReceivngPoComponent {
+    hasSerialized: boolean;
+    showNormalQuantity: boolean;
+    showFreeQuantity: boolean;
+    showRestrictQuantity: boolean;
+    hideSerialNumber: boolean;
     collectionofstockLine: any;
     stocklineListObj: any[]=[];
     allCustomer: any[];
@@ -426,6 +431,7 @@ export class ReceivngPoComponent {
             shelflist: this.allShelfs,
             binList: this.allBins,
             manfacturerList: this.allManufacturerInfo,
+            timeLifeCyclesId:''
 
         };
         return stockLineDefObj;
@@ -451,6 +457,24 @@ export class ReceivngPoComponent {
         this.itemser.getDescriptionbypart(partList.partNumber).subscribe((data:any) => {
             partList["isSerialized"] = data[0][0].isSerialized;
             partList["isTimeLife"] = data[0][0].isTimeLife;
+            if (partList["isSerialized"] == true) {
+                this.hideSerialNumber = true;
+                this.showRestrictQuantity = true;
+                this.showFreeQuantity = false;
+                this.showNormalQuantity = false;
+
+                this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
+
+            }
+            else {
+                this.hideSerialNumber = false;
+                this.showRestrictQuantity = false;
+                this.showFreeQuantity = true;
+                this.showNormalQuantity = false;
+
+                this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
+
+            }
            
         })
         for (let i = 0; i < partList.quantityOrdered; i++) {
@@ -462,26 +486,53 @@ export class ReceivngPoComponent {
        
     }
     saveStockline(partList) {
-        debugger;
-        for (let i = 0; i < partList["stocklineListObj"].length; i++) {
-            delete partList["stocklineListObj"][i].conditionList;
-            delete partList["stocklineListObj"][i].manfacturerList;
-            delete partList["stocklineListObj"][i].siteList;
-            partList["stocklineListObj"][i].itemMasterId = partList["itemMasterId"];
-            partList["stocklineListObj"][i].purchaseOrderId = partList["purchaseOrderId"];
-            partList["stocklineListObj"][i].partNumber = partList["partNumber"];
-            this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
-                this.collectionofstockLine = data;
+        //debugger;
+        if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
+            this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
+                //this.collectionofstockLineTimeLife = data;
+                this.sourceStockLineSetup.timeLifeCyclesId = data.timeLifeCyclesId;
+                if (data != null) {
+                    for (let i = 0; i < partList["stocklineListObj"].length; i++) {
+                        delete partList["stocklineListObj"][i].conditionList;
+                        delete partList["stocklineListObj"][i].manfacturerList;
+                        delete partList["stocklineListObj"][i].siteList;
+                        partList["stocklineListObj"][i].itemMasterId = partList["itemMasterId"];
+                        partList["stocklineListObj"][i].purchaseOrderId = partList["purchaseOrderId"];
+                        partList["stocklineListObj"][i].partNumber = partList["partNumber"];
+                        partList["stocklineListObj"][i].timeLifeCyclesId == this.sourceStockLineSetup.timeLifeCyclesId;
+                        this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
+                            this.collectionofstockLine = data;
+                        })
+                    }
+                }
             })
+        }
+        else {
+            for (let i = 0; i < partList["stocklineListObj"].length; i++) {
+                delete partList["stocklineListObj"][i].conditionList;
+                delete partList["stocklineListObj"][i].manfacturerList;
+                delete partList["stocklineListObj"][i].siteList;
+                partList["stocklineListObj"][i].itemMasterId = partList["itemMasterId"];
+                partList["stocklineListObj"][i].purchaseOrderId = partList["purchaseOrderId"];
+                partList["stocklineListObj"][i].partNumber = partList["partNumber"];
+               this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
+                    this.collectionofstockLine = data;
+                })
+            }
+
         }
     }
     sameDetailsforAllParts(partList) {
+        //debugger;
         let orderQuantity = 1;
+        let someArray = [];
+        someArray = partList["stocklineListObj"][0];
         partList["stocklineListObj"] = [];
-        for (let i = 0; i < orderQuantity; i++) {
+        partList["stocklineListObj"].push(someArray);
+        //for (let i = 0; i < orderQuantity; i++) {
 
-            partList["stocklineListObj"].push(this.loadDefualtObj());
-        }
+        //    partList["stocklineListObj"].push(this.loadDefualtObj());
+        //}
     }
     getAllparts() {
         //debugger;
