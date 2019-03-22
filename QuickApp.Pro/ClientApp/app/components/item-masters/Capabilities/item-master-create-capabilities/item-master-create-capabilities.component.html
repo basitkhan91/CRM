@@ -55,8 +55,8 @@
 								<th>Capability Types</th>
 								<th>Company</th>
 								<th>BU</th>
-								<th>Division</th>
 								<th>Dep</th>
+								<th>Division</th>
 								<th>Manufacturer</th>
 								<th>Aircraft Manufacturer</th>
 								<th>Model</th>
@@ -98,9 +98,8 @@
 										</p-multiSelect>
 									</div>
 								</td>
-								<td><a class="btn btn-warning" data-toggle="tooltip" title=""
-										data-original-title="Add Models" (click)="addModels(cap)"><i
-											class="fa fa-plus clr-white"></i></a></td>
+								<td [matTooltip]="addBtnTitle(cap)"><button class="btn btn-warning"  (click)="addModels(cap)" [disabled]="disableAddButton(cap)"><i
+											class="fa fa-plus clr-white"></i></button></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -116,31 +115,31 @@
 								<tr *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
 									<td></td>
 									<td>
-										<select formControlName="companyId"
-											(change)="getBUList(mfgFormArray.controls[i].controls['companyId'].value)">
+										<select formControlName="companyId" [ngClass]="validateForm(mfgFormArray.controls[i],'companyId')"
+											(change)="getBUList(mfgFormArray.controls[i].controls['companyId'].value,mfgFormArray.controls[i])">
 											<option *ngFor="let ataName of maincompanylist"
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="buisinessUnitId"
-											(change)="getDepartmentlist(mfgFormArray.controls[i].controls['buisinessUnitId'].value)">
-											<option *ngFor="let ataName of bulist"
+										<select formControlName="buisinessUnitId" [ngClass]="validateForm(mfgFormArray.controls[i],'buisinessUnitId')"
+											(change)="getDepartmentlist(mfgFormArray.controls[i].controls['buisinessUnitId'].value, mfgFormArray.controls[i])">
+											<option *ngFor="let ataName of mfgFormArray.controls[i].buList"
 												[ngValue]="ataName.managementStructureId">
 												{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="departmentId"
-											(change)="getDivisionlist(mfgFormArray.controls[i].controls['departmentId'].value)">
-											<option *ngFor="let ataName of departmentList "
+										<select formControlName="departmentId" [ngClass]="validateForm(mfgFormArray.controls[i],'departmentId')"
+											(change)="getDivisionlist(mfgFormArray.controls[i].controls['departmentId'].value, mfgFormArray.controls[i])">
+											<option *ngFor="let ataName of  mfgFormArray.controls[i].departmentList "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="divisionId"
-											(change)="getDivisionChangeManagementCode(mfgFormArray.controls[i].controls['divisionId'].value)">
-											<option *ngFor="let ataName of divisionlist "
+										<select formControlName="divisionId" [ngClass]="validateForm(mfgFormArray.controls[i],'divisionId')"
+											>
+											<option *ngFor="let ataName of mfgFormArray.controls[i].divisionlist "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
@@ -206,31 +205,31 @@
 								<tr *ngFor="let item of overhaulFormArray.controls;let j=index" [formGroupName]="j">
 									<td></td>
 									<td>
-										<select formControlName="companyId"
-											(change)="getBUList(overhaulFormArray.controls[j].controls['companyId'].value)">
+										<select formControlName="companyId" [ngClass]="validateForm(overhaulFormArray.controls[j],'companyId')"
+											(change)="getBUList(overhaulFormArray.controls[j].controls['companyId'].value,overhaulFormArray.controls[j])">
 											<option *ngFor="let ataName of maincompanylist"
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="buisinessUnitId"
-											(change)="getDepartmentlist(overhaulFormArray.controls[j].controls['buisinessUnitId'].value)">
-											<option *ngFor="let ataName of bulist"
+										<select formControlName="buisinessUnitId"  [ngClass]="validateForm(overhaulFormArray.controls[j],'buisinessUnitId')"
+											(change)="getDepartmentlist(overhaulFormArray.controls[j].controls['buisinessUnitId'].value,overhaulFormArray.controls[j])">
+											<option *ngFor="let ataName of overhaulFormArray.controls[j].buList"
 												[ngValue]="ataName.managementStructureId">
 												{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="departmentId"
-											(change)="getDivisionlist(overhaulFormArray.controls[j].controls['departmentId'].value)">
-											<option *ngFor="let ataName of departmentList "
+										<select formControlName="departmentId" [ngClass]="validateForm(overhaulFormArray.controls[j],'departmentId')"
+											(change)="getDivisionlist(overhaulFormArray.controls[j].controls['departmentId'].value,overhaulFormArray.controls[j])">
+											<option *ngFor="let ataName of overhaulFormArray.controls[j].departmentList "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="divisionId"
-											(change)="getDivisionChangeManagementCode(overhaulFormArray.controls[j].controls['divisionId'].value)">
-											<option *ngFor="let ataName of divisionlist "
+										<select formControlName="divisionId"  [ngClass]="validateForm(overhaulFormArray.controls[j],'divisionId')"
+											>
+											<option *ngFor="let ataName of overhaulFormArray.controls[j].divisionlist "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
@@ -298,31 +297,30 @@
 								<tr *ngFor="let item of distributionFormArray.controls;let k=index" [formGroupName]="k">
 									<td></td>
 									<td>
-										<select formControlName="companyId"
-											(change)="getBUList(distributionFormArray.controls[k].controls['companyId'].value)">
+										<select formControlName="companyId" [ngClass]="validateForm(distributionFormArray.controls[k],'companyId')"
+											(change)="getBUList(distributionFormArray.controls[k].controls['companyId'].value,distributionFormArray.controls[k])">
 											<option *ngFor="let ataName of maincompanylist"
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="buisinessUnitId"
-											(change)="getDepartmentlist(distributionFormArray.controls[k].controls['buisinessUnitId'].value)">
-											<option *ngFor="let ataName of bulist"
+										<select formControlName="buisinessUnitId" [ngClass]="validateForm(distributionFormArray.controls[k],'buisinessUnitId')"
+											(change)="getDepartmentlist(distributionFormArray.controls[k].controls['buisinessUnitId'].value,distributionFormArray.controls[k])">
+											<option *ngFor="let ataName of distributionFormArray.controls[k].buList"
 												[ngValue]="ataName.managementStructureId">
 												{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="departmentId"
-											(change)="getDivisionlist(distributionFormArray.controls[k].controls['departmentId'].value)">
-											<option *ngFor="let ataName of departmentList "
+										<select formControlName="departmentId" [ngClass]="validateForm(distributionFormArray.controls[k],'departmentId')"
+											(change)="getDivisionlist(distributionFormArray.controls[k].controls['departmentId'].value,distributionFormArray.controls[k])">
+											<option *ngFor="let ataName of distributionFormArray.controls[k].departmentList "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select formControlName="divisionId"
-											(change)="getDivisionChangeManagementCode(distributionFormArray.controls[k].controls['divisionId'].value)">
-											<option *ngFor="let ataName of divisionlist "
+										<select formControlName="divisionId"  [ngClass]="validateForm(distributionFormArray.controls[k],'divisionId')">
+											<option *ngFor="let ataName of distributionFormArray.controls[k].divisionlist "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
 									</td>
@@ -385,34 +383,33 @@
 
 							<!-- certificationForm Start *ngIf="cap.formArrayName == 'certificationForm'" -->
 							<ng-container *ngIf="cap.formArrayName == 'certificationForm'">
-									<tr *ngFor="let item of certificationFormArray.controls;let k=index" [formGroupName]="k">
+									<tr *ngFor="let item of certificationFormArray.controls;let l=index" [formGroupName]="l">
 										<td></td>
 										<td>
-											<select formControlName="companyId"
-												(change)="getBUList(certificationFormArray.controls[k].controls['companyId'].value)">
+											<select formControlName="companyId" [ngClass]="validateForm(certificationFormArray.controls[l],'companyId')"
+												(change)="getBUList(certificationFormArray.controls[l].controls['companyId'].value,certificationFormArray.controls[l])">
 												<option *ngFor="let ataName of maincompanylist"
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="buisinessUnitId"
-												(change)="getDepartmentlist(certificationFormArray.controls[k].controls['buisinessUnitId'].value)">
-												<option *ngFor="let ataName of bulist"
+											<select formControlName="buisinessUnitId" [ngClass]="validateForm(certificationFormArray.controls[l],'buisinessUnitId')"
+												(change)="getDepartmentlist(certificationFormArray.controls[l].controls['buisinessUnitId'].value,certificationFormArray.controls[l])">
+												<option *ngFor="let ataName of certificationFormArray.controls[l].buList"
 													[ngValue]="ataName.managementStructureId">
 													{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="departmentId"
-												(change)="getDivisionlist(certificationFormArray.controls[k].controls['departmentId'].value)">
-												<option *ngFor="let ataName of departmentList "
+											<select formControlName="departmentId" [ngClass]="validateForm(certificationFormArray.controls[l],'departmentId')"
+												(change)="getDivisionlist(certificationFormArray.controls[l].controls['departmentId'].value,certificationFormArray.controls[l])">
+												<option *ngFor="let ataName of certificationFormArray.controls[l].departmentList "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="divisionId"
-												(change)="getDivisionChangeManagementCode(certificationFormArray.controls[k].controls['divisionId'].value)">
-												<option *ngFor="let ataName of divisionlist "
+											<select formControlName="divisionId" [ngClass]="validateForm(certificationFormArray.controls[l],'divisionId')">
+												<option *ngFor="let ataName of certificationFormArray.controls[l].divisionlist "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
@@ -422,7 +419,7 @@
 													<option *ngFor="let name of allManufacturerInfo"
 														[ngValue]="name.manufacturerId">{{name.name}}</option>
 												</select>
-												<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
+												<!-- <a href="manufacturer.html" target="_blanl" class="add-icon"><i
 														class="fa fa-plus"></i></a> -->
 											</div>
 										</td>
@@ -476,34 +473,33 @@
 
 								<!-- repairForm Start *ngIf="cap.formArrayName == 'repairForm'" -->
 							<ng-container *ngIf="cap.formArrayName == 'repairForm'">
-									<tr *ngFor="let item of repairFormArray.controls;let k=index" [formGroupName]="k">
+									<tr *ngFor="let item of repairFormArray.controls;let m=index" [formGroupName]="m">
 										<td></td>
 										<td>
-											<select formControlName="companyId"
-												(change)="getBUList(repairFormArray.controls[k].controls['companyId'].value)">
+											<select formControlName="companyId"  [ngClass]="validateForm(repairFormArray.controls[m],'companyId')"
+												(change)="getBUList(repairFormArray.controls[m].controls['companyId'].value,repairFormArray.controls[m])">
 												<option *ngFor="let ataName of maincompanylist"
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="buisinessUnitId"
-												(change)="getDepartmentlist(repairFormArray.controls[k].controls['buisinessUnitId'].value)">
-												<option *ngFor="let ataName of bulist"
+											<select formControlName="buisinessUnitId" [ngClass]="validateForm(repairFormArray.controls[m],'buisinessUnitId')"
+												(change)="getDepartmentlist(repairFormArray.controls[m].controls['buisinessUnitId'].value,repairFormArray.controls[m])">
+												<option *ngFor="let ataName of repairFormArray.controls[m].buList"
 													[ngValue]="ataName.managementStructureId">
 													{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="departmentId"
-												(change)="getDivisionlist(repairFormArray.controls[k].controls['departmentId'].value)">
-												<option *ngFor="let ataName of departmentList "
+											<select formControlName="departmentId" [ngClass]="validateForm(repairFormArray.controls[m],'departmentId')"
+												(change)="getDivisionlist(repairFormArray.controls[m].controls['departmentId'].value,repairFormArray.controls[m])">
+												<option *ngFor="let ataName of repairFormArray.controls[m].departmentList "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="divisionId"
-												(change)="getDivisionChangeManagementCode(repairFormArray.controls[k].controls['divisionId'].value)">
-												<option *ngFor="let ataName of divisionlist "
+											<select formControlName="divisionId" [ngClass]="validateForm(repairFormArray.controls[m],'divisionId')">
+												<option *ngFor="let ataName of repairFormArray.controls[m].divisionlist "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
@@ -567,34 +563,34 @@
 
 								<!-- exchangeForm Start *ngIf="cap.formArrayName == 'exchangeForm'" -->
 							<ng-container *ngIf="cap.formArrayName == 'exchangeForm'">
-									<tr *ngFor="let item of exchangeFormArray.controls;let k=index" [formGroupName]="k">
+									<tr *ngFor="let item of exchangeFormArray.controls;let n=index" [formGroupName]="n">
 										<td></td>
 										<td>
-											<select formControlName="companyId"
-												(change)="getBUList(exchangeFormArray.controls[k].controls['companyId'].value)">
+											<select formControlName="companyId"  [ngClass]="validateForm(exchangeFormArray.controls[n],'companyId')"
+												(change)="getBUList(exchangeFormArray.controls[n].controls['companyId'].value,exchangeFormArray.controls[n])">
 												<option *ngFor="let ataName of maincompanylist"
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="buisinessUnitId"
-												(change)="getDepartmentlist(exchangeFormArray.controls[k].controls['buisinessUnitId'].value)">
-												<option *ngFor="let ataName of bulist"
+											<select formControlName="buisinessUnitId" [ngClass]="validateForm(exchangeFormArray.controls[n],'buisinessUnitId')"
+												(change)="getDepartmentlist(exchangeFormArray.controls[n].controls['buisinessUnitId'].value,exchangeFormArray.controls[n])">
+												<option *ngFor="let ataName of exchangeFormArray.controls[n].buList"
 													[ngValue]="ataName.managementStructureId">
 													{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="departmentId"
-												(change)="getDivisionlist(exchangeFormArray.controls[k].controls['departmentId'].value)">
-												<option *ngFor="let ataName of departmentList "
+											<select formControlName="departmentId" [ngClass]="validateForm(exchangeFormArray.controls[n],'departmentId')"
+												(change)="getDivisionlist(exchangeFormArray.controls[n].controls['departmentId'].value,exchangeFormArray.controls[n])">
+												<option *ngFor="let ataName of exchangeFormArray.controls[n].departmentList"
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
 										<td>
-											<select formControlName="divisionId"
-												(change)="getDivisionChangeManagementCode(exchangeFormArray.controls[k].controls['divisionId'].value)">
-												<option *ngFor="let ataName of divisionlist "
+											<select formControlName="divisionId"  [ngClass]="validateForm(exchangeFormArray.controls[n],'divisionId')"
+												(change)="getDivisionChangeManagementCode(exchangeFormArray.controls[n].controls['divisionId'].value)">
+												<option *ngFor="let ataName of exchangeFormArray.controls[n].divisionlist "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</td>
@@ -1075,7 +1071,7 @@
 		</div>
 		<div class="clear"></div>
 		<hr>
-		<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCapabilities()">Save</button>
+		<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCapabilities()" [disabled]="disableSaveBtn()">Save</button>
 		<div class="clear"></div>
 	</div>
 	<div class="pull-right"> © 2019 <a href="#">PAS</a> </div>
