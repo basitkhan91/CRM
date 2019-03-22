@@ -29,6 +29,7 @@ import { BinService } from '../../../../services/bin.service';
 import { SiteService } from '../../../../services/site.service';
 import { Site } from '../../../../models/site.model';
 import { LegalEntityService } from '../../../../services/legalentity.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -127,7 +128,7 @@ export class CustomerWorkSetupComponent {
 
 	}
 
-    constructor(public workFlowtService: CustomerService,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
+    constructor(private _route: Router,public workFlowtService: CustomerService,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
         this.dataSource = new MatTableDataSource();
         if (this.receivingCustomerWorkService.isEditMode == false) {
             this.receivingCustomerWorkService.listCollection = {};
@@ -367,6 +368,8 @@ export class CustomerWorkSetupComponent {
                             role => this.saveSuccessHelper(role),
                             error => this.saveFailedHelper(error));
                     }
+                    this.sourcereceving = {};
+                    this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
                 }
             }
 
@@ -392,6 +395,9 @@ export class CustomerWorkSetupComponent {
                         this.collectionofstockLine = data;
                     })
                 }
+
+                this.sourcereceving = {};
+                this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
             }
         }
     }
