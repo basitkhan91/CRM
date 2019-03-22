@@ -129,7 +129,9 @@ export class CustomerWorkSetupComponent {
 
     constructor(public workFlowtService: CustomerService,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
         this.dataSource = new MatTableDataSource();
-
+        if (this.receivingCustomerWorkService.isEditMode == false) {
+            this.receivingCustomerWorkService.listCollection = {};
+        }
         if (this.receivingCustomerWorkService.listCollection && this.receivingCustomerWorkService.isEditMode == true) {
             
             this.showLable = true;
@@ -357,9 +359,7 @@ export class CustomerWorkSetupComponent {
                                 role => this.saveSuccessHelper(role),
                                 error => this.saveFailedHelper(error));
                             this.sourcereceving = {};
-                        }
-
-                        )
+                        })
                     }
 
                     else {
@@ -370,31 +370,14 @@ export class CustomerWorkSetupComponent {
                 }
             }
 
-            //else {
-
-            //this.sourcereceving.updatedBy = this.userName;
-            //this.sourcereceving.createdBy = this.userName;
-            //this.sourcereceving.masterCompanyId = 1;
-            //if (this.sourcereceving.isTimeLife == null || this.sourcereceving.isTimeLife == false) {
-            //    this.sourcereceving.timeLifeDate = '';
-            //    this.sourcereceving.timeLifeOrigin = '';
-            //}
-            //this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-            //    response => this.saveCompleted(this.sourcereceving),
-            //    error => this.saveFailedHelper(error));
-            //if (this.sourcereceving.timeLifeCyclesId) {
-            //    console.log("Update Timelife");
-
-            //}
-
             else {
                 if ((this.sourcereceving.isTimeLife) && (this.sourcereceving.timeLifeCyclesId == null || this.sourcereceving.timeLifeCyclesId == undefined)) {
+                 
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
                         this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
                         this.value = 1;
                         if (data != null) {
-
                             this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                                 response => this.saveCompleted(this.sourcereceving),
                                 error => this.saveFailedHelper(error));
@@ -409,9 +392,6 @@ export class CustomerWorkSetupComponent {
                         this.collectionofstockLine = data;
                     })
                 }
-
-                //    }
-                //}
             }
         }
     }
@@ -672,6 +652,7 @@ export class CustomerWorkSetupComponent {
 			this.showRestrictQuantity = true;
 			this.showFreeQuantity = false;
             this.showNormalQuantity = false; 
+            this.sourcereceving.expirationDate = allWorkFlows[0].expirationDate;
 		}
 		else {
 			this.showRestrictQuantity = false;
@@ -682,24 +663,17 @@ export class CustomerWorkSetupComponent {
             this.sourcereceving.tagDate = '';
             this.sourcereceving.tagType = '';
             this.sourcereceving.partCertificationNumber = '';
+            this.sourcereceving.expirationDate = '';
         }
-
-        if (this.sourceTimeLife.timeLife == true) {
-            this.sourceTimeLife.timeLife = true;
-        }
-
-        else {
-            this.sourceTimeLife.timeLife = false;
-         
-        }
-
-
+        
         if (this.sourcereceving.isTimeLife == true) {
-           
+            this.sourcereceving.isTimeLife = true;
+            this.sourcereceving.timeLifeDate = '';
+            this.sourcereceving.timeLifeOrigin = '';
         }
         else {
-            this.sourceTimeLife.timeLifeDate = '';
-            this.sourceTimeLife.timeLifeOrigin = '';
+            this.sourcereceving.isTimeLife == false;
+            this.sourcereceving.timeLifeCyclesId = '';
         }
 
         if (allWorkFlows[0].isTimeLife == null) {

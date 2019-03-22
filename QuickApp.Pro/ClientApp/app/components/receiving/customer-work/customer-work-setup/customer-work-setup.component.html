@@ -74,7 +74,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact</label>
                                        
-                                            <p-autoComplete [(ngModel)]="sourcereceving.firstNames" [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                            <p-autoComplete [(ngModel)]="sourcereceving.customerContactName" [ngModelOptions]="{standalone: true}" (onSelect)="customerContactId($event)" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
                                                             [minLength]="1" [dropdown]="true">
                                                 <ng-template let-firstNames pTemplate="item">
                                                     <div class="ui-helper-clearfix">{{firstNames}}</div>
