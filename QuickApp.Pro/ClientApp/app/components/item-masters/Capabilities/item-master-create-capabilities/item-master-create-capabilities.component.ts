@@ -565,7 +565,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         });
     }
 
-    addExistingData(capData,data){
+    addExistingData(capData, data)
+    {
         let capbilitiesObj = data;
         capbilitiesObj.aircraftTypeName = "";
         capbilitiesObj.aircraftModelName = "";
@@ -689,7 +690,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
     }
 
-    resetFormArray(capData){
+    resetFormArray(capData)
+    {
         switch(capData.formArrayName){
             case "mfgForm":
             this.mfgFormArray.controls = [];

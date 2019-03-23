@@ -244,7 +244,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     completeAircraftManfacturerData: any[];
     ItemMasterId: number = 0;
     isSaveCapes: boolean;
-
+    allATAMaininfo1: ATAMain[];
     constructor(private formBuilder: FormBuilder,public workFlowtService1: LegalEntityService,private changeDetectorRef: ChangeDetectorRef,private router: Router, private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
 		this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
@@ -404,6 +404,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		this.activeIndex = 0;
         this.Integration();
         this.aircraftManfacturerData();
+       
 		//this.sourceAction.
 		this.sourceItemMaster.salesIsFixedPrice = true;
 		//this.workFlowtService.indexObj.next(this.activeIndex);
@@ -619,6 +620,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         })
     }
 
+    capsModelsOpen()
+    {
+
+    }
+
+    capsModels()
+    {
+
+    }
+
     cunstructCapabilities(content)
     {
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -656,14 +667,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     addModels(capData) {
+        this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
-        
         this.resetFormArray(capData);
         capData.selectedManufacturer.forEach(element1 => {
             capbilitiesObj.itemMasterId = this.ItemMasterId;
             capbilitiesObj.aircraftTypeId = element1.value;
             capbilitiesObj.aircraftTypeName = element1.label;
             capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
+            capbilitiesObj.aircraftManufacturer = element1.label;
             capData.selectedModel.forEach(element2 => {
                 if (element2.aircraftTypeId == element1.value) {
                     capbilitiesObj.aircraftModelName = element2.label;
@@ -672,28 +684,49 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     switch (capData.formArrayName) {
                         case "mfgForm":
                             this.mfgFormArray.push(mfObj);
+                            let mfgIndex = this.mfgFormArray.controls.length - 1;
+                            this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                            this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                            this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
                             break;
                         case "overhaulForm":
                             this.overhaulFormArray.push(mfObj);
+                            let overIndex = this.overhaulFormArray.controls.length - 1;
+                            this.overhaulFormArray.controls[overIndex]['buList'] = [];
+                            this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
+                            this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
                             break;
                         case "distributionForm":
                             this.distributionFormArray.push(mfObj);
+                            let distIndex = this.distributionFormArray.controls.length - 1;
+                            this.distributionFormArray.controls[distIndex]['buList'] = [];
+                            this.distributionFormArray.controls[distIndex]['departmentList'] = [];
+                            this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
                             break;
                         case "certificationForm":
                             this.certificationFormArray.push(mfObj);
+                            let certIndex = this.certificationFormArray.controls.length - 1;
+                            this.certificationFormArray.controls[certIndex]['buList'] = [];
+                            this.certificationFormArray.controls[certIndex]['departmentList'] = [];
+                            this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
                             break;
                         case "repairForm":
                             this.repairFormArray.push(mfObj);
+                            let repIndex = this.repairFormArray.controls.length - 1;
+                            this.repairFormArray.controls[repIndex]['buList'] = [];
+                            this.repairFormArray.controls[repIndex]['departmentList'] = [];
+                            this.repairFormArray.controls[repIndex]['divisionlist'] = [];
                             break;
                         case "exchangeForm":
                             this.exchangeFormArray.push(mfObj);
+                            let excngIndex = this.exchangeFormArray.controls.length - 1;
+                            this.exchangeFormArray.controls[excngIndex]['buList'] = [];
+                            this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
+                            this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
                             break;
                     }
                 }
 
-
-                // this.overhaulFormArray.push(mfObj);
-                // this.overhaulFormArray.push(mfObj);
             });
         });
 
@@ -1115,12 +1148,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		);
 	}
 
-	private onSuccessful(getAtaMainList: ATAChapter[]) {
+    private onSuccessful(getAtaMainList: any[]) {
 		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		//this.dataSource.data = getAtaMainList;
-		this.allATAMaininfo = getAtaMainList;
+        this.allATAMaininfo = getAtaMainList;
+        this.allATAMaininfo1 = getAtaMainList;
 	}
 
 	private integrationData() {
@@ -2538,21 +2572,46 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		
 	//}
 
-    getBUList(companyId) {
+    getBUList(companyId, formArray) {
         // this.sourceItemMasterCap.businessUnitId = "";
         // this.sourceItemMasterCap.managementStructureEntityId = companyId; //Saving Management Structure Id if there Company Id
 
-        this.bulist = [];
-        this.departmentList = [];
-        this.divisionlist = [];
+        // this.bulist = [];
+        formArray.controls['buisinessUnitId'].setValue("");
+        formArray.controls['departmentId'].setValue("");
+        formArray.controls['divisionId'].setValue("");
+        formArray.departmentList = [];
+        formArray.divisionlist = [];
+        formArray['buList'] = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == companyId) {
-                this.bulist.push(this.allManagemtninfo[i]);
+                // this.bulist.push(this.allManagemtninfo[i]);
+                formArray['buList'].push(this.allManagemtninfo[i])
             }
         }
 
+        this.setValidations(formArray);
     }
 
+    setValidations(formArray) {
+        //   formArray.controls['divisionId'].clearValidators();
+        //   formArray.controls['departmentId'].clearValidators();
+        formArray.controls['buisinessUnitId'].clearValidators();
+        formArray.updateValueAndValidity();
+        if (formArray['buList'].length == 0) {
+            formArray.controls['buisinessUnitId'].setValidators([Validators.required]);
+            formArray.updateValueAndValidity();
+        }
+
+        // if(formArray['departmentList'].length == 0){
+        //     formArray.controls['departmentId'].setValidators([Validators.required]);
+        //     formArray.updateValueAndValidity();
+        // }
+        // if(formArray['divisionlist'].length == 0){
+        //     formArray.controls['divisionId'].setValidators([Validators.required]);
+        //     formArray.updateValueAndValidity();
+        // }
+    }
 	getBUListovh(selItem, masterCompanyId) {
 		let _bulist = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -2627,16 +2686,20 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	//	selItem["departmentList"] = _departmentList;
 	//	console.log(this.departmentList);
 	//}
-    getDepartmentlist(businessUnitId) {
+    getDepartmentlist(businessUnitId, formArray) {
         // this.sourceItemMasterCap.managementStructureEntityId = businessUnitId; //Saving Management Structure Id if there businessUnitId
         // this.sourceItemMasterCap.departmentId = "";
-        this.departmentList = [];
-        this.divisionlist = [];
+        formArray.controls['departmentId'].setValue("");
+        formArray.controls['divisionId'].setValue("");
+        formArray.departmentList = [];
+        formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == businessUnitId) {
-                this.departmentList.push(this.allManagemtninfo[i]);
+                formArray.departmentList.push(this.allManagemtninfo[i]);
             }
         }
+
+        this.setValidations(formArray);
     }
 	getDepartmentlistdistribution(selItem, buid) {
 		let _departmentList = [];
@@ -2691,17 +2754,29 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	//	selItem["divisionlist"] = _divisionlist;
 	//	console.log(this.divisionlist);
 	//}
-    getDivisionlist(departmentId) {
+    getDivisionlist(departmentId, formArray) {
         // this.sourceItemMasterCap.divisionId = "";
         // this.sourceItemMasterCap.managementStructureEntityId = departmentId; //Saving Management Structure Id if there departmentId
-
-        this.divisionlist = [];
+        formArray.controls['divisionId'].setValue("");
+        formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == departmentId) {
-                this.divisionlist.push(this.allManagemtninfo[i]);
+                formArray.divisionlist.push(this.allManagemtninfo[i]);
             }
         }
+
+        this.setValidations(formArray);
     }
+
+    validateForm(form, fieldName: any) {
+        let className = '';
+        if (form.get(fieldName).valid) {
+            // className = "form-validation-success";
+        } else {
+            className = 'form-validation-error';
+        }
+        return className;
+    };
 	getDivisionlistcertificate(selItem, depid) {
 		let _divisionlist = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -3390,7 +3465,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 					this.savesuccessCompleted(this.sourceItemMaster);
 					if (data != null) {
                         this.ItemMasterId = data.itemMasterId;
-                        if (this.isSaveCapes == true) {
+                        if (this.isSaveCapes == true)
+                        {
                             this.saveCapabilities();
                         }
 					}
@@ -3790,8 +3866,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		}
 
     }
-    saveCapabilitiesEnable() {
+    saveCapabilitiesEnable()
+    {
         this.isSaveCapes = true;
+        this.modal.close();
     }
     saveCapabilities()
     {
@@ -3804,27 +3882,34 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         let repairForm = capbilitiesForm.repairForm;
         let exchangeForm = capbilitiesForm.exchangeForm;
         mfgForm.forEach(element => {
+            element.itemMasterId = this.ItemMasterId
             capabilityCollection.push(element);
         });
-        overhaulForm.forEach(element => {
+        overhaulForm.forEach(element =>
+        {
+            element.itemMasterId = this.ItemMasterId
             capabilityCollection.push(element);
         });
         distributionForm.forEach(element => {
+            element.itemMasterId = this.ItemMasterId
             capabilityCollection.push(element);
         });
         certificationForm.forEach(element => {
+            element.itemMasterId = this.ItemMasterId
             capabilityCollection.push(element);
         });
         repairForm.forEach(element => {
+            element.itemMasterId = this.ItemMasterId
             capabilityCollection.push(element);
         });
         exchangeForm.forEach(element => {
+            element.itemMasterId = this.ItemMasterId
             capabilityCollection.push(element);
         });
 
         this.itemser.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
             //this.collectionofItemMaster = data11;
-           // this.router.navigateByUrl("/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list");
+            this.router.navigateByUrl("/itemmastersmodule/itemmasterpages/app-item-master-list");
             // alert("success");
         })
 

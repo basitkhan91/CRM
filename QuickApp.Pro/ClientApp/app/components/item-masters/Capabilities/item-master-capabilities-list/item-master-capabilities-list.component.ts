@@ -84,8 +84,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             { field: 'itemMasterId', header: 'Item Master Id' },
             //{field: 'materialType', header: 'Material Type' },
             { field: 'vendorRanking', header: 'Material Type' },
-            { field: 'provision', header: 'Provision' },
-            { field: 'manufacturer', header: 'Manufacturer' },
+            { field: 'glAccountId', header: 'Gl Account' },
+           
             //{ field: 'partCertificationNumber', header: 'Part Certification Num' }
             //{ field: 'createdBy', header: 'Created By' },
             //{ field: 'updatedBy', header: 'Updated By' },
