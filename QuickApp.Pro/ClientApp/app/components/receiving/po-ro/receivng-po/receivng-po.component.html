@@ -470,7 +470,7 @@
                                                                                 <div class="form-group col-sm-12">
                                                                                     <label class="control-label col-sm-4">Company <strong class="clr-red">*</strong></label>
                                                                                     <div class="col-sm-7">
-                                                                                        <select [(ngModel)]="obj.companyId" [ngModelOptions]="{standalone: true}" (change)="BUList(obj.companyId)">
+                                                                                        <select [(ngModel)]="obj.companyId" [ngModelOptions]="{standalone: true}" (change)="BUList(obj)">
                                                                                             <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                                                                         </select>
                                                                                     </div>
@@ -478,7 +478,7 @@
                                                                                 <div class="form-group col-sm-12">
                                                                                     <label class="control-label col-sm-4">BU <strong *ngIf="showBuError" class="clr-red">*</strong></label>
                                                                                     <div class="col-sm-7">
-                                                                                        <select [(ngModel)]="obj.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="Departmentlist(obj.businessUnitId)">
+                                                                                        <select [(ngModel)]="obj.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="Departmentlist(obj)">
                                                                                             <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                                                                         </select>
                                                                                     </div>
@@ -487,7 +487,7 @@
                                                                                 <div class="form-group col-sm-12">
                                                                                     <label class="control-label col-sm-4">Division <strong *ngIf="showDivError" class="clr-red">*</strong></label>
                                                                                     <div class="col-sm-7">
-                                                                                        <select [(ngModel)]="obj.departmentId" [ngModelOptions]="{standalone: true}" (change)="Divisionlist(obj.departmentId)">
+                                                                                        <select [(ngModel)]="obj.departmentId" [ngModelOptions]="{standalone: true}" (change)="Divisionlist(obj)">
                                                                                             <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                                                                         </select>
                                                                                     </div>
@@ -496,7 +496,7 @@
                                                                                     <label class="control-label col-sm-4">Dept <strong *ngIf="showDepError" class="clr-red">*</strong></label>
                                                                                     <div class="col-sm-7">
                                                                                         <div>
-                                                                                            <select [(ngModel)]="obj.divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(obj.divisionId)">
+                                                                                            <select [(ngModel)]="obj.divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(obj)">
                                                                                                 <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                                                                             </select>
                                                                                         </div>
@@ -515,7 +515,7 @@
                                                                                     <label class="control-label col-sm-4">Warehouse</label>
                                                                                     <div class="col-sm-7">
                                                                                         <select [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)">
-                                                                                            <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <option *ngFor="let site of obj.allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                         </select>
                                                                                         <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.warehouse">-->
                                                                                     </div>
@@ -524,7 +524,7 @@
                                                                                     <label class="control-label col-sm-4">Location</label>
                                                                                     <div class="col-sm-7">
                                                                                         <select [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)">
-                                                                                            <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <option *ngFor="let site of obj.allLocations" [ngValue]="site.locationId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                         </select>
                                                                                         <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.location">-->
                                                                                     </div>
@@ -533,7 +533,7 @@
                                                                                     <label class="control-label col-sm-4">Shelf</label>
                                                                                     <div class="col-sm-7">
                                                                                         <select [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)">
-                                                                                            <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <option *ngFor="let site of obj.allShelfs" [ngValue]="site.shelfId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                         </select>
                                                                                         <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.shelf">-->
                                                                                     </div>
@@ -542,7 +542,7 @@
                                                                                     <label class="control-label col-sm-4">Bin</label>
                                                                                     <div class="col-sm-7">
                                                                                         <select [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)">
-                                                                                            <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <option *ngFor="let site of obj.allBins" [ngValue]="site.binId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                         </select>
                                                                                         <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.bin">-->
                                                                                     </div>

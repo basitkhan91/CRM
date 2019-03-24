@@ -431,7 +431,8 @@ export class ReceivngPoComponent {
             shelflist: this.allShelfs,
             binList: this.allBins,
             manfacturerList: this.allManufacturerInfo,
-            timeLifeCyclesId:''
+            timeLifeCyclesId: '',
+            
 
         };
         return stockLineDefObj;
@@ -457,12 +458,13 @@ export class ReceivngPoComponent {
         this.itemser.getDescriptionbypart(partList.partNumber).subscribe((data:any) => {
             partList["isSerialized"] = data[0][0].isSerialized;
             partList["isTimeLife"] = data[0][0].isTimeLife;
+            partList["glAccountId"] = data[0][0].glAccountId;
             if (partList["isSerialized"] == true) {
                 this.hideSerialNumber = true;
                 this.showRestrictQuantity = true;
                 this.showFreeQuantity = false;
                 this.showNormalQuantity = false;
-
+                partList["isSerialized"] = true;
                 this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
 
             }
@@ -471,6 +473,7 @@ export class ReceivngPoComponent {
                 this.showRestrictQuantity = false;
                 this.showFreeQuantity = true;
                 this.showNormalQuantity = false;
+                partList["isSerialized"] = false;
 
                 this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
 
@@ -486,7 +489,7 @@ export class ReceivngPoComponent {
        
     }
     saveStockline(partList) {
-        //debugger;
+        debugger;
         if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
             this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                 //this.collectionofstockLineTimeLife = data;
@@ -499,7 +502,14 @@ export class ReceivngPoComponent {
                         partList["stocklineListObj"][i].itemMasterId = partList["itemMasterId"];
                         partList["stocklineListObj"][i].purchaseOrderId = partList["purchaseOrderId"];
                         partList["stocklineListObj"][i].partNumber = partList["partNumber"];
-                        partList["stocklineListObj"][i].timeLifeCyclesId == this.sourceStockLineSetup.timeLifeCyclesId;
+                        partList["stocklineListObj"][i].isSerialized = partList["isSerialized"];
+                        partList["stocklineListObj"][i].timeLifeCyclesId = this.sourceStockLineSetup.timeLifeCyclesId;
+                        partList["stocklineListObj"][i].quantity = partList["quantityOrdered"];
+                        partList["stocklineListObj"][i].orderDate = partList["createdDate"];
+                        partList["stocklineListObj"][i].purchaseOrderUnitCost = partList["unitCost"];
+                        partList["stocklineListObj"][i].glAccountId = partList["glAccountId"];
+                        partList["stocklineListObj"][i].manufacturerId = partList["manufacturerId"];
+                        partList["stocklineListObj"][i].isHazardousMaterial = partList["isHazardousMaterial"];
                         this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
                             this.collectionofstockLine = data;
                         })
@@ -515,7 +525,14 @@ export class ReceivngPoComponent {
                 partList["stocklineListObj"][i].itemMasterId = partList["itemMasterId"];
                 partList["stocklineListObj"][i].purchaseOrderId = partList["purchaseOrderId"];
                 partList["stocklineListObj"][i].partNumber = partList["partNumber"];
-               this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
+                partList["stocklineListObj"][i].isSerialized = partList["isSerialized"];
+                partList["stocklineListObj"][i].quantity = partList["quantityOrdered"];
+                partList["stocklineListObj"][i].orderDate = partList["createdDate"];
+                partList["stocklineListObj"][i].purchaseOrderUnitCost = partList["unitCost"];
+                partList["stocklineListObj"][i].glAccountId = partList["glAccountId"];
+                partList["stocklineListObj"][i].manufacturerId = partList["manufacturerId"];
+                partList["stocklineListObj"][i].isHazardousMaterial = partList["isHazardousMaterial"];
+                this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
                     this.collectionofstockLine = data;
                 })
             }
@@ -1641,8 +1658,8 @@ export class ReceivngPoComponent {
         console.log(this.divisionlist);
     }
 
-    getDivisionChangeManagementCode(divisionId) {
-        this.sourcePoApproval.managementStructureEntityId = divisionId;
+    getDivisionChangeManagementCode(obj) {
+        obj.managementStructureEntityId = obj.divisionId;
     }
     private onprioritySuccessful(getPriorityList: any[]) {
 
@@ -2588,14 +2605,14 @@ export class ReceivngPoComponent {
         this.orderQuantity = event;
     }
 
-   BUList(companyId) {
-        this.sourceStockLineSetup.managementStructureEntityId = companyId; //Saving Management Structure Id if there Company Id
+   BUList(obj) {
+        obj.managementStructureEntityId = obj.companyId; //Saving Management Structure Id if there Company Id
 
         this.bulist = [];
         this.departmentList = [];
         this.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == companyId) {
+            if (this.allManagemtninfo[i].parentId == obj.companyId) {
                 this.bulist.push(this.allManagemtninfo[i]);
             }
         }
@@ -2608,13 +2625,13 @@ export class ReceivngPoComponent {
 
     }
 
-    Departmentlist(businessUnitId) {
-        this.sourceStockLineSetup.managementStructureEntityId = businessUnitId;
+    Departmentlist(obj) {
+        obj.managementStructureEntityId = obj.businessUnitId;
 
         this.departmentList = [];
         this.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == businessUnitId) {
+            if (this.allManagemtninfo[i].parentId == obj.businessUnitId) {
                 this.departmentList.push(this.allManagemtninfo[i]);
             }
         }
@@ -2626,12 +2643,12 @@ export class ReceivngPoComponent {
         console.log(this.departmentList);
     }
 
-   Divisionlist(departmentId) {
-        this.sourceStockLineSetup.managementStructureEntityId = departmentId;
+   Divisionlist(obj) {
+       obj.managementStructureEntityId = obj.departmentId;
 
         this.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == departmentId) {
+            if (this.allManagemtninfo[i].parentId == obj.departmentId) {
                 this.divisionlist.push(this.allManagemtninfo[i]);
             }
         }
@@ -2646,10 +2663,10 @@ export class ReceivngPoComponent {
     svalueChange(data) //Site Valu Selection in Form
     {
 
-        this.allWareHouses = [];
-        this.allLocations = [];
-        this.allShelfs = [];
-        this.allBins = [];
+        data.allWareHouses = [];
+        data.allLocations = [];
+        data.allShelfs = [];
+        data.allBins = [];
 
         data.warehouseId = 0
         data.locationId = 0;
@@ -2658,10 +2675,10 @@ export class ReceivngPoComponent {
 
 
 
-        this.binservice.getWareHouseDate(data.siteId).subscribe( //calling and Subscribing for WareHouse Data
-            results => this.onDataLoadWareHouse(results), //sending WareHouse
-            error => this.onDataLoadFailed(error)
-        );
+        this.binservice.getWareHouseDate(data.siteId).subscribe(warehousedata => {
+            data.allWareHouses = warehousedata;
+        })
+       
 
     }
 
@@ -2710,9 +2727,9 @@ export class ReceivngPoComponent {
     }
     wareHouseValueChange(data) {
 
-        this.allLocations = [];
-        this.allShelfs = [];
-        this.allBins = [];
+        data.allLocations = [];
+        data.allShelfs = [];
+        data.allBins = [];
 
         data.locationId = 0;
         data.shelfId = 0;
@@ -2720,10 +2737,8 @@ export class ReceivngPoComponent {
 
 
 
-        this.binservice.getLocationDate(data.warehouseId).subscribe( //calling and Subscribing for Location Data
-            results => this.onDataLoadLocation(results), //sending Location
-            error => this.onDataLoadFailed(error)
-        );
+        this.binservice.getLocationDate(data.warehouseId).subscribe(locationdata => { data.allLocations = locationdata})
+       
     }
     private onDataLoadLocation(getLocationList: any) { //Storing WareHouse Data
 
@@ -2735,18 +2750,15 @@ export class ReceivngPoComponent {
     }
 
     locationValueChange(data) {
-        this.allShelfs = [];
-        this.allBins = [];
+        data.allShelfs = [];
+        data.allBins = [];
 
 
         data.shelfId = 0;
         data.binId = 0;
 
-        this.binservice.getShelfDate(data.locationId).subscribe( //calling and Subscribing for Location Data
-            results => this.onDataLoadShelf(results), //sending Location
-            error => this.onDataLoadFailed(error)
-        );
-
+        this.binservice.getShelfDate(data.locationId).subscribe(shelfdata => { data.allShelfs = shelfdata})
+        
     }
     private onDataLoadShelf(getShelfList: any) {
         this.alertService.stopLoadingMessage();
@@ -2757,15 +2769,12 @@ export class ReceivngPoComponent {
 
 
     shelfValueChange(data) {
-        this.allBins = [];
+        data.allBins = [];
 
 
         data.binId = 0;
 
-        this.binservice.getBinDataById(data.binId).subscribe(
-            results => this.onDataLoadBin(results), //sending Location
-            error => this.onDataLoadFailed(error));
-
+        this.binservice.getBinDataById(data.binId).subscribe(bindata => { data.allBins=bindata})
     }
     private onDataLoadBin(getBinList: any) {
         this.loadingIndicator = false;
