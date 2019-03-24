@@ -405,23 +405,27 @@
 	</td>-->
 									<td>
 										
-										<select class="form-control w90" [(ngModel)]="partList.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partList.masterCompanyId)">
-											<option *ngFor="let ataName of mainPartcompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										<select class="form-control w90" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}" >{{company.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select class="form-control w90" [(ngModel)]="partList.buid1" [ngModelOptions]="{standalone: true}" (change)="getPartDepartmentlist(partList.buid1)">
-											<option *ngFor="let ataName of partBulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										<select class="form-control w90" [(ngModel)]="partList.partBusinessUnitId" [ngModelOptions]="{standalone: true}" (change)="onPartBusinessUnitChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let businessUnit of partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select class="form-control w90" [(ngModel)]="partList.depid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionlist(partList.depid1)">
-											<option *ngFor="let ataName of partDepartmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										<select class="form-control w90" [(ngModel)]="partList.partDivisionId" [ngModelOptions]="{standalone: true}" (change)="onPartDivisionChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let division of partDivisionList" value="{{division.managementStructureId}}">{{division.code}}</option>
 										</select>
 									</td>
 									<td>
-										<select class="form-control w90" [(ngModel)]="partList.divid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionChangeManagementCode(partList.divid1)">
-											<option *ngFor="let ataName of partDivisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+										<select class="form-control w90" [(ngModel)]="partList.partDepartmentId" [ngModelOptions]="{standalone: true}" (change)="onPartDepartmentChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let department of partDepartmentList " value="{{department.managementStructureId}}">{{department.code}}</option>
 										</select>
 									</td>
 									<!--<td>
@@ -504,17 +508,35 @@
 										</select>
 									</td>
 									<td>
-										<div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==1">
-											<i class="fa fa-search"></i>
-											<p-autoComplete (onSelect)="onCustomerNameselected(partChildList,$event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="partChildList.poPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-															[minLength]="1" [dropdown]="true">
-												<ng-template let-name pTemplate="item">
-													<div class="ui-helper-clearfix">{{name}}</div>
-												</ng-template>
-											</p-autoComplete>
-										</div>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==1">
+                                            <i class="fa fa-search"></i>
+                                            <p-autoComplete 
+                                                            field="customername"
+                                                            [(ngModel)]="ddlModel"
+                                                            (onSelect)="onCustomerNameChange(partChildList,$event)"
+                                                            (onKeyUp)=customereventHandler($event)
+                                                           
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            [suggestions]="partChildList.customers"
+                                                            (completeMethod)="getPartyNames(partChildList,$event)"
+                                                            [size]="30"
+                                                            [minLength]="1"
+                                                            [dropdown]="true"
+                                                            >
+
+                                            </p-autoComplete>
+                                        </div>
 										<div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==2">
-											<p-autoComplete (onSelect)="onVendorselected(partChildList,$event)" (onKeyUp)=eventHandler($event) [(ngModel)]="partChildList.poPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+											<p-autoComplete 
+                                                            field="vendorName"
+                                                            (onSelect)="onVendorNameChange(partChildList,$event)" 
+                                                            (onKeyUp)=vendoreventHandler($event) 
+                                                            [(ngModel)]="partChildList.poPartSplitUserName" 
+                                                            [ngModelOptions]="{standalone: true}" 
+                                                            [suggestions]="partChildList.vendors" 
+                                                            
+                                                            (completeMethod)="getVendorPartyNames(partChildList,$event)" 
+                                                            [size]="30"
 															[minLength]="1" [dropdown]="true">
 												<ng-template let-vendorName pTemplate="item">
 													<div class="ui-helper-clearfix">{{vendorName}}</div>
@@ -558,23 +580,42 @@
 									<!--<td><input type="date" name="" id="dp1547623339385" [(ngModel)]="partChildList.needByDate" class="form-control datepicker hasDatepicker"></td>-->
 									<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
                                     <td>
-                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partChildList.masterCompanyId)">
-                                            <option *ngFor="let ataName of mainPartcompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" 
+                                                [(ngModel)]="partChildList.companyId" 
+                                                [ngModelOptions]="{standalone: true}" 
+                                                (change)="onPartCompanyChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.buid1" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partChildList.buid1)">
-                                            <option *ngFor="let ataName of partBulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" 
+                                                [(ngModel)]="partChildList.partBusinessUnitId" 
+                                                [ngModelOptions]="{standalone: true}" 
+                                                (change)="onPartBusinessUnitChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let businessUnit of partChildList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.depid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionlist(partChildList.depid1)">
-                                            <option *ngFor="let ataName of partDepartmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" 
+                                                [(ngModel)]="partChildList.partDivisionId" 
+                                                [ngModelOptions]="{standalone: true}" 
+                                                (change)="onPartDivisionChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let division of partChildList.partDivisionList"
+                                                    value="{{division.managementStructureId}}">
+                                                {{division.code}}
+                                            </option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.divid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionChangeManagementCode(partChildList.divid1)">
-                                            <option *ngFor="let ataName of partDivisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.partDepartmentId"
+                                                [ngModelOptions]="{standalone: true}" 
+                                                (change)="onPartDepartmentChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let department of partChildList.partDepartmentList" value="{{department.managementStructureId}}">{{department.code}}</option>
                                         </select>
                                     </td>
 									<td colspan="20"><a  (click)="deleteSplitShipment(partChildList,row_no,row_index)"><i class="fa fa-trash"></i></a></td>

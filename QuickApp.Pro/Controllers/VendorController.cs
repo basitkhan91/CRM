@@ -726,7 +726,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.GeneralLedgerAccounId = poViewModel.GeneralLedgerAccounId;
                     actionobject.Memo = poViewModel.Memo;
                     actionobject.POPartSplitUserTypeId = poViewModel.POPartSplitUserTypeId;
-                    actionobject.POPartSplitUserName = poViewModel.POPartSplitUserName;
+                    actionobject.POPartSplitUserId = poViewModel.POPartSplitUserId;
                     actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
                     actionobject.POPartSplitAddress1 = poViewModel.POPartSplitAddress1;
                     actionobject.POPartSplitAddress2 = poViewModel.POPartSplitAddress2;
@@ -780,7 +780,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.GeneralLedgerAccounId = poViewModel.GeneralLedgerAccounId;
                     actionobject.Memo = poViewModel.Memo;
                     actionobject.POPartSplitUserTypeId = poViewModel.POPartSplitUserTypeId;
-                    actionobject.POPartSplitUserName = poViewModel.POPartSplitUserName;
+                    actionobject.POPartSplitUserId = poViewModel.POPartSplitUserId;
                     actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
                     actionobject.POPartSplitAddress1 = poViewModel.POPartSplitAddress1;
                     actionobject.POPartSplitAddress2 = poViewModel.POPartSplitAddress2;

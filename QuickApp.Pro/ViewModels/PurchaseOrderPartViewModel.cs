@@ -37,7 +37,7 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<int> GeneralLedgerAccounId { get; set; }
         public string Memo { get; set; }
         public Nullable<short> POPartSplitUserTypeId { get; set; }
-        public string POPartSplitUserName { get; set; }
+        public long? POPartSplitUserId { get; set; }
         public string POPartSplitAddress1 { get; set; }
         public string POPartSplitAddress2 { get; set; }
         public string POPartSplitAddress3 { get; set; }
@@ -45,7 +45,7 @@ namespace QuickApp.Pro.ViewModels
         public string POPartSplitState { get; set; }
         public string POPartSplitPostalCode { get; set; }
         public string POPartSplitCountry { get; set; }
-        public Nullable<long> ManagementStructureId { get; set; }
+        public long? ManagementStructureId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

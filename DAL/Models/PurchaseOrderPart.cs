@@ -37,7 +37,7 @@ namespace DAL.Models
         public Nullable<int> GeneralLedgerAccounId { get; set; }
         public string Memo { get; set; }
         public Nullable<short> POPartSplitUserTypeId { get; set; }
-        public string POPartSplitUserName { get; set; }
+        public long? POPartSplitUserId { get; set; }
         public string POPartSplitAddress1 { get; set; }
         public string POPartSplitAddress2 { get; set; }
         public string POPartSplitAddress3 { get; set; }

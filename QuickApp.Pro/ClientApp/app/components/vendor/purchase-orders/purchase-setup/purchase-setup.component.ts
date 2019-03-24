@@ -386,11 +386,13 @@ export class PurchaseSetupComponent {
 
 
 		console.log(this.partNumbers);
-	}
+    }
+    
 	savePurchaseOrder() {
-		//debugger;
-		this.sourcePoApproval.createdBy = this.userName;
-		this.sourcePoApproval.updatedBy = this.userName;
+        debugger;
+        this.userName = 'admin';
+        this.sourcePoApproval.createdBy = this.userName;
+        this.sourcePoApproval.updatedBy = this.userName;
 		this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
 			{
@@ -611,8 +613,10 @@ export class PurchaseSetupComponent {
 				}
 			};
 		}
-	}
-	savePurchaseorderPart(purId) {
+    }
+    ddlModel: any;
+    savePurchaseorderPart(purId) {
+        debugger;
 		if (this.workFlowtService.isEditMode == false) {
 			for (let i = 0; i < this.partListData.length; i++) {
 				if (this.partListData[i].purchaseOrderPartRecordId) {
@@ -650,7 +654,7 @@ export class PurchaseSetupComponent {
 						memo: this.partListData[i].memo,
 						poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
 						poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
-						poPartSplitUserName: this.partListData[i].poPartSplitUserName,
+						poPartSplitUserId: this.partListData[i].poPartSplitUserId,
 						poPartSplitAddress1: this.partListData[i].poPartSplitAddress1,
 						poPartSplitAddress2: this.partListData[i].poPartSplitAddress2,
 						poPartSplitAddress3: this.partListData[i].poPartSplitAddress3,
@@ -713,7 +717,7 @@ export class PurchaseSetupComponent {
 										memo: this.partListData[i].memo,
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
-										poPartSplitUserName: childDataList[k].poPartSplitUserName,
+										poPartSplitUserId: childDataList[k].poPartSplitUserId,
 										poPartSplitAddress1: childDataList[k].poPartSplitAddress1,
 										poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
 										poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
@@ -770,7 +774,7 @@ export class PurchaseSetupComponent {
 										memo: this.partListData[i].memo,
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
-										poPartSplitUserName: childDataList[k].poPartSplitUserName,
+										poPartSplitUserId: childDataList[k].poPartSplitUserId,
 										poPartSplitAddress1: childDataList[k].poPartSplitAddress1,
 										poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
 										poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
@@ -833,7 +837,7 @@ export class PurchaseSetupComponent {
 						memo: this.partListData[i].memo,
 						poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
 						poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
-						poPartSplitUserName: this.partListData[i].poPartSplitUserName,
+						poPartSplitUserId: this.partListData[i].poPartSplitUserId,
 						poPartSplitAddress1: this.partListData[i].poPartSplitAddress1,
 						poPartSplitAddress2: this.partListData[i].poPartSplitAddress2,
 						poPartSplitAddress3: this.partListData[i].poPartSplitAddress3,
@@ -895,7 +899,7 @@ export class PurchaseSetupComponent {
 									memo: this.partListData[i].memo,
 									poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 									poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
-									poPartSplitUserName: childDataList[k].poPartSplitUserName,
+									poPartSplitUserId: childDataList[k].poPartSplitUserId,
 									poPartSplitAddress1: childDataList[k].poPartSplitAddress1,
 									poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
 									poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
@@ -965,7 +969,7 @@ export class PurchaseSetupComponent {
 					poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
 					poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
 
-					poPartSplitUserName: this.partListData[i].poPartSplitUserName,
+					poPartSplitUserId: this.partListData[i].poPartSplitUserId,
 					poPartSplitAddress1: this.partListData[i].poPartSplitAddress1,
 					poPartSplitAddress2: this.partListData[i].poPartSplitAddress2,
 					poPartSplitAddress3: this.partListData[i].poPartSplitAddress3,
@@ -994,7 +998,9 @@ export class PurchaseSetupComponent {
 					this.savedPurchasedPart = saveddata1;
 					if (this.childDataList.length > 0) {
 						for (let k = 0; k < this.childDataList.length; k++) {
-							let childobj = {
+                            debugger;
+                            console.log('adding child records');
+                            let childobj = {
 								//ifSplitShip: false,
 								//purchaseOrderPartRecordId: this.partListData[i].purchaseOrderPartRecordId,
 								purchaseOrderId: purId,
@@ -1026,7 +1032,7 @@ export class PurchaseSetupComponent {
 								memo: this.partListData[i].memo,
 								poPartSplitAddressId: this.childDataList[k].poPartSplitAddressId,
 								poPartSplitUserTypeId: this.childDataList[k].poPartSplitUserTypeId,
-								poPartSplitUserName: this.childDataList[k].poPartSplitUserName,
+								poPartSplitUserId: this.childDataList[k].poPartSplitUserId,
 								poPartSplitAddress1: this.childDataList[k].poPartSplitAddress1,
 								poPartSplitAddress2: this.childDataList[k].poPartSplitAddress2,
 								poPartSplitAddress3: this.childDataList[k].poPartSplitAddress3,
@@ -1036,7 +1042,7 @@ export class PurchaseSetupComponent {
 								poPartSplitCountry: this.childDataList[k].poPartSplitCountry,
 								createdBy: this.userName,
 								updatedBy: this.userName,
-								//managementStructureId: this.partListData[i].managementStructureId,
+                                managementStructureId: this.childDataList[k].managementStructureId,
 								//createdBy: this.childDataList[k].createdBy,
 								//updatedBy: this.childDataList[k].updatedBy,
 								//createdDate: this.childDataList[k].createdDate,
@@ -1055,7 +1061,15 @@ export class PurchaseSetupComponent {
 			}
 			this.saveSuccessHelper(this.partListData[0])
 		}
-	}
+    }
+
+    //getManagementStructureForPart(parts) {
+    //    parts.forEach(part => {
+    //        if (part.companyId != 0) {
+    //            part.managementStructureId = part.companyId;
+    //        }
+    //    });
+    //}
 	getChildAddressValue(childobj, addressobj) {
 		//debugger;
 
@@ -1069,7 +1083,8 @@ export class PurchaseSetupComponent {
 		childobj["poPartSplitPostalCode"] = addressobj.postalCode;
 		childobj["poPartSplitCountry"] = addressobj.country;
 	}
-
+    
+   
 	filterNames(event) {
 
 		this.customerNames = [];
@@ -1098,7 +1113,9 @@ export class PurchaseSetupComponent {
 				}
 			}
 		}
-	}
+    }
+
+
 	customereventHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
@@ -1112,26 +1129,93 @@ export class PurchaseSetupComponent {
 			}
 
 		}
-	}
-	onCustomerNameselected(partChildList, event) //Customer Ship Address Data
-	{
-		//debugger;
-		for (let i = 0; i < this.customerNamecoll.length; i++) {
-			if (event == this.customerNamecoll[i][0].name)
-			{
+    }
+    onCustomerNameChange(part, customer): void{
+        debugger;
+        part.poPartSplitUserId = customer.customerId;
 
-				this.cusservice.getCustomerShipAddressGet(this.customerNamecoll[i][0].customerId).subscribe(returnedcusdata => {
-					this.spiltshipmentData = returnedcusdata[0];
-					partChildList["addressData"] = returnedcusdata[0];
-				});
+        this.cusservice.getCustomerShipAddressGet(customer.customerId).subscribe(returnedcustomerAddressses => {
+            this.spiltshipmentData = returnedcustomerAddressses[0];
+            part["addressData"] = returnedcustomerAddressses[0];
+        });
+
+    }
+	getPartyNames(part, event) {
+        if (this.allCustomers && this.allCustomers.length > 0) {
+            var customers = this.allCustomers.filter(function (customer) {
+                return customer.name.toLowerCase().indexOf(event.query.toLowerCase()) == 0;
+            });
+            part.customers = [];
+            customers.forEach(customer => {
+                part.customers.push({
+                    "customerId": customer.customerId,
+                    "customername": customer.name
+                });
+            });
+
+        }
+    }
+
+    vendoreventHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+
+                }
+                else {
+
+                }
+            }
+
+        }
+    }
+    onVendorNameChange(part, vendor): void {
+        debugger;
+        part.poPartSplitUserId = vendor.vendorId;
+        this.workFlowtService.getVendorShipAddressGet(vendor.vendorId).subscribe(
+            vendorAddresses => {
+                this.vendorSelectedforSplit = vendorAddresses[0];
+                part["addressData"] = vendorAddresses[0];;
+            })
+    }
+    getVendorPartyNames(part, event) {
+        debugger
+        if (this.allActions && this.allActions.length > 0) {
+            var vendors = this.allActions.filter(function (vendor) {
+                return vendor.vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0;
+            });
+            part.vendors = [];
+            vendors.forEach(vendor => {
+                part.vendors.push({
+                    "vendorId": vendor.vendorId,
+                    "vendorName": vendor.vendorName
+                });
+            });
+
+        }
+    }
 
 
-			}
+    onCustomerNameselected(partChildList, event) //Customer Ship Address Data
+    {
+        //debugger;
+        for (let i = 0; i < this.customerNamecoll.length; i++) {
+            if (event == this.customerNamecoll[i][0].name) {
 
-		}
+                this.cusservice.getCustomerShipAddressGet(this.customerNamecoll[i][0].customerId).subscribe(returnedcusdata => {
+                    this.spiltshipmentData = returnedcusdata[0];
+                    partChildList["addressData"] = returnedcusdata[0];
+                });
 
-	}
-	deleteSplitShipment(childata, index,mainindex) {
+
+            }
+
+        }
+
+    }
+
+    deleteSplitShipment(childata, index, mainindex) {
 
 		//debugger;
 		if (childata.purchaseOrderPartRecordId) {
@@ -1352,8 +1436,8 @@ export class PurchaseSetupComponent {
 			{
 				this.bulist = [];
 				this.departmentList = [];
-				this.divisionlist = [];
-
+                this.divisionlist = [];
+                debugger
 				this.maincompanylist.push(this.allManagemtninfo[i]);
                 this.mainPartcompanylist.push(this.allManagemtninfo[i]);
                 
@@ -1381,63 +1465,54 @@ export class PurchaseSetupComponent {
 			}
 		}
 
-		this.sourcePoApproval.buid1 = null;
+		//this.sourcePoApproval.buid1 = null;
 
 		console.log(this.bulist);
 
 	}
 
-	getPartBUList(masterCompanyId)
+    onPartCompanyChange(part)
 	{
-		this.partList.managementStructureEntityId = masterCompanyId; //Saving Management Structure Id if there Company Id
+        this.partList.managementStructureId = part.companyId; //Saving Management Structure Id if there Company Id
 
-		this.partBulist = [];
-		this.partDepartmentList = [];
-		this.partDivisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++)
-		{
-			if (this.allManagemtninfo[i].parentId == masterCompanyId)
-			{
-				this.partBulist.push(this.allManagemtninfo[i]);
-			}
-		}
+        part.partDepartmentList = [];
+        part.partDepartmentId = 0;
+        part.partDivisionList = [];
+        part.partDivisionId = 0;
+        part.managementStructureId = part.companyId;
+        part.partBusinessUnitId = 0;
+        part.partBulist = this.allManagemtninfo.filter(function (management) {
+            return management.parentId == part.companyId;
+        });
+    }
 
-		this.partList.buid1 = null;
+    onPartBusinessUnitChange(part) {
+        this.partList.managementStructureEntityId = part.partDepartmentId; //Saving Management Structure Id if there Company Id
 
-		console.log(this.bulist);
+        part.partDeparmentId = 0;
+        part.partDepartmentList = [];
+        part.partDivisionId = 0;
+        part.managementStructureId = part.partBusinessUnitId;
+        part.partDivisionList = this.allManagemtninfo.filter(function (management) {
+            return management.parentId == part.partBusinessUnitId;
+        });
+    }
 
-	}
-
-	getPartDepartmentlist(buid)
+    onPartDivisionChange(part):void
 	{
-		this.partList.managementStructureEntityId = buid; //Saving Management Structure Id if there Company Id
-
-		this.partDepartmentList = [];
-		this.partDivisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == buid) {
-				this.partDepartmentList.push(this.allManagemtninfo[i]);
-			}
-		}
-		this.partList.depid1 = null;
-		console.log(this.departmentList);
+        this.partList.managementStructureEntityId = part.partDivisionId; //Saving Management Structure Id if there Company Id
+        part.partDepartmentId = 0;
+        part.managementStructureId = part.partDivisionId;
+        part.partDepartmentList = this.allManagemtninfo.filter(function (management) {
+            return management.parentId == part.partDivisionId;
+        });
 	}
 
-	getPartDivisionlist(depid) {
-		this.partList.managementStructureEntityId = depid; //Saving Management Structure Id if there Company Id
+  
 
-		this.partDivisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == depid) {
-				this.partDivisionlist.push(this.allManagemtninfo[i]);
-			}
-		}
-
-		console.log(this.divisionlist);
-	}
-
-	getPartDivisionChangeManagementCode(divisionId) {
-		this.partList.managementStructureEntityId = divisionId;
+    onPartDepartmentChange(part):void {
+        part.managementStructureId = part.partDepartmentId;
+		//this.partList.managementStructureEntityId = divisionId;
 	}
 
 	getDepartmentlist(buid) {
@@ -1670,7 +1745,7 @@ export class PurchaseSetupComponent {
 			memo: '',
 			poPartSplitAddressId: '',
 			poPartSplitUserTypeId: '',
-			poPartSplitUserName: '',
+			poPartSplitUserId: '',
 			poPartSplitAddress1: '',
 			poPartSplitAddress2: '',
 			poPartSplitAddress3: '',
@@ -1678,7 +1753,7 @@ export class PurchaseSetupComponent {
 			poPartSplitState: '',
 			poPartSplitPostalCode: '',
 			poPartSplitCountry: '',
-			managementStructureId: '',
+			managementStructureId: '', // hey, take a break, and call me after u done with lunch ok ? ok-cool cya. ca
 			createdBy: '',
 			updatedBy: '',
 			createdDate: '',
@@ -1690,7 +1765,13 @@ export class PurchaseSetupComponent {
             companyList: [],
             partBulist: [],
             partDepartmentList: [],
-            partDivisionlist:[]
+            partDivisionList: [],
+            companyId: 0,
+            partBusinessUnitId: 0,
+            partDepartmentId: 0,
+            partDivisionId: 0,
+            customers: [],
+            vendors:[]
 		}
 		if (isParent) {
 			partListObj["childList"] = [];//this.emptyPartListObj(false)
