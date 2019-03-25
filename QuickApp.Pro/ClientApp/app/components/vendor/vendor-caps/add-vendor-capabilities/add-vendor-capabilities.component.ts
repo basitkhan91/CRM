@@ -729,188 +729,173 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	saveVendorCapsclose()//for Saving Vendor capability
 	{
-		//if (!this.sourceVendorCap.vendorCode)
-		//{
-		//	this.vendorCodeError = true;
-		//}
-		//else
-		//{
-		//	this.vendorCodeError = false;
-		//}
+		if (!this.sourceVendorCap.vendorCode)
+		{
+			this.vendorCodeError = true;
+		}
+		else
+		{
+			this.vendorCodeError = false;
+		}
 
-		//if (!this.sourceVendorCap.vendorName)
-		//{
-		//	this.vendorNameError = true;
-		//}
-		//else {
-		//	this.vendorNameError = false;
-		//}
+		if (!this.sourceVendorCap.vendorName)
+		{
+			this.vendorNameError = true;
+		}
+		else {
+			this.vendorNameError = false;
+		}
 
-		//if (!this.sourceVendorCap.vendorRanking)
-		//{
-		//	this.vendorRankingError = true;
-		//}
-		//else {
-		//	this.vendorRankingError = false;
-		//}
+		if (!this.sourceVendorCap.vendorRanking)
+		{
+			this.vendorRankingError = true;
+		}
+		else {
+			this.vendorRankingError = false;
+		}
 
-		//if (!this.sourceVendorCap.partId) {
-		//	this.partIdError = true;
-		//}
-		//else {
-		//	this.partIdError = false;
-		//}
+		if (!this.sourceVendorCap.partId) {
+			this.partIdError = true;
+		}
+		else {
+			this.partIdError = false;
+		}
 
 		
 
-		//if (!this.sourceVendorCap.partDescription) {
-		//	this.partDescriptionError = true;
-		//}
-		//else {
-		//	this.partDescriptionError = false;
-		//}
+		if (!this.sourceVendorCap.partDescription) {
+			this.partDescriptionError = true;
+		}
+		else {
+			this.partDescriptionError = false;
+		}
 
-		//if (!this.sourceVendorCap.selectedCapabulityTypesListData) {
-		//	this.capabulityTypeListDataError = true;
-		//}
-		//else {
-		//	this.capabulityTypeListDataError = false;
-		//}
+		if (!this.selectedCapabulityTypesListData) {
+			this.capabulityTypeListDataError = true;
+		}
+		else {
+			this.capabulityTypeListDataError = false;
+		}
 
-		//if (!this.sourceVendorCap.isPMADER) {
-		//	this.pmaDerError = true;
-		//}
-		//else {
-		//	this.pmaDerError = false;
-		//}
+		if (!this.sourceVendorCap.isPMADER) {
+			this.pmaDerError = true;
+		}
+		else {
+			this.pmaDerError = false;
+		}
 
-		//if (!this.sourceVendorCap.capDescription) {
-		//	this.capabulityDescError = true;
-		//}
-		//else {
-		//	this.capabulityDescError = false;
-		//}
+        if (!this.sourceVendorCap.capabilityDescription) {
+			this.capabulityDescError = true;
+		}
+		else {
+			this.capabulityDescError = false;
+		}
 
-		//if (!this.sourceVendorCap.cost) {
-		//	this.costError = true;
-		//}
-		//else {
-		//	this.costError = false;
-		//}
-		//if (!this.sourceVendorCap.tat) {
-		//	this.tatError = true;
-		//}
-		//else {
-		//	this.tatError = false;
-		//}
+		if (!this.sourceVendorCap.cost) {
+			this.costError = true;
+		}
+		else {
+			this.costError = false;
+		}
+		if (!this.sourceVendorCap.tat) {
+			this.tatError = true;
+		}
+		else {
+			this.tatError = false;
+		}
 
-		//if (!this.sourceVendorCap.manufacturerId) {
-		//	this.manufacturerdataError = true;
-		//}
-		//else {
-		//	this.manufacturerdataError = false;
-		//}
+		if (!this.sourceVendorCap.manufacturerId) {
+			this.manufacturerdataError = true;
+		}
+		else {
+			this.manufacturerdataError = false;
+		}
 
 
 
-		//if (
-		//	(!this.sourceVendorCap.vendorCode) || (!this.sourceVendorCap.vendorName)
-		//	|| (!this.sourceVendorCap.vendorRanking) || (!this.sourceVendorCap.partId) 
-		//	|| (!this.sourceVendorCap.partDescription) || (!this.sourceVendorCap.selectedCapabulityTypesListData) || (!this.sourceVendorCap.isPMADER)
-		//	|| (!this.sourceVendorCap.capDescription) || (!this.sourceVendorCap.cost) || (!this.sourceVendorCap.tat) || (!this.sourceVendorCap.manufacturerId)
-		//) {
-		//	this.display = true;
-		//	this.disableSave = true;
+		if (
+			(!this.sourceVendorCap.vendorCode) || (!this.sourceVendorCap.vendorName)
+			|| (!this.sourceVendorCap.vendorRanking) || (!this.sourceVendorCap.partId) 
+			|| (!this.sourceVendorCap.partDescription) || (!this.selectedCapabulityTypesListData) || (!this.sourceVendorCap.isPMADER)
+            || (!this.sourceVendorCap.capabilityDescription) || (!this.sourceVendorCap.cost) || (!this.sourceVendorCap.tat) || (!this.sourceVendorCap.manufacturerId)
+		) {
+			this.display = true;
+			this.disableSave = true;
 
-		//	this.modelValue = true;
-		//}
+			this.modelValue = true;
+		}
 
+        if (this.sourceVendorCap.vendorCode && this.sourceVendorCap.vendorName && this.sourceVendorCap.vendorRanking && this.sourceVendorCap.partId
+            && this.sourceVendorCap.partDescription && this.selectedCapabulityTypesListData && this.sourceVendorCap.isPMADER
+            && this.sourceVendorCap.capabilityDescription && this.sourceVendorCap.cost && this.sourceVendorCap.tat && this.sourceVendorCap.manufacturerId)
+        {
+            if (!this.sourceVendorCap.vendorCapabilityId) //for Edit Screen
+            {
+                this.sourceVendorCap.masterCompanyId = 1;
+                this.sourceVendorCap.itemTypeId = 1;
+
+                this.vendorService.newVendorCapability(this.sourceVendorCap).subscribe(data => {
+                    this.collectionofVendorCapability = data;
+                    this.savesuccessCompleted(this.sourceVendorCap);
+
+                    if (data != null) {
+                        //saving for Vendor capability Type Table
+                        if (this.selectedCapabulityTypesListData) {
+
+                            for (let i = 0; i < this.selectedCapabulityTypesListData.length; i++) {
+                                let localCapabulityTypeColl = [{
+                                    vendorCapabilityId: data.vendorCapabilityId,
+                                    capabilityTypeId: this.selectedCapabulityTypesListData[i]
+                                }]
+                                this.vendorService.addVendorCapabilityTypeList(localCapabulityTypeColl[0]).subscribe(aircraftdata => {
+                                    this.collectionofVendorCapabilityTypeList = aircraftdata;
+                                })
+                            }
+                            console.log(this.selectedCapabulityTypesListData);
+                        }
+
+                        if (this.selectedAircraftTypes) {
+                            for (let i = 0; i < this.selectedAircraftTypes.length; i++) {
+                                //this.selectedAircraftTypes[i].push = data.vendorCapabilityId;
+                                let localCapabulityAircraftTypeColl = [{
+                                    vendorCapabilityId: data.vendorCapabilityId,
+                                    AircraftTypeId: this.selectedAircraftTypes[i]
+                                }]
+                                this.vendorService.addVendorCapabilityAircraftType(localCapabulityAircraftTypeColl[0]).subscribe(aircraftdata => {
+                                    this.collectionofVendorCapabulityAircraftTypeList = aircraftdata;
+                                })
+                            }
+                            console.log(this.selectedAircraftTypes);
+                        }
+                        if (this.selectedModels) {
+                            for (let i = 0; i < this.selectedModels.length; i++) {
+                                // this.selectedModels[i].vendorCapabilityId = data.vendorCapabilityId;
+                                let localCapabulityAircraftModelColl = [{
+                                    vendorCapabilityId: data.vendorCapabilityId,
+                                    aircraftModelId: this.selectedModels[i].aircraftModelId,
+                                    dashNumber: this.selectedModels[i].dashNumber,
+                                    isSelected: true
+                                }]
+                                this.vendorService.addVendorCapabiltiyAircraftModel(localCapabulityAircraftModelColl[0]).subscribe(aircraftdata => {
+                                    this.collectionofVendorCapabilityTypeList = aircraftdata;
+                                })
+                            }
+                            console.log(this.selectedModels);
+                        }
+                    }
+                    this.alertService.startLoadingMessage();
+                    this.savesuccessCompleted(this.sourceVendorCap);
+                    this._route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capabilities-list')
+
+                })
+
+
+
+            }
+        }
        
 
-        if (!this.sourceVendorCap.vendorCapabilityId) //for Edit Screen
-        {
-            
-            
-            this.sourceVendorCap.masterCompanyId = 1;
-            this.sourceVendorCap.itemTypeId = 1;
-
-            this.vendorService.newVendorCapability(this.sourceVendorCap).subscribe(data => {
-                this.collectionofVendorCapability = data;
-                this.savesuccessCompleted(this.sourceVendorCap);
-
-                if (data != null)
-                {
-                    //saving for Vendor capability Type Table
-                    if (this.selectedCapabulityTypesListData)
-                    {
-                        
-                        for (let i = 0; i < this.selectedCapabulityTypesListData.length; i++)
-                        {
-                            let localCapabulityTypeColl = [{
-                                vendorCapabilityId: data.vendorCapabilityId,
-                                capabilityTypeId: this.selectedCapabulityTypesListData[i]
-                            }]
-                            this.vendorService.addVendorCapabilityTypeList(localCapabulityTypeColl[0]).subscribe(aircraftdata => {
-                                this.collectionofVendorCapabilityTypeList = aircraftdata;
-                            })
-                        }
-                        console.log(this.selectedCapabulityTypesListData);
-                    }
-
-                    if (this.selectedAircraftTypes)
-                    {
-                        for (let i = 0; i < this.selectedAircraftTypes.length; i++)
-                        {
-                            //this.selectedAircraftTypes[i].push = data.vendorCapabilityId;
-                            let localCapabulityAircraftTypeColl = [{
-                                vendorCapabilityId: data.vendorCapabilityId,
-                                AircraftTypeId: this.selectedAircraftTypes[i]
-                            }]
-                            this.vendorService.addVendorCapabilityAircraftType(localCapabulityAircraftTypeColl[0]).subscribe(aircraftdata => {
-                                this.collectionofVendorCapabulityAircraftTypeList = aircraftdata;
-                            })
-                        }
-                        console.log(this.selectedAircraftTypes);
-                    }
-                    if (this.selectedModels)
-                    {
-                        for (let i = 0; i < this.selectedModels.length; i++) {
-                           // this.selectedModels[i].vendorCapabilityId = data.vendorCapabilityId;
-                            let localCapabulityAircraftModelColl = [{
-                                vendorCapabilityId: data.vendorCapabilityId,
-                                aircraftModelId: this.selectedModels[i].aircraftModelId,
-                                dashNumber: this.selectedModels[i].dashNumber,
-                                isSelected: true
-                            }]
-                            this.vendorService.addVendorCapabiltiyAircraftModel(localCapabulityAircraftModelColl[0]).subscribe(aircraftdata => {
-                                this.collectionofVendorCapabilityTypeList = aircraftdata;
-                            })
-                        }
-                        console.log(this.selectedModels);
-                    }
-
-                    //saving for CAPABILITY TYPE
-                   
-                    //if (data.partId && data.itemMasterId)
-                    //{
-                       
-                    //    if (this.selectedModels.length > 0) {
-
-                    //        this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
-
-                    //    }
-
-                    //}
-                }
-                this.alertService.startLoadingMessage();
-                this.savesuccessCompleted(this.sourceVendorCap);
-                this._route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capabilities-list')
-
-            })
-
-            
-
-        }
+       
 
        
 
