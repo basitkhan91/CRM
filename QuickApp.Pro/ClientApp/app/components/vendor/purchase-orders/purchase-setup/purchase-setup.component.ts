@@ -173,9 +173,59 @@ export class PurchaseSetupComponent {
 				this.sourcePoApproval.dateApprovied = new Date(this.sourcePoApproval.dateApprovied);
 				this.sourcePoApproval.needByDate = new Date(this.sourcePoApproval.needByDate);
 				//this.allManagemtninfo = this.workFlowtService.purchasepartcollection;
-				for (let i = 0; i < this.workFlowtService.purchasepartcollection.length; i++) {
+                for (let i = 0; i < this.workFlowtService.purchasepartcollection.length; i++) {
+                   
 
-					if (this.workFlowtService.purchasepartcollection[i].pop.isParent == true) {
+                    if (this.workFlowtService.purchasepartcollection[i].pop.isParent == true) {
+                        var managementStructure = this.allManagemtninfo.filter(function (management) {
+                            return management.managementStructureId == workFlowtService.purchasepartcollection[i].managementStructureId;
+                        })[0];
+
+                        var structureList = [];
+                        structureList.push(managementStructure.managementStructureId);
+
+                        var parentId = managementStructure.parentId;
+                        while (parentId != null) {
+                            var parentMS = this.allManagemtninfo.filter(function (management) {
+                                return management.managementStructureId == parentId;
+                            })[0];
+                            structureList.push(parentMS.managementStructureId);
+                            parentId = parentMS.parentId;
+                        }
+                        structureList = structureList.reverse();
+                        var counter = 0;
+                        structureList.forEach(structure => {
+                            if (counter == 0) {
+                                this.workFlowtService.purchasepartcollection[i].pop.companyList = this.allManagemtninfo.filter(function (management) {
+                                    return management.managementStructureId == structure.managementStructureId;
+                                });
+                                this.workFlowtService.purchasepartcollection[i].pop.companyId = structure.managementStructureId;
+                            }
+                            if (counter == 1) {
+                                this.workFlowtService.purchasepartcollection[i].pop.partBulist = this.allManagemtninfo.filter(function (management) {
+                                    return management.managementStructureId == structure.managementStructureId;
+                                });
+                                this.workFlowtService.purchasepartcollection[i].pop.partBusinessUnitId = structure.managementStructureId;
+                            }
+                            if (counter == 2) {
+                                this.workFlowtService.purchasepartcollection[i].pop.partDivisionList = this.allManagemtninfo.filter(function (management) {
+                                    return management.managementStructureId == structure.managementStructureId;
+                                });
+                                this.workFlowtService.purchasepartcollection[i].pop.partDivisionId = structure.managementStructureId;
+                            }
+                            if (counter == 3) {
+                                this.workFlowtService.purchasepartcollection[i].pop.partDepartmentList = this.allManagemtninfo.filter(function (management) {
+                                    return management.managementStructureId == structure.managementStructureId;
+                                });
+                                this.workFlowtService.purchasepartcollection[i].pop.partDepartmentId = structure.managementStructureId;
+                            }
+                            counter += 1;
+
+                        });
+
+
+
+
 						if (this.workFlowtService.purchasepartcollection[i].pop.needByDate) {
 							this.workFlowtService.purchasepartcollection[i].pop.needByDate = new Date(this.workFlowtService.purchasepartcollection[i].pop.needByDate);
 						}
@@ -189,7 +239,8 @@ export class PurchaseSetupComponent {
 						this.workFlowtService.purchasepartcollection[i].pop.glAccountId = workFlowtService.purchasepartcollection[i].glAccountId;
 						this.workFlowtService.purchasepartcollection[i].pop.serialNumber = workFlowtService.purchasepartcollection[i].serialNumber;
 						this.workFlowtService.purchasepartcollection[i].pop.partNumber = workFlowtService.purchasepartcollection[i].partNumber;
-						this.workFlowtService.purchasepartcollection[i].pop.shortName = workFlowtService.purchasepartcollection[i].shortName;
+                        this.workFlowtService.purchasepartcollection[i].pop.shortName = workFlowtService.purchasepartcollection[i].shortName;
+
 						this.workFlowtService.purchasepartcollection[i].pop["childList"] = [];
 						this.partListData.push(this.workFlowtService.purchasepartcollection[i].pop)
 

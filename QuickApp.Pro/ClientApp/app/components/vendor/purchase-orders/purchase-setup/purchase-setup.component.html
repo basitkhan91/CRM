@@ -407,25 +407,25 @@
 										
 										<select class="form-control w90" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
                                             <option value="0">Select</option>
-                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}" >{{company.code}}</option>
+                                            <option *ngFor="let company of partList.companyList" value="{{company.managementStructureId}}" >{{company.code}}</option>
 										</select>
 									</td>
 									<td>
 										<select class="form-control w90" [(ngModel)]="partList.partBusinessUnitId" [ngModelOptions]="{standalone: true}" (change)="onPartBusinessUnitChange(partList)">
                                             <option value="0">Select</option>
-                                            <option *ngFor="let businessUnit of partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
+                                            <option *ngFor="let businessUnit of partList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
 										</select>
 									</td>
 									<td>
 										<select class="form-control w90" [(ngModel)]="partList.partDivisionId" [ngModelOptions]="{standalone: true}" (change)="onPartDivisionChange(partList)">
                                             <option value="0">Select</option>
-                                            <option *ngFor="let division of partDivisionList" value="{{division.managementStructureId}}">{{division.code}}</option>
+                                            <option *ngFor="let division of partList.partDivisionList" value="{{division.managementStructureId}}">{{division.code}}</option>
 										</select>
 									</td>
 									<td>
 										<select class="form-control w90" [(ngModel)]="partList.partDepartmentId" [ngModelOptions]="{standalone: true}" (change)="onPartDepartmentChange(partList)">
                                             <option value="0">Select</option>
-                                            <option *ngFor="let department of partDepartmentList " value="{{department.managementStructureId}}">{{department.code}}</option>
+                                            <option *ngFor="let department of partList.partDepartmentList " value="{{department.managementStructureId}}">{{department.code}}</option>
 										</select>
 									</td>
 									<!--<td>

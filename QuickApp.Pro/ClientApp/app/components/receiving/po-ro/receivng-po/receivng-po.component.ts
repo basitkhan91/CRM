@@ -450,52 +450,74 @@ export class ReceivngPoComponent {
    
 
     addDetailsClick(partList) {
-       //debugger;
-        partList["showGrid"] = true;
-        partList["stocklineListObj"] = [];
-        
-        //partList["quantityLength"] = partList.quantityOrdered;
-        this.itemser.getDescriptionbypart(partList.partNumber).subscribe((data:any) => {
-            partList["isSerialized"] = data[0][0].isSerialized;
-            partList["isTimeLife"] = data[0][0].isTimeLife;
-            partList["glAccountId"] = data[0][0].glAccountId;
-            if (partList["isSerialized"] == true) {
-                this.hideSerialNumber = true;
-                this.showRestrictQuantity = true;
-                this.showFreeQuantity = false;
-                this.showNormalQuantity = false;
-                partList["isSerialized"] = true;
-                this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
+       // debugger;
+        for (let i = 0; i < this.partListData.length; i++) {
+            if (this.partListData[i].partNumber == partList.partNumber) {
+                partList["showGrid"] = true;
+                partList["stocklineListObj"] = [];
+
+                //partList["quantityLength"] = partList.quantityOrdered;
+                this.itemser.getDescriptionbypart(partList.partNumber).subscribe((data: any) => {
+                    partList["isSerialized"] = data[0][0].isSerialized;
+                    partList["isTimeLife"] = data[0][0].isTimeLife;
+                    partList["glAccountId"] = data[0][0].glAccountId;
+                    if (partList["isSerialized"] == true) {
+                        this.hideSerialNumber = true;
+                        this.showRestrictQuantity = true;
+                        this.showFreeQuantity = false;
+                        this.showNormalQuantity = false;
+                        partList["isSerialized"] = true;
+                        this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
+
+                    }
+                    else {
+                        this.hideSerialNumber = false;
+                        this.showRestrictQuantity = false;
+                        this.showFreeQuantity = true;
+                        this.showNormalQuantity = false;
+                        partList["isSerialized"] = false;
+
+                        this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
+
+                    }
+
+                })
+                for (let i = 0; i < partList.quantityOrdered; i++) {
+
+                    partList["stocklineListObj"].push(this.loadDefualtObj());
+                }
 
             }
             else {
-                this.hideSerialNumber = false;
-                this.showRestrictQuantity = false;
-                this.showFreeQuantity = true;
-                this.showNormalQuantity = false;
-                partList["isSerialized"] = false;
-
-                this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
-
+                this.partListData[i]["showGrid"] = false;
+                
             }
-           
-        })
-        for (let i = 0; i < partList.quantityOrdered; i++) {
-            
-            partList["stocklineListObj"].push(this.loadDefualtObj());
-        }
+    }
 
    
        
     }
     saveStockline(partList) {
         debugger;
-        if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
-            this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
+        if ((partList["isSerialized"] == true)) {
+            let sourceTimeLife: any = {};
+            for (let i = 0; i < partList["stocklineListObj"].length; i++) {
+                sourceTimeLife.cyclesSinceNew = partList["stocklineListObj"][i].cyclesSinceNew;
+                sourceTimeLife.cyclesSinceOVH = partList["stocklineListObj"][i].cyclesSinceOVH;
+                sourceTimeLife.cyclesSinceRepair = partList["stocklineListObj"][i].cyclesSinceRepair;
+                sourceTimeLife.cyclesSinceInspection = partList["stocklineListObj"][i].cyclesSinceInspection;
+                sourceTimeLife.timeSinceNew = partList["stocklineListObj"][i].timeSinceNew;
+                sourceTimeLife.timeSinceOVH = partList["stocklineListObj"][i].timeSinceOVH;
+                sourceTimeLife.timeSinceRepair = partList["stocklineListObj"][i].timeSinceRepair;
+                sourceTimeLife.timeSinceInspection = partList["stocklineListObj"][i].timeSinceInspection;
+                sourceTimeLife.lastSinceNew = partList["stocklineListObj"][i].lastSinceNew;
+                sourceTimeLife.lastSinceOVH = partList["stocklineListObj"][i].lastSinceOVH;
+                sourceTimeLife.lastSinceInspection = partList["stocklineListObj"][i].lastSinceInspection;
+                this.stocklineser.newStockLineTimeLife(sourceTimeLife).subscribe(data => {
                 //this.collectionofstockLineTimeLife = data;
-                this.sourceStockLineSetup.timeLifeCyclesId = data.timeLifeCyclesId;
+                partList["stocklineListObj"][i].timeLifeCyclesId = data.timeLifeCyclesId;
                 if (data != null) {
-                    for (let i = 0; i < partList["stocklineListObj"].length; i++) {
+                    
                         delete partList["stocklineListObj"][i].conditionList;
                         delete partList["stocklineListObj"][i].manfacturerList;
                         delete partList["stocklineListObj"][i].siteList;
@@ -503,19 +525,19 @@ export class ReceivngPoComponent {
                         partList["stocklineListObj"][i].purchaseOrderId = partList["purchaseOrderId"];
                         partList["stocklineListObj"][i].partNumber = partList["partNumber"];
                         partList["stocklineListObj"][i].isSerialized = partList["isSerialized"];
-                        partList["stocklineListObj"][i].timeLifeCyclesId = this.sourceStockLineSetup.timeLifeCyclesId;
+                        //partList["stocklineListObj"][i].timeLifeCyclesId = this.sourceStockLineSetup.timeLifeCyclesId;
                         partList["stocklineListObj"][i].quantity = partList["quantityOrdered"];
                         partList["stocklineListObj"][i].orderDate = partList["createdDate"];
-                        partList["stocklineListObj"][i].purchaseOrderUnitCost = partList["unitCost"];
+                        //partList["stocklineListObj"][i].purchaseOrderUnitCost = partList["unitCost"];
                         partList["stocklineListObj"][i].glAccountId = partList["glAccountId"];
-                        partList["stocklineListObj"][i].manufacturerId = partList["manufacturerId"];
+                        //partList["stocklineListObj"][i].manufacturerId = partList["manufacturerId"];
                         partList["stocklineListObj"][i].isHazardousMaterial = partList["isHazardousMaterial"];
                         this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
                             this.collectionofstockLine = data;
                         })
                     }
-                }
-            })
+                })
+            }
         }
         else {
             for (let i = 0; i < partList["stocklineListObj"].length; i++) {
@@ -528,9 +550,9 @@ export class ReceivngPoComponent {
                 partList["stocklineListObj"][i].isSerialized = partList["isSerialized"];
                 partList["stocklineListObj"][i].quantity = partList["quantityOrdered"];
                 partList["stocklineListObj"][i].orderDate = partList["createdDate"];
-                partList["stocklineListObj"][i].purchaseOrderUnitCost = partList["unitCost"];
+                //partList["stocklineListObj"][i].purchaseOrderUnitCost = partList["unitCost"];
                 partList["stocklineListObj"][i].glAccountId = partList["glAccountId"];
-                partList["stocklineListObj"][i].manufacturerId = partList["manufacturerId"];
+                //partList["stocklineListObj"][i].manufacturerId = partList["manufacturerId"];
                 partList["stocklineListObj"][i].isHazardousMaterial = partList["isHazardousMaterial"];
                 this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
                     this.collectionofstockLine = data;
@@ -546,10 +568,7 @@ export class ReceivngPoComponent {
         someArray = partList["stocklineListObj"][0];
         partList["stocklineListObj"] = [];
         partList["stocklineListObj"].push(someArray);
-        //for (let i = 0; i < orderQuantity; i++) {
-
-        //    partList["stocklineListObj"].push(this.loadDefualtObj());
-        //}
+     
     }
     getAllparts() {
         //debugger;
@@ -1659,7 +1678,7 @@ export class ReceivngPoComponent {
     }
 
     getDivisionChangeManagementCode(obj) {
-        obj.managementStructureEntityId = obj.divisionId;
+        this.sourcePoApproval.managementStructureEntityId = obj;
     }
     private onprioritySuccessful(getPriorityList: any[]) {
 
@@ -2774,7 +2793,7 @@ export class ReceivngPoComponent {
 
         data.binId = 0;
 
-        this.binservice.getBinDataById(data.binId).subscribe(bindata => { data.allBins=bindata})
+        this.binservice.getBinDataById(data.shelfId).subscribe(bindata => { data.allBins=bindata})
     }
     private onDataLoadBin(getBinList: any) {
         this.loadingIndicator = false;
