@@ -17,7 +17,7 @@ namespace QuickApp.Pro.ViewModels
         public string Approver { get; set; }
         public Nullable<System.DateTime> ApprovedDate { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
-        public long? POPartSplitAddressId { get; set; }
+        public Nullable<long> POPartSplitAddressId { get; set; }
         public string Manufacturer { get; set; }
         public string Status { get; set; }
         public string Trace { get; set; }
@@ -45,7 +45,7 @@ namespace QuickApp.Pro.ViewModels
         public string POPartSplitState { get; set; }
         public string POPartSplitPostalCode { get; set; }
         public string POPartSplitCountry { get; set; }
-        public long? ManagementStructureId { get; set; }
+        public Nullable<long> ManagementStructureId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

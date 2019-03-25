@@ -157,7 +157,7 @@ export class PurchaseSetupComponent {
     orderQuantity: any;
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
-		//debugger;
+
 		this.loadcustomerData();
 		this.loadData();
 
@@ -175,7 +175,8 @@ export class PurchaseSetupComponent {
 				//this.allManagemtninfo = this.workFlowtService.purchasepartcollection;
 				for (let i = 0; i < this.workFlowtService.purchasepartcollection.length; i++) {
 
-					if (this.workFlowtService.purchasepartcollection[i].pop.isParent == true) {
+                    if (this.workFlowtService.purchasepartcollection[i].pop.isParent == true) {
+                      
 						if (this.workFlowtService.purchasepartcollection[i].pop.needByDate) {
 							this.workFlowtService.purchasepartcollection[i].pop.needByDate = new Date(this.workFlowtService.purchasepartcollection[i].pop.needByDate);
 						}
@@ -353,7 +354,7 @@ export class PurchaseSetupComponent {
 
 	}
 	getAllparts() {
-		//debugger;
+	
 		//let partsArray = [];
 		this.returnPartsListArray = [];
 		this.array = this.partNumbers.split(',');
@@ -389,7 +390,7 @@ export class PurchaseSetupComponent {
     }
     
 	savePurchaseOrder() {
-        debugger;
+        
         this.userName = 'admin';
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
@@ -575,7 +576,7 @@ export class PurchaseSetupComponent {
 	}
 
 	partnmId(parentdata, event) {
-		//debugger;
+	
 		this.showInput = true;
 
 		if (this.itemclaColl) {
@@ -616,7 +617,7 @@ export class PurchaseSetupComponent {
     }
     ddlModel: any;
     savePurchaseorderPart(purId) {
-        debugger;
+
 		if (this.workFlowtService.isEditMode == false) {
 			for (let i = 0; i < this.partListData.length; i++) {
 				if (this.partListData[i].purchaseOrderPartRecordId) {
@@ -998,7 +999,6 @@ export class PurchaseSetupComponent {
 					this.savedPurchasedPart = saveddata1;
 					if (this.childDataList.length > 0) {
 						for (let k = 0; k < this.childDataList.length; k++) {
-                            debugger;
                             console.log('adding child records');
                             let childobj = {
 								//ifSplitShip: false,
@@ -1071,7 +1071,7 @@ export class PurchaseSetupComponent {
     //    });
     //}
 	getChildAddressValue(childobj, addressobj) {
-		//debugger;
+
 
 		//childobj["poPartSplitAddressId"] = addressobj.vendorShippingAddressId;
 
@@ -1130,17 +1130,17 @@ export class PurchaseSetupComponent {
 
 		}
     }
-    onCustomerNameChange(part, customer): void{
-        debugger;
+    onCustomerNameChange(part, customer): void {
         part.poPartSplitUserId = customer.customerId;
 
         this.cusservice.getCustomerShipAddressGet(customer.customerId).subscribe(returnedcustomerAddressses => {
             this.spiltshipmentData = returnedcustomerAddressses[0];
-            part["addressData"] = returnedcustomerAddressses[0];
+            part.addressData = returnedcustomerAddressses[0];
+            part.poPartSplitAddressId = 0;
         });
 
     }
-	getPartyNames(part, event) {
+	getPartyNames(part, event) : void {
         if (this.allCustomers && this.allCustomers.length > 0) {
             var customers = this.allCustomers.filter(function (customer) {
                 return customer.name.toLowerCase().indexOf(event.query.toLowerCase()) == 0;
@@ -1156,7 +1156,8 @@ export class PurchaseSetupComponent {
         }
     }
 
-    vendoreventHandler(event) {
+    ddlVendorModel: any;
+    vendoreventHandler(event) :void {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedActionName) {
@@ -1171,16 +1172,14 @@ export class PurchaseSetupComponent {
         }
     }
     onVendorNameChange(part, vendor): void {
-        debugger;
         part.poPartSplitUserId = vendor.vendorId;
         this.workFlowtService.getVendorShipAddressGet(vendor.vendorId).subscribe(
             vendorAddresses => {
                 this.vendorSelectedforSplit = vendorAddresses[0];
-                part["addressData"] = vendorAddresses[0];;
+                part.addressData = vendorAddresses[0];;
             })
     }
-    getVendorPartyNames(part, event) {
-        debugger
+    getVendorPartyNames(part, event) : void {
         if (this.allActions && this.allActions.length > 0) {
             var vendors = this.allActions.filter(function (vendor) {
                 return vendor.vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0;
@@ -1197,9 +1196,9 @@ export class PurchaseSetupComponent {
     }
 
 
-    onCustomerNameselected(partChildList, event) //Customer Ship Address Data
-    {
-        //debugger;
+    onCustomerNameselected(partChildList, event): void {
+        //Customer Ship Address Data
+   
         for (let i = 0; i < this.customerNamecoll.length; i++) {
             if (event == this.customerNamecoll[i][0].name) {
 
@@ -1207,29 +1206,20 @@ export class PurchaseSetupComponent {
                     this.spiltshipmentData = returnedcusdata[0];
                     partChildList["addressData"] = returnedcusdata[0];
                 });
-
-
             }
-
         }
-
     }
 
     deleteSplitShipment(childata, index, mainindex) {
+ 
+        if (childata.purchaseOrderPartRecordId) {
+            this.workFlowtService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
 
-		//debugger;
-		if (childata.purchaseOrderPartRecordId) {
-			this.workFlowtService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
-
-			})
-		}
-		
-				const index1: number = this.partListData.indexOf(index);
-			
-				this.partListData[mainindex].childList.splice(index, 1);
-			 
-		
-	}
+            })
+        }
+        const index1: number = this.partListData.indexOf(index);
+        this.partListData[mainindex].childList.splice(index, 1);
+    }
 	filterFirstNamesforshipto(event) {
 
 		this.firstNamesShipTo = [];
@@ -1287,7 +1277,7 @@ export class PurchaseSetupComponent {
 		}
 	}
 	onBillToCustomerNameselected(event) {
-		//debugger;
+
 		for (let i = 0; i < this.customerNamecoll.length; i++) {
 			if (event == this.customerNamecoll[i][0].name) {
 
@@ -1296,7 +1286,6 @@ export class PurchaseSetupComponent {
 						this.billToCusData = returnddataforbill[0];
 					});
 				this.workFlowtService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
-					//debugger;
 					this.shipToContactData = data[0];
 				});
 			}
@@ -1304,7 +1293,7 @@ export class PurchaseSetupComponent {
 
 	}
 	onshipCustomerNameselected(event) {
-		//debugger;
+	
 		for (let i = 0; i < this.customerNamecoll.length; i++) {
 			if (event == this.customerNamecoll[i][0].name) {
 
@@ -1313,7 +1302,7 @@ export class PurchaseSetupComponent {
 						this.shipToCusData = returnddataforbill[0];
 					});
 				this.workFlowtService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
-					//debugger;
+		
 					this.billToContactData = data[0];
 				});
 			}
@@ -1437,7 +1426,7 @@ export class PurchaseSetupComponent {
 				this.bulist = [];
 				this.departmentList = [];
                 this.divisionlist = [];
-                debugger
+                
 				this.maincompanylist.push(this.allManagemtninfo[i]);
                 this.mainPartcompanylist.push(this.allManagemtninfo[i]);
                 
@@ -1562,8 +1551,7 @@ export class PurchaseSetupComponent {
 
 
 	private loadCreditTermsData() {
-		// debugger;
-
+		
 		this.CreditTermsService.getCreditTermsList().subscribe(
 			results => this.onCreditTermsdata(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -1577,12 +1565,10 @@ export class PurchaseSetupComponent {
 	}
 
 	getValue(data) {
-		//debugger;
 		this.issuedToAddress = data;
 		console.log(data);
 	}
 	getPartValue(parentdata, data) {
-		//debugger;
 		this.partWithId = [];
 		this.itemTypeId = 1;
 		this.workFlowtService.getPartDetailsWithid(data).subscribe(
@@ -1602,7 +1588,6 @@ export class PurchaseSetupComponent {
 		console.log(this.partWithId);
 	}
 	getPartValueForPart(parentdata, data) {
-		//debugger;
 		this.partWithId = [];
 		this.itemTypeId = 1;
 		this.workFlowtService.getPartDetailsWithidForSinglePart(data).subscribe(
@@ -1624,11 +1609,8 @@ export class PurchaseSetupComponent {
 		console.log(this.partWithId);
 	}
 	getMultiplParts(parentdata, data) {
-		//debugger;
 		this.partWithId = [];
 		this.itemTypeId = 1;
-		//this.workFlowtService.getPartDetailsWithid(data).subscribe(
-		//	data1 => {
 		if (data) {
 			this.partWithId = data;
 			parentdata.partAlternatePartId = this.partWithId.partAlternatePartId;
@@ -1640,12 +1622,10 @@ export class PurchaseSetupComponent {
 			parentdata.itemMasterId = this.partWithId.itemMasterId;
 		}
 
-		//})
 		console.log(this.partWithId);
 	}
 	private loadConditionData() {
-		// debugger;
-
+		
 		this.conditionService.getConditionList().subscribe(data => {
 			this.allconditioninfo = data[0];
 		})
@@ -1753,7 +1733,7 @@ export class PurchaseSetupComponent {
 			poPartSplitState: '',
 			poPartSplitPostalCode: '',
 			poPartSplitCountry: '',
-			managementStructureId: '', // hey, take a break, and call me after u done with lunch ok ? ok-cool cya. ca
+			managementStructureId: 0, // hey, take a break, and call me after u done with lunch ok ? ok-cool cya. ca
 			createdBy: '',
 			updatedBy: '',
 			createdDate: '',
@@ -1762,6 +1742,7 @@ export class PurchaseSetupComponent {
 			isParent: isParent,
 			partListObj: this.allPartDetails,
             itemTypeId: '',
+            addressData:[],
             companyList: [],
             partBulist: [],
             partDepartmentList: [],
@@ -1795,9 +1776,7 @@ export class PurchaseSetupComponent {
 	}
 
 	private loadCurrencyData() {
-		// debugger;
-
-
+		
 		this.currencyService.getCurrencyList().subscribe(currencydata => {
 			this.allCurrencyData = currencydata[0];
 		})
@@ -1828,7 +1807,6 @@ export class PurchaseSetupComponent {
 
 	onVendorselected(partChildList, event) //Calling For Vendor Ship Data
 	{
-		//debugger;
 		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
@@ -1843,7 +1821,6 @@ export class PurchaseSetupComponent {
 
 	}
 	onVendorselectedForShipTo(event) {
-		//debugger;
 		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
@@ -1861,7 +1838,6 @@ export class PurchaseSetupComponent {
 
 	}
 	onVendorselectedForBillTo(event) {
-		//debugger;
 		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
@@ -1884,7 +1860,6 @@ export class PurchaseSetupComponent {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
 				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveVenderName = true;
 					this.disableSaveVenName = true;
 				}
@@ -2014,8 +1989,6 @@ export class PurchaseSetupComponent {
 	}
 
 	onVendorCodeselected(event) {
-		//debugger;
-
 		for (let i = 0; i < this.VendorCodesColl.length; i++) {
 			if (event == this.VendorCodesColl[i][0].vendorCode) {
 
@@ -2352,7 +2325,6 @@ export class PurchaseSetupComponent {
 		this.modal.close();
 	}
 	updateissued() {
-		//debugger;
 		this.isEditMode = true;
 		this.sourcePoApproval.isActive = true;
 		this.sourceissued.updatedBy = this.userName;
@@ -2476,23 +2448,19 @@ export class PurchaseSetupComponent {
 				this.saveManagement(data.siteId, this.companyId,1); //pushing Site Management Need Site Value so after getting SiteId we are calling
 
 			}
-			//retrive after enter siteid get and submit managementsite
-
 
 		})
 	}
 
 	public saveManagement(siteId, data1, MasterCompanyId) //retriving SiteManagement Array
 	{
-		debugger;
 		let Data = [{
 			SiteId: siteId,
 			ManagementStructureId: data1,
 			MasterCompanyId: MasterCompanyId
 		}]
 		this.data1.push(Data);
-
-
+        
 		this.siteService.newManagementSite(this.data1[0][0]).subscribe(data11 => {
 			this.localManagementSiteCollection = data11; //local SiteManagement Data
 			this.getBUList1(this.companyId);
