@@ -148,7 +148,9 @@ export class RoSetupComponent {
 	actionamecolle: any[] = [];
 	selectedSite: any;
 	disableSaveManufacturer: boolean;
-	name: any;
+    name: any;
+    mainPartcompanylist: any[] = [];
+    partList: any = {};
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
 		//debugger;
@@ -1291,14 +1293,57 @@ export class RoSetupComponent {
 
 			if (this.allManagemtninfo[i].parentId == null) {
 				this.maincompanylist.push(this.allManagemtninfo[i]);
-
+                this.mainPartcompanylist.push(this.allManagemtninfo[i]);
 			}
-
-
 		}
+    }
+
+    onPartCompanyChange(part) {
+        this.partList.managementStructureId = part.companyId; //Saving Management Structure Id if there Company Id
+
+        part.partDepartmentList = [];
+        part.partDepartmentId = 0;
+        part.partDivisionList = [];
+        part.partDivisionId = 0;
+        part.managementStructureId = part.companyId;
+        part.partBusinessUnitId = 0;
+        part.partBulist = this.allManagemtninfo.filter(function (management) {
+            return management.parentId == part.companyId;
+        });
+
+        this.bulist = part.partBulist;
+    }
+
+    onPartBusinessUnitChange(part) {
+        this.partList.managementStructureEntityId = part.partDepartmentId; //Saving Management Structure Id if there Company Id
+
+        part.partDeparmentId = 0;
+        part.partDepartmentList = [];
+        part.partDivisionId = 0;
+        part.managementStructureId = part.partBusinessUnitId;
+        part.partDivisionList = this.allManagemtninfo.filter(function (management) {
+            return management.parentId == part.partBusinessUnitId;
+        });
+
+        this.divisionlist = part.partDivisionList;
+    }
+
+    onPartDivisionChange(part): void {
+        this.partList.managementStructureEntityId = part.partDivisionId; //Saving Management Structure Id if there Company Id
+        part.partDepartmentId = 0;
+        part.managementStructureId = part.partDivisionId;
+        part.partDepartmentList = this.allManagemtninfo.filter(function (management) {
+            return management.parentId == part.partDivisionId;
+        });
+        this.departmentList = part.partDepartmentList
+    }
 
 
-	}
+
+    onPartDepartmentChange(part): void {
+        part.managementStructureId = part.partDepartmentId;
+        //this.partList.managementStructureEntityId = divisionId;
+    }
 	getBUList(masterCompanyId) {
 		this.bulist = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -1540,7 +1585,15 @@ export class RoSetupComponent {
 			updatedDate: '',
 			isActive: '',
 			isParent: isParent,
-			partListObj: this.allPartDetails,
+            partListObj: this.allPartDetails,
+            companyList: [],
+            partBulist: [],
+            partDepartmentList: [],
+            partDivisionList: [],
+            companyId: 0,
+            partBusinessUnitId: 0,
+            partDepartmentId: 0,
+            partDivisionId: 0,
 			itemTypeId: ''
 		}
 		if (isParent) {

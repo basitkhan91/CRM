@@ -285,216 +285,278 @@
 									<!--<th>RO </th>-->
 									<th>SO </th>
 									<th class="from-item-master">Company</th>
-									<!--<th class="from-item-master">BU</th>
+									<th class="from-item-master">BU</th>
 									<th class="from-item-master">Division</th>
-									<th class="from-item-master">Dept</th>-->
+									<th class="from-item-master">Dept</th>
 
 									<th>Memo</th>
 								</tr>
 							</thead>
 							<tbody *ngFor="let partList of partListData;let row_index=index">
-								<tr class="parent-data">
-									<td></td>
-									<td><input type="checkbox" class="pcheck" checked=""></td>
-									<td><input type="checkbox" class="splitship" [(ngModel)]="partList.ifSplitShip" (change)="getCheckboxvalue(partList)"></td>
-									<td>
-										<div class="inner-addon inline-block w80">
-											<!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
-												<option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
-											</select>-->
-											<p-autoComplete [(ngModel)]="partList.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-															[minLength]="1" [dropdown]="true">
-												<ng-template let-partName pTemplate="part">
-													<div class="ui-helper-clearfix">{{partName}}</div>
-												</ng-template>
-											</p-autoComplete>
+                                <tr class="parent-data">
+                                    <td></td>
+                                    <td><input type="checkbox" class="pcheck" checked=""></td>
+                                    <td><input type="checkbox" class="splitship" [(ngModel)]="partList.ifSplitShip" (change)="getCheckboxvalue(partList)"></td>
+                                    <td>
+                                        <div class="inner-addon inline-block w80">
+                                            <!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
+                <option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
+            </select>-->
+                                            <p-autoComplete [(ngModel)]="partList.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                            [minLength]="1" [dropdown]="true">
+                                                <ng-template let-partName pTemplate="part">
+                                                    <div class="ui-helper-clearfix">{{partName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
 
-										</div>
-									</td>
-									<td>
-										<div class="inner-addon right-addon autosuggesions-add inline-block w80">
-											<i class="fa fa-search"></i>
-											<input type="text" class="form-control numberids ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="partList.partAlternatePartId">
-										</div>
-									</td>
-									<td>{{partList?.partdescription}}</td>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w80">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control numberids ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="partList.partAlternatePartId">
+                                        </div>
+                                    </td>
+                                    <td>{{partList?.partdescription}}</td>
 
-									<td>{{partList?.serialNumber}}</td>
-									<td *ngIf="partList?.itemTypeId==1">Stock</td>
-									<td *ngIf="partList?.itemTypeId==2">Non Stock</td>
-									<td *ngIf="partList?.itemTypeId==3">Equipment</td>
-									<td *ngIf="partList?.itemTypeId==0"></td>
-									<td>{{partList?.name}}</td>
-									<td>
-										{{partList?.glAccountId}}
-									</td>
-									<td>
-										<!--<select class="w80" [(ngModel)]="partList.uomId">
-											<option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
-										</select>-->
-										{{partList?.shortName}}
-									</td>
-									<!--<td><input type="date" class="form-control datepicker w90 hasDatepicker" [(ngModel)]="partList.needByDate"></td>-->
-									<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partList.needByDate"></p-calendar>
-									<td>
-										<select class="w80" [(ngModel)]="partList.conditionCode">
-											<option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}} </option>
-										</select>
-									</td>
+                                    <td>{{partList?.serialNumber}}</td>
+                                    <td *ngIf="partList?.itemTypeId==1">Stock</td>
+                                    <td *ngIf="partList?.itemTypeId==2">Non Stock</td>
+                                    <td *ngIf="partList?.itemTypeId==3">Equipment</td>
+                                    <td *ngIf="partList?.itemTypeId==0"></td>
+                                    <td>{{partList?.name}}</td>
+                                    <td>
+                                        {{partList?.glAccountId}}
+                                    </td>
+                                    <td>
+                                        <!--<select class="w80" [(ngModel)]="partList.uomId">
+            <option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+        </select>-->
+                                        {{partList?.shortName}}
+                                    </td>
+                                    <!--<td><input type="date" class="form-control datepicker w90 hasDatepicker" [(ngModel)]="partList.needByDate"></td>-->
+                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partList.needByDate"></p-calendar>
+                                    <td>
+                                        <select class="w80" [(ngModel)]="partList.conditionCode">
+                                            <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}} </option>
+                                        </select>
+                                    </td>
 
-									<td><input type="number" class="form-control w90" [(ngModel)]="partList.quantityOrdered"></td>
-									<td><input type="text" class="form-control w90" [(ngModel)]="partList.unitCost"></td>
-									<td><input type="text" class="form-control w90" [(ngModel)]="partList.discountPerUnit"></td>
-									<td><input type="text" class="form-control w90" [(ngModel)]="partList.discountCostPerUnit"></td>
-									<td><input type="text" class="form-control w90" [(ngModel)]="partList.extendedCost"></td>
-									<td>
-										<select class="w80" [(ngModel)]="partList.functionalCurrencyId">
-											<option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
-										</select>
-									</td>
+                                    <td><input type="number" class="form-control w90" [(ngModel)]="partList.quantityOrdered"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.unitCost"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.discountPerUnit"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.discountCostPerUnit"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.extendedCost"></td>
+                                    <td>
+                                        <select class="w80" [(ngModel)]="partList.functionalCurrencyId">
+                                            <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+                                        </select>
+                                    </td>
 
-									<td><input type="text" class="form-control w90" [(ngModel)]="partList.foreignExchangeRate"></td>
-									<td>
-										<select class="w80" [(ngModel)]="partList.transactionalCurrencyId">
-											<option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
-										</select>
-									</td>
-									<td><input type="text" class="form-control w90" [(ngModel)]="partList.workOrderId"></td>
-									<!--<td><input type="text" class="form-control w90" [(ngModel)]="partList.repairOrderId"></td>-->
-									<td><input type="text" class="form-control w90" [(ngModel)]="partList.salesOrderId"></td>
-									<td>
-										<select class="w70" [(ngModel)]="partList.managementStructureId" [ngModelOptions]="{standalone: true}">
-											<option *ngFor="let ataName of allManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<!--<td>
-										<select class="w80">
-											<option value="">Adso</option>
-											<option value="">Aerospace</option>
-											<option value="">ILS</option>
-											<option value="">PArts Base</option>
-											<option value="">PAS</option>
-											<option value="">Silverxis</option>
-										</select>
-									</td>
-									<td>
-										<select class="w80">
-											<option value="Broker">Broker</option>
-											<option value="BusJet">BusJet</option>
-											<option value="Cargo">Cargo</option>
-											<option value="Commercial">Commercial</option>
-											<option value="Distributor">Distributor</option>
-											<option value="General Aviation (GA)">General Aviation (GA)</option>
-											<option value="Military">Military</option>
-											<option value="MRO">MRO</option>
-											<option value="OEM">OEM</option>
-											<option value="Rotary">Rotary</option>
-										</select>
-									</td>
-									<td>
-										<select class="w80">
-											<option value="">Department</option>
-											<option value="">Auditor</option>
-											<option value="">Engineer</option>
-											<option value="">Inspector</option>
-											<option value="">Mech</option>
-											<option value="">Quality</option>
-											<option value="">Receiver</option>
-											<option value="">Tech</option>
-										</select>
-									</td>-->
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.foreignExchangeRate"></td>
+                                    <td>
+                                        <select class="w80" [(ngModel)]="partList.transactionalCurrencyId">
+                                            <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.workOrderId"></td>
+                                    <!--<td><input type="text" class="form-control w90" [(ngModel)]="partList.repairOrderId"></td>-->
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.salesOrderId"></td>
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.partBusinessUnitId" [ngModelOptions]="{standalone: true}" (change)="onPartBusinessUnitChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let businessUnit of bulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.partDivisionId" [ngModelOptions]="{standalone: true}" (change)="onPartDivisionChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let division of divisionlist" value="{{division.managementStructureId}}">{{division.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.partDepartmentId" [ngModelOptions]="{standalone: true}" (change)="onPartDepartmentChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let department of departmentList" value="{{department.managementStructureId}}">{{department.code}}</option>
+                                        </select>
+                                    </td>
+                                    <!--<td>
+        <select class="w80">
+            <option value="">Adso</option>
+            <option value="">Aerospace</option>
+            <option value="">ILS</option>
+            <option value="">PArts Base</option>
+            <option value="">PAS</option>
+            <option value="">Silverxis</option>
+        </select>
+    </td>
+    <td>
+        <select class="w80">
+            <option value="Broker">Broker</option>
+            <option value="BusJet">BusJet</option>
+            <option value="Cargo">Cargo</option>
+            <option value="Commercial">Commercial</option>
+            <option value="Distributor">Distributor</option>
+            <option value="General Aviation (GA)">General Aviation (GA)</option>
+            <option value="Military">Military</option>
+            <option value="MRO">MRO</option>
+            <option value="OEM">OEM</option>
+            <option value="Rotary">Rotary</option>
+        </select>
+    </td>
+    <td>
+        <select class="w80">
+            <option value="">Department</option>
+            <option value="">Auditor</option>
+            <option value="">Engineer</option>
+            <option value="">Inspector</option>
+            <option value="">Mech</option>
+            <option value="">Quality</option>
+            <option value="">Receiver</option>
+            <option value="">Tech</option>
+        </select>
+    </td>-->
 
-									<td><input type="text" class="w100" [(ngModel)]="partList.memo"></td>
-								</tr>
-								<tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
-									<th></th>
-									<th></th>
-									<th></th>
-									<th>PN</th>
-									<th>PN Des.</th>
-									<th>User Type</th>
-									<th>Name</th>
-									<th>Select Address</th>
-									<th>UOM</th>
-									<!--<th>Address 1</th>
-									<th>Address 2</th>
-									<th>Address 3</th>
-									<th>City</th>
-									<th>State/Prov</th>
-									<th>Postal Code</th>
-									<th>Country</th>-->
-									<!--<th>Item Type</th>-->
+                                    <td><input type="text" class="w100" [(ngModel)]="partList.memo"></td>
+                                </tr>
+                                <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>PN</th>
+                                    <th>PN Des.</th>
+                                    <th>User Type</th>
+                                    <th>Name</th>
+                                    <th>Select Address</th>
+                                    <th>UOM</th>
+                                    <!--<th>Address 1</th>
+                                    <th>Address 2</th>
+                                    <th>Address 3</th>
+                                    <th>City</th>
+                                    <th>State/Prov</th>
+                                    <th>Postal Code</th>
+                                    <th>Country</th>-->
+                                    <!--<th>Item Type</th>-->
 
-									<th>Quantity To Repair</th>
-									<th>Need By </th>
-									<th colspan="20"><button type="button" class="btn btn-success btn-xs" (click)="addRow(partList)"><i class="fa fa-plus"></i></button></th>
-								</tr>
-								<tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index" [hidden]="!partList.ifSplitShip">
-									<td></td>
-									<td></td>
-									<td></td>
-									<td>{{partList?.partNumber}}</td>
-									<td>{{partList?.partdescription}}</td>
-									<td>
-										<select [(ngModel)]="partChildList.roPartSplitUserTypeId">
-											<option value="1">Customer</option>
-											<option value="2">Vendor</option>
-											<option value="3">Company</option>
-										</select>
-									</td>
-									<td>
-										<div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.roPartSplitUserTypeId==1">
-											<i class="fa fa-search"></i>
-											<p-autoComplete (onSelect)="onCustomerNameselected(partChildList,$event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="partChildList.roPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-															[minLength]="1" [dropdown]="true">
-												<ng-template let-name pTemplate="item">
-													<div class="ui-helper-clearfix">{{name}}</div>
-												</ng-template>
-											</p-autoComplete>
-										</div>
-										<div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.roPartSplitUserTypeId==2">
-											<p-autoComplete (onSelect)="onVendorselected(partChildList,$event)" (onKeyUp)=eventHandler($event) [(ngModel)]="partChildList.roPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-															[minLength]="1" [dropdown]="true">
-												<ng-template let-vendorName pTemplate="item">
-													<div class="ui-helper-clearfix">{{vendorName}}</div>
-												</ng-template>
-											</p-autoComplete>
-										</div>
-										<div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.roPartSplitUserTypeId==3">
-											<i class="fa fa-search"></i>
-											<input type="text" [(ngModel)]="partChildList.roPartSplitUserName" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
-										</div>
-									</td>
-									<td>
-										<select class="w175" [(ngModel)]="partChildList.addressobject" (change)="getChildAddressValue(partChildList,partChildList.addressobject)">
+                                    <th>Quantity To Repair</th>
+                                    <th>Need By </th>
+                                    <th>Company </th>
+                                    <th>BU </th>
+                                    <th>Division</th>
+                                    <th>Dept</th>
+                                    <th colspan="20"><button type="button" class="btn btn-success btn-xs" (click)="addRow(partList)"><i class="fa fa-plus"></i></button></th>
+                                </tr>
+                                <tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index" [hidden]="!partList.ifSplitShip">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{partList?.partNumber}}</td>
+                                    <td>{{partList?.partdescription}}</td>
+                                    <td>
+                                        <select [(ngModel)]="partChildList.roPartSplitUserTypeId">
+                                            <option value="1">Customer</option>
+                                            <option value="2">Vendor</option>
+                                            <option value="3">Company</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.roPartSplitUserTypeId==1">
+                                            <i class="fa fa-search"></i>
+                                            <p-autoComplete (onSelect)="onCustomerNameselected(partChildList,$event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="partChildList.roPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                                            [minLength]="1" [dropdown]="true">
+                                                <ng-template let-name pTemplate="item">
+                                                    <div class="ui-helper-clearfix">{{name}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                        </div>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.roPartSplitUserTypeId==2">
+                                            <p-autoComplete (onSelect)="onVendorselected(partChildList,$event)" (onKeyUp)=eventHandler($event) [(ngModel)]="partChildList.roPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                                                            [minLength]="1" [dropdown]="true">
+                                                <ng-template let-vendorName pTemplate="item">
+                                                    <div class="ui-helper-clearfix">{{vendorName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                        </div>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.roPartSplitUserTypeId==3">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" [(ngModel)]="partChildList.roPartSplitUserName" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="w175" [(ngModel)]="partChildList.addressobject" (change)="getChildAddressValue(partChildList,partChildList.addressobject)">
 
-											<option *ngFor="let object of partChildList.addressData" [ngValue]="object">{{object.address1}} {{object.city}} {{object.country}} {{object.stateOrProvince}} {{object.postalCode}}</option>
+                                            <option *ngFor="let object of partChildList.addressData" [ngValue]="object">{{object.address1}} {{object.city}} {{object.country}} {{object.stateOrProvince}} {{object.postalCode}}</option>
 
-										</select>
-									</td>
-									<!--<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitAddress1" class="form-control"></td>
-									<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitAddress2" class="form-control"></td>
-									<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitAddress3" class="form-control"></td>
-									<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitCity" class="form-control"></td>
-									<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitState" class="form-control"></td>
-									<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitPostalCode" class="form-control"></td>
-									<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitCountry" class="form-control"></td>-->
-									<!--<td>{{partChildList.ite}}</td>-->
-									<!--<td *ngIf="partWithId?.itemTypeId==1 || partChildList?.itemTypeId==1">IdStock</td>
-									<td *ngIf="partWithId?.itemTypeId==2 || partChildList?.itemTypeId==2">Non Stock</td>
-									<td *ngIf="partWithId?.itemTypeId==3 || partChildList?.itemTypeId==3">Equipment</td>-->
-									<!--<td *ngIf="partList?.itemTypeId==0"></td>-->
-									<td>
-										<!--<select class="w80" [(ngModel)]="partChildList.uomId">
-												<option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
-										</select>-->
-										{{partList?.shortName}}
-									</td>
-									<td><input type="number" min="1" max="1000" name="" id="" [(ngModel)]="partChildList.quantityOrdered" class="form-control"></td>
-									<!--<td><input type="date" name="" id="dp1547623339385" [(ngModel)]="partChildList.needByDate" class="form-control datepicker hasDatepicker"></td>-->
-									<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
-									<td colspan="20" (click)="deleteSplitShipment(partChildList,row_no,row_index)"><a class="delete-split-shipment-row"><i class="fa fa-trash"></i></a></td>
-								</tr>
+                                        </select>
+                                    </td>
+                                    <!--<td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitAddress1" class="form-control"></td>
+    <td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitAddress2" class="form-control"></td>
+    <td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitAddress3" class="form-control"></td>
+    <td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitCity" class="form-control"></td>
+    <td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitState" class="form-control"></td>
+    <td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitPostalCode" class="form-control"></td>
+    <td><input type="text" name="" id="" [(ngModel)]="partChildList.roPartSplitCountry" class="form-control"></td>-->
+                                    <!--<td>{{partChildList.ite}}</td>-->
+                                    <!--<td *ngIf="partWithId?.itemTypeId==1 || partChildList?.itemTypeId==1">IdStock</td>
+    <td *ngIf="partWithId?.itemTypeId==2 || partChildList?.itemTypeId==2">Non Stock</td>
+    <td *ngIf="partWithId?.itemTypeId==3 || partChildList?.itemTypeId==3">Equipment</td>-->
+                                    <!--<td *ngIf="partList?.itemTypeId==0"></td>-->
+                                    <td>
+                                        <!--<select class="w80" [(ngModel)]="partChildList.uomId">
+                <option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+        </select>-->
+                                        {{partList?.shortName}}
+                                    </td>
+                                    <td><input type="number" min="1" max="1000" name="" id="" [(ngModel)]="partChildList.quantityOrdered" class="form-control"></td>
+                                    <!--<td><input type="date" name="" id="dp1547623339385" [(ngModel)]="partChildList.needByDate" class="form-control datepicker hasDatepicker"></td>-->
+                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.companyId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartCompanyChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.partBusinessUnitId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartBusinessUnitChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let businessUnit of partChildList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.partDivisionId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartDivisionChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let division of partChildList.partDivisionList"
+                                                    value="{{division.managementStructureId}}">
+                                                {{division.code}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.partDepartmentId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartDepartmentChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let department of partChildList.partDepartmentList" value="{{department.managementStructureId}}">{{department.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="20" (click)="deleteSplitShipment(partChildList,row_no,row_index)"><a class="delete-split-shipment-row"><i class="fa fa-trash"></i></a></td>
+                                </tr>
 							</tbody>
 						</table>
 					</div>
