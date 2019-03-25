@@ -89,7 +89,7 @@ export class CustomerWorkSetupComponent {
     modelValue: boolean;
     alldata: any;
     firstNames: any[];
-    workPhone: any[];
+    workPhone: any[]=[];
     local: any;
     collectionofstockLineTimeLife: any;
     value: number;
@@ -576,11 +576,13 @@ export class CustomerWorkSetupComponent {
 
         this.workPhone = [];
         if (this.allActions) {
-        for (let i = 0; i < this.allActions.length; i++) {
-            let workPhone = this.allActions[i].workPhone;
-            if (workPhone.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.workPhone.push(workPhone);
-            }
+            if (this.allActions.length > 0) {
+                for (let i = 0; i < this.allActions.length; i++) {
+                    let workPhone = this.allActions[i].workPhone;
+                    if (workPhone.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                        this.workPhone.push(workPhone);
+                    }
+                }
             }
         }
     }

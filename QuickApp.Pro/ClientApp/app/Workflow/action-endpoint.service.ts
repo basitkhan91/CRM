@@ -97,7 +97,8 @@ export class ActionEndpoint extends EndpointFactory {
 			'customerName':workflowData.customerName,
 			'partNumber': workflowData.partNumber,
 			'workflowId': workflowData.workflowId,
-			'workScopeId':workflowData.workScopeId
+            'workScopeId': workflowData.workScopeId,
+            'customerCode': workflowData.customerCode
 		}
 		return this.http.post<T>(this.AddWorkFlowURL, JSON.parse(JSON.stringify(obj)), this.getRequestHeaders())
 		//return this.http.post<T>(this.AddWorkFlowURL,JSON.parse(JSON.stringify((workflowData)), this.getRequestHeaders())

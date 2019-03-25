@@ -602,5 +602,6 @@ export class WorkflowCreateComponent implements OnInit {
 	private onDataLoadFailed(error: any) {
 
 
-	}
+    }
+
 }

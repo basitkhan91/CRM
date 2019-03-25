@@ -110,8 +110,8 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
             { field: 'firstName', header: 'Employee Name' },
             { field: 'name', header: 'Customer Name' },
              { field: 'customerReference', header: 'Customer Reference' },
-            { field: 'createdDate', header: 'Created Date' },
-            { field: 'updatedDate', header: 'Updated Date' },
+            //{ field: 'createdDate', header: 'Created Date' },
+            //{ field: 'updatedDate', header: 'Updated Date' },
 
 
         ];
@@ -178,6 +178,22 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
             this.showViewProperties.binId = row.bi.name;
         }
         else { this.showViewProperties.binId = "" }
+        if (row.ti) {
+            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesRemaining;
+            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceNew;
+            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceOVH;
+            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceInspection;
+            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceRepair;
+            this.showViewProperties.timeLifeCyclesId = row.ti.timeRemaining;
+            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceNew;
+            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceOVH;
+            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceInspection;
+            this.showViewProperties.timeLifeCyclesId = row.ti.lastSinceInspection;
+            this.showViewProperties.timeLifeCyclesId = row.ti.lastSinceOVH;
+            this.showViewProperties.timeLifeCyclesId = row.ti.lastSinceNew;
+            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceRepair;
+        }
+        else { this.showViewProperties.timeLifeCyclesId = "" }
 
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'lg' });
