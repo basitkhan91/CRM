@@ -99,6 +99,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
             repairForm: this.formBuilder.array([]),
             exchangeForm: this.formBuilder.array([])
         });
+        this.capabilityTypeData.forEach(element => {
+            this.resetFormArray(element);
+        });
         //this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
         // debugger;
         //this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
@@ -813,11 +816,20 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 break;
         }
     }
-
+    checkIsExisted(type,modal,myForm){
+        let itemExisted = false;
+        myForm.controls.forEach(data => {
+            if(data['controls']['aircraftTypeId'].value == type && data['controls']['aircraftModelId'].value == modal){
+                itemExisted = true;
+                return itemExisted;
+            }
+        });
+        return itemExisted;
+    }
     addModels(capData) {
         this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
-        this.resetFormArray(capData);
+        // this.resetFormArray(capData);
         capData.selectedManufacturer.forEach(element1 => {
             capbilitiesObj.itemMasterId = this.ItemMasterId;
             capbilitiesObj.aircraftTypeId = element1.value;
@@ -831,46 +843,65 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     let mfObj = this.formBuilder.group(capbilitiesObj);
                     switch (capData.formArrayName) {
                         case "mfgForm":
+                           let mfgItemExisted = this.checkIsExisted(element1.value,element2.value,this.mfgFormArray);
+                           if(mfgItemExisted == false){
                             this.mfgFormArray.push(mfObj);
                             let mfgIndex = this.mfgFormArray.controls.length - 1;
                             this.mfgFormArray.controls[mfgIndex]['buList'] = [];
                             this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
                             this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+                           } 
+                          
                             break;
                         case "overhaulForm":
+                        let oralItemExisted = this.checkIsExisted(element1.value,element2.value,this.overhaulFormArray);
+                           if(oralItemExisted == false){
                             this.overhaulFormArray.push(mfObj);
                             let overIndex = this.overhaulFormArray.controls.length - 1;
                             this.overhaulFormArray.controls[overIndex]['buList'] = [];
                             this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
                             this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
+                           }
                             break;
                         case "distributionForm":
+                        let distExisted = this.checkIsExisted(element1.value,element2.value,this.distributionFormArray);
+                           if(distExisted == false){
                             this.distributionFormArray.push(mfObj);
                             let distIndex = this.distributionFormArray.controls.length - 1;
                             this.distributionFormArray.controls[distIndex]['buList'] = [];
                             this.distributionFormArray.controls[distIndex]['departmentList'] = [];
                             this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
+                           }
                             break;
                         case "certificationForm":
+                        let certExisted = this.checkIsExisted(element1.value,element2.value,this.certificationFormArray);
+                           if(certExisted == false){
                             this.certificationFormArray.push(mfObj);
                             let certIndex = this.certificationFormArray.controls.length - 1;
                             this.certificationFormArray.controls[certIndex]['buList'] = [];
                             this.certificationFormArray.controls[certIndex]['departmentList'] = [];
                             this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
+                           }
                             break;
                         case "repairForm":
+                        let repairExisted = this.checkIsExisted(element1.value,element2.value,this.repairFormArray);
+                           if(repairExisted == false){
                             this.repairFormArray.push(mfObj);
                             let repIndex = this.repairFormArray.controls.length - 1;
                             this.repairFormArray.controls[repIndex]['buList'] = [];
                             this.repairFormArray.controls[repIndex]['departmentList'] = [];
                             this.repairFormArray.controls[repIndex]['divisionlist'] = [];
+                           }
                             break;
                         case "exchangeForm":
+                        let exchangeExisted = this.checkIsExisted(element1.value,element2.value,this.exchangeFormArray);
+                           if(exchangeExisted == false){
                             this.exchangeFormArray.push(mfObj);
                             let excngIndex = this.exchangeFormArray.controls.length - 1;
                             this.exchangeFormArray.controls[excngIndex]['buList'] = [];
                             this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
                             this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
+                           }
                             break;
                     }
                 }
