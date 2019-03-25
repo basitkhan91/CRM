@@ -221,22 +221,6 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-
-        //[HttpPost("PostTimeLine")]
-        //public IActionResult addMaterial([FromBody] TimeLife TimeLife)
-        //{
-        //    if (TimeLife != null)
-        //    {
-        //        TimeLife.TimeLifeCyclesId = 0;
-        //        TimeLife.MasterCompanyId = 1;
-        //        _context.TimeLife.Add(TimeLife);
-        //        _context.SaveChanges();
-        //    }
-        //    return Ok();
-        //}
-
-
-
         [HttpPut("UpdatereceivingCustomerWork")]
         public IActionResult updatereceivingcustomer([FromBody] ReceivingCustomerWork rcwork)
         {

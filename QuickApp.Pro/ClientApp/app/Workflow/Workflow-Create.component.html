@@ -60,102 +60,109 @@
 					<div class="form-group col-sm-12">
 						<label class="control-label col-sm-4">Work Scope <span class="clr-red">*</span></label>
 						<div class="col-sm-7">
-							<select class="w80" [(ngModel)]="sourceWorkFlow.workScopeId">
+							<select [(ngModel)]="sourceWorkFlow.workScopeId">
 								<option *ngFor="let workScope of worksScopeCollection" [ngValue]="workScope.workScopeId">  {{workScope.description}}</option>
 							</select>
 						</div>
 					</div>
 
 				</div>
-				<div class="col-sm-3 left-block">
-					<div class="col-sm-12">
+                <div class="col-sm-3 left-block">
+                    <div class="col-sm-12">
 
 
-						<div class="form-group col-sm-12">
-							<label for="vendorName" class="control-label col-sm-4">Part Number <span class="clr-red">*</span></label>
-							<div class="col-sm-7">
-								<p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-												[minLength]="1" [dropdown]="true">
-									<ng-template let-partName pTemplate="part">
-										<div class="ui-helper-clearfix">{{partName}}</div>
-									</ng-template>
-								</p-autoComplete>
-							</div>
-						</div>
+                        <div class="form-group col-sm-12">
+                            <label for="vendorName" class="control-label col-sm-4">Part Number <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-partName pTemplate="part">
+                                        <div class="ui-helper-clearfix">{{partName}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                        </div>
 
 
-						<!--<a href="item-master-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
-					</div>
+                        <!--<a href="item-master-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                    </div>
 
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">PN Description</label>
-						<div class="col-sm-7">
-							<input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.partNumberDescription" readonly>
-						</div>
-					</div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">PN Description</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.partNumberDescription" readonly>
+                        </div>
+                    </div>
 
 
-					<!--<div class="form-group col-sm-12">
-						<label for="vendorName" class="control-label col-sm-4">Changed Part Number <span class="clr-red">*</span></label>
-						<div class="col-sm-7">
-							<p-autoComplete [(ngModel)]="sourceWorkFlow.changedPartNumber" (onSelect)="onPartSelect($event)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-											[minLength]="1" [dropdown]="true">
-								<ng-template let-partName pTemplate="part">
-									<div class="ui-helper-clearfix">{{partName}}</div>
-								</ng-template>
-							</p-autoComplete>
-						</div>
-					</div>-->
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">Changed PN</label>
-						<div class="col-sm-7">
-							<input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.changedPartNumber">
-						</div>
-					</div>
+                    <!--<div class="form-group col-sm-12">
+        <label for="vendorName" class="control-label col-sm-4">Changed Part Number <span class="clr-red">*</span></label>
+        <div class="col-sm-7">
+            <p-autoComplete [(ngModel)]="sourceWorkFlow.changedPartNumber" (onSelect)="onPartSelect($event)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                            [minLength]="1" [dropdown]="true">
+                <ng-template let-partName pTemplate="part">
+                    <div class="ui-helper-clearfix">{{partName}}</div>
+                </ng-template>
+            </p-autoComplete>
+        </div>
+    </div>-->
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Changed PN</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.changedPartNumber">
+                        </div>
+                    </div>
 
-					<!--<div class="col-sm-12">
-						<label>Customer Name</label>
-						<div class="inner-addon right-addon autosuggesions-add inline-block">
-							<i class="fa fa-search"></i>
-							<input type="text" [(ngModel)]="sourceWorkFlow.customerId" class="form-control names ui-autocomplete-input" id="" name="" placeholder="Customer Name" autocomplete="off">
-						</div>
-						<a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-					</div>-->
-					<div class="form-group col-sm-12">
-						<label for="vendorName" class="control-label col-sm-4">Customer Name <span class="clr-red">*</span></label>
-						<div class="col-sm-7">
-							<p-autoComplete [(ngModel)]="sourceWorkFlow.customerName" (onSelect)="onCustomerNameselected($event)" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-											[minLength]="1" [dropdown]="true">
-								<ng-template let-name pTemplate="item">
-									<div class="ui-helper-clearfix">{{name}}</div>
-								</ng-template>
-							</p-autoComplete>
-						</div>
-					</div>
+                    <!--<div class="col-sm-12">
+        <label>Customer Name</label>
+        <div class="inner-addon right-addon autosuggesions-add inline-block">
+            <i class="fa fa-search"></i>
+            <input type="text" [(ngModel)]="sourceWorkFlow.customerId" class="form-control names ui-autocomplete-input" id="" name="" placeholder="Customer Name" autocomplete="off">
+        </div>
+        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+    </div>-->
+                    <div class="form-group col-sm-12">
+                        <label for="vendorName" class="control-label col-sm-4">Customer Name <span class="clr-red">*</span></label>
+                        <div class="col-sm-7">
+                            <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName" (onSelect)="onCustomerNameselected($event)" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true">
+                                <ng-template let-name pTemplate="item">
+                                    <div class="ui-helper-clearfix">{{name}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+                        </div>
+                    </div>
 
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">Currency <span class="clr-red">*</span></label>
-						<div class="col-sm-7">
-							<!--<select class="w80" [(ngModel)]="sourceWorkFlow.currencyId">
-								<option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
-							</select>-->
-							<select class="w80" [(ngModel)]="sourceWorkFlow.currencyId">
-								<option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
-							</select>
-						</div>
-					</div>
-					<!--<div class="col-sm-12">
-						<label class="">Workflow Exp. Date</label>
-						<input [(ngModel)]="sourceWorkFlow.workflowExpirationDate" type="text" class="form-control  hasDatepicker" id="datepicker" name="" placeholder="1/31/2018">
-					</div>-->
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">Workflow Exp. Date</label>
-						<div class="col-sm-7">
-							<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate"></p-calendar>
-						</div>
-					</div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Customer Code</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" readonly type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.customerCode">
+                        </div>
+                    </div>
 
-				</div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Currency <span class="clr-red">*</span></label>
+                        <div class="col-sm-7">
+                            <!--<select class="w80" [(ngModel)]="sourceWorkFlow.currencyId">
+                <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+            </select>-->
+                            <select [(ngModel)]="sourceWorkFlow.currencyId">
+                                <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--<div class="col-sm-12">
+        <label class="">Workflow Exp. Date</label>
+        <input [(ngModel)]="sourceWorkFlow.workflowExpirationDate" type="text" class="form-control  hasDatepicker" id="datepicker" name="" placeholder="1/31/2018">
+    </div>-->
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Workflow Exp. Date</label>
+                        <div class="col-sm-7">
+                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate"></p-calendar>
+                        </div>
+                    </div>
+
+                </div>
 				<div class="col-sm-6 right-block">
 					<div class="col-sm-12">
 						<label class="w200 active-text">

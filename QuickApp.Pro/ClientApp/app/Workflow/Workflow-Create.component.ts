@@ -155,7 +155,8 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 
 	setSelectedItems(workFlow: any): void {
 		//debugger;
-		this.selectedItems = [];
+        this.selectedItems = [];
+
 		if (workFlow.charges != undefined && workFlow.charges.length > 0) {
 			var chargesItem = this.actionAttributes.filter(x => x.Name == "Charges")[0];
 			this.selectedItems.push(chargesItem);
@@ -518,18 +519,23 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 		for (let i = 0; i < this.customerNamecoll.length; i++) {
 			if (event == this.customerNamecoll[i][0].name) {
 
-				this.sourceWorkFlow.customerId = this.customerNamecoll[i][0].customerId;
+                this.sourceWorkFlow.customerId = this.customerNamecoll[i][0].customerId;
+                this.sourceWorkFlow.customerCode = this.customerNamecoll[i][0].customerCode;
 				//this.cusservice.getCustomerShipAddressGet(this.customerNamecoll[i][0].customerId).subscribe(returnedcusdata => {
 				//	this.spiltshipmentData = returnedcusdata[0];
 				//	partChildList["addressData"] = returnedcusdata[0];
 				//});
-
-
+                //this.cusservice.getDescriptionbypart(event).subscribe(
+                //    results => this.oncustomernumberloadsuccessfull(results[0]),
+                //    error => this.onDataLoadFailed(error)
+                //);
 			}
 
 		}
-
-	}
+    }
+    //private oncustomernumberloadsuccessfull(allCustomers: any[]) {
+    //    this.sourceWorkFlow.customerCode = this.allCustomers[0].customerCode;
+    //}
 	filterNames(event) {
 
 		this.customerNames = [];
@@ -541,7 +547,8 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 							this.customerNamecoll.push([{
 								"customerId": this.allCustomers[i].customerId,
-								"name": name
+                                "name": name,
+                                "customerCode": this.allCustomers[i].customerCode
 							}]),
 								this.customerNames.push(name);
 						}
@@ -550,7 +557,8 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						//if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 						this.customerNamecoll.push([{
 							"customerId": this.allCustomers[i].customerId,
-							"name": name
+                            "name": name,
+                            "customerCode": this.allCustomers[i].customerCode
 						}]),
 							this.customerNames.push(name);
 						//}

@@ -132,14 +132,16 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 	}
 	filterFirstNames(event) {
 
-		this.firstNames = [];
-		for (let i = 0; i < this.alldata.length; i++) {
-			let firstName = this.alldata[i].firstName;
+        this.firstNames = [];
+        if (this.alldata) {
+            for (let i = 0; i < this.alldata.length; i++) {
+                let firstName = this.alldata[i].firstName;
 
-			if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.firstNames.push(firstName);
+                if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.firstNames.push(firstName);
 
-			}
+                }
+            }
 		}
 	}
 	filterLastNames(event) {

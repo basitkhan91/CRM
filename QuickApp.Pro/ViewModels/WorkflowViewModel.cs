@@ -27,6 +27,7 @@ namespace QuickApp.Pro.ViewModels
         public string changedPartNumberDescription { get; set; }
         public Nullable<long> CustomerId { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerCode { get; set; }
         public Nullable<int> CurrencyId { get; set; }
         public Nullable<System.DateTime> WorkflowExpirationDate { get; set; }
         public Nullable<bool> IsCalculatedBERThreshold { get; set; }

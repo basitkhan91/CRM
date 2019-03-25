@@ -53,6 +53,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.ChangedPartNumber = workFlow.ChangedPartNumber;
                 actionobject.changedPartNumberDescription = workFlow.changedPartNumberDescription;
                 actionobject.CustomerId = workFlow.CustomerId;
+                actionobject.CustomerCode = workFlow.CustomerCode;
                 actionobject.CustomerName = workFlow.CustomerName;
                 actionobject.CurrencyId = workFlow.CurrencyId;
                 actionobject.WorkflowExpirationDate = workFlow.WorkflowExpirationDate;
