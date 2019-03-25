@@ -290,7 +290,7 @@
 				<div id="adminsearchlocationajax" class="default-bg clear ro-grid-table">
 					<button (click)="addPartNumber()" class="add-row-btn">Add Part Number</button>
 					<button  data-toggle="modal" data-target="#add-multiple-pn" class="add-multiple-pn-btn" (click)="addMultiplePartNumbers(contentMultipleParts)">Add Multiple Part Numbers</button>
-					<div class="table-responsive mleft60">
+					<div class="table-responsive mleft60"  style="height:150px;">
 						<div class="clear mtop5"></div>
 						<table class="table table-bordered table-striped po-ro-setup-table col2-fix">
 							<thead>
@@ -333,7 +333,7 @@
 									<td><input type="checkbox" class="pcheck" checked=""></td>
 									<td><input type="checkbox" class="splitship" [(ngModel)]="partList.ifSplitShip" (change)="getCheckboxvalue(partList)"></td>
 									<td>
-										<div class="inner-addon inline-block w80">
+										<div class="inner-addon inline-block">
 											<!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
 				<option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
 			</select>-->
@@ -531,29 +531,26 @@
                                                             field="vendorName"
                                                             (onSelect)="onVendorNameChange(partChildList,$event)" 
                                                             (onKeyUp)=vendoreventHandler($event) 
-                                                            [(ngModel)]="partChildList.poPartSplitUserName" 
+                                                            [(ngModel)]="ddlVendorModel" 
                                                             [ngModelOptions]="{standalone: true}" 
                                                             [suggestions]="partChildList.vendors" 
                                                             
                                                             (completeMethod)="getVendorPartyNames(partChildList,$event)" 
                                                             [size]="30"
 															[minLength]="1" [dropdown]="true">
-												<ng-template let-vendorName pTemplate="item">
-													<div class="ui-helper-clearfix">{{vendorName}}</div>
-												</ng-template>
+												
 											</p-autoComplete>
 										</div>
 										<div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.poPartSplitUserTypeId==3">
 											<i class="fa fa-search"></i>
-											<input type="text" [(ngModel)]="partChildList.poPartSplitUserName" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
+											<input type="text" [(ngModel)]="partChildList.poPartSplitId" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
 										</div>
 									</td>
 									<td>
-										<select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.addressobject" (change)="getChildAddressValue(partChildList,partChildList.addressobject)">
-
-											<option *ngFor="let object of partChildList.addressData" [ngValue]="object">{{object.address1}} {{object.city}} {{object.country}} {{object.stateOrProvince}} {{object.postalCode}}</option>
-
-										</select>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.poPartSplitAddressId">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let object of partChildList.addressData" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
+                                        </select>
 										
 										<!--<a href="#" data-toggle="modal" data-target="#add-split-ship" class="add-icon add-icon-in-table" (click)="openedit(partChildList,contentSplitShipmentAddress)"><i class="fa fa-plus"></i></a>
 										<a href="#" data-toggle="modal" data-target="#edit-split-ship" class="add-icon edit-btn m0">Edit</a>-->
@@ -580,6 +577,9 @@
 									<!--<td><input type="date" name="" id="dp1547623339385" [(ngModel)]="partChildList.needByDate" class="form-control datepicker hasDatepicker"></td>-->
 									<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
                                     <td>
+                                        <style>
+                                            .ui-autocomplete .ui-autocomplete-panel{position:absolute;}
+                                        </style>
                                         <select class="inner-addon right-addon autosuggesions-add inline-block mw400" 
                                                 [(ngModel)]="partChildList.companyId" 
                                                 [ngModelOptions]="{standalone: true}" 
@@ -1023,10 +1023,7 @@
 		<hr>
 		<a  class="btn btn-success pull-right" (click)="savePurchaseOrder()">Save</a>
 		<div class="clear"></div>
-		<br>
-		<br>
-		<br>
-		<br>
+		
 	</div>
 </div>
 <ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
