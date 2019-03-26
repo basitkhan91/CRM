@@ -33,8 +33,8 @@ namespace DAL.Repositories
                                   join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
                                   join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
                             from currency in curr.DefaultIfEmpty()
-                            join creditterms in _appContext .CreditTerms on t.CreditTermsId equals creditterms.CreditTermsId into cre
-                            from creditTerms in cre.DefaultIfEmpty()
+                            join creditterms in _appContext .CreditTerms on t.CreditTermsId equals creditterms.CreditTermsId into cred
+                            from creditterms in cred.DefaultIfEmpty()
                             where t.IsDelete==true || t.IsDelete==null
                                  // select new { t, ad, vt }).ToList();
                             select new { t.CreditTermsId,t.VendorId,t,t.VendorEmail,t.IsActive,
