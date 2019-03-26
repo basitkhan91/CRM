@@ -47,6 +47,9 @@ export class ItemMasterService {
     public stockableObjChangeObject$ = this.stockable.asObservable();
     isCapsEditMode: boolean;
     capabilityCollection: any;
+    capsCollection: any;
+   
+   
     constructor(
         private router: Router,
         private http: HttpClient,

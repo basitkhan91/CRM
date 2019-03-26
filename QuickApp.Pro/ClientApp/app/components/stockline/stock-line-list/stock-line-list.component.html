@@ -168,28 +168,28 @@
 		</div>
 		<div class="modal-body viewform">
 			<div class="row">
-				<div class="col-sm-4">
-					<p><span class="label"><b>Company: </b></span><span class="value">{{company}}</span></p>
-					<p><span class="label"><b>BU: </b></span><span class="value">{{businessUnitName}}</span></p>
-					<p><span class="label"><b>Division: </b></span><span class="value">{{division}}</span></p>
-					<p><span class="label"><b>Department: </b></span><span class="value">{{departmentName}}</span></p>
-					<p><span class="label"><b>PN: </b></span><span class="value">{{partNumber}}</span></p>
-					<p><span class="label"><b>PN Description: </b></span><span class="value">{{partDescription}}</span></p>
-					<p><span class="label"><b>Stock Line Num: </b></span><span class="value">{{stockLineNumber}}</span></p>
-					<p><span class="label"><b>Control Num: </b></span><span class="value">{{controlNumber}}</span></p>
-					<p><span class="label"><b>ID Num: </b></span><span class="value">{{idNumber}}</span></p>
-					<p><span class="label"><b>Is Serialized: </b></span><span class="value">{{isSerialized}}</span></p>
-					<p><span class="label"><b>Qty: </b></span><span class="value">{{quantity}}</span></p>
-					<p><span class="label"><b>Condition: </b></span><span class="value">{{condition}}</span></p>
-					<p><span class="label"><b>Serial Num: </b></span><span class="value">{{serialNumber}}</span></p>
-					<!--<p><span class="label"><b>Shelf Life: </b></span><span class="value">{{shelfLife}}</span></p>-->
-					<p><span class="label"><b>Shelf Life Exp Date: </b></span><span class="value">{{shelfLifeExpirationDate}}</span></p>
-					<p><span class="label"><b>Site: </b></span><span class="value">{{site}}</span></p>
-					<p><span class="label"><b>Warehouse: </b></span><span class="value">{{warehouse}}</span></p>
-					<p><span class="label"><b>Location: </b></span><span class="value">{{location}}</span></p>
-					<p><span class="label"><b>Shelf: </b></span><span class="value">{{shelf}}</span></p>
-					<p><span class="label"><b>Bin: </b></span><span class="value">{{bin}}</span></p>
-				</div>
+                <div class="col-sm-4">
+                    <p><span class="label"><b>Company: </b></span><span class="value">{{company}}</span></p>
+                    <p><span class="label"><b>BU: </b></span><span class="value">{{businessUnitName}}</span></p>
+                    <p><span class="label"><b>Division: </b></span><span class="value">{{division}}</span></p>
+                    <p><span class="label"><b>Department: </b></span><span class="value">{{departmentName}}</span></p>
+                    <p><span class="label"><b>PN: </b></span><span class="value">{{partNumber}}</span></p>
+                    <p><span class="label"><b>PN Description: </b></span><span class="value">{{partDescription}}</span></p>
+                    <p><span class="label"><b>Stock Line Num: </b></span><span class="value">{{stockLineNumber}}</span></p>
+                    <p><span class="label"><b>Control Num: </b></span><span class="value">{{controlNumber}}</span></p>
+                    <p><span class="label"><b>ID Num: </b></span><span class="value">{{idNumber}}</span></p>
+                    <p><span class="label"><b>Is Serialized: </b></span><input type="checkbox" [disabled]="true" [checked]="isSerialized" /></p>
+                    <p><span class="label"><b>Qty: </b></span><span class="value">{{quantity}}</span></p>
+                    <p><span class="label"><b>Condition: </b></span><span class="value">{{condition}}</span></p>
+                    <p><span class="label"><b>Serial Num: </b></span><span class="value">{{serialNumber}}</span></p>
+                    <!--<p><span class="label"><b>Shelf Life: </b></span><span class="value">{{shelfLife}}</span></p>-->
+                    <p><span class="label"><b>Shelf Life Exp Date: </b></span><span class="value">{{shelfLifeExpirationDate}}</span></p>
+                    <p><span class="label"><b>Site: </b></span><span class="value">{{site}}</span></p>
+                    <p><span class="label"><b>Warehouse: </b></span><span class="value">{{warehouse}}</span></p>
+                    <p><span class="label"><b>Location: </b></span><span class="value">{{location}}</span></p>
+                    <p><span class="label"><b>Shelf: </b></span><span class="value">{{shelf}}</span></p>
+                    <p><span class="label"><b>Bin: </b></span><span class="value">{{bin}}</span></p>
+                </div>
 				<div class="col-sm-4">
 					<p><span class="label"><b>Obtain From: </b></span><span class="value">{{obtainFrom}}</span></p>
 					<p><span class="label"><b>Owner: </b></span><span class="value">{{owner}}</span></p>
@@ -211,21 +211,20 @@
 					<p><span class="label"><b>RO Num: </b></span><span class="value">{{repairOrderNumber}}</span></p>
 					<p><span class="label"><b>RO Unit Cost: </b></span><span class="value">{{repairOrderUnitCost}}</span></p>
 				</div>
-				<div class="col-sm-4">
-					<p><span class="label"><b>Received Date: </b></span><span class="value">{{receivedDate}}</span></p>
-					<p><span class="label"><b>Receiver Num: </b></span><span class="value">{{receiverNumber}}</span></p>
-					<p><span class="label"><b>Reconiliation Num: </b></span><span class="value">{{reconciliationNumber}}</span></p>
-					<p><span class="label"><b>Unit Sale Price: </b></span><span class="value">{{unitSalesPrice}}</span></p>
-					<p><span class="label"><b>Core Unit Cost: </b></span><span class="value">{{coreUnitCost}}</span></p>
-					<!--<p><span class="label"><b>GL Account: </b></span><span class="value">{{gLAccountId}}</span></p>-->
-					<!--<p><span class="label"><b>Asset Num: </b></span><span class="value">{{assetId}}</span></p>-->
-					<!--<p><span class="label"><b>Hazardous Material: </b></span><span class="value">{{isHazardousMaterial}}</span></p>-->
-					<p><span class="label"><b>PMA: </b></span><span class="value">{{isPMA}}</span></p>
-					<p><span class="label"><b>DER: </b></span><span class="value">{{isDER}}</span></p>
-					<p><span class="label"><b>OEM: </b></span><span class="value">{{oem}}</span></p>
-					<p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
+                <div class="col-sm-4">
+                    <p><span class="label"><b>Received Date: </b></span><span class="value">{{receivedDate}}</span></p>
+                    <p><span class="label"><b>Receiver Num: </b></span><span class="value">{{receiverNumber}}</span></p>
+                    <p><span class="label"><b>Reconiliation Num: </b></span><span class="value">{{reconciliationNumber}}</span></p>
+                    <p><span class="label"><b>Unit Sale Price: </b></span><span class="value">{{unitSalesPrice}}</span></p>
+                    <p><span class="label"><b>Core Unit Cost: </b></span><span class="value">{{coreUnitCost}}</span></p>
+                    <p><span class="label"><b>PMA: </b></span><input type="checkbox" [disabled]="true" [checked]="isPMA" /></p>
+                    <p><span class="label"><b>DER: </b></span><input type="checkbox" [disabled]="true" [checked]="isDER" /></p>
+                    <p><span class="label"><b>OEM: </b></span><input type="checkbox" [disabled]="true" [checked]="oem" /></p>
+                    <!--<p><span class="label"><b>DER: </b></span><span class="value">{{isDER}}</span></p>
+                    <p><span class="label"><b>OEM: </b></span><span class="value">{{oem}}</span></p>-->
+                    <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
 
-				</div>
+                </div>
 			</div>
 			<div class="clear"></div>
 		</div>
