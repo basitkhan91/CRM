@@ -467,6 +467,11 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         this.loadingIndicator = false;
         capData.selectedAircraftDataModels = [];
         allWorkFlows.forEach(element => {
+            for (let z = 0; z < capData.selectedAircraftModelTypes.length; z++) {
+                if (element.aircraftModelId == capData.selectedAircraftModelTypes[z]) {
+                    capData.selectedModel.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+                }
+            }
             capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
         });
         this.displayModalNames(capData);
@@ -647,16 +652,23 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     cunstructItemMastars() {
         let mfgData: any = [];
         this.capabilityEditCollection.forEach(element => {
-            this.ItemMasterId = element.itemMasterId;
-            let index = element.capabilityTypeId - 1;
-            let capData = this.capabilityTypeData[index];
-            capData.selectedAircraftTypes.push(element.aircraftTypeId);
-            capData.selectedAircraftModelTypes.push(element.aircraftModelId);
-            this.addExistingData(capData, element)
+            if (element.isDelete != true) {
+                this.ItemMasterId = element.itemMasterId;
+                let index = element.capabilityTypeId - 1;
+                let capData = this.capabilityTypeData[index];
+                let typeIndex = capData.selectedAircraftTypes.indexOf(element.aircraftTypeId);
+                if (typeIndex == -1) {
+                    capData.selectedAircraftTypes.push(element.aircraftTypeId);
+                    capData.selectedManufacturer.push({ value: element.aircraftTypeId, label: this.getAircraftTypeName(element.aircraftTypeId) });
+                }
+                capData.selectedAircraftModelTypes.push(element.aircraftModelId);
+                // capData.selectedModel.push({ value: element.aircraftModelId, label: this.getAirCraftModalName([], element.aircraftModelId) });
+                this.addExistingData(capData, element)
+            }
         });
-        this.capabilityTypeData.forEach(element => {
-            if (element.selectedAircraftModelTypes.length > 0) {
-                this.loadModalsForExistingRecords(element);
+        this.capabilityTypeData.forEach(element1 => {
+            if (element1.selectedAircraftModelTypes.length > 0) {
+                this.loadModalsForExistingRecords(element1);
                 // if(this.mfgFormArray)
             }
         });
@@ -752,7 +764,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         capbilitiesObj.isVerified = false;
         capbilitiesObj.isActive = true;
         capbilitiesObj.verifiedBy = "";
-        
+
         capbilitiesObj.aircraftManufacturer = this.getAircraftTypeName(data.aircraftTypeId);
         capbilitiesObj.dateVerified = new Date();
         this.setManagementStrucureData(capbilitiesObj);
@@ -858,16 +870,33 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 break;
         }
     }
-    checkIsExisted(type, modal, myForm) {
+    checkIsExisted(type, modal, myForm, capData) {
         let itemExisted = false;
         myForm.controls.forEach(data => {
             if (data['controls']['aircraftTypeId'].value == type && data['controls']['aircraftModelId'].value == modal) {
                 itemExisted = true;
-                return itemExisted;
+                data['controls']['isDelete'].setValue(false);
+            } else {
+                let typeId = data['controls']['aircraftTypeId'].value;
+                let typeIndex = capData.selectedAircraftTypes.indexOf(typeId);
+                if (typeIndex == -1) {
+                    data['controls']['isDelete'].setValue(true);
+                }
+                let modaleId = data['controls']['aircraftModelId'].value;
+                let modalIndex = capData.selectedAircraftModelTypes.indexOf(modaleId);
+                if (modalIndex == -1) {
+                    data['controls']['isDelete'].setValue(true);
+                }
             }
+
+
         });
         return itemExisted;
     }
+
+
+
+
     addModels(capData) {
         this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
@@ -885,7 +914,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     let mfObj = this.formBuilder.group(capbilitiesObj);
                     switch (capData.formArrayName) {
                         case "mfgForm":
-                            let mfgItemExisted = this.checkIsExisted(element1.value, element2.value, this.mfgFormArray);
+                            let mfgItemExisted = this.checkIsExisted(element1.value, element2.value, this.mfgFormArray, this.capabilityTypeData[0]);
                             if (mfgItemExisted == false) {
                                 this.mfgFormArray.push(mfObj);
                                 let mfgIndex = this.mfgFormArray.controls.length - 1;
@@ -894,9 +923,10 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                                 this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
                             }
 
+
                             break;
                         case "overhaulForm":
-                            let oralItemExisted = this.checkIsExisted(element1.value, element2.value, this.overhaulFormArray);
+                            let oralItemExisted = this.checkIsExisted(element1.value, element2.value, this.overhaulFormArray, this.capabilityTypeData[1]);
                             if (oralItemExisted == false) {
                                 this.overhaulFormArray.push(mfObj);
                                 let overIndex = this.overhaulFormArray.controls.length - 1;
@@ -906,7 +936,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                             }
                             break;
                         case "distributionForm":
-                            let distExisted = this.checkIsExisted(element1.value, element2.value, this.distributionFormArray);
+                            let distExisted = this.checkIsExisted(element1.value, element2.value, this.distributionFormArray, this.capabilityTypeData[2]);
                             if (distExisted == false) {
                                 this.distributionFormArray.push(mfObj);
                                 let distIndex = this.distributionFormArray.controls.length - 1;
@@ -916,7 +946,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                             }
                             break;
                         case "certificationForm":
-                            let certExisted = this.checkIsExisted(element1.value, element2.value, this.certificationFormArray);
+                            let certExisted = this.checkIsExisted(element1.value, element2.value, this.certificationFormArray, this.capabilityTypeData[3]);
                             if (certExisted == false) {
                                 this.certificationFormArray.push(mfObj);
                                 let certIndex = this.certificationFormArray.controls.length - 1;
@@ -926,7 +956,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                             }
                             break;
                         case "repairForm":
-                            let repairExisted = this.checkIsExisted(element1.value, element2.value, this.repairFormArray);
+                            let repairExisted = this.checkIsExisted(element1.value, element2.value, this.repairFormArray, this.capabilityTypeData[4]);
                             if (repairExisted == false) {
                                 this.repairFormArray.push(mfObj);
                                 let repIndex = this.repairFormArray.controls.length - 1;
@@ -936,7 +966,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                             }
                             break;
                         case "exchangeForm":
-                            let exchangeExisted = this.checkIsExisted(element1.value, element2.value, this.exchangeFormArray);
+                            let exchangeExisted = this.checkIsExisted(element1.value, element2.value, this.exchangeFormArray, this.capabilityTypeData[5]);
                             if (exchangeExisted == false) {
                                 this.exchangeFormArray.push(mfObj);
                                 let excngIndex = this.exchangeFormArray.controls.length - 1;

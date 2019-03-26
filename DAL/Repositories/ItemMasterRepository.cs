@@ -469,7 +469,8 @@ namespace DAL.Repositories
                                 iM.BuisinessUnitId,
                                 iM.DivisionId,
                                 iM.DepartmentId,
-                                iM.ManagementStructureId
+                                iM.ManagementStructureId,
+                                iM.IsDelete
 
                             }).ToList();
                 return data;
