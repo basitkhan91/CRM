@@ -468,8 +468,8 @@ namespace DAL.Repositories
                                 iM.CompanyId,
                                 iM.BuisinessUnitId,
                                 iM.DivisionId,
-                                iM.DepartmentId
-
+                                iM.DepartmentId,
+                                iM.ManagementStructureId
 
                             }).ToList();
                 return data;

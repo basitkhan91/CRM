@@ -210,6 +210,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         formArray.controls['buisinessUnitId'].setValue("");
         formArray.controls['departmentId'].setValue("");
         formArray.controls['divisionId'].setValue("");
+        formArray.controls['managementStructureId'].setValue(companyId);
         formArray.departmentList = [];
         formArray.divisionlist = [];
         formArray['buList'] = [];
@@ -248,6 +249,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         // this.sourceItemMasterCap.departmentId = "";
         formArray.controls['departmentId'].setValue("");
         formArray.controls['divisionId'].setValue("");
+        formArray.controls['managementStructureId'].setValue(businessUnitId);
         formArray.departmentList = [];
         formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -263,6 +265,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         // this.sourceItemMasterCap.divisionId = "";
         // this.sourceItemMasterCap.managementStructureEntityId = departmentId; //Saving Management Structure Id if there departmentId
         formArray.controls['divisionId'].setValue("");
+        formArray.controls['managementStructureId'].setValue(departmentId);
         formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == departmentId) {
@@ -272,7 +275,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
         this.setValidations(formArray);
     }
-
+    divisionChange(divisionId,formArray){
+        formArray.controls['managementStructureId'].setValue(divisionId);
+    }
 
 
     getDivisionChangeManagementCode(divisionId) {

@@ -138,7 +138,7 @@
 									</td>
 									<td>
 										<select formControlName="divisionId" [ngClass]="validateForm(mfgFormArray.controls[i],'divisionId')"
-											>
+										(change)="divisionChange(mfgFormArray.controls[i].controls['divisionId'].value, mfgFormArray.controls[i])">
 											<option *ngFor="let ataName of mfgFormArray.controls[i].divisionlist "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
@@ -228,7 +228,7 @@
 									</td>
 									<td>
 										<select formControlName="divisionId"  [ngClass]="validateForm(overhaulFormArray.controls[j],'divisionId')"
-											>
+										(change)="divisionChange(overhaulFormArray.controls[i].controls['divisionId'].value, overhaulFormArray.controls[i])">
 											<option *ngFor="let ataName of overhaulFormArray.controls[j].divisionlist "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
@@ -319,7 +319,8 @@
 										</select>
 									</td>
 									<td>
-										<select formControlName="divisionId"  [ngClass]="validateForm(distributionFormArray.controls[k],'divisionId')">
+										<select formControlName="divisionId"  [ngClass]="validateForm(distributionFormArray.controls[k],'divisionId')"
+										(change)="divisionChange(distributionFormArray.controls[i].controls['divisionId'].value, distributionFormArray.controls[i])">
 											<option *ngFor="let ataName of distributionFormArray.controls[k].divisionlist "
 												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 										</select>
@@ -408,7 +409,8 @@
 											</select>
 										</td>
 										<td>
-											<select formControlName="divisionId" [ngClass]="validateForm(certificationFormArray.controls[l],'divisionId')">
+											<select formControlName="divisionId" [ngClass]="validateForm(certificationFormArray.controls[l],'divisionId')"
+										(change)="divisionChange(certificationFormArray.controls[i].controls['divisionId'].value, certificationFormArray.controls[i])">
 												<option *ngFor="let ataName of certificationFormArray.controls[l].divisionlist "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
@@ -498,7 +500,8 @@
 											</select>
 										</td>
 										<td>
-											<select formControlName="divisionId" [ngClass]="validateForm(repairFormArray.controls[m],'divisionId')">
+											<select formControlName="divisionId" [ngClass]="validateForm(repairFormArray.controls[m],'divisionId')"
+										(change)="divisionChange(repairFormArray.controls[i].controls['divisionId'].value, repairFormArray.controls[i])">
 												<option *ngFor="let ataName of repairFormArray.controls[m].divisionlist "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
@@ -589,7 +592,7 @@
 										</td>
 										<td>
 											<select formControlName="divisionId"  [ngClass]="validateForm(exchangeFormArray.controls[n],'divisionId')"
-												(change)="getDivisionChangeManagementCode(exchangeFormArray.controls[n].controls['divisionId'].value)">
+										(change)="divisionChange(exchangeFormArray.controls[i].controls['divisionId'].value, exchangeFormArray.controls[i])">
 												<option *ngFor="let ataName of exchangeFormArray.controls[n].divisionlist "
 													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
