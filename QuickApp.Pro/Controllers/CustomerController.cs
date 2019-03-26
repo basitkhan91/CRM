@@ -1147,6 +1147,7 @@ namespace QuickApp.Pro.Controllers
                 cbs.CreatedDate = DateTime.Now;
                //cbs.IsActive = customerBillingAddressViewModel.IsActive;
                 customerBillingAddressViewModel.UpdatedDate = DateTime.Now;
+                customerBillingAddressViewModel.IsActive = true;
                 address.Line1 = customerBillingAddressViewModel.Address1;
                 address.Line2 = customerBillingAddressViewModel.Address2;
                 address.Line3 = customerBillingAddressViewModel.Address3;
@@ -1233,7 +1234,7 @@ namespace QuickApp.Pro.Controllers
                 checkBillingObj.StartDate = customerBillingAddressViewModel.StartDate;
                 checkBillingObj.ExpirationDate = customerBillingAddressViewModel.ExpirationDate;
                 checkBillingObj.Amount = customerBillingAddressViewModel.Amount;
-                checkBillingObj.MasterCompanyId = customerBillingAddressViewModel.MasterCompanyId;
+                checkBillingObj.MasterCompanyId = 1;
                 addressObj.Line1 = customerBillingAddressViewModel.Address1;
                 addressObj.Line2 = customerBillingAddressViewModel.Address2;
                 addressObj.Line3 = customerBillingAddressViewModel.Address3;
@@ -1300,7 +1301,7 @@ namespace QuickApp.Pro.Controllers
                 customerObj.EDI = customerViewModel.EDI;
                 customerObj.MarkUpPercent = customerViewModel.MarkUpPercent;
                 customerObj.CreditLimit = customerViewModel.CreditLimit;
-                customerObj.CreditTerms = customerViewModel.CreditTerms;
+                //customerObj.CreditTerms = customerViewModel.CreditTerms;
                 customerObj.CreditTermsId = customerViewModel.CreditTermsId;
                 //customerObj.CustomerId = customerViewModel.CustomerId;
                 customerObj.TaxRateOther = customerViewModel.TaxRateOther;
@@ -1317,8 +1318,8 @@ namespace QuickApp.Pro.Controllers
                 customerObj.IsTaxExempt = customerViewModel.IsTaxExempt;
                 customerObj.AeroExchangeDescription = customerViewModel.AeroExchangeDescription;
                 customerObj.AllowNettingOfAPAR = customerViewModel.AllowNettingOfAPAR;
-                customerObj.MasterCompanyId = customerViewModel.MasterCompanyId;
-                customerObj.IsActive = customerViewModel.IsActive;
+                customerObj.MasterCompanyId = 1;
+                customerObj.IsActive = true;
                 customerObj.CreatedDate = DateTime.Now;
                 customerObj.UpdatedDate = DateTime.Now;
                 customerObj.CreatedBy = customerViewModel.CreatedBy;
