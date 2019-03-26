@@ -40,7 +40,8 @@ export class VendorService {
 	contactCollection: any;
 	vendorForPoCollection: any;
 	financeCollection: any;
-	ShowPtab: boolean = true;
+    ShowPtab: boolean = true;
+    receiveSaveddata: any[] = [];
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";

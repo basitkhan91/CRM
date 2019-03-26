@@ -431,7 +431,7 @@
                                                             <label class="control-label col-sm-4 wauto">Qty to receive</label>
                                                             <div class="col-sm-7">
                                                                 <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
-                                                                <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
+                                                                <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" maxlength="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
                                                                 <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
 
                                                                 <!--<input class="form-control w70" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">-->
@@ -464,8 +464,8 @@
                                                                                 </div>
                                                                                 <div class="form-group col-sm-10" *ngIf="tabindex==0">
                                                                                     <label class="control-label col-sm-4">Same Details for all Parts</label>
-                                                                                    <div class="col-sm-7">
-                                                                                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.resale" (change)="sameDetailsforAllParts(partList)">
+                                                                                    <div class="col-sm-7" *ngIf="!showRestrictQuantity">
+                                                                                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.resale" (change)="sameDetailsforAllParts(partList)" >
                                                                                         <!--<input [(ngModel)]="obj.checkbox" [ngModelOptions]="{standalone: true}" type="checkbox" (change)="sameDetailsforAllParts(partList)">-->
                                                                                     </div>
                                                                                 </div>
@@ -917,7 +917,7 @@
         </div>
         <div class="clear"></div>
         <hr>
-        <a class="btn btn-success pull-right" (click)="savePurchaseOrder()">Save</a>
+        <a class="btn btn-success pull-right" (click)="saveReceivePurchaseOrder()">Save</a>
         <div class="clear"></div>
         <br>
         <br>

@@ -534,6 +534,7 @@ export class ReceivngPoComponent {
                         partList["stocklineListObj"][i].isHazardousMaterial = partList["isHazardousMaterial"];
                         this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
                             this.collectionofstockLine = data;
+                            this.vendorService.receiveSaveddata.push(data);
                         })
                     }
                 })
@@ -605,14 +606,16 @@ export class ReceivngPoComponent {
 
         console.log(this.partNumbers);
     }
-    savePurchaseOrder() {
+    saveReceivePurchaseOrder() {
         //debugger;
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
         this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
             this.savedInfo = saveddata;
             {
-                this.savePurchaseorderPart(saveddata.purchaseOrderId)
+               
+                this.route.navigateByUrl('/receivingmodule/receivingpages/app-edit-po');
+
             }
         });
 
