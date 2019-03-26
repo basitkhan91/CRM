@@ -20,7 +20,7 @@ export class ItemMasterCapabilitiesModel {
     entryDate: Date = new Date();
     isCMMExist: any;
     isVerified:boolean = false;
-
+    managementStructureId: any = NaN;
     verifiedBy: any = "";
     dateVerified: Date = new Date();
     memo: any = "";
