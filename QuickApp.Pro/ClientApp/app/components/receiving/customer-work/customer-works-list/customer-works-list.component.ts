@@ -50,10 +50,14 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     locationId: any;
     showViewProperties: any = {};
     selectedColumn: any;
+   
+
     constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal) {
         this.dataSource = new MatTableDataSource();
+        this.receivingCustomerWorkService.isEditMode = false;
     }
 
+     
 
     ngAfterViewInit(): void {
     }

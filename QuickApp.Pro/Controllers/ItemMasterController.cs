@@ -445,7 +445,7 @@ namespace QuickApp.Pro.Controllers
                    // capability[i].CapabilityId = 0;
                     capability[i].MasterCompanyId = 1;
                     capability[i].CreatedDate = DateTime.Now;
-                    if(capability[i].CapabilityId > 0)
+                    if (capability[i].CapabilityId > 0)
                     {
                         _unitOfWork.Repository<Capability>().Update(capability[i]);
                     }
@@ -453,7 +453,6 @@ namespace QuickApp.Pro.Controllers
                     {
                         _unitOfWork.Repository<Capability>().Add(capability[i]);
                     }
-                   
                     _unitOfWork.SaveChanges();
                 }
             }

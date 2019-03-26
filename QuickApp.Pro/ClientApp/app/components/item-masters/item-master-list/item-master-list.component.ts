@@ -93,7 +93,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	selectedNonstockColumn: any[];
 	selectedEquipmentColumn: any[];
     selectedColumns2: any[];
-
+    getSelectedCollection: any;
 	NonstockView: boolean = false;
 	NonstockAdd: boolean = false;priorityId: any;
     exportCountryId: any;
@@ -206,7 +206,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-	openEdits(row) {
+    openEdits(row)
+    {
 
 
 		this.itemMasterService.isEditMode = true;
@@ -231,6 +232,11 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.itemMasterService.isEditMode = true;
 
 		this.sourceItemMaster = row;
+
+        this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
+            this.getSelectedCollection = data;
+            this.itemMasterService.capsCollection = this.getSelectedCollection;
+        });
 
 		this.itemMasterService.listEquipmentCollection = this.sourceItemMaster;
 		this.activeIndex = 2;

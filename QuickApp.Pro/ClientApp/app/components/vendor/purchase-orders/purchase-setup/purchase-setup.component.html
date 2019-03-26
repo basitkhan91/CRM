@@ -404,7 +404,6 @@
 			</select>
 	</td>-->
 									<td>
-										
 										<select class="form-control w90" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
                                             <option value="0">Select</option>
                                             <option *ngFor="let company of partList.companyList" value="{{company.managementStructureId}}" >{{company.code}}</option>

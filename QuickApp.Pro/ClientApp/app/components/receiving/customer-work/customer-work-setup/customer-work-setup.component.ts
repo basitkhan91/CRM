@@ -39,7 +39,8 @@ import { Router } from '@angular/router';
     animations: [fadeInOut]
 })
 
-export class CustomerWorkSetupComponent {
+export class CustomerWorkSetupComponent
+{
     firstCollection: any[];
 	allEmployeeinfo: any[] = [];
     loadingIndicator: boolean;
@@ -130,11 +131,11 @@ export class CustomerWorkSetupComponent {
 
     constructor(private _route: Router,public workFlowtService: CustomerService,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
         this.dataSource = new MatTableDataSource();
-        if (this.receivingCustomerWorkService.isEditMode == false) {
-            this.receivingCustomerWorkService.listCollection = {};
-        }
-        if (this.receivingCustomerWorkService.listCollection && this.receivingCustomerWorkService.isEditMode == true) {
-            
+        //if (this.receivingCustomerWorkService.listCollection == null) {
+        //    this.receivingCustomerWorkService.listCollection = {};
+        //}
+        if (this.receivingCustomerWorkService.listCollection != null && this.receivingCustomerWorkService.isEditMode == true) {
+
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
@@ -209,8 +210,7 @@ export class CustomerWorkSetupComponent {
                 this.sourcereceving.expirationDate = new Date();
             }
 
-            switch (this.sourcereceving.obtainFromType)
-            {
+            switch (this.sourcereceving.obtainFromType) {
                 case 1: {
                     this.showCustomer1 = true;
                     break;
@@ -267,7 +267,7 @@ export class CustomerWorkSetupComponent {
                 }
             }
         }
-
+        
 	}
 
 	sourcereceving: any = {};
@@ -368,8 +368,9 @@ export class CustomerWorkSetupComponent {
                             role => this.saveSuccessHelper(role),
                             error => this.saveFailedHelper(error));
                     }
-                    this.sourcereceving = {};
+                  //  this.sourcereceving = {};
                     this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+                    this.sourcereceving = {};
                 }
             }
 
@@ -396,8 +397,9 @@ export class CustomerWorkSetupComponent {
                     })
                 }
 
-                this.sourcereceving = {};
+              
                 this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+                this.sourcereceving = {};
             }
         }
     }
@@ -562,12 +564,13 @@ export class CustomerWorkSetupComponent {
     filterFirstNames(event) {
 
         this.firstNames = [];
+        if (this.allCustomer) {
         for (let i = 0; i < this.allActions.length; i++) {
             let firstName = this.allActions[i].firstName;
         
             if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.firstNames.push(firstName);
-
+            }
             }
         }
     }
@@ -671,13 +674,25 @@ export class CustomerWorkSetupComponent {
             this.sourcereceving.tagDate = '';
             this.sourcereceving.tagType = '';
             this.sourcereceving.partCertificationNumber = '';
-            this.sourcereceving.expirationDate = '';
         }
         
         if (this.sourcereceving.isTimeLife == true) {
             this.sourcereceving.isTimeLife = true;
             this.sourcereceving.timeLifeDate = '';
             this.sourcereceving.timeLifeOrigin = '';
+            this.sourceTimeLife.cyclesRemaining = '';
+            this.sourceTimeLife.timeRemaining = '';
+            this.sourceTimeLife.lastSinceNew = '';
+            this.sourceTimeLife.cyclesSinceNew = '';
+            this.sourceTimeLife.timeSinceNew = '';
+            this.sourceTimeLife.lastSinceOVH = '';
+            this.sourceTimeLife.cyclesSinceOVH = '';
+            this.sourceTimeLife.timeSinceOVH = '';
+            this.sourceTimeLife.lastSinceInspection = '';
+            this.sourceTimeLife.cyclesSinceInspection = '';
+            this.sourceTimeLife.timeSinceInspection = '';
+            this.sourceTimeLife.cyclesSinceRepair = '';
+            this.sourceTimeLife.timeSinceRepair = '';
         }
         else {
             this.sourcereceving.isTimeLife == false;
@@ -688,6 +703,19 @@ export class CustomerWorkSetupComponent {
             this.sourcereceving.timeLife = false;
             this.sourceTimeLife.timeLifeDate = '';
             this.sourceTimeLife.timeLifeOrigin = '';
+            this.sourceTimeLife.cyclesRemaining = '';
+            this.sourceTimeLife.timeRemaining = '';
+            this.sourceTimeLife.lastSinceNew = '';
+            this.sourceTimeLife.cyclesSinceNew = '';
+            this.sourceTimeLife.timeSinceNew = '';
+            this.sourceTimeLife.lastSinceOVH = '';
+            this.sourceTimeLife.cyclesSinceOVH = '';
+            this.sourceTimeLife.timeSinceOVH = '';
+            this.sourceTimeLife.lastSinceInspection = '';
+            this.sourceTimeLife.cyclesSinceInspection = '';
+            this.sourceTimeLife.timeSinceInspection = '';
+            this.sourceTimeLife.cyclesSinceRepair = '';
+            this.sourceTimeLife.timeSinceRepair = '';
          
         }
         else {

@@ -373,7 +373,7 @@ export class StockLineListComponent implements OnInit {
 	openEdits(row)
 	{
 		this.workFlowtService.isEditMode = true;
-		this.isSaving = true;
+        this.isSaving = true;
 		this.workFlowtService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
 		this._route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-edit');
 	}

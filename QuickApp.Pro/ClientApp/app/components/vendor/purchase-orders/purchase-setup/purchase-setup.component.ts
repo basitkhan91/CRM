@@ -2428,8 +2428,6 @@ export class PurchaseSetupComponent {
 			error => this.onDataLoadFailed(error)
 		);
 
-
-
 		this.selectedColumns = this.cols;
 
 	}
