@@ -341,13 +341,13 @@ namespace QuickApp.Pro.Controllers
         //[HttpPost("employeecertifi")]
         public IActionResult addEmployeeShiftDetails([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
         {
-            EmployeeShift employeeLicensureViewModel = new EmployeeShift();
+            EmployeeShiftMapping employeeLicensureViewModel = new EmployeeShiftMapping();
 
             if (ModelState.IsValid)
             {
                 if (employeeLicensureViewModel == null)
                     return BadRequest($"{nameof(employeeLicensureViewModel)} cannot be null");
-                DAL.Models.EmployeeShift employeeobject = new DAL.Models.EmployeeShift();
+                DAL.Models.EmployeeShiftMapping employeeobject = new DAL.Models.EmployeeShiftMapping();
                 employeeobject.MasterCompanyId = 1;
 
                 employeeobject.IsActive = employeeLicensureViewModel.IsActive;
@@ -361,7 +361,7 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.UpdatedDate = DateTime.Now;
 
                 employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
-                _unitOfWork.employeeShift.Add(employeeobject);
+                _unitOfWork.EmployeeShiftMappingRepository.Add(employeeobject);
                 _unitOfWork.SaveChanges();
                 return Ok(employeeobject);
             }
@@ -369,12 +369,12 @@ namespace QuickApp.Pro.Controllers
         }
         public IActionResult updateShiftDetials([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
         {
-            EmployeeShift employeeLicensureViewModel = new EmployeeShift();
+            EmployeeShiftMapping employeeLicensureViewModel = new EmployeeShiftMapping();
 
             if (ModelState.IsValid)
             {
-                var employeeobject = _unitOfWork.employeeShift.GetSingleOrDefault(a => a.EmployeeId == employeeid);
-                if (Convert.ToBoolean(employeeobject.EmployeeShiftId)) {
+                var employeeobject = _unitOfWork.EmployeeShiftMappingRepository.GetSingleOrDefault(a => a.EmployeeId == employeeid);
+                if (Convert.ToBoolean(employeeobject.EmployeeShiftMappingId)) {
                     employeeobject.MasterCompanyId = 1;
 
                     employeeobject.IsActive = employeeLicensureViewModel.IsActive;
@@ -388,7 +388,7 @@ namespace QuickApp.Pro.Controllers
                     employeeobject.UpdatedDate = DateTime.Now;
 
                     employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
-                    _unitOfWork.employeeShift.Add(employeeobject);
+                    _unitOfWork.EmployeeShiftMappingRepository.Add(employeeobject);
                     _unitOfWork.SaveChanges();
                     return Ok(employeeobject);
                 }
@@ -501,15 +501,8 @@ namespace QuickApp.Pro.Controllers
                 if (employeeShiftViewModel == null)
                     return BadRequest($"{nameof(employeeShiftViewModel)} cannot be null");
                 EmployeeLeaveType employeeshiftObj = new EmployeeLeaveType();
-
-                //employeeShiftViewModel.MasterCompanyId = 1;
                 employeeshiftObj.EmployeeLeaveTypeId = employeeShiftViewModel.EmployeeLeaveTypeId;
-              //  employeeshiftObj.ShiftId = employeeShiftViewModel.ShiftId;
                 employeeshiftObj.IsActive = employeeShiftViewModel.IsActive;
-               // employeeshiftObj.CreatedDate = DateTime.Now;
-              //  employeeshiftObj.UpdatedDate = DateTime.Now;
-               // employeeshiftObj.CreatedBy = employeeShiftViewModel.CreatedBy;
-               // employeeshiftObj.UpdatedBy = employeeShiftViewModel.UpdatedBy;
                 _unitOfWork.EmployeeLeaveType.Add(employeeshiftObj);
                 _unitOfWork.SaveChanges();
                 return Ok(employeeshiftObj);
