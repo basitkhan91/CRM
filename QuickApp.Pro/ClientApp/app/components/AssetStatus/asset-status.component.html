@@ -1,0 +1,124 @@
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_content">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" aria-current="page">Asset Management</li>
+                        <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
+                        <li class="breadcrumb-item active" aria-current="page">Asset Status</li>
+                    </ol>
+                </nav>
+                <h4 class="page-heading">Asset Status</h4>
+                <div class="col-sm-12 form-bg">
+                    <div class="form-group add-inputs">
+                        <!--<form id="" name="" method="post">-->
+                            <div class="form-group col-sm-4 w250">
+                                <label class="control-label col-sm-4">ID</label>
+                                <div class="col-sm-7 cust-name">
+                                    <div class="inner-addon right-addon w200 inline-block">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text" [(ngModel)]="currentAssetStatus.identification" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4 w250">
+                                <label class="control-label col-sm-4">Name</label>
+                                <div class="col-sm-7 cust-name">
+                                    <div class="inner-addon right-addon w200 inline-block">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text"  [(ngModel)]="currentAssetStatus.name" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4 w250">
+                                <label class="control-label col-sm-4">Memo</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control"  [(ngModel)]="currentAssetStatus.memo"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <button type="button" id="btnFilterAssetStatus" name="" class="btn btn-warning" data-toggle="tooltip" data-original-title="Filter"><i class="fa fa-search"></i></button>
+                                <button type="button" id="btnAddAssetStatus" *ngIf="!this.updateMode" (click)="addAssetStatus()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Add"><i class="fa fa-plus"></i></button>
+                                <button type="button" id="btnUpdateAssetStatus" *ngIf="this.updateMode" (click)="updateAssetStatus()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
+                                <button type="button" id="btnResetAssetStatus" *ngIf="this.updateMode" (click)="resetAssetStatus()" name="" class="btn btn-default nobg" data-toggle="tooltip" data-original-title="Reset"><i class="fa fa-edit"></i></button>
+
+                            </div>
+                            <div class="excel-upload mtop0">
+                                <input type="file" name="upload[]" multiple="" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                <label for="upload"> <span data-toggle="tooltip" title="" data-original-title="Excel Upload (table rows)"><i class="fa fa-file-excel-o"></i></span> </label>
+                            </div>
+                        <!--</form>-->
+                    </div>
+                    <!--Add claffication End -->
+                    <!--Uplad Doc-->
+                    <!--End-->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Memo</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let assetStatus of assetStatusList">
+                                    <td>{{assetStatus.identification}}</td>
+                                    <td>{{assetStatus.name}}</td>
+                                    <td>{{assetStatus.memo}}</td>
+                                    <td>
+                                        <div  (click)="toggleIsDeleted(assetStatus.id)"  data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active">
+                                            <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;">
+                                            <input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger">
+                                            <div class="toggle-group">
+                                                <label class="btn btn-success toggle-on">
+                                                <i class="fa fa-check"></i>
+                                                </label>
+                                                <label class="btn btn-danger active toggle-off">
+                                                <i class="fa fa-times"></i>
+                                                    </label>
+                                                <span class="toggle-handle btn btn-default"></span>
+                                            </div>
+                                            </div>
+                                        </div> 
+                                        <span (click)="setAssetStatusToUpdate(assetStatus.id)" data-toggle="modal" data-target="#edit"> 
+                                        <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                            <i class="fa fa-edit"></i>
+                                            </a> 
+                                            </span> 
+                                        <span data-toggle="modal" data-target="#history"> 
+                                        <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                            <i class="fa fa-history"></i>
+                                            </a>
+                                            </span>
+                                        <span (click)="removeAssetStatus(assetStatus.id)" data-toggle="modal" data-target="#data"> 
+                                        <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                                            <i class="fa fa-trash"></i>
+                                            </a> 
+                                        </span>
+                                    </td>
+                                </tr>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <!--<div class="padding5">
+                        <ul class="pagination">
+                            <li class="arrows disabled"><a href="#"> <i class="fa fa-angle-left"></i> </a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li class="arrows"><a href="#"> <i class="fa fa-angle-right"></i> </a></li>
+                        </ul>
+                        <div class="pull-right"> © <span class="currentyear">2019</span> <a href="#">PAS</a> </div>
+                    </div>-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

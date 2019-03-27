@@ -87,6 +87,9 @@ import { CheckboxModule } from 'primeng/checkbox'; //for site,warehouse,location
 import { TreeModule } from 'primeng/tree';
 import { DialogModule } from "primeng/dialog";
 import { CertificationTypeComponent } from "../components/certification-type/certification-type.component";
+import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
+import { AssetStatusService } from "../services/asset-status/asset-status.service";
+import { AssetStatusEndpointService } from "../services/asset-status/assetstatus-endpoint.service";
 //import { SharedModule } from '../shared/shared.module';
 //import { CompanyComponent } from '../shared/company/company.component';
 
@@ -159,13 +162,16 @@ import { CertificationTypeComponent } from "../components/certification-type/cer
 		LocationComponent,
 		LaberAndOverheadCostSetupComponent,
 		ShelfComponent,
-		CertificationTypeComponent
+        CertificationTypeComponent,
+        AssetStatusComponent,
 		//DefaultMessageComponent
 
 
     ],
     providers: [
-        SingleScreenBreadcrumbService
+        SingleScreenBreadcrumbService,
+        AssetStatusService,
+        AssetStatusEndpointService
     ],
     exports: [
         FlexLayoutModule,

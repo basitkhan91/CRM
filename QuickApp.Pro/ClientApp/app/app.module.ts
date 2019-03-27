@@ -412,8 +412,8 @@ import { CertificationtypeService } from "./services/certificationtype.service";
 		RolesManagementStructureService,
 		RolesManagementStructureEndpoint,
 		CertificationTypeEndpoint,
-		CertificationtypeService
-		
+        CertificationtypeService
+       
 		
     ],
     entryComponents: [

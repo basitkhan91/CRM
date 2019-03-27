@@ -18,6 +18,7 @@ namespace DAL
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public string CurrentUserId { get; set; }
+        public DbSet<AssetStatus> AssetStatus { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Product> Products { get; set; }

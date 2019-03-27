@@ -70,6 +70,7 @@ import { ManufacturerComponent } from "../components/manufacturer/manufacturer.c
 import { VendorcapabilitiesComponent } from '../components/vendorcapabilities/vendorcapabilities.component';
 import { LaberAndOverheadCostSetupComponent } from '../components/laber-and-overhead-cost-setup/laber-and-overhead-cost-setup.component';
 import { CertificationTypeComponent } from '../components/certification-type/certification-type.component';
+import { AssetStatusComponent } from '../components/AssetStatus/asset-status.component';
 
 
 const singlePagesRoutes: Routes = [
@@ -77,6 +78,11 @@ const singlePagesRoutes: Routes = [
         path: 'singlepages',
         component: SingleComponent ,
         children: [
+            {
+                path: 'asset-status',
+                component: AssetStatusComponent,
+                data: { title:'Asset Status' }
+            },
             {
                 path: 'app-actions',
                 component: ActionsComponent,
