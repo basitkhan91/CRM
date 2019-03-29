@@ -71,7 +71,7 @@ import { VendorcapabilitiesComponent } from '../components/vendorcapabilities/ve
 import { LaberAndOverheadCostSetupComponent } from '../components/laber-and-overhead-cost-setup/laber-and-overhead-cost-setup.component';
 import { CertificationTypeComponent } from '../components/certification-type/certification-type.component';
 import { AssetStatusComponent } from '../components/AssetStatus/asset-status.component';
-
+import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 
 const singlePagesRoutes: Routes = [
     {
@@ -149,7 +149,8 @@ const singlePagesRoutes: Routes = [
 			{ path: "app-manufacturer", component: ManufacturerComponent, data: { title: "Manufacturer" } },
 			{ path: "app-vendorcapabilities", component: VendorcapabilitiesComponent, data: { title: "Vendor Setup" } },
 			{ path: "app-labor-and-overhead-cost-setup", component: LaberAndOverheadCostSetupComponent, data: { title: "Labor And Overhead Cost SetUp" } },
-			{ path: "app-certification-type", component: CertificationTypeComponent, data: { title: "Certification Type" } }
+            { path: "app-certification-type", component: CertificationTypeComponent, data: { title: "Certification Type" } },
+            { path: "app-node-setup", component: NodeSetupComponent, data: { title: "Node" } }
         ]
     }
 ];

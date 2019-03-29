@@ -67,6 +67,8 @@ import { AuthGuard } from './services/auth-guard.service';
 
 			{ path: "customersmodule", loadChildren: './customerpages/customerpages.module#CustomerPagesModule' },
 
+            //{ path: "accountmodule", loadChildren: './accountpages/accountpages.module#AccountingPagesModule' },
+
             { path: "vendorsmodule", loadChildren: './vendorpages/vendorpages.module#VendorPagesModule' },
 
 			{ path: "employeesmodule", loadChildren: './employeepages/employeepages.module#EmployeepagesModule' },
@@ -83,6 +85,7 @@ import { AuthGuard } from './services/auth-guard.service';
 			{ path: "generalledgermodule", loadChildren: './generalledgerpages/generalledgerpages.module#GeneralledgerPageModule' },
 
 			{ path: "workflowmodule", loadChildren: './workflowpages/workflowpages.module#WorkFlowPagesModule' },
+
             
       
            

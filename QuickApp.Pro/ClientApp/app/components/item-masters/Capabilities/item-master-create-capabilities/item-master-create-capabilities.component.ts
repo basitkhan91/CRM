@@ -388,7 +388,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         }
     }
 
-    private aircraftManfacturerData() {
+    private aircraftManfacturerData()
+    {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
@@ -439,7 +440,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
         }
-        if (this.itemser.capabilityCollection) {
+        if (this.itemser.capabilityCollection)
+        {
             this.capabilityEditCollection = this.itemser.capabilityCollection;
             this.cunstructFormForEdit()
         }

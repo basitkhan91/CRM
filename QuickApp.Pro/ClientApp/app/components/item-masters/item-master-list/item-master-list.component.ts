@@ -210,7 +210,12 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
     {
 
 
-		this.itemMasterService.isEditMode = true;
+        this.itemMasterService.isEditMode = true;
+
+        this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
+            this.getSelectedCollection = data;
+            this.itemMasterService.capsCollection = this.getSelectedCollection;
+        });
 
 		this.sourceItemMaster = row;
 
@@ -233,10 +238,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 
 		this.sourceItemMaster = row;
 
-        this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
-            this.getSelectedCollection = data;
-            this.itemMasterService.capsCollection = this.getSelectedCollection;
-        });
+       
 
 		this.itemMasterService.listEquipmentCollection = this.sourceItemMaster;
 		this.activeIndex = 2;

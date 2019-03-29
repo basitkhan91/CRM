@@ -683,7 +683,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     addModels(capData) {
         this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
-        this.resetFormArray(capData);
+        // this.resetFormArray(capData);
         capData.selectedManufacturer.forEach(element1 => {
             capbilitiesObj.itemMasterId = this.ItemMasterId;
             capbilitiesObj.aircraftTypeId = element1.value;
@@ -697,46 +697,66 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     let mfObj = this.formBuilder.group(capbilitiesObj);
                     switch (capData.formArrayName) {
                         case "mfgForm":
-                            this.mfgFormArray.push(mfObj);
-                            let mfgIndex = this.mfgFormArray.controls.length - 1;
-                            this.mfgFormArray.controls[mfgIndex]['buList'] = [];
-                            this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
-                            this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+                            let mfgItemExisted = this.checkIsExisted(element1.value, element2.value, this.mfgFormArray, this.capabilityTypeData[0]);
+                            if (mfgItemExisted == false) {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
+                                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+                            }
+
+
                             break;
                         case "overhaulForm":
-                            this.overhaulFormArray.push(mfObj);
-                            let overIndex = this.overhaulFormArray.controls.length - 1;
-                            this.overhaulFormArray.controls[overIndex]['buList'] = [];
-                            this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
-                            this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
+                            let oralItemExisted = this.checkIsExisted(element1.value, element2.value, this.overhaulFormArray, this.capabilityTypeData[1]);
+                            if (oralItemExisted == false) {
+                                this.overhaulFormArray.push(mfObj);
+                                let overIndex = this.overhaulFormArray.controls.length - 1;
+                                this.overhaulFormArray.controls[overIndex]['buList'] = [];
+                                this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
+                                this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
+                            }
                             break;
                         case "distributionForm":
-                            this.distributionFormArray.push(mfObj);
-                            let distIndex = this.distributionFormArray.controls.length - 1;
-                            this.distributionFormArray.controls[distIndex]['buList'] = [];
-                            this.distributionFormArray.controls[distIndex]['departmentList'] = [];
-                            this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
+                            let distExisted = this.checkIsExisted(element1.value, element2.value, this.distributionFormArray, this.capabilityTypeData[2]);
+                            if (distExisted == false) {
+                                this.distributionFormArray.push(mfObj);
+                                let distIndex = this.distributionFormArray.controls.length - 1;
+                                this.distributionFormArray.controls[distIndex]['buList'] = [];
+                                this.distributionFormArray.controls[distIndex]['departmentList'] = [];
+                                this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
+                            }
                             break;
                         case "certificationForm":
-                            this.certificationFormArray.push(mfObj);
-                            let certIndex = this.certificationFormArray.controls.length - 1;
-                            this.certificationFormArray.controls[certIndex]['buList'] = [];
-                            this.certificationFormArray.controls[certIndex]['departmentList'] = [];
-                            this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
+                            let certExisted = this.checkIsExisted(element1.value, element2.value, this.certificationFormArray, this.capabilityTypeData[3]);
+                            if (certExisted == false) {
+                                this.certificationFormArray.push(mfObj);
+                                let certIndex = this.certificationFormArray.controls.length - 1;
+                                this.certificationFormArray.controls[certIndex]['buList'] = [];
+                                this.certificationFormArray.controls[certIndex]['departmentList'] = [];
+                                this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
+                            }
                             break;
                         case "repairForm":
-                            this.repairFormArray.push(mfObj);
-                            let repIndex = this.repairFormArray.controls.length - 1;
-                            this.repairFormArray.controls[repIndex]['buList'] = [];
-                            this.repairFormArray.controls[repIndex]['departmentList'] = [];
-                            this.repairFormArray.controls[repIndex]['divisionlist'] = [];
+                            let repairExisted = this.checkIsExisted(element1.value, element2.value, this.repairFormArray, this.capabilityTypeData[4]);
+                            if (repairExisted == false) {
+                                this.repairFormArray.push(mfObj);
+                                let repIndex = this.repairFormArray.controls.length - 1;
+                                this.repairFormArray.controls[repIndex]['buList'] = [];
+                                this.repairFormArray.controls[repIndex]['departmentList'] = [];
+                                this.repairFormArray.controls[repIndex]['divisionlist'] = [];
+                            }
                             break;
                         case "exchangeForm":
-                            this.exchangeFormArray.push(mfObj);
-                            let excngIndex = this.exchangeFormArray.controls.length - 1;
-                            this.exchangeFormArray.controls[excngIndex]['buList'] = [];
-                            this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
-                            this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
+                            let exchangeExisted = this.checkIsExisted(element1.value, element2.value, this.exchangeFormArray, this.capabilityTypeData[5]);
+                            if (exchangeExisted == false) {
+                                this.exchangeFormArray.push(mfObj);
+                                let excngIndex = this.exchangeFormArray.controls.length - 1;
+                                this.exchangeFormArray.controls[excngIndex]['buList'] = [];
+                                this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
+                                this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
+                            }
                             break;
                     }
                 }
@@ -1331,24 +1351,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 	}
 
-    openModelPopups(content) {
+    openModelPopups(capData) {
 
         //alert(this.itemser.isEditMode);
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
-            if (this.selectedAircraftTypes.length > 0) {
-                var arr = this.selectedAircraftTypes;
+            if (capData.selectedAircraftTypes.length > 0) {
+                var arr = capData.selectedAircraftTypes;
                 var selectedvalues = arr.join(",");
                 this.itemser.getAircraftTypes(selectedvalues).subscribe(
-                    results => this.onDataLoadaircrafttypeSuccessful(results[0]),
+                    results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),
                     error => this.onDataLoadFailed(error)
                 );
-                this.modal = this.modalService.open(content, { size: 'sm' });
-                this.modal.result.then(() => {
-
-                    console.log('When user closes');
-                }, () => { console.log('Backdrop click') })
             }
             else {
                 this.allAircraftinfo = []; //Making empty if selecting is null
@@ -1405,17 +1420,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		}
 
 	}
-    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[]) //getting Models Based on Manfacturer Selection
+    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
     {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;cun
-        this.allAircraftinfo = allWorkFlows; //selected Aircraft Models based on Aircraft Data Selection
-        //this.selectedAircraftDataModels = [];
-        //allWorkFlows.forEach(element => {
-        //    capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
-        //});
+        //this.dataSource.data = allWorkFlows;
+        // this.selectedAircraftDataModels = allWorkFlows; //selected Aircraft Models based on Aircraft Data Selection
+        capData.selectedAircraftDataModels = [];
+        allWorkFlows.forEach(element => {
+            capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+        });
 
 
         //for Open Model for Edit Data
@@ -1622,7 +1637,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 		this.descriptionbyPart = allWorkFlows[0]
-		this.sourceAction = this.descriptionbyPart;
+		//this.sourceAction = this.descriptionbyPart;
 		this.sourceItemMaster.partDescription = allWorkFlows[0].partDescription;
 
 
@@ -2195,6 +2210,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
+   
+
     cunstructFormForEdit() {
         if (this.manufacturerData.length > 0 && this.allManagemtninfo.length > 0) {
             this.cunstructItemMastars();
@@ -2203,16 +2220,23 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     cunstructItemMastars() {
         let mfgData: any = [];
         this.capabilityEditCollection.forEach(element => {
-            this.ItemMasterId = element.itemMasterId;
-            let index = element.capabilityTypeId - 1;
-            let capData = this.capabilityTypeData[index];
-            capData.selectedAircraftTypes.push(element.aircraftTypeId);
-            capData.selectedAircraftModelTypes.push(element.aircraftModelId);
-            this.addExistingData(capData, element)
+            if (element.isDelete != true) {
+                this.ItemMasterId = element.itemMasterId;
+                let index = element.capabilityTypeId - 1;
+                let capData = this.capabilityTypeData[index];
+                let typeIndex = capData.selectedAircraftTypes.indexOf(element.aircraftTypeId);
+                if (typeIndex == -1) {
+                    capData.selectedAircraftTypes.push(element.aircraftTypeId);
+                    capData.selectedManufacturer.push({ value: element.aircraftTypeId, label: this.getAircraftTypeName(element.aircraftTypeId) });
+                }
+                capData.selectedAircraftModelTypes.push(element.aircraftModelId);
+                // capData.selectedModel.push({ value: element.aircraftModelId, label: this.getAirCraftModalName([], element.aircraftModelId) });
+                this.addExistingData(capData, element)
+            }
         });
-        this.capabilityTypeData.forEach(element => {
-            if (element.selectedAircraftModelTypes.length > 0) {
-                this.loadModalsForExistingRecords(element);
+        this.capabilityTypeData.forEach(element1 => {
+            if (element1.selectedAircraftModelTypes.length > 0) {
+                this.loadModalsForExistingRecords(element1);
                 // if(this.mfgFormArray)
             }
         });
@@ -2240,6 +2264,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         capData.selectedAircraftDataModels = [];
         allWorkFlows.forEach(element => {
+            for (let z = 0; z < capData.selectedAircraftModelTypes.length; z++) {
+                if (element.aircraftModelId == capData.selectedAircraftModelTypes[z]) {
+                    capData.selectedModel.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+                }
+            }
             capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
         });
         this.displayModalNames(capData);
@@ -2325,6 +2354,42 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    managementStructureData: any = [];
+    setManagementStrucureData(capObj) {
+        this.managementStructureData = [];
+        this.checkMSParents(capObj.managementStructureId);
+        if (this.managementStructureData.length == 4) {
+            capObj.companyId = this.managementStructureData[3];
+            capObj.buisinessUnitId = this.managementStructureData[2];
+            capObj.departmentId = this.managementStructureData[1];
+            capObj.divisionId = this.managementStructureData[0];
+        }
+        if (this.managementStructureData.length == 3) {
+            capObj.companyId = this.managementStructureData[2];
+            capObj.buisinessUnitId = this.managementStructureData[1];
+            capObj.departmentId = this.managementStructureData[0];
+        }
+        if (this.managementStructureData.length == 2) {
+            capObj.companyId = this.managementStructureData[1];
+            capObj.buisinessUnitId = this.managementStructureData[0];
+        }
+        if (this.managementStructureData.length == 1) {
+            capObj.companyId = this.managementStructureData[0];
+        }
+
+    }
+    checkMSParents(msId) {
+        this.managementStructureData.push(msId);
+        for (let a = 0; a < this.allManagemtninfo.length; a++) {
+            if (this.allManagemtninfo[a].managementStructureId == msId) {
+                if (this.allManagemtninfo[a].parentId) {
+                    this.checkMSParents(this.allManagemtninfo[a].parentId);
+                    break;
+                }
+            }
+        }
+
+    }
 
     addExistingData(capData, data) {
         let capbilitiesObj = data;
@@ -2335,8 +2400,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         capbilitiesObj.isVerified = false;
         capbilitiesObj.isActive = true;
         capbilitiesObj.verifiedBy = "";
+
         capbilitiesObj.aircraftManufacturer = this.getAircraftTypeName(data.aircraftTypeId);
         capbilitiesObj.dateVerified = new Date();
+        this.setManagementStrucureData(capbilitiesObj);
         // capData.push(data);
         let mfObj = this.formBuilder.group(capbilitiesObj);
         switch (capData.formArrayName) {
@@ -2439,13 +2506,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 break;
         }
     }
-    checkIsExisted(type, modal, myForm) {
+    checkIsExisted(type, modal, myForm, capData) {
         let itemExisted = false;
         myForm.controls.forEach(data => {
             if (data['controls']['aircraftTypeId'].value == type && data['controls']['aircraftModelId'].value == modal) {
                 itemExisted = true;
-                return itemExisted;
+                data['controls']['isDelete'].setValue(false);
+            } else {
+                let typeId = data['controls']['aircraftTypeId'].value;
+                let typeIndex = capData.selectedAircraftTypes.indexOf(typeId);
+                if (typeIndex == -1) {
+                    data['controls']['isDelete'].setValue(true);
+                }
+                let modaleId = data['controls']['aircraftModelId'].value;
+                let modalIndex = capData.selectedAircraftModelTypes.indexOf(modaleId);
+                if (modalIndex == -1) {
+                    data['controls']['isDelete'].setValue(true);
+                }
             }
+
+
         });
         return itemExisted;
     }
@@ -2855,6 +2935,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         formArray.controls['buisinessUnitId'].setValue("");
         formArray.controls['departmentId'].setValue("");
         formArray.controls['divisionId'].setValue("");
+        formArray.controls['managementStructureId'].setValue(companyId);
         formArray.departmentList = [];
         formArray.divisionlist = [];
         formArray['buList'] = [];
@@ -2966,6 +3047,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // this.sourceItemMasterCap.departmentId = "";
         formArray.controls['departmentId'].setValue("");
         formArray.controls['divisionId'].setValue("");
+        formArray.controls['managementStructureId'].setValue(businessUnitId);
         formArray.departmentList = [];
         formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -3033,6 +3115,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // this.sourceItemMasterCap.divisionId = "";
         // this.sourceItemMasterCap.managementStructureEntityId = departmentId; //Saving Management Structure Id if there departmentId
         formArray.controls['divisionId'].setValue("");
+        formArray.controls['managementStructureId'].setValue(departmentId);
         formArray.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == departmentId) {
@@ -3101,6 +3184,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		}
 		selItem["divisionlistrepair"] = _divisionlist;
 		console.log(this.divisionlist);
+    }
+
+    divisionChange(divisionId, formArray) {
+        formArray.controls['managementStructureId'].setValue(divisionId);
     }
 
     getDivisionChangeManagementCode(divisionId) {

@@ -33,33 +33,33 @@ import { DialogModule } from 'primeng/dialog';//Error Validation Pop Up
 import { CustomerService } from '../../../services/customer.service';
 declare const google: any;
 @Component({
-     selector: 'app-vendor-general-information',
+    selector: 'app-vendor-general-information',
     templateUrl: './vendor-general-information.component.html',
-	styleUrls: ['./vendor-general-information.component.scss'],
-	animations: [fadeInOut]
+    styleUrls: ['./vendor-general-information.component.scss'],
+    animations: [fadeInOut]
 })
 /** anys component*/
 export class VendorGeneralInformationComponent implements OnInit, AfterViewChecked {
-	disableSaveVenderName: boolean;
-	disableSaveVenderCode: boolean;
-	VendorCodesColl: any[]=[];
-	selectedVendorCode: any;
-	disableSaveVenCode: boolean;
-	disableSave: boolean;
-	selectedActionName: any;
-	disableSaveVenName: boolean;
-	VendorNamecoll: any[]=[];
+    disableSaveVenderName: boolean;
+    disableSaveVenderCode: boolean;
+    VendorCodesColl: any[] = [];
+    selectedVendorCode: any;
+    disableSaveVenCode: boolean;
+    disableSave: boolean;
+    selectedActionName: any;
+    disableSaveVenName: boolean;
+    VendorNamecoll: any[] = [];
     allCapbilityClassInfo: any[];
-	modelValue: boolean;
-	display: boolean;
-	matSpinner: boolean;
-	activeIndex: number;
-	showvendorContractReference: boolean;
-	showvendorCode: boolean;
-	showVendorName: boolean;
-	showalert: boolean;
-	showLable: boolean;
-	venname: any;
+    modelValue: boolean;
+    display: boolean;
+    matSpinner: boolean;
+    activeIndex: number;
+    showvendorContractReference: boolean;
+    showvendorCode: boolean;
+    showVendorName: boolean;
+    showalert: boolean;
+    showLable: boolean;
+    venname: any;
     allVendorClassInfo: VendorClassification[];
     vendorClassName: any;
     vendorCollection: any[];
@@ -69,11 +69,11 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
     vendorName: any;
     vendorCode: any;
     checkAddress: boolean = false;
-   // vendorCode: any;
+    // vendorCode: any;
     //vendorname: any;
     allgeneralInfo: any[];
-    closeCmpny: boolean= true;
-    service: boolean=false;
+    closeCmpny: boolean = true;
+    service: boolean = false;
     vendorId: any;
     addressId: any;
     allAddresses: any[];
@@ -83,33 +83,33 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
     updatedBy: any = "";
     createddate: any = "";
     updatedDate: any = "";
-	vendorParentName: any = "";
-	viewName: string = "Create";
-	private items: MenuItem[];
-	home: MenuItem;
+    vendorParentName: any = "";
+    viewName: string = "Create";
+    private items: MenuItem[];
+    home: MenuItem;
     local: any;
-	vendorInfoByName: any[] = [];
-	sourceCustomer: any;
-	allCountryinfo: any[];
-	disablesave: boolean;
-	countrycollection: any;
-	selectedCountries: any;
-	isVendorAlsoCustomer: boolean = false;
+    vendorInfoByName: any[] = [];
+    sourceCustomer: any;
+    allCountryinfo: any[];
+    disablesave: boolean;
+    countrycollection: any;
+    selectedCountries: any;
+    isVendorAlsoCustomer: boolean = false;
 
-	ngOnInit(): void {
-		this.matSpinner = false;
-		//this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
+    ngOnInit(): void {
+        this.matSpinner = false;
+        //this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
 
-		// debugger;
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.workFlowtService.ShowPtab = true;
-		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
-		this.activeIndex = 0;
-		this.workFlowtService.indexObj.next(this.activeIndex);
+        // debugger;
+        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.workFlowtService.ShowPtab = true;
+        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+        this.activeIndex = 0;
+        this.workFlowtService.indexObj.next(this.activeIndex);
         this.loadData();
-		this.Capabilitydata();
-		this.countrylist();
+        this.Capabilitydata();
+        this.countrylist();
         this.loadDataVendorData();
         //this.sourceVendor.vendorTypeId = 2;
         this.options = {
@@ -117,22 +117,22 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
             zoom: 12
         };
         if (this.workFlowtService.isEditMode == false) {
-			this.sourceVendor.vendorTypeId = 2;
-			this.viewName = "Create";
+            this.sourceVendor.vendorTypeId = 2;
+            this.viewName = "Create";
         }
         if (this.workFlowtService.enableExternal == false) {
             this.sourceVendor.vendorTypeId = 2;
         }
 
-		if (this.workFlowtService.generalCollection) {
-			this.sourceVendor = this.workFlowtService.generalCollection;
-		}
-	}
-	ngOndestroy() {
-		//this.matSpinner = false;
-		//this.workFlowtService.MatSpinner = false; //APP Mat Spinner will be display
+        if (this.workFlowtService.generalCollection) {
+            this.sourceVendor = this.workFlowtService.generalCollection;
+        }
+    }
+    ngOndestroy() {
+        //this.matSpinner = false;
+        //this.workFlowtService.MatSpinner = false; //APP Mat Spinner will be display
 
-	}
+    }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     //@ViewChild('vendorclassificationcomponent') patientContactPopupModal: ModalDirective
@@ -160,54 +160,60 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
     localCollection: any[] = [];
     collection: any;
     options: any;
-	public overlays: any[];
-	msgs: Message[];
+    public overlays: any[];
+    msgs: Message[];
 
-	uploadedFiles: any[] = [];
+    uploadedFiles: any[] = [];
 
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		
-		
-		this.dataSource = new MatTableDataSource();
-		if (this.local) {
-
-			this.workFlowtService.contactCollection = this.local;
-		}
-		if (this.workFlowtService.generalCollection) {
-			this.local = this.workFlowtService.generalCollection;
-		}
-		
-		if (this.workFlowtService.listCollection!=null && this.workFlowtService.isEditMode == true) {
-			this.showLable = true;
-			this.viewName = "Edit";
-			this.local = this.workFlowtService.listCollection.t;
-			this.sourceVendor = this.workFlowtService.listCollection.t;
-			this.sourceVendor.address1 = this.workFlowtService.listCollection.address1;
-			this.sourceVendor.address2 = this.workFlowtService.listCollection.address2;
-			this.sourceVendor.address3 = this.workFlowtService.listCollection.address3;
-			this.sourceVendor.city = this.workFlowtService.listCollection.city;
-			this.sourceVendor.country = this.workFlowtService.listCollection.country;
-			this.sourceVendor.stateOrProvince = this.workFlowtService.listCollection.stateOrProvince;
-			this.sourceVendor.PostalCode = this.workFlowtService.listCollection.postalCode;
-
-		}
-		if (this.customerser.isCustomerAlsoVendor == true) {
-			this.sourceVendor = this.customerser.localCollectiontoVendor;
-		}
+    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
 
-     }
+        this.dataSource = new MatTableDataSource();
+        if (this.local) {
+
+            this.workFlowtService.contactCollection = this.local;
+        }
+        if (this.workFlowtService.generalCollection) {
+            this.local = this.workFlowtService.generalCollection;
+        }
+
+        if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
+            this.showLable = true;
+            this.viewName = "Edit";
+            this.local = this.workFlowtService.listCollection.t;
+            this.sourceVendor = this.workFlowtService.listCollection.t;
+            this.sourceVendor.address1 = this.workFlowtService.listCollection.address1;
+            this.sourceVendor.address2 = this.workFlowtService.listCollection.address2;
+            this.sourceVendor.address3 = this.workFlowtService.listCollection.address3;
+            this.sourceVendor.city = this.workFlowtService.listCollection.city;
+            this.sourceVendor.country = this.workFlowtService.listCollection.country;
+            this.sourceVendor.stateOrProvince = this.workFlowtService.listCollection.stateOrProvince;
+            this.sourceVendor.PostalCode = this.workFlowtService.listCollection.postalCode;
+
+        }
+        if (this.customerser.isCustomerAlsoVendor == true) {
+            this.sourceVendor = this.customerser.localCollectiontoVendor;
+            this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
+            this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
+            this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
+            this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
+            this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
+            this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
+        }
+
+
+    }
     sourceVendor: any = {};
     closethis() {
-       this.closeCmpny = false;
+        this.closeCmpny = false;
     }
-	ngAfterViewChecked() {
-		//this.matSpinner = false;
+    ngAfterViewChecked() {
+        //this.matSpinner = false;
         //this.dataSource.paginator = this.paginator;
         //this.dataSource.sort = this.sort;
     }
@@ -217,30 +223,30 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-		this.workFlowtService.getWorkFlows().subscribe(
+        this.workFlowtService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-      
 
-	}
-	private countrylist() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
 
-		this.workFlowtService.getCountrylist().subscribe(
-			results => this.onDatacountrySuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+    }
+    private countrylist() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
-	private onDatacountrySuccessful(allWorkFlows: any[]) {
+        this.workFlowtService.getCountrylist().subscribe(
+            results => this.onDatacountrySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allCountryinfo = allWorkFlows;
-	}
+    private onDatacountrySuccessful(allWorkFlows: any[]) {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allCountryinfo = allWorkFlows;
+    }
 
     private Capabilitydata() {
         this.alertService.startLoadingMessage();
@@ -307,10 +313,10 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
 
         //debugger;
         this.checkAddress = true;
-        return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data:any) => {
+        return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
             //alert(data);
             this.options = {
-                center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng  },
+                center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
                 zoom: 12
             };
             this.overlays = [
@@ -326,16 +332,16 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
                 //new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
             ];
             return data;
-            
-           
-       });
+
+
+        });
     }
-   
+
 
 
     private loadMasterCompanies() {
-       
-    
+
+
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
@@ -346,33 +352,33 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
 
     }
     openClassification(content) {
-            this.isEditMode = false;
-            this.isDeleteMode = false;
+        this.isEditMode = false;
+        this.isDeleteMode = false;
 
-            this.isSaving = true;
-            this.loadMasterCompanies();
-            this.sourceAction = new VendorClassification();
-            this.sourceAction.isActive = true;
-            this.vendorName = "";
-            this.modal = this.modalService.open(content, { size: 'sm' });
-            this.modal.result.then(() => {
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction = new VendorClassification();
+        this.sourceAction.isActive = true;
+        this.vendorName = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
 
 
 
-                console.log('When user closes');
-            }, () => { console.log('Backdrop click') })
-        
-       
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+
+
 
 
     }
 
 
-      
+
 
     saveVendorClassificationDetails() {
 
-       // debugger;
+        // debugger;
 
         this.isSaving = true;
 
@@ -381,14 +387,14 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.classificationName = this.vendorClassName;
             this.sourceAction.masterCompanyId = 1;
-			this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
-				//debugger;
-				if (data) { this.sourceVendor.vendorClassificationId=data.vendorClassificationId}
+            this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
+                //debugger;
+                if (data) { this.sourceVendor.vendorClassificationId = data.vendorClassificationId }
 
                 this.loadDataVendorData();
             })
-                //role => this.saveSuccessHelper(role),
-                //error => this.saveFailedHelper(error));
+            //role => this.saveSuccessHelper(role),
+            //error => this.saveFailedHelper(error));
         }
         else {
 
@@ -424,76 +430,76 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
 
         this.vendorCollection = [];
         for (let i = 0; i < this.allVendorClassInfo.length; i++) {
-			let vendorName = this.allVendorClassInfo[i].classificationName;
-			if (vendorName != "" && vendorName != null && vendorName != "Null") {
+            let vendorName = this.allVendorClassInfo[i].classificationName;
+            if (vendorName != "" && vendorName != null && vendorName != "Null") {
 
-				if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.vendorCollection.push(vendorName);
-				}
-			
-			}
-		}
+                if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.vendorCollection.push(vendorName);
+                }
+
+            }
+        }
 
 
     }
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
-    
+
 
     private refresh() {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
-        
+
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
         this.vendorId = this.allActions[0].vendorId;
         //console.log(this.allActions);
-        
-
-	}
-	private onvendorloadsuccessfull(allWorkFlows: any[]) {
-
-		
-		this.vendorInfoByName = allWorkFlows[0]
-		this.sourceVendor = this.vendorInfoByName;
-		
 
 
-	}
+    }
+    private onvendorloadsuccessfull(allWorkFlows: any[]) {
+
+
+        this.vendorInfoByName = allWorkFlows[0]
+        this.sourceVendor = this.vendorInfoByName;
+
+
+
+    }
     filterVendorNames(event) {
 
         this.vendorNames = [];
         for (let i = 0; i < this.allActions.length; i++) {
             let vendorName = this.allActions[i].vendorName;
             if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				//this.vendorNames.push(vendorName);
-				this.VendorNamecoll.push([{
-					"vendorId": this.allActions[i].vendorClassificationId,
-					"vendorName": vendorName
-				}]),
-					this.vendorNames.push(vendorName);
+                //this.vendorNames.push(vendorName);
+                this.VendorNamecoll.push([{
+                    "vendorId": this.allActions[i].vendorClassificationId,
+                    "vendorName": vendorName
+                }]),
+                    this.vendorNames.push(vendorName);
             }
         }
-	}
-	filterVendorParentNames(event) {
+    }
+    filterVendorParentNames(event) {
 
-		this.vendorNames = [];
-		for (let i = 0; i < this.allActions.length; i++) {
-			let vendorParentName = this.allActions[i].vendorName;
-			if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.vendorNames.push(vendorParentName);
-			}
-		}
-	}
-	selectedValue(name) {
-		//alert(name);
-		this.venname = name;
-	}
+        this.vendorNames = [];
+        for (let i = 0; i < this.allActions.length; i++) {
+            let vendorParentName = this.allActions[i].vendorName;
+            if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.vendorNames.push(vendorParentName);
+            }
+        }
+    }
+    selectedValue(name) {
+        //alert(name);
+        this.venname = name;
+    }
 
 
     filterVendorCodes(event) {
@@ -503,12 +509,12 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
             let vendorCode = this.allActions[i].vendorCode;
 
             if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				//this.vendorCodes.push(vendorCode);
-				this.VendorCodesColl.push([{
-					"vendorId": this.allActions[i].vendorClassificationId,
-					"vendorCode": vendorCode
-				}]),
-					this.vendorCodes.push(vendorCode);
+                //this.vendorCodes.push(vendorCode);
+                this.VendorCodesColl.push([{
+                    "vendorId": this.allActions[i].vendorClassificationId,
+                    "vendorCode": vendorCode
+                }]),
+                    this.vendorCodes.push(vendorCode);
 
             }
         }
@@ -539,7 +545,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
         this.allComapnies = allComapnies;
 
     }
-   
+
     private onDataLoadFailed(error: any) {
         // alert(error);
         this.alertService.stopLoadingMessage();
@@ -613,7 +619,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
         this.isSaving = true;
         this.sourceVendor = row;
         this.loadMasterCompanies();
-       // this.actionName = this.sourceVendor.description;
+        // this.actionName = this.sourceVendor.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -657,133 +663,133 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
 
 
     }
-	//onBlurMethod(data) {
-	//	if (data == 'vendorContractReference') {
-	//		this.showvendorContractReference = false;
-	//	}
-	//	if (data == 'vendorName') {
-	//		this.showVendorName = false;
-	//	}
-	//	if (data == 'vendorCode') {
-	//		this.showvendorCode = false;
-	//	}
-	//}
+    //onBlurMethod(data) {
+    //	if (data == 'vendorContractReference') {
+    //		this.showvendorContractReference = false;
+    //	}
+    //	if (data == 'vendorName') {
+    //		this.showVendorName = false;
+    //	}
+    //	if (data == 'vendorCode') {
+    //		this.showvendorCode = false;
+    //	}
+    //}
     editItemAndCloseModel() {
-     
 
-		this.isSaving = true;
-		if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-			&& this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId
-			 
-		)) {
-			this.display = true;
-			this.modelValue = true;
-		}
-	
 
-		if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-			&& this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId) {
-			
-			if (!this.sourceVendor.vendorId) {
-				this.sourceVendor.createdBy = this.userName;
-				this.sourceVendor.updatedBy = this.userName;
-				this.sourceVendor.masterCompanyId = 1;
-				this.sourceVendor.isActive=true;
-				//this.sourceVendor.vendorName = this.vendorName;
+        this.isSaving = true;
+        if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
+            && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId
+
+        )) {
+            this.display = true;
+            this.modelValue = true;
+        }
+
+
+        if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
+            && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId) {
+
+            if (!this.sourceVendor.vendorId) {
+                this.sourceVendor.createdBy = this.userName;
+                this.sourceVendor.updatedBy = this.userName;
+                this.sourceVendor.masterCompanyId = 1;
+                this.sourceVendor.isActive = true;
+                //this.sourceVendor.vendorName = this.vendorName;
                 //this.sourceVendor.vendorCode = this.vendorCode;
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
 
                 }
-				this.workFlowtService.newAction(this.sourceVendor).subscribe(data => {
-					this.sourceVendor.updatedBy = this.userName;
-					this.localCollection = data;
-					this.sourceVendor = data;
-					this.sourceVendor.address1 = data.address.line1;
-					this.sourceVendor.address2 = data.address.line2;
-					this.sourceVendor.address3 = data.address.line3;
-					this.sourceVendor.city = data.address.city;
-					//this.sourceVendor.phone = data.address.phone;
-					this.sourceVendor.country = data.address.country;
-					this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
-					this.sourceVendor.PostalCode = data.address.postalCode;
-					//this.sourceVendor = this.localCollection;
-					//this.workFlowtService.listCollection = this.localCollection;
-					this.workFlowtService.generalCollection = this.localCollection;
-					this.workFlowtService.contactCollection = this.localCollection;
-					this.workFlowtService.financeCollection = this.localCollection;
-					this.workFlowtService.paymentCollection = this.localCollection;
-					this.workFlowtService.shippingCollection = this.localCollection;
-					if (this.isVendorAlsoCustomer == true) {
-						this.workFlowtService.isVendorAlsoCustomer = this.isVendorAlsoCustomer;
-						this.workFlowtService.localCollectiontoCustomer = this.sourceVendor;
-					}
-					this.activeIndex = 0;
-					this.workFlowtService.indexObj.next(this.activeIndex);
-					this.savesuccessCompleted(this.sourceVendor);
-				})
-			}
+                this.workFlowtService.newAction(this.sourceVendor).subscribe(data => {
+                    this.sourceVendor.updatedBy = this.userName;
+                    this.localCollection = data;
+                    this.sourceVendor = data;
+                    this.sourceVendor.address1 = data.address.line1;
+                    this.sourceVendor.address2 = data.address.line2;
+                    this.sourceVendor.address3 = data.address.line3;
+                    this.sourceVendor.city = data.address.city;
+                    //this.sourceVendor.phone = data.address.phone;
+                    this.sourceVendor.country = data.address.country;
+                    this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
+                    this.sourceVendor.PostalCode = data.address.postalCode;
+                    //this.sourceVendor = this.localCollection;
+                    //this.workFlowtService.listCollection = this.localCollection;
+                    this.workFlowtService.generalCollection = this.localCollection;
+                    this.workFlowtService.contactCollection = this.localCollection;
+                    this.workFlowtService.financeCollection = this.localCollection;
+                    this.workFlowtService.paymentCollection = this.localCollection;
+                    this.workFlowtService.shippingCollection = this.localCollection;
+                    if (this.sourceVendor.isVendorAlsoCustomer == true) {
+                        this.workFlowtService.isVendorAlsoCustomer = this.sourceVendor.isVendorAlsoCustomer;
+                        this.workFlowtService.localCollectiontoCustomer = this.sourceVendor;
+                    }
+                    this.activeIndex = 0;
+                    this.workFlowtService.indexObj.next(this.activeIndex);
+                    this.savesuccessCompleted(this.sourceVendor);
+                })
+            }
 
-			else {
-				this.sourceVendor.updatedBy = this.userName;
+            else {
+                this.sourceVendor.updatedBy = this.userName;
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
 
                 }
-				this.workFlowtService.updateVendorDetails(this.sourceVendor).subscribe(
-					data => {
-						this.sourceVendor.updatedBy = this.userName;
-						this.localCollection = data;
-						this.sourceVendor = data;
-						this.sourceVendor.address1 = data.address.line1;
-						this.sourceVendor.address2 = data.address.line2;
-						this.sourceVendor.address3 = data.address.line3;
-						this.sourceVendor.city = data.address.city;
-						//this.sourceVendor.phone = data.address.phone;
-						this.sourceVendor.country = data.address.country;
-						this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
-						this.sourceVendor.PostalCode = data.address.postalCode;
-						//this.sourceVendor = this.localCollection;
-						//this.workFlowtService.listCollection = this.localCollection;
-						this.workFlowtService.generalCollection = this.localCollection;
-						this.workFlowtService.contactCollection = this.localCollection;
-						this.workFlowtService.financeCollection = this.localCollection;
-						this.workFlowtService.paymentCollection = this.localCollection;
-						this.workFlowtService.shippingCollection = this.localCollection;
-						this.activeIndex = 0;
-						this.workFlowtService.indexObj.next(this.activeIndex);
-						this.savesuccessCompleted(this.sourceVendor);
-						//this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+                this.workFlowtService.updateVendorDetails(this.sourceVendor).subscribe(
+                    data => {
+                        this.sourceVendor.updatedBy = this.userName;
+                        this.localCollection = data;
+                        this.sourceVendor = data;
+                        this.sourceVendor.address1 = data.address.line1;
+                        this.sourceVendor.address2 = data.address.line2;
+                        this.sourceVendor.address3 = data.address.line3;
+                        this.sourceVendor.city = data.address.city;
+                        //this.sourceVendor.phone = data.address.phone;
+                        this.sourceVendor.country = data.address.country;
+                        this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
+                        this.sourceVendor.PostalCode = data.address.postalCode;
+                        //this.sourceVendor = this.localCollection;
+                        //this.workFlowtService.listCollection = this.localCollection;
+                        this.workFlowtService.generalCollection = this.localCollection;
+                        this.workFlowtService.contactCollection = this.localCollection;
+                        this.workFlowtService.financeCollection = this.localCollection;
+                        this.workFlowtService.paymentCollection = this.localCollection;
+                        this.workFlowtService.shippingCollection = this.localCollection;
+                        this.activeIndex = 0;
+                        this.workFlowtService.indexObj.next(this.activeIndex);
+                        this.savesuccessCompleted(this.sourceVendor);
+                        //this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
 
-					})
-				
-			}
-		}
-		else {
-			//this.showalert = true;
-		}
+                    })
+
+            }
+        }
+        else {
+            //this.showalert = true;
+        }
         //console.log(this.localCollection)
-        
+
 
         //this.modal.close();
     }
-	nextClick() {
-		this.workFlowtService.vendorgeneralcollection = this.local;
-		this.activeIndex = 1;
-		this.workFlowtService.indexObj.next(this.activeIndex);
-		//this.saveCompleted(this.sourceCustomer);
-		this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+    nextClick() {
+        this.workFlowtService.vendorgeneralcollection = this.local;
+        this.activeIndex = 1;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        //this.saveCompleted(this.sourceCustomer);
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
 
-	}
-    
-   
+    }
+
+
     dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
-		this.modal.close();
+        this.modal.close();
     }
 
-    
+
 
     private saveCompleted(user?: any) {
         this.isSaving = false;
@@ -798,22 +804,22 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
         }
 
         this.loadData();
-	}
+    }
 
-	private savesuccessCompleted(user?: any) {
-		this.isSaving = false;
+    private savesuccessCompleted(user?: any) {
+        this.isSaving = false;
 
-		
-			this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-		
+        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-		this.loadData();
-	}
+
+
+        this.loadData();
+    }
     private saveSuccessHelper(role?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-                
+
     }
 
     get userName(): string {
@@ -835,125 +841,125 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
         } else {
             return `with: ${reason}`;
         }
-	}
-	onUpload(event) {
-		debugger;
-		for (let file of event.files) {
-			this.uploadedFiles.push(file);
-		}
+    }
+    onUpload(event) {
+        debugger;
+        for (let file of event.files) {
+            this.uploadedFiles.push(file);
+        }
 
-		this.msgs = [];
-		this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
-	}
-
-	
-
-	eventHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedActionName) {
-				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disableSaveVenderName = true;
-					this.disableSaveVenName = true;
-				}
-				else {
-					this.disableSaveVenderName = false;
-					this.disableSaveVenName = false;
-				}
-			}
-
-		}
-	}
-	onVendorselected(event) {
-		//debugger;
-		for (let i = 0; i < this.VendorNamecoll.length; i++) {
-			if (event == this.VendorNamecoll[i][0].vendorName) {
-				//alert("Action Name already Exists");
-				this.disableSaveVenName = true;
-				this.disableSave = true;
-				this.disableSaveVenderName = true;
-				this.selectedActionName = event;
-			}
-			
-		}
-		//this.workFlowtService.getvendorList(event).subscribe(
-		//	results => this.onvendorloadsuccessfull(results[0]),
-		//	error => this.onDataLoadFailed(error)
-		//);
-	}
-
-	eventvendorHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedVendorCode) {
-				if (value == this.selectedVendorCode.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disableSaveVenCode = true;
-					this.disableSaveVenderCode = true;
-					
-				}
-				else {
-					this.disableSaveVenCode = false;
-					this.disableSaveVenderCode = false;
-					
-				}
-			}
-
-		}
+        this.msgs = [];
+        this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
+    }
 
 
-	}
-	onVendorCodeselected(event) {
-		//debugger;
-		for (let i = 0; i < this.VendorCodesColl.length; i++) {
-			if (event == this.VendorCodesColl[i][0].vendorCode) {
-				
-				this.disableSaveVenCode = true;
-				this.disableSaveVenderCode = true;
-				this.selectedVendorCode = event;
-			}
-		}
-	}
-	onCountrieselected(event) {
-		if (this.allCountryinfo) {
 
-			for (let i = 0; i < this.allCountryinfo.length; i++) {
-				if (event == this.allCountryinfo[i].nice_name) {
-					this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-					this.disablesave = true;
+    eventHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    //alert("Action Name already Exists");
+                    this.disableSaveVenderName = true;
+                    this.disableSaveVenName = true;
+                }
+                else {
+                    this.disableSaveVenderName = false;
+                    this.disableSaveVenName = false;
+                }
+            }
 
-					this.selectedCountries = event;
-				}
-			}
-		}
-	}
-	eventCountryHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedCountries) {
-				if (value == this.selectedCountries.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disablesave = true;
-				}
-				else {
-					this.disablesave = false;
-				}
-			}
+        }
+    }
+    onVendorselected(event) {
+        //debugger;
+        for (let i = 0; i < this.VendorNamecoll.length; i++) {
+            if (event == this.VendorNamecoll[i][0].vendorName) {
+                //alert("Action Name already Exists");
+                this.disableSaveVenName = true;
+                this.disableSave = true;
+                this.disableSaveVenderName = true;
+                this.selectedActionName = event;
+            }
 
-		}
-	}
-	filtercountry(event) {
+        }
+        //this.workFlowtService.getvendorList(event).subscribe(
+        //	results => this.onvendorloadsuccessfull(results[0]),
+        //	error => this.onDataLoadFailed(error)
+        //);
+    }
 
-		this.countrycollection = [];
-		if (this.allCountryinfo.length > 0) {
-			for (let i = 0; i < this.allCountryinfo.length; i++) {
-				let countryName = this.allCountryinfo[i].nice_name;
-				if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.countrycollection.push(countryName);
-				}
-			}
-		}
-	}
+    eventvendorHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedVendorCode) {
+                if (value == this.selectedVendorCode.toLowerCase()) {
+                    //alert("Action Name already Exists");
+                    this.disableSaveVenCode = true;
+                    this.disableSaveVenderCode = true;
+
+                }
+                else {
+                    this.disableSaveVenCode = false;
+                    this.disableSaveVenderCode = false;
+
+                }
+            }
+
+        }
+
+
+    }
+    onVendorCodeselected(event) {
+        //debugger;
+        for (let i = 0; i < this.VendorCodesColl.length; i++) {
+            if (event == this.VendorCodesColl[i][0].vendorCode) {
+
+                this.disableSaveVenCode = true;
+                this.disableSaveVenderCode = true;
+                this.selectedVendorCode = event;
+            }
+        }
+    }
+    onCountrieselected(event) {
+        if (this.allCountryinfo) {
+
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                if (event == this.allCountryinfo[i].nice_name) {
+                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesave = true;
+
+                    this.selectedCountries = event;
+                }
+            }
+        }
+    }
+    eventCountryHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
+                if (value == this.selectedCountries.toLowerCase()) {
+                    //alert("Action Name already Exists");
+                    this.disablesave = true;
+                }
+                else {
+                    this.disablesave = false;
+                }
+            }
+
+        }
+    }
+    filtercountry(event) {
+
+        this.countrycollection = [];
+        if (this.allCountryinfo.length > 0) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                let countryName = this.allCountryinfo[i].nice_name;
+                if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.countrycollection.push(countryName);
+                }
+            }
+        }
+    }
 
 }

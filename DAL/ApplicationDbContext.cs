@@ -241,6 +241,8 @@ namespace DAL
         public DbSet<VendorCapabilityAircraftType> vendorCapabilityAircraftType { get; set; }
         public DbSet<VendorCapabilityType> vendorCapabilityType { get; set; }
         public DbSet<VendorCapabiltiyAircraftModel> vendorCapabiltiyAircraftModel { get; set; }
+        public DbSet<GLAccountNode> GLAccountNodes { get; set; }
+        public DbSet<GLAccountNodeShareWithEntityMapper> GLAccountNodeShareWithEntityMappers { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

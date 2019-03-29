@@ -70,6 +70,7 @@ import { DefaultMessageComponent } from '../components/default-message/default-m
 import { TaxTypeComponent } from "../components/tax-type/tax-type.component";
 import { ConditionsComponent } from "../components/conditions/conditions.component";
 
+
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
 import { SingleScreenBreadcrumbService } from "../services/single-screens-breadcrumb.service";
@@ -90,6 +91,7 @@ import { CertificationTypeComponent } from "../components/certification-type/cer
 import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
 import { AssetStatusService } from "../services/asset-status/asset-status.service";
 import { AssetStatusEndpointService } from "../services/asset-status/assetstatus-endpoint.service";
+import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 //import { SharedModule } from '../shared/shared.module';
 //import { CompanyComponent } from '../shared/company/company.component';
 
@@ -164,6 +166,7 @@ import { AssetStatusEndpointService } from "../services/asset-status/assetstatus
 		ShelfComponent,
         CertificationTypeComponent,
         AssetStatusComponent,
+        NodeSetupComponent
 		//DefaultMessageComponent
 
 
