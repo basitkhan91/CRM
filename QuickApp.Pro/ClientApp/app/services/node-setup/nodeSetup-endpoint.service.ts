@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
+import { GLAccountNodeSetup } from '../../models/node-setup.model';
 
 @Injectable()
 export class NodeSetupEndpointService extends EndpointFactory {
@@ -27,48 +28,48 @@ export class NodeSetupEndpointService extends EndpointFactory {
         super(http, configurations, injector);
     }
 
-    getAllAssets<T>(): Observable<T> {
+    getAllNodesSetup<T>(): Observable<T> {
         let endpointUrl = this.getAll;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAllAssets());
+                return this.handleError(error, () => this.getAllNodesSetup());
             });
     }
 
-    getAssetById<T>(assetId: number): Observable<T> {
-        let endpointUrl = `${this.getById}/${assetId}`;
+    getNodeSetupById<T>(nodeId: number): Observable<T> {
+        let endpointUrl = `${this.getById}/${nodeId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAssetById(assetId));
+                return this.handleError(error, () => this.getNodeSetupById(nodeId));
             });
     }
 
-    addAsset<T>(asset: AssetStatus): Observable<T> {
+    addNode<T>(node: GLAccountNodeSetup): Observable<T> {
         let endpointUrl = this.add;
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(asset), this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(node), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.addAsset(asset));
+                return this.handleError(error, () => this.addNode(node));
             });
     }
 
-    updateAsset<T>(assetStatus: AssetStatus): Observable<T> {
+    updateNode<T>(node: GLAccountNodeSetup): Observable<T> {
         let endpointUrl = this.update;
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(assetStatus), this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(node), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.updateAsset(assetStatus));
+                return this.handleError(error, () => this.updateNode(node));
             });
     }
 
-    removeAssetById<T>(assetId: number): Observable<T> {
-        let endpointUrl = `${this.removeById}/${assetId}`;
+    removeNodeById<T>(nodeId: number): Observable<T> {
+        let endpointUrl = `${this.removeById}/${nodeId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.removeAssetById(assetId));
+                return this.handleError(error, () => this.removeNodeById(nodeId));
             });
     }
 

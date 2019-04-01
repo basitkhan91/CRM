@@ -1,7 +1,9 @@
 ﻿import { OnInit, Component } from "@angular/core";
 import { fadeInOut } from "../../../../services/animations";
 import { AlertService } from "../../../../services/alert.service";
-import { AssetStatus } from "../../../../models/asset-status.model";
+import { GLAccountNodeSetup } from "../../../../models/node-setup.model";
+import { NodeSetupService } from "../../../../services/node-setup/node-setup.service";
+import { LegalEntityService } from "../../../../services/legalentity.service";
 
 @Component({
     selector: 'app-node-setup',
@@ -10,9 +12,15 @@ import { AssetStatus } from "../../../../models/asset-status.model";
     animations: [fadeInOut]
 })
 /** node-setup component*/
-export class NodeSetupComponent {
-    /** node-setup ctor */
-    constructor(private alertService: AlertService, private nodeSetupService: )
+export class NodeSetupComponent implements OnInit {
+    maincompanylist: any;
+    allManagemtninfoData: any[];
+    currentNodeSetup: GLAccountNodeSetup;
+    nodeSetupList: GLAccountNodeSetup[];
+    updateMode: boolean;
+    loadingIndicator: boolean;
+
+    constructor(public legalEntityService: LegalEntityService,private alertService: AlertService, private nodeSetupService: NodeSetupService )
     {
     }
 
@@ -20,54 +28,88 @@ export class NodeSetupComponent {
         this.nodeSetupService.getAll().subscribe(nodes => {
             this.nodeSetupList = nodes[0];
         });
-        this.currentAssetStatus = new AssetStatus();
+        this.currentNodeSetup = new GLAccountNodeSetup();
+        this.loadManagementdata();
     }
 
-    addAssetStatus(): void {
-        this.assetStatusService.add(this.currentAssetStatus).subscribe(asset => {
-            this.currentAssetStatus = asset;
+    addNodeSetup(): void {
+        this.nodeSetupService.add(this.currentNodeSetup).subscribe(node => {
+            this.currentNodeSetup = node;
             this.alertService.showMessage('Asset Status added successfully.');
-            this.assetStatusService.getAll().subscribe(assets => {
-                this.assetStatusList = assets[0];
+            this.nodeSetupService.getAll().subscribe(Nodes => {
+                this.nodeSetupList = Nodes[0];
             });
         });
     }
 
-    setAssetStatusToUpdate(id: number): void {
-        this.currentAssetStatus = Object.assign({}, this.assetStatusList.filter(function (asset) {
-            return asset.id == id;
+    setNodeSetupToUpdate(id: number): void {
+        this.currentNodeSetup = Object.assign({}, this.nodeSetupList.filter(function (node) {
+            return node.GLAccountNodeId == id;
         })[0]);
         this.updateMode = true;
     }
 
-    updateAssetStatus(): void {
-        this.assetStatusService.update(this.currentAssetStatus).subscribe(asset => {
-            this.alertService.showMessage('Asset Status updated successfully.');
-            this.assetStatusService.getAll().subscribe(assets => {
-                this.assetStatusList = assets[0];
+    updateNodeSetup(): void {
+        this.nodeSetupService.update(this.currentNodeSetup).subscribe(node => {
+            this.alertService.showMessage('Node Setup updated successfully.');
+            this.nodeSetupService.getAll().subscribe(nodes => {
+                this.nodeSetupList = nodes[0];
             });
             this.updateMode = false;
             this.resetAssetStatus();
         });
     }
 
-    removeAssetStatus(assetStatusId: number): void {
-        this.assetStatusService.remove(assetStatusId).subscribe(response => {
+    removeNodeSetup(nodeId: number): void {
+        this.nodeSetupService.remove(nodeId).subscribe(response => {
             this.alertService.showMessage("Asset Status removed successfully.");
-            this.assetStatusService.getAll().subscribe(assets => {
-                this.assetStatusList = assets[0];
+            this.nodeSetupService.getAll().subscribe(nodes => {
+                this.nodeSetupList = nodes[0];
             });
         });
-
     }
 
-    toggleIsDeleted(assetStatusId: number): void {
-        this.setAssetStatusToUpdate(assetStatusId);
-        this.currentAssetStatus.isDeleted = !this.currentAssetStatus.isDeleted;
+    toggleIsDeleted(nodeId: number): void
+    {
+        this.setNodeSetupToUpdate(nodeId);
+        this.currentNodeSetup.IsDelete = !this.currentNodeSetup.IsDelete;
     }
 
-    resetAssetStatus(): void {
+    resetAssetStatus(): void
+    {
         this.updateMode = false;
-        this.currentAssetStatus = new AssetStatus();
+        this.currentNodeSetup = new GLAccountNodeSetup();
     }
+    //end
+    private loadManagementdata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.legalEntityService.getManagemententity().subscribe(
+            results => this.onManagemtntdataLoadDataList(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onManagemtntdataLoadDataList(getAtaMainList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allManagemtninfoData = getAtaMainList;
+
+        for (let i = 0; i < this.allManagemtninfoData.length; i++) {
+            if (this.allManagemtninfoData[i].parentId == null) {
+                this.maincompanylist.push(this.allManagemtninfoData[i]);
+            }
+        }
+    }
+
+    private onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+    }
+
+    saveOrEditItemAndCloseModel()
+    {
+    }
+
 }
