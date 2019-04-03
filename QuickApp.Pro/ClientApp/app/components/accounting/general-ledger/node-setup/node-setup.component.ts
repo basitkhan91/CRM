@@ -4,7 +4,17 @@ import { AlertService } from "../../../../services/alert.service";
 import { GLAccountNodeSetup } from "../../../../models/node-setup.model";
 import { NodeSetupService } from "../../../../services/node-setup/node-setup.service";
 import { LegalEntityService } from "../../../../services/legalentity.service";
-
+import { GLAccountClassService } from "../../../../services/glaccountclass.service";
+import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'; 
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { MenuItem } from 'primeng/api';//bread crumb
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 @Component({
     selector: 'app-node-setup',
     templateUrl: './node-setup.component.html',
@@ -13,38 +23,77 @@ import { LegalEntityService } from "../../../../services/legalentity.service";
 })
 /** node-setup component*/
 export class NodeSetupComponent implements OnInit {
-    maincompanylist: any;
+    maincompanylist: any[] = [];
     allManagemtninfoData: any[];
     currentNodeSetup: GLAccountNodeSetup;
-    nodeSetupList: GLAccountNodeSetup[];
+    nodeSetupList: GLAccountNodeSetup[] = [];
+    nodeSetupListData: GLAccountNodeSetup[] = [];
     updateMode: boolean;
     loadingIndicator: boolean;
-
-    constructor(public legalEntityService: LegalEntityService,private alertService: AlertService, private nodeSetupService: NodeSetupService )
+    selectedCompanysData: any;
+    allGLAccountClassData: any[];
+    modal: NgbModalRef;
+    private isDeleteMode: boolean = false;
+    mainCompanylistMultiSelectData: any[] = [];
+    cols: any[];
+    constructor(private modalService: NgbModal,public glAccountService: GLAccountClassService,public legalEntityService: LegalEntityService,private alertService: AlertService, private nodeSetupService: NodeSetupService )
     {
     }
 
     ngOnInit(): void {
         this.nodeSetupService.getAll().subscribe(nodes => {
             this.nodeSetupList = nodes[0];
+            this.nodeSetupListData = nodes[0];
+            if (this.nodeSetupList) {
+                for (let nlength = 0; nlength < this.nodeSetupList.length; nlength++) {
+                    this.nodeSetupService.getShareWithOtherEntitysData(this.nodeSetupList[nlength].glAccountNodeId).subscribe(msData => {
+                        let companyCodes = [];
+                        let string = '';
+                        let companyIds = [];
+                        
+                        if (msData[0].length) {
+                            for (let j = 0; j < msData[0].length; j++) {
+                                
+                                if (msData[0][j]) {
+                                    companyCodes.push(msData[0][j].code);
+                                    companyIds.push(msData[0][j].managementStructureId);
+                                    string = companyCodes.join(',');
+                                    
+                                }
+                                this.nodeSetupListData[nlength].comapnycodes = string;
+                                this.nodeSetupListData[nlength].selectedCompanysData = companyIds;
+                            }
+                        }
+
+                    })
+                }
+            }
+
         });
+
         this.currentNodeSetup = new GLAccountNodeSetup();
         this.loadManagementdata();
+        this.loadGlAccountClassData();
     }
 
     addNodeSetup(): void {
         this.nodeSetupService.add(this.currentNodeSetup).subscribe(node => {
-            this.currentNodeSetup = node;
-            this.alertService.showMessage('Asset Status added successfully.');
+            this.currentNodeSetup.glAccountNodeId = node.glAccountNodeId;
+            this.addGLAccountNodeShareWithEntityMapper();
+            this.alertService.showMessage('Node Setup added successfully.');
             this.nodeSetupService.getAll().subscribe(Nodes => {
                 this.nodeSetupList = Nodes[0];
             });
+            this.dismissModel();
         });
     }
 
-    setNodeSetupToUpdate(id: number): void {
+    setNodeSetupToUpdate(id: number, content): void
+    {
+        this.open(content);
+        this.updateMode = true;
         this.currentNodeSetup = Object.assign({}, this.nodeSetupList.filter(function (node) {
-            return node.GLAccountNodeId == id;
+            return node.glAccountNodeId == id;
         })[0]);
         this.updateMode = true;
     }
@@ -56,13 +105,13 @@ export class NodeSetupComponent implements OnInit {
                 this.nodeSetupList = nodes[0];
             });
             this.updateMode = false;
-            this.resetAssetStatus();
+            this.resetNodeSetup();
         });
     }
 
     removeNodeSetup(nodeId: number): void {
         this.nodeSetupService.remove(nodeId).subscribe(response => {
-            this.alertService.showMessage("Asset Status removed successfully.");
+            this.alertService.showMessage("Node Setup removed successfully.");
             this.nodeSetupService.getAll().subscribe(nodes => {
                 this.nodeSetupList = nodes[0];
             });
@@ -71,14 +120,15 @@ export class NodeSetupComponent implements OnInit {
 
     toggleIsDeleted(nodeId: number): void
     {
-        this.setNodeSetupToUpdate(nodeId);
-        this.currentNodeSetup.IsDelete = !this.currentNodeSetup.IsDelete;
+       // this.setNodeSetupToUpdate(nodeId);
+        this.currentNodeSetup.isActive = !this.currentNodeSetup.isActive;
     }
 
-    resetAssetStatus(): void
+    resetNodeSetup(): void
     {
         this.updateMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
+        this.dismissModel();
     }
     //end
     private loadManagementdata() {
@@ -101,6 +151,16 @@ export class NodeSetupComponent implements OnInit {
                 this.maincompanylist.push(this.allManagemtninfoData[i]);
             }
         }
+
+        if (this.maincompanylist) {
+            if (this.maincompanylist.length > 0) {
+                for (let i = 0; i < this.maincompanylist.length; i++)
+                    this.mainCompanylistMultiSelectData.push(
+                        { value: this.maincompanylist[i].managementStructureId, label: this.maincompanylist[i].code },
+
+                    );
+            }
+        }
     }
 
     private onDataLoadFailed(error: any) {
@@ -108,8 +168,56 @@ export class NodeSetupComponent implements OnInit {
         this.loadingIndicator = false;
     }
 
-    saveOrEditItemAndCloseModel()
+    private loadGlAccountClassData() {
+        this.alertService.startLoadingMessage();
+        this.glAccountService.getWorkFlows().subscribe(
+            results => this.onDataLoadGlDataSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    onDataLoadGlDataSuccessful(allWorkFlows: any[])
     {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allGLAccountClassData = allWorkFlows;
     }
 
+    addGLAccountNodeShareWithEntityMapper()
+    {
+        let data = [];
+        if (this.currentNodeSetup.selectedCompanysData)
+        {
+            for (let i = 0; i < this.currentNodeSetup.selectedCompanysData.length;i++)
+            {
+                data.push({
+                    "managementStructureId": this.currentNodeSetup.selectedCompanysData[i],
+                    "GLAccountNodeId": this.currentNodeSetup.glAccountNodeId
+                })
+
+                this.nodeSetupService.addGLAccountNodeShareWithEntityMapper(data[i]).subscribe(Nodes => {
+                    this.nodeSetupList = Nodes[0];
+                });
+            }
+        }
+
+       
+    }
+
+    open(content) {
+
+        this.updateMode = false;
+        this.isDeleteMode = false;
+        this.currentNodeSetup = new GLAccountNodeSetup();
+        this.currentNodeSetup.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    dismissModel() {
+        this.isDeleteMode = false;
+        this.updateMode = false;
+        this.modal.close();
+        this.currentNodeSetup.selectedCompanysData = [];
+    }
 }

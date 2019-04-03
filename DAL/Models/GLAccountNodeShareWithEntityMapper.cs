@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class GLAccountNodeShareWithEntityMapper : BaseEntity
+    public class GLAccountNodeShareWithEntityMapper : PasBase
     {
         public long GLAccountNodeShareWithEntityMapperId { get; set; }
 
@@ -14,5 +14,6 @@ namespace DAL.Models
         public long GLAccountNodeId { get; set; }
 
         public long MasterCompanyId { get; set; }
+        
     }
 }

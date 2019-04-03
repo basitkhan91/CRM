@@ -866,7 +866,7 @@ namespace DAL
             }
         }
 
-        public IGLAccountClassRespository GLAccountClass
+        public IGLAccountClassRespository GLAccountClassRespository
 
         {
             get
@@ -1297,7 +1297,7 @@ namespace DAL
             }
         }
 
-       
+
         //public IStockLineAdjustmentDatatypeRepository StockLineAdjustmentDatatypeRepository
         //{
 
@@ -1309,7 +1309,10 @@ namespace DAL
         //    }
         //}
 
-        public IGLAccountClassRespository gLAccountClass => throw new NotImplementedException();
+        
+
+
+     
 
         public IGlCashFlowRepository glCashFlowRepository => throw new NotImplementedException();
 
@@ -1440,6 +1443,15 @@ namespace DAL
             }
         }
 
+        public IGLAccountClassRespository GLAccountClass
+        {
+            get
+            {
+                if (_gLAccountClassRespository == null)
+                    _gLAccountClassRespository = new GLAccountClassRepository(_context);
+                return _gLAccountClassRespository;
+            }
+        }
 
         //IWorkFlowRepositoryTest IUnitOfWork.workFlowRepositoryTest => throw new NotImplementedException();
 

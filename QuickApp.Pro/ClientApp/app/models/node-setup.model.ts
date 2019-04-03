@@ -1,20 +1,21 @@
 ﻿export class GLAccountNodeSetup {
-    GLAccountNodeId: number;
-    LedgerName: string;
-    NodeCode: string;
-    NodeName: string;
-    ParentNodeId: number;
-    LeafNodeCheck: boolean;
-    GLAccountTypeId: number;
-    FSType: boolean;
-    Description: string;
+    glAccountNodeId: number;
+    ledgerName: string;
+    nodeCode: string;
+    nodeName: string;
+    parentNodeId: number;
+    leafNodeCheck: boolean;
+    glAccountTypeId: number;
+    fsType: boolean;
+    description: string;
     createdBy: string;
     updatedBy: string;
     createdDate: Date;
     updatedDate: Date;
-    IsActive: boolean;
-    IsDelete: boolean;
-    LedgerNameMgmStructureId: number;
-    assetsStatusList: GLAccountNodeSetup[];
-
+    isActive: boolean;
+    isDelete: boolean;
+    ledgerNameMgmStructureId: number;
+    nodeSetupList: GLAccountNodeSetup[];
+    comapnycodes: string;
+    selectedCompanysData: any[] = [];
 }

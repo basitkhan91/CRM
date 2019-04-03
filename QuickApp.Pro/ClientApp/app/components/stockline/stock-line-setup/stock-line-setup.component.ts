@@ -282,7 +282,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		//this.dataSource.data = allWorkFlows;
-		this.allManufacturerInfo = allWorkFlows;
+		this.allManufacturerInfo = allWorkFlows; 
 	}
 
 	private onIntegrationData(getEmployeeCerficationList: any[]) {

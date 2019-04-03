@@ -189,7 +189,7 @@ namespace DAL
 
         ILegalEntity legalEntity { get; }
 
-        IGLAccountClassRespository gLAccountClass { get; }
+       // IGLAccountClassRespository gLAccountClass { get; }
 
         IGlCashFlowRepository glCashFlowRepository { get; }
 

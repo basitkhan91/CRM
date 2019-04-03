@@ -28,9 +28,18 @@ export class NodeSetupService {
             this.nodeSetupEndpoint.getNodeSetupById<GLAccountNodeSetup>(nodeId)
         );
     }
+    getShareWithOtherEntitysData(nodeId: number) {
+        return Observable.forkJoin(
+            this.nodeSetupEndpoint.getShareWithOtherEntitysDataEndPoint<any>(nodeId)
+        );
+    }
 
     add(assetStatus: GLAccountNodeSetup) {
         return this.nodeSetupEndpoint.addNode<GLAccountNodeSetup>(assetStatus);
+    }
+    addGLAccountNodeShareWithEntityMapper(data: any)
+    {
+        return this.nodeSetupEndpoint.addGLAccountNodeShareWithEntityMapper<any>(data);
     }
 
     update(assetStatus: GLAccountNodeSetup) {

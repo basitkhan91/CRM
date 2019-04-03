@@ -33,15 +33,25 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var nodes = unitOfWork.Repository<GLAccountNode>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.Id);
+            var nodes = unitOfWork.Repository<GLAccountNode>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountNodeId);
             return Ok(nodes);
         }
 
         [HttpGet("getById/{id}")]
         public IActionResult getNodeById(long id)
         {
-            var node = unitOfWork.Repository<GLAccountNode>().Find(x => x.Id == id && x.IsDeleted != true);
+            var node = unitOfWork.Repository<GLAccountNode>().Find(x => x.GLAccountNodeId == id && x.IsDelete != true);
             return Ok(node);
+        }
+        
+        
+        [HttpGet("shareWithOtherEntityById/{id}")]
+        [Produces(typeof(List<GLAccountNodeShareWithEntityMapper>))]
+        public IActionResult getShareWithEntityNodeById(long id)
+        {
+            var node = unitOfWork.GLAccountClass.getShareWithEntityNodeById(id); 
+            return Ok(node);
+
         }
 
         [HttpPost("add")]
@@ -51,7 +61,33 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    node.MasterCompanyId = 1;
                     unitOfWork.Repository<GLAccountNode>().Add(node);
+                    unitOfWork.SaveChanges();
+                    return Ok(node);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpPost("addEntityMapper")]
+        public IActionResult addEntityMapper([FromBody]GLAccountNodeShareWithEntityMapper node)
+        {
+            if (node != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    node.MasterCompanyId = 1;
+                    unitOfWork.Repository<GLAccountNodeShareWithEntityMapper>().Add(node);
                     unitOfWork.SaveChanges();
                     return Ok(node);
                 }
@@ -93,10 +129,10 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeAssetById(long id)
         {
-            var node = unitOfWork.Repository<GLAccountNode>().Find(x => x.Id == id).FirstOrDefault();
+            var node = unitOfWork.Repository<GLAccountNode>().Find(x => x.GLAccountNodeId == id).FirstOrDefault();
             if (node != null)
             {
-                node.IsDeleted = true;
+                node.IsDelete = true;
                 unitOfWork.Repository<GLAccountNode>().Update(node);
                 unitOfWork.SaveChanges();
                 return Ok();
@@ -106,6 +142,15 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
         }
+
+        //[HttpGet("updateIsActive/{glAccountNodeId)}")]
+        //public ActionResult updateIsActive(long glAccountNodeId)
+        //{
+        //    var glAccountNode = unitOfWork.Repository<GLAccountNode>().getById(glAccountNodeId);
+        //    glAccountNode.IsActive = !glAccountNode.IsActive;
+        //    unitOfWork.Repository<GLAccountNode>().Update(glAccountNode);
+        //    return Ok(glAccountNode);
+        //}
 
         #endregion Public Methods
 

@@ -84,8 +84,10 @@ import { AuthGuard } from './services/auth-guard.service';
 
 			{ path: "generalledgermodule", loadChildren: './generalledgerpages/generalledgerpages.module#GeneralledgerPageModule' },
 
-			{ path: "workflowmodule", loadChildren: './workflowpages/workflowpages.module#WorkFlowPagesModule' },
+            { path: "workflowmodule", loadChildren: './workflowpages/workflowpages.module#WorkFlowPagesModule' },
 
+
+            { path: "assetmodule", loadChildren: './assetmanagement/assetmanagement.module#AssetmanagementModule' },
             
       
            

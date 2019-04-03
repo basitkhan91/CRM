@@ -235,6 +235,7 @@
                     <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-entity-edit">Add Legal Entity Structure</a>
                     <!--<a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-legalentity-structure">Legal Entity Structure</a>-->
                     <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-managemententity-structure">Management Structure</a>
+                    <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-node-setup">Node</a>
 
                 </mat-expansion-panel>
 
@@ -306,14 +307,14 @@
                 </mat-expansion-panel>
                 <!--Arun-->
 
-                <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
+                <!--<mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                            Accounting
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <!--<a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-node-setup">Node</a>-->
-                </mat-expansion-panel>
+                    <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-node-setup">Node</a>
+                </mat-expansion-panel>-->
 
                 <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
                     <mat-expansion-panel-header>
@@ -321,7 +322,7 @@
                             Single Screens
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-node-setup">Actions</a>
+                    
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-actions">Actions</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-action-attributes">Action Attributes</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-ata-main">Ata Chapter</a>
