@@ -305,16 +305,36 @@
 
 
                 </mat-expansion-panel>
-                <!--Arun-->
 
-                <!--<mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
+                <mat-expansion-panel [expanded]="step === 11" (opened)="setStep(11)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                           Accounting
+                            Asset Management
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-node-setup">Node</a>
-                </mat-expansion-panel>-->
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                   Assets
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <a mat-list-item routerLinkActive="active" routerLink="/assetmodule/assetpages/app-asset-listing">AssetList</a>
+
+                            <a mat-list-item routerLinkActive="active" routerLink="/assetmodule/assetpages/app-create-asset">Create Asset</a>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-expansion-panel>
+                <!--Arun-->
+                <!--<mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+               Accounting
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-node-setup">Node</a>
+    </mat-expansion-panel>-->
 
                 <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
                     <mat-expansion-panel-header>
@@ -322,7 +342,7 @@
                             Single Screens
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    
+
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-actions">Actions</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-action-attributes">Action Attributes</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-ata-main">Ata Chapter</a>
