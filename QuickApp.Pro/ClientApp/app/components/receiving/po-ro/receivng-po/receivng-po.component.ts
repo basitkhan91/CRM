@@ -557,6 +557,7 @@ export class ReceivngPoComponent {
                 partList["stocklineListObj"][i].isHazardousMaterial = partList["isHazardousMaterial"];
                 this.stocklineser.newStockLine(partList["stocklineListObj"][i]).subscribe(data => {
                     this.collectionofstockLine = data;
+                    this.vendorService.receiveSaveddata.push(data);
                 })
             }
 
