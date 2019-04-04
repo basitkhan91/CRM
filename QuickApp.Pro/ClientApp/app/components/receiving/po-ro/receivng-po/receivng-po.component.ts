@@ -218,7 +218,7 @@ export class ReceivngPoComponent {
                         this.workFlowtService.selectedPoCollection[i].pop.glAccountId = workFlowtService.selectedPoCollection[i].glAccountId;
                         this.workFlowtService.selectedPoCollection[i].pop.serialNumber = workFlowtService.selectedPoCollection[i].serialNumber;
                         this.workFlowtService.selectedPoCollection[i].pop.partNumber = workFlowtService.selectedPoCollection[i].partNumber;
-                        this.GetStockLineDataBasedonItemMasterId(this.workFlowtService.selectedPoCollection[i].pop.itemTypeId);
+                      //  this.GetStockLineDataBasedonItemMasterId(this.workFlowtService.selectedPoCollection[i].pop.itemTypeId);
                         this.workFlowtService.selectedPoCollection[i].pop.shortName = workFlowtService.selectedPoCollection[i].shortName;
                         this.workFlowtService.selectedPoCollection[i].pop["childList"] = [];
                         this.partListData.push(this.workFlowtService.selectedPoCollection[i].pop)
@@ -280,12 +280,12 @@ export class ReceivngPoComponent {
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
     }
 
-    GetStockLineDataBasedonItemMasterId(itemMasterId:any)
-    {
-        this.stocklineser.getStocklineListById(itemMasterId).subscribe(data: any => {
-            this.assetStatusList = data[0];
-        });
-    }
+    //GetStockLineDataBasedonItemMasterId(itemMasterId:any)
+    //{
+    //    this.stocklineser.getStocklineListById(itemMasterId).subscribe(data: any => {
+    //        this.assetStatusList = data[0];
+    //    });
+    //}
     makeNestedObj(arr, parent) {
         var out = []
 		/*for (var i in arr)*/for (let i = 0; i < arr.length; i++) {
