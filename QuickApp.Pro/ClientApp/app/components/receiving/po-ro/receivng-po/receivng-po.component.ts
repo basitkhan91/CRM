@@ -218,6 +218,7 @@ export class ReceivngPoComponent {
                         this.workFlowtService.selectedPoCollection[i].pop.glAccountId = workFlowtService.selectedPoCollection[i].glAccountId;
                         this.workFlowtService.selectedPoCollection[i].pop.serialNumber = workFlowtService.selectedPoCollection[i].serialNumber;
                         this.workFlowtService.selectedPoCollection[i].pop.partNumber = workFlowtService.selectedPoCollection[i].partNumber;
+                        this.GetStockLineDataBasedonItemMasterId(this.workFlowtService.selectedPoCollection[i].pop.itemTypeId);
                         this.workFlowtService.selectedPoCollection[i].pop.shortName = workFlowtService.selectedPoCollection[i].shortName;
                         this.workFlowtService.selectedPoCollection[i].pop["childList"] = [];
                         this.partListData.push(this.workFlowtService.selectedPoCollection[i].pop)
@@ -277,6 +278,13 @@ export class ReceivngPoComponent {
         this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-purchase-setup';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+    }
+
+    GetStockLineDataBasedonItemMasterId(itemMasterId:any)
+    {
+        this.stocklineser.getStocklineListById(itemMasterId).subscribe(data: any => {
+            this.assetStatusList = data[0];
+        });
     }
     makeNestedObj(arr, parent) {
         var out = []
@@ -570,6 +578,33 @@ export class ReceivngPoComponent {
         partList["stocklineListObj"] = [];
         partList["stocklineListObj"].push(someArray);
      
+    }
+    //passing Value of Object and Qty to receive Value for Show Data of Details of Part
+    changeQuantityToReceive(partList,qtyReceiveValue)
+    {
+        let quantity = partList["stocklineListObj"][0].quantityToReceive;
+        partList["stocklineListObj"] = [];
+        for (let i = 0; i < qtyReceiveValue; i++)
+        {
+            partList["stocklineListObj"].push(this.loadDefualtObj());
+            partList["stocklineListObj"][0].quantityToReceive = quantity;
+        }
+    }
+
+    restrictedQuantitytoReceive(partList, restrictedQtyReceiveValue)
+    {
+        if (restrictedQtyReceiveValue > 1)
+        {
+           let quantity = partList["stocklineListObj"].length;
+            partList["stocklineListObj"] = [];
+
+            for (let i = 0; i < quantity; i++)
+            {
+                partList["stocklineListObj"].push(this.loadDefualtObj());
+                partList["stocklineListObj"][i].quantityToReceive = 1;
+            }
+
+        }
     }
     getAllparts() {
         //debugger;
