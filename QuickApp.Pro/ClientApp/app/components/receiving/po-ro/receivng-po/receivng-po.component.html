@@ -431,8 +431,8 @@
                                                             <label class="control-label col-sm-4 wauto">Qty to receive</label>
                                                             <div class="col-sm-7">
                                                                 <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
-                                                                <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" maxlength="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
-                                                                <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
+                                                                <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" maxlength="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive" (keyup)="restrictedQuantitytoReceive(partList,obj.quantityToReceive)">
+                                                                <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive" (change)="changeQuantityToReceive(partList,obj.quantityToReceive)">
 
                                                                 <!--<input class="form-control w70" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">-->
                                                             </div>

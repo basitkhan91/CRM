@@ -334,6 +334,31 @@ namespace DAL.Repositories
             }
         }
 
+        
+
+        public IEnumerable<object> getStocklineDataById(long id)
+        {
+            try
+            {
+                var result = (from st in _appContext.StockLine
+                              where st.ItemMasterId == id
+
+                              select new
+                              {
+                                 st.PurchaseOrderId,
+                                 st.QuantityToReceive,
+
+
+                              }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+        }
+
         public IEnumerable<object> GetAllStockLineAdjustmentlistData(long id)
         {
             try

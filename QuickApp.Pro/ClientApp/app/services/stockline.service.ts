@@ -93,6 +93,10 @@ export class StocklineService {
 		return this.stocklineEndpoint.getUpdateStockLineAdjustmentToListEndpoint<any>(sourceStockLine, sourceStockLine.StockLineId);
 	}
 
+    getStocklineListById(stocklineId)
+    {
+        return this.stocklineEndpoint.getStockLineByIdEndpoint(stocklineId);
+    }
 
 	//For getting the stockline Adjustment values
 	getStockLineAdjustmentList(stocklineId) {
