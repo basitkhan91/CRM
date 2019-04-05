@@ -209,6 +209,21 @@ import { RolesManagementStructureService } from "./services/roles-management-str
 import { RolesManagementStructureEndpoint } from "./services/roles-management-structure-endpoint.service";
 import { CertificationTypeEndpoint } from "./services/certificationtype.endpoint.service";
 import { CertificationtypeService } from "./services/certificationtype.service";
+import { AssetStatusService } from "./services/asset-status/asset-status.service";
+import { AssetStatusEndpointService } from "./services/asset-status/assetstatus-endpoint.service";
+import { DepriciationMethodService } from "./services/depriciation-method/depriciation.service";
+import { DepriciationMethodEndpointService } from "./services/depriciation-method/depriciationmethod-endpoint.service";
+import { DisposalTypeService } from "./services/disposal-type/disposaltype.service";
+import { DisposalTypeEndpointService } from "./services/disposal-type/disposaltype-endpoint.service";
+import { DepreciationIntervalsEndpoint } from "./services/Depreciation -intervals/depreciation-intervals-endpoint.service";
+import { DepreciationIntervalsService } from "./services/Depreciation -intervals/depreciation-intervals.service ";
+import { AssetDepConventionTypeEndpointService } from "./services/assetDepConventionType/assetDepConventionType-endpoint.service";
+import { AssetDepConventionTypeService } from "./services/assetDepConventionType/assetDepConventionType.service";
+import { AssetIntangibleTypeSingleScreenEndpointService } from "./services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen-endpoint";
+import { AssetIntangibleTypeSingleScreenService } from "./services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service";
+import { AssetTypeSingleScreenEndpointService } from "./services/AssetTypeSingleScreen/assettypesinglescreen-endpoint.service";
+import { AssetTypeSingleScreenService } from "./services/AssetTypeSingleScreen/assettypesinglescreen.service";
+
 //import { TreeviewModule } from 'ngx-treeview';
 //import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown"
 //import { ChargesCreateComponent } from "./shared/Charges-Create.component";
@@ -412,7 +427,21 @@ import { CertificationtypeService } from "./services/certificationtype.service";
 		RolesManagementStructureService,
 		RolesManagementStructureEndpoint,
 		CertificationTypeEndpoint,
-        CertificationtypeService
+        CertificationtypeService,
+        AssetStatusService,
+        AssetStatusEndpointService,
+        DepriciationMethodService,
+        DepriciationMethodEndpointService,
+        DisposalTypeService,
+        DisposalTypeEndpointService,
+        DepreciationIntervalsEndpoint,
+        DepreciationIntervalsService,
+        AssetDepConventionTypeEndpointService,
+        AssetDepConventionTypeService,
+        AssetIntangibleTypeSingleScreenEndpointService,
+        AssetIntangibleTypeSingleScreenService,
+        AssetTypeSingleScreenEndpointService,
+        AssetTypeSingleScreenService
        
 		
     ],

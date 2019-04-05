@@ -350,7 +350,7 @@ export class CustomerShippingInformationComponent {
 				this.sourceCustomer.expirationDate = new Date();
 			}
 			this.sourceCustomer.isActive = false;
-			this.workFlowtService.updateActionforActiveforShiping(this.sourceCustomer).subscribe(
+            this.workFlowtService.updateshippinginfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
 				error => this.saveFailedHelper(error));
 			//alert(e);
@@ -373,7 +373,7 @@ export class CustomerShippingInformationComponent {
 			else {
 				this.sourceCustomer.expirationDate = new Date();
 			}
-			this.workFlowtService.updateActionforActiveforShiping(this.sourceCustomer).subscribe(
+            this.workFlowtService.updateshippinginfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
 				error => this.saveFailedHelper(error));
 			//alert(e);

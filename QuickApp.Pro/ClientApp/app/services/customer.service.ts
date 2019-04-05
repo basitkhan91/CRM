@@ -65,9 +65,11 @@ export class CustomerService {
 	public currentUrl = this.router.url;
 	navigationObjChangeObject$ = this.navigationObj.asObservable();
 	public bredcrumbObj = new Subject<any>();
-	public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
+    public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
+    //for steps
 	public alertObj = new Subject<any>();
-	public alertChangeObject$ = this.alertObj.asObservable();
+    public alertChangeObject$ = this.alertObj.asObservable();
+    //steps end
 	public indexObj = new Subject<any>();
 	public indexObjChangeObject$ = this.indexObj.asObservable();
 	public isCustomerAlsoVendor: boolean = false;

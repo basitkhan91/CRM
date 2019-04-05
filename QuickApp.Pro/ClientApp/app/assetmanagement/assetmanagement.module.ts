@@ -1,4 +1,4 @@
-﻿import { NgModule } from "@angular/core";
+﻿import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
@@ -30,7 +30,10 @@ import { AssetGeneralInformationComponent } from "../components/Asset-Management
 import { AssetMaintenanceWarrantyComponent } from "../components/Asset-Management/Asset-pages/asset-maintenance-warranty/asset-maintenance-warranty.component";
 import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
 import { AssetmanagementRoutingModule } from "./assetmanagement-routing.module";
-
+import { MenuItem } from 'primeng/api';
+import { AssetStepsComponent } from "../components/Asset-Management/Asset-Steps-primeng/asset-steps/asset-steps.component";
+import { AssetService } from "../services/asset/Assetservice";
+import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -49,7 +52,7 @@ import { AssetmanagementRoutingModule } from "./assetmanagement-routing.module";
         AutoCompleteModule,
         GMapModule
         , RadioButtonModule,
-        CalendarModule, StepsModule, BreadcrumbModule
+        CalendarModule, StepsModule, BreadcrumbModule,
     ],
     declarations: [
        AssetmanagementComponent,
@@ -58,11 +61,14 @@ import { AssetmanagementRoutingModule } from "./assetmanagement-routing.module";
        AssetCapesComponent,
        AssetGeneralInformationComponent,
        AssetMaintenanceWarrantyComponent,
-       CreateAssetComponent
+        CreateAssetComponent,
+        AssetStepsComponent
     ],
-    providers: [
+    providers: [AssetService,
+        AssetEndpoint
 
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     entryComponents: [
 
     ],

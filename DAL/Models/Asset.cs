@@ -1,0 +1,85 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+
+namespace DAL.Models
+{
+   public class Asset
+    {
+        [Key]
+
+        public long AssetRecordId { get; set; }
+
+        [Required(ErrorMessage = "Id Is Required.")]
+        public string AssetId { get; set; }
+
+
+        [Required(ErrorMessage = "Id Is Required.")]
+        public string AlternateAssetId { get; set; }
+
+
+        [Required(ErrorMessage = "Id Is Required.")]
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public long ManagementStructureId { get; set; }
+        public Nullable<bool> CalibrationRequired { get; set; }
+        public Nullable<bool> CertificationRequired { get; set; }
+        public Nullable<bool> InspectionRequired { get; set; }
+        public Nullable<bool> VerificationRequired { get; set; }
+        public Nullable<bool> IsDepreciable { get; set; }
+        public Nullable<bool> IsIntangible { get; set; }
+        public Nullable<byte> AssetAcquisitionTypeId { get; set; }
+        public Nullable<long> ManufacturerId { get; set; }
+        public Nullable<System.DateTime> ManufacturedDate { get; set; }
+        public string Model { get; set; }
+        public Nullable<bool> IsSerialized { get; set; }
+        public Nullable<long> UnitOfMeasureId { get; set; }
+        public Nullable<int> CurrencyId { get; set; }
+        public Nullable<decimal> UnitCost { get; set; }
+        public Nullable<System.DateTime> ExpirationDate { get; set; }
+        public string Asset_Location { get; set; }
+        public string Memo { get; set; }
+        public Nullable<long> AssetParentId { get; set; }
+
+
+        [Required(ErrorMessage = "Name Is Required.")]
+        public Nullable<long> AssetTypeSingleScreenId { get; set; }
+        public Nullable<long> AssetIntangibleTypeId { get; set; }
+        public Nullable<long> AmortizationMethodId { get; set; }
+        public string IntangibleLife { get; set; }
+        public string AmortizationFrequency { get; set; }
+        public Nullable<long> IntangibleGLId { get; set; }
+        public Nullable<long> AmortizationExpenseGLId { get; set; }
+        public Nullable<long> AccAmortDeprGLId { get; set; }
+        public Nullable<long> IntangibleWriteDownGLId { get; set; }
+        public string AssetCalibrationMin { get; set; }
+        public string AssetCalibrationMinTolerance { get; set; }
+        public string AssetCalibratonMax { get; set; }
+        public string AssetCalibrationMaxTolerance { get; set; }
+        public string AssetCalibrationExpected { get; set; }
+        public string AssetCalibrationExpectedTolerance { get; set; }
+        public string AssetCalibrationMemo { get; set; }
+        public Nullable<bool> AssetIsMaintenanceReqd { get; set; }
+        public Nullable<bool> AssetMaintenanceIsContract { get; set; }
+        public string AssetMaintenanceContractFile { get; set; }
+        public Nullable<byte> MaintenanceFrequencyMonths { get; set; }
+        public Nullable<byte> MaintenanceFrequencyDays { get; set; }
+        public Nullable<long> DefaultVendorId { get; set; }
+        public Nullable<long> GLAccountId { get; set; }
+
+        public Nullable<bool> IsDelete { get; set; }
+        public string MaintenanceMemo { get; set; }
+        public Nullable<bool> IsWarrantyRequired { get; set; }
+
+        public Nullable<bool> Warranty { get; set; }
+        public string WarrantyCompany { get; set; }
+        public Nullable<System.DateTime> WarrantyStartDate { get; set; }
+        public Nullable<System.DateTime> WarrantyEndDate { get; set; }
+        public string WarrantyStatus { get; set; }
+        public Nullable<byte> UnexpiredTime { get; set; }
+        public Nullable<Int32> MasterCompanyId { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AssetCapes> AssetCapes { get; set; }
+    }
+}

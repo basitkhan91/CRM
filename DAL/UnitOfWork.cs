@@ -84,7 +84,7 @@ namespace DAL
 
         IVendorShippingDetailsRepository _vendorShippingDetailsRepository;
         IGLAccountClassRespository _gLAccountClassRespository;
-
+        IAssetRepository _assetRepository;
 
         IEmployee _employee;
         IGlCashFlowRepository _glCashFlowRepository;
@@ -1453,17 +1453,15 @@ namespace DAL
             }
         }
 
-        //IWorkFlowRepositoryTest IUnitOfWork.workFlowRepositoryTest => throw new NotImplementedException();
-
-        //public IPurchaseOrderPartRepository PurchaseOrderPartRepository
-        //{
-        //    get
-        //    {
-        //        if (_purchaseOrderPartRepository == null)
-        //            _purchaseOrderPartRepository = new PurchaseOrderPartRepository(_context);
-        //        return _purchaseOrderPartRepository;
-        //    }
-        //}
+        public IAssetRepository Asset
+        {
+            get
+            {
+                if (_assetRepository == null)
+                    _assetRepository = new AssetRepository(_context);
+                return _assetRepository;
+            }
+        }
 
         public IRepository<T> Repository<T>() where T : class
         {

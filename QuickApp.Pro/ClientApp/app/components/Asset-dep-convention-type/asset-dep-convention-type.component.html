@@ -1,0 +1,137 @@
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_content">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" aria-current="page">Asset Management</li>
+                        <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
+                        <li class="breadcrumb-item active" aria-current="page">Depreciation Convension</li>
+                    </ol>
+                </nav>
+                <h4 class="page-heading">Asset Status</h4>
+                <div class="col-sm-12 form-bg">
+                    <div class="form-group add-inputs">
+                        <div class="form-group col-sm-4 w250">
+                            <label class="control-label col-sm-4">ID</label>
+                            <div class="col-sm-7 cust-name">
+                                <div class="inner-addon right-addon w200 inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" [(ngModel)]="currentAssetDep.assetDepConventionId" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 w250">
+                            <label class="control-label col-sm-4">Name</label>
+                            <div class="col-sm-7 cust-name">
+                                <div class="inner-addon right-addon w200 inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" [(ngModel)]="currentAssetDep.assetDepConventionName" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 w250">
+                            <label class="control-label col-sm-4">Memo</label>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" [(ngModel)]="currentAssetDep.assetDepConventionMemo"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <button type="button" id="btnFilterAssetStatus" name="" class="btn btn-warning" data-toggle="tooltip" data-original-title="Filter"><i class="fa fa-search"></i></button>
+                            <button type="button" id="btnAddAssetDep" *ngIf="!this.updateMode" (click)="addAssetDepConventionType()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Add"><i class="fa fa-plus"></i></button>
+                            <button type="button" id="btnUpdateAssetDep" *ngIf="this.updateMode" (click)="updateAssetDepConventionType()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
+                            <button type="button" id="btnResetAssetDep" *ngIf="this.updateMode" (click)="resetAssetDepConventionType()" name="" class="btn btn-default nobg" data-toggle="tooltip" data-original-title="Reset"><i class="fa fa-edit"></i></button>
+
+                        </div>
+                        <div class="excel-upload mtop0">
+                            <input type="file" name="upload[]" multiple="" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <label for="upload"> <span data-toggle="tooltip" title="" data-original-title="Excel Upload (table rows)"><i class="fa fa-file-excel-o"></i></span> </label>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Memo</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let assetDep of assetDepList">
+                                    <td>{{assetDep.assetDepConventionId}}</td>
+                                    <td>{{assetDep.assetDepConventionName}}</td>
+                                    <td>{{assetDep.assetDepConventionMemo}}</td>
+                                    <td>
+                                        <div (click)="toggleIsDeleted(assetDep.assetDepConventionTypeId)" data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active">
+                                            <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;">
+                                                <input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger">
+                                                <div class="toggle-group">
+                                                    <label class="btn btn-success toggle-on">
+                                                        <i class="fa fa-check"></i>
+                                                    </label>
+                                                    <label class="btn btn-danger active toggle-off">
+                                                        <i class="fa fa-times"></i>
+                                                    </label>
+                                                    <span class="toggle-handle btn btn-default"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span (click)="setAssetDepConventionTypeToUpdate(assetDep.assetDepConventionTypeId)" data-toggle="modal" data-target="#edit">
+                                            <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </span>
+                                        <span data-toggle="modal" data-target="#history">
+                                            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                        <span (click)="openDelete(content,assetDep)" data-toggle="modal" data-target="#data">
+                                            <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--Confirmation for Delete-->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="removeAssetDepConventionType()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+
+</ng-template>
+
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>

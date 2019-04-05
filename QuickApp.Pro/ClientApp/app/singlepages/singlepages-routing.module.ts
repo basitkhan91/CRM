@@ -71,6 +71,13 @@ import { VendorcapabilitiesComponent } from '../components/vendorcapabilities/ve
 import { LaberAndOverheadCostSetupComponent } from '../components/laber-and-overhead-cost-setup/laber-and-overhead-cost-setup.component';
 import { CertificationTypeComponent } from '../components/certification-type/certification-type.component';
 import { AssetStatusComponent } from '../components/AssetStatus/asset-status.component';
+import { DepriciationMethodComponent } from '../components/depriciation-method/depriciation-method.component';
+import { DisposalTypeComponent } from '../components/disposal-type/disposal-type.component';
+import { AssetDepConventionTypeComponent } from '../components/asset-dep-convention-type/asset-dep-convention-type.component';
+import { DepreciationIntervalsComponent } from '../components/depreciation-intervals/depreciation-intervals.component';
+import { AssetIntangibleTypeSingleScreenComponent } from '../components/asset-intangible-type-single-screen/asset-intangible-type-single-screen.component';
+import { AssetTypeSingleScreenComponent } from '../components/asset-type-single-screen/asset-type-single-screen.component';
+
 
 const singlePagesRoutes: Routes = [
     {
@@ -148,7 +155,14 @@ const singlePagesRoutes: Routes = [
 			{ path: "app-manufacturer", component: ManufacturerComponent, data: { title: "Manufacturer" } },
 			{ path: "app-vendorcapabilities", component: VendorcapabilitiesComponent, data: { title: "Vendor Setup" } },
 			{ path: "app-labor-and-overhead-cost-setup", component: LaberAndOverheadCostSetupComponent, data: { title: "Labor And Overhead Cost SetUp" } },
-            { path: "app-certification-type", component: CertificationTypeComponent, data: { title: "Certification Type" } }
+            { path: "app-certification-type", component: CertificationTypeComponent, data: { title: "Certification Type" } },
+             { path: "app-depriciation-method", component: DepriciationMethodComponent, data: { title: "Certification Type" } },
+            { path: "app-disposal-type", component: DisposalTypeComponent, data: { title: "Disposal Type" } },
+            { path: "app-asset-dep-convention-type", component: AssetDepConventionTypeComponent, data: { title: "Depreciation Convension" } },
+            { path: "app-depreciation-intervals", component: DepreciationIntervalsComponent, data: { title: "Depreciation Intervals" } },
+            { path: "app-asset-intangible-type-single-screen", component: AssetIntangibleTypeSingleScreenComponent, data: { title: "Intangible Type" } },
+
+            { path: "app-asset-type-single-screen", component: AssetTypeSingleScreenComponent, data: { title: "Asset Type" } }
         ]
     }
 ];

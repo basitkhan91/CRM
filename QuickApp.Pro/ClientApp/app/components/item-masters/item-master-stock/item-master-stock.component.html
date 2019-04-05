@@ -809,7 +809,7 @@
                                                     <label class="control-label col-sm-6">Currency</label>
                                                     <div class="col-sm-5">
                                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.salesCurrencyId" style="width:125px">
-                                                            ng
+                                                           
                                                             <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId"><!--{{currencyName.code}}-->  {{currencyName.symbol}}</option>
                                                         </select>
 
