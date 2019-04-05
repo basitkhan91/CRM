@@ -34,8 +34,8 @@
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Code</label>
-                                <div class="col-sm-7"  [(ngModel)]="currentGLAccount.accountCode" [ngModelOptions]="{standalone: true}">
-                                        <select>
+                                <div class="col-sm-7"  >
+                                        <select [(ngModel)]="currentGLAccount.accountCode" [ngModelOptions]="{standalone: true}">
                                             <option>00000</option>
                                             <option>5000</option>
                                             <option>6000</option>
