@@ -27,7 +27,9 @@ export class StocklineEndpoint extends EndpointFactory
 
 	private readonly _integrationPortalById: string = "/api/StockLine/IntegrationPortalGet";
 
-	private readonly _timeLifeGetById: string = "/api/StockLine/timeLifeGetById";
+    private readonly _timeLifeGetById: string = "/api/StockLine/timeLifeGetById";
+
+    private readonly _stocklineGetById: string = "/api/StockLine/StocklineGetById";//which will be specified in the Controller
 
 	private readonly _adjustmentUrl: string = "/api/StockLine/AdjustmentGet";//which will be specified in the Controller
 
@@ -55,9 +57,11 @@ export class StocklineEndpoint extends EndpointFactory
 
     private readonly _stockLineAdjustmentDelete: string = "/api/StockLine/stockLineAdjustmentReasonDelete";
 
+    //get stocklineGetByIdUrl() { return this.configurations.baseUrl + this._stocklineGetById; }
+
     get adjustmentReasonUrl() { return this.configurations.baseUrl + this._adjustmentReasonUrl; }
 
-
+    get stocklineUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -180,7 +184,15 @@ export class StocklineEndpoint extends EndpointFactory
 			.catch(error => {
 				return this.handleError(error, () => this.getStockLineTimeLifeByIdEndpoint(timeLifeCycleId));
 			});
-	}
+    }
+
+    getStockLineByIdEndpoint<T>(stockLineId: any): Observable<T> {
+        let endpointUrl = `${this._stocklineGetById}/${stockLineId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getStockLineAdjustmentEndpoint(stockLineId));
+            });
+    }
 
 	//for getting stockline adjustment
 	getStockLineAdjustmentEndpoint<T>(stockLineId: any): Observable<T> {

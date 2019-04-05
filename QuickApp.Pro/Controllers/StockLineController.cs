@@ -106,6 +106,24 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpGet("StocklineGetById/{id}")]
+        [Produces(typeof(List<BinViewModel>))]
+        public IActionResult GetStocklineDataById(long id)
+        {
+
+            try
+            {
+                var result = _unitOfWork.stockLineList.getStocklineDataById(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
 
         // [HttpGet("AdjustmentGet")]
 
