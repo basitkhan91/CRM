@@ -57,7 +57,7 @@ export class StocklineEndpoint extends EndpointFactory
 
     private readonly _stockLineAdjustmentDelete: string = "/api/StockLine/stockLineAdjustmentReasonDelete";
 
-    get stocklineGetByIdUrl() { return this.configurations.baseUrl + this._stocklineGetById; }
+    //get stocklineGetByIdUrl() { return this.configurations.baseUrl + this._stocklineGetById; }
 
     get adjustmentReasonUrl() { return this.configurations.baseUrl + this._adjustmentReasonUrl; }
 
@@ -187,9 +187,8 @@ export class StocklineEndpoint extends EndpointFactory
     }
 
     getStockLineByIdEndpoint<T>(stockLineId: any): Observable<T> {
-        
-
-        return this.http.get<T>(this.stocklineGetByIdUrl, this.getRequestHeaders())
+        let endpointUrl = `${this._stocklineGetById}/${stockLineId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getStockLineAdjustmentEndpoint(stockLineId));
             });

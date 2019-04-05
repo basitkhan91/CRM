@@ -11,30 +11,30 @@
         </div>
         
         <div class="clear"></div>
-        <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+        
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="tab-content form-bg">
                     <div class="tab-pane active" id="home">
                         <div class="col-sm-4">
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Ledger Name</label>
-                                <div class="col-sm-7">
+                                <div>
                                     <select [(ngModel)]="currentGLAccount.ledgerName" [ngModelOptions]="{standalone: true}">
-                                        <option value="ABC Ledger">ABC Ledger</option>
-                                        <option value="totalRevenue">DFG Company</option>
-                                        <option value="totalRevenue">FFG Ledger</option>
+                                        <option value="">ABC Ledger</option>
+                                        <option value="">DFG Company</option>
+                                        <option value="">FFG Ledger</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Old Account Code</label>
-                                <div class="col-sm-7">
-                                        <input type="text" class="form-control numberids ui-autocomplete-input" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}" id="" name="" autocomplete="off">
+                                <div>
+                                  <input type="text"  name="test" value="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}" ngDefaultControl>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Code</label>
-                                <div class="col-sm-7 inner-addon col-sm-7 inline-block display-flex" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                <div class="col-sm-7"  [(ngModel)]="currentGLAccount.accountCode" [ngModelOptions]="{standalone: true}">
                                         <select>
                                             <option>00000</option>
                                             <option>5000</option>
@@ -44,34 +44,34 @@
                                     <a href="#" class="add-icon"><i class="fa fa-plus"></i></a>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Name</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test1" class="form-control" type="text" [(ngModel)]="currentGLAccount.accountName" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Description</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test2" class="form-control" type="text" [(ngModel)]="currentGLAccount.accountDescription" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12 summary-account-block">
+                            <div class=" col-sm-12 summary-account-block">
                                 <label class="control-label col-sm-4">Summary Account</label>
                                 <div class="col-sm-7">
-                                    <input type="checkbox" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test3" type="checkbox" [(ngModel)]="currentGLAccount.summaryAccount" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12 allow-manual-je-block">
+                            <div class=" col-sm-12 allow-manual-je-block">
                                 <label class="control-label col-sm-4">Allow Manual JE</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="checkbox" checked="" disabled="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test4" class="form-control" type="checkbox" checked="" disabled="" [(ngModel)]="currentGLAccount.allowManualJE" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Currency</label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" id="" name="">
+                                    <select class="form-control" id="" [(ngModel)]="currentGLAccount.currencyId" [ngModelOptions]="{standalone: true}">
                                         <option value="inr">₹</option>
                                         <option value="usd" selected="1">$</option>
                                         <option value="pound">£</option>
@@ -80,42 +80,42 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Intercompany</label>
                                 <div class="col-sm-7">
-                                    <input type="checkbox" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test5" type="checkbox" [(ngModel)]="currentGLAccount.interCompany" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Active</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="checkbox" checked="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test6" class="form-control" type="checkbox" checked="" [(ngModel)]="currentGLAccount.activeFlag" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
 
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Balance Type</label>
                                 <div class="col-sm-7">
                                     <label class="wauto">
-                                        <input type="checkbox" name="" id="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                        <input name="test7" type="checkbox"  id="" [(ngModel)]="currentGLAccount.balanceTypeActual" [ngModelOptions]="{standalone: true}">
                                         Actual
                                     </label>
                                     <label class="wauto">
-                                        <input type="checkbox" name="" id="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                        <input name="test8" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeBudget" [ngModelOptions]="{standalone: true}">
                                         Budget
                                     </label>
                                     <label class="wauto">
-                                        <input type="checkbox" name="" id="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                        <input name="test9" type="checkbox"  id="" [(ngModel)]="currentGLAccount.balanceTypeForecast" [ngModelOptions]="{standalone: true}">
                                         Forecast
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Type</label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" id="" name="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <select class="form-control" id=""  [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
                                         <option>Assets</option>
                                         <option>Liabilities</option>
                                         <option>Owners Equity</option>
@@ -124,7 +124,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <!--<div class="form-group col-sm-12">
+                            <!--<div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Expenditure Type</label>
                                 <div class="col-sm-7">
                                     <select class="form-control" id="" name="">
@@ -136,10 +136,10 @@
                                     </select>
                                 </div>
                             </div>-->
-                            <div class="form-group col-sm-12 sub-account-block" style="display: none;">
+                            <div class=" col-sm-12 sub-account-block" style="display: none;">
                                 <label class="control-label col-sm-4">Sub Account of</label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" id="" name="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <select class="form-control" id=""  [(ngModel)]="currentGLAccount.subAccountOf" [ngModelOptions]="{standalone: true}">
                                         <option>5002</option>
                                         <option>5003</option>
                                         <option>5004</option>
@@ -156,10 +156,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">C-Flows Classification</label>
                                 <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
-                                    <select [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <select [(ngModel)]="currentGLAccount.glClassFlowClassificationId" [ngModelOptions]="{standalone: true}">
                                         <option>Operating Activity</option>
                                         <option>Financing Activity</option>
                                         <option>Investing Activity</option>
@@ -168,16 +168,16 @@
                                 </div>
                                 <a href="#" data-toggle="modal" data-target="#add-cash-flows-classification" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Code Description</label>
                                 <div class="col-sm-7">
                                     <p>IT Consulting-80002</p>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Share with Entities</label>
                                 <div class="col-sm-7">
-                                    <select [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <select [(ngModel)]="currentGLAccount.managementStrtureId" [ngModelOptions]="{standalone: true}">
                                         <option value="">Adso</option>
                                         <option value="">Aerospace</option>
                                         <option value="">ILS</option>
@@ -187,10 +187,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">1099 Misc Category</label>
                                 <div class="col-sm-7">
-                                    <select [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <select [(ngModel)]="currentGLAccount.glAccountMiscCategoryId" [ngModelOptions]="{standalone: true}">
                                         <option value="">Rent</option>
                                         <option value="">Royalties</option>
                                         <option value="">Other Income</option>
@@ -201,16 +201,16 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Created By</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" value="Shabbir" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test10" class="form-control" type="text"  [(ngModel)]="currentGLAccount.glCreatedBy" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12">
+                            <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Created Date</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control datepicker today hasDatepicker" type="text" id="dp1554284356275" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}">
+                                    <input name="test11" class="form-control datepicker today hasDatepicker" type="text" id="dp1554284356275" [(ngModel)]="currentGLAccount.createdDate" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                         </div>
@@ -222,7 +222,7 @@
                 </div>
                 <div class="clearfix"></div>
             </div>
-        </form>
+       
         <div class="clear"></div>
         <hr>
         <div class="pull-right"> © <span class="currentyear">2019</span> <a href="#">PAS</a> </div>

@@ -3,7 +3,7 @@ import { fadeInOut } from "../../../services/animations";
 import { AlertService } from "../../../services/alert.service";
 import { GlAccount } from "../../../models/GlAccount.model";
 import { GlAccountService } from "../../../services/glAccount/glAccount.service";
-
+import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'; 
 @Component({
     selector: 'app-glaccount-create',
     templateUrl: './glaccount-create.component.html',
@@ -13,19 +13,20 @@ import { GlAccountService } from "../../../services/glAccount/glAccount.service"
 /** GLAccountCreate component*/
 export class GlaccountCreateComponent implements OnInit {
     /** GLAccountCreate ctor */
-    currentGLAccount: GlAccount;
+    currentGLAccount: any = {};
     glAccountList: GlAccount[];
     updateMode: boolean;
 
     constructor(private alertService: AlertService, private glAccountService: GlAccountService) {
-
+       
     }
 
     ngOnInit(): void {
+        // this.currentGLAccount = new GlAccount();
         this.glAccountService.getAll().subscribe(glAccountData => {
             this.glAccountList = glAccountData[0];
         });
-        this.currentGLAccount = new GlAccount();
+       
     }
 
     addAssetStatus(): void {

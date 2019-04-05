@@ -13,6 +13,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetBinByShelfIdAdjustmentBeforeChange(long id);
 
         IEnumerable<object>  GetAllStockLineIntegrationPortalData(long id);
+        IEnumerable<object> getStocklineDataById(long id);
         IEnumerable<object>  GetAllTimeLifeData(long id);
     }
 }

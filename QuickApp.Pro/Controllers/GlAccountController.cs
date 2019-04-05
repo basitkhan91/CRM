@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
 {
+
+    [Route("api/GlAccount")]
     public class GlAccountController : Controller
     {
         #region Private Members
