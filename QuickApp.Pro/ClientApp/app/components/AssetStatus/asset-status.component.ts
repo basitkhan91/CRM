@@ -21,6 +21,7 @@ export class AssetStatusComponent implements OnInit {
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
+    Active: string = "Active";
 
     constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal) {
     }
@@ -101,5 +102,35 @@ export class AssetStatusComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    activeUpdate(rowData, e) {
+        if (e.checked == false) {
+            this.currentAssetStatus = rowData;
+            this.Active = "In Active";
+            this.currentAssetStatus.isActive == false;
+            this.assetStatusService.updateActive(this.currentAssetStatus).subscribe(asset => {
+                this.alertService.showMessage('Asset Status updated successfully.');
+                this.assetStatusService.getAll().subscribe(assets => {
+                    this.assetStatusList = assets[0];
+                });
+                this.updateMode = false;
+                this.resetAssetStatus();
+            })
+        }
+        else {
+            this.currentAssetStatus = rowData;
+            this.Active = "Active";
+            this.currentAssetStatus.isActive == true;
+            this.assetStatusService.updateActive(this.currentAssetStatus).subscribe(asset => {
+                this.alertService.showMessage('Asset Status updated successfully.');
+                this.assetStatusService.getAll().subscribe(assets => {
+                    this.assetStatusList = assets[0];
+                });
+                this.updateMode = false;
+                this.resetAssetStatus();
+            })
+        }
+
     }
 }

@@ -19,7 +19,7 @@ export class AssetStatusEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/assetstatus/add";
     private readonly updateURL: string = "/api/assetstatus/update";
     private readonly removeByIdURL: string = "/api/assetstatus/removeById";
-
+    private readonly updateForActive: string = "/api/assetstatus/updateActive";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -75,6 +75,14 @@ export class AssetStatusEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.removeAssetById(assetId));
+            });
+    }
+    getUpdateForActive<T>(roleObject: any, assetId: number): Observable<T> {
+        let endpointUrl = `${this.updateForActive}/${assetId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateForActive(roleObject, assetId));
             });
     }
     

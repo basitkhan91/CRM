@@ -51,6 +51,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    asset.IsActive = true;
                     asset.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetStatus>().Add(asset);
                     unitOfWork.SaveChanges();
@@ -108,6 +109,26 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest();
             }
+        }
+        [HttpPut("updateActive/{id}")]
+        public IActionResult UpdateAction(long id, [FromBody] AssetStatus asset)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (asset != null)
+                    return BadRequest($"{nameof(asset)} cannot be null");
+
+                var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
+                existingResult.IsActive = asset.IsActive;
+                unitOfWork.Repository<AssetStatus>().Update(asset);
+                unitOfWork.SaveChanges();
+                return Ok();
+
+            }
+
+
+            return Ok(ModelState);
         }
 
         #endregion Public Methods

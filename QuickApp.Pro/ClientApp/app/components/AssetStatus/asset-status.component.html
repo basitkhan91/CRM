@@ -83,6 +83,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <p-inputSwitch *ngIf="assetStatus['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="activeUpdate(assetStatus,$event)" [(ngModel)]="assetStatus['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="assetStatus['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="activeUpdate(assetStatus,$event)" [(ngModel)]="assetStatus['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="assetStatus['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="activeUpdate(assetStatus,$event)" [(ngModel)]="assetStatus['isActive']"></p-inputSwitch>
                                         <span (click)="setAssetStatusToUpdate(assetStatus.id)" data-toggle="modal" data-target="#edit">
                                             <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                 <i class="fa fa-edit"></i>
