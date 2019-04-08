@@ -223,6 +223,10 @@ import { AssetIntangibleTypeSingleScreenEndpointService } from "./services/Asset
 import { AssetIntangibleTypeSingleScreenService } from "./services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service";
 import { AssetTypeSingleScreenEndpointService } from "./services/AssetTypeSingleScreen/assettypesinglescreen-endpoint.service";
 import { AssetTypeSingleScreenService } from "./services/AssetTypeSingleScreen/assettypesinglescreen.service";
+import { AssetIntangibleTypeEndpointService } from "./services/AssetIntangibleType/assetIntangibletype-endpoint.service";
+import { AssetIntangibleTypeService } from "./services/AssetIntangibleType/AssetIntangibleType.service";
+import { AssetTypeEndpointService } from "./services/AssetType/assettype-endpoint.service";
+import { AssetTypeService } from "./services/AssetType/assettype.service";
 
 //import { TreeviewModule } from 'ngx-treeview';
 //import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown"
@@ -428,8 +432,12 @@ import { AssetTypeSingleScreenService } from "./services/AssetTypeSingleScreen/a
 		RolesManagementStructureEndpoint,
 		CertificationTypeEndpoint,
         CertificationtypeService,
-        AssetStatusService,
+        AssetStatusService,       
         AssetStatusEndpointService,
+        AssetTypeService,
+        AssetTypeEndpointService,
+        AssetIntangibleTypeService,
+        AssetIntangibleTypeEndpointService,
         DepriciationMethodService,
         DepriciationMethodEndpointService,
         DisposalTypeService,
