@@ -8,6 +8,7 @@
     createdDate: Date;
     updatedDate: Date;
     isDelete: boolean;
+    isActive: boolean;
     disposaltypeList: DisposalType[];
 
 }

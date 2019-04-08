@@ -20,7 +20,7 @@ export class AssetStatusComponent implements OnInit {
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
-    Active: string = "Active";
+    Active: string;
 
     constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal) {
     }
@@ -77,20 +77,22 @@ export class AssetStatusComponent implements OnInit {
 
     }
 
-    toggleIsActive(assetStatusId: number): void {
-        this.assetStatusToUpdate = Object.assign({}, this.assetStatusList.filter(function (asset) {
-            return asset.id == assetStatusId;
-        })[0]);
-        this.assetStatusToUpdate.isActive = this.assetStatusToUpdate.isActive != null ? !this.assetStatusToUpdate.isActive : false; 
-        this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
-            this.alertService.showMessage('Asset Status updated successfully.');
-            this.assetStatusService.getAll().subscribe(assets => {
-                this.assetStatusList = assets[0];
-            });
-            this.resetUpdateAssetStatus();
-            this.dismissModel();
-        });
-    }
+    //toggleIsActive(assetStatusId: number): void {
+    //    this.assetStatusToUpdate = Object.assign({}, this.assetStatusList.filter(function (asset) {
+    //        return asset.id == assetStatusId;
+    //    })[0]);
+    //    this.Active = "In Active";
+    //    this.assetStatusToUpdate.isActive == false;
+    //   // this.assetStatusToUpdate.isActive = this.assetStatusToUpdate.isActive != null ? !this.assetStatusToUpdate.isActive : false;
+    //    this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
+    //        this.alertService.showMessage('Asset Status updated successfully.');
+    //        this.assetStatusService.getAll().subscribe(assets => {
+    //            this.assetStatusList = assets[0];
+    //        });
+    //        this.resetUpdateAssetStatus();
+    //        this.dismissModel();
+    //    });
+    //}
 
     resetAddAssetStatus(): void {
         this.currentAssetStatus = new AssetStatus();
@@ -113,31 +115,29 @@ export class AssetStatusComponent implements OnInit {
         this.modal = this.modalService.open(content, { size: 'sm' });
     }
 
-    activeUpdate(rowData, e) {
+
+    toggleIsActive(assetStatus: any,e) {
         if (e.checked == false) {
-            this.currentAssetStatus = rowData;
+            this.assetStatusToUpdate = assetStatus;
             this.Active = "In Active";
-            this.currentAssetStatus.isActive == false;
-            this.assetStatusService.updateActive(this.currentAssetStatus).subscribe(asset => {
+            this.assetStatusToUpdate.isActive == false;
+            this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
                 this.alertService.showMessage('Asset Status updated successfully.');
                 this.assetStatusService.getAll().subscribe(assets => {
                     this.assetStatusList = assets[0];
                 });
-                this.updateMode = false;
-                this.resetAssetStatus();
+             
             })
         }
         else {
-            this.currentAssetStatus = rowData;
+            this.assetStatusToUpdate = assetStatus;
             this.Active = "Active";
-            this.currentAssetStatus.isActive == true;
-            this.assetStatusService.updateActive(this.currentAssetStatus).subscribe(asset => {
+            this.assetStatusToUpdate.isActive == true;
+            this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
                 this.alertService.showMessage('Asset Status updated successfully.');
                 this.assetStatusService.getAll().subscribe(assets => {
                     this.assetStatusList = assets[0];
                 });
-                this.updateMode = false;
-                this.resetAssetStatus();
             })
         }
 

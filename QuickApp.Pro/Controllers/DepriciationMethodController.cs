@@ -51,6 +51,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    depricationMethod.IsActive = true;
                     depricationMethod.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDepreciationMethod>().Add(depricationMethod);
                     unitOfWork.SaveChanges();

@@ -248,10 +248,11 @@ namespace DAL
         public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
         public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
-
+        
         public DbSet<AssetTypeSingleScreen> AssetTypeSingleScreen { get; set; }
         public DbSet<Asset> Asset { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
+        public DbSet<GLAccount> GLAccount { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

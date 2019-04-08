@@ -15,12 +15,14 @@ import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class DisposalTypeComponent implements OnInit {
     currentdisposalType: DisposalType;
     disposalTypeList: DisposalType[];
+    assetDisposalToUpdate: DisposalType;
     updateMode: boolean;
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
+    Active: string;
 
     constructor(private alertService: AlertService, private disposalTypeService: DisposalTypeService, private modalService: NgbModal) {
     }
@@ -47,22 +49,25 @@ export class DisposalTypeComponent implements OnInit {
             });
         }
     }
+    
 
-    setdisposalTypeToUpdate(id: number): void {
-        this.currentdisposalType = Object.assign({}, this.disposalTypeList.filter(function (disposalType) {
-            return disposalType.assetDisposalTypeId == id;
+    setdisposalTypeToUpdate(editDisposal: any, id: number): void {
+        this.assetDisposalToUpdate = Object.assign({}, this.disposalTypeList.filter(function (assetConvention) {
+            return assetConvention.assetDisposalTypeId == id;
         })[0]);
-        this.updateMode = true;
+        this.modal = this.modalService.open(editDisposal, { size: 'sm' });
     }
 
+
     updatedisposalType(): void {
-        this.disposalTypeService.update(this.currentdisposalType).subscribe(disposalType => {
+        this.disposalTypeService.update(this.assetDisposalToUpdate).subscribe(disposalType => {
             this.alertService.showMessage('Disposal Type  updated successfully.');
             this.disposalTypeService.getAll().subscribe(disposalTypes => {
                 this.disposalTypeList = disposalTypes[0];
             });
             this.updateMode = false;
             this.resetdisposalType();
+            this.dismissModel();
         });
     }
 
@@ -76,12 +81,7 @@ export class DisposalTypeComponent implements OnInit {
         });
 
     }
-
-    toggleIsDeleted(assetDisposalTypeId: number): void {
-        this.setdisposalTypeToUpdate(assetDisposalTypeId);
-        this.currentdisposalType.isDelete = !this.currentdisposalType.isDelete;
-    }
-
+    
     resetdisposalType(): void {
         this.updateMode = false;
         this.currentdisposalType = new DisposalType();
@@ -102,5 +102,31 @@ export class DisposalTypeComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    toggleIsActive(assetTypes: any, e) {
+        if (e.checked == false) {
+            this.assetDisposalToUpdate = assetTypes;
+            this.Active = "In Active";
+            this.assetDisposalToUpdate.isActive == false;
+            this.disposalTypeService.update(this.assetDisposalToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Disposal Type updated successfully.');
+                this.disposalTypeService.getAll().subscribe(assets => {
+                    this.disposalTypeList = assets[0];
+                });
+
+            })
+        }
+        else {
+            this.assetDisposalToUpdate = assetTypes;
+            this.Active = "Active";
+            this.assetDisposalToUpdate.isActive == true;
+            this.disposalTypeService.update(this.assetDisposalToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Disposal Type updated successfully.');
+                this.disposalTypeService.getAll().subscribe(assets => {
+                    this.disposalTypeList = assets[0];
+                });
+            })
+        }
     }
 }

@@ -79,6 +79,11 @@ namespace DAL.Models
         public string WarrantyStatus { get; set; }
         public Nullable<byte> UnexpiredTime { get; set; }
         public Nullable<Int32> MasterCompanyId { get; set; }
+        public Nullable<bool> IsActive { get; set; }
+        public Nullable<long> CalibrationDefaultVendorId { get; set; }
+        public Nullable<long> CertificationDefaultVendorId { get; set; }
+        public Nullable<long> InspectionDefaultVendorId { get; set; }
+        public Nullable<long> VerificationDefaultVendorId { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssetCapes> AssetCapes { get; set; }
     }

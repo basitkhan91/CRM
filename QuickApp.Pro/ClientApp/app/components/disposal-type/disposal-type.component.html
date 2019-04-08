@@ -65,21 +65,11 @@
                                     <td>{{disposalType.assetDisposalName}}</td>
                                     <td>{{disposalType.assetDisposalMemo}}</td>
                                     <td>
-                                        <div (click)="toggleIsDeleted(disposalType.assetDisposalTypeId)" data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active">
-                                            <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;">
-                                                <input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger">
-                                                <div class="toggle-group">
-                                                    <label class="btn btn-success toggle-on">
-                                                        <i class="fa fa-check"></i>
-                                                    </label>
-                                                    <label class="btn btn-danger active toggle-off">
-                                                        <i class="fa fa-times"></i>
-                                                    </label>
-                                                    <span class="toggle-handle btn btn-default"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span (click)="setdisposalTypeToUpdate(disposalType.assetDisposalTypeId)" data-toggle="modal" data-target="#edit">
+                                        <p-inputSwitch *ngIf="disposalType['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(disposalType,$event)" [(ngModel)]="disposalType['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="disposalType['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(disposalType,$event)" [(ngModel)]="disposalType['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="disposalType['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(disposalType,$event)" [(ngModel)]="disposalType['isActive']"></p-inputSwitch>
+
+                                        <span (click)="setdisposalTypeToUpdate(editpopup,disposalType.assetDisposalTypeId)" data-toggle="modal" data-target="#edit">
                                             <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                 <i class="fa fa-edit"></i>
                                             </a>
@@ -121,3 +111,51 @@
     </div>
 
 </ng-template>
+
+<ng-template #editpopup let-c="close" let-d="dismiss">
+
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+            <h4 class="modal-title"> Edit {{assetDisposalToUpdate.assetDisposalId}} Disposal Type</h4>
+        </div>
+        <div class="modal-body">
+            <p>
+                <span class="col-sm-3"><b>ID: </b></span> <span class="col-sm-6">
+                    <input type="text" [(ngModel)]="assetDisposalToUpdate.assetDisposalId" class="form-control">
+                </span>
+            </p>
+            <hr>
+            <p>
+                <span class="col-sm-3"><b>Name: </b></span> <span class="col-sm-6">
+                    <input type="text" [(ngModel)]="assetDisposalToUpdate.assetDisposalName" class="form-control">
+                </span>
+            </p>
+            <hr>
+            <p>
+                <span class="col-sm-3"><b>Memo: </b></span> <span class="col-sm-6">
+                    <textarea [(ngModel)]="assetDisposalToUpdate.assetDisposalMemo" class="form-control"></textarea>
+                </span>
+            </p>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" (click)="updatedisposalType()" class="btn btn-success" data-dismiss="modal">Update</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+</ng-template>
+
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>

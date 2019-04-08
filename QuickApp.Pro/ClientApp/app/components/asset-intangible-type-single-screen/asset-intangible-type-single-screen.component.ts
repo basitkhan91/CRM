@@ -15,18 +15,20 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
 
     currentAssetIntangible: AssetIntangibleTypeSingleScreen;
     assetIntangibleList: AssetIntangibleTypeSingleScreen[];
+    assetIntangibleToUpdate: AssetIntangibleTypeSingleScreen;
     updateMode: boolean;
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
+    Active: string;
 
-    constructor(private alertService: AlertService, private assetStatusService: AssetIntangibleTypeSingleScreenService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private assetIntangibleService: AssetIntangibleTypeSingleScreenService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
-        this.assetStatusService.getAll().subscribe(assetIntangible => {
+        this.assetIntangibleService.getAll().subscribe(assetIntangible => {
             this.assetIntangibleList = assetIntangible[0];
         });
         this.currentAssetIntangible = new AssetIntangibleTypeSingleScreen();
@@ -38,49 +40,45 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
             this.modelValue = true;
         }
         if ((this.currentAssetIntangible.assetIntangibleSingleId && this.currentAssetIntangible.assetIntangibleName && this.currentAssetIntangible.assetIntangibleMemo)) {
-            this.assetStatusService.add(this.currentAssetIntangible).subscribe(assetIntangible => {
+            this.assetIntangibleService.add(this.currentAssetIntangible).subscribe(assetIntangible => {
                 this.currentAssetIntangible = assetIntangible;
                 this.alertService.showMessage('Asset Intangible added successfully.');
-                this.assetStatusService.getAll().subscribe(assetIntangible => {
+                this.assetIntangibleService.getAll().subscribe(assetIntangible => {
                     this.assetIntangibleList = assetIntangible[0];
                 });
+                this.resetAssetIntangible();
             });
         }
     }
 
-    setAssetIntangibleToUpdate(id: number): void {
-        this.currentAssetIntangible = Object.assign({}, this.assetIntangibleList.filter(function (assetIntangible) {
+    setAssetIntangibleToUpdate(editassetConvention: any, id: number): void {
+        this.assetIntangibleToUpdate = Object.assign({}, this.assetIntangibleList.filter(function (assetIntangible) {
             return assetIntangible.assetIntangibleTypeSingleId == id;
         })[0]);
-        this.updateMode = true;
+        this.modal = this.modalService.open(editassetConvention, { size: 'sm' });
     }
-
     updateAssetIntangible(): void {
-        this.assetStatusService.update(this.currentAssetIntangible).subscribe(assetIntangible => {
+        this.assetIntangibleService.update(this.assetIntangibleToUpdate).subscribe(assetIntangible => {
             this.alertService.showMessage('Asset Intangible updated successfully.');
-            this.assetStatusService.getAll().subscribe(assetIntangible => {
+            this.assetIntangibleService.getAll().subscribe(assetIntangible => {
                 this.assetIntangibleList = assetIntangible[0];
             });
             this.updateMode = false;
             this.resetAssetIntangible();
+            this.dismissModel();
         });
     }
 
     removeAssetIntangible(): void {
-        this.assetStatusService.remove(this.currentAssetIntangible.assetIntangibleTypeSingleId).subscribe(response => {
+        this.assetIntangibleService.remove(this.currentAssetIntangible.assetIntangibleTypeSingleId).subscribe(response => {
             this.alertService.showMessage("Asset Intangible removed successfully.");
-            this.assetStatusService.getAll().subscribe(assets => {
+            this.assetIntangibleService.getAll().subscribe(assets => {
                 this.assetIntangibleList = assets[0];
                 this.modal.close();
             });
         });
    }
-
-    toggleIsDeleted(assetIntangibleTypeSingleId: number): void {
-        this.setAssetIntangibleToUpdate(assetIntangibleTypeSingleId);
-        this.currentAssetIntangible.isDelete = !this.currentAssetIntangible.isDelete;
-    }
-
+    
     resetAssetIntangible(): void {
         this.updateMode = false;
         this.currentAssetIntangible = new AssetIntangibleTypeSingleScreen();
@@ -101,5 +99,31 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    toggleIsActive(intangibleTypes: any, e) {
+        if (e.checked == false) {
+            this.assetIntangibleToUpdate = intangibleTypes;
+            this.Active = "In Active";
+            this.assetIntangibleToUpdate.isActive == false;
+            this.assetIntangibleService.update(this.assetIntangibleToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Dep Convention updated successfully.');
+                this.assetIntangibleService.getAll().subscribe(assets => {
+                    this.assetIntangibleList = assets[0];
+                });
+
+            })
+        }
+        else {
+            this.assetIntangibleToUpdate = intangibleTypes;
+            this.Active = "Active";
+            this.assetIntangibleToUpdate.isActive == true;
+            this.assetIntangibleService.update(this.assetIntangibleToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Dep Convention updated successfully.');
+                this.assetIntangibleService.getAll().subscribe(assets => {
+                    this.assetIntangibleList = assets[0];
+                });
+            })
+        }
     }
 }

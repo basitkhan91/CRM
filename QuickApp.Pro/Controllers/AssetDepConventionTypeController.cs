@@ -51,6 +51,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    assetDep.IsActive = true;
                     assetDep.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDepConventionType>().Add(assetDep);
                     unitOfWork.SaveChanges();

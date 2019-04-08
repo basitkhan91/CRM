@@ -7,7 +7,8 @@
     updatedBy: string;
     createdDate: Date;
     updatedDate: Date;
-    isDeleted: boolean;
+    isDelete: boolean;
+    isActive: boolean;
     masterCompanyId: number;
     depreciationIntervalsList: DepreciationIntervals[];
 

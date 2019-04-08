@@ -227,6 +227,8 @@ import { AssetIntangibleTypeEndpointService } from "./services/AssetIntangibleTy
 import { AssetIntangibleTypeService } from "./services/AssetIntangibleType/AssetIntangibleType.service";
 import { AssetTypeEndpointService } from "./services/AssetType/assettype-endpoint.service";
 import { AssetTypeService } from "./services/AssetType/assettype.service";
+import { GlAccountService } from "./services/glAccount/glAccount.service";
+import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoint.service";
 
 //import { TreeviewModule } from 'ngx-treeview';
 //import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown"
@@ -449,8 +451,9 @@ import { AssetTypeService } from "./services/AssetType/assettype.service";
         AssetIntangibleTypeSingleScreenEndpointService,
         AssetIntangibleTypeSingleScreenService,
         AssetTypeSingleScreenEndpointService,
-        AssetTypeSingleScreenService
-       
+        AssetTypeSingleScreenService,
+        GlAccountService,
+        GlAccountEndpointService
 		
     ],
     entryComponents: [

@@ -59,26 +59,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let assetTypes of AssetTypeList">
+                                <tr *ngFor="let assetTypes of assetTypeList">
                                     <td>{{assetTypes.assetTypeSingleId}}</td>
                                     <td>{{assetTypes.assetTypeName}}</td>
                                     <td>{{assetTypes.assetTypeMemo}}</td>
                                     <td>
-                                        <div (click)="toggleIsDeleted(assetTypes.assetTypeSingleScreenId)" data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active">
-                                            <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;">
-                                                <input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger">
-                                                <div class="toggle-group">
-                                                    <label class="btn btn-success toggle-on">
-                                                        <i class="fa fa-check"></i>
-                                                    </label>
-                                                    <label class="btn btn-danger active toggle-off">
-                                                        <i class="fa fa-times"></i>
-                                                    </label>
-                                                    <span class="toggle-handle btn btn-default"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span (click)="setAssetTypeToUpdate(assetTypes.assetTypeSingleScreenId)" data-toggle="modal" data-target="#edit">
+
+                                        <p-inputSwitch *ngIf="assetTypes['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(assetTypes,$event)" [(ngModel)]="assetTypes['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="assetTypes['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(assetTypes,$event)" [(ngModel)]="assetTypes['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="assetTypes['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(assetTypes,$event)" [(ngModel)]="assetTypes['isActive']"></p-inputSwitch>
+
+                                        <span (click)="setAssetTypeToUpdate(editAssetTypes,assetTypes.assetTypeSingleScreenId)" data-toggle="modal" data-target="#edit">
                                             <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                 <i class="fa fa-edit"></i>
                                             </a>
@@ -123,6 +114,42 @@
 
 </ng-template>
 
+<ng-template #editAssetTypes let-c="close" let-d="dismiss">
+
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"> Edit {{assetTypeToUpdate.assetTypeSingleId}} Asset Type</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <span class="col-sm-3"><b>ID: </b></span> <span class="col-sm-6">
+                            <input type="text"  [(ngModel)]="assetTypeToUpdate.assetTypeSingleId" class="form-control">
+                        </span>
+                    </p>
+                    <hr>
+                    <p>
+                        <span class="col-sm-3"><b>Name: </b></span> <span class="col-sm-6">
+                            <input type="text" [(ngModel)]="assetTypeToUpdate.assetTypeName" class="form-control" >
+                        </span>
+                    </p>
+                    <hr>
+                    <p>
+                        <span class="col-sm-3"><b>Memo: </b></span> <span class="col-sm-6">
+                            <textarea [(ngModel)]="assetTypeToUpdate.assetTypeMemo" class="form-control"></textarea>
+                        </span>
+                    </p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" (click)="updateAssetType()" class="btn btn-success" data-dismiss="modal">Update</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+       
+</ng-template>
+
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
           [width]="350" [minWidth]="200" [responsive]="true"
           [minY]="1050" [baseZIndex]="1100000">
@@ -130,7 +157,7 @@
         Please Enter (*) Mandatory Fields
     </h5>
     <p-footer>
-        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+        <button type="button" pButton icon="pi pi-check" (click)="dismissModel()" label="Close"></button>
     </p-footer>
 
 </p-dialog>

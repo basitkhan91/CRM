@@ -41,6 +41,6 @@ export class AssetStatusService {
         return this.assetStatusEndpoint.removeAssetById(assetStatusId);
     }
     updateActive(assetStatus: any) {
-        return this.assetStatusEndpoint.getUpdateForActive(assetStatus, assetStatus.assetStatusId);
+        return this.assetStatusEndpoint.getUpdateForActive(assetStatus, assetStatus.id);
     }
 }

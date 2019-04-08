@@ -65,21 +65,11 @@
                                     <td>{{depreciationIntervals.assetDepreciationIntervalName}}</td>
                                     <td>{{depreciationIntervals.assetDepreciationIntervalMemo}}</td>
                                     <td>
-                                        <div (click)="toggleIsDeleted(depreciationIntervals.assetDepreciationIntervalTypeId)" data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active">
-                                            <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;">
-                                                <input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger">
-                                                <div class="toggle-group">
-                                                    <label class="btn btn-success toggle-on">
-                                                        <i class="fa fa-check"></i>
-                                                    </label>
-                                                    <label class="btn btn-danger active toggle-off">
-                                                        <i class="fa fa-times"></i>
-                                                    </label>
-                                                    <span class="toggle-handle btn btn-default"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span (click)="setdepreciationIntervalsToUpdate(depreciationIntervals.assetDepreciationIntervalTypeId)" data-toggle="modal" data-target="#edit">
+                                        <p-inputSwitch *ngIf="depreciationIntervals['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depreciationIntervals,$event)" [(ngModel)]="depreciationIntervals['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="depreciationIntervals['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depreciationIntervals,$event)" [(ngModel)]="depreciationIntervals['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="depreciationIntervals['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depreciationIntervals,$event)" [(ngModel)]="depreciationIntervals['isActive']"></p-inputSwitch>
+
+                                        <span (click)="setdepreciationIntervalsToUpdate(editpopup,depreciationIntervals.assetDepreciationIntervalTypeId)" data-toggle="modal" data-target="#edit">
                                             <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                 <i class="fa fa-edit"></i>
                                             </a>
@@ -119,6 +109,42 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="removedepreciationIntervals()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+
+</ng-template>
+
+<ng-template #editpopup let-c="close" let-d="dismiss">
+
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+            <h4 class="modal-title"> Edit {{depriciationIntervalsToUpdate.assetDepreciationIntervalId}} Asset Depreciation Intervals</h4>
+        </div>
+        <div class="modal-body">
+            <p>
+                <span class="col-sm-3"><b>ID: </b></span> <span class="col-sm-6">
+                    <input type="text" [(ngModel)]="depriciationIntervalsToUpdate.assetDepreciationIntervalId" class="form-control">
+                </span>
+            </p>
+            <hr>
+            <p>
+                <span class="col-sm-3"><b>Name: </b></span> <span class="col-sm-6">
+                    <input type="text" [(ngModel)]="depriciationIntervalsToUpdate.assetDepreciationIntervalName" class="form-control">
+                </span>
+            </p>
+            <hr>
+            <p>
+                <span class="col-sm-3"><b>Memo: </b></span> <span class="col-sm-6">
+                    <textarea [(ngModel)]="depriciationIntervalsToUpdate.assetDepreciationIntervalMemo" class="form-control"></textarea>
+                </span>
+            </p>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" (click)="updatedepreciationIntervals()" class="btn btn-success" data-dismiss="modal">Update</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
+        </div>
     </div>
 
 </ng-template>

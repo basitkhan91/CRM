@@ -51,6 +51,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    depreciationInterval.IsActive = true;
                     depreciationInterval.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDepreciationIntervalType>().Add(depreciationInterval);
                     unitOfWork.SaveChanges();

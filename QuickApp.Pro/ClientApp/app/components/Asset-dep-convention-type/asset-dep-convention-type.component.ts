@@ -16,12 +16,14 @@ export class AssetDepConventionTypeComponent implements OnInit {
 
     currentAssetDep: AssetDepConventionType;
     assetDepList: AssetDepConventionType[];
+    assetDepConventionToUpdate: AssetDepConventionType;
     updateMode: boolean;
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
+    Active: string;
 
     constructor(private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal) {
     }
@@ -45,25 +47,27 @@ export class AssetDepConventionTypeComponent implements OnInit {
                 this.assetDepConventionTypeService.getAll().subscribe(assetDeps => {
                     this.assetDepList = assetDeps[0];
                 });
+                this.resetAssetDepConventionType();
             });
         }
     }
-
-    setAssetDepConventionTypeToUpdate(id: number): void {
-        this.currentAssetDep = Object.assign({}, this.assetDepList.filter(function (assetDep) {
-            return assetDep.assetDepConventionTypeId == id;
+    
+    setAssetDepConventionTypeToUpdate(editassetConvention: any, id: number): void {
+        this.assetDepConventionToUpdate = Object.assign({}, this.assetDepList.filter(function (assetConvention) {
+            return assetConvention.assetDepConventionTypeId == id;
         })[0]);
-        this.updateMode = true;
+        this.modal = this.modalService.open(editassetConvention, { size: 'sm' });
     }
 
     updateAssetDepConventionType(): void {
-        this.assetDepConventionTypeService.update(this.currentAssetDep).subscribe(assetDep => {
+        this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(assetDep => {
             this.alertService.showMessage('Asset Dep Convention updated successfully.');
             this.assetDepConventionTypeService.getAll().subscribe(assetDep => {
                 this.assetDepList = assetDep[0];
             });
             this.updateMode = false;
             this.resetAssetDepConventionType();
+            this.dismissModel();
         });
     }
 
@@ -77,13 +81,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
         });
 
     }
-
-    toggleIsDeleted(assetDepConventionTypeId: number): void {
-        this.setAssetDepConventionTypeToUpdate(assetDepConventionTypeId);
-       // this.currentAssetDep.isDelete = !this.currentAssetDep.isDelete;
-        this.currentAssetDep.isActive = !this.currentAssetDep.isActive;
-    }
-
+   
     resetAssetDepConventionType(): void {
         this.updateMode = false;
         this.currentAssetDep = new AssetDepConventionType();
@@ -105,4 +103,29 @@ export class AssetDepConventionTypeComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
+    toggleIsActive(assetDepConventions: any, e) {
+        if (e.checked == false) {
+            this.assetDepConventionToUpdate = assetDepConventions;
+            this.Active = "In Active";
+            this.assetDepConventionToUpdate.isActive == false;
+            this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Dep Convention updated successfully.');
+                this.assetDepConventionTypeService.getAll().subscribe(assets => {
+                    this.assetDepList = assets[0];
+                });
+
+            })
+        }
+        else {
+            this.assetDepConventionToUpdate = assetDepConventions;
+            this.Active = "Active";
+            this.assetDepConventionToUpdate.isActive == true;
+            this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Dep Convention updated successfully.');
+                this.assetDepConventionTypeService.getAll().subscribe(assets => {
+                    this.assetDepList = assets[0];
+                });
+            })
+        }
+    }
 }

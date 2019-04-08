@@ -117,14 +117,13 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 if (asset != null)
-                    return BadRequest($"{nameof(asset)} cannot be null");
-
-                var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
-                existingResult.IsActive = asset.IsActive;
-                unitOfWork.Repository<AssetStatus>().Update(asset);
-                unitOfWork.SaveChanges();
-                return Ok();
-
+                {
+                    var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
+                    existingResult.IsActive = asset.IsActive;
+                    unitOfWork.Repository<AssetStatus>().Update(asset);
+                    unitOfWork.SaveChanges();
+                    return Ok();
+                }
             }
 
 

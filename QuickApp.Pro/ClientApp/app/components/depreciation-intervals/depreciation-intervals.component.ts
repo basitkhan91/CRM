@@ -16,12 +16,14 @@ export class DepreciationIntervalsComponent implements OnInit {
 
     currentDepreciationIntervals: DepreciationIntervals;
     depreciationIntervalsList: DepreciationIntervals[];
+    depriciationIntervalsToUpdate: DepreciationIntervals;
     updateMode: boolean;
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
+    Active: string;
 
     constructor(private alertService: AlertService, private depreciationIntervalsService: DepreciationIntervalsService, private modalService: NgbModal) {
     }
@@ -45,25 +47,31 @@ export class DepreciationIntervalsComponent implements OnInit {
                 this.depreciationIntervalsService.getAll().subscribe(depreciationIntervals => {
                     this.depreciationIntervalsList = depreciationIntervals[0];
                 });
+                this.resetDepreciationInterval();
             });
         }
     }
-
-    setdepreciationIntervalsToUpdate(id: number): void {
-        this.currentDepreciationIntervals = Object.assign({}, this.depreciationIntervalsList.filter(function (depreciationInterval) {
-            return depreciationInterval.assetDepreciationIntervalTypeId == id;
+    resetDepreciationInterval(): void {
+        this.updateMode = false;
+        this.currentDepreciationIntervals = new DepreciationIntervals();
+    }
+    
+    setdepreciationIntervalsToUpdate(editassetConvention: any, id: number): void {
+        this.depriciationIntervalsToUpdate = Object.assign({}, this.depreciationIntervalsList.filter(function (assetConvention) {
+            return assetConvention.assetDepreciationIntervalTypeId == id;
         })[0]);
-        this.updateMode = true;
+        this.modal = this.modalService.open(editassetConvention, { size: 'sm' });
     }
 
     updatedepreciationIntervals(): void {
-        this.depreciationIntervalsService.update(this.currentDepreciationIntervals).subscribe(depreciationInterval => {
+        this.depreciationIntervalsService.update(this.depriciationIntervalsToUpdate).subscribe(depreciationInterval => {
             this.alertService.showMessage('Depreciation Interval  updated successfully.');
             this.depreciationIntervalsService.getAll().subscribe(depreciationIntervals => {
                 this.depreciationIntervalsList = depreciationIntervals[0];
             });
             this.updateMode = false;
             this.resetdepreciationIntervals();
+            this.dismissModel();
         });
     }
 
@@ -76,11 +84,6 @@ export class DepreciationIntervalsComponent implements OnInit {
             });
         });
 
-    }
-
-    toggleIsDeleted(assetDepreciationIntervalTypeId: number): void {
-        this.setdepreciationIntervalsToUpdate(assetDepreciationIntervalTypeId);
-        this.currentDepreciationIntervals.isDeleted = !this.currentDepreciationIntervals.isDeleted;
     }
 
     resetdepreciationIntervals(): void {
@@ -102,6 +105,32 @@ export class DepreciationIntervalsComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    toggleIsActive(assetTypes: any, e) {
+        if (e.checked == false) {
+            this.depriciationIntervalsToUpdate = assetTypes;
+            this.Active = "In Active";
+            this.depriciationIntervalsToUpdate.isActive == false;
+            this.depreciationIntervalsService.update(this.depriciationIntervalsToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Depreciation Interval Type updated successfully.');
+                this.depreciationIntervalsService.getAll().subscribe(assets => {
+                    this.depreciationIntervalsList = assets[0];
+                });
+
+            })
+        }
+        else {
+            this.depriciationIntervalsToUpdate = assetTypes;
+            this.Active = "Active";
+            this.depriciationIntervalsToUpdate.isActive == true;
+            this.depreciationIntervalsService.update(this.depriciationIntervalsToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Depreciation Interval Type updated successfully.');
+                this.depreciationIntervalsService.getAll().subscribe(assets => {
+                    this.depreciationIntervalsList = assets[0];
+                });
+            })
+        }
     }
 
 }

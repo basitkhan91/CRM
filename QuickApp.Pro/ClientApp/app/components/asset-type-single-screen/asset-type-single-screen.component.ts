@@ -14,20 +14,22 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 export class AssetTypeSingleScreenComponent implements OnInit {
 
     currentAssetTypeetStatus: AssetTypeSingleScreen;
-    AssetTypeList: AssetTypeSingleScreen[];
+    assetTypeList: AssetTypeSingleScreen[];
+    assetTypeToUpdate: AssetTypeSingleScreen;
     updateMode: boolean;
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
+    Active: string;
 
-    constructor(private alertService: AlertService, private AssetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
-        this.AssetTypeService.getAll().subscribe(AssetTypes => {
-            this.AssetTypeList = AssetTypes[0];
+        this.assetTypeService.getAll().subscribe(AssetTypes => {
+            this.assetTypeList = AssetTypes[0];
         });
         this.currentAssetTypeetStatus = new AssetTypeSingleScreen();
     }
@@ -38,50 +40,51 @@ export class AssetTypeSingleScreenComponent implements OnInit {
             this.modelValue = true;
         }
         if ((this.currentAssetTypeetStatus.assetTypeSingleId && this.currentAssetTypeetStatus.assetTypeName && this.currentAssetTypeetStatus.assetTypeMemo)) {
-            this.AssetTypeService.add(this.currentAssetTypeetStatus).subscribe(asset => {
+            this.assetTypeService.add(this.currentAssetTypeetStatus).subscribe(asset => {
                 this.currentAssetTypeetStatus = asset;
                 this.alertService.showMessage('Asset Type added successfully.');
-                this.AssetTypeService.getAll().subscribe(AssetTypes => {
-                    this.AssetTypeList = AssetTypes[0];
+                this.assetTypeService.getAll().subscribe(AssetTypes => {
+                    this.assetTypeList = AssetTypes[0];
                 });
+                this.resetAssetTypeAdd();
             });
         }
     }
 
-    setAssetTypeToUpdate(id: number): void {
-        this.currentAssetTypeetStatus = Object.assign({}, this.AssetTypeList.filter(function (asset) {
+    resetAssetTypeAdd(): void {
+        this.currentAssetTypeetStatus = new AssetTypeSingleScreen();
+    }
+   
+    setAssetTypeToUpdate(editAssetTypes: any, id: number): void {
+        this.assetTypeToUpdate = Object.assign({}, this.assetTypeList.filter(function (asset) {
             return asset.assetTypeSingleScreenId == id;
         })[0]);
-        this.updateMode = true;
+        this.modal = this.modalService.open(editAssetTypes, { size: 'sm' });
     }
 
     updateAssetType(): void {
-        this.AssetTypeService.update(this.currentAssetTypeetStatus).subscribe(asset => {
+        this.assetTypeService.update(this.assetTypeToUpdate).subscribe(asset => {
             this.alertService.showMessage('Asset Type updated successfully.');
-            this.AssetTypeService.getAll().subscribe(AssetTypes => {
-                this.AssetTypeList = AssetTypes[0];
+            this.assetTypeService.getAll().subscribe(AssetTypes => {
+                this.assetTypeList = AssetTypes[0];
             });
             this.updateMode = false;
             this.resetAssetType();
+            this.dismissModel();
         });
     }
 
     removeAssetType(): void {
-        this.AssetTypeService.remove(this.currentAssetTypeetStatus.assetTypeSingleScreenId).subscribe(response => {
+        this.assetTypeService.remove(this.currentAssetTypeetStatus.assetTypeSingleScreenId).subscribe(response => {
             this.alertService.showMessage("Asset Type removed successfully.");
-            this.AssetTypeService.getAll().subscribe(AssetTypes => {
-                this.AssetTypeList = AssetTypes[0];
+            this.assetTypeService.getAll().subscribe(AssetTypes => {
+                this.assetTypeList = AssetTypes[0];
                 this.modal.close();
             });
         });
 
     }
-
-    toggleIsDeleted(assetTypeSingleScreenId: number): void {
-        this.setAssetTypeToUpdate(assetTypeSingleScreenId);
-        this.currentAssetTypeetStatus.isDelete = !this.currentAssetTypeetStatus.isDelete;
-    }
-
+    
     resetAssetType(): void {
         this.updateMode = false;
         this.currentAssetTypeetStatus = new AssetTypeSingleScreen();
@@ -102,5 +105,30 @@ export class AssetTypeSingleScreenComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+    toggleIsActive(assetTypes: any, e) {
+        if (e.checked == false) {
+            this.assetTypeToUpdate = assetTypes;
+            this.Active = "In Active";
+            this.assetTypeToUpdate.isActive == false;
+            this.assetTypeService.update(this.assetTypeToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Type updated successfully.');
+                this.assetTypeService.getAll().subscribe(assets => {
+                    this.assetTypeList = assets[0];
+                });
+
+            })
+        }
+        else {
+            this.assetTypeToUpdate = assetTypes;
+            this.Active = "Active";
+            this.assetTypeToUpdate.isActive == true;
+            this.assetTypeService.update(this.assetTypeToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Type updated successfully.');
+                this.assetTypeService.getAll().subscribe(assets => {
+                    this.assetTypeList = assets[0];
+                });
+            })
+        }
     }
 }

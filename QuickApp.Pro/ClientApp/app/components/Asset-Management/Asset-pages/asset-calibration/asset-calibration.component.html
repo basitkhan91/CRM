@@ -4,51 +4,55 @@
             <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
                 <p class="fs10">
                     <label class="control-label" style="width: auto;">Asset ID</label>
-                    A12345
+                    {{local?.assetId}}
                 </p>
             </div>
             <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
                 <p class="fs10">
                     <label class="control-label" style="width: auto;">Alt Asset ID</label>
-                    A12346
+                    {{local?.alternateAssetId}}
                 </p>
             </div>
             <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
                 <p class="fs10">
                     <label class="control-label" style="width: auto;">Asset Name</label>
-                    Asset Name
+                    {{local?.name}}
                 </p>
             </div>
             <div class="form-group" style="display: inline-block;">
                 <p class="fs10">
                     <label class="control-label" style="width: auto;">Asset Type</label>
-                    Equipment
+                    {{local?.assetTypeSingleScreenId}}
                 </p>
             </div>
         </div>
         <div class="clear"></div>
-        <!--<div class="col-sm-12">
-          <h5 class="heading">Create Certification Info</h5>
-        </div>-->
         <div class="clear"></div>
         <hr class="hr-light-grey">
         <div class="col-sm-6 w400 calibration-blocks" style="display: block;">
-            <div class="calibration-block" style="display: block;">
+            <div *ngIf="currentCalibration.calibrationRequired" class="calibration-block" style="display: block;">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Calibration Frequency</label>
                     <div class="col-sm-7">
-                        <span class="bold">Mths</span> <input class="form-control w40" type="number" min="0" max="12">
-                        <span class="bold"> - Days</span> <input class="form-control w40 time" type="number" min="0" max="31">
+                        <div class="col-sm-4">
+                            <span class="bold">Mths<input type="number" min="0" max="12"></span>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="bold">-Days<input type="number" min="0" max="12"></span>
+
+                        </div>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Default Vendor</label>
                     <div class="col-sm-7">
-                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                            <i class="fa fa-search"></i>
-                            <input type="text" class="form-control names ui-autocomplete-input" name="" value="" autocomplete="off">
-                        </div>
-                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.calibrationDefaultVendorId">
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let vendors of allVendorInfo" [ngValue]="vendors.vendorId">
+                                {{vendors.vendorName}}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -95,18 +99,23 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Certification Frequency</label>
                     <div class="col-sm-7">
-                        <span class="bold">Mths</span> <input class="form-control w40" type="number" min="0" max="12">
-                        <span class="bold"> - Days</span> <input class="form-control w40 time" type="number" min="0" max="31">
+                        <div class="col-sm-4">
+                            <span class="bold">Mths<input type="number" min="0" max="12"></span>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="bold">-Days<input type="number" min="0" max="12"></span>
+                        </div>
+                        </div>
                     </div>
-                </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Default Vendor</label>
                     <div class="col-sm-7">
-                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                            <i class="fa fa-search"></i>
-                            <input type="text" class="form-control names ui-autocomplete-input" name="" value="" autocomplete="off">
-                        </div>
-                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.certificationDefaultVendorId">
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let vendors of allVendorInfo" [ngValue]="vendors.vendorId">
+                                {{vendors.vendorName}}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -153,18 +162,22 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Inspection Frequency</label>
                     <div class="col-sm-7">
-                        <span class="bold">Mths</span> <input class="form-control w40" type="number" min="0" max="12">
-                        <span class="bold"> - Days</span> <input class="form-control w40 time" type="number" min="0" max="31">
+                        <div class="col-sm-4">
+                            <span class="bold">Mths<input type="number" min="0" max="12"></span>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="bold">-Days<input type="number" min="0" max="12"></span></div>
+                        </div>
                     </div>
-                </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Default Vendor</label>
                     <div class="col-sm-7">
-                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                            <i class="fa fa-search"></i>
-                            <input type="text" class="form-control names ui-autocomplete-input" name="" value="" autocomplete="off">
-                        </div>
-                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.inspectionDefaultVendorId">
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let vendors of allVendorInfo" [ngValue]="vendors.vendorId">
+                                {{vendors.vendorName}}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -211,18 +224,23 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Verification Frequency</label>
                     <div class="col-sm-7">
-                        <span class="bold">Mths</span> <input class="form-control w40" type="number" min="0" max="12">
-                        <span class="bold"> - Days</span> <input class="form-control w40 time" type="number" min="0" max="31">
+                        <div class="col-sm-4">
+                            <span class="bold">Mths<input type="number" min="0" max="12"></span>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="bold">-Days<input type="number" min="0" max="12"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Default Vendor</label>
                     <div class="col-sm-7">
-                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                            <i class="fa fa-search"></i>
-                            <input type="text" class="form-control names ui-autocomplete-input" name="" value="" autocomplete="off">
-                        </div>
-                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.verificationDefaultVendorId">
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let vendors of allVendorInfo" [ngValue]="vendors.vendorId">
+                                {{vendors.vendorName}}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -304,3 +322,4 @@
         <div class="clear"></div>
     </fieldset>
 </div>
+<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCalibration()">Save</button>

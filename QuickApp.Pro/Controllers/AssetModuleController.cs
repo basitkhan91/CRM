@@ -37,6 +37,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (asset != null)
             {
+                asset.IsActive = true;
                 asset.AssetRecordId = 0;
                 asset.MasterCompanyId = 1;
                 _context.Asset.Add(asset);

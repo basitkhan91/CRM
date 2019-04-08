@@ -73,8 +73,7 @@ import { GlAccountEndpointService } from "../services/glAccount/glAccount-endpoi
     providers: [
         NodeSetupService,
         NodeSetupEndpointService,
-        GlAccountService,
-        GlAccountEndpointService
+       
 
     ],
     exports: [

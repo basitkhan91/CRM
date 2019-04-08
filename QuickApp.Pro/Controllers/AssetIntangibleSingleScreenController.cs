@@ -51,6 +51,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    assetIntangibleTypeSingleScreen.IsActive = true;
                     assetIntangibleTypeSingleScreen.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Add(assetIntangibleTypeSingleScreen);
                     unitOfWork.SaveChanges();

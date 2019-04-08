@@ -51,6 +51,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    disposalType.IsActive = true;
                     disposalType.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDisposalType>().Add(disposalType);
                     unitOfWork.SaveChanges();

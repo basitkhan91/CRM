@@ -77,12 +77,12 @@ export class AssetStatusEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.removeAssetById(assetId));
             });
     }
-    getUpdateForActive<T>(roleObject: any, assetId: number): Observable<T> {
-        let endpointUrl = `${this.updateForActive}/${assetId}`;
+    getUpdateForActive<T>(roleObject: any, id: number): Observable<T> {
+        let endpointUrl = `${this.updateForActive}/${id}`;
 
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getUpdateForActive(roleObject, assetId));
+                return this.handleError(error, () => this.getUpdateForActive(roleObject, id));
             });
     }
     

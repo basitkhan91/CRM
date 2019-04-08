@@ -11,9 +11,12 @@ import { Router } from '@angular/router';
 /** Asset-listing component*/
 export class AssetListingComponent implements OnInit {
     isSaving: boolean;
+    activeIndex: number;
 
     ngOnInit(): void {
         this.loadData();
+        this.activeIndex = 0;
+        this.assetService.indexObj.next(this.activeIndex);
     }
     /** Asset-listing ctor */
     loadingIndicator: boolean;

@@ -2,6 +2,10 @@
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { AuthService } from '../../../../services/auth.service';
 import { AlertService } from '../../../../services/alert.service';
+import { GlAccount } from '../../../../models/GlAccount.model';
+import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
+import { VendorService } from '../../../../services/vendor.service';
+import { Vendor } from '../../../../models/vendor.model';
 
 @Component({
     selector: 'app-asset-maintenance-warranty',
@@ -17,8 +21,11 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     activeIndex: number;
     showLable: boolean;
     local: any;
+    loadingIndicator: boolean;
+    allGlInfo: GlAccount[];
+    allVendorInfo: Vendor[];
     /** asset-maintenance-warranty ctor */
-    constructor(private assetService: AssetService, private authService: AuthService, private alertService: AlertService) {
+    constructor(private assetService: AssetService, private vendorService: VendorService, private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
 
             this.showLable = true;
@@ -44,6 +51,8 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     }
     ngOnInit(): void {
         this.activeIndex = 3;
+        this.glList();
+        this.vendorList();
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -80,10 +89,43 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 this.currentMaintenance.unexpiredTime = "";
             }
             this.assetService.updateAsset(this.currentMaintenance).subscribe(response => {
-                this.alertService.showMessage('Asset Intangible updated successfully.');
+                this.alertService.showMessage('Asset Maintance updated successfully.');
                 this.activeIndex = 3;
                 this.assetService.indexObj.next(this.activeIndex);
             })
         }
+    }
+
+    private onGlAccountLoad(getGlList: GlAccount[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allGlInfo = getGlList;
+    }
+    private glList() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.glAccountService.getAll().subscribe(
+            results => this.onGlAccountLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onVendorNameLoad(getVendorList: Vendor[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allVendorInfo = getVendorList;
+    }
+    private vendorList() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.vendorService.getWorkFlows().subscribe(
+            results => this.onVendorNameLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
     }
 }
