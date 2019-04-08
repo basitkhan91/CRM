@@ -20,9 +20,9 @@
                                 <label class="control-label col-sm-4">Ledger Name</label>
                                 <div>
                                     <select [(ngModel)]="currentGLAccount.ledgerName" [ngModelOptions]="{standalone: true}">
-                                        <option value="">ABC Ledger</option>
-                                        <option value="">DFG Company</option>
-                                        <option value="">FFG Ledger</option>
+                                        <option value="ABC Ledger">ABC Ledger</option>
+                                        <option value="DFG Company">DFG Company</option>
+                                        <option value="FFG Ledger">FFG Ledger</option>
                                     </select>
                                 </div>
                             </div>
@@ -34,14 +34,8 @@
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Code</label>
-                                <div class="col-sm-7"  [(ngModel)]="currentGLAccount.accountCode" [ngModelOptions]="{standalone: true}">
-                                        <select>
-                                            <option>00000</option>
-                                            <option>5000</option>
-                                            <option>6000</option>
-                                            <option>7000</option>
-                                        </select>
-                                    <a href="#" class="add-icon"><i class="fa fa-plus"></i></a>
+                                <div class="col-sm-7" >
+                                    <input type="text" name="test" value="" [(ngModel)]="currentGLAccount.accountCode" [ngModelOptions]="{standalone: true}" ngDefaultControl>
                                 </div>
                             </div>
                             <div class=" col-sm-12">
@@ -65,18 +59,14 @@
                             <div class=" col-sm-12 allow-manual-je-block">
                                 <label class="control-label col-sm-4">Allow Manual JE</label>
                                 <div class="col-sm-7">
-                                    <input name="test4" class="form-control" type="checkbox" checked="" disabled="" [(ngModel)]="currentGLAccount.allowManualJE" [ngModelOptions]="{standalone: true}">
+                                    <input  value="true" type="checkbox"  [(ngModel)]="currentGLAccount.allowManualJE" [ngModelOptions]="{standalone: true}" disabled>
                                 </div>
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Currency</label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" id="" [(ngModel)]="currentGLAccount.currencyId" [ngModelOptions]="{standalone: true}">
-                                        <option value="inr">₹</option>
-                                        <option value="usd" selected="1">$</option>
-                                        <option value="pound">£</option>
-                                        <option value="euro">€</option>
-                                        <option value="yen">¥</option>
+                                    <select class="w80" [(ngModel)]="currentGLAccount.currencyId" >
+                                        <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -115,28 +105,15 @@
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Type</label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" id=""  [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
-                                        <option>Assets</option>
-                                        <option>Liabilities</option>
-                                        <option>Owners Equity</option>
-                                        <option>Revenue</option>
-                                        <option>Expenses</option>
+                                  
+
+                                    <select class="w80" [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">  {{accounttype.glAccountClassName}}</option>
                                     </select>
                                 </div>
                             </div>
-                            <!--<div class=" col-sm-12">
-                                <label class="control-label col-sm-4">Expenditure Type</label>
-                                <div class="col-sm-7">
-                                    <select class="form-control" id="" name="">
-                                        <option>Accounts Payable</option>
-                                        <option>Accounts Receivables</option>
-                                        <option>Accrued Liabilities</option>
-                                        <option>Cash &amp; Cash Equivalent</option>
-                                        <option>Computer Hardware Expense</option>
-                                    </select>
-                                </div>
-                            </div>-->
-                            <div class=" col-sm-12 sub-account-block" style="display: none;">
+                            
+                            <div class=" col-sm-12 sub-account-block" *ngIf="currentGLAccount.summaryAccount">
                                 <label class="control-label col-sm-4">Sub Account of</label>
                                 <div class="col-sm-7">
                                     <select class="form-control" id=""  [(ngModel)]="currentGLAccount.subAccountOf" [ngModelOptions]="{standalone: true}">
@@ -159,11 +136,9 @@
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">C-Flows Classification</label>
                                 <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
-                                    <select [(ngModel)]="currentGLAccount.glClassFlowClassificationId" [ngModelOptions]="{standalone: true}">
-                                        <option>Operating Activity</option>
-                                        <option>Financing Activity</option>
-                                        <option>Investing Activity</option>
-                                        <option>None</option>
+                                   
+                                    <select class="w80" [(ngModel)]="currentGLAccount.glClassFlowClassificationId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
                                     </select>
                                 </div>
                                 <a href="#" data-toggle="modal" data-target="#add-cash-flows-classification" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -177,27 +152,16 @@
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Share with Entities</label>
                                 <div class="col-sm-7">
-                                    <select [(ngModel)]="currentGLAccount.managementStrtureId" [ngModelOptions]="{standalone: true}">
-                                        <option value="">Adso</option>
-                                        <option value="">Aerospace</option>
-                                        <option value="">ILS</option>
-                                        <option value="">PArts Base</option>
-                                        <option value="">PAS</option>
-                                        <option value="">Silverxis</option>
+                                    <select class="w80" [(ngModel)]="currentGLAccount.managementStructureId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let msData of companyList" [ngValue]="msData.managementStructureId">  {{msData.code}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">1099 Misc Category</label>
                                 <div class="col-sm-7">
-                                    <select [(ngModel)]="currentGLAccount.glAccountMiscCategoryId" [ngModelOptions]="{standalone: true}">
-                                        <option value="">Rent</option>
-                                        <option value="">Royalties</option>
-                                        <option value="">Other Income</option>
-                                        <option value="">Medical &amp; Healthcare Payments</option>
-                                        <option value="">Non Employee Comp</option>
-                                        <option value="">Golden Parachute</option>
-                                        <option value="">Gross Proceeds paid to an attorneey</option>
+                                    <select class="w80" [(ngModel)]="currentGLAccount.glAccountMiscCategoryId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let miscObj of miscData" [ngValue]="miscObj.glAccountMiscCategoryId">  {{miscObj.name}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -216,7 +180,7 @@
                         </div>
                         <div class="clear"></div>
                         <hr>
-                        <a href="#" class="btn btn-success pull-right">Save</a>
+                        <button href="#" class="btn btn-success pull-right" (click)="addGLAccount()">Save</button>
                         <div class="clear"></div>
                     </div>
                 </div>

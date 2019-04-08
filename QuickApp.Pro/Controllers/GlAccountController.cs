@@ -36,6 +36,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(glAccountData);
         }
 
+        [HttpGet("getMiscData")]
+        public IActionResult getMiscData()
+        {
+            var glAccountMiscdata = unitOfWork.Repository<GLAccountMiscCategory>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountMiscCategoryId);
+            return Ok(glAccountMiscdata);
+        }
         [HttpGet("getById/{id}")]
         public IActionResult getGlAccountById(long id)
         {
@@ -50,6 +56,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    glAccountData.MasterCompanyId = 1;
                     unitOfWork.Repository<GLAccount>().Add(glAccountData);
                     unitOfWork.SaveChanges();
                     return Ok(glAccountData);

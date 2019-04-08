@@ -209,6 +209,10 @@ import { RolesManagementStructureService } from "./services/roles-management-str
 import { RolesManagementStructureEndpoint } from "./services/roles-management-structure-endpoint.service";
 import { CertificationTypeEndpoint } from "./services/certificationtype.endpoint.service";
 import { CertificationtypeService } from "./services/certificationtype.service";
+import { AssetTypeService } from "./services/AssetType/assettype.service";
+import { AssetTypeEndpointService } from "./services/AssetType/assettype-endpoint.service";
+import { AssetIntangibleTypeService } from "./services/AssetIntangibleType/AssetIntangibleType.service";
+import { AssetIntangibleTypeEndpointService } from "./services/AssetIntangibleType/assetIntangibletype-endpoint.service";
 //import { TreeviewModule } from 'ngx-treeview';
 //import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown"
 //import { ChargesCreateComponent } from "./shared/Charges-Create.component";
@@ -412,8 +416,11 @@ import { CertificationtypeService } from "./services/certificationtype.service";
 		RolesManagementStructureService,
 		RolesManagementStructureEndpoint,
 		CertificationTypeEndpoint,
-        CertificationtypeService
-       
+        CertificationtypeService,
+        AssetTypeService,
+        AssetTypeEndpointService,
+        AssetIntangibleTypeService,
+        AssetIntangibleTypeEndpointService
 		
     ],
     entryComponents: [

@@ -10,6 +10,7 @@ import { GlAccount } from '../../models/GlAccount.model';
 @Injectable()
 export class GlAccountService {
 
+    glAccountEditCollection: any;
     constructor(private glAccountEndpoint: GlAccountEndpointService) {
     }
 
@@ -35,5 +36,8 @@ export class GlAccountService {
     remove(glAccountId: number) {
         return this.glAccountEndpoint.removeGlAccountById(glAccountId);
     }
-
+    getMiscdata() {
+        return Observable.forkJoin(
+            this.glAccountEndpoint.getMiscData<GlAccount[]>());
+    }
 }

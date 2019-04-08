@@ -1,1 +1,50 @@
-﻿<div style="border: 1px solid red">GLAccountList Component</div>
+﻿<div class="col-xs-12">
+    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper no-footer">
+        <div id="DataTables_Table_0_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="DataTables_Table_0"></label></div><div class="dataTables_scroll">
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 1138px; padding-right: 0px;">
+                    <table class="table table-bordered table-striped table-sorting dataTable no-footer" role="grid" style="margin-left: 0px; width: 1138px;">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 125px;" aria-label="Ledger Name: activate to sort column ascending">Ledger Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 202px;" aria-label="Old GL Account Code: activate to sort column ascending">Old GL Account Code</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 165px;" aria-label="GL Account Code: activate to sort column descending" aria-sort="ascending">GL Account Code</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Account Type</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 271px;" aria-label="Financial Statement Mapping: activate to sort column ascending">Financial Statement Mapping</th>
+                                <th class="events5 sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 246px;" aria-label=": activate to sort column ascending"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let glAccount of glAccountList">
+                                <td>{{glAccount.ledgerName}}</td>
+                                <td>{{glAccount.oldAccountCode}}</td>
+                                <td>{{glAccount.accountCode}}</td>
+                                <td>{{glAccount.accountName}}</td>
+                                <!--<td>Accounts Payable</td>-->
+                                <td>{{glAccount.accountDescription}}</td>
+                                <td>
+                                    <span data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active" >
+                                        <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;">
+                                        <input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger">
+                                            <div class="toggle-group">
+                                                <label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label>
+                                                <label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label>
+                                            <span class="toggle-handle btn btn-default"></span>
+                                            </div>
+                                        </div>
+                                    </span>
+                                    <span data-toggle="modal" data-target="#view"> <a href="#" class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View"><i class="fa fa-eye"></i></a> </span> 
+                                    <a data-toggle="tooltip" title="" class="btn btn-primary boxed-float-btn nobg" data-original-title="Edit"><i class="fa fa-edit" (click)="glAccountEdit(glAccount)"></i></a> 
+                                    <span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="History"><i class="fa fa-history"></i></a></span> 
+                                    <span data-toggle="modal" data-target="#delete"> <a href="#" class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+       
+        </div><div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">Showing 1 to 1 of 1 entries</div>
+    </div>
+</div>

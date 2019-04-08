@@ -8,7 +8,7 @@ namespace DAL.Models
 {
     public class GLAccount : PasBase
     {
-        public long GLAccountId { get; set; }
+        public long? GLAccountId { get; set; }
 
         public string LedgerName { get; set; }
 
@@ -24,7 +24,7 @@ namespace DAL.Models
 
         public bool AllowManualJE { get; set; }
 
-        public bool CurrencyId { get; set; }
+        public Int32? CurrencyId { get; set; }
 
         public bool InterCompany { get; set; }
 
@@ -36,7 +36,7 @@ namespace DAL.Models
 
         public bool BalanceTypeForecast { get; set; }
 
-        public long SubAccountOf { get; set; }
+        public long? SubAccountOf { get; set; }
 
         public string AccountCodeDescription { get; set; }
 
@@ -44,11 +44,11 @@ namespace DAL.Models
 
         public string GLCreatedBy { get; set; }
 
-        public int MasterCompanyId { get; set; }
+        public int? MasterCompanyId { get; set; }
 
         public bool IsActive { get; set; }
 
-        public bool IsDelete { get; set; }
+        public bool? IsDelete { get; set; }
 
         [ForeignKey("GLAccountTypeId")]
         public long GLAccountTypeId { get; set; }
@@ -58,5 +58,7 @@ namespace DAL.Models
 
         [ForeignKey("GLAccountMiscCategoryId")]
         public long GLAccountMiscCategoryId { get; set; }
+
+        //public virtual Currency Currency { get; set; }
     }
 }
