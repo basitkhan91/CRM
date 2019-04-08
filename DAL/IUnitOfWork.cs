@@ -229,7 +229,7 @@ namespace DAL
         IStocklineIntegrationPortalRepository StocklineIntegrationPortalRepository { get; }
 
         ICapabilityTypeRepository capabilityTypeRepository { get; }
-
+        IAssetRepository Asset { get; }
 
         IRepository<T> Repository<T>() where T : class;
 

@@ -375,9 +375,9 @@
 													</div>
 												</div>
 
-												<div *ngIf="selectedAircraftTypes.length>0 || enablePlus" class="form-group col-sm-12">
+												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">Models</label>
-													<div class="col-sm-7" >
+													<div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
 														<i class="fa fa-plus clr-blue cpointer" data-toggle="modal" data-target="#platform-block" (click)="openModelPopup(contentModel)"></i>
 
 														<table *ngIf="showInput" [style.border]="showInput ? '1px solid gray' : 'none'">
@@ -749,7 +749,7 @@
 								<th>Aircraft Type</th>
 								<th>Model</th>
 								<th>Select Model</th>
-								<th>Priority</th>
+								<th>Dash Number</th>
 							</tr>
 						</thead>
 						<tbody>

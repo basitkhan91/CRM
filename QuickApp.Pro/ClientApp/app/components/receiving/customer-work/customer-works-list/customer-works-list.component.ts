@@ -1,5 +1,4 @@
-﻿
-import { ReceivingCustomerWorkService } from '../../../../services/receivingcustomerwork.service';
+﻿import { ReceivingCustomerWorkService } from '../../../../services/receivingcustomerwork.service';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog, MatIcon } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
@@ -62,35 +61,15 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     ngAfterViewInit(): void {
     }
     ngOnInit(): void {
-       // this.Receveingcustomerlist();
         this.loadData();
     }
     public navigateTogeneralInfo() {
-        //this.receivingCustomerWorkService.listCollection = [];
         this.receivingCustomerWorkService.isEditMode = false;
         this.receivingCustomerWorkService.enableExternal = false;
         this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-work-setup');
 
     }
-    //private onDataLoadrecevingSuccessful(getEmployeeCerficationList: any[]) {
-    //    // alert('success');
-    //    this.alertService.stopLoadingMessage();
-    //    this.loadingIndicator = false;
-    //    this.dataSource.data = getEmployeeCerficationList;
-    //   // this.allRecevinginfo1 = getEmployeeCerficationList;
-    //}
-    //private Receveingcustomerlist() {
-    //    this.alertService.startLoadingMessage();
-    //    this.loadingIndicator = true;
-
-    //    this.receivingCustomerWorkService.getReceiveCustomerList().subscribe(
-    //        results => this.onDataLoadrecevingSuccessful(results[0]),
-    //        error => this.onDataLoadFailed(error)
-    //    );
-    //}
-
     private onDataLoadFailed(error: any) {
-        // alert(error);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -113,33 +92,22 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
             { field: 'changePartNumber', header: 'Change Part Number' },
             { field: 'firstName', header: 'Employee Name' },
             { field: 'name', header: 'Customer Name' },
-             { field: 'customerReference', header: 'Customer Reference' },
-            //{ field: 'createdDate', header: 'Created Date' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-
-
+            { field: 'customerReference', header: 'Customer Reference' },
         ];
 
         this.selectedColumns = this.cols;
 
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
-        // debugger;
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
         this.allRecevinginfo = allWorkFlows;
         console.log(allWorkFlows);
     }
     openEdits(row) {
-        //  debugger
         this.receivingCustomerWorkService.isEditMode = true;
-        
-        //this.sourcereceving = row;
         this.isSaving = true;
         this.receivingCustomerWorkService.listCollection = row;
-        //this.receivingCustomerWorkService.listCollection = this.sourcereceving;
         this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-work-setup');
     }
   

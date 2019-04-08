@@ -91,6 +91,25 @@ import { CertificationTypeComponent } from "../components/certification-type/cer
 import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
 import { AssetStatusService } from "../services/asset-status/asset-status.service";
 import { AssetStatusEndpointService } from "../services/asset-status/assetstatus-endpoint.service";
+import { DepriciationMethodComponent } from "../components/depriciation-method/depriciation-method.component";
+import { DepriciationMethodService } from "../services/depriciation-method/depriciation.service";
+import { DepriciationMethodEndpointService } from "../services/depriciation-method/depriciationmethod-endpoint.service";
+import { DisposalTypeEndpointService } from "../services/disposal-type/disposaltype-endpoint.service";
+import { DisposalTypeService } from "../services/disposal-type/disposaltype.service";
+import { DisposalTypeComponent } from "../components/disposal-type/disposal-type.component";
+import { AssetDepConventionTypeComponent } from "../components/asset-dep-convention-type/asset-dep-convention-type.component";
+import { DepreciationIntervalsService } from "../services/Depreciation -intervals/depreciation-intervals.service ";
+import { DepreciationIntervalsEndpoint } from "../services/Depreciation -intervals/depreciation-intervals-endpoint.service";
+import { AssetDepConventionTypeService } from "../services/assetDepConventionType/assetDepConventionType.service";
+import { AssetDepConventionTypeEndpointService } from "../services/assetDepConventionType/assetDepConventionType-endpoint.service";
+import { DepreciationIntervalsComponent } from "../components/depreciation-intervals/depreciation-intervals.component";
+import { AssetIntangibleTypeSingleScreenEndpointService } from "../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen-endpoint";
+import { AssetIntangibleTypeSingleScreenService } from "../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service";
+import { AssetIntangibleTypeSingleScreenComponent } from "../components/asset-intangible-type-single-screen/asset-intangible-type-single-screen.component";
+import { AssetTypeSingleScreenEndpointService } from "../services/AssetTypeSingleScreen/assettypesinglescreen-endpoint.service";
+import { AssetTypeSingleScreenService } from "../services/AssetTypeSingleScreen/assettypesinglescreen.service";
+import { AssetTypeSingleScreenComponent } from "../components/asset-type-single-screen/asset-type-single-screen.component";
+import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
 //import { SharedModule } from '../shared/shared.module';
 //import { CompanyComponent } from '../shared/company/company.component';
 
@@ -165,6 +184,13 @@ import { AssetStatusEndpointService } from "../services/asset-status/assetstatus
 		ShelfComponent,
         CertificationTypeComponent,
         AssetStatusComponent,
+        DisposalTypeComponent,
+        DepriciationMethodComponent,
+        AssetDepConventionTypeComponent,
+        DepreciationIntervalsComponent,
+        AssetIntangibleTypeSingleScreenComponent,
+        AssetTypeSingleScreenComponent,
+
 		//DefaultMessageComponent
 
 
@@ -172,7 +198,20 @@ import { AssetStatusEndpointService } from "../services/asset-status/assetstatus
     providers: [
         SingleScreenBreadcrumbService,
         AssetStatusService,
-        AssetStatusEndpointService
+        AssetStatusEndpointService,
+        AssetStatusEndpointService,
+        DepriciationMethodService,
+        DepriciationMethodEndpointService,
+        DisposalTypeEndpointService,
+        DisposalTypeService,
+        DepreciationIntervalsService,
+        DepreciationIntervalsEndpoint,
+        AssetDepConventionTypeService,
+        AssetDepConventionTypeEndpointService,
+        AssetIntangibleTypeSingleScreenEndpointService,
+        AssetIntangibleTypeSingleScreenService,
+        AssetTypeSingleScreenEndpointService,
+        AssetTypeSingleScreenService
     ],
     exports: [
         FlexLayoutModule,

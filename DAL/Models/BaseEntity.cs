@@ -11,6 +11,7 @@ namespace DAL.Models
         public Nullable<DateTime> CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<DateTime> UpdatedDate { get; set; }
+        public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
     }
 }

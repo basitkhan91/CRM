@@ -1,1 +1,515 @@
-﻿<div style="border: 1px solid red">create-asset Component</div>
+﻿<ol class="breadcrumb">
+    <li class="breadcrumb-item" aria-current="page">Asset</li>
+    <li class="breadcrumb-item active" aria-current="page">Create Asset</li>
+</ol>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-sm-4">
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Asset ID <span class="clr-red">*</span></label>
+                <div class="col-sm-7">
+                    <div class="inner-addon right-addon inline-block">
+                        <p-autoComplete [(ngModel)]="sourceAssetSetup.assetId" [ngModelOptions]="{standalone: true}" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                        </p-autoComplete>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Alt Asset ID<span class="clr-red">*</span></label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.alternateAssetId">
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Asset Name <span class="clr-red">*</span></label>
+                <div class="col-sm-7">
+                    <div class="inner-addon right-addon inline-block">
+                        <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.name">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Asset Description</label>
+                <div class="col-sm-7">
+                    <textarea type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.description"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Company</label>
+                <div class="col-sm-7">
+                    <select [(ngModel)]="sourceAssetSetup.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceAssetSetup.companyId)">
+                        <option>--Select--</option>
+                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">BU</label>
+                <div class="col-sm-7">
+                    <select [(ngModel)]="sourceAssetSetup.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceAssetSetup.businessUnitId)">
+                        <option>--Select--</option>
+                        <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Div</label>
+                <div class="col-sm-7">
+                    <select [(ngModel)]="sourceAssetSetup.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceAssetSetup.departmentId)">
+                        <option>--Select--</option>
+                        <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Dep</label>
+                <div class="col-sm-7">
+                    <div>
+                        <select [(ngModel)]="sourceAssetSetup.divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(sourceAssetSetup.divisionId)">
+                            <option>--Select--</option>
+                            <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Calibration Required</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.calibrationRequired">
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Certification Required</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.certificationRequired">
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Inspection Required</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.inspectionRequired">
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Verification Required</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.verificationRequired">
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-4">
+
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4"></label>
+                <div class="col-sm-7">
+                    <label>
+                        <input type="radio" [value]="Depreciable" name="assetRadio" (change)="onDepreciable()"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.isDepreciable" [checked]="depreciable">
+                        Depreciable
+                    </label>
+                    <label>
+                        <input type="radio" [value]="Intangible" name="assetRadio" (change)="onIntangible()" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.isIntangible" [checked]="intangible">
+                        Intangible
+                    </label>
+                </div>
+            </div>
+            <div  class="depreciation-block">
+                <div *ngIf="depreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Acquisition Type <span class="clr-red">*</span></label>
+                    <div class="col-sm-7">
+                        <select  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.assetAcquisitionTypeId">
+                            <option value="1">Buy</option>
+                            <option value="2">Make</option>
+                            <option value="3">Capital Lease</option>
+                            <option value="4">Operating Lease</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Manufacturer</label>
+                    <div class="col-sm-7">
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.manufacturerId">
+                            <option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Manufactured Date</label>
+                    <div class="col-sm-7">
+
+                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.manufacturedDate"></p-calendar>
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Model</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.model">
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Serialized?</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.isSerialized">
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+            </div>
+            <div class="intangible-block" style="display: none;">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Intangible Type <span class="clr-red">*</span></label>
+                    <div class="col-sm-7">
+                        <select>
+                            <option value="">Intangible Type 1</option>
+                            <option value="">Intangible Type 2</option>
+                            <option value="">Intangible Type 3</option>
+                            <option value="">Intangible Type 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div *ngIf="intangible" class="intangible-block block-bg2" style="display: none;">
+                <div class="form-group col-sm-12">
+                    <p class="clr-red text-center col-sm-12">Fields autopopulate when intangable type is selected</p>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Amortization Method</label>
+                    <div class="col-sm-7">
+                        <select disabled="">
+                            <option value="">Method 1</option>
+                            <option value="">Method 2</option>
+                            <option value="">Method 3</option>
+                            <option value="">Method 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="intangible" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Intangible Life</label>
+                    <div class="col-sm-7">
+                        <input class="form-control amount" type="text" disabled="">
+                    </div>
+                </div>
+                <div *ngIf="intangible" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Amort Frequency</label>
+                    <div class="col-sm-7">
+                        <select disabled="">
+                            <option value="">Monthly</option>
+                            <option value="">Yearly</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="intangible" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Intangible GL</label>
+                    <div class="col-sm-7">
+                        <select class="autosuggest" disabled="">
+                            <option>12345 (Description)</option>
+                            <option>23456 (Description)</option>
+                            <option>34567 (Description)</option>
+                            <option>45678 (Description)</option>
+                            <option>56789 (Description)</option>
+                            <option>98765 (Description)</option>
+                            <option>87654 (Description)</option>
+                            <option>76543 (Description)</option>
+                            <option>65432 (Description)</option>
+                            <option>54321 (Description)</option>
+                            <option>43210 (Description)</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="intangible" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Amort Expense GL</label>
+                    <div class="col-sm-7">
+                        <select class="autosuggest" disabled="">
+                            <option>12345 (Description)</option>
+                            <option>23456 (Description)</option>
+                            <option>34567 (Description)</option>
+                            <option>45678 (Description)</option>
+                            <option>56789 (Description)</option>
+                            <option>98765 (Description)</option>
+                            <option>87654 (Description)</option>
+                            <option>76543 (Description)</option>
+                            <option>65432 (Description)</option>
+                            <option>54321 (Description)</option>
+                            <option>43210 (Description)</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="intangible" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Acc Amort Depr GL</label>
+                    <div class="col-sm-7">
+                        <select class="autosuggest" disabled="">
+                            <option>12345 (Description)</option>
+                            <option>23456 (Description)</option>
+                            <option>34567 (Description)</option>
+                            <option>45678 (Description)</option>
+                            <option>56789 (Description)</option>
+                            <option>98765 (Description)</option>
+                            <option>87654 (Description)</option>
+                            <option>76543 (Description)</option>
+                            <option>65432 (Description)</option>
+                            <option>54321 (Description)</option>
+                            <option>43210 (Description)</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="intangible" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Intangible Write Down GL</label>
+                    <div class="col-sm-7">
+                        <select class="autosuggest" disabled="">
+                            <option>12345 (Description)</option>
+                            <option>23456 (Description)</option>
+                            <option>34567 (Description)</option>
+                            <option>45678 (Description)</option>
+                            <option>56789 (Description)</option>
+                            <option>98765 (Description)</option>
+                            <option>87654 (Description)</option>
+                            <option>76543 (Description)</option>
+                            <option>65432 (Description)</option>
+                            <option>54321 (Description)</option>
+                            <option>43210 (Description)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="depreciation-block">
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">UOM <span class="clr-red">*</span></label>
+                    <div class="col-sm-7">
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.unitOfMeasureId">
+                            <option>--Select--</option>
+                            <option *ngFor="let unitName of allUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12 ">
+                    <label class="control-label col-sm-4">Currency<span class="clr-red">*</span></label>
+                    <div class="col-sm-7">
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.currencyId">
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
+                                {{currencyName.symbol}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Unit Cost</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.unitCost">
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Expiration Date</label>
+                    <div class="col-sm-7">
+                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.expirationDate"></p-calendar>
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Asset Location</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.asset_Location">
+                    </div>
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Memo</label>
+                    <div class="col-sm-7">
+                        <textarea class="h80" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.memo"></textarea>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        <div class="col-sm-4">
+
+
+            <div *ngIf="isDepreciable" class="depreciation-block">
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Asset Parent</label>
+                    <!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.assetTypeSingleScreenId">
+                        <option>--Select--</option>
+                        <option class="form-control" *ngFor="let assetType of allAssetTypeInfo" [ngValue]="assetType.assetTypeSingleScreenId">
+                            {{assetType.assetTypeSingleId}}
+                        </option>
+                    </select>-->
+                </div>
+                <div *ngIf="isDepreciable" class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Asset Type <span class="clr-red">*</span></label><div class="col-sm-7">
+                        <select [ngModelOptions]="{standalone: true}"  [(ngModel)]="sourceAssetSetup.assetTypeSingleScreenId">
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let assetType of allAssetTypeInfo" [ngValue]="assetType.assetTypeSingleScreenId">
+                                {{assetType.assetTypeSingleId}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div  class="depreciation-asset-block block-bg1" style="display: none;">
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Depreciation Method</label>
+                        <div class="col-sm-7">
+                            <select disabled="">
+                                <option value="">Method 1</option>
+                                <option value="">Method 2</option>
+                                <option value="">Method 3</option>
+                                <option value="">Method 4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Residual %</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAssetSetup.memo">
+                                <option>1%</option>
+                                <option>2%</option>
+                                <option>3%</option>
+                                <option>4%</option>
+                                <option>5%</option>
+                                <option>6%</option>
+                                <option>7%</option>
+                                <option>8%</option>
+                                <option>9%</option>
+                                <option>10%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Asset Life</label>
+                        <div class="col-sm-7">
+                            <input class="form-control amount" type="text" disabled="">
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Depr Frequency</label>
+                        <div class="col-sm-7">
+                            <select disabled="">
+                                <option value="">Monthly</option>
+                                <option value="">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Acquired GL</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" disabled="">
+                                <option>12345 (Description)</option>
+                                <option>23456 (Description)</option>
+                                <option>34567 (Description)</option>
+                                <option>45678 (Description)</option>
+                                <option>56789 (Description)</option>
+                                <option>98765 (Description)</option>
+                                <option>87654 (Description)</option>
+                                <option>76543 (Description)</option>
+                                <option>65432 (Description)</option>
+                                <option>54321 (Description)</option>
+                                <option>43210 (Description)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Depr Expense GL</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" disabled="">
+                                <option>12345 (Description)</option>
+                                <option>23456 (Description)</option>
+                                <option>34567 (Description)</option>
+                                <option>45678 (Description)</option>
+                                <option>56789 (Description)</option>
+                                <option>98765 (Description)</option>
+                                <option>87654 (Description)</option>
+                                <option>76543 (Description)</option>
+                                <option>65432 (Description)</option>
+                                <option>54321 (Description)</option>
+                                <option>43210 (Description)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">AD Depr GL</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" disabled="">
+                                <option>12345 (Description)</option>
+                                <option>23456 (Description)</option>
+                                <option>34567 (Description)</option>
+                                <option>45678 (Description)</option>
+                                <option>56789 (Description)</option>
+                                <option>98765 (Description)</option>
+                                <option>87654 (Description)</option>
+                                <option>76543 (Description)</option>
+                                <option>65432 (Description)</option>
+                                <option>54321 (Description)</option>
+                                <option>43210 (Description)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Sale GL</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" disabled="">
+                                <option>12345 (Description)</option>
+                                <option>23456 (Description)</option>
+                                <option>34567 (Description)</option>
+                                <option>45678 (Description)</option>
+                                <option>56789 (Description)</option>
+                                <option>98765 (Description)</option>
+                                <option>87654 (Description)</option>
+                                <option>76543 (Description)</option>
+                                <option>65432 (Description)</option>
+                                <option>54321 (Description)</option>
+                                <option>43210 (Description)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Write Off GL</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" disabled="">
+                                <option>12345 (Description)</option>
+                                <option>23456 (Description)</option>
+                                <option>34567 (Description)</option>
+                                <option>45678 (Description)</option>
+                                <option>56789 (Description)</option>
+                                <option>98765 (Description)</option>
+                                <option>87654 (Description)</option>
+                                <option>76543 (Description)</option>
+                                <option>65432 (Description)</option>
+                                <option>54321 (Description)</option>
+                                <option>43210 (Description)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div  class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Write Down GL</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" disabled="">
+                                <option>12345 (Description)</option>
+                                <option>23456 (Description)</option>
+                                <option>34567 (Description)</option>
+                                <option>45678 (Description)</option>
+                                <option>56789 (Description)</option>
+                                <option>98765 (Description)</option>
+                                <option>87654 (Description)</option>
+                                <option>76543 (Description)</option>
+                                <option>65432 (Description)</option>
+                                <option>54321 (Description)</option>
+                                <option>43210 (Description)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+
+
+    <button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveAsset()">Save</button>
+    <div class="clear"></div>
+</div>

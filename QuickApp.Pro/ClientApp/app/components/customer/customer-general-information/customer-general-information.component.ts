@@ -153,9 +153,11 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        //steps Code  Start
         this.workFlowtService.ShowPtab = true;
         this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
         this.activeIndex = 0;
+        //steps Code  End
         this.getAircraftModelsData();
         this.workFlowtService.indexObj.next(this.activeIndex);
         //if (this.workFlowtService.isEditMode == true) {

@@ -1,0 +1,7 @@
+﻿<!--<div style="border: 1px solid red">Asset-Steps Component</div>-->
+
+<div *ngIf="showComponentPTab" [class.disabled]="ifvalue">
+    <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="false"></p-steps>
+</div>
+
+

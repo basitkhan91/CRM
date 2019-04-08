@@ -11,9 +11,9 @@ namespace DAL.Models
         [Required(ErrorMessage= "Id Is Required.")]
         public string Identification { get; set; }
 
-        [Required(ErrorMessage = "Id Is Required.")]
+        [Required(ErrorMessage = "Name Is Required.")]
         public string Name { get; set; }
-
+        public Int32? MasterCompanyId { get; set; }
         public string Memo { get; set; }
     }
 }

@@ -8,6 +8,7 @@
     createdDate: Date;
     updatedDate: Date;
     isDeleted: boolean;
+    isActive: boolean;
     assetsStatusList: AssetStatus[];
 
 }

@@ -1966,7 +1966,7 @@ namespace QuickApp.Pro.Controllers
                 vendorInternationalPaymentobj.MasterCompanyId = 1;
                 vendorInternationalPaymentobj.IsActive = vendorInternationlWirePaymentViewModel.IsActive;
                 vendorInternationalPaymentobj.InternationalWirePaymentId = vendorInternationlWirePaymentViewModel.InternationalWirePaymentId;
-                vendorInternationalPaymentobj.VendorInternationalWirePaymentId = vendorInternationlWirePaymentViewModel.VendorInternationalWirePaymentId;
+                //vendorInternationalPaymentobj.VendorInternationalWirePaymentId = vendorInternationlWirePaymentViewModel.VendorInternationalWirePaymentId;
                 vendorInternationalPaymentobj.CreatedDate = DateTime.Now;
                 vendorInternationalPaymentobj.UpdatedDate = DateTime.Now;
                 vendorInternationalPaymentobj.CreatedBy = vendorInternationlWirePaymentViewModel.CreatedBy;
