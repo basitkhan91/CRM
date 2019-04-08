@@ -8,11 +8,14 @@ import { VendorService } from '../../../../services/vendor.service';
 })
 /** edit-po component*/
 export class EditPoComponent {
+    receivingPoEditCollection: any;
+    data: any;
     localData: any[]=[];
     /** edit-po ctor */
     constructor(private vendorService: VendorService) {
         debugger;
         this.vendorService.receiveSaveddata = this.localData;
-
+        this.receivingPoEditCollection = this.vendorService.selectedPoCollection;
+        //this.receivingPoEditCollection = this.vendorService.vendorForPoCollection;
     }
 }

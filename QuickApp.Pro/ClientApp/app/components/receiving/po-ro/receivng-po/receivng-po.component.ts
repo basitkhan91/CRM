@@ -32,6 +32,8 @@ import { StocklineService } from '../../../../services/stockline.service';
 })
 /** purchase-setup component*/
 export class ReceivngPoComponent {
+    iValue: number;
+    QuantityReceivedDataForItemMasterId: any[];
     hasSerialized: boolean;
     showNormalQuantity: boolean;
     showFreeQuantity: boolean;
@@ -204,6 +206,8 @@ export class ReceivngPoComponent {
                 //this.allManagemtninfo = this.workFlowtService.selectedPoCollection;
                 for (let i = 0; i < this.workFlowtService.selectedPoCollection.length; i++) {
 
+                    this.iValue = i;
+
                     if (this.workFlowtService.selectedPoCollection[i].pop.isParent == true) {
                         if (this.workFlowtService.selectedPoCollection[i].pop.needByDate) {
                             this.workFlowtService.selectedPoCollection[i].pop.needByDate = new Date(this.workFlowtService.selectedPoCollection[i].pop.needByDate);
@@ -219,7 +223,7 @@ export class ReceivngPoComponent {
                         this.workFlowtService.selectedPoCollection[i].pop.serialNumber = workFlowtService.selectedPoCollection[i].serialNumber;
                         this.workFlowtService.selectedPoCollection[i].pop.partNumber = workFlowtService.selectedPoCollection[i].partNumber;
 
-                        this.GetStockLineDataBasedonItemMasterId(this.workFlowtService.selectedPoCollection[i].pop.itemMasterId);
+                        this.GetStockLineDataBasedonItemMasterId(this.workFlowtService.selectedPoCollection[i],this.workFlowtService.selectedPoCollection[i].pop.itemMasterId);
 
                         this.workFlowtService.selectedPoCollection[i].pop.shortName = workFlowtService.selectedPoCollection[i].shortName;
                         this.workFlowtService.selectedPoCollection[i].pop["childList"] = [];
@@ -282,15 +286,37 @@ export class ReceivngPoComponent {
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
     }
 
-    GetStockLineDataBasedonItemMasterId(itemMasterId:any)
+    GetStockLineDataBasedonItemMasterId(Collection,itemMasterId:any)
     {
         
         this.stocklineser.getStocklineListById(itemMasterId).subscribe(results =>
-            this.onDataLoadSuccessful(results[0]),
+
+            this.onDataLoadQuantityReceive(Collection,results),
             error => this.onDataLoadFailed(error)
             )
         
     }
+
+    onDataLoadQuantityReceive(Collection,results:any)
+    {
+        this.QuantityReceivedDataForItemMasterId = results;
+
+        //if (this.QuantityReceivedDataForItemMasterId)
+        //{
+        //    data = this.QuantityReceivedDataForItemMasterId.quantityToReceive;
+        //}
+
+        let data = 0;
+        for (let i = 0; i < results.length;i++)
+        {
+            data += results[i].quantityToReceive;
+        }
+        this.workFlowtService.selectedPoCollection[this.iValue].pop.quantityReceived = data;
+        this.workFlowtService.selectedPoCollection[this.iValue].pop.quantityBackOrdered = this.workFlowtService.selectedPoCollection[this.iValue].pop.quantityOrdered - this.workFlowtService.selectedPoCollection[this.iValue].pop.quantityReceived;
+        this.iValue = 0;
+        console.log(data)
+        
+     }
     makeNestedObj(arr, parent) {
         var out = []
 		/*for (var i in arr)*/for (let i = 0; i < arr.length; i++) {
@@ -651,6 +677,7 @@ export class ReceivngPoComponent {
         //debugger;
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
+        //saving for Purchase Order
         this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
             this.savedInfo = saveddata;
             {
