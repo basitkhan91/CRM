@@ -251,7 +251,7 @@ namespace DAL
 
         public DbSet<AssetTypeSingleScreen> AssetTypeSingleScreen { get; set; }
         public DbSet<Asset> Asset { get; set; }
-
+        public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
