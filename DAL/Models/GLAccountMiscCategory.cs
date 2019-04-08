@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    class GLAccountMiscCategory : PasBase
+  public  class GLAccountMiscCategory : PasBase
     {
         public long GLAccountMiscCategoryId { get; set; }
         public string Name { get; set; }

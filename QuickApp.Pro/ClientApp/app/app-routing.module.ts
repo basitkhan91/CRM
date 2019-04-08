@@ -88,6 +88,8 @@ import { AuthGuard } from './services/auth-guard.service';
 
 
             { path: "assetmodule", loadChildren: './assetmanagement/assetmanagement.module#AssetmanagementModule' },
+
+            { path: "mastermodule", loadChildren: './mastermaintanacepages/mastermaintanacepages.module#MastermaintanceModule' },
             
       
            

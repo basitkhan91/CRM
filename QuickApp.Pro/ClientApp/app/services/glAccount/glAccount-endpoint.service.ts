@@ -15,13 +15,14 @@ export class GlAccountEndpointService extends EndpointFactory {
     private readonly updateURL: string = "/api/GlAccount/update";
     private readonly removeByIdURL: string = "/api/GlAccount/removeById";
 
-
+    private readonly getMiscdataURL: string = '/api/GlAccount/getMiscData';
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
     get add() { return this.configurations.baseUrl + this.addURL; }
     get update() { return this.configurations.baseUrl + this.updateURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
+    get getMiscdata() { return this.configurations.baseUrl + this.getMiscdataURL; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -72,5 +73,12 @@ export class GlAccountEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.removeGlAccountById(glAccountId));
             });
     }
+    getMiscData<T>(): Observable<T> {
+        let endpointUrl = this.getMiscdata;
 
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getMiscData());
+            });
+    }
 }
