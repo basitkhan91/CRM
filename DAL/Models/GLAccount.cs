@@ -50,6 +50,7 @@ namespace DAL.Models
 
         public bool? IsDelete { get; set; }
 
+        public long? LegalEntityId { get; set; }
         [ForeignKey("GLAccountTypeId")]
         public long GLAccountTypeId { get; set; }
 

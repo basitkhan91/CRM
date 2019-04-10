@@ -26,7 +26,7 @@ import { TreeTableModule } from 'primeng/treetable';
 import { EntityEditComponent } from "../components/general-ledger/entity/entity-edit/entity-edit.component";
 //import { TreeNode } from 'primeng/api';
 import { TreeModule } from 'primeng/tree';
-import { DialogModule } from 'primeng/dialog'; 
+import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 import { NodeSetupService } from "../services/node-setup/node-setup.service";
@@ -34,8 +34,12 @@ import { NodeSetupEndpointService } from "../services/node-setup/nodeSetup-endpo
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { GlaccountListComponent } from "../components/general-ledger/glaccount-list/glaccount-list.component";
 import { GlaccountCreateComponent } from "../components/general-ledger/glaccount-create/glaccount-create.component";
-import { GlAccountService } from "../services/glAccount/glAccount.service";
-import { GlAccountEndpointService } from "../services/glAccount/glAccount-endpoint.service";
+import { AssetcreateComponent } from "../components/master-maintanace/assets-master/assetstype/assetcreate/assetcreate.component";
+import { AssettypelistingComponent } from "../components/master-maintanace/assets-master/assetstype/assettypelisting/assettypelisting.component";
+import { CreateIntangibletypeComponent } from "../components/master-maintanace/assets-master/IntangibleType/create-intangibletype/create-intangibletype.component";
+import { IntangibletypeListingComponent } from "../components/master-maintanace/assets-master/IntangibleType/intangibletype-listing/intangibletype-listing.component";
+import { AccountCalenderService } from "../services/account-calender/accountcalender.service";
+import { AccountCalenderEndpointService } from "../services/account-calender/accountcalender-endpoint.service";
 //import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
 @NgModule({
     imports: [
@@ -49,10 +53,10 @@ import { GlAccountEndpointService } from "../services/glAccount/glAccount-endpoi
         ButtonModule,
         SelectButtonModule,
         InputTextModule,
-		MultiSelectModule,
-		TreeTableModule,
+        MultiSelectModule,
+        TreeTableModule,
         TreeModule, DialogModule, CalendarModule, InputSwitchModule
-	
+
     ],
     declarations: [
         GeneralledgerPageComponent,
@@ -62,18 +66,24 @@ import { GlAccountEndpointService } from "../services/glAccount/glAccount-endpoi
         AccountReportsComponent,
         AccountSetupComponent,
         GeneralLedgerCurrencyComponent,
-		//GLAccountCategoryComponent,
-		LegalEntityStructureComponent,
-		ManagementStructureComponent,
+        //GLAccountCategoryComponent,
+        LegalEntityStructureComponent,
+        ManagementStructureComponent,
         EntityEditComponent,
         NodeSetupComponent,
         GlaccountListComponent,
-        GlaccountCreateComponent
+        GlaccountCreateComponent,
+
+        AssetcreateComponent,
+        AssettypelistingComponent,
+        CreateIntangibletypeComponent,
+        IntangibletypeListingComponent
     ],
     providers: [
         NodeSetupService,
         NodeSetupEndpointService,
-       
+        AccountCalenderService,
+        AccountCalenderEndpointService
 
     ],
     exports: [

@@ -37,4 +37,4 @@ const maintanancePagesRoutes: Routes = [
         AuthService, AuthGuard
     ]
 })
-export class AssetmanagementRoutingModule { }
+export class MastermaintanacepagesRoutingModule { }

@@ -18,17 +18,15 @@
                         <div class="col-sm-4">
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Ledger Name</label>
-                                <div>
+                                <div class="col-sm-7">                                   
                                     <select [(ngModel)]="currentGLAccount.ledgerName" [ngModelOptions]="{standalone: true}">
-                                        <option value="ABC Ledger">ABC Ledger</option>
-                                        <option value="DFG Company">DFG Company</option>
-                                        <option value="FFG Ledger">FFG Ledger</option>
+                                        <option *ngFor="let entity of companyList" [ngValue]="entity.name">  {{entity.name}} Ledger</option>
                                     </select>
                                 </div>
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Old Account Code</label>
-                                <div>
+                                <div class="col-sm-7">
                                   <input type="text"  name="test" value="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}" ngDefaultControl>
                                 </div>
                             </div>
@@ -141,19 +139,19 @@
                                         <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
                                     </select>
                                 </div>
-                                <a href="#" data-toggle="modal" data-target="#add-cash-flows-classification" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                             
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Code Description</label>
                                 <div class="col-sm-7">
-                                    <p>IT Consulting-80002</p>
+                                    <p>{{currentGLAccount.accountCode}}_{{currentGLAccount.accountDescription}}</p>
                                 </div>
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Share with Entities</label>
                                 <div class="col-sm-7">
-                                    <select class="w80" [(ngModel)]="currentGLAccount.managementStructureId" [ngModelOptions]="{standalone: true}">
-                                        <option *ngFor="let msData of companyList" [ngValue]="msData.managementStructureId">  {{msData.code}}</option>
+                                    <select class="w80" [(ngModel)]="currentGLAccount.legalEntityId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let msData of companyList" [ngValue]="msData.legalEntityId">  {{msData.name}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -165,7 +163,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class=" col-sm-12">
+                            <!--<div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Created By</label>
                                 <div class="col-sm-7">
                                     <input name="test10" class="form-control" type="text"  [(ngModel)]="currentGLAccount.glCreatedBy" [ngModelOptions]="{standalone: true}">
@@ -176,7 +174,7 @@
                                 <div class="col-sm-7">
                                     <input name="test11" class="form-control datepicker today hasDatepicker" type="text" id="dp1554284356275" [(ngModel)]="currentGLAccount.createdDate" [ngModelOptions]="{standalone: true}">
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="clear"></div>
                         <hr>

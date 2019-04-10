@@ -8,6 +8,7 @@ import { CurrencyService } from "../../../services/currency.service";
 import { GLAccountClassService } from "../../../services/glaccountclass.service";
 import { GlCashFlowClassificationService } from "../../../services/gl-cash-flow-classification.service";
 import { LegalEntityService } from "../../../services/legalentity.service";
+import { AuthService } from "../../../services/auth.service";
 @Component({
     selector: 'app-glaccount-create',
     templateUrl: './glaccount-create.component.html',
@@ -26,7 +27,7 @@ export class GlaccountCreateComponent implements OnInit {
     allManagemtninfo: any[] = [];
     companyList: any[] = [];
     miscData: any[] = [];
-    constructor(private legalEntityservice:LegalEntityService,private glcashFlowClassifcationService:GlCashFlowClassificationService,private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
+    constructor(private legalEntityservice: LegalEntityService, private authService: AuthService,private glcashFlowClassifcationService:GlCashFlowClassificationService,private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
         if (this.glAccountService.glAccountEditCollection) {
             this.currentGLAccount = this.glAccountService.glAccountEditCollection;
         }
@@ -48,6 +49,7 @@ export class GlaccountCreateComponent implements OnInit {
     }
 
     addGLAccount(): void {
+        this.currentGLAccount.createdBy = this.userName;
         if (!this.currentGLAccount.glAccountId) {
             this.glAccountService.add(this.currentGLAccount).subscribe(glData => {
                 this.currentGLAccount = glData;
@@ -71,32 +73,26 @@ export class GlaccountCreateComponent implements OnInit {
     }
 
     private loadcurrencyData() {
-        this.currencyService.getCurrencyList().subscribe(data => {
-            this.allCurrencyInfo = data[0];
+        this.currencyService.getCurrencyList().subscribe(currencydata => {
+            this.allCurrencyInfo = currencydata[0];
         });
     }
 
     private loadGLAccountTypeData() {
-        this.glAccountClassService.getWorkFlows().subscribe(data => {
-            this.allGLAccountClassInfo = data[0];
+        this.glAccountClassService.getWorkFlows().subscribe(Glaccountdata => {
+            this.allGLAccountClassInfo = Glaccountdata[0];
         })
     }
 
     private loadGLCashFlowClassification() {
-        this.glcashFlowClassifcationService.getWorkFlows().subscribe(data => {
-            this.allGLCashFlowClassInfo = data[0];
+        this.glcashFlowClassifcationService.getWorkFlows().subscribe(cahsFlowClassdata => {
+            this.allGLCashFlowClassInfo = cahsFlowClassdata[0];
         })
     }
 
     private loadCompaniesData() {
-        this.legalEntityservice.getManagemententity().subscribe(data => {
-            this.allManagemtninfo = data[0];
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
-
-                if (this.allManagemtninfo[i].parentId == null) {                   
-                    this.companyList.push(this.allManagemtninfo[i]);
-                }
-            }
+        this.legalEntityservice.getEntityList().subscribe(entitydata => {
+            this.companyList = entitydata[0];
         });
     }
 
@@ -113,17 +109,7 @@ export class GlaccountCreateComponent implements OnInit {
         this.updateMode = true;
     }
 
-    updateAssetStatus(): void {
-        this.glAccountService.update(this.currentGLAccount).subscribe(asset => {
-            this.alertService.showMessage('Asset Status updated successfully.');
-            this.glAccountService.getAll().subscribe(assets => {
-                this.glAccountList = assets[0];
-            });
-            this.updateMode = false;
-            this.resetAssetStatus();
-        });
-    }
-
+   
     removeAssetStatus(assetStatusId: number): void {
         this.glAccountService.remove(assetStatusId).subscribe(response => {
             this.alertService.showMessage("Asset Status removed successfully.");
@@ -142,5 +128,9 @@ export class GlaccountCreateComponent implements OnInit {
     resetAssetStatus(): void {
         this.updateMode = false;
         this.currentGLAccount = new GlAccount();
+    }
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 }

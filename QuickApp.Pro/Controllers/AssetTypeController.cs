@@ -2,84 +2,120 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using DAL;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using QuickApp.Pro.Helpers;
-using QuickApp.Pro.ViewModels;
+
 namespace QuickApp.Pro.Controllers
 {
 
-
-    [Route("api/[controller]")]
+    [Route("api/AssetType")]
     public class AssetTypeController : Controller
     {
-        private IUnitOfWork _unitOfWork;
-        readonly ILogger _logger;
-        readonly IEmailer _emailer;
-        private const string GetActionByIdActionName = "GetActionById";
+        #region Private Members
 
-        public AssetTypeController(IUnitOfWork unitOfWork, ILogger<AssetTypeController> logger, IEmailer emailer)
+        private IUnitOfWork unitOfWork;
+
+        #endregion Private Members
+
+        #region Constructor
+
+        public AssetTypeController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
-            _emailer = emailer;
+            this.unitOfWork = unitOfWork;
+        }
+        #endregion Constructor
+
+        #region Public Methods
+
+        [HttpGet("getAllAssetTypes")]
+        public IActionResult getAll()
+        {
+            var assetTypeData = unitOfWork.Repository<AssetType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetTypeId);
+            return Ok(assetTypeData);
         }
 
-        // GET: api/values
-    //    [HttpGet("Get")]
-    //    [Produces(typeof(List<PriorityViewModel>))]
-    //    public IActionResult Get()
-    //    {
-    //        var allGatecodeinfo = _unitOfWork.Priority.GetPriorities(); //.GetAllCustomersData();
-    //        return Ok(Mapper.Map<IEnumerable<PriorityViewModel>>(allGatecodeinfo));
-
-    //    }
-    //    [HttpGet("auditHistoryById/{id}")]
-    //    [Produces(typeof(List<AuditHistory>))]
-    //    public IActionResult GetAuditHostoryById(long id)
-    //    {
-    //        var result = _unitOfWork.AuditHistory.GetAllHistory("Priority", id); //.GetAllCustomersData();
-
-
-    //        try
-    //        {
-    //            var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-    //            return Ok(resul1);
-    //        }
-    //        catch (Exception ex)
-    //        {
-
-    //            throw;
-    //        }
-
-
-
-    //    }
-
        
-       
+        [HttpGet("getById/{id}")]
+        public IActionResult getAssetById(long id)
+        {
+            var assetTypeData = unitOfWork.Repository<AssetType>().Find(x => x.AssetTypeId == id && x.IsDelete != true);
+            return Ok(assetTypeData);
+        }
 
-    //    [HttpDelete("priority/{id}")]
-    //    [Produces(typeof(PriorityViewModel))]
-    //    public IActionResult DeleteAction(long id)
-    //    {
-    //        var existingResult = _unitOfWork.Priority.GetSingleOrDefault(c => c.PriorityId == id);
-    //        existingResult.IsDelete = true;
-    //        _unitOfWork.Priority.Update(existingResult);
-    //        //_unitOfWork.Priority.Remove(existingResult);
+        [HttpPost("addAssetType")]
+        public IActionResult addAssetType([FromBody]AssetType assetTypeData)
+        {
+            if (assetTypeData != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    assetTypeData.MasterCompanyId = 1;
+                    assetTypeData.CreatedDate = DateTime.Now;
+                    assetTypeData.UpdatedDate = DateTime.Now;
+                    unitOfWork.Repository<AssetType>().Add(assetTypeData);
+                    unitOfWork.SaveChanges();
+                    return Ok(assetTypeData);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
 
-    //        _unitOfWork.SaveChanges();
+            }
+            else
+            {
+                return BadRequest();
+            }
 
-    //        return Ok(id);
-    //    }
+        }
 
+        [HttpPut("update")]
+        public IActionResult updateAssetType([FromBody]AssetType assetType)
+        {
+            if (assetType != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.Repository<AssetType>().Update(assetType);
+                    unitOfWork.SaveChanges();
+                    return Ok(assetType);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpGet("removeAssetTypeById/{id}")]
+        public IActionResult removeAssetTypeById(long id)
+        {
+            var assetType = unitOfWork.Repository<AssetType>().Find(x => x.AssetTypeId == id).FirstOrDefault();
+            if (assetType != null)
+            {
+                assetType.IsDelete = true;
+                unitOfWork.Repository<AssetType>().Update(assetType);
+                unitOfWork.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        #endregion Private Methods
     }
-
-
-
-
 }

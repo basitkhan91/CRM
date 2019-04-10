@@ -39,7 +39,7 @@ namespace DAL.Models
         public decimal? AssetWriteDown { get; set; }
 
         public long? ManagementStructureId { get; set; }
-
+        public Int32? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
 

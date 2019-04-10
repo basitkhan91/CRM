@@ -57,6 +57,7 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     glAccountData.MasterCompanyId = 1;
+                    glAccountData.CreatedDate = DateTime.Now;
                     unitOfWork.Repository<GLAccount>().Add(glAccountData);
                     unitOfWork.SaveChanges();
                     return Ok(glAccountData);
@@ -98,7 +99,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("removeById/{id}")]
+        [HttpGet("removeGlaccountId/{id}")]
         public IActionResult removeGlAccountById(long id)
         {
             var glAccount = unitOfWork.Repository<GLAccount>().Find(x => x.GLAccountId == id).FirstOrDefault();

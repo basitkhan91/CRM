@@ -62,7 +62,7 @@ import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
        AssetGeneralInformationComponent,
        AssetMaintenanceWarrantyComponent,
         CreateAssetComponent,
-        AssetStepsComponent
+        AssetStepsComponent,
     ],
     providers: [AssetService,
         AssetEndpoint
