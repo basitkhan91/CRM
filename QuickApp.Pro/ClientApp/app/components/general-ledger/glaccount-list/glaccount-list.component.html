@@ -24,17 +24,11 @@
                                 <!--<td>Accounts Payable</td>-->
                                 <td>{{glAccount.accountDescription}}</td>
                                 <td>
-                                    <span data-toggle="tooltip" class="status" title="" data-placement="right" data-original-title="Active">
-                                        <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;">
-                                            <input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger">
-                                            <div class="toggle-group">
-                                                <label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label>
-                                                <label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label>
-                                                <span class="toggle-handle btn btn-default"></span>
-                                            </div>
-                                        </div>
-                                    </span>
-                                    <span data-toggle="modal" data-target="#view"> <a href="#" class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View"><i class="fa fa-eye"></i></a> </span>
+                             
+                                    <p-inputSwitch *ngIf="glAccount['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(glAccount,$event)" [(ngModel)]="glAccount['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="glAccount['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(glAccount,$event)" [(ngModel)]="glAccount['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="glAccount['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(glAccount,$event)" [(ngModel)]="glAccount['isActive']"></p-inputSwitch>
+                                    <span data-toggle="modal" data-target="#view"> <a  class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" (click)="showViewData(contentView,glAccount)"><i class="fa fa-eye"></i></a> </span>
                                     <a data-toggle="tooltip" title="" class="btn btn-primary boxed-float-btn nobg" data-original-title="Edit"><i class="fa fa-edit" (click)="glAccountEdit(glAccount)"></i></a>
                                     <span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
                                     <!--<span data-toggle="modal" data-target="#delete"> <a href="#" class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a> </span>-->
@@ -63,3 +57,43 @@
     </div>
 
 </ng-template>
+<ng-template #contentView let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="dismissModel()">×</button>
+            <h4 class="modal-title">Details of GL Accounts"</h4>
+        </div>
+        <div class="modal-body viewform">
+            <div class="panel-body">
+                <div class="col-sm-6">
+                    <p><span class="label"><b>Ledger Name: </b></span><span class="value">{{glAccountViewData.ledgerName}}</span></p>
+                    <p><span class="label"><b>Old Account Code: </b></span><span class="value">{{glAccountViewData.oldAccountCode}}</span></p>
+                    <p><span class="label"><b>Account Code: </b></span><span class="value">{{glAccountViewData.accountCode}}</span></p>
+                    <p><span class="label"><b>Account Name: </b></span><span class="value">{{glAccountViewData.accountName}}</span></p>
+                    <p><span class="label"><b>Account Description: </b></span><span class="value">{{glAccountViewData.accountCode}}_{{glAccountViewData.accountDescription}}</span></p>
+                    <p><span class="label"><b>Summary Account: </b></span><span class="value">{{glAccountViewData.summaryAccount}}</span></p>
+                    <p><span class="label"><b>Allow Manual JE: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
+                    <p><span class="label"><b>Currency: </b></span><span class="value">{{glAccountViewData.currency?.symbol}}</span></p>
+                    <p><span class="label"><b>Intercompany: </b></span><span class="value">{{glAccountViewData.interCompany}}</span></p>
+                    <p><span class="label"><b>Active: </b></span><span class="value">{{glAccountViewData.isActive}}</span></p>
+
+                </div>
+                <div class="col-sm-6">
+                    <p><span class="label"><b>Balance Type: </b></span><span class="value">{{glAccountViewData.balanceTypeActual}}</span></p>
+                    <p><span class="label"><b>Account Type: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
+                    <!--<p><span class="label"><b>Expenditure Type: </b></span><span class="value">Accounts Payable</span></p>                  -->
+                    <p><span class="label"><b>Sub Account of: </b></span><span class="value">{{glAccountViewData.subAccountOf}}</span></p>
+                    <p><span class="label"><b>C-Flows Classification: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
+                    <p><span class="label"><b>Account Code Description: </b></span><span class="value">{{glAccountViewData.accountDescription}}</span></p>
+                 
+                    <p><span class="label"><b>1099 Misc Categories: </b></span><span class="value">{{glAccountViewData.glAccountMiscCategory?.name}}</span></p>
+                    <p><span class="label"><b>Created By: </b></span><span class="value">{{glAccountViewData.createdBy}}</span></p>
+                    <p><span class="label"><b>Created Date: </b></span><span class="value">{{glAccountViewData.createdDate}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+    </ng-template>

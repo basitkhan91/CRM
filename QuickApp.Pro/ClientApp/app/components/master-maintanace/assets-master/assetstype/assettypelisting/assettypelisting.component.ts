@@ -15,6 +15,8 @@ export class AssettypelistingComponent implements OnInit {
     assetTypeCollection: any[] = [];
     assetTypeToRemove: any;
     modal: NgbModalRef;
+    Active: string;
+    assetTypeUpdate: any;
     constructor(private assetTypeService: AssetTypeService, private router: Router, private alertService: AlertService, private modalService: NgbModal) {
 
     }
@@ -50,6 +52,32 @@ export class AssettypelistingComponent implements OnInit {
         if (this.modal != undefined) {
             this.modal.close();
         }
+    }
+    toggleIsActive(assetType: any, e) {
+        if (e.checked == false) {
+            this.assetTypeUpdate = assetType;
+            this.Active = "In Active";
+            this.assetTypeUpdate.isActive == false;
+            this.assetTypeService.updateAssetType(this.assetTypeUpdate).subscribe(assetTypes => {
+                this.alertService.showMessage('Asset Type updated successfully.');
+                this.assetTypeService.getAll().subscribe(assetTypes => {
+                    this.assetTypeCollection = assetTypes[0];
+                });
+
+            })
+        }
+        else {
+            this.assetTypeUpdate = assetType;
+            this.Active = "Active";
+            this.assetTypeUpdate.isActive == true;
+            this.assetTypeService.updateAssetType(this.assetTypeUpdate).subscribe(assetTypes => {
+                this.alertService.showMessage('Asset Type updated successfully.');
+                this.assetTypeService.getAll().subscribe(assetTypes => {
+                    this.assetTypeCollection = assetTypes[0];
+                });
+            })
+        }
+
     }
 
 }

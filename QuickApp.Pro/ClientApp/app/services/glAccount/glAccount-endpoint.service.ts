@@ -9,7 +9,7 @@ import { GlAccount } from '../../models/GlAccount.model';
 @Injectable()
 export class GlAccountEndpointService extends EndpointFactory {
 
-    private readonly getAllURL: string = "/api/GlAccount/getAll";
+    private readonly getAllURL: string = "/api/GlAccount/getAllGLAccount";
     private readonly getByIdURL: string = "/api/GlAccount/getById";
     private readonly addURL: string = "/api/GlAccount/add";
     private readonly updateURL: string = "/api/GlAccount/update";

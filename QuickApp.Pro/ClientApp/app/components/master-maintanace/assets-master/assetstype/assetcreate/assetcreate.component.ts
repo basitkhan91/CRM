@@ -10,6 +10,7 @@ import { GlAccount } from '../../../../../models/GlAccount.model';
 import { LegalEntityService } from '../../../../../services/legalentity.service';
 import { AlertService } from '../../../../../services/alert.service';
 import { AssetTypeService } from '../../../../../services/AssetType/assettype.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-assetcreate',
@@ -31,12 +32,12 @@ export class AssetcreateComponent implements OnInit {
     divisionlist: any[];
     departmentList: any[];
     managementStructureData: any = [];
-    constructor(private assetTypeService:AssetTypeService,private AssetTypeService: AssetTypeSingleScreenService, private alertService:AlertService, private legalEntityservice:LegalEntityService, private glAccountService: GlAccountService, private assetDepConventionTypeService: AssetDepConventionTypeService, private depriciationMethodService: DepriciationMethodService,) {
+    updateMode: boolean=false;
+    constructor(private assetTypeService:AssetTypeService,private router:Router,private AssetTypeService: AssetTypeSingleScreenService, private alertService:AlertService, private legalEntityservice:LegalEntityService, private glAccountService: GlAccountService, private assetDepConventionTypeService: AssetDepConventionTypeService, private depriciationMethodService: DepriciationMethodService,) {
         if (this.assetTypeService.assetrowSelection) {
+            this.updateMode = true;
             this.currentAssetObj = this.assetTypeService.assetrowSelection;
-            
-           
-            
+                       
         }
     }
     checkMSParents(msId) {
@@ -59,15 +60,21 @@ export class AssetcreateComponent implements OnInit {
             this.currentAssetObj.buisinessUnitId = this.managementStructureData[2];
             this.currentAssetObj.departmentId = this.managementStructureData[1];
             this.currentAssetObj.divisionId = this.managementStructureData[0];
+            this.getBUList(this.currentAssetObj.companyId);
+            this.getDepartmentlist(this.currentAssetObj.buisinessUnitId);
+            this.getDivisionlist(this.currentAssetObj.departmentId);
         }
         if (this.managementStructureData.length == 3) {
             this.currentAssetObj.companyId = this.managementStructureData[2];
             this.currentAssetObj.buisinessUnitId = this.managementStructureData[1];
             this.currentAssetObj.departmentId = this.managementStructureData[0];
+            this.getBUList(this.currentAssetObj.companyId);
+            this.getDepartmentlist(this.currentAssetObj.buisinessUnitId);
         }
         if (this.managementStructureData.length == 2) {
             this.currentAssetObj.companyId = this.managementStructureData[1];
             this.currentAssetObj.buisinessUnitId = this.managementStructureData[0];
+            this.getBUList(this.currentAssetObj.companyId);
         }
         if (this.managementStructureData.length == 1) {
             this.currentAssetObj.companyId = this.managementStructureData[0];
@@ -120,6 +127,7 @@ export class AssetcreateComponent implements OnInit {
                 this.alertService.showMessage('Asset Type added successfully.');
                 this.assetTypeService.getAll().subscribe(assetTypeData => {
                     this.assetTypeList = assetTypeData[0];
+                    this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-assettypelisting');
                 });
             });
         }
@@ -130,7 +138,7 @@ export class AssetcreateComponent implements OnInit {
                     this.assetTypeList = assetTypeData[0];
                 });
                 
-                this.resetAsset();
+                //this.resetAsset();
             });
         }
 
@@ -139,49 +147,79 @@ export class AssetcreateComponent implements OnInit {
         this.currentAssetObj = {};
     }
     getBUList(companyId) {
-        this.currentAssetObj.buisinessUnitId="";
-        this.currentAssetObj.departmentId="";
-        this.currentAssetObj.divisionId="";
-        this.currentAssetObj.managementStructureId=companyId;
-        this.departmentList = [];
-        this.divisionlist = [];
-        this.buList = [];
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == companyId) {
-               this.buList.push(this.allManagemtninfo[i])
+        if (this.updateMode == false) {
+            this.currentAssetObj.buisinessUnitId = "";
+            this.currentAssetObj.departmentId = "";
+            this.currentAssetObj.divisionId = "";
+            this.currentAssetObj.managementStructureId = companyId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.buList = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.buList.push(this.allManagemtninfo[i])
+                }
+            }
+
+        }
+        else {
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.buList = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.buList.push(this.allManagemtninfo[i])
+                }
             }
         }
-
-        
     }
 
     getDepartmentlist(businessUnitId) {
-    
-        this.currentAssetObj.departmentId="";
-        this.currentAssetObj.divisionId="";
-        this.currentAssetObj.managementStructureId=businessUnitId;
-        this.departmentList = [];
-        this.divisionlist = [];
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == businessUnitId) {
-                this.departmentList.push(this.allManagemtninfo[i]);
+        if (this.updateMode == false) {
+            this.currentAssetObj.departmentId = "";
+            this.currentAssetObj.divisionId = "";
+            this.currentAssetObj.managementStructureId = businessUnitId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+
+        }
+        else {
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
             }
         }
-
-        
     }
 
     getDivisionlist(departmentId) {
-        this.currentAssetObj.divisionId="";
-        this.currentAssetObj.managementStructureId=departmentId;
-        this.divisionlist = [];
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == departmentId) {
-                this.divisionlist.push(this.allManagemtninfo[i]);
+        if (this.updateMode == false) {
+            this.currentAssetObj.divisionId = "";
+            this.currentAssetObj.managementStructureId = departmentId;
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
             }
         }
+        else {
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
+            }
 
-       
+
+        }
     }
     divisionChange(divisionId) {
         this.currentAssetObj.managementStructureId=divisionId;

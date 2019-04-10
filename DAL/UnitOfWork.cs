@@ -468,7 +468,7 @@ namespace DAL
 
         public IRepository<T> Repository<T>() where T : class
         {
-            throw new NotImplementedException();
+            return new Repository<T>(_context);
         }
 
         public IMasterCompanyRepository MasterCompanies

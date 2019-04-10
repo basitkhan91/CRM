@@ -16,6 +16,9 @@ export class GlaccountListComponent implements OnInit {
     glaccountToRemove: any;
     assetTypeCollection: any[] = [];
     modal: NgbModalRef;
+    glAccountObj: any;
+    Active: string;
+    glAccountViewData: any;
     /** GLAccountList ctor */
     constructor(private glAccountService: GlAccountService, private router: Router, private modalService: NgbModal, private alertService: AlertService) {
 
@@ -55,5 +58,40 @@ export class GlaccountListComponent implements OnInit {
         if (this.modal != undefined) {
             this.modal.close();
         }
+    }
+
+    toggleIsActive(intangibleType: any, e) {
+        if (e.checked == false) {
+            this.glAccountObj = intangibleType;
+            this.Active = "In Active";
+            this.glAccountObj.isActive == false;
+            this.glAccountService.update(this.glAccountObj).subscribe(glAccount => {
+                this.alertService.showMessage('GlAccount  updated successfully.');
+                this.glAccountService.getAll().subscribe(glAccount => {
+                    this.glAccountList = glAccount[0];
+                });
+
+            })
+        }
+        else {
+            this.glAccountObj = intangibleType;
+            this.Active = "Active";
+            this.glAccountObj.isActive == true;
+            this.glAccountService.update(this.glAccountObj).subscribe(glAccount => {
+                this.alertService.showMessage('GlAccount Type updated successfully.');
+                this.glAccountService.getAll().subscribe(glAccount => {
+                    this.glAccountList = glAccount[0];
+                });
+            })
+        }
+
+    }
+    showViewData(viewContent,glAccount) {
+       
+        this.glAccountService.getById(glAccount.glAccountId).subscribe(data => {
+            this.glAccountViewData = data[0];
+            this.modal = this.modalService.open(viewContent, { size: 'sm' });
+        })
+        
     }
 }

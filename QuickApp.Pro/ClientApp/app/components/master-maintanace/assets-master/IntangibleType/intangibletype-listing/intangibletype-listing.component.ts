@@ -16,6 +16,8 @@ export class IntangibletypeListingComponent {
     intangibleToRemove: any;
     
     modal: NgbModalRef;
+    intangibleTypeUpdate: any;
+    Active: string;
     constructor(private intangibleTypeService: AssetIntangibleTypeService, private router: Router, private modalService: NgbModal, private alertService: AlertService) {
 
     }
@@ -32,7 +34,7 @@ export class IntangibletypeListingComponent {
 
 
     confirmDelete(content, id) {
-        debugger;
+        //debugger;
         this.intangibleToRemove = Object.assign({}, this.intangibleTypeList.filter(function (intangibleType) {
             return intangibleType.assetIntangibleTypeId == id;
         })[0]);;
@@ -53,5 +55,31 @@ export class IntangibletypeListingComponent {
         if (this.modal != undefined) {
             this.modal.close();
         }
+    }
+    toggleIsActive(intangibleType: any, e) {
+        if (e.checked == false) {
+            this.intangibleTypeUpdate = intangibleType;
+            this.Active = "In Active";
+            this.intangibleTypeUpdate.isActive == false;
+            this.intangibleTypeService.update(this.intangibleTypeUpdate).subscribe(intangibleTypes => {
+                this.alertService.showMessage('Intangible Type updated successfully.');
+                this.intangibleTypeService.getAll().subscribe(intangibleTypes => {
+                    this.intangibleTypeList = intangibleTypes[0];
+                });
+
+            })
+        }
+        else {
+            this.intangibleTypeUpdate = intangibleType;
+            this.Active = "Active";
+            this.intangibleTypeUpdate.isActive == true;
+            this.intangibleTypeService.update(this.intangibleTypeUpdate).subscribe(intangibleTypes => {
+                this.alertService.showMessage('Intangible Type updated successfully.');
+                this.intangibleTypeService.getAll().subscribe(intangibleTypes => {
+                    this.intangibleTypeList = intangibleTypes[0];
+                });
+            })
+        }
+
     }
 }
