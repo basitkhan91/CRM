@@ -36,11 +36,15 @@ namespace DAL.Models
         public Nullable<bool> IsSerialized { get; set; }
         public Nullable<long> UnitOfMeasureId { get; set; }
         public Nullable<int> CurrencyId { get; set; }
+        public Nullable<int> CalibrationCurrencyId { get; set; }
+        public Nullable<int> CertificationCurrencyId { get; set; }
+        public Nullable<int> InspectionCurrencyId { get; set; }
+        public Nullable<int> VerificationCurrencyId { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
         public Nullable<System.DateTime> ExpirationDate { get; set; }
         public string Asset_Location { get; set; }
         public string Memo { get; set; }
-        public Nullable<long> AssetParentId { get; set; }
+        public string AssetParentId { get; set; }
 
 
         [Required(ErrorMessage = "Name Is Required.")]
@@ -84,7 +88,34 @@ namespace DAL.Models
         public Nullable<long> CertificationDefaultVendorId { get; set; }
         public Nullable<long> InspectionDefaultVendorId { get; set; }
         public Nullable<long> VerificationDefaultVendorId { get; set; }
+        public Nullable<byte> CalibrationFrequencyMonths { get; set; }
+        public Nullable<byte> CalibrationFrequencyDays { get; set; }
+        public Nullable<decimal> CalibrationDefaultCost { get; set; }
+        public Nullable<long> CalibrationGlAccountId { get; set; }
+        public string CalibrationMemo { get; set; }
+        public Nullable<byte> CertificationFrequencyMonths { get; set; }
+        public Nullable<byte> CertificationFrequencyDays { get; set; }
+        public Nullable<decimal> CertificationDefaultCost { get; set; }
+        public Nullable<long>  CertificationGlAccountId { get; set; }
+        public string CertificationMemo { get; set; }
+        public Nullable<byte> InspectionFrequencyMonths { get; set; }
+        public Nullable<byte> InspectionFrequencyDays { get; set; }
+        public Nullable<decimal> InspectionDefaultCost { get; set; }
+        public Nullable<long> InspectionGlaAccountId { get; set; }
+        public string InspectionMemo { get; set; }
+        public Nullable<byte> VerificationFrequencyMonths { get; set; }
+        public Nullable<byte> VerificationFrequencyDays { get; set; }
+        public Nullable<decimal> VerificationDefaultCost { get; set; }
+        public string VerificationMemo { get; set; }
+        public Nullable<long> VerificationGlAccountId { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssetCapes> AssetCapes { get; set; }
+
+        public virtual Manufacturer Manufacturer { get; set; }
+        public virtual Currency Currency { get; set; }
+        public virtual GLAccount GLAccount { get; set; }
+
+        public virtual UnitOfMeasure UnitOfMeasure { get; set; }
+
     }
 }

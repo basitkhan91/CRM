@@ -52,7 +52,7 @@ import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
         AutoCompleteModule,
         GMapModule
         , RadioButtonModule,
-        CalendarModule, StepsModule, BreadcrumbModule,
+        CalendarModule, StepsModule, BreadcrumbModule, DialogModule
     ],
     declarations: [
        AssetmanagementComponent,

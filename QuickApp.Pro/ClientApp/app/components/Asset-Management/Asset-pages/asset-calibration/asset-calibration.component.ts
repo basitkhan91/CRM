@@ -4,6 +4,11 @@ import { VendorService } from '../../../../services/vendor.service';
 import { AlertService } from '../../../../services/alert.service';
 import { Vendor } from '../../../../models/vendor.model';
 import { AuthService } from '../../../../services/auth.service';
+import { GlAccount } from '../../../../models/GlAccount.model';
+import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
+import { Router } from '@angular/router';
+import { Currency } from '../../../../models/currency.model';
+import { CurrencyService } from '../../../../services/currency.service';
 
 @Component({
     selector: 'app-asset-calibration',
@@ -12,21 +17,24 @@ import { AuthService } from '../../../../services/auth.service';
 })
 /** asset-calibration component*/
 export class AssetCalibrationComponent implements OnInit {
-  
+
+    allGlInfo: GlAccount[];
     currentCalibration: any = {};
     showLable: boolean;
-    sourceAssetSetup: any;
+    currentAsset: any;
     loadingIndicator: boolean;
     allVendorInfo: Vendor[];
     local: any;
     activeIndex: number;
     localCollection: any;
+    allCurrencyInfo: Currency[];
     /** asset-calibration ctor */
-    constructor(private assetService: AssetService, private vendorService: VendorService, private alertService: AlertService, private authService: AuthService) {
+    constructor(private assetService: AssetService, private vendorService: VendorService, private alertService: AlertService,
+        private authService: AuthService, private glAccountService: GlAccountService, private route: Router, private currencyService: CurrencyService) {
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
 
             this.showLable = true;
-            this.sourceAssetSetup = this.assetService.listCollection;
+            this.currentAsset = this.assetService.listCollection;
             if (this.assetService.listCollection) {
                 this.local = this.assetService.listCollection;
                 this.currentCalibration = this.local;
@@ -38,6 +46,8 @@ export class AssetCalibrationComponent implements OnInit {
     }
     ngOnInit(): void {
         this.vendorList();
+        this.glList();
+        this.CurrencyData();
     }
     private onVendorNameLoad(getVendorList: Vendor[]) {
         this.alertService.stopLoadingMessage();
@@ -56,6 +66,37 @@ export class AssetCalibrationComponent implements OnInit {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+    }
+
+    private onGlAccountLoad(getGlList: GlAccount[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allGlInfo = getGlList;
+    }
+
+    private glList() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.glAccountService.getAll().subscribe(
+            results => this.onGlAccountLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+
+    private oncurrencySuccessful(getCreditTermsList: Currency[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allCurrencyInfo = getCreditTermsList;
+    }
+
+    private CurrencyData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.currencyService.getCurrencyList().subscribe(
+            results => this.oncurrencySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
     }
 
     saveCalibration() {
@@ -79,5 +120,19 @@ export class AssetCalibrationComponent implements OnInit {
                 this.assetService.indexObj.next(this.activeIndex);
             })
         }
+    }
+
+    nextClick() {
+        this.assetService.listCollection = this.local;
+        this.activeIndex = 3;
+        this.assetService.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-maintenance-warranty');
+    }
+
+    backClick() {
+        this.assetService.listCollection = this.local;
+        this.activeIndex = 1;
+        this.assetService.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
     }
 }

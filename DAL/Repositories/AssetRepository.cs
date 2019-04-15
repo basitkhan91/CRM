@@ -11,17 +11,18 @@ namespace DAL.Repositories
     {
         public AssetRepository(ApplicationDbContext context) : base(context)
         { }
-        //public IEnumerable<DAL.Models.Asset>  getAllAssetList()
+        //IEnumerable<object> IAssetRepository.getAllAssetList()
         //{
-        //    return _appContext.Asset.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AssetRecordId).ToList();
+        //    return _appContext.Asset.Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AssetRecordId).ToList();
         //}
-
         IEnumerable<object> IAssetRepository.getAllAssetList()
         {
-            return _appContext.Asset.Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AssetRecordId).ToList();
-        }
+            var data = _appContext.Asset.Include("Manufacturer").Include("GLAccount").Include("Currency").Include("UnitOfMeasure").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AssetRecordId).ToList();
+           
 
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+            return data;
+        }
+    private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
    
