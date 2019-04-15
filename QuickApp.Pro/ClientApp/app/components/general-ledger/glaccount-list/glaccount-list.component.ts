@@ -87,10 +87,10 @@ export class GlaccountListComponent implements OnInit {
 
     }
     showViewData(viewContent,glAccount) {
-       
+       // debugger;
         this.glAccountService.getById(glAccount.glAccountId).subscribe(data => {
-            this.glAccountViewData = data[0];
-            this.modal = this.modalService.open(viewContent, { size: 'sm' });
+            this.glAccountViewData = data[0][0];
+            this.modal = this.modalService.open(viewContent, { size: 'lg' });
         })
         
     }

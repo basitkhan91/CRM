@@ -5,11 +5,13 @@ import { LegalEntityService } from '../../../../../services/legalentity.service'
 import { AlertService } from '../../../../../services/alert.service';
 import { AssetIntangibleTypeService } from '../../../../../services/AssetIntangibleType/AssetIntangibleType.service';
 import { Router } from '@angular/router';
+import { fadeInOut } from '../../../../../services/animations';
 
 @Component({
     selector: 'app-create-intangibletype',
     templateUrl: './create-intangibletype.component.html',
-    styleUrls: ['./create-intangibletype.component.scss']
+    styleUrls: ['./create-intangibletype.component.scss'],
+    animations: [fadeInOut]
 })
 /** create-intangibletype component*/
 export class CreateIntangibletypeComponent implements OnInit {

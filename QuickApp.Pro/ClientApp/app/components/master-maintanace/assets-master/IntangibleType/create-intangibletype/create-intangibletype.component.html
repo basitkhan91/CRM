@@ -1,131 +1,135 @@
-﻿<form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
-    <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="tab-content form-bg">
-            <div class="tab-pane active" id="home">
-                <div class="col-sm-4 mtop10">
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Intangible Type </label>
-                        <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
-                            <input type="text" autocomplete="off" class="form-control autosuggest es-input" [(ngModel)]="currentIntangibleType.intangibleTypeName" [ngModelOptions]="{standalone: true}">
+﻿
+<div [@fadeInOut] class="page-content">
+    <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="tab-content form-bg">
+                <div class="tab-pane active" id="home">
+                    <div class="col-sm-4 mtop10">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Intangible Type </label>
+                            <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
+                                <input type="text" autocomplete="off" class="form-control autosuggest es-input" [(ngModel)]="currentIntangibleType.intangibleTypeName" [ngModelOptions]="{standalone: true}">
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Amortization Method </label>
-                        <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
-                            <input type="text" autocomplete="off" class="form-control autosuggest es-input" [(ngModel)]="currentIntangibleType.amortizationMethod" [ngModelOptions]="{standalone: true}">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Amortization Method </label>
+                            <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
+                                <input type="text" autocomplete="off" class="form-control autosuggest es-input" [(ngModel)]="currentIntangibleType.amortizationMethod" [ngModelOptions]="{standalone: true}">
 
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Intangible Life</label>
-                        <div class="col-sm-7">
-                            <input type="text" class="form-control amount" id="" name="" [(ngModel)]="currentIntangibleType.intangibleLife" [ngModelOptions]="{standalone: true}">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Intangible Life</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control amount" id="" name="" [(ngModel)]="currentIntangibleType.intangibleLife" [ngModelOptions]="{standalone: true}">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Amort Frequency</label>
-                        <div class="col-sm-7">
-                            <select class="form-control" [(ngModel)]="currentIntangibleType.amortizationFrequency" [ngModelOptions]="{standalone: true}">
-                                <option></option>
-                                <option>Monthly</option>
-                                <option>Yearly</option>
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-sm-4">
-
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Intangible GL</label>
-                        <div class="col-sm-7">
-                            <select class="form-control" [(ngModel)]="currentIntangibleType.intangibleGLAccountId"[ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Amort Expense GL</label>
-                        <div class="col-sm-7">
-                            <select class="form-control" [(ngModel)]="currentIntangibleType.amortExpenseGLAccountId" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Acc Amort Depr GL</label>
-                        <div class="col-sm-7">
-                            <select class="form-control" [(ngModel)]="currentIntangibleType.accAmortDeprGLAccountId" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Intangible Write Down GL</label>
-                        <div class="col-sm-7">
-                            <select class="form-control" [(ngModel)]="currentIntangibleType.intangibleWriteDownGLAccountId" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Intangible Write Off GL</label>
-                        <div class="col-sm-7">
-                            <select class="form-control" [(ngModel)]="currentIntangibleType.intangibleWriteOffGLAccountId" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
-                            </select>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="col-sm-4">
-
-
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Company <strong class="clr-red">*</strong></label>
-                        <div class="col-sm-7">
-                            <select [(ngModel)]="currentIntangibleType.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(currentIntangibleType.companyId)">
-                                <option *ngFor="let company of companyList" [ngValue]="company.managementStructureId">{{company.code}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">BU <strong *ngIf="showBuError" class="clr-red">*</strong></label>
-                        <div class="col-sm-7">
-                            <select [(ngModel)]="currentIntangibleType.buisinessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(currentIntangibleType.buisinessUnitId)">
-                                <option *ngFor="let bu of buList" [ngValue]="bu.managementStructureId">{{bu.code}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Division <strong *ngIf="showDivError" class="clr-red">*</strong></label>
-                        <div class="col-sm-7">
-                            <select [(ngModel)]="currentIntangibleType.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(currentIntangibleType.departmentId)">
-                                <option *ngFor="let div of departmentList " [ngValue]="div.managementStructureId">{{div.code}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Dept <strong *ngIf="showDepError" class="clr-red">*</strong></label>
-                        <div class="col-sm-7">
-                            <div>
-                                <select [(ngModel)]="currentIntangibleType.divisionId" [ngModelOptions]="{standalone: true}" (change)="divisionChange(currentIntangibleType.divisionId)">
-                                    <option *ngFor="let dep of divisionlist " [ngValue]="dep.managementStructureId">{{dep.code}}</option>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Amort Frequency</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" [(ngModel)]="currentIntangibleType.amortizationFrequency" [ngModelOptions]="{standalone: true}">
+                                    <option></option>
+                                    <option>Monthly</option>
+                                    <option>Yearly</option>
                                 </select>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="clear"></div>
-                <hr>
-                <button class="btn btn-success pull-right" (click)="addIntangibileType()">Save</button>
-                <div class="clear"></div>
+                    </div>
+                    <div class="col-sm-4">
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Intangible GL</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" [(ngModel)]="currentIntangibleType.intangibleGLAccountId" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Amort Expense GL</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" [(ngModel)]="currentIntangibleType.amortExpenseGLAccountId" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Acc Amort Depr GL</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" [(ngModel)]="currentIntangibleType.accAmortDeprGLAccountId" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Intangible Write Down GL</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" [(ngModel)]="currentIntangibleType.intangibleWriteDownGLAccountId" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Intangible Write Off GL</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" [(ngModel)]="currentIntangibleType.intangibleWriteOffGLAccountId" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.glAccountId">  {{acqGL.accountName}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-4">
+
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Company <strong class="clr-red">*</strong></label>
+                            <div class="col-sm-7">
+                                <select [(ngModel)]="currentIntangibleType.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(currentIntangibleType.companyId)">
+                                    <option *ngFor="let company of companyList" [ngValue]="company.managementStructureId">{{company.code}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">BU <strong *ngIf="showBuError" class="clr-red">*</strong></label>
+                            <div class="col-sm-7">
+                                <select [(ngModel)]="currentIntangibleType.buisinessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(currentIntangibleType.buisinessUnitId)">
+                                    <option *ngFor="let bu of buList" [ngValue]="bu.managementStructureId">{{bu.code}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Division <strong *ngIf="showDivError" class="clr-red">*</strong></label>
+                            <div class="col-sm-7">
+                                <select [(ngModel)]="currentIntangibleType.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(currentIntangibleType.departmentId)">
+                                    <option *ngFor="let div of departmentList " [ngValue]="div.managementStructureId">{{div.code}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Dept <strong *ngIf="showDepError" class="clr-red">*</strong></label>
+                            <div class="col-sm-7">
+                                <div>
+                                    <select [(ngModel)]="currentIntangibleType.divisionId" [ngModelOptions]="{standalone: true}" (change)="divisionChange(currentIntangibleType.divisionId)">
+                                        <option *ngFor="let dep of divisionlist " [ngValue]="dep.managementStructureId">{{dep.code}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+                    <hr>
+                    <button class="btn btn-success pull-right" (click)="addIntangibileType()">Save</button>
+                    <div class="clear"></div>
+                </div>
             </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
-    </div>
-</form>
+    </form>
+
+</div>

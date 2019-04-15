@@ -72,6 +72,7 @@
                     <p><span class="label"><b>Account Name: </b></span><span class="value">{{glAccountViewData.accountName}}</span></p>
                     <p><span class="label"><b>Account Description: </b></span><span class="value">{{glAccountViewData.accountCode}}_{{glAccountViewData.accountDescription}}</span></p>
                     <p><span class="label"><b>Summary Account: </b></span><span class="value">{{glAccountViewData.summaryAccount}}</span></p>
+                    <p><input type="checkbox" [disabled]="true" [checked]="glAccountViewData.allowManualJE"   /></p>
                     <p><span class="label"><b>Allow Manual JE: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
                     <p><span class="label"><b>Currency: </b></span><span class="value">{{glAccountViewData.currency?.symbol}}</span></p>
                     <p><span class="label"><b>Intercompany: </b></span><span class="value">{{glAccountViewData.interCompany}}</span></p>

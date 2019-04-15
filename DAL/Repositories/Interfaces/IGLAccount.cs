@@ -7,7 +7,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IGLAccount : IRepository<GLAccount>
     {
-        IEnumerable<GLAccount> GetAllglacoounts(long id);
+        IEnumerable<GLAccount> GetAllglacoounts(long? id);
 
     }
 }

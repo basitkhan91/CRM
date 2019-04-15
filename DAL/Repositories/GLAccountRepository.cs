@@ -12,11 +12,21 @@ namespace DAL.Repositories
         public GLAccountRepository(ApplicationDbContext context) : base(context)
         { }
 
-        public IEnumerable<DAL.Models.GLAccount> GetAllglacoounts(long id)
+        public IEnumerable<DAL.Models.GLAccount> GetAllglacoounts(long? id)
         {
-            var glAccountData= _appContext.GLAccount.Include("GlClassFlowClassification").Include("GLAccountMiscCategory").Include("MasterCompany").Where(c => c.GLAccountId==id).ToList();
+            try
+            {
+                var glAccountData = _appContext.GLAccount.Where(x => x.GLAccountId == id).Include("GlClassFlowClassification").Include("GLAccountMiscCategory").Include("MasterCompany").ToList();
+                return glAccountData;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+           
 
-            return glAccountData;
+            
+            //return null;
         }
 
 

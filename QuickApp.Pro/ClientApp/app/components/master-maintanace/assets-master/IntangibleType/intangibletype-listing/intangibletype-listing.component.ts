@@ -3,11 +3,13 @@ import { AssetIntangibleTypeService } from '../../../../../services/AssetIntangi
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../../../../../services/alert.service';
 import { Router } from '@angular/router';
+import { fadeInOut } from '../../../../../services/animations';
 
 @Component({
     selector: 'app-intangibletype-listing',
     templateUrl: './intangibletype-listing.component.html',
-    styleUrls: ['./intangibletype-listing.component.scss']
+    styleUrls: ['./intangibletype-listing.component.scss'],
+    animations: [fadeInOut]
 })
 /** intangibletype-listing component*/
 export class IntangibletypeListingComponent {
@@ -29,7 +31,7 @@ export class IntangibletypeListingComponent {
     }
     private intangibleTypeEdit(intangibleType) {
         this.intangibleTypeService.intangibleTypeEditCollection = intangibleType;
-        this.router.navigateByUrl('generalledgermodule/generalledgerpage/app-create-intangibletype')
+        this.router.navigateByUrl('/mastermodule/masterpages/app-create-intangibletype')
     }
 
 

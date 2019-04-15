@@ -11,11 +11,13 @@ import { LegalEntityService } from '../../../../../services/legalentity.service'
 import { AlertService } from '../../../../../services/alert.service';
 import { AssetTypeService } from '../../../../../services/AssetType/assettype.service';
 import { Router } from '@angular/router';
+import { fadeInOut } from '../../../../../services/animations';
 
 @Component({
     selector: 'app-assetcreate',
     templateUrl: './assetcreate.component.html',
-    styleUrls: ['./assetcreate.component.scss']
+    styleUrls: ['./assetcreate.component.scss'],
+    animations: [fadeInOut]
 })
 /** assetcreate component*/
 export class AssetcreateComponent implements OnInit {

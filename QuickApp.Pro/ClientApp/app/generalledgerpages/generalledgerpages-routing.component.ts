@@ -20,10 +20,7 @@ import { GlaccountListComponent } from '../components/general-ledger/glaccount-l
 import { GlaccountCreateComponent } from '../components/general-ledger/glaccount-create/glaccount-create.component';
 //import { GLAccountCategoryComponent } from '../components/gl-account-categories/gl-account-categories.component';
 
-import { AssetcreateComponent } from "../components/master-maintanace/assets-master/assetstype/assetcreate/assetcreate.component";
-import { AssettypelistingComponent } from "../components/master-maintanace/assets-master/assetstype/assettypelisting/assettypelisting.component";
-import { CreateIntangibletypeComponent } from "../components/master-maintanace/assets-master/IntangibleType/create-intangibletype/create-intangibletype.component";
-import { IntangibletypeListingComponent } from "../components/master-maintanace/assets-master/IntangibleType/intangibletype-listing/intangibletype-listing.component";
+
 
 const generalledgerpageRoutes: Routes = [
 	{
@@ -46,12 +43,6 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-glaccount-list", component: GlaccountListComponent, data: { title: "GlAccountList" } },
             { path: "app-glaccount-create", component: GlaccountCreateComponent, data: { title: "GlAccountCreate" } },
 
-            { path: "app-assetcreate", component: AssetcreateComponent, data: { title: "Asset Create" } },
-            { path: "app-assettypelisting", component: AssettypelistingComponent, data: { title: "Asset List" } },
-            { path: "app-create-intangibletype", component: CreateIntangibletypeComponent, data: { title: "Intangible Type" } },
-            { path: "app-intangibletype-listing", component: IntangibletypeListingComponent, data: { title: "Intangible List" } },
-			//{ path: "app-generalLedgercurrenccComponent", component: GeneralLedgerCurrencyComponent, data: { title: "GeneralLedgerCurrencyComponent" } },
-			//{ path: "app-glaccountcategoriescomponent", component: GLAccountCategoryComponent, data: { title: "GlAccountCategoriesComponent" } }
 		]
 	}
 ];

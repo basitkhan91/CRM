@@ -34,10 +34,6 @@ import { NodeSetupEndpointService } from "../services/node-setup/nodeSetup-endpo
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { GlaccountListComponent } from "../components/general-ledger/glaccount-list/glaccount-list.component";
 import { GlaccountCreateComponent } from "../components/general-ledger/glaccount-create/glaccount-create.component";
-import { AssetcreateComponent } from "../components/master-maintanace/assets-master/assetstype/assetcreate/assetcreate.component";
-import { AssettypelistingComponent } from "../components/master-maintanace/assets-master/assetstype/assettypelisting/assettypelisting.component";
-import { CreateIntangibletypeComponent } from "../components/master-maintanace/assets-master/IntangibleType/create-intangibletype/create-intangibletype.component";
-import { IntangibletypeListingComponent } from "../components/master-maintanace/assets-master/IntangibleType/intangibletype-listing/intangibletype-listing.component";
 import { AccountCalenderService } from "../services/account-calender/accountcalender.service";
 import { AccountCalenderEndpointService } from "../services/account-calender/accountcalender-endpoint.service";
 //import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
@@ -74,10 +70,7 @@ import { AccountCalenderEndpointService } from "../services/account-calender/acc
         GlaccountListComponent,
         GlaccountCreateComponent,
 
-        AssetcreateComponent,
-        AssettypelistingComponent,
-        CreateIntangibletypeComponent,
-        IntangibletypeListingComponent
+       
     ],
     providers: [
         NodeSetupService,

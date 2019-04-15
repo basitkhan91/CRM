@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DAL.Models
 {
-   public class Asset
+    public class Asset
     {
         [Key]
 
@@ -45,6 +46,7 @@ namespace DAL.Models
 
         [Required(ErrorMessage = "Name Is Required.")]
         public Nullable<long> AssetTypeSingleScreenId { get; set; }
+        [ForeignKey("AssetIntangibleTypeId")]
         public Nullable<long> AssetIntangibleTypeId { get; set; }
         public Nullable<long> AmortizationMethodId { get; set; }
         public string IntangibleLife { get; set; }
@@ -66,7 +68,7 @@ namespace DAL.Models
         public Nullable<byte> MaintenanceFrequencyMonths { get; set; }
         public Nullable<byte> MaintenanceFrequencyDays { get; set; }
         public Nullable<long> DefaultVendorId { get; set; }
-        public Nullable<long> GLAccountId { get; set; }
+        //public Nullable<long> GLAccountId { get; set; }
 
         public Nullable<bool> IsDelete { get; set; }
         public string MaintenanceMemo { get; set; }
@@ -86,5 +88,6 @@ namespace DAL.Models
         public Nullable<long> VerificationDefaultVendorId { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssetCapes> AssetCapes { get; set; }
+        public virtual ICollection<AssetIntangibleType> AssetIntangibleType { get;set;}
     }
 }

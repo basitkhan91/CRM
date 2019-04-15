@@ -3,11 +3,13 @@ import { AssetTypeService } from '../../../../../services/AssetType/assettype.se
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../../services/alert.service';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { fadeInOut } from '../../../../../services/animations';
 
 @Component({
     selector: 'app-assettypelisting',
     templateUrl: './assettypelisting.component.html',
-    styleUrls: ['./assettypelisting.component.scss']
+    styleUrls: ['./assettypelisting.component.scss'],
+    animations: [fadeInOut]
 })
 /** assettypelisting component*/
 export class AssettypelistingComponent implements OnInit {
@@ -28,7 +30,7 @@ export class AssettypelistingComponent implements OnInit {
     }
     private assetTypeObjEdit(assetData) {
         this.assetTypeService.assetrowSelection = assetData;
-        this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-assetcreate')
+        this.router.navigateByUrl('/mastermodule/masterpages/app-assetcreate')
     }
 
     
