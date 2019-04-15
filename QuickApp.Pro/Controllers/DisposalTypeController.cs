@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DAL;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
@@ -51,6 +48,8 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    disposalType.CreatedDate = DateTime.Now;
+                    disposalType.UpdatedDate = DateTime.Now;
                     disposalType.IsActive = true;
                     disposalType.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDisposalType>().Add(disposalType);
@@ -77,6 +76,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    disposalType.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<AssetDisposalType>().Update(disposalType);
                     unitOfWork.SaveChanges();
                     return Ok(disposalType);

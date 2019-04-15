@@ -51,6 +51,8 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    depreciationInterval.UpdatedDate = DateTime.Now;
+                    depreciationInterval.CreatedDate = DateTime.Now;
                     depreciationInterval.IsActive = true;
                     depreciationInterval.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDepreciationIntervalType>().Add(depreciationInterval);
@@ -77,6 +79,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    depreciationInterval.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<AssetDepreciationIntervalType>().Update(depreciationInterval);
                     unitOfWork.SaveChanges();
                     return Ok(depreciationInterval);

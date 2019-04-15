@@ -4,6 +4,7 @@ import { DepreciationIntervalsService } from '../../services/Depreciation -inter
 import { DepreciationIntervals } from '../../models/depriciationIntervals.model';
 import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-depreciation-intervals',
@@ -25,7 +26,7 @@ export class DepreciationIntervalsComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
 
-    constructor(private alertService: AlertService, private depreciationIntervalsService: DepreciationIntervalsService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private authService: AuthService, private depreciationIntervalsService: DepreciationIntervalsService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
@@ -35,12 +36,18 @@ export class DepreciationIntervalsComponent implements OnInit {
         this.currentDepreciationIntervals = new DepreciationIntervals();
     }
 
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     adddepreciationIntervals(): void {
         if (!(this.currentDepreciationIntervals.assetDepreciationIntervalId && this.currentDepreciationIntervals.assetDepreciationIntervalName && this.currentDepreciationIntervals.assetDepreciationIntervalMemo)) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.currentDepreciationIntervals.assetDepreciationIntervalId && this.currentDepreciationIntervals.assetDepreciationIntervalName && this.currentDepreciationIntervals.assetDepreciationIntervalMemo)) {
+            this.currentDepreciationIntervals.createdBy = this.userName;
+            this.currentDepreciationIntervals.updatedBy = this.userName;
             this.depreciationIntervalsService.add(this.currentDepreciationIntervals).subscribe(depreciationInterval => {
                 this.currentDepreciationIntervals = depreciationInterval;
                 this.alertService.showMessage('Depreciation Interval  added successfully.');
@@ -64,15 +71,22 @@ export class DepreciationIntervalsComponent implements OnInit {
     }
 
     updatedepreciationIntervals(): void {
-        this.depreciationIntervalsService.update(this.depriciationIntervalsToUpdate).subscribe(depreciationInterval => {
-            this.alertService.showMessage('Depreciation Interval  updated successfully.');
-            this.depreciationIntervalsService.getAll().subscribe(depreciationIntervals => {
-                this.depreciationIntervalsList = depreciationIntervals[0];
+        if (!(this.depriciationIntervalsToUpdate.assetDepreciationIntervalId && this.depriciationIntervalsToUpdate.assetDepreciationIntervalName && this.depriciationIntervalsToUpdate.assetDepreciationIntervalMemo)) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        else {
+            this.currentDepreciationIntervals.updatedBy = this.userName;
+            this.depreciationIntervalsService.update(this.depriciationIntervalsToUpdate).subscribe(depreciationInterval => {
+                this.alertService.showMessage('Depreciation Interval  updated successfully.');
+                this.depreciationIntervalsService.getAll().subscribe(depreciationIntervals => {
+                    this.depreciationIntervalsList = depreciationIntervals[0];
+                });
+                this.updateMode = false;
+                this.resetdepreciationIntervals();
+                this.dismissModel();
             });
-            this.updateMode = false;
-            this.resetdepreciationIntervals();
-            this.dismissModel();
-        });
+        }
     }
 
     removedepreciationIntervals(): void {

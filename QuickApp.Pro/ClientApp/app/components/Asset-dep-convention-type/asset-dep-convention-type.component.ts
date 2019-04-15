@@ -4,6 +4,7 @@ import { AlertService } from "../../services/alert.service";
 import { AssetDepConventionType } from "../../models/assetDepConventionType.model";
 import { AssetDepConventionTypeService } from "../../services/assetDepConventionType/assetDepConventionType.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
     selector: 'app-asset-dep-convention-type',
@@ -25,7 +26,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
 
-    constructor(private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
@@ -35,12 +36,18 @@ export class AssetDepConventionTypeComponent implements OnInit {
         this.currentAssetDep = new AssetDepConventionType();
     }
 
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     addAssetDepConventionType(): void {
         if (!(this.currentAssetDep.assetDepConventionId && this.currentAssetDep.assetDepConventionName && this.currentAssetDep.assetDepConventionMemo)) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.currentAssetDep.assetDepConventionId && this.currentAssetDep.assetDepConventionName && this.currentAssetDep.assetDepConventionMemo)) {
+            this.currentAssetDep.updatedBy = this.userName;
+            this.currentAssetDep.createdBy = this.userName;
             this.assetDepConventionTypeService.add(this.currentAssetDep).subscribe(assetDep => {
                 this.currentAssetDep = assetDep;
                 this.alertService.showMessage('Asset Dep Convention added successfully.');
@@ -60,15 +67,22 @@ export class AssetDepConventionTypeComponent implements OnInit {
     }
 
     updateAssetDepConventionType(): void {
-        this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(assetDep => {
-            this.alertService.showMessage('Asset Dep Convention updated successfully.');
-            this.assetDepConventionTypeService.getAll().subscribe(assetDep => {
-                this.assetDepList = assetDep[0];
+        if (!(this.assetDepConventionToUpdate.assetDepConventionId && this.assetDepConventionToUpdate.assetDepConventionName && this.assetDepConventionToUpdate.assetDepConventionMemo)) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        else {
+            this.currentAssetDep.updatedBy = this.userName;
+            this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(assetDep => {
+                this.alertService.showMessage('Asset Dep Convention updated successfully.');
+                this.assetDepConventionTypeService.getAll().subscribe(assetDep => {
+                    this.assetDepList = assetDep[0];
+                });
+                this.updateMode = false;
+                this.resetAssetDepConventionType();
+                this.dismissModel();
             });
-            this.updateMode = false;
-            this.resetAssetDepConventionType();
-            this.dismissModel();
-        });
+        }
     }
 
     removeAssetDepConventionType(): void {

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DAL;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
@@ -51,6 +48,8 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    depricationMethod.CreatedDate = DateTime.Now;
+                    depricationMethod.UpdatedDate = DateTime.Now;
                     depricationMethod.IsActive = true;
                     depricationMethod.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDepreciationMethod>().Add(depricationMethod);
@@ -77,6 +76,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    depricationMethod.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<AssetDepreciationMethod>().Update(depricationMethod);
                     unitOfWork.SaveChanges();
                     return Ok(depricationMethod);

@@ -4,6 +4,7 @@ import { AlertService } from "../../services/alert.service";
 import { AssetIntangibleTypeSingleScreen } from "../../models/assetIntangibleTypeSingleScreen.model";
 import { AssetIntangibleTypeSingleScreenService } from "../../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
      selector: 'app-asset-intangible-type-single-screen',
@@ -24,7 +25,7 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
 
-    constructor(private alertService: AlertService, private assetIntangibleService: AssetIntangibleTypeSingleScreenService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private assetIntangibleService: AssetIntangibleTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
@@ -34,12 +35,19 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
         this.currentAssetIntangible = new AssetIntangibleTypeSingleScreen();
     }
 
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     addAssetIntangible(): void {
         if (!(this.currentAssetIntangible.assetIntangibleSingleId && this.currentAssetIntangible.assetIntangibleName && this.currentAssetIntangible.assetIntangibleMemo)) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.currentAssetIntangible.assetIntangibleSingleId && this.currentAssetIntangible.assetIntangibleName && this.currentAssetIntangible.assetIntangibleMemo)) {
+            this.currentAssetIntangible.updatedBy = this.userName;
+            this.currentAssetIntangible.createdBy = this.userName;
             this.assetIntangibleService.add(this.currentAssetIntangible).subscribe(assetIntangible => {
                 this.currentAssetIntangible = assetIntangible;
                 this.alertService.showMessage('Asset Intangible added successfully.');
@@ -58,15 +66,22 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
         this.modal = this.modalService.open(editassetConvention, { size: 'sm' });
     }
     updateAssetIntangible(): void {
-        this.assetIntangibleService.update(this.assetIntangibleToUpdate).subscribe(assetIntangible => {
-            this.alertService.showMessage('Asset Intangible updated successfully.');
-            this.assetIntangibleService.getAll().subscribe(assetIntangible => {
-                this.assetIntangibleList = assetIntangible[0];
+        if (!(this.assetIntangibleToUpdate.assetIntangibleSingleId && this.assetIntangibleToUpdate.assetIntangibleName && this.assetIntangibleToUpdate.assetIntangibleMemo)) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        else {
+            this.currentAssetIntangible.updatedBy = this.userName;
+            this.assetIntangibleService.update(this.assetIntangibleToUpdate).subscribe(assetIntangible => {
+                this.alertService.showMessage('Asset Intangible updated successfully.');
+                this.assetIntangibleService.getAll().subscribe(assetIntangible => {
+                    this.assetIntangibleList = assetIntangible[0];
+                });
+                this.updateMode = false;
+                this.resetAssetIntangible();
+                this.dismissModel();
             });
-            this.updateMode = false;
-            this.resetAssetIntangible();
-            this.dismissModel();
-        });
+        }
     }
 
     removeAssetIntangible(): void {
@@ -107,7 +122,7 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
             this.Active = "In Active";
             this.assetIntangibleToUpdate.isActive == false;
             this.assetIntangibleService.update(this.assetIntangibleToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Dep Convention updated successfully.');
+                this.alertService.showMessage('Asset Intangible updated successfully.');
                 this.assetIntangibleService.getAll().subscribe(assets => {
                     this.assetIntangibleList = assets[0];
                 });
@@ -119,7 +134,7 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
             this.Active = "Active";
             this.assetIntangibleToUpdate.isActive == true;
             this.assetIntangibleService.update(this.assetIntangibleToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Dep Convention updated successfully.');
+                this.alertService.showMessage('Asset Intangible updated successfully.');
                 this.assetIntangibleService.getAll().subscribe(assets => {
                     this.assetIntangibleList = assets[0];
                 });

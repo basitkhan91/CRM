@@ -507,16 +507,11 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 						this.workFlowtService.isCustomerAlsoVendor = this.isCustomerAlsoVendor;
 						this.workFlowtService.localCollectiontoVendor = data;
 					}
-					//let navigationExtras: NavigationExtras = {
-					//    queryParams: this.local
-					//}
-					//this.route.navigate(['/customersmodule/customerpages/app-customer-financial-information'], navigationExtras);
 					this.workFlowtService.contactCollection = this.local;
 					this.savesuccessCompleted(this.sourceCustomer);
 					this.activeIndex = 1;
 					this.workFlowtService.indexObj.next(this.activeIndex);
 					
-					//this.route.navigateByUrl('/customersmodule/customerpages/app-customer-financial-information');
 				})
 
 

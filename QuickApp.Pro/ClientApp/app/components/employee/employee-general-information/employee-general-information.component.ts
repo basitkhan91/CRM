@@ -771,9 +771,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			this.sourceAction.description = this.description;
 			this.sourceAction.masterCompanyId = 1;
 			this.employeeService.newActionforLeave(this.sourceAction).subscribe(data => {
-				this.EmployeeLeaveType();
 				this.saveCompleted(this.sourceAction);
-				this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
+                this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
+                this.EmployeeLeaveType();
+                
 			})
 		}
 		else {
@@ -782,9 +783,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			this.sourceAction.description = this.description;
 			this.sourceAction.masterCompanyId = 1;
 			this.employeeService.newActionforLeave(this.sourceAction).subscribe(data => {
-				this.EmployeeLeaveType();
 				this.saveCompleted(this.sourceAction);
-				this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
+                this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
+                this.EmployeeLeaveType();
 			});
 			
 		}

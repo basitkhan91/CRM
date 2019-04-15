@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DAL;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
@@ -51,6 +48,8 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    assetDep.CreatedDate = DateTime.Now;
+                    assetDep.UpdatedDate = DateTime.Now;
                     assetDep.IsActive = true;
                     assetDep.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDepConventionType>().Add(assetDep);
@@ -77,6 +76,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    assetDep.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<AssetDepConventionType>().Update(assetDep);
                     unitOfWork.SaveChanges();
                     return Ok(assetDep);

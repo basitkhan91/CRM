@@ -4,6 +4,7 @@ import { DepriciationMethodService } from '../../services/depriciation-method/de
 import { DepriciationMethod } from '../../models/depriciation-method.model';
 import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-depriciation-method',
@@ -25,7 +26,7 @@ export class DepriciationMethodComponent implements OnInit {
     Active: string;
 
     /** DepriciationMethod ctor */
-    constructor(private alertService: AlertService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
@@ -35,15 +36,21 @@ export class DepriciationMethodComponent implements OnInit {
         this.currentDepriciationmethod = new DepriciationMethod();
     }
 
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     adddepriciationmethod(): void {
         if (!(this.currentDepriciationmethod.assetDepreciationMethodName && this.currentDepriciationmethod.assetDepreciationBasis && this.currentDepriciationmethod.assetDepreciationMemo)) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.currentDepriciationmethod.assetDepreciationMethodName && this.currentDepriciationmethod.assetDepreciationBasis && this.currentDepriciationmethod.assetDepreciationMemo)) {
+            this.currentDepriciationmethod.createdBy = this.userName;
+            this.currentDepriciationmethod.updatedBy = this.userName;
             this.depriciationMethodService.add(this.currentDepriciationmethod).subscribe(depriciationmethod => {
                 this.currentDepriciationmethod = depriciationmethod;
-                this.alertService.showMessage('Depriciationmethod  added successfully.');
+                this.alertService.showMessage('Depriciation Method  added successfully.');
                 this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
                     this.depriciationMethodList = depriciationmethods[0];
                 });
@@ -60,20 +67,27 @@ export class DepriciationMethodComponent implements OnInit {
     }
 
     updatedepriciationmethod(): void {
-        this.depriciationMethodService.update(this.depriciationToUpdate).subscribe(depriciationmethod => {
-            this.alertService.showMessage('Depriciationmethod  updated successfully.');
-            this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
-                this.depriciationMethodList = depriciationmethods[0];
+        if (!(this.depriciationToUpdate.assetDepreciationMethodName && this.depriciationToUpdate.assetDepreciationBasis && this.depriciationToUpdate.assetDepreciationMemo)) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        else {
+            this.currentDepriciationmethod.updatedBy = this.userName;
+            this.depriciationMethodService.update(this.depriciationToUpdate).subscribe(depriciationmethod => {
+                this.alertService.showMessage('Depriciation Method  updated successfully.');
+                this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
+                    this.depriciationMethodList = depriciationmethods[0];
+                });
+                this.updateMode = false;
+                this.resetdepriciationmethod();
+                this.dismissModel();
             });
-            this.updateMode = false;
-            this.resetdepriciationmethod();
-            this.dismissModel();
-        });
+        }
     }
 
     removedepriciationmethod(): void {
         this.depriciationMethodService.remove(this.currentDepriciationmethod.assetDepreciationMethodId).subscribe(response => {
-            this.alertService.showMessage("Depriciationmethod  removed successfully.");
+            this.alertService.showMessage("Depriciation Method  removed successfully.");
             this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
                 this.depriciationMethodList = depriciationmethods[0];
                 this.modal.close();
@@ -109,7 +123,7 @@ export class DepriciationMethodComponent implements OnInit {
             this.Active = "In Active";
             this.depriciationToUpdate.isActive == false;
             this.depriciationMethodService.update(this.depriciationToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Status updated successfully.');
+                this.alertService.showMessage('Depriciation Method updated successfully.');
                 this.depriciationMethodService.getAll().subscribe(assets => {
                     this.depriciationMethodList = assets[0];
                 });
@@ -121,7 +135,7 @@ export class DepriciationMethodComponent implements OnInit {
             this.Active = "Active";
             this.depriciationToUpdate.isActive == true;
             this.depriciationMethodService.update(this.depriciationToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Status updated successfully.');
+                this.alertService.showMessage('Depriciation Method updated successfully.');
                 this.depriciationMethodService.getAll().subscribe(assets => {
                     this.depriciationMethodList = assets[0];
                 });

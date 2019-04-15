@@ -51,6 +51,9 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
+                    assetIntangibleTypeSingleScreen.UpdatedDate = DateTime.Now;
+                    assetIntangibleTypeSingleScreen.CreatedDate = DateTime.Now;
                     assetIntangibleTypeSingleScreen.IsActive = true;
                     assetIntangibleTypeSingleScreen.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Add(assetIntangibleTypeSingleScreen);
@@ -79,6 +82,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     if (assetIntangibleTypeSingleScreen.AssetIntangibleTypeSingleId > 0)
                     {
+                        assetIntangibleTypeSingleScreen.UpdatedDate = DateTime.Now;
                         unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Update(assetIntangibleTypeSingleScreen);
                         unitOfWork.SaveChanges();
                         return Ok(assetIntangibleTypeSingleScreen);

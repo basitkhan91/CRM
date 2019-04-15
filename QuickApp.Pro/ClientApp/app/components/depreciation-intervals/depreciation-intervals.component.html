@@ -56,7 +56,7 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Memo</th>
-                                    <th>&nbsp;</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -123,19 +123,19 @@
         </div>
         <div class="modal-body">
             <p>
-                <span class="col-sm-3"><b>ID: </b></span> <span class="col-sm-6">
+                <span class="col-sm-3"><b>ID: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
                     <input type="text" [(ngModel)]="depriciationIntervalsToUpdate.assetDepreciationIntervalId" class="form-control">
                 </span>
             </p>
             <hr>
             <p>
-                <span class="col-sm-3"><b>Name: </b></span> <span class="col-sm-6">
+                <span class="col-sm-3"><b>Name: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
                     <input type="text" [(ngModel)]="depriciationIntervalsToUpdate.assetDepreciationIntervalName" class="form-control">
                 </span>
             </p>
             <hr>
             <p>
-                <span class="col-sm-3"><b>Memo: </b></span> <span class="col-sm-6">
+                <span class="col-sm-3"><b>Memo: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
                     <textarea [(ngModel)]="depriciationIntervalsToUpdate.assetDepreciationIntervalMemo" class="form-control"></textarea>
                 </span>
             </p>

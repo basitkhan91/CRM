@@ -51,6 +51,8 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    assetType.CreatedDate = DateTime.Now;
+                    assetType.UpdatedDate = DateTime.Now;
                     assetType.IsActive = true;
                     assetType.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetTypeSingleScreen>().Add(assetType);
@@ -77,7 +79,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //assetType.IsActive = !assetType.IsActive;
+                    assetType.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<AssetTypeSingleScreen>().Update(assetType);
                     unitOfWork.SaveChanges();
                     return Ok(assetType);

@@ -4,6 +4,7 @@ import { AlertService } from "../../services/alert.service";
 import { AssetTypeSingleScreenService } from "../../services/AssetTypeSingleScreen/assettypesinglescreen.service";
 import { AssetTypeSingleScreen } from "../../models/assettypesinglescreen.model";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
     selector: 'app-asset-type-single-screen',
@@ -24,7 +25,7 @@ export class AssetTypeSingleScreenComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
 
-    constructor(private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
@@ -34,12 +35,18 @@ export class AssetTypeSingleScreenComponent implements OnInit {
         this.currentAssetTypeetStatus = new AssetTypeSingleScreen();
     }
 
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     addAssetType(): void {
         if (!(this.currentAssetTypeetStatus.assetTypeSingleId && this.currentAssetTypeetStatus.assetTypeName && this.currentAssetTypeetStatus.assetTypeMemo)) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.currentAssetTypeetStatus.assetTypeSingleId && this.currentAssetTypeetStatus.assetTypeName && this.currentAssetTypeetStatus.assetTypeMemo)) {
+            this.currentAssetTypeetStatus.createdBy = this.userName;
+            this.currentAssetTypeetStatus.updatedBy = this.userName;
             this.assetTypeService.add(this.currentAssetTypeetStatus).subscribe(asset => {
                 this.currentAssetTypeetStatus = asset;
                 this.alertService.showMessage('Asset Type added successfully.');
@@ -63,15 +70,22 @@ export class AssetTypeSingleScreenComponent implements OnInit {
     }
 
     updateAssetType(): void {
-        this.assetTypeService.update(this.assetTypeToUpdate).subscribe(asset => {
-            this.alertService.showMessage('Asset Type updated successfully.');
-            this.assetTypeService.getAll().subscribe(AssetTypes => {
-                this.assetTypeList = AssetTypes[0];
+        if (!(this.assetTypeToUpdate.assetTypeSingleId && this.assetTypeToUpdate.assetTypeName && this.assetTypeToUpdate.assetTypeMemo)) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        else {
+            this.currentAssetTypeetStatus.updatedBy = this.userName;
+            this.assetTypeService.update(this.assetTypeToUpdate).subscribe(asset => {
+                this.alertService.showMessage('Asset Type updated successfully.');
+                this.assetTypeService.getAll().subscribe(AssetTypes => {
+                    this.assetTypeList = AssetTypes[0];
+                });
+                this.updateMode = false;
+                this.resetAssetType();
+                this.dismissModel();
             });
-            this.updateMode = false;
-            this.resetAssetType();
-            this.dismissModel();
-        });
+        }
     }
 
     removeAssetType(): void {

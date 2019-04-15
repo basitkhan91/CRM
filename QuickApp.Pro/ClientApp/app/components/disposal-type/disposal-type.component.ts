@@ -4,6 +4,7 @@ import { AlertService } from '../../services/alert.service';
 import { DisposalType } from '../../models/disposal-type.model';
 import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-disposal-type',
@@ -24,7 +25,7 @@ export class DisposalTypeComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
 
-    constructor(private alertService: AlertService, private disposalTypeService: DisposalTypeService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private disposalTypeService: DisposalTypeService, private authService: AuthService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
@@ -34,12 +35,18 @@ export class DisposalTypeComponent implements OnInit {
         this.currentdisposalType = new DisposalType();
     }
 
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     adddisposalType(): void {
         if (!(this.currentdisposalType.assetDispoalId && this.currentdisposalType.assetDisposalName && this.currentdisposalType.assetDisposalMemo)) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.currentdisposalType.assetDispoalId && this.currentdisposalType.assetDisposalName && this.currentdisposalType.assetDisposalMemo)) {
+            this.currentdisposalType.createdBy = this.userName;
+            this.currentdisposalType.updatedBy = this.userName;
             this.disposalTypeService.add(this.currentdisposalType).subscribe(disposalType => {
                 this.currentdisposalType = disposalType;
                 this.alertService.showMessage('Disposal Type added successfully.');
@@ -60,15 +67,22 @@ export class DisposalTypeComponent implements OnInit {
 
 
     updatedisposalType(): void {
-        this.disposalTypeService.update(this.assetDisposalToUpdate).subscribe(disposalType => {
-            this.alertService.showMessage('Disposal Type  updated successfully.');
-            this.disposalTypeService.getAll().subscribe(disposalTypes => {
-                this.disposalTypeList = disposalTypes[0];
+        if (!(this.assetDisposalToUpdate.assetDispoalId && this.assetDisposalToUpdate.assetDisposalName && this.assetDisposalToUpdate.assetDisposalMemo)) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        else {
+            this.currentdisposalType.updatedBy = this.userName;
+            this.disposalTypeService.update(this.assetDisposalToUpdate).subscribe(disposalType => {
+                this.alertService.showMessage('Disposal Type  updated successfully.');
+                this.disposalTypeService.getAll().subscribe(disposalTypes => {
+                    this.disposalTypeList = disposalTypes[0];
+                });
+                this.updateMode = false;
+                this.resetdisposalType();
+                this.dismissModel();
             });
-            this.updateMode = false;
-            this.resetdisposalType();
-            this.dismissModel();
-        });
+        }
     }
 
     removedisposalType(): void {

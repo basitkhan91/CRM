@@ -62,6 +62,7 @@
                                     <th>Name</th>
                                     <th>Depriciation Basis</th>
                                     <th>Memo</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -130,25 +131,25 @@
         </div>
         <div class="modal-body">
             <p>
-                <span class="col-sm-3"><b>ID: </b></span> <span class="col-sm-6">
+                <span class="col-sm-3"><b>ID: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
                     <input type="text" [(ngModel)]="depriciationToUpdate.assetDepreciationId" class="form-control">
                 </span>
             </p>
             <hr>
             <p>
-                <span class="col-sm-3"><b>Name: </b></span> <span class="col-sm-6">
+                <span class="col-sm-3"><b>Name: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
                     <input type="text" [(ngModel)]="depriciationToUpdate.assetDepreciationMethodName" class="form-control">
                 </span>
             </p>
             <hr>
             <p>
-                <span class="col-sm-3"><b>Basis: </b></span> <span class="col-sm-6">
+                <span class="col-sm-3"><b>Basis: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
                     <input type="text" [(ngModel)]="depriciationToUpdate.assetDepreciationBasis" class="form-control">
                 </span>
             </p>
             <hr>
             <p>
-                <span class="col-sm-3"><b>Memo: </b></span> <span class="col-sm-6">
+                <span class="col-sm-3"><b>Memo: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
                     <textarea [(ngModel)]="depriciationToUpdate.assetDepreciationMemo" class="form-control"></textarea>
                 </span>
             </p>
