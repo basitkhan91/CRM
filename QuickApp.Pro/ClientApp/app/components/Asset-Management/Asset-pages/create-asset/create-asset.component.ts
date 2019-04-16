@@ -65,25 +65,20 @@ export class CreateAssetComponent implements OnInit {
     constructor(private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService,  private authService: AuthService, ) {
         this.dataSource = new MatTableDataSource();
-       
-        //if (this.assetService.currentAssetId != null && this.assetService.currentAssetId > 0 && this.assetService.isEditMode == true) {
-        //    //TODO : call the getAssetById method and add it in the currentAsset
-        //}
-
-
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
 
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
             this.updateMode = true;
-            //if (this.currentAsset.isIntangible ==true) {
-            //    this.currentAsset.isDepreciable = false;
-            //    this.currentAsset.isIntangible = true;
-            //}
-            //else {
-            //    this.currentAsset.isDepreciable = true;
-            //    this.currentAsset.isIntangible = false;
-            //}
+
+            if (this.currentAsset.isIntangible ==true) {
+                this.currentAsset.isDepreciable = false;
+                this.currentAsset.isIntangible = true;
+            }
+            else {
+                this.currentAsset.isDepreciable = true;
+                this.currentAsset.isIntangible = false;
+            }
            
         }
         if (this.currentAsset.expirationDate) {
@@ -400,12 +395,18 @@ export class CreateAssetComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allAssetTypeInfo = getAssetTypeList;
+        if (this.assetService.isEditMode == true && this.currentAsset.assetTypeId) {
+            this.getSelectedAssetType(this.currentAsset.assetTypeId);
+        }
     }
 
     private onIntangibletypeLoad(getAssetTypeList: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allIntangibleInfo = getAssetTypeList;
+        if (this.assetService.isEditMode == true && this.currentAsset.assetIntangibleTypeId) {
+            this.getSelectedIntangible(this.currentAsset.assetIntangibleTypeId);
+        }
     }
 
     private assetTypeData() {
@@ -548,12 +549,17 @@ export class CreateAssetComponent implements OnInit {
         }
     }
     getSelectedIntangible(selectedObj) {
-        this.currentAsset.assetIntangibleTypeId = selectedObj.assetIntangibleTypeId;
-        this.currentSelectedIntangibleAssetType = selectedObj;
+        this.currentSelectedIntangibleAssetType = Object.assign({}, this.allIntangibleInfo.filter(function (intangible) {
+            return intangible.assetIntangibleTypeId == selectedObj;
+        })[0]);;
+       
+      
     }
     getSelectedAssetType(selectedAssetObj) {
-        this.currentAsset.assetTypeId = selectedAssetObj.assetTypeId;
-        this.currentSelectedAssetType = selectedAssetObj;
+        
+        this.currentSelectedAssetType = Object.assign({}, this.allAssetTypeInfo.filter(function (asset) {
+            return asset.assetTypeId == selectedAssetObj;
+        })[0]);;
     }
 
     loadDepricationMethod() {

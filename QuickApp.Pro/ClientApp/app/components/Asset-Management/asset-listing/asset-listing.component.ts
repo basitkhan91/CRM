@@ -74,6 +74,13 @@ export class AssetListingComponent implements OnInit {
 
     }
 
+    public navigateTogeneralInfo() {
+        this.assetService.isEditMode = false;
+        this.assetService.enableExternal = false;
+        this._route.navigateByUrl('assetmodule/assetpages/app-create-asset');
+
+    }
+
     openAssetToEdit(row) {
         this.assetService.isEditMode = true;
         this.isSaving = true;
