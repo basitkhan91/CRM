@@ -143,8 +143,8 @@ export class AssetcreateComponent implements OnInit {
             else {
                 this.currentAssetObj.residualValue = null;
             }
-            this.currentAssetObj.createdBy = this.username;
-            this.currentAssetObj.updatedBy = this.username;
+            this.currentAssetObj.createdBy = this.userName;
+            this.currentAssetObj.updatedBy = this.userName;
             this.assetTypeService.addAssetType(this.currentAssetObj).subscribe(assetData => {
                 this.currentAssetObj = assetData;
                 this.alertService.showMessage('Asset Type added successfully.');
@@ -155,7 +155,7 @@ export class AssetcreateComponent implements OnInit {
             });
         }
         else {
-            this.currentAssetObj.updatedBy = this.username;
+            this.currentAssetObj.updatedBy = this.userName;
             this.assetTypeService.updateAssetType(this.currentAssetObj).subscribe(asset => {
                 this.alertService.showMessage('Asset Type updated successfully.');
                 this.assetTypeService.getAll().subscribe(assetTypeData => {
