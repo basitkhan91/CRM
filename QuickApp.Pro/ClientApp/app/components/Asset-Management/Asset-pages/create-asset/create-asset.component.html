@@ -157,7 +157,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Depreciation Method</label>
                     <div class="col-sm-7">
-                        <select class="form-control" [(ngModel)]="currentSelectedIntangibleAssetType.depreciationMethod" [ngModelOptions]="{standalone: true}">
+                        <select disabled="" class="form-control" [(ngModel)]="currentSelectedIntangibleAssetType.depreciationMethod" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let depMethod of depriciationMethodList" [ngValue]="depMethod.assetDepreciationMethodId">  {{depMethod.assetDepreciationMethodName}}</option>
                         </select>
                     </div>
@@ -309,7 +309,7 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Residual %</label>
                             <div class="col-sm-7">
-                                <select class="form-control" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.residualValue">
+                                <select class="form-control" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.residualPercentage">
                                     <option>1%</option>
                                     <option>2%</option>
                                     <option>3%</option>
