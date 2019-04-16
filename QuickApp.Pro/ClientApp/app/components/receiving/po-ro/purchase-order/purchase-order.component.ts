@@ -10,6 +10,7 @@ import { MasterComapnyService } from '../../../../services/mastercompany.service
 import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
+import { ReceivingService } from '../../../../services/receiving/receiving.service';
 
 @Component({
     selector: 'app-purchase-order',
@@ -67,7 +68,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 	allPolistInfo: any[] = [];
 	allPurchaseorderInfo: any[] = [];
 	/** Currency ctor */
-	constructor(private authService: AuthService, private _fb: FormBuilder, public _router: Router, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public vendorservice: VendorService, private dialog: MatDialog) {
+    constructor(private receivingService: ReceivingService,private authService: AuthService, private _fb: FormBuilder, public _router: Router, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public vendorservice: VendorService, private dialog: MatDialog) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		this.vendorservice.ShowPtab = false;
@@ -157,7 +158,8 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
 	private onDataLoadordrSuccessful(getCreditTermsList: any[]) {
 		// alert('success');
-		this.allPurchaseorderInfo = getCreditTermsList;
+        this.allPurchaseorderInfo = getCreditTermsList;
+        this.receivingService.selectedPurchaseorderCollection = this.allPurchaseorderInfo;
 		this.vendorservice.selectedPoCollection = this.allPurchaseorderInfo;
 		
 	}

@@ -1357,8 +1357,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
-            if (capData.selectedAircraftTypes.length > 0) {
-                var arr = capData.selectedAircraftTypes;
+            if (this.selectedAircraftTypes.length > 0) {
+                var arr = this.selectedAircraftTypes;
                 var selectedvalues = arr.join(",");
                 this.itemser.getAircraftTypes(selectedvalues).subscribe(
                     results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),

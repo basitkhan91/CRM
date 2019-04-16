@@ -28,5 +28,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getIntegrationData(long id);
 
         IEnumerable<object> getCapabilityData(long id);
+        IEnumerable<object> getItemMasterData(long id);
     }
 }

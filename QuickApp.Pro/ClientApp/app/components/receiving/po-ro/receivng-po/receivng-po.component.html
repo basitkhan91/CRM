@@ -9,41 +9,34 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">PO Num</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" value="Creating" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.purchaseOrderNumber">
+                    <input class="form-control" type="text" value="Creating" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber">
                 </div>
             </div>
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Open Date</label>
                 <div class="col-sm-7">
-                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateRequested"></p-calendar>
-                    <!--<input type="date" id="dp1547623339381" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateRequested">-->
+                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
                 </div>
             </div>
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Need By</label>
                 <div class="col-sm-7">
-                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.needByDate"></p-calendar>
-                    <!--<input type="date" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.needByDate">-->
+                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate"></p-calendar>
                 </div>
             </div>
             <div class="form-group col-sm-12 input-icon1 ">
-
                 <label class="control-label col-sm-4">Priority </label>
-
                 <div class="inner-addon right-addon inline-block col-sm-7">
-                    <!--<i class="fa fa-caret-down"></i>-->
-                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.priorityId">
+                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.priorityId">
                         <option *ngFor="let priorityName of allPriorityInfo" [ngValue]="priorityName.priorityId">{{priorityName.description}}</option>
                     </select>
                 </div>
-
-                <!--<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="priorty(modelEdits)"><i class="fa fa-plus"></i></a>-->
             </div>
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Deferred Receiver</label>
                 <div class="col-sm-7">
                     <div class="inner-addon">
-                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
+                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -51,7 +44,7 @@
                 <label class="control-label col-sm-4">Resale</label>
                 <div class="col-sm-7">
                     <div class="inner-addon">
-                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
+                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -62,14 +55,12 @@
                 <label class="control-label col-sm-4">Vendor Num</label>
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
-
-                        <p-autoComplete (onSelect)="onVendorCodeselected($event)" (onKeyUp)=eventvendorHandler($event) [(ngModel)]="sourcePoApproval.vendorCode" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
+                        <p-autoComplete (onSelect)="onVendorCodeselected($event)" (onKeyUp)=eventvendorHandler($event) [(ngModel)]="purchaseOrderData.vendorCode" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-vendorCode pTemplate="item">
                                 <div class="ui-helper-clearfix">{{vendorCode}}</div>
                             </ng-template>
                         </p-autoComplete>
-                        <!--<div *ngIf="disableSaveVenderCode" class="clr-red">Already Exists</div>-->
                     </div>
 
                 </div>
@@ -80,16 +71,13 @@
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
 
-                        <p-autoComplete (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                        <p-autoComplete (onKeyUp)=eventHandler($event) [(ngModel)]="purchaseOrderData.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-vendorName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{vendorName}}</div>
                             </ng-template>
                         </p-autoComplete>
-                        <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
-
                     </div>
-
                 </div>
             </div>
 
@@ -98,30 +86,29 @@
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
                         <i class="fa fa-search"></i>
-                        <input type="text" class="form-control names ui-autocomplete-input" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.firstName" autocomplete="off">
+                        <input type="text" class="form-control names ui-autocomplete-input" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.firstName" autocomplete="off">
                     </div>
                 </div>
             </div>
+
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Contact Phone</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.workPhone">
+                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
                 </div>
             </div>
+
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Credit Limit &amp; Terms</label>
                 <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.terms">
+                    <input class="form-control" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms">
                 </div>
                 <div class="col-sm-4">
-
-                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.creditLimit">
+                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit">
                         <option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
-
                     </select>
                 </div>
             </div>
-
         </div>
 
         <div class="col-sm-3">
@@ -130,7 +117,7 @@
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
                         <div class="inner-addon right-addon inline-block">
-                            <p-autoComplete [(ngModel)]="sourcePoApproval.requestedBy" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                            <p-autoComplete [(ngModel)]="purchaseOrderData.requestedBy" [ngModelOptions]="{standalone: true}" [suggestions]="employeeNameCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true">
                                 <ng-template let-firstName pTemplate="item">
                                     <div class="ui-helper-clearfix">{{firstName}}</div>
@@ -144,89 +131,30 @@
                 <label class="control-label col-sm-4">Approver</label>
                 <div class="col-sm-7">
                     <div class="inner-addon ">
-                        <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.approver">
+                        <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver">
                     </div>
                 </div>
             </div>
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Approved Date</label>
                 <div class="col-sm-7">
-                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateApprovied"></p-calendar>
-
-                    <!--<input class="form-control datepicker hasDatepicker" type="date"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.dateApprovied" >-->
+                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied"></p-calendar>
                 </div>
             </div>
+
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Status</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.statusId" >
+                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.statusId" >
                 </div>
             </div>
         </div>
+
         <div class="col-sm-3">
-            <!--<div class="form-group col-sm-12">
-        <label class="control-label col-sm-4">Company</label>
-        <div class="col-sm-7">
-            <select [(ngModel)]="sourcePoApproval.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getBUList1(sourcePoApproval.masterCompanyId)">
-                <option *ngFor="let ataName of allManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </div>
-    </div>-->
-            <!-- Check Box Management Data -->
-            <!--<div *ngIf="showManagement" class="form-group col-sm-12">
-                    <p-treeTable [value]="gridData" [columns]="cols1" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedNode">
-
-                        <ng-template pTemplate="header" let-columns>
-
-                            <tr>
-                                <th *ngFor="let col of columns">
-                                    {{col.header}}
-                                </th>
-
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-
-                                <tr [ttSelectableRow]="rowNode">
-                                    <td *ngFor="let col of columns; let i = index">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-
-
-                        </ng-template>
-                </p-treeTable>
-            </div>-->
-            <!-- Check box Management Date End -->
-            <!--<div class="form-group col-sm-12">
-        <label class="control-label col-sm-4">BU</label>
-        <div class="col-sm-7">
-            <select class="w70" [(ngModel)]="sourcePoApproval.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourcePoApproval.buid1)">
-                <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group col-sm-12">
-        <label class="control-label col-sm-4">Division</label>
-        <div class="col-sm-7">
-            <select class="w70" [(ngModel)]="sourcePoApproval.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourcePoApproval.depid1)">
-                <option *ngFor="let ataName of departmentList" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group col-sm-12">
-        <label class="control-label col-sm-4">Department</label>
-        <div class="col-sm-7">
-            <select class="w70" [(ngModel)]="sourcePoApproval.divid1" [ngModelOptions]="{standalone: true}">
-                <option *ngFor="let ataName of divisionlist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </div>
-    </div>-->
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Company</label>
                 <div class="col-sm-7">
-                    <select [(ngModel)]="sourcePoApproval.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourcePoApproval.masterCompanyId)">
+                    <select [(ngModel)]="purchaseOrderData.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(purchaseOrderData.masterCompanyId)">
                         <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                     </select>
                 </div>
@@ -234,7 +162,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">BU</label>
                 <div class="col-sm-7">
-                    <select [(ngModel)]="sourcePoApproval.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourcePoApproval.buid1)">
+                    <select [(ngModel)]="purchaseOrderData.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(purchaseOrderData.buid1)">
                         <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                     </select>
                 </div>
@@ -242,7 +170,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Dept</label>
                 <div class="col-sm-7">
-                    <select [(ngModel)]="sourcePoApproval.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourcePoApproval.depid1)">
+                    <select [(ngModel)]="purchaseOrderData.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(purchaseOrderData.depid1)">
                         <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                     </select>
                 </div>
@@ -251,7 +179,7 @@
                 <label class="control-label col-sm-4">Division</label>
                 <div class="col-sm-7">
                     <div>
-                        <select [(ngModel)]="sourcePoApproval.divid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(sourcePoApproval.divid1)">
+                        <select [(ngModel)]="purchaseOrderData.divid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(purchaseOrderData.divid1)">
                             <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                         </select>
                     </div>
@@ -260,7 +188,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Memo</label>
                 <div class="col-sm-7">
-                    <textarea class="h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.notes"></textarea>
+                    <textarea class="h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
                 </div>
             </div>
         </div>
@@ -270,17 +198,9 @@
 </div>
 <div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
     <div class="x_panel">
-        <!--<ul class="nav nav-pills">
-            <li class="active"><a data-toggle="tab" href="#tab1">Parts List</a></li>
-            <li><a data-toggle="tab" href="#tab2">Approve</a></li>
-            <li><a data-toggle="tab" href="#tab3">Vendor Capes</a></li>
-            <li class="vaddress"><a data-toggle="tab" href="#tab4">Address</a></li>
-        </ul>-->
         <div class="tab-content">
             <div id="tab1" class="tab-pane  active">
                 <div id="adminsearchlocationajax">
-                    <!--<button (click)="addPartNumber()" class="add-row-btn">Add Part Number</button>-->
-                    <!--<button data-toggle="modal" data-target="#add-multiple-pn" class="add-multiple-pn-btn" (click)="addMultiplePartNumbers(contentMultipleParts)">Add Multiple Part Numbers</button>-->
                     <div class="table-responsive">
                         <div class="clear"></div>
                         <table class="table table-bordered">
@@ -295,54 +215,46 @@
                                     <th class="from-item-master">Division</th>
                                     <th class="from-item-master">Dept</th>
                                     <th></th>
-
                                 </tr>
                             </thead>
                             <tbody *ngFor="let partList of partListData;let row_index=index">
                                 <tr>
-
                                     <td>
-
                                         {{partList.partNumber}}
                                     </td>
-
-                                    <td>{{partList.quantityOrdered}}</td>
-
-
-                                    <td>{{partList.quantityReceived}}</td>
-                                    <td>{{partList.quantityBackOrdered}}</td>
-
-
                                     <td>
-                                        Adso
-                                        <!--<select class="form-control w90" [(ngModel)]="partList.masterCompanyId" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partList.masterCompanyId)">
-                <option *ngFor="let ataName of mainPartcompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>-->
+                                    {{partList.quantityOrdered}}
                                     </td>
                                     <td>
-                                        Silverxis
-                                        <!--<select class="form-control w90" [(ngModel)]="partList.buid1" [ngModelOptions]="{standalone: true}" (change)="getPartDepartmentlist(partList.buid1)">
-                <option *ngFor="let ataName of partBulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>-->
+                                    {{partList.quantityReceived}}
                                     </td>
                                     <td>
-                                        Developing
-                                        <!--<select class="form-control w90" [(ngModel)]="partList.depid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionlist(partList.depid1)">
-                <option *ngFor="let ataName of partDepartmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>-->
+                                    {{partList.quantityBackOrdered}}
                                     </td>
                                     <td>
-                                        .Net
-                                        <!--<select class="form-control w90" [(ngModel)]="partList.divid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionChangeManagementCode(partList.divid1)">
-                <option *ngFor="let ataName of partDivisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>-->
+                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partList.masterCompanyId)">
+                                            <option *ngFor="let ataName of mainPartcompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                        </select>
                                     </td>
                                     <td>
-                                        <button [disabled]="!partList.quantityBackOrdered" (click)="addDetailsClick(partList)" style="color:red">Add Details</button>
+                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getPartDepartmentlist(partList.buid1)">
+                                                <option *ngFor="let ataName of allManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                         </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.departmentId" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionlist(partList.depid1)">
+                                                    <option *ngFor="let ataName of allManagemtninfo " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                         </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.divid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionChangeManagementCode(partList.divid1)">
+                                                 <option *ngFor="let ataName of allManagemtninfo " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                         </select>
+                                    </td>
+                                    <td>
+                                        <a *ngIf="partList.quantityBackOrdered" (click)="addDetailsClick(partList)" style="color:red">Add Details</a>
 
                                     </td>
-
-
                                 </tr>
                                 <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
                                     <th></th>
@@ -412,8 +324,9 @@
                                     <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
                                     <td colspan="20"><a (click)="deleteSplitShipment(partChildList,row_no,row_index)"><i class="fa fa-trash"></i></a></td>
                                 </tr>
+                                <br />
                                 <ng-container *ngIf="partList.showGrid">
-                                    <tr *ngFor="let obj of partList.stocklineListObj;let tabindex=index">
+                                    <tr *ngFor="let stocklineObj of partList.stocklineListObj;let tabindex=index">
                                         <td colspan="9">
                                             <div class="receiving-po-ro-edit-box">
 
@@ -430,11 +343,11 @@
                                                         <div class="form-group col-sm-12">
                                                             <label class="control-label col-sm-4 wauto">Qty to receive</label>
                                                             <div class="col-sm-7">
-                                                                <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">
-                                                                <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" maxlength="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive" (keyup)="restrictedQuantitytoReceive(partList,obj.quantityToReceive)">
-                                                                <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" max="partList.quantityBackOrdered" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive" (change)="changeQuantityToReceive(partList,obj.quantityToReceive)">
+                                                                <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive">
+                                                                <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" maxlength="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive" (keyup)="restrictedQuantitytoReceive(partList,stocklineObj.quantityToReceive)">
+                                                                <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" max="partList.quantityBackOrdered" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive" (change)="changeQuantityToReceive(partList,stocklineObj.quantityToReceive)">
 
-                                                                <!--<input class="form-control w70" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.quantityToReceive">-->
+                                                                <!--<input class="form-control w70" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive">-->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -442,7 +355,7 @@
                                                         <div class="form-group col-sm-12">
                                                             <label class="control-label col-sm-4">Condtion</label>
                                                             <div class="col-sm-7">
-                                                                <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId">
+                                                                <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.conditionId">
                                                                     <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                                                                 </select>
                                                             </div>
@@ -451,6 +364,9 @@
                                                 </div>
                                                 <div class="clear"></div>
                                                 <hr>
+
+                                                <!-- Details Part for Stockline Start -->
+
                                                 <div id="owner-details-slider" class="banner banner-slider carousel slide carousel-fade bglight carousel-sync">
                                                     <div class="carousel-inner ptop10">
                                                         <div class="item active carousel-item">
@@ -464,25 +380,25 @@
                                                                                 </div>
                                                                                 <div class="form-group col-sm-10" *ngIf="tabindex==0">
                                                                                     <label class="control-label col-sm-4">Same Details for all Parts</label>
-                                                                                    <div class="col-sm-7" *ngIf="!showRestrictQuantity">
-                                                                                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.resale" (change)="sameDetailsforAllParts(partList)" >
-                                                                                        <!--<input [(ngModel)]="obj.checkbox" [ngModelOptions]="{standalone: true}" type="checkbox" (change)="sameDetailsforAllParts(partList)">-->
+                                                                                    <div class="col-sm-7" *ngIf="showRestrictQuantity">
+                                                                                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.resale" (change)="sameDetailsforAllParts(partList)">
+                                                                                        <!--<input [(ngModel)]="stocklineObj.checkbox" [ngModelOptions]="{standalone: true}" type="checkbox" (change)="sameDetailsforAllParts(partList)">-->
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-sm-4">
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Company <strong class="clr-red">*</strong></label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.companyId" [ngModelOptions]="{standalone: true}" (change)="BUList(obj)">
-                                                                                                <option *ngFor="let cmpny of maincompanylist" [ngValue]="cmpny.managementStructureId">{{cmpny.code}}</option>
+                                                                                            <select [(ngModel)]="stocklineObj.companyId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartBUList(stocklineObj)">
+                                                                                                <option *ngFor="let company of maincompanylist" [ngValue]="company.managementStructureId">{{company.code}}</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">BU <strong *ngIf="showBuError" class="clr-red">*</strong></label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="Departmentlist(obj)">
-                                                                                                <option *ngFor="let bu of bulist" [ngValue]="bu.managementStructureId">{{bu.code}}</option>
+                                                                                            <select [(ngModel)]="stocklineObj.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartDepartmentlist(stocklineObj)">
+                                                                                                <option *ngFor="let business of bulist" [ngValue]="business.managementStructureId">{{business.code}}</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -490,7 +406,7 @@
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Division <strong *ngIf="showDivError" class="clr-red">*</strong></label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.departmentId" [ngModelOptions]="{standalone: true}" (change)="Divisionlist(obj)">
+                                                                                            <select [(ngModel)]="stocklineObj.departmentId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartDivisionlist(stocklineObj)">
                                                                                                 <option *ngFor="let dep of departmentList " [ngValue]="dep.managementStructureId">{{dep.code}}</option>
                                                                                             </select>
                                                                                         </div>
@@ -499,7 +415,7 @@
                                                                                         <label class="control-label col-sm-4">Dept <strong *ngIf="showDepError" class="clr-red">*</strong></label>
                                                                                         <div class="col-sm-7">
                                                                                             <div>
-                                                                                                <select [(ngModel)]="obj.divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(obj)">
+                                                                                                <select [(ngModel)]="stocklineObj.divisionId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartgetDivisionChangeManagementCode(stocklineObj)">
                                                                                                     <option *ngFor="let div of divisionlist " [ngValue]="div.managementStructureId">{{div.code}}</option>
                                                                                                 </select>
                                                                                             </div>
@@ -508,46 +424,41 @@
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Site <strong class="clr-red">*</strong></label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)">
-                                                                                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <select [(ngModel)]="stocklineObj.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange(stocklineObj)">
+                                                                                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
                                                                                             </select>
-                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.site">-->
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Warehouse</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)">
-                                                                                                <option *ngFor="let site of obj.allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <select [(ngModel)]="stocklineObj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(stocklineObj)">
+                                                                                                <option *ngFor="let warehouse of stocklineObj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option>
                                                                                             </select>
-                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.warehouse">-->
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Location</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)">
-                                                                                                <option *ngFor="let site of obj.allLocations" [ngValue]="site.locationId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <select [(ngModel)]="stocklineObj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(stocklineObj)">
+                                                                                                <option *ngFor="let location of stocklineObj.allLocations" [ngValue]="location.locationId">{{location.name}}</option>
                                                                                             </select>
-                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.location">-->
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Shelf</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)">
-                                                                                                <option *ngFor="let site of obj.allShelfs" [ngValue]="site.shelfId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <select [(ngModel)]="stocklineObj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(stocklineObj)">
+                                                                                                <option *ngFor="let shelf of stocklineObj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option>
                                                                                             </select>
-                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.shelf">-->
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Bin</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)">
-                                                                                                <option *ngFor="let site of obj.allBins" [ngValue]="site.binId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <select [(ngModel)]="stocklineObj.binId" [ngModelOptions]="{standalone: true}">
+                                                                                                <option *ngFor="let bin of stocklineObj.allBins" [ngValue]="bin.binId">{{bin.name}}</option>
                                                                                             </select>
-                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.bin">-->
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -555,7 +466,7 @@
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Obtain From</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="obj.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control">
+                                                                                            <select [(ngModel)]="stocklineObj.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control">
 
                                                                                                 <option value="1">Customer</option>
                                                                                                 <option value="2">Other </option>
@@ -563,18 +474,18 @@
                                                                                             </select>
                                                                                         </div>
                                                                                         <label class="control-label col-sm-4"></label>
-                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="obj.obtainFromType == 1">
-                                                                                            <select [(ngModel)]="obj.obtainFrom" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
+                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.obtainFromType == 1">
+                                                                                            <select [(ngModel)]="stocklineObj.obtainFrom" [ngModelOptions]="{standalone: true}">
+                                                                                                <option *ngFor="let customer of allCustomersForStockline" [ngValue]="customer.name">{{customer.name}}</option>
                                                                                             </select>
                                                                                             <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                                                                                         </div>
-                                                                                        <div class="col-sm-7" *ngIf="obj.obtainFromType == 2">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.obtainFrom">
+                                                                                        <div class="col-sm-7" *ngIf="stocklineObj.obtainFromType == 2">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.obtainFrom">
                                                                                         </div>
-                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="obj.obtainFromType == 3">
-                                                                                            <select [(ngModel)]="obj.obtainFrom" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.obtainFromType == 3">
+                                                                                            <select [(ngModel)]="stocklineObj.obtainFrom" [ngModelOptions]="{standalone: true}">
+                                                                                                <option *ngFor="let vendor of allVendorListForStockline" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                             </select>
                                                                                             <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                                                                                         </div>
@@ -584,7 +495,7 @@
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4" for="obtainFrom">Owner</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select id="obtainFrom" [(ngModel)]="obj.ownerType" [ngModelOptions]="{standalone: true}" class="form-control">
+                                                                                            <select id="obtainFrom" [(ngModel)]="stocklineObj.ownerType" [ngModelOptions]="{standalone: true}" class="form-control">
 
                                                                                                 <option value="1">Customer</option>
                                                                                                 <option value="2">Other </option>
@@ -592,26 +503,26 @@
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="form-group col-sm-12" *ngIf="obj.ownerType == 1">
+                                                                                    <div class="form-group col-sm-12" *ngIf="stocklineObj.ownerType == 1">
                                                                                         <label class="control-label col-sm-4"></label>
                                                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                                                            <select [(ngModel)]="obj.owner" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
+                                                                                            <select [(ngModel)]="stocklineObj.owner" [ngModelOptions]="{standalone: true}">
+                                                                                                <option *ngFor="let customer of allCustomersForStockline" [ngValue]="customer.name">{{customer.name}}</option>
                                                                                             </select>
                                                                                             <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="form-group col-sm-12" *ngIf="obj.ownerType== 2">
+                                                                                    <div class="form-group col-sm-12" *ngIf="stocklineObj.ownerType== 2">
                                                                                         <label class="control-label col-sm-4"></label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.owner">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.owner">
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="form-group col-sm-12" *ngIf="obj.ownerType == 3">
+                                                                                    <div class="form-group col-sm-12" *ngIf="stocklineObj.ownerType == 3">
                                                                                         <label class="control-label col-sm-4"></label>
                                                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                                                            <select [(ngModel)]="obj.owner" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <select [(ngModel)]="stocklineObj.owner" [ngModelOptions]="{standalone: true}">
+                                                                                                <option *ngFor="let vendor of allVendorListForStockline" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                             </select>
                                                                                             <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                                                                                         </div>
@@ -619,7 +530,7 @@
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4" for="obtainFrom">Tracable to</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <select id="obtainFrom" [(ngModel)]="obj.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
+                                                                                            <select id="obtainFrom" [(ngModel)]="stocklineObj.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
 
                                                                                                 <option [value]="1">Customer</option>
                                                                                                 <option [value]="2">Other </option>
@@ -628,24 +539,24 @@
                                                                                         </div>
                                                                                         <div class="form-group col-sm-12">
                                                                                             <label class="control-label col-sm-4"></label>
-                                                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="obj.traceableToType == 1">
-                                                                                                <select [(ngModel)]="obj.traceableTo" [ngModelOptions]="{standalone: true}">
-                                                                                                    <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
+                                                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.traceableToType == 1">
+                                                                                                <select [(ngModel)]="stocklineObj.traceableTo" [ngModelOptions]="{standalone: true}">
+                                                                                                    <option *ngFor="let customer of allCustomersForStockline" [ngValue]="customer.name">{{customer.name}}</option>
                                                                                                 </select>
                                                                                                 <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-group col-sm-12">
                                                                                             <label class="control-label col-sm-4"></label>
-                                                                                            <div class="col-sm-7" *ngIf="obj.traceableToType == 2">
-                                                                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.traceableTo">
+                                                                                            <div class="col-sm-7" *ngIf="stocklineObj.traceableToType == 2">
+                                                                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.traceableTo">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-group col-sm-12">
                                                                                             <label class="control-label col-sm-4"></label>
-                                                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="obj.traceableToType == 3">
-                                                                                                <select [(ngModel)]="obj.traceableTo" [ngModelOptions]="{standalone: true}">
-                                                                                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.traceableToType == 3">
+                                                                                                <select [(ngModel)]="stocklineObj.traceableTo" [ngModelOptions]="{standalone: true}">
+                                                                                                    <option *ngFor="let vendor of allVendorListForStockline" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                                 </select>
                                                                                                 <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                                                                                             </div>
@@ -656,49 +567,49 @@
                                                                                         <label class="control-label col-sm-4">MFG</label>
                                                                                         <div class="col-sm-7">
 
-                                                                                            <select [(ngModel)]="obj.manufacturerId" [ngModelOptions]="{standalone: true}">
+                                                                                            <select [(ngModel)]="stocklineObj.manufacturerId" [ngModelOptions]="{standalone: true}">
                                                                                                 <option *ngFor="let manufacturer of allManufacturerInfo" [ngValue]="manufacturer.manufacturerId">{{manufacturer.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                                             </select>
-                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.manufacturer">-->
+                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturer">-->
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">MFG Lot Num</label>
 
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.manufacturerLotNumber">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturerLotNumber">
                                                                                         </div>
                                                                                     </div>
 
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Mfg date</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.manufacturingDate"></p-calendar>
+                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturingDate"></p-calendar>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">MFG Trace</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.manufacturingTraceNumber">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturingTraceNumber">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">MFG Batch Num</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.manufacturingBatchNumber">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturingBatchNumber">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Expiration Date</label>
                                                                                         <div class="col-sm-7">
 
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.expirationDate"></p-calendar>
+                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.expirationDate"></p-calendar>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Unit Cost</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.purchaseOrderUnitCost">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.purchaseOrderUnitCost">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
@@ -713,47 +624,39 @@
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Parts Cert Num</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.partCertificationNumber">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.partCertificationNumber">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Cert By:</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input type="text" [(ngModel)]="obj.certifiedBy" [ngModelOptions]="{standalone: true}" />
+                                                                                            <input type="text" [(ngModel)]="stocklineObj.certifiedBy" [ngModelOptions]="{standalone: true}" />
                                                                                         </div>
                                                                                     </div><div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Certified Date</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.certifiedDate"></p-calendar>
+                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.certifiedDate"></p-calendar>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Tag Date</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.tagDate"></p-calendar>
+                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.tagDate"></p-calendar>
 
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Tag Type</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.tagType">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.tagType">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Certified Due Date</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.certifiedDueDate"></p-calendar>
+                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.certifiedDueDate"></p-calendar>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <!--<div class="form-group col-sm-12">
-                                                            <label class="control-label col-sm-4">Expiration Date</label>
-                                                            <div class="col-sm-7">
-                                                                <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.expirationDate"></p-calendar>
-                                                            </div>
-                                                        </div>-->
-
-
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -791,70 +694,54 @@
                                                                                     <div class="form-group col-sm-12">
                                                                                         <label class="control-label col-sm-4">Serial Num</label>
                                                                                         <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.serialNumber">
+                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.serialNumber">
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
 
                                                                             </div>
                                                                             <div class="col-sm-12" *ngIf="partList.isTimeLife">
-
                                                                                 <div class="form-group col-sm-12">
                                                                                     <h4>Time Life</h4>
                                                                                 </div>
-                                                                                <div class="col-sm-12">
-                                                                                    <div class="table-responsive">
-                                                                                        <table class="table table-bordered table-striped timelife-table">
-                                                                                            <thead>
-                                                                                                <tr>
-                                                                                                    <th colspan="15" class="text-center"><strong>TIME LIFE ADJUSTMENTS</strong></th>
-                                                                                                </tr>
-                                                                                            </thead>
-                                                                                            <tbody>
-                                                                                                <tr>
+                                                                                
 
-                                                                                                    <td>&nbsp;</td>
-                                                                                                    <td colspan="4" class="text-center clr1"><strong>CYCLES</strong></td>
-                                                                                                    <td colspan="4" class="text-center clr2"><strong>TIMES</strong></td>
-                                                                                                    <td colspan="4" class="text-center clr3"><strong>LAST</strong></td>
-                                                                                                </tr>
-                                                                                                <tr>
-
-                                                                                                    <td>Control Num</td>
-                                                                                                    <td class="clr1">Since New</td>
-                                                                                                    <td class="clr1">Since OVH</td>
-                                                                                                    <td class="clr1">Since Insp</td>
-                                                                                                    <td class="clr1">Since Repair</td>
-                                                                                                    <td class="clr2">Since New</td>
-                                                                                                    <td class="clr2">Since OVH</td>
-                                                                                                    <td class="clr2">Since Insp</td>
-                                                                                                    <td class="clr2">Since Repair</td>
-                                                                                                    <td class="clr3">Since New</td>
-                                                                                                    <td class="clr3">Since OVH</td>
-                                                                                                    <td class="clr3">Since Insp</td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <!--<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="timeLifeEditAllow" (change)="isTimeLifeEdit(timeLifeEditAllow)"></td>-->
-                                                                                                    <td>{{sourceStockLineSetup.controlNumber}}</td>
-                                                                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.cyclesSinceNew"></td>
-                                                                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.cyclesSinceOVH"></td>
-                                                                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.cyclesSinceRepair"></td>
-                                                                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.cyclesSinceInspection"></td>
-                                                                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.timeSinceNew"></td>
-                                                                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.timeSinceOVH"></td>
-                                                                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.timeSinceRepair"></td>
-                                                                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.timeSinceInspection"></td>
-                                                                                                    <td class="clr3"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.lastSinceNew"></td>
-                                                                                                    <td class="clr3"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.lastSinceOVH"></td>
-                                                                                                    <td class="clr3"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.lastSinceInspection"></td>
-                                                                                                </tr>
-
-
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </div>
-                                                                                    <div class="clear"></div>
+                                                                                <div class="table-responsive form-group col-sm-12"> 
+                                                                                         <table class="table table-bordered table-striped"> 
+                                                                                    <thead> 
+                                                                                        <tr> 
+                                                                                            <th colspan="2" class="text-center">Cycles</th> 
+                                                                                            <th colspan="2" class="text-center">Time</th>
+                                                                                            <th colspan="2" class="text-center">Last</th>
+                                                                                         </tr>
+                                                                                     </thead>
+                                                                                    <tbody> 
+                                                                                    <tr> 
+                                                                                        <!--<td>Remaining</td> <td><input type="text" class="w50" ></td>
+                                                                                        <td>Remaining</td><td><input type="text" class="w50" ></td>-->
+                                                                                        <td>Since New</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceNew" ></td>
+                                                                                        <td>Since New</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceNew"  ></td>
+                                                                                        <td>Since New</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.lastSinceNew" ></td>
+                                                                                     </tr>
+                                                                                    <tr>
+                                                                                        <td>Since Ovh</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceOVH" ></td>
+                                                                                        <td>Since Ovh</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceOVH" ></td>
+                                                                                        <td>Since Ovh</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.lastSinceOVH" ></td>
+                                                                                     </tr>
+                                                                                    <tr> 
+                                                                                        <td>Since Insp</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceInspection"></td>
+                                                                                        <td>Since Insp</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceInspection"></td>
+                                                                                        <td>Since Insp</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.lastSinceInspection" ></td>
+                                                                                     </tr>
+                                                                                    <tr> 
+                                                                                        <td>Since Repair</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceRepair"></td>
+                                                                                        <td>Since Repair</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceRepair"></td>
+                                                                                        <td></td><td></td>
+                                                                                    </tr>
+                                                                                   </tbody>
+                                                                                  </table>
                                                                                 </div>
+
                                                                             </div>
                                                                             <div class="col-sm-12" *ngIf="partList.itemTypeId==3">
 
@@ -906,13 +793,13 @@
 
                             </tbody>
                         </table>
-                       
+
                     </div>
                     <div *ngIf="showGrid">Hi</div>
                 </div>
             </div>
-           
-         
+
+
 
         </div>
         <div class="clear"></div>
@@ -925,755 +812,7 @@
         <br>
     </div>
 </div>
-<ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Issued Details</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Issued Details</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Site Name <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.siteName">
-                </div>
 
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 1 <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address1">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 2</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address2">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 3</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address3">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">City <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cscity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.city">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Primary State/Province <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.stateOrProvince">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4"> Postal <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.postalCode">
-                </div>
-
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Country <span class="clr-red"></span></label>
-                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.country">
-            </div>
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="!userForm.valid">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
-    </div>
-
-</ng-template>
-
-<!--<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-    <h4 class="modal-title" *ngIf="isEditMode">Edit Ship To Details</h4>
-    <h4 class="modal-title" *ngIf="!isEditMode">Add Ship To Details</h4>
-    <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-    <span aria-hidden="true">&times;</span>
-    </button>
-    </div>
-    <div class="modal-body">
-    <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndModel()">
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4">Site Name <span class="clr-red"></span></label>
-    <div class="col-sm-7">
-    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.siteName">
-    </div>
-
-    </div>
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4">Address Line 1 <span class="clr-red"></span></label>
-    <div class="col-sm-7">
-    <input class="form-control" type="text" id="cmaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address1">
-    </div>
-
-    </div>
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4">Address Line 2</label>
-    <div class="col-sm-7">
-    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address2">
-    </div>
-    </div>
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4">Address Line 3</label>
-    <div class="col-sm-7">
-    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address3">
-    </div>
-    </div>
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4">City <span class="clr-red"></span></label>
-    <div class="col-sm-7">
-    <input class="form-control" type="text" id="cscity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.city">
-    </div>
-
-    </div>
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4">Primary State/Province <span class="clr-red"></span></label>
-    <div class="col-sm-7">
-    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.stateOrProvince">
-    </div>
-
-    </div>
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4"> Postal <span class="clr-red"></span></label>
-    <div class="col-sm-7">
-    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.postalCode">
-    </div>
-
-    </div>
-    <div class="form-group col-sm-12">
-    <label class="control-label col-sm-4">Country <span class="clr-red"></span></label>
-    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.country">
-    </div>
-
-    <div class="modal-footer">
-
-    <button class="btn btn-success pull-right submit-btn" [disabled]="!userForm.valid">Submit</button>
-    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-    </div>
-    </form>
-    </div>
-
-</ng-template>-->
-
-
-<ng-template #content let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Bill To Details</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Bill To Details</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemModel()">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Site Name <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.siteName">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 1 <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address1">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 2</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address2">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 3</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address3">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">City <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cscity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.city">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Primary State/Province <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.stateOrProvince">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4"> Postal <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.postalCode">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Country <span class="clr-red"></span></label>
-                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.country">
-            </div>
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="!userForm.valid">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
-    </div>
-
-</ng-template>
-
-<ng-template #contentmodel let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Ship To Details</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Ship To Details</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateissued()">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Site Name <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.siteName">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 1 <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address1">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 2</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address2">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 3</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address3">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">City <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cscity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.city">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Primary State/Province <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.stateOrProvince">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4"> Postal <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.postalCode">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Country <span class="clr-red"></span></label>
-                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.country">
-            </div>
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="!userForm.valid">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
-    </div>
-
-</ng-template>
-
-<ng-template #contentclose let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Issued To Details</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Issued To Details</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateissued()">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Site Name <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.siteName">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 1 <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address1">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 2</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address2">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 3</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address3">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">City <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cscity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.city">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Primary State/Province <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.stateOrProvince">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4"> Postal <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.postalCode">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Country <span class="clr-red"></span></label>
-                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.country">
-            </div>
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="!userForm.valid">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
-    </div>
-
-</ng-template>
-
-<ng-template #cmodel let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Bill To Details</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Bill To Details</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateissued()">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Site Name <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.siteName">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 1 <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address1">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 2</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address2">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Address Line 3</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cmaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.address3">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">City <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" id="cscity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.city">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Primary State/Province <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.stateOrProvince">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4"> Postal <span class="clr-red"></span></label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.postalCode">
-                </div>
-
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Country <span class="clr-red"></span></label>
-                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceissued.country">
-            </div>
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="!userForm.valid">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
-    </div>
-
-</ng-template>
-
-<ng-template #contentMultipleParts let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
-                <h4 class="modal-title"> Add Multiple PN's</h4>
-            </div>
-            <div class="modal-body">
-
-
-                <!--<form method="post" id="" name="">-->
-
-                <p>
-                    <span class="col-sm-3"><b>List of PN's (Saperated by Comma): </b></span>
-                    <span class="col-sm-7 "><textarea class="h50 w100p" [(ngModel)]="partNumbers"></textarea></span>
-                    <span class="col-sm-2"><button type="button" class="btn btn-primary height40 black-search-button multiple-pns-search-btn" (click)="getAllparts()"><i class="fa fa-search"></i></button></span>
-                </p>
-                <table class="table table-bordered table-striped multiple-pns-table">
-                    <thead>
-                        <tr>
-                            <!--<th>Enterd Part</th>-->
-                            <th>PN</th>
-                            <th>Description</th>
-                            <th>Item Type</th>
-                            <th>Hazardous Material</th>
-                            <th>Manufacturer</th>
-                            <!--<th>Aircraft Manufacturer</th>
-                            <th>NSN</th>-->
-                            <th>Priority</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let obj of returnPartsListArray">
-                            <!--<th>{{obj.enterdPart}}</th>-->
-                            <td>{{obj.partNumber}}</td>
-                            <td>{{obj.description}}</td>
-                            <td>{{obj.itemTypeId}}</td>
-                            <td>{{obj.isHazardousMaterial}}</td>
-                            <td>{{obj.manufacturerId}}</td>
-                            <!--<td>{{obj.partNumber}}</td>
-                            <td>{{obj.partNumber}}</td>-->
-                            <td>{{obj.priorityId}}</td>
-                            <td></td>
-                        </tr>
-                        <tr *ngFor="let obj of array">
-                            <!--<th>{{obj.enterdPart}}</th>-->
-                            <td>{{obj}}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                            <td></td>
-                            <td style="color:red">Add Part Number</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!--</form>-->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" (click)="addAvailableParts()">Add Available Parts</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</ng-template>
-
-<!-- Site Template -->
-
-<ng-template #contentSiteEdit let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Site</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Site</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveSiteItemAndCloseModel()">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
-                        <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
-                                        [minLength]="2" [dropdown]="true">
-                            <ng-template let-name pTemplate="item">
-                                <div class="ui-helper-clearfix">{{name}}</div>
-                            </ng-template>
-                        </p-autoComplete>
-                        <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">Address Line 1</label>
-                        <div class="control-data">
-                            <input  id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.address1" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">Address Line 2</label>
-                        <div class="control-data">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.address2" minlength="2" required>
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">Address Line 3</label>
-                        <div class="control-data">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.address3" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">City</label>
-                        <div class="control-data">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.city" minlength="2" required>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">State</label>
-                        <div class="control-data">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.stateOrProvince" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">Country</label>
-                        <div class="control-data">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.country" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">Zip Code</label>
-                        <div class="control-data">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.postalCode" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label">Memo</label>
-                        <div class="control-data">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSite.memo" required>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <!-- Check Box Management Data -->
-                    <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
-                                <th *ngFor="let col of columns">
-                                    {{col.header}}
-                                </th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                            <tr>
-                                <td *ngFor="let col of columns; let i = index">
-                                    <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                    <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                    {{rowData[col.field]}}
-                                </td>
-                            </tr>
-                        </ng-template>
-
-                    </p-treeTable>-->
-                    <!-- Check box Management Date End -->
-                </div>
-            </div>
-
-
-
-
-
-
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success" [disabled]="disableSaveManufacturer">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
-    </div>
-
-
-</ng-template>
-
-<!-- Split Shipment Address -->
-<ng-template #contentSplitShipmentAddress let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Split Shipment Address</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Split Shipment Address</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal">
-            <div class="row">
-                <div class="col-6">
-                    <!--<div class="form-group">
-                        <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
-                        <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
-                                        [minLength]="2" [dropdown]="true">
-                            <ng-template let-name pTemplate="item">
-                                <div class="ui-helper-clearfix">{{name}}</div>
-                            </ng-template>
-                        </p-autoComplete>
-                        <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-                        <div class="clear"></div>
-                    </div>-->
-                    <div class="form-group col-sm-12">
-                        <label for="description" class="control-label col-sm-4">Address 1</label>
-                        <div class="col-sm-7">
-                            <input  id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSplitShipment.address1" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label for="description" class="control-label col-sm-4">Address 2</label>
-                        <div class="col-sm-7">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSplitShipment.address2" minlength="2" required>
-                        </div>
-
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label for="description" class="control-label col-sm-4">Address 3</label>
-                        <div class="col-sm-7">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSplitShipment.address3" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label for="description" class="control-label col-sm-4">City</label>
-                        <div class="col-sm-7">
-                            <input  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSplitShipment.city" minlength="2" required>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label for="description" class="control-label col-sm-4">State</label>
-                        <div class="col-sm-7">
-                            <input  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSplitShipment.stateOrProvince" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label for="description" class="control-label col-sm-4">Postal Code</label>
-                        <div class="col-sm-7">
-                            <input  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSplitShipment.postalCode" minlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label for="description" class="control-label col-sm-4">Country</label>
-                        <div class="col-sm-7">
-                            <input  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceSplitShipment.country" minlength="2" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <!-- Check Box Management Data -->
-                    <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
-                                <th *ngFor="let col of columns">
-                                    {{col.header}}
-                                </th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                            <tr>
-                                <td *ngFor="let col of columns; let i = index">
-                                    <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                    <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                    {{rowData[col.field]}}
-                                </td>
-                            </tr>
-                        </ng-template>
-
-                    </p-treeTable>-->
-                    <!-- Check box Management Date End -->
-                </div>
-            </div>
-            <div class="modal-footer">
-
-                <button class="btn btn-success" [disabled]="disableSaveManufacturer" (click)="saveToVendorCustomerCompanyTable(sourceSplitShipment)">Save to Vendor/Customer/company Table</button>
-                <button class="btn btn-success" [disabled]="disableSaveManufacturer" (click)="saveToThisPO()">Save to this PO</button>
-
-            </div>
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-        </form>
-    </div>
-
-
-</ng-template>
-
-<p-dialog header="Error" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="1850px"
-          [width]="350" [minWidth]="200" [responsive]="true"
-          [minY]="1050" [baseZIndex]="1100000">
-    
-    <p *ngIf="showBuError" [ngStyle]="{'color':'red'}"> Please Enter BU</p>
-    <p *ngIf="showDivError" [ngStyle]="{'color':'red'}"> Please Enter Div</p>
-    <p *ngIf="showDepError" [ngStyle]="{'color':'red'}"> Please Enter Dept</p>
-    <!--<p *ngIf="showPartNumberError" [ngStyle]="{'color':'red'}"> Please Enter Part Number</p>
-    <p *ngIf="showSerialNumberError" [ngStyle]="{'color':'red'}"> Please Enter Serial Number </p>-->
-
-
-    <!--<p *ngIf="showPartDescriptionError" [ngStyle]="{'color':'red'}"> Please Enter Part Description</p>
-    <p *ngIf="showConditionError" [ngStyle]="{'color':'red'}"> Please Enter Condition</p>
-    <p *ngIf="showSiteError" [ngStyle]="{'color':'red'}"> Please Select Site</p>
-    <p *ngIf="showReceiveDateError" [ngStyle]="{'color':'red'}"> Please Select Receive Date</p>
-    <p *ngIf="showReceiverNumberError" [ngStyle]="{'color':'red'}"> Please Enter receive Number</p>
-    <p *ngIf="showGlAccountNumberError" [ngStyle]="{'color':'red'}"> Please Enter GL Account</p>-->
-
-</p-dialog>
 <style>
     .disabled {
         cursor: not-allowed;

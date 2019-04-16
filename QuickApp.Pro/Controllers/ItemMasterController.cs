@@ -1252,6 +1252,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("itemMasterDataById/{id}")]
+        [Produces(typeof(List<ItemMasterViewModel>))]
+        public IActionResult itemMasterDataById(int id)
+        {
+            var integrationportal = _unitOfWork.itemMaster.getItemMasterData(id); //.GetAllCustomersData();
+            return Ok(integrationportal);
+
+        }
+
 
         [HttpGet("GetDescriptionbypart/{partNumber}")]
         [Produces(typeof(List<ItemMasterViewModel>))]
