@@ -54,9 +54,9 @@ export class CreateAssetComponent implements OnInit {
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeSingleService: AssetTypeSingleScreenService, private authService: AuthService, ) {
         this.dataSource = new MatTableDataSource();
        
-        if (this.assetService.currentAssetId != null && this.assetService.currentAssetId > 0 && this.assetService.isEditMode == true) {
-            //TODO : call the getAssetById method and add it in the currentAsset
-        }
+        //if (this.assetService.currentAssetId != null && this.assetService.currentAssetId > 0 && this.assetService.isEditMode == true) {
+        //    //TODO : call the getAssetById method and add it in the currentAsset
+        //}
 
 
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
