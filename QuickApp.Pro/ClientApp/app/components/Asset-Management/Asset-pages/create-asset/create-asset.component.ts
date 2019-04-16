@@ -465,7 +465,7 @@ export class CreateAssetComponent implements OnInit {
             && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)
 
             if (this.currentAsset.isIntangible == true) {
-                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name)) {
+                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)) {
                     this.display = true;
                     this.modelValue = true;
                 }

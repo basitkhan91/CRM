@@ -25,6 +25,7 @@ export class AssetListingComponent implements OnInit {
     Active: string;
     assetTypeToUpdate: any;
     unitOfMeasureId: any;
+    assetTypeId: any;
 
     ngOnInit(): void {
         this.loadData();
@@ -186,6 +187,16 @@ export class AssetListingComponent implements OnInit {
 
         if (row.glAccount) {
             this.glAccountId = row.glAccount.accountName;
+        }
+        else {
+            this.glAccountId = "";
+        }
+
+        if (row.assetType) {
+            this.assetTypeId = row.assetType.assetTypeName;
+        }
+        else {
+            this.assetTypeId = "";
         }
         this.assetViewList.unitCost = row.unitCost;
         this.assetViewList.expirationDate = row.expirationDate;

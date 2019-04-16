@@ -85,11 +85,6 @@
                                                 <p><span class="label"><b>Asset ID: </b></span><span class="value">{{assetViewList.assetId}}</span></p>
                                                 <p><span class="label"><b>Alt Asset ID: </b></span><span class="value">{{assetViewList.alternateAssetId}}</span></p>
                                                 <p><span class="label"><b>Asset Name: </b></span><span class="value">{{assetViewList.name}} </span></p>
-                                                <p><span class="label"><b>Asset Description: </b></span><span class="value">{{assetViewList.description}}</span></p>
-                                                <p><span class="label"><b>Company: </b></span><span class="value">{{assetViewList.companyId}}</span></p>
-                                                <p><span class="label"><b>BU: </b></span><span class="value">{{assetViewList.businessUnitId}}</span></p>
-                                                <p><span class="label"><b>DIV: </b></span><span class="value">{{assetViewList.departmentId}}</span></p>
-                                                <p><span class="label"><b>DEP: </b></span><span class="value">{{assetViewList.divisionId}}</span></p>
                                                 <p><span class="label"><b>Calibration Required: </b></span><input type="checkbox" [disabled]="true" [checked]="assetViewList.calibrationRequired" /></p>
                                                 <p><span class="label"><b>Certification Required: </b></span><input type="checkbox" [disabled]="true" [checked]="assetViewList.certificationRequired" /></p>
                                                 <p><span class="label"><b>Inspection Required: </b></span><input type="checkbox" [disabled]="true" [checked]="assetViewList.inspectionRequired" /></p>
@@ -102,14 +97,14 @@
                                                 <p><span class="label"><b>Serialized?: </b></span><input type="checkbox" [disabled]="true" [checked]="assetViewList.isSerialized" /></p>
                                             </div>
                                             <div class="col-sm-6">
-                                                <p><span class="label"><b>UOM: </b></span><span class="value">{{assetViewList.unitOfMeasureId}}</span></p>
+                                                <p><span class="label"><b>UOM: </b></span><span class="value">{{unitOfMeasureId}}</span></p>
                                                 <p><span class="label"><b>Currency: </b></span><span class="value">{{currencyId}}</span></p>
                                                 <p><span class="label"><b>Unit Cost: </b></span><span class="value">{{assetViewList.unitCost}}</span></p>
                                                 <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{assetViewList.expirationDate}}</span></p>
                                                 <p><span class="label"><b>Asset Location: </b></span><span class="value">{{assetViewList.asset_Location}}</span></p>
                                                 <p><span class="label"><b>Memo: </b></span><span class="value">{{assetViewList.memo}} </span></p>
                                                 <p><span class="label"><b>Asset Parent: </b></span><span class="value">{{assetViewList.assetParentId}}</span></p>
-                                                <p><span class="label"><b>Asset Type: </b></span><span class="value">{{assetViewList.assetTypeSingleScreenId}}</span></p>
+                                                <p><span class="label"><b>Asset Type: </b></span><span class="value">{{assetTypeId}}</span></p>
                                                 <!--<p><span class="label"><b>Depreciation Method: </b></span><span class="value">{{assetViewList.description}}</span></p>
                                                 <p><span class="label"><b>Residual %: </b></span><span class="value">{{assetViewList.description}}</span></p>
                                                 <p><span class="label"><b>Asset Life: </b></span><span class="value"> {{assetViewList.description}}</span></p>

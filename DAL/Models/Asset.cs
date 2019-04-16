@@ -121,5 +121,7 @@ namespace DAL.Models
 
         public virtual UnitOfMeasure UnitOfMeasure { get; set; }
 
+        public virtual AssetType AssetType { get; set; }
+
     }
 }

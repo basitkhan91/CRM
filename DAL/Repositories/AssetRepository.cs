@@ -17,7 +17,7 @@ namespace DAL.Repositories
         //}
         IEnumerable<object> IAssetRepository.getAllAssetList()
         {
-            var data = _appContext.Asset.Include("Manufacturer").Include("GLAccount").Include("Currency").Include("UnitOfMeasure").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AssetRecordId).ToList();
+            var data = _appContext.Asset.Include("Manufacturer").Include("GLAccount").Include("Currency").Include("UnitOfMeasure").Include("AssetType").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AssetRecordId).ToList();
            
 
             return data;
