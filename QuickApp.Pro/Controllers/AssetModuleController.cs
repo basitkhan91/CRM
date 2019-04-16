@@ -40,6 +40,8 @@ namespace QuickApp.Pro.Controllers
             {
                 asset.IsActive = true;
                 asset.AssetRecordId = 0;
+                asset.CreatedDate = DateTime.Now;
+                asset.UpdatedDate = DateTime.Now;
                 asset.MasterCompanyId = 1;
                 _context.Asset.Add(asset);
                 _context.SaveChanges();
@@ -51,6 +53,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult updateAsset([FromBody] Asset asset)
         {
             asset.MasterCompanyId = 1;
+            asset.UpdatedDate = DateTime.Now;
             _unitOfWork.Repository<Asset>().Update(asset);
             _unitOfWork.SaveChanges();
             return Ok();

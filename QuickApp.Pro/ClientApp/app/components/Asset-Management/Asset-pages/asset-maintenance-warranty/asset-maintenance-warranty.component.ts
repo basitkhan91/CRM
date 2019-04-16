@@ -73,14 +73,14 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         else {
             this.currentMaintenance.updatedBy = this.userName;
             this.currentMaintenance.masterCompanyId = 1;
-            if (this.currentMaintenance.assetIsMaintenanceReqd == false) {
+            if (this.currentMaintenance.assetIsMaintenanceReqd == false || this.currentMaintenance.isDepreciable == false) {
                 this.currentMaintenance.assetMaintenanceIsContract = false;
                 this.currentMaintenance.assetMaintenanceContractFile = "";
                 this.currentMaintenance.maintenanceFrequencyMonths = "";
                 this.currentMaintenance.maintenanceFrequencyDays = "";
                 this.currentMaintenance.maintenanceMemo = "";
             }
-            if (this.currentMaintenance.isWarrantyRequired == false) {
+            if (this.currentMaintenance.isWarrantyRequired == false || this.currentMaintenance.isDepreciable == false) {
                 this.currentMaintenance.warranty = "";
                 this.currentMaintenance.warrantyCompany = "";
                 this.currentMaintenance.warrantyStartDate = "";

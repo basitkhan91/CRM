@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class Asset
+   public class Asset 
     {
         [Key]
 
@@ -48,7 +48,7 @@ namespace DAL.Models
 
 
         [Required(ErrorMessage = "Name Is Required.")]
-        public Nullable<long> AssetTypeSingleScreenId { get; set; }
+        public Nullable<long> AssetTypeId { get; set; }
         public Nullable<long> AssetIntangibleTypeId { get; set; }
         public Nullable<long> AmortizationMethodId { get; set; }
         public string IntangibleLife { get; set; }
@@ -108,6 +108,10 @@ namespace DAL.Models
         public Nullable<decimal> VerificationDefaultCost { get; set; }
         public string VerificationMemo { get; set; }
         public Nullable<long> VerificationGlAccountId { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public virtual AssetCapes AssetCapes { get; set; }
 

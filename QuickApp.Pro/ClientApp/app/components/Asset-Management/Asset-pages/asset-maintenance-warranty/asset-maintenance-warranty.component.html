@@ -28,7 +28,7 @@
         </div>
         <div class="clear"></div>
         <hr class="hr-light-grey">
-        <div class="col-sm-6 w400">
+        <div *ngIf="currentMaintenance.isDepreciable" class="col-sm-6 w400">
             <div class="col-sm-12">
                 <h5 class="heading">MAINTENANCE</h5>
             </div>
@@ -93,7 +93,7 @@
                 <div class="clear"></div>
             </div>
         </div>
-        <div class="col-sm-6 w400">
+        <div *ngIf="currentMaintenance.isDepreciable" class="col-sm-6 w400">
             <div class="col-sm-12">
                 <h5 class="heading">Warranty</h5>
             </div>

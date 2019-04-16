@@ -10,6 +10,12 @@ import { CurrencyService } from '../../../../services/currency.service';
 import { AssetTypeSingleScreenService } from '../../../../services/AssetTypeSingleScreen/assettypesinglescreen.service';
 import { AssetTypeSingleScreen } from '../../../../models/assettypesinglescreen.model';
 import { AuthService } from '../../../../services/auth.service';
+import { AssetIntangibleTypeService } from '../../../../services/AssetIntangibleType/AssetIntangibleType.service';
+import { GlAccount } from '../../../../models/GlAccount.model';
+import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
+import { AssetTypeService } from '../../../../services/AssetType/assettype.service';
+import { DepriciationMethodService } from '../../../../services/depriciation-method/depriciation.service';
+import { DepriciationMethod } from '../../../../models/depriciation-method.model';
 
 @Component({
     selector: 'app-create-asset',
@@ -33,6 +39,7 @@ export class CreateAssetComponent implements OnInit {
     allUnitOfMeasureinfo: any[];
     allCurrencyInfo: any[];
     allAssetTypeInfo: any[];
+    allIntangibleInfo: any[];
     display: boolean = false;
     modelValue: boolean;
     isDepreciable: boolean = true;
@@ -49,9 +56,14 @@ export class CreateAssetComponent implements OnInit {
     localCollection: any[];
     managementStructureData: any = [];
     updateMode: boolean = false;
+    allGlInfo: GlAccount[];
+    currentSelectedIntangibleAssetType: any = {};
+    currentSelectedAssetType: any = {};
+    depriciationMethodList: DepriciationMethod[];
+    allAssets: any[]=[];
 
-    constructor(private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
-        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeSingleService: AssetTypeSingleScreenService, private authService: AuthService, ) {
+    constructor(private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
+        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService,  private authService: AuthService, ) {
         this.dataSource = new MatTableDataSource();
        
         //if (this.assetService.currentAssetId != null && this.assetService.currentAssetId > 0 && this.assetService.isEditMode == true) {
@@ -64,6 +76,15 @@ export class CreateAssetComponent implements OnInit {
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
             this.updateMode = true;
+            //if (this.currentAsset.isIntangible ==true) {
+            //    this.currentAsset.isDepreciable = false;
+            //    this.currentAsset.isIntangible = true;
+            //}
+            //else {
+            //    this.currentAsset.isDepreciable = true;
+            //    this.currentAsset.isIntangible = false;
+            //}
+           
         }
         if (this.currentAsset.expirationDate) {
             this.currentAsset.expirationDate = new Date(this.currentAsset.expirationDate);
@@ -77,7 +98,7 @@ export class CreateAssetComponent implements OnInit {
         else {
             this.currentAsset.manufacturedDate = new Date();
         }
-
+     
     }
 
     ngOnInit() {
@@ -95,6 +116,9 @@ export class CreateAssetComponent implements OnInit {
         this.unitOfMeasureList();
         this.CurrencyData();
         this.assetTypeData();
+        this.intangibleData();
+        this.glList();
+        this.loadDepricationMethod();
     }
 
     private getAssetsList() {
@@ -119,11 +143,11 @@ export class CreateAssetComponent implements OnInit {
     }
     
     onAssetIdselection(event) {
-        if (this.allAssetInfo) {
+        if (this.allAssets) {
 
-            for (let i = 0; i < this.allAssetInfo.length; i++) {
-                if (event == this.allAssetInfo[i].assetId) {
-                    this.currentAsset.assetId = this.allAssetInfo[i].assetId;
+            for (let i = 0; i < this.allAssets.length; i++) {
+                if (event == this.allAssets[i][0].assetId) {
+                    this.currentAsset.assetId = this.allAssets[i].assetId;
                     this.disableSave = true;
 
                     this.onSelectedId = event;
@@ -133,16 +157,20 @@ export class CreateAssetComponent implements OnInit {
     }
 
     assetIdHandler(event) {
+        if (event) {
         if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.onSelectedId) {
-                if (value == this.onSelectedId.toLowerCase()) {
-                    this.disableSave = true;
-                }
-                else {
-                    this.disableSave = false;
+            
+                let value = event.target.value.toLowerCase();
+                if (this.onSelectedId) {
+                    if (value == this.onSelectedId.toLowerCase()) {
+                        this.disableSave = true;
+                    }
+                    else {
+                        this.disableSave = false;
+                    }
                 }
             }
+           
         }
     }
 
@@ -151,13 +179,15 @@ export class CreateAssetComponent implements OnInit {
         this.localCollection = [];
         for (let i = 0; i < this.allAssetInfo.length; i++) {
             let assetId = this.allAssetInfo[i].assetId;
-            if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.allAssetInfo.push([{
-                    "assetRecordId": this.allAssetInfo[i].assetRecordId,
-                    "assetId": this.allAssetInfo[i].assetId
-                }]),
-                    this.localCollection.push(assetId)
+            if (assetId) {
+                if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.allAssets.push([{
+                        "assetRecordId": this.allAssetInfo[i].assetRecordId,
+                        "assetId": this.allAssetInfo[i].assetId
+                    }]),
+                        this.localCollection.push(assetId)
 
+                }
             }
         }
     }
@@ -366,17 +396,47 @@ export class CreateAssetComponent implements OnInit {
         );
     }
 
-    private onAssetTypeLoad(getAssetTypeList: AssetTypeSingleScreen[]) {
+    private onAssetTypeLoad(getAssetTypeList: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allAssetTypeInfo = getAssetTypeList;
     }
 
+    private onIntangibletypeLoad(getAssetTypeList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allIntangibleInfo = getAssetTypeList;
+    }
+
     private assetTypeData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.assetTypeSingleService.getAll().subscribe(
+        this.assetTypeService.getAll().subscribe(
             results => this.onAssetTypeLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onGlAccountLoad(getGlList: GlAccount[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allGlInfo = getGlList;
+    }
+
+    private glList() {
+    this.alertService.startLoadingMessage();
+    this.loadingIndicator = true;
+    this.glAccountService.getAll().subscribe(
+        results => this.onGlAccountLoad(results[0]),
+        error => this.onDataLoadFailed(error)
+    );
+}
+
+    private intangibleData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.intangibleTypeService.getAll().subscribe(
+            results => this.onIntangibletypeLoad(results[0]),
             error => this.onDataLoadFailed(error)
         );
     }
@@ -393,15 +453,15 @@ export class CreateAssetComponent implements OnInit {
     
     saveAsset(): void {
 
-        if (this.currentAsset.isDepreciable == true) {
+        if (this.currentAsset.isIntangible == false) {
             if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-                && this.currentAsset.currencyId && this.currentAsset.assetTypeSingleScreenId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
                 this.display = true;
                 this.modelValue = true;
             }
         }
         if (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-            && this.currentAsset.currencyId && this.currentAsset.assetTypeSingleScreenId && this.currentAsset.assetAcquisitionTypeId)
+            && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)
 
             if (this.currentAsset.isIntangible == true) {
                 if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name)) {
@@ -486,5 +546,19 @@ export class CreateAssetComponent implements OnInit {
                 })
             }
         }
+    }
+    getSelectedIntangible(selectedObj) {
+        this.currentAsset.assetIntangibleTypeId = selectedObj.assetIntangibleTypeId;
+        this.currentSelectedIntangibleAssetType = selectedObj;
+    }
+    getSelectedAssetType(selectedAssetObj) {
+        this.currentAsset.assetTypeId = selectedAssetObj.assetTypeId;
+        this.currentSelectedAssetType = selectedAssetObj;
+    }
+
+    loadDepricationMethod() {
+        this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
+            this.depriciationMethodList = depriciationmethods[0];
+        });
     }
 }

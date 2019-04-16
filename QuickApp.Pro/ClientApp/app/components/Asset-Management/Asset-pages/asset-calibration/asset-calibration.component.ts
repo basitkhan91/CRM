@@ -39,6 +39,43 @@ export class AssetCalibrationComponent implements OnInit {
                 this.local = this.assetService.listCollection;
                 this.currentCalibration = this.local;
             }
+            if (this.currentCalibration.calibrationRequired == false) {
+                this.currentCalibration.calibrationFrequencyMonths = "";
+                this.currentCalibration.calibrationFrequencyDays = "";
+                this.currentCalibration.calibrationDefaultVendorId = "";
+                this.currentCalibration.calibrationDefaultCost = "";
+                this.currentCalibration.calibrationCurrencyId = "";
+                this.currentCalibration.calibrationGlAccountId = "";
+                this.currentCalibration.calibrationMemo = "";
+            }
+            if (this.currentCalibration.certificationRequired == false) {
+                this.currentCalibration.certificationFrequencyMonths = "";
+                this.currentCalibration.certificationFrequencyDays = "";
+                this.currentCalibration.certificationDefaultVendorId = "";
+                this.currentCalibration.certificationDefaultCost = "";
+                this.currentCalibration.certificationCurrencyId = "";
+                this.currentCalibration.certificationGlAccountId = "";
+                this.currentCalibration.certificationMemo = "";
+            }
+            if (this.currentCalibration.inspectionRequired == false) {
+                this.currentCalibration.inspectionFrequencyMonths = "";
+                this.currentCalibration.inspectionFrequencyDays = "";
+                this.currentCalibration.inspectionDefaultVendorId = "";
+                this.currentCalibration.inspectionDefaultCost = "";
+                this.currentCalibration.inspectionCurrencyId = "";
+                this.currentCalibration.inspectionGlaAccountId = "";
+                this.currentCalibration.inspectionMemo = "";
+            }
+            if (this.currentCalibration.verificationRequired == false) {
+                this.currentCalibration.verificationFrequencyMonths = "";
+                this.currentCalibration.verificationFrequencyDays = "";
+                this.currentCalibration.verificationDefaultVendorId = "";
+                this.currentCalibration.verificationDefaultCost = "";
+                this.currentCalibration.verificationCurrencyId = "";
+                this.currentCalibration.verificationGlAccountId = "";
+                this.currentCalibration.verificationMemo = "";
+            }
+
         }
     }
     get userName(): string {
@@ -112,6 +149,43 @@ export class AssetCalibrationComponent implements OnInit {
             })
         }
         else {
+            if (this.currentCalibration.calibrationRequired == false) {
+                this.currentCalibration.calibrationFrequencyMonths = "";
+                this.currentCalibration.calibrationFrequencyDays = "";
+                this.currentCalibration.calibrationDefaultVendorId = "";
+                this.currentCalibration.calibrationDefaultCost = "";
+                this.currentCalibration.calibrationCurrencyId = "";
+                this.currentCalibration.calibrationGlAccountId = "";
+                this.currentCalibration.calibrationMemo = "";
+            }
+            if (this.currentCalibration.certificationRequired == false) {
+                this.currentCalibration.certificationFrequencyMonths = "";
+                this.currentCalibration.certificationFrequencyDays = "";
+                this.currentCalibration.certificationDefaultVendorId = "";
+                this.currentCalibration.certificationDefaultCost = "";
+                this.currentCalibration.certificationCurrencyId = "";
+                this.currentCalibration.certificationGlAccountId = "";
+                this.currentCalibration.certificationMemo = "";
+            }
+            if (this.currentCalibration.inspectionRequired == false) {
+                this.currentCalibration.inspectionFrequencyMonths = "";
+                this.currentCalibration.inspectionFrequencyDays = "";
+                this.currentCalibration.inspectionDefaultVendorId = "";
+                this.currentCalibration.inspectionDefaultCost = "";
+                this.currentCalibration.inspectionCurrencyId = "";
+                this.currentCalibration.inspectionGlaAccountId = "";
+                this.currentCalibration.inspectionMemo = "";
+            }
+            if (this.currentCalibration.verificationRequired == false) {
+                this.currentCalibration.verificationFrequencyMonths = "";
+                this.currentCalibration.verificationFrequencyDays = "";
+                this.currentCalibration.verificationDefaultVendorId = "";
+                this.currentCalibration.verificationDefaultCost = "";
+                this.currentCalibration.verificationCurrencyId = "";
+                this.currentCalibration.verificationGlAccountId = "";
+                this.currentCalibration.verificationMemo = "";
+            }
+            
             this.currentCalibration.updatedBy = this.userName;
             this.currentCalibration.masterCompanyId = 1;            
             this.assetService.updateAsset(this.currentCalibration).subscribe(response => {
@@ -119,7 +193,8 @@ export class AssetCalibrationComponent implements OnInit {
                 this.activeIndex = 2;
                 this.assetService.indexObj.next(this.activeIndex);
             })
-        }
+            }
+
     }
 
     nextClick() {
