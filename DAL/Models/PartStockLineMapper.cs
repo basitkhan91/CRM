@@ -11,4 +11,4 @@ namespace DAL.Models
 
         public string StockLineId { get; set; }
     }
-}
+} 
