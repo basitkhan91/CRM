@@ -38,7 +38,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _listNonstockUrl: string = "api/ItemMaster/GetItemnonstocklist";
     private readonly _liststockUrl: string = "api/ItemMaster/GetItemStocklist";
     private readonly _listeqpmntUrl: string = "api/ItemMaster/GetEquipmentlist";
-	private readonly _listsUrl: string = "/api/ItemMaster/GetDescriptionbypart";
+    private readonly _lisUrl: string = "/api/ItemMaster/GetDescriptionbypart";
 	private readonly _updateActiveInactiveforstock: string = "/api/ItemMaster/itemstockUpdateforActive";
 	private readonly _stocksUrlNew: string = "/api/ItemMaster/itemMasterpost";
 	private readonly _getIntegrationUrl: string = "/api/ItemMaster/IntegrationGet";
@@ -65,7 +65,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get listNonstockUrl() { return this.configurations.baseUrl + this._listNonstockUrl; }
     get liststockUrl() { return this.configurations.baseUrl + this._liststockUrl; }
     get listeqpmntUrl() { return this.configurations.baseUrl + this._listeqpmntUrl; }
-	get listsUrl() { return this.configurations.baseUrl + this._listsUrl; }
+	get listsUrl() { return this.configurations.baseUrl + this._lisUrl; }
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
 

@@ -44,6 +44,8 @@ import { CalendarModule } from "primeng/calendar";
 import { EditPoComponent } from "../components/receiving/po-ro/edit-po/edit-po.component";
 import { PurchaseOrderComponent } from "../components/receiving/po-ro/purchase-order/purchase-order.component";
 import { ReceivngPoComponent } from "../components/receiving/po-ro/receivng-po/receivng-po.component";
+import { ReceivingService } from "../services/receiving/receiving.service";
+import { ReceivingEndpointService } from "../services/receiving/receiving-endpoint.service";
 
 
 
@@ -73,7 +75,7 @@ import { ReceivngPoComponent } from "../components/receiving/po-ro/receivng-po/r
 		ReceivingpagesComponent
 
 	],
-	providers: [
+    providers: [ReceivingService, ReceivingEndpointService
 
 	],
 	entryComponents: [

@@ -61,11 +61,38 @@ namespace DAL.Repositories
                 return data;
             }
         }
-
-
         
+              public IEnumerable<object> getItemMasterData(long id)
+        {
 
-             public IEnumerable<object> GetSelectedAircraftModeldata(long id)
+            {
+                var data = (from iM in _appContext.ItemMaster
+                            where iM.ItemMasterId == id
+
+                            select new
+                            {
+                                iM,
+                                iM.PartDescription,
+                                iM.IsSerialized,
+                                iM.IsShelfLifeAvailable,
+                                iM.TagDate,
+                                iM.TagType,
+                                iM.TagDays,
+                                iM.PMA,
+                                iM.DER,
+                                iM.IsTimeLife,
+                                iM.ItemMasterId,
+                                iM.GLAccountId,
+                                iM.ManufacturerId,
+                                iM.Manufacturer
+
+
+                            }).ToList();
+                return data;
+            }
+        }
+
+        public IEnumerable<object> GetSelectedAircraftModeldata(long id)
         {
 
             {

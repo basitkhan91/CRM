@@ -19,7 +19,10 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.Action> GetAllActionData()
         {
-            var data =_appContext.Action.Include("MasterCompany").Where(a => a.IsDelete==false || a.IsDelete==null).OrderByDescending(a => a.ActionId).ToList(); 
+            
+            var data =_appContext.Action.Include("MasterCompany").Where(a => a.IsDelete==false || a.IsDelete==null).OrderByDescending(a => a.ActionId).ToList();
+            //var fnlData= { };
+            //data.CopyTo(fnlData, 5);
             return data;
         }
 
