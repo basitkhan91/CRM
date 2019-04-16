@@ -13,7 +13,7 @@ namespace DAL.Models
 
         public long GLAccountNodeId { get; set; }
 
-        public long MasterCompanyId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
         
     }
 }

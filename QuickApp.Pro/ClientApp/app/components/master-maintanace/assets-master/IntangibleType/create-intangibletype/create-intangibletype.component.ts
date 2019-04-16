@@ -6,6 +6,8 @@ import { AlertService } from '../../../../../services/alert.service';
 import { AssetIntangibleTypeService } from '../../../../../services/AssetIntangibleType/AssetIntangibleType.service';
 import { Router } from '@angular/router';
 import { fadeInOut } from '../../../../../services/animations';
+import { AssetIntangibleTypeSingleScreenService } from '../../../../../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service';
+import { AssetIntangibleTypeSingleScreen } from '../../../../../models/assetIntangibleTypeSingleScreen.model';
 
 @Component({
     selector: 'app-create-intangibletype',
@@ -25,8 +27,9 @@ export class CreateIntangibletypeComponent implements OnInit {
     divisionlist: any[];
     departmentList: any[];
     managementStructureData: any = [];
+    assetIntangibleList: AssetIntangibleTypeSingleScreen[];
     updateMode: boolean = false;
-    constructor(private alertService: AlertService, private router:Router, private legalEntityservice: LegalEntityService, private glAccountService: GlAccountService,private intangibleService:AssetIntangibleTypeService) {
+    constructor(private alertService: AlertService, private router: Router, private assetIntangibleService: AssetIntangibleTypeSingleScreenService,private legalEntityservice: LegalEntityService, private glAccountService: GlAccountService,private intangibleService:AssetIntangibleTypeService) {
         if (this.intangibleService.intangibleTypeEditCollection) {
             this.updateMode = true;
             this.currentIntangibleType = this.intangibleService.intangibleTypeEditCollection;
@@ -35,6 +38,12 @@ export class CreateIntangibletypeComponent implements OnInit {
     ngOnInit() {
         this.loadCompaniesData();
         this.loadGLAccountData();
+        this.loadIntangibleSingleScrren();
+    }
+    loadIntangibleSingleScrren() {
+        this.assetIntangibleService.getAll().subscribe(assetIntangible => {
+            this.assetIntangibleList = assetIntangible[0];
+        });
     }
     loadCompaniesData() {
         this.legalEntityservice.getManagemententity().subscribe(data => {
@@ -59,7 +68,7 @@ export class CreateIntangibletypeComponent implements OnInit {
                 this.alertService.showMessage('Intangible Type added successfully.');
                 this.intangibleService.getAll().subscribe(intangibleTypeData => {
                     this.intangibleTypeList = intangibleTypeData[0];
-                    this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-intangibletype-listing');
+                    this.router.navigateByUrl('/mastermodule/masterpages/app-intangibletype-listing');
                 });
             });
         }

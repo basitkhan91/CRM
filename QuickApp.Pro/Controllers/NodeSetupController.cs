@@ -33,6 +33,9 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
+            //var nodes = unitOfWork.GLAccountClass.getAllNodeSetup(); 
+            //return Ok(nodes);
+
             var nodes = unitOfWork.Repository<GLAccountNode>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountNodeId);
             return Ok(nodes);
         }
@@ -62,6 +65,8 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     node.MasterCompanyId = 1;
+                    node.CreatedDate = DateTime.Now;
+                    node.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<GLAccountNode>().Add(node);
                     unitOfWork.SaveChanges();
                     return Ok(node);
@@ -111,6 +116,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    node.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<GLAccountNode>().Update(node);
                     unitOfWork.SaveChanges();
                     return Ok(node);
@@ -142,6 +148,7 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
         }
+        
 
         //[HttpGet("updateIsActive/{glAccountNodeId)}")]
         //public ActionResult updateIsActive(long glAccountNodeId)

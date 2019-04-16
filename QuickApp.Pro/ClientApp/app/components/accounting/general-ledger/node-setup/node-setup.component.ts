@@ -15,6 +15,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { AuthService } from "../../../../services/auth.service";
 @Component({
     selector: 'app-node-setup',
     templateUrl: './node-setup.component.html',
@@ -40,29 +41,41 @@ export class NodeSetupComponent implements OnInit {
     display: boolean = false;
     Active: string;
     modelValue: boolean = false;
-    constructor(private modalService: NgbModal,public glAccountService: GLAccountClassService,public legalEntityService: LegalEntityService,private alertService: AlertService, private nodeSetupService: NodeSetupService )
+    constructor(private modalService: NgbModal, public glAccountService: GLAccountClassService, public legalEntityService: LegalEntityService, private alertService: AlertService, private nodeSetupService: NodeSetupService, private authService:AuthService )
     {
     }
 
     ngOnInit(): void {
+        this.loadManagementdata();
+
+        this.setManagementDesctoList();
+
+        this.currentNodeSetup = new GLAccountNodeSetup();
+       
+        this.loadGlAccountClassData();
+    }
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+    setManagementDesctoList() {
         this.nodeSetupService.getAll().subscribe(nodes => {
             this.nodeSetupList = nodes[0];
             this.nodeSetupListData = nodes[0];
-            if (this.nodeSetupList) {
-                for (let nlength = 0; nlength < this.nodeSetupList.length; nlength++) {
-                    this.nodeSetupService.getShareWithOtherEntitysData(this.nodeSetupList[nlength].glAccountNodeId).subscribe(msData => {
+            if (this.nodeSetupListData) {
+                for (let nlength = 0; nlength < this.nodeSetupListData.length; nlength++) {
+                    this.nodeSetupService.getShareWithOtherEntitysData(this.nodeSetupListData[nlength].glAccountNodeId).subscribe(msData => {
                         let companyCodes = [];
                         let string = '';
                         let companyIds = [];
-                        
+
                         if (msData[0].length) {
                             for (let j = 0; j < msData[0].length; j++) {
-                                
+
                                 if (msData[0][j]) {
                                     companyCodes.push(msData[0][j].code);
                                     companyIds.push(msData[0][j].managementStructureId);
                                     string = companyCodes.join(',');
-                                    
+
                                 }
                                 this.nodeSetupListData[nlength].comapnycodes = string;
                                 this.nodeSetupListData[nlength].selectedCompanysData = companyIds;
@@ -74,12 +87,7 @@ export class NodeSetupComponent implements OnInit {
             }
 
         });
-
-        this.currentNodeSetup = new GLAccountNodeSetup();
-        this.loadManagementdata();
-        this.loadGlAccountClassData();
     }
-
     addNodeSetup(): void {
         if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType)) {
             this.display = true;
@@ -87,12 +95,14 @@ export class NodeSetupComponent implements OnInit {
         }
         if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType))
         {
+            this.currentNodeSetup.createdBy = this.userName;
+            this.currentNodeSetup.updatedBy = this.userName;
             this.nodeSetupService.add(this.currentNodeSetup).subscribe(node => {
                 this.currentNodeSetup.glAccountNodeId = node.glAccountNodeId;
                 this.addGLAccountNodeShareWithEntityMapper();
                 this.alertService.showMessage('Node Setup added successfully.');
                 this.nodeSetupService.getAll().subscribe(Nodes => {
-                    this.nodeSetupList = Nodes[0];
+                    this.nodeSetupListData = Nodes[0];
                 });
                 this.dismissModel();
             });
@@ -104,20 +114,23 @@ export class NodeSetupComponent implements OnInit {
     {
         this.open(content);
         this.updateMode = true;
-        this.currentNodeSetup = Object.assign({}, this.nodeSetupList.filter(function (node) {
+        this.currentNodeSetup = Object.assign({}, this.nodeSetupListData.filter(function (node) {
             return node.glAccountNodeId == id;
         })[0]);
         this.updateMode = true;
     }
 
     updateNodeSetup(): void {
+        this.currentNodeSetup.updatedBy = this.userName;
         this.nodeSetupService.update(this.currentNodeSetup).subscribe(node => {
+            this.updateGLAccountNodeShareWithEntityMapper(node.glAccountNodeId);
             this.alertService.showMessage('Node Setup updated successfully.');
             this.nodeSetupService.getAll().subscribe(nodes => {
-                this.nodeSetupList = nodes[0];
+                this.nodeSetupListData = nodes[0];
+                this.setManagementDesctoList();
             });
             this.updateMode = false;
-            this.resetNodeSetup();
+           
         });
     }
 
@@ -211,8 +224,30 @@ export class NodeSetupComponent implements OnInit {
                 });
             }
         }
+    }
 
-       
+    updateGLAccountNodeShareWithEntityMapper(id)
+    {
+        this.nodeSetupService.removeNodeShareEntityMapper(id).subscribe(Nodes => {
+            this.nodeSetupList = Nodes[0];
+
+            let data = [];
+            if (this.currentNodeSetup.selectedCompanysData) {
+                for (let i = 0; i < this.currentNodeSetup.selectedCompanysData.length; i++) {
+                    data.push({
+                        "managementStructureId": this.currentNodeSetup.selectedCompanysData[i],
+                        "GLAccountNodeId": this.currentNodeSetup.glAccountNodeId
+                    })
+
+                    this.nodeSetupService.addGLAccountNodeShareWithEntityMapper(data[i]).subscribe(Nodes => {
+                        this.nodeSetupList = Nodes[0];
+                    });
+                }
+            }
+
+            this.resetNodeSetup();
+        });
+        
     }
 
     open(content) {
@@ -230,7 +265,7 @@ export class NodeSetupComponent implements OnInit {
         this.isDeleteMode = false;
         this.updateMode = false;
         this.modal.close();
-        this.currentNodeSetup.selectedCompanysData = [];
+       // this.currentNodeSetup.selectedCompanysData = [];
     }
 
     toggleIsActive(nodeSetup: any, e) {
@@ -239,9 +274,9 @@ export class NodeSetupComponent implements OnInit {
             this.Active = "In Active";
             this.nodeSetupUpdate.isActive == false;
             this.nodeSetupService.update(this.nodeSetupUpdate).subscribe(intangibleTypes => {
-                this.alertService.showMessage('Node Setup updated successfully.');
+                this.alertService.showMessage('Node Setup Saved successfully.');
                 this.nodeSetupService.getAll().subscribe(Nodes => {
-                    this.nodeSetupList = Nodes[0];
+                    this.nodeSetupListData = Nodes[0];
                 });
 
             })
@@ -253,7 +288,7 @@ export class NodeSetupComponent implements OnInit {
             this.nodeSetupService.update(this.nodeSetupUpdate).subscribe(intangibleTypes => {
                 this.alertService.showMessage('Node Setup updated successfully.');
                 this.nodeSetupService.getAll().subscribe(Nodes => {
-                    this.nodeSetupList = Nodes[0];
+                    this.nodeSetupListData = Nodes[0];
                 });
             })
         }

@@ -241,6 +241,7 @@ namespace DAL
 
         IRepository<T> Repository<T>() where T : class;
 
+        IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper { get; }
         
         
 

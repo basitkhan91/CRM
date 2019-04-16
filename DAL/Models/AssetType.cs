@@ -46,6 +46,8 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
+
+        public long? AssetTypeSingleScreenId { get; set; }
         //public ICollection<GLAccount> GLAccount { get; set; }
     }
 }

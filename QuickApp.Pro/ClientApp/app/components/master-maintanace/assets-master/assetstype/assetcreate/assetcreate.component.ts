@@ -12,6 +12,7 @@ import { AlertService } from '../../../../../services/alert.service';
 import { AssetTypeService } from '../../../../../services/AssetType/assettype.service';
 import { Router } from '@angular/router';
 import { fadeInOut } from '../../../../../services/animations';
+import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
     selector: 'app-assetcreate',
@@ -33,9 +34,10 @@ export class AssetcreateComponent implements OnInit {
     buList: any[];
     divisionlist: any[];
     departmentList: any[];
+    assetTypeSingleScreenList: AssetTypeSingleScreen[] = [];
     managementStructureData: any = [];
     updateMode: boolean=false;
-    constructor(private assetTypeService:AssetTypeService,private router:Router,private AssetTypeService: AssetTypeSingleScreenService, private alertService:AlertService, private legalEntityservice:LegalEntityService, private glAccountService: GlAccountService, private assetDepConventionTypeService: AssetDepConventionTypeService, private depriciationMethodService: DepriciationMethodService,) {
+    constructor(private assetTypeService: AssetTypeService, private assetTypeSingleScreenService: AssetTypeSingleScreenService, private authService:AuthService,private router:Router,private AssetTypeService: AssetTypeSingleScreenService, private alertService:AlertService, private legalEntityservice:LegalEntityService, private glAccountService: GlAccountService, private assetDepConventionTypeService: AssetDepConventionTypeService, private depriciationMethodService: DepriciationMethodService,) {
         if (this.assetTypeService.assetrowSelection) {
             this.updateMode = true;
             this.currentAssetObj = this.assetTypeService.assetrowSelection;
@@ -53,6 +55,15 @@ export class AssetcreateComponent implements OnInit {
             }
         }
 
+    }
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
+    loadAssetTypes() {
+        this.assetTypeSingleScreenService.getAll().subscribe(AssetTypes => {
+            this.assetTypeSingleScreenList = AssetTypes[0];
+        });
     }
     setManagementStrucureData(obj) {
         this.managementStructureData = [];
@@ -88,7 +99,9 @@ export class AssetcreateComponent implements OnInit {
         this.loadCoventionType();
         this.loadDepricationMethod();
         this.loadGLAccountData();
-        this.loadCompaniesData()
+        this.loadCompaniesData();
+        this.loadAssetTypes();
+
     }
     loadAssetTypedata() {
         this.AssetTypeService.getAll().subscribe(AssetTypes => {
@@ -124,16 +137,25 @@ export class AssetcreateComponent implements OnInit {
 
     addAsset(): void {
         if (!this.currentAssetObj.assetTypeId) {
+            if (this.currentAssetObj.residualPercentage == null || this.currentAssetObj.residualPercentage == undefined) {
+                this.currentAssetObj.residualValue = 0;
+            }
+            else {
+                this.currentAssetObj.residualValue = null;
+            }
+            this.currentAssetObj.createdBy = this.username;
+            this.currentAssetObj.updatedBy = this.username;
             this.assetTypeService.addAssetType(this.currentAssetObj).subscribe(assetData => {
                 this.currentAssetObj = assetData;
                 this.alertService.showMessage('Asset Type added successfully.');
                 this.assetTypeService.getAll().subscribe(assetTypeData => {
                     this.assetTypeList = assetTypeData[0];
-                    this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-assettypelisting');
+                    this.router.navigateByUrl('/mastermodule/masterpages/app-assettypelisting');
                 });
             });
         }
         else {
+            this.currentAssetObj.updatedBy = this.username;
             this.assetTypeService.updateAssetType(this.currentAssetObj).subscribe(asset => {
                 this.alertService.showMessage('Asset Type updated successfully.');
                 this.assetTypeService.getAll().subscribe(assetTypeData => {

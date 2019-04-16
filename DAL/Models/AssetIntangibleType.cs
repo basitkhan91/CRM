@@ -37,7 +37,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
-
+        public long? AssetIntangibleTypeSingleId { get; set; }
         //public virtual ICollection<GLAccount> GLAccount { get; set; }
 
     }

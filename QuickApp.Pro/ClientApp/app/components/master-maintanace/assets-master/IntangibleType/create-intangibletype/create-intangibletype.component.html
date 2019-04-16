@@ -8,8 +8,11 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Intangible Type </label>
                             <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
-                                <input type="text" autocomplete="off" class="form-control autosuggest es-input" [(ngModel)]="currentIntangibleType.intangibleTypeName" [ngModelOptions]="{standalone: true}">
+                                <!--<input type="text" autocomplete="off" class="form-control autosuggest es-input" [(ngModel)]="currentIntangibleType.intangibleTypeName" [ngModelOptions]="{standalone: true}">-->
 
+                                <select class="form-control" [(ngModel)]="currentIntangibleType.assetIntangibleTypeSingleId" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let intangibleObj of assetIntangibleList" [ngValue]="intangibleObj.assetIntangibleTypeSingleId">  {{intangibleObj.assetIntangibleName}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">

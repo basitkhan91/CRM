@@ -176,6 +176,8 @@ namespace DAL
 
         IAssetType _assetType;
 
+        IGLAccountNodeShareWithEntityMapper gLAccountNodeShareWithEntityMapper;
+
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
         public UnitOfWork(ApplicationDbContext context)
@@ -1513,6 +1515,17 @@ namespace DAL
                 return _assetType;
             }
         }
+
+        public IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper
+        {
+            get
+            {
+                if (gLAccountNodeShareWithEntityMapper == null)
+                    gLAccountNodeShareWithEntityMapper = new GLAccountNodeShareWithEntityMapperRepository(_context);
+                return gLAccountNodeShareWithEntityMapper;
+            }
+        }
+
     }
 }
 

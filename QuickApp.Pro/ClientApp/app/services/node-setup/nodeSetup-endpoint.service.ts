@@ -15,6 +15,7 @@ export class NodeSetupEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/nodesetup/add";
     private readonly updateURL: string = "/api/nodesetup/update";
     private readonly removeByIdURL: string = "/api/nodesetup/removeById";
+    private readonly removeByIdMapperURL: string = "/api/StockLine/removeMapperById";
     private readonly addEntityMapperURL: string = "/api/nodesetup/addEntityMapper";
 
 
@@ -25,6 +26,7 @@ export class NodeSetupEndpointService extends EndpointFactory {
     get add() { return this.configurations.baseUrl + this.addURL; }
     get update() { return this.configurations.baseUrl + this.updateURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
+    get removeMapperById() { return this.configurations.baseUrl + this.removeByIdMapperURL; }
     get addEntityMapper() { return this.configurations.baseUrl + this.addEntityMapperURL; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -92,6 +94,15 @@ export class NodeSetupEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.removeNodeById(nodeId));
+            });
+    }
+
+    removeNodeShareEntityMapper<T>(nodeId: number): Observable<T> {
+        let endpointUrl = `${this.removeMapperById}/${nodeId}`;
+
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.removeNodeShareEntityMapper(nodeId));
             });
     }
 

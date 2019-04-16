@@ -1072,12 +1072,8 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
-
-
-
-        //deleteIntegration
-
-         [HttpDelete("deleteIntegration/{id}")]
+        
+        [HttpDelete("deleteIntegration/{id}")]
         [Produces(typeof(StockLineViewModel))]
         public IActionResult deleteIntegration(long id)
         {
@@ -1088,8 +1084,20 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.StocklineIntegrationPortalRepository.Remove(existingResult[i]);
                 _unitOfWork.SaveChanges();
             }
-            //existingResult.IsDelete = true;
-            //_unitOfWork.managementSite.Update(existingResult);
+            return Ok(id);
+        }
+
+        [HttpDelete("removeMapperById/{id}")]
+        [Produces(typeof(GLAccountNodeShareWithEntityMapper))]
+        public IActionResult deleteMapperNode(long id)
+        {
+            var existingResult = _context.GLAccountNodeShareWithEntityMapper.Where(c => c.GLAccountNodeId == id).ToList();
+
+            for (var i = 0; i < existingResult.Count; i++)
+            {
+                _unitOfWork.GLAccountNodeShareWithEntityMapper.Remove(existingResult[i]);
+                _unitOfWork.SaveChanges();
+            }
             return Ok(id);
         }
 

@@ -50,4 +50,8 @@ export class NodeSetupService {
         return this.nodeSetupEndpoint.removeNodeById(nodeId);
     }
 
+    removeNodeShareEntityMapper(nodeId: number) {
+        return this.nodeSetupEndpoint.removeNodeShareEntityMapper(nodeId);
+    }
+
 }

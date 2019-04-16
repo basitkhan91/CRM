@@ -45,6 +45,33 @@ namespace DAL.Repositories
 
 
         }
+
+        //public IEnumerable<object> getAllNodeSetup()
+        //{
+        //    try
+        //    {
+        //        var result = (from glAccountNode in _appContext.GLAccountNode
+        //                      join glEntityMapper in _appContext.GLAccountNodeShareWithEntityMapper on gle.GLAccountNodeId equals gn.GLAccountNodeId
+        //                      join ms in _appContext.ManagementStructure on gle.ManagementStructureId equals ms.ManagementStructureId
+        //                      where gle.GLAccountNodeId == id
+        //                      select new
+        //                      {
+        //                          ms.Code,
+        //                          gle.GLAccountNodeId,
+        //                          gle.ManagementStructureId
+
+        //                      }).ToList();
+
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return null;
+        //    }
+
+
+        //}
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
