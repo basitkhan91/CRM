@@ -108,8 +108,8 @@ namespace DAL.Models
         public Nullable<decimal> VerificationDefaultCost { get; set; }
         public string VerificationMemo { get; set; }
         public Nullable<long> VerificationGlAccountId { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssetCapes> AssetCapes { get; set; }
+
+        public virtual AssetCapes AssetCapes { get; set; }
 
         public virtual Manufacturer Manufacturer { get; set; }
         public virtual Currency Currency { get; set; }
