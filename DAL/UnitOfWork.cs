@@ -5,19 +5,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.Models;
 using DAL.Repositories;
 using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL
 {
     public class UnitOfWork : IUnitOfWork
     {
         readonly ApplicationDbContext _context;
-
+       
         ICustomerRepository _customer;
         ICustomerBillingInformationRepository _customerBillingInformation;
         IProductRepository _products;
@@ -455,6 +458,7 @@ namespace DAL
 
         public int SaveChanges()
         {
+            AuditChanges();
             return _context.SaveChanges();
         }
 
@@ -1524,6 +1528,73 @@ namespace DAL
                     gLAccountNodeShareWithEntityMapper = new GLAccountNodeShareWithEntityMapperRepository(_context);
                 return gLAccountNodeShareWithEntityMapper;
             }
+        }
+
+        private void AuditChanges()
+        {
+            _context.ChangeTracker.DetectChanges();
+            var modifiedEntries = _context.ChangeTracker.Entries()
+                .Where(x => x.Entity is IAudit && x.State == EntityState.Modified).ToList();
+            foreach (var entry in modifiedEntries)
+            {
+                var entity = entry.Entity;
+                Type type = entity.GetType();
+                var classPath = type.GetTypeInfo().FullName;
+                var auditEntity = Activator.CreateInstance(Type.GetType(classPath + "Audit", true));
+                var auditEntityProperties = auditEntity.GetType().GetProperties();
+                var originalValues = entry.GetDatabaseValues();  // OriginalValues[property.Name];
+                var entityProperties = entity.GetType().GetProperties();
+                var isValueChanged = false;
+                auditEntityProperties.ToList().ForEach(property =>
+                {
+
+                    if (entityProperties.Any(x => x.Name == property.Name))
+                    {
+                        var originalValue = originalValues[property.Name];
+                        var currentValue = entry.CurrentValues[property.Name];
+                        var entityProperty = entityProperties.First(x => x.Name == property.Name);
+                        var isKeyAttribute = Attribute.GetCustomAttribute(entityProperty, typeof(KeyAttribute)) as KeyAttribute != null;
+
+                        if (originalValue != null)
+                        {
+                            if (currentValue == null)
+                            {
+                                property.SetValue(auditEntity, originalValue, null);
+                                isValueChanged = true;
+                            }
+                            else if (originalValue.ToString() != currentValue.ToString())
+                            {
+                                property.SetValue(auditEntity, originalValue, null);
+                                isValueChanged = true;
+                            }
+                            else if (isKeyAttribute)
+                            {
+                                property.SetValue(auditEntity, originalValue, null);
+                            }
+                        }
+                        else {
+                            if (currentValue != null && property.Name == "UpdatedDate")
+                            {
+                                property.SetValue(auditEntity, currentValue, null);
+                                isValueChanged = true;
+                            }
+                        }
+                    }
+                });
+                if (isValueChanged)
+                    AuditRecord(auditEntity);
+            }
+        }
+        
+        private void AuditRecord(object auditData)
+        {
+            var classType = typeof(Repository<>);
+            var argumentType = auditData.GetType();
+            var constructedAddAuditMethod = classType.MakeGenericType(argumentType);
+            var obj = Activator.CreateInstance(constructedAddAuditMethod, new object[] { _context });
+
+            MethodInfo addAuditMethod = constructedAddAuditMethod.GetMethod("Add");
+            addAuditMethod.Invoke(obj, new[] { auditData });
         }
 
     }

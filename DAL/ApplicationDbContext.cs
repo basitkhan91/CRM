@@ -19,6 +19,7 @@ namespace DAL
     {
         public string CurrentUserId { get; set; }
         public DbSet<AssetStatus> AssetStatus { get; set; }
+        public DbSet<AssetStatusAudit> AssetStatusAudit { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -257,7 +258,7 @@ namespace DAL
         public DbSet<AssetIntangibleType> AssetIntangibleType { get; set; }
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
-        //public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
+        public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
@@ -334,29 +335,7 @@ namespace DAL
 
         private void UpdateAuditEntities()
         {
-            var modifiedEntries = ChangeTracker.Entries()
-                .Where(x => x.Entity is IAuditableEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
-
-
-            foreach (var entry in modifiedEntries)
-            {
-                var entity = (IAuditableEntity)entry.Entity;
-                DateTime now = DateTime.UtcNow;
-
-                if (entry.State == EntityState.Added)
-                {
-                    entity.CreatedDate = now;
-                    entity.CreatedBy = CurrentUserId;
-                }
-                else
-                {
-                    base.Entry(entity).Property(x => x.CreatedBy).IsModified = false;
-                    base.Entry(entity).Property(x => x.CreatedDate).IsModified = false;
-                }
-
-                entity.UpdatedDate = now;
-                entity.UpdatedBy = CurrentUserId;
-            }
+            
         }
     }
 }

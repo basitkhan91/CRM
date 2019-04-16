@@ -4,7 +4,9 @@ import { AlertService } from "../../services/alert.service";
 import { AssetStatus } from "../../models/asset-status.model";
 import { AssetStatusService } from "../../services/asset-status/asset-status.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AuthService } from "../../services/auth.service";
+import { AssetStatusAudit} from "../../models/asset-status-audit.model";
+import { forEach } from "@angular/router/src/utils/collection";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'asset-status',
@@ -18,23 +20,23 @@ export class AssetStatusComponent implements OnInit {
     assetStatusToUpdate: AssetStatus;
     assetStatusToRemove: AssetStatus;
     assetStatusList: AssetStatus[];
+    assetStatusAuditList: AssetStatusAudit[];
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
-
-    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService) {
+    AuditDetails: SingleScreenAuditDetails[];
+    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
         this.assetStatusService.getAll().subscribe(assets => {
             this.assetStatusList = assets[0];
+            this.assetStatusList.forEach(function (assetStatus) {
+                assetStatus.isActive = assetStatus.isActive == false ? false : true;
+            });
         });
         this.currentAssetStatus = new AssetStatus();
-    }
-
-    get userName(): string {
-        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
     addAssetStatus(): void {
@@ -42,8 +44,7 @@ export class AssetStatusComponent implements OnInit {
             this.display = true;
             return;
         }
-        this.currentAssetStatus.createdBy = this.userName;
-        this.currentAssetStatus.updatedBy = this.userName;
+
         this.assetStatusService.add(this.currentAssetStatus).subscribe(asset => {
             this.alertService.showMessage('Asset Status added successfully.');
             this.assetStatusService.getAll().subscribe(assets => {
@@ -62,22 +63,14 @@ export class AssetStatusComponent implements OnInit {
     }
 
     updateAssetStatus(): void {
-        if (!(this.assetStatusToUpdate.identification && this.assetStatusToUpdate.name && this.assetStatusToUpdate.memo)) {
-            this.display = true;
-            return;
-        }
-        else {
-            this.currentAssetStatus.updatedBy = this.userName;
-            this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Status updated successfully.');
-                this.assetStatusService.getAll().subscribe(assets => {
-                    this.assetStatusList = assets[0];
-                });
-
-                this.resetUpdateAssetStatus();
-                this.dismissModel();
+        this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
+            this.alertService.showMessage('Asset Status updated successfully.');
+            this.assetStatusService.getAll().subscribe(assets => {
+                this.assetStatusList = assets[0];
             });
-        }
+            this.resetUpdateAssetStatus();
+            this.dismissModel();
+        });
     }
 
     removeAssetStatus(): void {
@@ -91,22 +84,6 @@ export class AssetStatusComponent implements OnInit {
 
     }
 
-    //toggleIsActive(assetStatusId: number): void {
-    //    this.assetStatusToUpdate = Object.assign({}, this.assetStatusList.filter(function (asset) {
-    //        return asset.id == assetStatusId;
-    //    })[0]);
-    //    this.Active = "In Active";
-    //    this.assetStatusToUpdate.isActive == false;
-    //   // this.assetStatusToUpdate.isActive = this.assetStatusToUpdate.isActive != null ? !this.assetStatusToUpdate.isActive : false;
-    //    this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
-    //        this.alertService.showMessage('Asset Status updated successfully.');
-    //        this.assetStatusService.getAll().subscribe(assets => {
-    //            this.assetStatusList = assets[0];
-    //        });
-    //        this.resetUpdateAssetStatus();
-    //        this.dismissModel();
-    //    });
-    //}
 
     resetAddAssetStatus(): void {
         this.currentAssetStatus = new AssetStatus();
@@ -116,44 +93,76 @@ export class AssetStatusComponent implements OnInit {
         this.assetStatusToUpdate = new AssetStatus();
     }
 
-    dismissModel() {
+    dismissModel(): void {
         if (this.modal != undefined) {
             this.modal.close();
         }
     }
 
-    confirmDelete(content, id) {
+    confirmDelete(content, id): void {
         this.assetStatusToRemove = Object.assign({}, this.assetStatusList.filter(function (asset) {
             return asset.id == id;
         })[0]);;
         this.modal = this.modalService.open(content, { size: 'sm' });
     }
 
+    toggleIsActive(assetStatus: any, event): void {
+        this.assetStatusToUpdate = assetStatus;
+        this.assetStatusToUpdate.isActive = event.checked == false ? false : true;
+        this.updateAssetStatus();
+    }
 
-    toggleIsActive(assetStatus: any,e) {
-        if (e.checked == false) {
-            this.assetStatusToUpdate = assetStatus;
-            this.Active = "In Active";
-            this.assetStatusToUpdate.isActive == false;
-            this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Status updated successfully.');
-                this.assetStatusService.getAll().subscribe(assets => {
-                    this.assetStatusList = assets[0];
-                });
-             
-            })
-        }
-        else {
-            this.assetStatusToUpdate = assetStatus;
-            this.Active = "Active";
-            this.assetStatusToUpdate.isActive == true;
-            this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Status updated successfully.');
-                this.assetStatusService.getAll().subscribe(assets => {
-                    this.assetStatusList = assets[0];
-                });
-            })
-        }
+    showAuditPopup(template, id): void {
+        this.auditAssetStatus(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
 
+    auditAssetStatus(assetStatusId: number): void {
+        this.assetStatusService.getAssetAudit(assetStatusId).subscribe(audits => {
+            var columnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate","updatedDate"];
+            this.AuditDetails = this.extractAuditChangedValues(audits.result, columnsToAvoid);
+        });
+    }
+
+    extractAuditChangedValues(audits: any[], columnsToAvoid: string[]): SingleScreenAuditDetails[] {
+        var singleScreenAuditList = [];
+        var index = 1;
+        audits.forEach(function (audit) {
+
+            var singleScreenAudit = new SingleScreenAuditDetails();
+            singleScreenAudit.LastUpdatedTime = audit.updatedDate.toString();
+            singleScreenAudit.LastUpdatedBy = audit.updatedBy != undefined ? audit.updatedBy : "admin";
+            singleScreenAudit.AuditChanges = [];
+            singleScreenAudit.Visible = false;
+            var properties = Object.keys(audit);
+            properties.forEach(function (property) {
+                if (audit[property] != null && columnsToAvoid.indexOf(property) == -1) {
+                    var auditChanges = new AuditChanges();
+                    auditChanges.FieldFriendlyname = property;
+                    auditChanges.NewValue = audit[property];
+
+                    if (index < audits.length) {
+                        var oldValueAudit = audits.slice(index, audits.length).filter(function (o) {
+                            return o[property] != null;
+                        })[0];
+                        auditChanges.OldValue = oldValueAudit != undefined ? oldValueAudit[property] : "";
+                    }
+                    else {
+                        auditChanges.OldValue = "-";
+                    }
+
+                    singleScreenAudit.AuditChanges.push(auditChanges);
+                }
+            });
+
+            singleScreenAuditList.push(singleScreenAudit);
+            index += 1;
+        });
+
+        return singleScreenAuditList;
+    }
+
+    ToggleChangedPropertiesSection(SingleScreenAudit: SingleScreenAuditDetails): void {
+        SingleScreenAudit.Visible = !SingleScreenAudit.Visible;
     }
 }

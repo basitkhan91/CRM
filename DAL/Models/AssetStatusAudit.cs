@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class AssetStatusAudit
+    public class AssetStatusAudit : PasBaseAudit
     {
         [Key]
         public long AssetStatusAuditId { get; set; }
@@ -13,10 +13,6 @@ namespace DAL.Models
         public string Identification { get; set; }
         public string Name { get; set; }
         public string Memo { get; set; }
-        public string CreatedBy { get; set; }
-        public Nullable<DateTime> CreatedDate { get; set; }
-        public string UpdatedBy { get; set; }
-        public Nullable<DateTime> UpdatedDate { get; set; }
-        public Nullable<bool> IsDeleted { get; set; }
+
     }
 }
