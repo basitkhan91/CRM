@@ -17,6 +17,7 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class AssetService {
+    currentAssetId: number;
     generalcustomer: boolean = false;
     contacts: boolean = false;
     financial: boolean = false;
@@ -75,4 +76,18 @@ export class AssetService {
     updateAsset(asset: any) {
         return this.assetEndpoint.updateAsset(asset, asset.assetRecordId);
     }
+
+    remove(assetRecordId: number) {
+        return this.assetEndpoint.removeAssetById(assetRecordId);
+    }
+    //For Saving of Capes//
+    saveManfacturerinforcapes(data) {
+        return this.assetEndpoint.saveAssetCapesInfo<any>(data);
+    }
+
+    getcapabilityListData() {
+        return Observable.forkJoin(
+            this.assetEndpoint.getCapabilityTypeListEndpoint<any[]>());
+    }
+
 }

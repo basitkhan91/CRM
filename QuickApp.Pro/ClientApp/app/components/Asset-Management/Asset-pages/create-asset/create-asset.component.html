@@ -64,7 +64,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">BU</label>
                 <div class="col-sm-7">
-                    <select [(ngModel)]="currentAsset.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(currentAsset.businessUnitId)">
+                    <select [(ngModel)]="currentAsset.buisinessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(currentAsset.buisinessUnitId)">
                         <option>--Select--</option>
                         <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
                     </select>
@@ -80,10 +80,10 @@
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Dep</label>
+                <label class="control-label col-sm-4">Dept</label>
                 <div class="col-sm-7">
                     <div>
-                        <select [(ngModel)]="currentAsset.divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(currentAsset.divisionId)">
+                        <select [(ngModel)]="currentAsset.divisionId" [ngModelOptions]="{standalone: true}" (change)="divisionChange(currentAsset.divisionId)">
                             <option>--Select--</option>
                             <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
                         </select>
