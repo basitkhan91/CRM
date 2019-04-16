@@ -8,7 +8,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationStart } from '@angular/router';
 import { MatExpansionPanel, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
-import {DataTableModule} from 'angular-datatable';
+//import {DataTableModule} from 'angular-datatable';
 import { AlertService, AlertDialog, DialogType, AlertMessage, MessageSeverity } from './services/alert.service';
 import { NotificationService } from "./services/notification.service";
 import { AppTranslationService } from "./services/app-translation.service";

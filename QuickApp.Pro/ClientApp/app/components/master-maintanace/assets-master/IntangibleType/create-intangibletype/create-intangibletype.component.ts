@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { fadeInOut } from '../../../../../services/animations';
 import { AssetIntangibleTypeSingleScreenService } from '../../../../../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service';
 import { AssetIntangibleTypeSingleScreen } from '../../../../../models/assetIntangibleTypeSingleScreen.model';
+import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
     selector: 'app-create-intangibletype',
@@ -29,7 +30,7 @@ export class CreateIntangibletypeComponent implements OnInit {
     managementStructureData: any = [];
     assetIntangibleList: AssetIntangibleTypeSingleScreen[];
     updateMode: boolean = false;
-    constructor(private alertService: AlertService, private router: Router, private assetIntangibleService: AssetIntangibleTypeSingleScreenService,private legalEntityservice: LegalEntityService, private glAccountService: GlAccountService,private intangibleService:AssetIntangibleTypeService) {
+    constructor(private authService:AuthService,private alertService: AlertService, private router: Router, private assetIntangibleService: AssetIntangibleTypeSingleScreenService,private legalEntityservice: LegalEntityService, private glAccountService: GlAccountService,private intangibleService:AssetIntangibleTypeService) {
         if (this.intangibleService.intangibleTypeEditCollection) {
             this.updateMode = true;
             this.currentIntangibleType = this.intangibleService.intangibleTypeEditCollection;
@@ -45,6 +46,10 @@ export class CreateIntangibletypeComponent implements OnInit {
             this.assetIntangibleList = assetIntangible[0];
         });
     }
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     loadCompaniesData() {
         this.legalEntityservice.getManagemententity().subscribe(data => {
             this.allManagemtninfo = data[0];
@@ -63,6 +68,8 @@ export class CreateIntangibletypeComponent implements OnInit {
     }
     addIntangibileType(): void {
         if (!this.currentIntangibleType.assetIntangibleTypeId) {
+            this.currentIntangibleType.createdBy = this.userName;
+            this.currentIntangibleType.updatedBy = this.userName;
             this.intangibleService.add(this.currentIntangibleType).subscribe(intangibleData => {
                 this.currentIntangibleType = intangibleData;
                 this.alertService.showMessage('Intangible Type added successfully.');
@@ -73,6 +80,7 @@ export class CreateIntangibletypeComponent implements OnInit {
             });
         }
         else {
+            this.currentIntangibleType.updatedBy = this.userName;
             this.intangibleService.update(this.currentIntangibleType).subscribe(intangible => {
                 this.alertService.showMessage('Intangible Type updated successfully.');
                 this.intangibleService.getAll().subscribe(intangibleTypeData => {

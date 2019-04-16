@@ -78,6 +78,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    assetType.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<AssetType>().Update(assetType);
                     unitOfWork.SaveChanges();
                     return Ok(assetType);

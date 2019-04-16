@@ -120,6 +120,9 @@
                                 <option>80000</option>
                                 <option>90000</option>
                             </select>
+                            <!--<select class="form-control" [(ngModel)]="currentAssetObj.assetSale" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.accountCode">  {{acqGL.accountCode}}</option>
+                            </select>-->
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
@@ -131,6 +134,9 @@
                                 <option>80000</option>
                                 <option>90000</option>
                             </select>
+                            <!--<select class="form-control" [(ngModel)]="currentAssetObj.assetWriteOff" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.accountCode">  {{acqGL.accountCode}}</option>
+                            </select>-->
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
@@ -142,6 +148,9 @@
                                 <option>80000</option>
                                 <option>90000</option>
                             </select>
+                            <!--<select class="form-control" [(ngModel)]="currentAssetObj.assetWriteDown" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let acqGL of glAccountList" [ngValue]="acqGL.accountCode">  {{acqGL.accountCode}} </option>
+                            </select>-->
                         </div>
                     </div>
                 </div>
@@ -186,8 +195,8 @@
 
                 <div class="clear"></div>
                 <hr>
-                <button (click)="addAsset()">Save</button>
-                <div class="clear"></div>
+                <button (click)="addAsset()" class="btn btn-success pull-right" >Save</button>
+                <div class="clear" ></div>
             </div>
         </div>
         <div class="clearfix"></div>

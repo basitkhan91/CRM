@@ -103,11 +103,14 @@ export class NodeSetupComponent implements OnInit {
                 this.alertService.showMessage('Node Setup added successfully.');
                 this.nodeSetupService.getAll().subscribe(Nodes => {
                     this.nodeSetupListData = Nodes[0];
+                    this.setManagementDesctoList();
+
                 });
                 this.dismissModel();
             });
         }
-       
+
+        
     }
 
     setNodeSetupToUpdate(id: number, content): void
@@ -277,6 +280,7 @@ export class NodeSetupComponent implements OnInit {
                 this.alertService.showMessage('Node Setup Saved successfully.');
                 this.nodeSetupService.getAll().subscribe(Nodes => {
                     this.nodeSetupListData = Nodes[0];
+                    this.setManagementDesctoList();
                 });
 
             })
@@ -289,6 +293,7 @@ export class NodeSetupComponent implements OnInit {
                 this.alertService.showMessage('Node Setup updated successfully.');
                 this.nodeSetupService.getAll().subscribe(Nodes => {
                     this.nodeSetupListData = Nodes[0];
+                    this.setManagementDesctoList();
                 });
             })
         }

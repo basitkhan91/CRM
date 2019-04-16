@@ -51,6 +51,7 @@ export class GlaccountCreateComponent implements OnInit {
 
     addGLAccount(): void {
         this.currentGLAccount.createdBy = this.userName;
+        this.currentGLAccount.updatedBy = this.userName;
         if (!this.currentGLAccount.glAccountId) {
             this.glAccountService.add(this.currentGLAccount).subscribe(glData => {
                 this.currentGLAccount = glData;
@@ -62,6 +63,7 @@ export class GlaccountCreateComponent implements OnInit {
             });
         }
         else {
+            this.currentGLAccount.updatedBy = this.userName;
             this.glAccountService.update(this.currentGLAccount).subscribe(asset => {
                 this.alertService.showMessage('Asset Status updated successfully.');
                 this.glAccountService.getAll().subscribe(assets => {
