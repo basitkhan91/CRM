@@ -31,8 +31,15 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<GlCashFlowClassificationViewModel>))]
         public IActionResult Get()
         {
-            var allcashflows = _context.GlClassFlowClassification.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a=>a.GlClassFlowClassificationId).ToList();
-            return Ok(allcashflows);
+            try
+            {
+                var allcashflows = _context.GlClassFlowClassification.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.GlClassFlowClassificationId).ToList();
+                return Ok(allcashflows);
+            }catch(Exception ex)
+            {
+
+            }
+            return null;
 
         }
 

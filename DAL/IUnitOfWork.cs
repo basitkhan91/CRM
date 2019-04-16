@@ -223,6 +223,14 @@ namespace DAL
         IEmployeeLeaveTypeMappingRepository EmployeeLeaveTypeMappingRepository { get; }
 
 
+        IAccountingCalendar accountingCalendar { get; }
+
+        IGLAccount gLAccount { get; }
+
+        IAssetIntangibleType assetIntangibleType { get; }
+
+        IAssetType assetType { get; }
+
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }
         IWorkFlowRepositoryTest workFlowRepositoryTest { get; }
         //IPurchaseOrderPartRepository PurchaseOrderPartRepository { get; }

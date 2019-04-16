@@ -370,6 +370,9 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.manufacturedDate = "";
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeSingleScreenId = "";
+                    //this.currentAsset.currency = [];
+                    //this.currentAsset.manufacturer = [];
+                    //this.currentAsset.unitOfMeasure = [];
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
@@ -402,10 +405,14 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.manufacturedDate = "";
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeSingleScreenId = "";
+                    //this.currentAsset.currency = [];
+                    //this.currentAsset.manufacturer = [];
+                    //this.currentAsset.unitOfMeasure = [];
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
                 }
+                
                 this.assetService.updateAsset(this.currentAsset).subscribe(data => {
                     this.currentAsset.updatedBy = this.userName;
                     this.listCollection = data;

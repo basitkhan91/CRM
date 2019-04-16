@@ -29,11 +29,21 @@ namespace QuickApp.Pro.Controllers
 
         #region Public Methods
 
-        [HttpGet("getAll")]
-        public IActionResult getAll()
+        [HttpGet("getAllGLAccount")]
+        public IActionResult getAllGLAccount()
         {
-            var glAccountData = unitOfWork.Repository<GLAccount>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountId);
-            return Ok(glAccountData);
+            try
+            {
+
+                var glAccountData = unitOfWork.Repository<GLAccount>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountId);
+                return Ok(glAccountData);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return Ok(ModelState);
+
         }
 
         [HttpGet("getMiscData")]
@@ -42,10 +52,12 @@ namespace QuickApp.Pro.Controllers
             var glAccountMiscdata = unitOfWork.Repository<GLAccountMiscCategory>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountMiscCategoryId);
             return Ok(glAccountMiscdata);
         }
+
+        
         [HttpGet("getById/{id}")]
         public IActionResult getGlAccountById(long id)
         {
-            var glAccountData = unitOfWork.Repository<GLAccount>().Find(x => x.GLAccountId == id && x.IsDelete != true);
+            var glAccountData = unitOfWork.gLAccount.GetAllglacoounts(id);
             return Ok(glAccountData);
         }
 
@@ -57,6 +69,7 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     glAccountData.MasterCompanyId = 1;
+                    glAccountData.CreatedDate = DateTime.Now;
                     unitOfWork.Repository<GLAccount>().Add(glAccountData);
                     unitOfWork.SaveChanges();
                     return Ok(glAccountData);
@@ -98,7 +111,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("removeById/{id}")]
+        [HttpGet("removeGlaccountId/{id}")]
         public IActionResult removeGlAccountById(long id)
         {
             var glAccount = unitOfWork.Repository<GLAccount>().Find(x => x.GLAccountId == id).FirstOrDefault();

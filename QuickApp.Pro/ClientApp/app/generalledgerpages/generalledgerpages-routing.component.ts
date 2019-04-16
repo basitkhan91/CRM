@@ -20,6 +20,8 @@ import { GlaccountListComponent } from '../components/general-ledger/glaccount-l
 import { GlaccountCreateComponent } from '../components/general-ledger/glaccount-create/glaccount-create.component';
 //import { GLAccountCategoryComponent } from '../components/gl-account-categories/gl-account-categories.component';
 
+
+
 const generalledgerpageRoutes: Routes = [
 	{
 
@@ -40,8 +42,7 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-node-setup", component: NodeSetupComponent, data: { title: "NodeSetupComponent" } },
             { path: "app-glaccount-list", component: GlaccountListComponent, data: { title: "GlAccountList" } },
             { path: "app-glaccount-create", component: GlaccountCreateComponent, data: { title: "GlAccountCreate" } },
-			//{ path: "app-generalLedgercurrenccComponent", component: GeneralLedgerCurrencyComponent, data: { title: "GeneralLedgerCurrencyComponent" } },
-			//{ path: "app-glaccountcategoriescomponent", component: GLAccountCategoryComponent, data: { title: "GlAccountCategoriesComponent" } }
+
 		]
 	}
 ];

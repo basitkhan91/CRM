@@ -168,7 +168,13 @@ namespace DAL
 
         ICapabilityTypeRepository _capabilityTypeRepository;
 
-        
+        IAccountingCalendar _accountingCalendar;
+
+        IAssetIntangibleType _assetIntangibleType;
+
+        IGLAccount _gLAccount;
+
+        IAssetType _assetType;
 
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
@@ -458,6 +464,11 @@ namespace DAL
         public IEnumerable<Customer> getAlldata()
         {
             throw new NotImplementedException();
+        }
+
+        public IRepository<T> Repository<T>() where T : class
+        {
+            return new Repository<T>(_context);
         }
 
         public IMasterCompanyRepository MasterCompanies
@@ -1463,11 +1474,45 @@ namespace DAL
             }
         }
 
-        public IRepository<T> Repository<T>() where T : class
+        public IAccountingCalendar accountingCalendar
         {
-            return new Repository<T>(_context);
+            get
+            {
+                if (_accountingCalendar == null)
+                    _accountingCalendar = new AccountingCalendarRepository(_context);
+                return _accountingCalendar;
+            }
         }
 
+        public IGLAccount gLAccount
+        {
+            get
+            {
+                if (_gLAccount == null)
+                    _gLAccount = new GLAccountRepository(_context);
+                return _gLAccount;
+            }
+        }
+
+        public IAssetIntangibleType assetIntangibleType
+        {
+            get
+            {
+                if (_assetIntangibleType == null)
+                    _assetIntangibleType = new AssetIntangibleTypeRepository(_context);
+                return _assetIntangibleType;
+            }
+        }
+
+        IAssetType IUnitOfWork.assetType
+        {
+            get
+            {
+                if (_assetType == null)
+                    _assetType = new AssetTypeRepository(_context);
+                return _assetType;
+            }
+        }
     }
 }
 

@@ -2,84 +2,120 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using DAL;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using QuickApp.Pro.Helpers;
-using QuickApp.Pro.ViewModels;
+
 namespace QuickApp.Pro.Controllers
 {
 
-
-    [Route("api/[controller]")]
+    [Route("api/AssetIntangibleType")]
     public class AssetIntangibleTypeController : Controller
     {
-        private IUnitOfWork _unitOfWork;
-        readonly ILogger _logger;
-        readonly IEmailer _emailer;
-        private const string GetActionByIdActionName = "GetActionById";
+        #region Private Members
 
-        public AssetIntangibleTypeController(IUnitOfWork unitOfWork, ILogger<AssetIntangibleTypeController> logger, IEmailer emailer)
+        private IUnitOfWork unitOfWork;
+
+        #endregion Private Members
+
+        #region Constructor
+
+        public AssetIntangibleTypeController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
-            _emailer = emailer;
+            this.unitOfWork = unitOfWork;
+        }
+        #endregion Constructor
+
+        #region Public Methods
+
+        [HttpGet("getAllIntangibleTypes")]
+        public IActionResult getAll()
+        {
+            var intangibleTypeData = unitOfWork.Repository<AssetIntangibleType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetIntangibleTypeId);
+            return Ok(intangibleTypeData);
         }
 
-        // GET: api/values
-        //    [HttpGet("Get")]
-        //    [Produces(typeof(List<PriorityViewModel>))]
-        //    public IActionResult Get()
-        //    {
-        //        var allGatecodeinfo = _unitOfWork.Priority.GetPriorities(); //.GetAllCustomersData();
-        //        return Ok(Mapper.Map<IEnumerable<PriorityViewModel>>(allGatecodeinfo));
 
-        //    }
-        //    [HttpGet("auditHistoryById/{id}")]
-        //    [Produces(typeof(List<AuditHistory>))]
-        //    public IActionResult GetAuditHostoryById(long id)
-        //    {
-        //        var result = _unitOfWork.AuditHistory.GetAllHistory("Priority", id); //.GetAllCustomersData();
+        [HttpGet("getById/{id}")]
+        public IActionResult getintangibleById(long id)
+        {
+            var intangibleTypeData = unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id && x.IsDelete != true);
+            return Ok(intangibleTypeData);
+        }
 
+        [HttpPost("addintangibleType")]
+        public IActionResult addintangibleType([FromBody]AssetIntangibleType intangibleTypeData)
+        {
+            if (intangibleTypeData != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    intangibleTypeData.MasterCompanyId = 1;
+                    intangibleTypeData.CreatedDate = DateTime.Now;
+                    intangibleTypeData.UpdatedDate = DateTime.Now;
+                    unitOfWork.Repository<AssetIntangibleType>().Add(intangibleTypeData);
+                    unitOfWork.SaveChanges();
+                    return Ok(intangibleTypeData);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
 
-        //        try
-        //        {
-        //            var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
 
-        //            return Ok(resul1);
-        //        }
-        //        catch (Exception ex)
-        //        {
+        }
 
-        //            throw;
-        //        }
+        [HttpPut("update")]
+        public IActionResult updateintangibleType([FromBody]AssetIntangibleType intangibleType)
+        {
+            if (intangibleType != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.Repository<AssetIntangibleType>().Update(intangibleType);
+                    unitOfWork.SaveChanges();
+                    return Ok(intangibleType);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
 
+            }
+            else
+            {
+                return BadRequest();
+            }
 
+        }
 
-        //    }
+        [HttpGet("removeintangibleTypeById/{id}")]
+        public IActionResult removeintangibleTypeById(long id)
+        {
+            var intangibleType = unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault();
+            if (intangibleType != null)
+            {
+                intangibleType.IsDelete = true;
+                unitOfWork.Repository<AssetIntangibleType>().Update(intangibleType);
+                unitOfWork.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
+        #endregion Public Methods
 
+        #region Private Methods
 
-
-        //    [HttpDelete("priority/{id}")]
-        //    [Produces(typeof(PriorityViewModel))]
-        //    public IActionResult DeleteAction(long id)
-        //    {
-        //        var existingResult = _unitOfWork.Priority.GetSingleOrDefault(c => c.PriorityId == id);
-        //        existingResult.IsDelete = true;
-        //        _unitOfWork.Priority.Update(existingResult);
-        //        //_unitOfWork.Priority.Remove(existingResult);
-
-        //        _unitOfWork.SaveChanges();
-
-        //        return Ok(id);
-        //    }
-
+        #endregion Private Methods
     }
-
-
-
-
 }

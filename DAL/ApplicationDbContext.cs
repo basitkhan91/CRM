@@ -253,6 +253,11 @@ namespace DAL
         public DbSet<Asset> Asset { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
+         public DbSet<AssetType> AssetType { get; set; }
+        public DbSet<AssetIntangibleType> AssetIntangibleType { get; set; }
+
+        public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
+        //public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

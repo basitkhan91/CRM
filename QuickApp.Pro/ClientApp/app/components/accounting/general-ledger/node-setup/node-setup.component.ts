@@ -36,6 +36,10 @@ export class NodeSetupComponent implements OnInit {
     private isDeleteMode: boolean = false;
     mainCompanylistMultiSelectData: any[] = [];
     cols: any[];
+    nodeSetupUpdate: any;
+    display: boolean = false;
+    Active: string;
+    modelValue: boolean = false;
     constructor(private modalService: NgbModal,public glAccountService: GLAccountClassService,public legalEntityService: LegalEntityService,private alertService: AlertService, private nodeSetupService: NodeSetupService )
     {
     }
@@ -77,15 +81,23 @@ export class NodeSetupComponent implements OnInit {
     }
 
     addNodeSetup(): void {
-        this.nodeSetupService.add(this.currentNodeSetup).subscribe(node => {
-            this.currentNodeSetup.glAccountNodeId = node.glAccountNodeId;
-            this.addGLAccountNodeShareWithEntityMapper();
-            this.alertService.showMessage('Node Setup added successfully.');
-            this.nodeSetupService.getAll().subscribe(Nodes => {
-                this.nodeSetupList = Nodes[0];
+        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType)) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType))
+        {
+            this.nodeSetupService.add(this.currentNodeSetup).subscribe(node => {
+                this.currentNodeSetup.glAccountNodeId = node.glAccountNodeId;
+                this.addGLAccountNodeShareWithEntityMapper();
+                this.alertService.showMessage('Node Setup added successfully.');
+                this.nodeSetupService.getAll().subscribe(Nodes => {
+                    this.nodeSetupList = Nodes[0];
+                });
+                this.dismissModel();
             });
-            this.dismissModel();
-        });
+        }
+       
     }
 
     setNodeSetupToUpdate(id: number, content): void
@@ -219,5 +231,32 @@ export class NodeSetupComponent implements OnInit {
         this.updateMode = false;
         this.modal.close();
         this.currentNodeSetup.selectedCompanysData = [];
+    }
+
+    toggleIsActive(nodeSetup: any, e) {
+        if (e.checked == false) {
+            this.nodeSetupUpdate = nodeSetup;
+            this.Active = "In Active";
+            this.nodeSetupUpdate.isActive == false;
+            this.nodeSetupService.update(this.nodeSetupUpdate).subscribe(intangibleTypes => {
+                this.alertService.showMessage('Node Setup updated successfully.');
+                this.nodeSetupService.getAll().subscribe(Nodes => {
+                    this.nodeSetupList = Nodes[0];
+                });
+
+            })
+        }
+        else {
+            this.nodeSetupUpdate = nodeSetup;
+            this.Active = "Active";
+            this.nodeSetupUpdate.isActive == true;
+            this.nodeSetupService.update(this.nodeSetupUpdate).subscribe(intangibleTypes => {
+                this.alertService.showMessage('Node Setup updated successfully.');
+                this.nodeSetupService.getAll().subscribe(Nodes => {
+                    this.nodeSetupList = Nodes[0];
+                });
+            })
+        }
+
     }
 }

@@ -22,37 +22,37 @@ export class AssetTypeService {
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
     private _rolesChanged = new Subject<RolesChangedEventArg>();
-
+    public assetrowSelection: any;
     constructor(
         private router: Router,
         private http: HttpClient,
         private authService: AuthService,
         private assettypeEndpoint: AssetTypeEndpointService) { }
 
-    getWorkFlows() {
+    getAll() {
         return Observable.forkJoin(
-            this.assettypeEndpoint.getGateCodeEndpoint<any[]>());
+            this.assettypeEndpoint.getAllAssets<any[]>());
     }
 
-    newAction(action: any) {
-        return this.assettypeEndpoint.getNewGatecodeEndpoint<any>(action);
+    addAssetType(assetType: any) {
+        return this.assettypeEndpoint.addAssetType<any>(assetType);
     }
 
-    getAction(actionId?: number) {
-        return this.assettypeEndpoint.getEditActionEndpoint<any>(actionId);
+    getAction(assetType?: number) {
+        return this.assettypeEndpoint.editAssetType<any>(assetType);
     }
 
-    updateAction(action: any) {
-        return this.assettypeEndpoint.getUpdateActionEndpoint(action, action.gateCodeId);
+   
+    updateAssetType(assetType: any) {
+        return this.assettypeEndpoint.updateAssetType<any>(assetType);
     }
 
-    deleteAcion(actionId: number) {
 
-        return this.assettypeEndpoint.getDeleteActionEndpoint(actionId);
+    deleteAssetType(assetTypeId: number) {
+
+        return this.assettypeEndpoint.deleteAssetType(assetTypeId);
 
     }
-    historyAcion(actionId: number) {
-        return Observable.forkJoin(this.assettypeEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
-    }
+   
 
 }

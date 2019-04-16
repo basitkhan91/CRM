@@ -7,14 +7,14 @@ import { ConfigurationService } from '../configuration.service';
 import { GlAccount } from '../../models/GlAccount.model';
 
 @Injectable()
-export class GlAccountEndpointService extends EndpointFactory {
+export class AccountCalenderEndpointService extends EndpointFactory {
 
-    private readonly getAllURL: string = "/api/GlAccount/getAllGLAccount";
+    private readonly getAllURL: string = "/api/GlAccount/getAll";
     private readonly getByIdURL: string = "/api/GlAccount/getById";
     private readonly addURL: string = "/api/GlAccount/add";
     private readonly updateURL: string = "/api/GlAccount/update";
     private readonly removeglId: string = "/api/GlAccount/removeGlaccountId";
-   
+
     private readonly getMiscdataURL: string = '/api/GlAccount/getMiscData';
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -22,7 +22,7 @@ export class GlAccountEndpointService extends EndpointFactory {
     get add() { return this.configurations.baseUrl + this.addURL; }
     get update() { return this.configurations.baseUrl + this.updateURL; }
     get removeglaccount() { return this.configurations.baseUrl + this.removeglId; }
-   
+
     get getMiscdata() { return this.configurations.baseUrl + this.getMiscdataURL; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {

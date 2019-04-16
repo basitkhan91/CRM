@@ -239,6 +239,8 @@
                     <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-glaccount-list">GL Account List</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-glaccount-create">GL Account Create</a>
 
+                  
+
                 </mat-expansion-panel>
 
                 <mat-expansion-panel [expanded]="step === 6" (opened)="setStep(6)">
@@ -265,6 +267,54 @@
                     <!--<a mat-list-item routerLinkActive="active" routerLink="/stocklinemodule/stocklinepages/app-stock-adjustment">Stock Adjustment</a>-->
                     <a mat-list-item routerLinkActive="active" routerLink="/stocklinemodule/stocklinepages/app-stockline-adjustment-reason">Stock Adjustment Reason</a>
                 </mat-expansion-panel>
+
+
+                <mat-expansion-panel [expanded]="step ===13" (opened)="setStep(13)">
+                    <mat-expansion-panel-header>
+
+                        <mat-panel-title>
+                            Master Maintainance
+                        </mat-panel-title>
+
+                    </mat-expansion-panel-header>
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Asset
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Asset Type
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <a mat-list-item routerLinkActive="active" routerLink="/mastermodule/masterpages/app-assetcreate"> Asset Create</a>
+
+                                    <a mat-list-item routerLinkActive="active" routerLink="/mastermodule/masterpages/app-assettypelisting">Asset Type Listing</a>
+
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Intanigible Type
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <a mat-list-item routerLinkActive="active" routerLink="/mastermodule/masterpages/app-intangibletype-listing">Intangible Type List</a>
+
+                                    <a mat-list-item routerLinkActive="active" routerLink="/mastermodule/masterpages/app-create-intangibletype">Create Asset Intangibletype</a>
+
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-expansion-panel>
+              
 
                 <mat-expansion-panel [expanded]="step === 12" (opened)="setStep(12)">
                     <mat-expansion-panel-header>
@@ -318,7 +368,7 @@
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                   Assets
+                                    Assets
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <a mat-list-item routerLinkActive="active" routerLink="/assetmodule/assetpages/app-asset-listing">AssetList</a>

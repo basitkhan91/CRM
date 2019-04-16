@@ -12,67 +12,60 @@ import { ConfigurationService } from '../configuration.service';
 export class AssetTypeEndpointService extends EndpointFactory {
 
 
-    private readonly _gateCodeGetUrl: string = "/api/AssetType/Get";
-    private readonly _gateCodeUrlNew: string = "/api/AssetType/gatecodepost";
-    private readonly _actionsUrlAuditHistory: string = "/api/AssetType/auditHistoryById";
-
-    get getCodeUrl() { return this.configurations.baseUrl + this._gateCodeGetUrl; }
-
+    private readonly getAllURL: string = "/api/AssetType/getAllAssetTypes";
+    private readonly addURL: string = "/api/AssetType/addAssetType";
+    private readonly updateURL: string = "/api/AssetType/update";
+    private readonly removeByIdURL: string = "/api/AssetType/removeAssetTypeById";
+    get getAll() { return this.configurations.baseUrl + this.getAllURL; }
+    get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
     }
 
-    getGateCodeEndpoint<T>(): Observable<T> {
+    getAllAssets<T>(): Observable<T> {
 
-        return this.http.get<T>(this.getCodeUrl, this.getRequestHeaders())
+        return this.http.get<T>(this.getAll, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getGateCodeEndpoint());
+                return this.handleError(error, () => this.getAllAssets());
             });
     }
 
-    getNewGatecodeEndpoint<T>(userObject: any): Observable<T> {
+    addAssetType<T>(assetObj: any): Observable<T> {
 
-        return this.http.post<T>(this._gateCodeUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+        return this.http.post<T>(this.addURL, JSON.stringify(assetObj), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getNewGatecodeEndpoint(userObject));
+                return this.handleError(error, () => this.addAssetType(assetObj));
             });
     }
 
-    getEditActionEndpoint<T>(actionId?: number): Observable<T> {
-        let endpointUrl = actionId ? `${this._gateCodeUrlNew}/${actionId}` : this._gateCodeUrlNew;
+    editAssetType<T>(assetTypeId?: number): Observable<T> {
+        let endpointUrl = assetTypeId ? `${this.addURL}/${assetTypeId}` : this.addURL;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getEditActionEndpoint(actionId));
+                return this.handleError(error, () => this.editAssetType(assetTypeId));
             });
     }
 
-    getUpdateActionEndpoint<T>(roleObject: any, actionId: number): Observable<T> {
-        let endpointUrl = `${this._gateCodeUrlNew}/${actionId}`;
+    updateAssetType<T>(assetObj: any): Observable<T> {
+        let endpointUrl = this.updateURL; 
 
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+        return this.http.put<T>(endpointUrl, JSON.stringify(assetObj), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getUpdateActionEndpoint(roleObject, actionId));
+                return this.handleError(error, () => this.updateAssetType(assetObj));
             });
     }
 
-    getDeleteActionEndpoint<T>(actionId: number): Observable<T> {
-        let endpointUrl = `${this._gateCodeUrlNew}/${actionId}`;
-
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeleteActionEndpoint(actionId));
-            });
-    }
-
-
-    getHistoryActionEndpoint<T>(actionId: number): Observable<T> {
-        let endpointUrl = `${this._actionsUrlAuditHistory}/${actionId}`;
+    deleteAssetType<T>(assetTypeId: number): Observable<T> {
+        let endpointUrl = `${this.removeById}/${assetTypeId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getHistoryActionEndpoint(actionId));
+                return this.handleError(error, () => this.deleteAssetType(assetTypeId));
             });
     }
+
+
+    
 }

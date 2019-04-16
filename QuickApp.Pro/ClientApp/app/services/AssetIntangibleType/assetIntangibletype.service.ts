@@ -23,37 +23,36 @@ export class AssetIntangibleTypeService {
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
     private _rolesChanged = new Subject<RolesChangedEventArg>();
-
+    public intangibleTypeEditCollection: any;
     constructor(
         private router: Router,
         private http: HttpClient,
         private authService: AuthService,
         private assettypeEndpoint: AssetIntangibleTypeEndpointService) { }
 
-    getWorkFlows() {
+    getAll() {
         return Observable.forkJoin(
-            this.assettypeEndpoint.getGateCodeEndpoint<any[]>());
+            this.assettypeEndpoint.getAllintangibleTypes<any[]>());
     }
 
-    newAction(action: any) {
-        return this.assettypeEndpoint.getNewGatecodeEndpoint<any>(action);
+    getById(intangibleTypeId: number) {
+        return Observable.forkJoin(
+            this.assettypeEndpoint.getintangibleTypeById<any>(intangibleTypeId)
+        );
     }
 
-    getAction(actionId?: number) {
-        return this.assettypeEndpoint.getEditActionEndpoint<any>(actionId);
+    add(intangibleType: any) {
+        return this.assettypeEndpoint.addintangibleType<any>(intangibleType);
     }
 
-    updateAction(action: any) {
-        return this.assettypeEndpoint.getUpdateActionEndpoint(action, action.gateCodeId);
+    update(intangibleType: any) {
+        return this.assettypeEndpoint.updateintangibleType<any>(intangibleType);
     }
 
-    deleteAcion(actionId: number) {
-
-        return this.assettypeEndpoint.getDeleteActionEndpoint(actionId);
-
+    remove(intangibleTypeId: number) {
+        return this.assettypeEndpoint.removeintangibleTypeById(intangibleTypeId);
     }
-    historyAcion(actionId: number) {
-        return Observable.forkJoin(this.assettypeEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
-    }
+   
+
 
 }

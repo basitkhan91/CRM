@@ -16,10 +16,11 @@ const maintanancePagesRoutes: Routes = [
         path: 'masterpages',
         component: MastermaintanacepagesComponent,
         children: [
-            { path: "app-intangibletype-listing", component: IntangibletypeListingComponent, data: { title: "Asset List" } },
+           
             { path: "app-assetcreate", component: AssetcreateComponent, data: { title: "Asset Create" } },
             { path: "app-assettypelisting", component: AssettypelistingComponent, data: { title: "Asset Type Listing" } },
             { path: "app-create-intangibletype", component: CreateIntangibletypeComponent, data: { title: "Create Asset Intangibletype" } },
+            { path: "app-intangibletype-listing", component: IntangibletypeListingComponent, data: { title: "Intangible Type List" } },
             
 
         ]
@@ -37,4 +38,4 @@ const maintanancePagesRoutes: Routes = [
         AuthService, AuthGuard
     ]
 })
-export class AssetmanagementRoutingModule { }
+export class MastermaintanacepagesRoutingModule { }

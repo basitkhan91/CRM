@@ -27,7 +27,9 @@ import { IntangibletypeListingComponent } from "../components/master-maintanace/
 import { AssettypelistingComponent } from "../components/master-maintanace/assets-master/assetstype/assettypelisting/assettypelisting.component";
 import { CreateIntangibletypeComponent } from "../components/master-maintanace/assets-master/IntangibleType/create-intangibletype/create-intangibletype.component";
 import { MastermaintanacepagesComponent } from "./mastermaintanacepages.component";
-import { AssetmanagementRoutingModule } from "../assetmanagement/assetmanagement-routing.module";
+
+
+import { MastermaintanacepagesRoutingModule } from "./mastermaintanacepages-routing.module";
 
 
 
@@ -43,7 +45,7 @@ import { AssetmanagementRoutingModule } from "../assetmanagement/assetmanagement
         SelectButtonModule,
         InputTextModule,
         MultiSelectModule,
-        AssetmanagementRoutingModule,
+        MastermaintanacepagesRoutingModule,
         InputSwitchModule,
         CheckboxModule,
         AutoCompleteModule,
@@ -57,7 +59,10 @@ import { AssetmanagementRoutingModule } from "../assetmanagement/assetmanagement
         IntangibletypeListingComponent,
         AssetcreateComponent,
         AssettypelistingComponent,
-        CreateIntangibletypeComponent
+        CreateIntangibletypeComponent,
+       
+
+        
     ],
     providers: [
 

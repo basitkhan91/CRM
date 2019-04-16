@@ -40,4 +40,11 @@ export class GlAccountService {
         return Observable.forkJoin(
             this.glAccountEndpoint.getMiscData<GlAccount[]>());
     }
+
+
+    //deleteAssetType(glAccountId: number) {
+
+    //    return this.glAccountEndpoint.removeGlAccountById(glAccountId);
+
+    //}
 }

@@ -8,6 +8,7 @@ namespace DAL.Models
 {
     public class GLAccount : PasBase
     {
+        [Key]
         public long? GLAccountId { get; set; }
 
         public string LedgerName { get; set; }
@@ -43,22 +44,28 @@ namespace DAL.Models
         public DateTime GLCreatedDate { get; set; }
 
         public string GLCreatedBy { get; set; }
-
+        [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
 
         public bool IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
 
-        [ForeignKey("GLAccountTypeId")]
-        public long GLAccountTypeId { get; set; }
+        public long? LegalEntityId { get; set; }
+       
+        public long? GLAccountTypeId { get; set; }
 
         [ForeignKey("GLClassFlowClassificationId")]
-        public long GLClassFlowClassificationId { get; set; }
+        public long? GLClassFlowClassificationId { get; set; }
 
         [ForeignKey("GLAccountMiscCategoryId")]
-        public long GLAccountMiscCategoryId { get; set; }
+        public long? GLAccountMiscCategoryId { get; set; }
 
-        //public virtual Currency Currency { get; set; }
+       
+        public virtual GlClassFlowClassification GlClassFlowClassification { get; set; }
+        public virtual GLAccountMiscCategory GLAccountMiscCategory { get; set; }       
+        public virtual MasterCompany MasterCompany { get; set; }
+        //public virtual ICollection<GlClassFlowClassification> GlClassFlowClassification { get; set; }
+        //public virtual ICollection<GLAccountMiscCategory> GLAccountMiscCategory { get; }
     }
 }
