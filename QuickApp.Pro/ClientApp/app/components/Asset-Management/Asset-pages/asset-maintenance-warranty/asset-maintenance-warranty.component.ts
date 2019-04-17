@@ -6,6 +6,7 @@ import { GlAccount } from '../../../../models/GlAccount.model';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { VendorService } from '../../../../services/vendor.service';
 import { Vendor } from '../../../../models/vendor.model';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-asset-maintenance-warranty',
@@ -25,7 +26,8 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     allGlInfo: GlAccount[];
     allVendorInfo: Vendor[];
     /** asset-maintenance-warranty ctor */
-    constructor(private assetService: AssetService, private vendorService: VendorService, private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
+    constructor(private assetService: AssetService, private vendorService: VendorService, private route: Router,
+        private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
 
             this.showLable = true;
@@ -126,6 +128,12 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+    }
 
+    backClick() {
+        this.assetService.listCollection = this.local;
+        this.activeIndex = 2;
+        this.assetService.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
     }
 }

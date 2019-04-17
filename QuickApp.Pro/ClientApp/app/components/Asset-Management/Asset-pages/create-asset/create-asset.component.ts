@@ -16,6 +16,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { AssetTypeService } from '../../../../services/AssetType/assettype.service';
 import { DepriciationMethodService } from '../../../../services/depriciation-method/depriciation.service';
 import { DepriciationMethod } from '../../../../models/depriciation-method.model';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-create-asset',
@@ -62,7 +63,7 @@ export class CreateAssetComponent implements OnInit {
     depriciationMethodList: DepriciationMethod[];
     allAssets: any[]=[];
 
-    constructor(private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
+    constructor(private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService,  private authService: AuthService, ) {
         this.dataSource = new MatTableDataSource();
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
@@ -496,9 +497,10 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeId = "";
                     this.currentSelectedAssetType.selectedObj = "";
-                    //this.currentAsset.currency = [];
-                    //this.currentAsset.manufacturer = [];
-                    //this.currentAsset.unitOfMeasure = [];
+                    this.currentAsset.assetType = "";
+                    this.currentAsset.currency = "";
+                    this.currentAsset.manufacturer = "";
+                    this.currentAsset.unitOfMeasure = "";
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
@@ -534,9 +536,10 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeId = "";
                     this.currentSelectedAssetType.selectedObj = "";
-                    //this.currentAsset.currency = [];
-                    //this.currentAsset.manufacturer = [];
-                    //this.currentAsset.unitOfMeasure = [];
+                    this.currentAsset.assetType = "";
+                    this.currentAsset.currency = "";
+                    this.currentAsset.manufacturer = "";
+                    this.currentAsset.unitOfMeasure = "";
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
@@ -572,5 +575,10 @@ export class CreateAssetComponent implements OnInit {
         this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
             this.depriciationMethodList = depriciationmethods[0];
         });
+    }
+    nextClick() {
+        this.activeIndex = 1;
+        this.assetService.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
     }
 }

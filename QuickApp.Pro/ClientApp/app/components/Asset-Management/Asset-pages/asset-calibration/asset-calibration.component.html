@@ -19,12 +19,12 @@
                     {{local?.name}}
                 </p>
             </div>
-            <div class="form-group" style="display: inline-block;">
+            <!--<div class="form-group" style="display: inline-block;">
                 <p class="fs10">
                     <label class="control-label" style="width: auto;">Asset Type</label>
                     {{local?.assetTypeSingleScreenId}}
                 </p>
-            </div>
+            </div>-->
         </div>
         <div class="clear"></div>
         <div class="clear"></div>
@@ -168,11 +168,11 @@
                     <div class="col-sm-7">
                         <input class="form-control w70 amount" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.inspectionDefaultCost">
                         <select class="w70 form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.inspectionCurrencyId">
-                                <option>--Select--</option>
-                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
-                                    {{currencyName.symbol}}
-                                </option>
-                            </select>
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
+                                {{currencyName.symbol}}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -222,11 +222,11 @@
                     <div class="col-sm-7">
                         <input class="form-control w70 amount" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.verificationDefaultCost" type="text">
                         <select class="w70 form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.verificationCurrencyId">
-                                <option>--Select--</option>
-                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
-                                    {{currencyName.symbol}}
-                                </option>
-                            </select>
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
+                                {{currencyName.symbol}}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -249,7 +249,7 @@
                 <div class="clear"></div>
             </div>
         </div>
-        <div *ngIf="currentCalibration.isDepreciable && currentCalibration.calibrationRequired && currentCalibration.certificationRequired && currentCalibration.inspectionRequired && currentCalibration.verificationRequired " class="col-sm-6 w400">
+        <div *ngIf="currentCalibration.isDepreciable && currentCalibration.calibrationRequired" class="col-sm-6 w400">
             <div class="form-group col-sm-12 calibration-block">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -287,6 +287,8 @@
         <div class="clear"></div>
     </fieldset>
 </div>
-<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCalibration()">Save</button>
+<div *ngIf="currentCalibration.isDepreciable && (currentCalibration.calibrationRequired || currentCalibration.certificationRequired || currentCalibration.inspectionRequired || currentCalibration.verificationRequired)">
+    <button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCalibration()">Save</button>
+</div>
 <button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
 <button type="button" class="btn btn-success pull-right submit-btn" (click)="backClick()">Previous</button>

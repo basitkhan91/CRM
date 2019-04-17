@@ -19,12 +19,12 @@
                     {{local?.name}}
                 </p>
             </div>
-            <div class="form-group" style="display: inline-block;">
+            <!--<div class="form-group" style="display: inline-block;">
                 <p class="fs10">
                     <label class="control-label" style="width: auto;">Asset Type</label>
                     {{local?.assetTypeSingleScreenId}}
                 </p>
-            </div>
+            </div>-->
         </div>
         <div class="clear"></div>
         <hr class="hr-light-grey">
@@ -154,5 +154,7 @@
         <div class="clear"></div>
     </fieldset>
 </div>
-
-<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveWarrenty()">Save</button>
+<div *ngIf="currentMaintenance.isDepreciable">
+    <button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveWarrenty()">Save</button>
+    <button type="button" class="btn btn-success pull-right submit-btn" (click)="backClick()">Previous</button>
+</div>

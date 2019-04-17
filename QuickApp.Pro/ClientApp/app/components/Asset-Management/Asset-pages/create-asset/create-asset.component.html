@@ -9,11 +9,11 @@
                 <label class="control-label col-sm-4"></label>
                 <div class="col-sm-7">
                     <label>
-                        <input type="radio" [value]="1" name="assetRadio" (change)="onDepreciable()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isDepreciable" [checked]="depreciable">
+                        <input type="radio" value="1" name="assetRadio" class="form-check-inline" (change)="onDepreciable()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isDepreciable">
                         Depreciable
                     </label>
                     <label>
-                        <input type="radio" [value]="2" name="assetRadio" (change)="onIntangible()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isIntangible" [checked]="intangible">
+                        <input type="radio" value="2" name="assetRadio" (change)="onIntangible()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isIntangible">
                         Intangible
                     </label>
                 </div>
@@ -93,9 +93,9 @@
 
         </div>
 
-        <div  class="col-sm-4">
+        <div class="col-sm-4">
             <div *ngIf="currentAsset.isDepreciable && !currentAsset.isIntangible" class="depreciation-block">
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Acquisition Type <span class="clr-red">*</span></label>
                     <div class="col-sm-7">
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetAcquisitionTypeId">
@@ -106,7 +106,7 @@
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Manufacturer</label>
                     <div class="col-sm-7">
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.manufacturerId">
@@ -114,20 +114,20 @@
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Manufactured Date</label>
                     <div class="col-sm-7">
 
                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.manufacturedDate"></p-calendar>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Model</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.model">
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Serialized?</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isSerialized">
@@ -136,7 +136,7 @@
 
                 <div class="clear"></div>
             </div>
-            <div *ngIf="currentAsset.isIntangible" class="intangible-block" >
+            <div *ngIf="currentAsset.isIntangible" class="intangible-block">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Intangible Type <span class="clr-red">*</span></label>
                     <div class="col-sm-7">
@@ -152,7 +152,7 @@
             </div>
             <div *ngIf="currentAsset.isIntangible" class="intangible-block block-bg2">
                 <div class="form-group col-sm-12">
-                    
+
                 </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Depreciation Method</label>
@@ -162,44 +162,44 @@
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Intangible Life</label>
                     <div class="col-sm-7">
                         <input disabled class="form-control amount" type="text" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleLife">
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Amort Frequency</label>
                     <div class="col-sm-7">
-                        <select disabled=""  [(ngModel)]="currentSelectedIntangibleAssetType.amortizationFrequency">
+                        <select disabled="" [(ngModel)]="currentSelectedIntangibleAssetType.amortizationFrequency">
                             <option value="Monthly">Monthly</option>
                             <option value="Yearly">Yearly</option>
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Intangible GL</label>
                     <div class="col-sm-7">
                         <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleGLAccountId">
-                            
+
                             <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
                                 {{glAccounts.accountName}}
                             </option>
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Amort Expense GL</label>
                     <div class="col-sm-7">
                         <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.amortExpenseGLAccountId">
-                            
+
                             <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
                                 {{glAccounts.accountName}}
                             </option>
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Acc Amort Depr GL</label>
                     <div class="col-sm-7">
                         <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.accAmortDeprGLAccountId">
@@ -210,10 +210,10 @@
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Intangible Write Down GL</label>
                     <div class="col-sm-7">
-                        <select  disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountId">
+                        <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountId">
                             <option>--Select--</option>
                             <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
                                 {{glAccounts.accountName}}
@@ -224,16 +224,16 @@
                 <div class="clear"></div>
             </div>
             <div class="depreciation-block" *ngIf="currentAsset.isDepreciable  && !currentAsset.isIntangible">
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">UOM <span class="clr-red">*</span></label>
                     <div class="col-sm-7">
-                        <select  [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.unitOfMeasureId">
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.unitOfMeasureId">
                             <option>--Select--</option>
                             <option *ngFor="let unitName of allUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12 ">
+                <div class="form-group col-sm-12 ">
                     <label class="control-label col-sm-4">Currency<span class="clr-red">*</span></label>
                     <div class="col-sm-7">
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.currencyId">
@@ -244,25 +244,25 @@
                         </select>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Unit Cost</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.unitCost">
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Expiration Date</label>
                     <div class="col-sm-7">
                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.expirationDate"></p-calendar>
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Asset Location</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.asset_Location">
                     </div>
                 </div>
-                <div  class="form-group col-sm-12">
+                <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Memo</label>
                     <div class="col-sm-7">
                         <textarea class="h80" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.memo"></textarea>
@@ -284,130 +284,130 @@
                                 {{asset.assetId}}
                             </option>
                         </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Asset Type <span class="clr-red">*</span></label>
+                    <div class="col-sm-7">
+                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetTypeId" (change)="getSelectedAssetType(currentAsset.assetTypeId)">
+                            <option>--Select--</option>
+                            <option class="form-control" *ngFor="let assetType of allAssetTypeInfo" [ngValue]="assetType.assetTypeId">
+                                {{assetType.assetTypeName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="depreciation-asset-block block-bg1">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Depreciation Method</label>
+                        <div class="col-sm-7">
+                            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.depreciationMethod" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let depMethod of depriciationMethodList" [ngValue]="depMethod.assetDepreciationMethodId">  {{depMethod.assetDepreciationMethodName}}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Asset Type <span class="clr-red">*</span></label>
+                        <label class="control-label col-sm-4">Residual %</label>
                         <div class="col-sm-7">
-                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetTypeId" (change)="getSelectedAssetType(currentAsset.assetTypeId)">
+                            <select class="form-control" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.residualPercentage">
+                                <option>1%</option>
+                                <option>2%</option>
+                                <option>3%</option>
+                                <option>4%</option>
+                                <option>5%</option>
+                                <option>6%</option>
+                                <option>7%</option>
+                                <option>8%</option>
+                                <option>9%</option>
+                                <option>10%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Asset Life</label>
+                        <div class="col-sm-7">
+                            <input class="form-control amount" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.assetLife">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Depr Frequency</label>
+                        <div class="col-sm-7">
+                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.depreciationFrequencyId">
+                                <option value="">Monthly</option>
+                                <option value="">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Acquired GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.acquiredGLAccountId">
                                 <option>--Select--</option>
-                                <option class="form-control" *ngFor="let assetType of allAssetTypeInfo" [ngValue]="assetType.assetTypeId">
-                                    {{assetType.assetTypeName}}
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
                                 </option>
                             </select>
                         </div>
                     </div>
-                    <div class="depreciation-asset-block block-bg1">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Depreciation Method</label>
-                            <div class="col-sm-7">
-                                <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.depreciationMethod" [ngModelOptions]="{standalone: true}">
-                                    <option *ngFor="let depMethod of depriciationMethodList" [ngValue]="depMethod.assetDepreciationMethodId">  {{depMethod.assetDepreciationMethodName}}</option>
-                                </select>
-                            </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Depr Expense GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.deprExpenseGLAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
                         </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Residual %</label>
-                            <div class="col-sm-7">
-                                <select class="form-control" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.residualPercentage">
-                                    <option>1%</option>
-                                    <option>2%</option>
-                                    <option>3%</option>
-                                    <option>4%</option>
-                                    <option>5%</option>
-                                    <option>6%</option>
-                                    <option>7%</option>
-                                    <option>8%</option>
-                                    <option>9%</option>
-                                    <option>10%</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Asset Life</label>
-                            <div class="col-sm-7">
-                                <input class="form-control amount" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.assetLife">
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Depr Frequency</label>
-                            <div class="col-sm-7">
-                                <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.depreciationFrequencyId">
-                                    <option value="">Monthly</option>
-                                    <option value="">Yearly</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Acquired GL</label>
-                            <div class="col-sm-7">
-                                <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.acquiredGLAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Depr Expense GL</label>
-                            <div class="col-sm-7">
-                                <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.deprExpenseGLAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">AD Depr GL</label>
-                            <div class="col-sm-7">
-                                <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.adDepsGLAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <!--<div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Sale GL</label>
-                            <div class="col-sm-7">
-                                <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>-->
-                        <!--<div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Write Off GL</label>
-                            <div class="col-sm-7">
-                                <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>-->
-                        <!--<div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Write Down GL</label>
-                            <div class="col-sm-7">
-                                <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>-->
-                        <div class="clear"></div>
                     </div>
-
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">AD Depr GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.adDepsGLAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--<div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Sale GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>-->
+                    <!--<div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Write Off GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>-->
+                    <!--<div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Write Down GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>-->
+                    <div class="clear"></div>
                 </div>
+
+            </div>
             <div *ngIf="currentAsset.isDepreciable && !currentAsset.isIntangible">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Calibration Required</label>
@@ -443,8 +443,13 @@
     </div>
 
     <div class="clear"></div>
-    <button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSave" (click)="saveAsset()">Save</button>
+
+
 </div>
+
+
+<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSave" (click)="saveAsset()">Save</button>
+<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
 
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
           [width]="350" [minWidth]="200" [responsive]="true"

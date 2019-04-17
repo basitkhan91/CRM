@@ -47,6 +47,13 @@ export class AssetCalibrationComponent implements OnInit {
                 this.currentCalibration.calibrationCurrencyId = "";
                 this.currentCalibration.calibrationGlAccountId = "";
                 this.currentCalibration.calibrationMemo = "";
+                this.currentCalibration.minTolerance1 = "";
+                this.currentCalibration.minTolerance2 = "";
+                this.currentCalibration.maxTolerance1 = "";
+                this.currentCalibration.maxTolerance2 = "";
+                this.currentCalibration.expectedTolerance1 = "";
+                this.currentCalibration.expectedTolerance2 = "";
+                this.currentCalibration.toleranceMemo = "";
             }
             if (this.currentCalibration.certificationRequired == false) {
                 this.currentCalibration.certificationFrequencyMonths = "";
