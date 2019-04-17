@@ -210,6 +210,13 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.defaultVendorId = row.defaultVendorId;
         this.assetViewList.maintenanceMemo = row.maintenanceMemo;
         this.assetViewList.isWarrantyRequired = row.isWarrantyRequired;
+        this.assetViewList.minTolerance1 = row.minTolerance1;
+        this.assetViewList.minTolerance2 = row.minTolerance2;
+        this.assetViewList.maxTolerance1 = row.maxTolerance1;
+        this.assetViewList.maxTolerance2 = row.maxTolerance2;
+        this.assetViewList.expectedTolerance1 = row.expectedTolerance1;
+        this.assetViewList.expectedTolerance2 = row.expectedTolerance2;
+        this.assetViewList.toleranceMemo = row.toleranceMemo;
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');

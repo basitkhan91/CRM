@@ -113,6 +113,14 @@ namespace DAL.Models
         public DateTime? UpdatedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
 
+        public Nullable<Int32> MinTolerance1 { get; set; }
+        public Nullable<Int32> MinTolerance2 { get; set; }
+        public Nullable<Int32> MaxTolerance1 { get; set; }
+        public Nullable<Int32> MaxTolerance2 { get; set; }
+        public Nullable<Int32> ExpectedTolerance1 { get; set; }
+        public Nullable<Int32> ExpectedTolerance2 { get; set; }
+        public string ToleranceMemo { get; set; }
+
         public virtual AssetCapes AssetCapes { get; set; }
 
         public virtual Manufacturer Manufacturer { get; set; }
