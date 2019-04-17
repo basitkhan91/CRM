@@ -49,6 +49,8 @@ import { UnitOfMeasure } from '../../../models/unitofmeasure.model';
 
 import { CalendarModule } from 'primeng/calendar';
 import { ATAChapter } from '../../../models/atachapter.model';
+import { GlAccount } from '../../../models/GlAccount.model';
+import { GlAccountService } from '../../../services/glAccount/glAccount.service';
 @Component({
     selector: 'app-item-master-non-stock',
     templateUrl: './item-master-non-stock.component.html',
@@ -104,10 +106,11 @@ export class ItemMasterNonStockComponent {
     className: string;
     itemTypeName: string;
     disableSavepartDescription: boolean;
+    allGlInfo: GlAccount[];
 
 
     /** item-master-non-stock ctor */
-    constructor(private router: Router, public unitService: UnitOfMeasureService, private authService: AuthService, private modalService: NgbModal, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private router: Router, private glAccountService: GlAccountService,public unitService: UnitOfMeasureService, private authService: AuthService, private modalService: NgbModal, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new ItemClassificationModel();
@@ -219,7 +222,8 @@ export class ItemMasterNonStockComponent {
         this.unitofmeasure();
         this.manufacturerdata();
 		this.ptnumberlistdata();
-		this.glAccountlistdata();
+        this.glAccountlistdata();
+        this.glList();
         this.cols = [
             //{ field: 'itemClassificationId', header: 'Item Classification ID' },
 
@@ -262,6 +266,21 @@ export class ItemMasterNonStockComponent {
         );
 
     }
+
+    private glList() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.glAccountService.getAll().subscribe(
+            results => this.onGlAccountLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onGlAccountLoad(getGlList: GlAccount[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allGlInfo = getGlList;
+    }
+
 
 
     private manufacturerdata() {
@@ -1220,7 +1239,7 @@ export class ItemMasterNonStockComponent {
 				this.sourceItemMaster.itemTypeId = 2;
 				this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
 					this.collectionofItemMaster = data;
-					this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+					//this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
 
 					this.itemser.listStock = false;
 					this.itemser.listNonstock = true;
@@ -1240,7 +1259,7 @@ export class ItemMasterNonStockComponent {
 			}
 		}
         //this.modal.close();
-		this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+		//this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
     }
 
     deleteItemAndCloseModel() {

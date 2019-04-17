@@ -277,15 +277,19 @@
 						<div class="form-group col-sm-12 input-icon1">
 							<label class="control-label col-sm-4">GL Acct.<strong class="clr-red">*</strong> </label>
 							<div class="col-sm-7">
-								<div class="inner-addon right-addon inline-block">
-
-									<p-autoComplete [(ngModel)]="sourceItemMaster.glAccountId" (onKeyUp)=glAccountHandler($event) (onSelect)="glAccountId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="glAccountCollection" (completeMethod)="filterglAccount($event)" [size]="30"
-													[minLength]="1" [dropdown]="true">
-										<ng-template let-glAccountId pTemplate="glAccount">
-											<div class="ui-helper-clearfix">{{glAccountId}}</div>
-										</ng-template>
-									</p-autoComplete>
-								</div>
+                                <div>
+                                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.glAccountId">
+                                        <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                            {{glAccounts.accountName}}
+                                        </option>
+                                    </select>
+                                    <!--<p-autoComplete [(ngModel)]="sourceItemMaster.glAccountId" (onKeyUp)=glAccountHandler($event) (onSelect)="glAccountId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="glAccountCollection" (completeMethod)="filterglAccount($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-glAccountId pTemplate="glAccount">
+                                            <div class="ui-helper-clearfix">{{glAccountId}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>-->
+                                </div>
 							</div>
 
 						</div>
@@ -304,7 +308,7 @@
 							<label class="control-label col-sm-4">Currency</label>
 							<div class="col-sm-7">
 								<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.currencyId">
-									<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.code}}{{currencyName.symbol}}</option>
+									<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
 								</select>
 							</div>
 						</div>

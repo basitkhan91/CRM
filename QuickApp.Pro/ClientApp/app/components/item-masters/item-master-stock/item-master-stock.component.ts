@@ -53,6 +53,8 @@ import { forEach } from '@angular/router/src/utils/collection';
 import { ATAChapter } from '../../../models/atachapter.model';
 import {  FormArray } from '@angular/forms';
 import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilities.model';
+import { GlAccountService } from '../../../services/glAccount/glAccount.service';
+import { GlAccount } from '../../../models/GlAccount.model';
 
 
 @Component({
@@ -246,7 +248,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     isSaveCapes: boolean;
     allATAMaininfo1: ATAMain[];
     capabilityEditCollection: any;
-    constructor(private formBuilder: FormBuilder,public workFlowtService1: LegalEntityService,private changeDetectorRef: ChangeDetectorRef,private router: Router, private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    allGlInfo: GlAccount[];
+    constructor(private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
 		this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
 		this.displayedColumns.push('action');
@@ -399,7 +402,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 		this.warningdata();
 		this.aircraftmodelData();
 		this.loadData();
-		
+        this.glList();
 		this.ptnumberlistdata();
 		this.glAccountlistdata();
 		this.getAircraftModelsData();
@@ -459,7 +462,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         );
 
     }
-
+    
     private onDataLoadaircraftManfacturerSuccessful(allWorkFlows: any[]) //While oading
     {
 
@@ -589,7 +592,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 	}
 
-
+    private glList() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.glAccountService.getAll().subscribe(
+            results => this.onGlAccountLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onGlAccountLoad(getGlList: GlAccount[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allGlInfo = getGlList;
+    }
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;

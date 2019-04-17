@@ -67,7 +67,7 @@
                             <div class="col-sm-4">
                                 <!--First Block SDtart-->
                                 <div class="form-group col-sm-12 input-icon1">
-                                    <label for="customerName" class="control-label col-sm-4">PN<span class="clr-red">*</span></label>
+                                    <label for="customerName" class="control-label col-sm-4">PN<strong class="clr-red">*</strong></label>
                                     <div class="col-sm-7">
                                         <div class="inner-addon right-addon inline-block">
 
@@ -83,7 +83,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1">
-                                    <label class="control-label col-sm-4">PN Description <span class="clr-red">*</span></label>
+                                    <label class="control-label col-sm-4">PN Description <strong class="clr-red">*</strong></label>
                                     <div class="col-sm-7">
                                         <p-autoComplete (onKeyUp)=descriptionHandler($event) (onSelect)="partdescriptionId($event)" [suggestions]="descriptionCollection" [ngModelOptions]="{standalone: true}" (completeMethod)="filterdescription($event)" [(ngModel)]="sourceItemMaster.partDescription" [size]="20"
                                                         [minLength]="1" [dropdown]="true">
@@ -150,7 +150,7 @@
 
                                 <div class="form-group col-sm-12">
 
-                                    <label class="control-label col-sm-4">Item Classification <span class="clr-red">*</span> </label>
+                                    <label class="control-label col-sm-4">Item Classification <strong class="clr-red">*</strong></label>
                                     <div class="inner-addon col-sm-7 inline-block display-flex">
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.itemClassificationId">
                                             <option *ngFor="let itemName of allitemclassificationInfo" [ngValue]="itemName.itemClassificationId">{{itemName.description}}</option>
@@ -450,20 +450,19 @@
                                     </div>
 
                                     <div class="form-group col-sm-12 input-icon1">
-                                        <label class="control-label col-sm-4">GL Acct.<span class="clr-red">*</span> </label>
+                                        <label class="control-label col-sm-4">GL Acct.<strong class="clr-red">*</strong> </label>
                                         <div class="col-sm-7">
-                                            <div class="inner-addon right-addon inline-block">
-                                                <p-autoComplete [(ngModel)]="sourceItemMaster.glAccountId" (onKeyUp)=glAccountHandler($event) (onSelect)="glAccountId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="glAccountCollection" (completeMethod)="filterglAccount($event)" [size]="30"
-                                                                [minLength]="1" [dropdown]="true">
-                                                    <ng-template let-glAccountId pTemplate="glAccount">
-                                                        <div class="ui-helper-clearfix">{{glAccountId}}</div>
-                                                    </ng-template>
-                                                </p-autoComplete>
+                                            <div>
+                                                <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.glAccountId">
+                                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
+                                                        {{glAccounts.accountName}}
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
-                                        <label class="control-label col-sm-4">Purchase UOM <span class="clr-red">*</span> </label>
+                                        <label class="control-label col-sm-4">Purchase UOM <strong class="clr-red">*</strong></label>
                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                             <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
                                                 <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
@@ -1015,17 +1014,17 @@
                                 <label class="control-label col-sm-4">Weight</label>
                                 <div class="col-sm-4">
 
-                                    <input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.exportWeight">
+                                    <input placeholder="W" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.exportWeight">
                                 </div>
 
                                 <!--<input  class="form-control w90 "type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.Weight" >-->
                                 <div class="col-sm-3">
                                     <select type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.exportWeightUnit">
 
-                                        <option value="">Weight in</option>
-                                        <option value="">Ibs</option>
-                                        <option value="">Kg</option>
-                                        <option value="">g</option>
+                                        <option value="1">Weight in</option>
+                                        <option value="2">Ibs</option>
+                                        <option value="3">Kg</option>
+                                        <option value="4">g</option>
                                     </select>
                                 </div>
                             </div>
