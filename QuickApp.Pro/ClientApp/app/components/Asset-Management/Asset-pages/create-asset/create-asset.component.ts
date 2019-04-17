@@ -494,13 +494,16 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.assetAcquisitionTypeId = "";
                     this.currentAsset.manufacturedDate = "";
                     this.currentAsset.asset_Location = "";
-                    this.currentAsset.assetTypeSingleScreenId = "";
+                    this.currentAsset.assetTypeId = "";
+                    this.currentSelectedAssetType.selectedObj = "";
                     //this.currentAsset.currency = [];
                     //this.currentAsset.manufacturer = [];
                     //this.currentAsset.unitOfMeasure = [];
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
+                    this.currentSelectedIntangibleAssetType.selectedAssetObj = {};
+                    this.currentAsset.assetIntangibleTypeId = "";
                 }
                 this.assetService.addAsset(this.currentAsset).subscribe(data => {
                     this.currentAsset.updatedBy = this.userName;
@@ -529,13 +532,16 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.assetAcquisitionTypeId = "";
                     this.currentAsset.manufacturedDate = "";
                     this.currentAsset.asset_Location = "";
-                    this.currentAsset.assetTypeSingleScreenId = "";
+                    this.currentAsset.assetTypeId = "";
+                    this.currentSelectedAssetType.selectedObj = "";
                     //this.currentAsset.currency = [];
                     //this.currentAsset.manufacturer = [];
                     //this.currentAsset.unitOfMeasure = [];
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
+                    this.currentSelectedIntangibleAssetType.selectedAssetObj = {};
+                    this.currentAsset.assetIntangibleTypeId = "";
                 }
                 
                 this.assetService.updateAsset(this.currentAsset).subscribe(data => {
