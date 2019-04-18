@@ -41,11 +41,11 @@ export class DepriciationMethodComponent implements OnInit {
     }
 
     adddepriciationmethod(): void {
-        if (!(this.currentDepriciationmethod.assetDepreciationMethodName && this.currentDepriciationmethod.assetDepreciationBasis && this.currentDepriciationmethod.assetDepreciationMemo)) {
+        if (!(this.currentDepriciationmethod.assetDepreciationId && this.currentDepriciationmethod.assetDepreciationMethodName && this.currentDepriciationmethod.assetDepreciationBasis && this.currentDepriciationmethod.assetDepreciationMemo)) {
             this.display = true;
             this.modelValue = true;
         }
-        if ((this.currentDepriciationmethod.assetDepreciationMethodName && this.currentDepriciationmethod.assetDepreciationBasis && this.currentDepriciationmethod.assetDepreciationMemo)) {
+        if ((this.currentDepriciationmethod.assetDepreciationMethodName && this.currentDepriciationmethod.assetDepreciationId  && this.currentDepriciationmethod.assetDepreciationBasis && this.currentDepriciationmethod.assetDepreciationMemo)) {
             this.currentDepriciationmethod.createdBy = this.userName;
             this.currentDepriciationmethod.updatedBy = this.userName;
             this.depriciationMethodService.add(this.currentDepriciationmethod).subscribe(depriciationmethod => {
@@ -67,7 +67,7 @@ export class DepriciationMethodComponent implements OnInit {
     }
 
     updatedepriciationmethod(): void {
-        if (!(this.depriciationToUpdate.assetDepreciationMethodName && this.depriciationToUpdate.assetDepreciationBasis && this.depriciationToUpdate.assetDepreciationMemo)) {
+        if (!(this.depriciationToUpdate.assetDepreciationMethodName && this.currentDepriciationmethod.assetDepreciationId  && this.depriciationToUpdate.assetDepreciationBasis && this.depriciationToUpdate.assetDepreciationMemo)) {
             this.display = true;
             this.modelValue = true;
         }
