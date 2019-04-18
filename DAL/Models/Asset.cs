@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DAL.Models
 {
@@ -18,9 +16,9 @@ namespace DAL.Models
         [Required(ErrorMessage = "Id Is Required.")]
         public string AlternateAssetId { get; set; }
 
-
         [Required(ErrorMessage = "Id Is Required.")]
         public string Name { get; set; }
+
         public string Description { get; set; }
         public long ManagementStructureId { get; set; }
         public Nullable<bool> CalibrationRequired { get; set; }
@@ -71,11 +69,9 @@ namespace DAL.Models
         public Nullable<byte> MaintenanceFrequencyDays { get; set; }
         public Nullable<long> DefaultVendorId { get; set; }
         public Nullable<long> GLAccountId { get; set; }
-
         public Nullable<bool> IsDelete { get; set; }
         public string MaintenanceMemo { get; set; }
         public Nullable<bool> IsWarrantyRequired { get; set; }
-
         public Nullable<bool> Warranty { get; set; }
         public string WarrantyCompany { get; set; }
         public Nullable<System.DateTime> WarrantyStartDate { get; set; }
@@ -112,7 +108,6 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
-
         public Nullable<Int32> MinTolerance1 { get; set; }
         public Nullable<Int32> MinTolerance2 { get; set; }
         public Nullable<Int32> MaxTolerance1 { get; set; }
@@ -122,13 +117,10 @@ namespace DAL.Models
         public string ToleranceMemo { get; set; }
 
         public virtual AssetCapes AssetCapes { get; set; }
-
         public virtual Manufacturer Manufacturer { get; set; }
         public virtual Currency Currency { get; set; }
         public virtual GLAccount GLAccount { get; set; }
-
         public virtual UnitOfMeasure UnitOfMeasure { get; set; }
-
         public virtual AssetType AssetType { get; set; }
 
     }

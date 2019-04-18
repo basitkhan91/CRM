@@ -2,13 +2,10 @@
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
-import { MatTableDataSource } from '@angular/material';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service';
 import { Currency } from '../../../../models/currency.model';
 import { CurrencyService } from '../../../../services/currency.service';
-import { AssetTypeSingleScreenService } from '../../../../services/AssetTypeSingleScreen/assettypesinglescreen.service';
-import { AssetTypeSingleScreen } from '../../../../models/assettypesinglescreen.model';
 import { AuthService } from '../../../../services/auth.service';
 import { AssetIntangibleTypeService } from '../../../../services/AssetIntangibleType/AssetIntangibleType.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
@@ -65,7 +62,7 @@ export class CreateAssetComponent implements OnInit {
 
     constructor(private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService,  private authService: AuthService, ) {
-        this.dataSource = new MatTableDataSource();
+       
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
 
             this.showLable = true;
@@ -131,7 +128,6 @@ export class CreateAssetComponent implements OnInit {
     private onAssetListLoaded(assetList: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = assetList; //TODO:  you can remove
         this.allAssetInfo = assetList;
     }
     get userName(): string {
@@ -187,8 +183,6 @@ export class CreateAssetComponent implements OnInit {
             }
         }
     }
-
-    dataSource: MatTableDataSource<any>;
 
     checkMSParents(msId) {
         this.managementStructureData.push(msId);
@@ -260,6 +254,7 @@ export class CreateAssetComponent implements OnInit {
             }
         }
     }
+
     getDepartmentlist(businessUnitId) {
         if (this.updateMode == false) {
             this.currentAsset.departmentId = "";
@@ -313,7 +308,6 @@ export class CreateAssetComponent implements OnInit {
     private onManagemtntdataLoad(getAtaMainList: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = getAtaMainList;
         this.allManagemtninfo = getAtaMainList;
 
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -564,6 +558,7 @@ export class CreateAssetComponent implements OnInit {
        
       
     }
+
     getSelectedAssetType(selectedAssetObj) {
         
         this.currentSelectedAssetType = Object.assign({}, this.allAssetTypeInfo.filter(function (asset) {
@@ -576,6 +571,7 @@ export class CreateAssetComponent implements OnInit {
             this.depriciationMethodList = depriciationmethods[0];
         });
     }
+
     nextClick() {
         this.activeIndex = 1;
         this.assetService.indexObj.next(this.activeIndex);

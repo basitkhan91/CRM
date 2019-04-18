@@ -8,11 +8,11 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4"></label>
                 <div class="col-sm-7">
-                    <label>
+                    <label class="radio-inline">
                         <input type="radio" value="1" name="assetRadio" class="form-check-inline" (change)="onDepreciable()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isDepreciable">
                         Depreciable
                     </label>
-                    <label>
+                    <label class="radio-inline">
                         <input type="radio" value="2" name="assetRadio" (change)="onIntangible()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isIntangible">
                         Intangible
                     </label>
@@ -310,16 +310,16 @@
                         <label class="control-label col-sm-4">Residual %</label>
                         <div class="col-sm-7">
                             <select class="form-control" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.residualPercentage">
-                                <option>1%</option>
-                                <option>2%</option>
-                                <option>3%</option>
-                                <option>4%</option>
-                                <option>5%</option>
-                                <option>6%</option>
-                                <option>7%</option>
-                                <option>8%</option>
-                                <option>9%</option>
-                                <option>10%</option>
+                                <option value="1">1%</option>
+                                <option value="2">2%</option>
+                                <option value="3">3%</option>
+                                <option value="4">4%</option>
+                                <option value="5">5%</option>
+                                <option value="6">6%</option>
+                                <option value="7">7%</option>
+                                <option value="8">8%</option>
+                                <option value="9">9%</option>
+                                <option value="10">10%</option>
                             </select>
                         </div>
                     </div>
@@ -333,8 +333,8 @@
                         <label class="control-label col-sm-4">Depr Frequency</label>
                         <div class="col-sm-7">
                             <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.depreciationFrequencyId">
-                                <option value="">Monthly</option>
-                                <option value="">Yearly</option>
+                                <option value="1">Monthly</option>
+                                <option value="2">Yearly</option>
                             </select>
                         </div>
                     </div>
