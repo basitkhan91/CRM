@@ -33,7 +33,7 @@ const generalledgerpageRoutes: Routes = [
 			{ path: "app-managemententity-structure", component: ManagementStructureComponent, data: { title: "EntitySetupComponent" } },
 			{ path: "app-entity-edit", component: EntityEditComponent, data: { title: "EntityEditComponent" } },
 
-			{ path: "app-entity-edit-component", component: AccountingCalendarComponent, data: { title: "AccountingCalendarComponent" } },
+            { path: "app-accounting-calendar", component: AccountingCalendarComponent, data: { title: "AccountingCalendarComponent" } },
 			{ path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
 			{ path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
 			{ path: "app-entity-edit-component", component: OpenClosePeriodComponent, data: { title: "OpenClosePeriodComponent" } },

@@ -43,4 +43,7 @@ export class AssetStatusService {
     updateActive(assetStatus: any) {
         return this.assetStatusEndpoint.getUpdateForActive(assetStatus, assetStatus.id);
     }
+    getAssetAudit(assetId:number) {
+        return this.assetStatusEndpoint.getAssetStatusAuditById<any>(assetId);
+    }
 }

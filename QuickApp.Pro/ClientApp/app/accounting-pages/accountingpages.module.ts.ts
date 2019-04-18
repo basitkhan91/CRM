@@ -27,7 +27,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { InputSwitchModule } from "primeng/inputswitch";
 import { CalendarModule } from "primeng/calendar";
 import { AccountingPagesComponent } from "./accounting-pages.component";
-import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
+//import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 import { AccountingPagesRoutingModule } from "./accountingpages-routing.module";
 
 
@@ -49,7 +49,8 @@ import { AccountingPagesRoutingModule } from "./accountingpages-routing.module";
         CalendarModule,
         GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, AccountingPagesRoutingModule
     ],
-    declarations: [AccountingPagesComponent, NodeSetupComponent, 
+    declarations: [AccountingPagesComponent,
+        // NodeSetupComponent,
 
     ],
     providers: [

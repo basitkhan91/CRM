@@ -228,23 +228,6 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 		//}, () => { console.log('Backdrop click') })
 	}
 
-	//openHist(content, row) {
-	//	this.alertService.startLoadingMessage();
-	//	this.loadingIndicator = true;
-
-
-	//	this.sourceAction = row;
-
-
-
-	//	this.isSaving = true;
-
-	//	this.vendorservice.historycurrency(this.sourceAction.currencyId).subscribe(
-	//		results => this.onHistoryLoadSuccessful(results[0], content),
-	//		error => this.saveFailedHelper(error));
-
-
-	//}
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
 
@@ -262,23 +245,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
 
 	}
-	//openView(content, row) {
-
-	//	this.sourceAction = row;
-	//	this.currency_Name = row.code;
-	//	this.symbol = row.symbol;
-	//	this.displayName = row.displayName;
-	//	this.memo = row.memo;
-	//	this.createdBy = row.createdBy;
-	//	this.updatedBy = row.updatedBy;
-	//	this.createdDate = row.createdDate;
-	//	this.updatedDate = row.updatedDate;
-	//	this.loadMasterCompanies();
-	//	this.modal = this.modalService.open(content, { size: 'sm' });
-	//	this.modal.result.then(() => {
-	//		console.log('When user closes');
-	//	}, () => { console.log('Backdrop click') })
-	//}
+	
 	openHelpText(content) {
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
