@@ -27,7 +27,9 @@
     updatedDate: Date;
     isActive: boolean;
     isDeleted: boolean;
-    managementStrtureId: number=NaN;
+    managementStrtureId: number = NaN;
+    legalEntityId: number=NaN;
     glAccountList: GlAccount[];
+
 
 }

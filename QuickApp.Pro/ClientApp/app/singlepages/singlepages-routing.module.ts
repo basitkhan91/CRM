@@ -73,7 +73,7 @@ import { CertificationTypeComponent } from '../components/certification-type/cer
 import { AssetStatusComponent } from '../components/AssetStatus/asset-status.component';
 import { DepriciationMethodComponent } from '../components/depriciation-method/depriciation-method.component';
 import { DisposalTypeComponent } from '../components/disposal-type/disposal-type.component';
-import { AssetDepConventionTypeComponent } from '../components/asset-dep-convention-type/asset-dep-convention-type.component';
+import { AssetDepConventionTypeComponent } from "../components/Asset-dep-convention-type/asset-dep-convention-type.component";
 import { DepreciationIntervalsComponent } from '../components/depreciation-intervals/depreciation-intervals.component';
 import { AssetIntangibleTypeSingleScreenComponent } from '../components/asset-intangible-type-single-screen/asset-intangible-type-single-screen.component';
 import { AssetTypeSingleScreenComponent } from '../components/asset-type-single-screen/asset-type-single-screen.component';

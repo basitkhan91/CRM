@@ -71,7 +71,7 @@
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
 
-                        <p-autoComplete (onKeyUp)=eventHandler($event) [(ngModel)]="purchaseOrderData.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                        <p-autoComplete  [(ngModel)]="purchaseOrderData.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-vendorName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{vendorName}}</div>
@@ -795,7 +795,7 @@
                         </table>
 
                     </div>
-                    <div *ngIf="showGrid">Hi</div>
+                  
                 </div>
             </div>
 

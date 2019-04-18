@@ -1,6 +1,6 @@
 ﻿export class DisposalType {
     assetDisposalTypeId: number;
-    assetDispoalId: string;
+    assetDisposalId: string;
     assetDisposalName: string;
     assetDisposalMemo: string;
     createdBy: string;

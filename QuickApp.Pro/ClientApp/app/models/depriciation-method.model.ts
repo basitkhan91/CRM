@@ -3,6 +3,7 @@
     assetDepreciationMethodName: string;
     assetDepreciationBasis: string;
     assetDepreciationMemo: string;
+    assetDepreciationId: string;
     masterCompanyId: number;
     createdBy: string;
     updatedBy: string;

@@ -175,7 +175,7 @@ export class ReceivngPoComponent {
                 {
                     for (let m = 0; m < this.editChildList.length; m++)
                     {
-                        if (this.partListData[k].itemMasterId == this.editChildList[m].itemMasterId) {
+                        if ((this.partListData[k].itemMasterId == this.editChildList[m].itemMasterId) && (this.partListData[k].purchaseOrderId == this.editChildList[m].purchaseOrderId)) {
                             this.partListData[k].ifSplitShip = true;
                             this.partListData[k]["childList"].push(this.editChildList[m]);
 
@@ -184,6 +184,8 @@ export class ReceivngPoComponent {
                     }
                 }
             }
+
+            console.log(this.partListData);
         }
     }
     private priorityData()

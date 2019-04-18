@@ -40,11 +40,11 @@ export class DisposalTypeComponent implements OnInit {
     }
 
     adddisposalType(): void {
-        if (!(this.currentdisposalType.assetDispoalId && this.currentdisposalType.assetDisposalName && this.currentdisposalType.assetDisposalMemo)) {
+        if (!(this.currentdisposalType.assetDisposalId && this.currentdisposalType.assetDisposalName && this.currentdisposalType.assetDisposalMemo)) {
             this.display = true;
             this.modelValue = true;
         }
-        if ((this.currentdisposalType.assetDispoalId && this.currentdisposalType.assetDisposalName && this.currentdisposalType.assetDisposalMemo)) {
+        if ((this.currentdisposalType.assetDisposalId && this.currentdisposalType.assetDisposalName && this.currentdisposalType.assetDisposalMemo)) {
             this.currentdisposalType.createdBy = this.userName;
             this.currentdisposalType.updatedBy = this.userName;
             this.disposalTypeService.add(this.currentdisposalType).subscribe(disposalType => {
@@ -67,7 +67,7 @@ export class DisposalTypeComponent implements OnInit {
 
 
     updatedisposalType(): void {
-        if (!(this.assetDisposalToUpdate.assetDispoalId && this.assetDisposalToUpdate.assetDisposalName && this.assetDisposalToUpdate.assetDisposalMemo)) {
+        if (!(this.assetDisposalToUpdate.assetDisposalId && this.assetDisposalToUpdate.assetDisposalName && this.assetDisposalToUpdate.assetDisposalMemo)) {
             this.display = true;
             this.modelValue = true;
         }

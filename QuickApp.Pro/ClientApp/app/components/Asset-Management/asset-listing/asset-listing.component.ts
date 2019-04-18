@@ -26,7 +26,7 @@ export class AssetListingComponent implements OnInit {
     assetTypeToUpdate: any;
     unitOfMeasureId: any;
     assetTypeId: any;
-
+    selectedColumn: any;
     ngOnInit(): void {
         this.loadData();
         this.activeIndex = 0;

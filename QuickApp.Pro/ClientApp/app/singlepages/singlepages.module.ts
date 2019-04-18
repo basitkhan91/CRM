@@ -97,7 +97,7 @@ import { DepriciationMethodEndpointService } from "../services/depriciation-meth
 import { DisposalTypeEndpointService } from "../services/disposal-type/disposaltype-endpoint.service";
 import { DisposalTypeService } from "../services/disposal-type/disposaltype.service";
 import { DisposalTypeComponent } from "../components/disposal-type/disposal-type.component";
-import { AssetDepConventionTypeComponent } from "../components/asset-dep-convention-type/asset-dep-convention-type.component";
+import { AssetDepConventionTypeComponent } from "../components/Asset-dep-convention-type/asset-dep-convention-type.component";
 import { DepreciationIntervalsService } from "../services/Depreciation -intervals/depreciation-intervals.service ";
 import { DepreciationIntervalsEndpoint } from "../services/Depreciation -intervals/depreciation-intervals-endpoint.service";
 import { AssetDepConventionTypeService } from "../services/assetDepConventionType/assetDepConventionType.service";
@@ -110,6 +110,7 @@ import { AssetTypeSingleScreenEndpointService } from "../services/AssetTypeSingl
 import { AssetTypeSingleScreenService } from "../services/AssetTypeSingleScreen/assettypesinglescreen.service";
 import { AssetTypeSingleScreenComponent } from "../components/asset-type-single-screen/asset-type-single-screen.component";
 import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
+
 //import { SharedModule } from '../shared/shared.module';
 //import { CompanyComponent } from '../shared/company/company.component';
 
