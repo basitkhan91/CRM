@@ -28,14 +28,27 @@ export class AccountingCalendarComponent {
         
     }
     loaddefualtObj(selectedPeriod) {
-        
+        var months = ["", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+        if (this.period<=3) {
+            this.currentCalendarObj.quarter = 1;
+        }
+        if (this.period >= 4 && this.period<=6) {
+            this.currentCalendarObj.quarter = 2;
+        }
+        if (this.period >= 7 && this.period <= 9) {
+            this.currentCalendarObj.quarter = 3;
+        }
+        if (this.period >= 10 && this.period <= 12) {
+            this.currentCalendarObj.quarter = 4;
+        }
         let defualtCalendarObj = {
-            calendarType: '',
-            year: this.currentCalendarObj.fiscalYear,
-            period:this.period,
+            calendarType: months[this.period],
+            fiscalYear: this.currentCalendarObj.fiscalYear,
+            period: this.period,
+            quarter:this.currentCalendarObj.quarter,
             fromDate: this.currentCalendarObj.fromDate,
             toDate: this.currentCalendarObj.toDate,
-            periodName: this.currentCalendarObj.calendarName
+            periodName: months[this.period] + ' ' + this.currentCalendarObj.fiscalYear
         }
         this.period++;
         return defualtCalendarObj;
@@ -43,7 +56,7 @@ export class AccountingCalendarComponent {
     addCalendar() {
         this.showTable = true;
         debugger;
-       
+        
         if (this.selectedPeriod == 12) {
             for (let i = 0; i < this.selectedPeriod; i++) {
                 this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod));

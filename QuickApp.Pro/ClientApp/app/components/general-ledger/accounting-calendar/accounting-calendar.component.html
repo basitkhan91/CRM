@@ -92,13 +92,13 @@
             </thead>
             <tbody>
                 <tr *ngFor="let obj of calendarArray">
-                    <td>{{obj.periodName}}</td>
+                    <td>{{obj.calendarType}}</td>
                     <td>{{obj.fiscalYear}}</td>
+                    <td>{{obj.quarter}}</td>
                     <td>{{obj.period}}</td>
-                    <td>1</td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker" value="1/1/2018" id="dp1555497164114"></td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker" value="1/31/2018" id="dp1555497164115"></td>
-                    <td>Jan-2018</td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker"  id="dp1555497164114" value="{{obj.fromDate}}"></td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker"  id="dp1555497164115" value="{{obj.toDate}}"></td>
+                    <td>{{obj.periodName}}</td>
                 </tr>
 
 
