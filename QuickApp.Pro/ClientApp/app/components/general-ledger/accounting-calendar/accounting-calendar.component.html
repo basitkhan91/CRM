@@ -1,472 +1,114 @@
 ﻿<div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="x_panel" style="">
-            <div class="x_content add-customer-work">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">General Ledger</li>
-                        <li class="breadcrumb-item active" aria-current="page">Accounting Calendar</li>
-                    </ol>
-                </nav>
-                <div class="pheading">
-                    <h4 class="page-heading clr-green">Accounting Calendar</h4>
-                </div>
-                <!--<div class="cdetails-top">
-                    <div class="col-sm-12">
-                        <label>Company</label>
-                        <span>
-                            <select>
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </span>
+    <div class="tab-content form-bg">
+        <div class="tab-pane active" id="home">
+            <div class="col-sm-3">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Calender Name</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.calendarName">
                     </div>
-                    <div class="col-sm-12">
-                        <label>BU</label>
-                        <span>
-                            <select>
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </span>
-                    </div>
-                    <div class="col-sm-12">
-                        <label>Division</label>
-                        <span>
-                            <select>
-                                <option value="">Designing</option>
-                                <option value="">Development</option>
-                                <option value="">Repear</option>
-                            </select>
-                        </span>
-                    </div>
-                    <div class="col-sm-12">
-                        <label>Dept</label>
-                        <span>
-                            <select>
-                                <option value="">.net</option>
-                                <option value="">HTML</option>
-                                <option value="">Java</option>
-                            </select>
-                        </span>
-                    </div>
-
-                </div>-->
-                <div class="clear"></div>
-                <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
-                    <div class="col-md-12 col-sm-12 col-12">
-                        <div class="tab-content form-bg">
-                            <div class="tab-pane active" id="home">
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Calender Name</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" type="text" placeholder="PAS Calendar">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Calender Description</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" type="text" placeholder="PowerAeroSuites Accounting Calendar">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                                <hr class="hr-dark" />
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Fiscal Year</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" type="text" placeholder="E.g. 2018">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Start Date</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control datepicker" type="text" placeholder="1/1/2018">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">End Date</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control datepicker" type="text" placeholder="12/31/2018">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Period Type</label>
-                                        <div class="col-sm-7">
-                                            <select>
-                                                <option>Select Period Type</option>
-                                                <option>Calendar Months</option>
-                                                <option>Fiscal Month</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Num of periods</label>
-                                        <div class="col-sm-7">
-                                            <input type="text" name="noperiods" id="noperiods" placeholder="Num of periods">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Description</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" type="text" placeholder="12 Fiscal Months">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-
-                            </div>
-
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </form>
-
-                <!--Period12 -->
-                <div id="" class="table-responsive default-bg clear calendar-table-12 col-sm-8">
-
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Fiscal</th>
-                                <th>Year</th>
-                                <th>Qtr</th>
-                                <th>Period </th>
-                                <th>From Date</th>
-                                <th>To Date</th>
-                                <th>Period Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Jan</td>
-                                <td>2018</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td><input type="text" class="datepicker form-control" value="1/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="1/31/2018" /></td>
-                                <td>Jan_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Feb</td>
-                                <td>2018</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td><input type="text" class="datepicker form-control" value="2/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="2/28/2018" /></td>
-                                <td>Feb_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Mar</td>
-                                <td>2018</td>
-                                <td>1</td>
-                                <td>3</td>
-                                <td><input type="text" class="datepicker form-control" value="3/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="3/31/2018" /></td>
-                                <td>Mar_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Apr</td>
-                                <td>2018</td>
-                                <td>2</td>
-                                <td>4</td>
-                                <td><input type="text" class="datepicker form-control" value="4/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="4/30/2018" /></td>
-                                <td>Apr_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>May</td>
-                                <td>2018</td>
-                                <td>2</td>
-                                <td>5</td>
-                                <td><input type="text" class="datepicker form-control" value="5/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="5/31/2018" /></td>
-                                <td>May_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Jun</td>
-                                <td>2018</td>
-                                <td>2</td>
-                                <td>6</td>
-                                <td><input type="text" class="datepicker form-control" value="6/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="6/30/2018" /></td>
-                                <td>Jun_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Jul</td>
-                                <td>2018</td>
-                                <td>3</td>
-                                <td>7</td>
-                                <td><input type="text" class="datepicker form-control" value="7/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="7/31/2018" /></td>
-                                <td>Jul_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Aug</td>
-                                <td>2018</td>
-                                <td>3</td>
-                                <td>8</td>
-                                <td><input type="text" class="datepicker form-control" value="8/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="8/31/2018" /></td>
-                                <td>Aug_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Sep</td>
-                                <td>2018</td>
-                                <td>3</td>
-                                <td>9</td>
-                                <td><input type="text" class="datepicker form-control" value="9/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="9/30/2018" /></td>
-                                <td>Sep_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Oct</td>
-                                <td>2018</td>
-                                <td>4</td>
-                                <td>10</td>
-                                <td><input type="text" class="datepicker form-control" value="10/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="10/31/2018" /></td>
-                                <td>Oct_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Nov</td>
-                                <td>2018</td>
-                                <td>4</td>
-                                <td>11</td>
-                                <td><input type="text" class="datepicker form-control" value="11/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="11/30/2018" /></td>
-                                <td>Nov_2018</td>
-
-                            </tr>
-                            <tr>
-                                <td>Dec</td>
-                                <td>2018</td>
-                                <td>4</td>
-                                <td>12</td>
-                                <td><input type="text" class="datepicker form-control" value="12/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="12/31/2018" /></td>
-                                <td>Dec_2018</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="clear"></div>
-                    <br />
-                    <a class="btn btn-success pull-right">Submit</a>
-                    <div class="clear"></div>
-                </div>
-                <!--Period12 End-->
-                <!--Period13 -->
-                <div id="" class="table-responsive default-bg clear calendar-table-13 col-sm-8">
-
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Fiscal</th>
-                                <th>Year</th>
-                                <th>Qtr</th>
-                                <th>Period </th>
-                                <th>From Date</th>
-                                <th>To Date</th>
-                                <th>Period Name</th>
-                                <th>Adjusting Period</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Jan</td>
-                                <td>2018</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td><input type="text" class="datepicker form-control" value="1/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="1/31/2018" /></td>
-                                <td>Jan_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Feb</td>
-                                <td>2018</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td><input type="text" class="datepicker form-control" value="2/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="2/28/2018" /></td>
-                                <td>Feb_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Mar</td>
-                                <td>2018</td>
-                                <td>1</td>
-                                <td>3</td>
-                                <td><input type="text" class="datepicker form-control" value="3/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="3/31/2018" /></td>
-                                <td>Mar_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Apr</td>
-                                <td>2018</td>
-                                <td>2</td>
-                                <td>4</td>
-                                <td><input type="text" class="datepicker form-control" value="4/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="4/30/2018" /></td>
-                                <td>Apr_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>May</td>
-                                <td>2018</td>
-                                <td>2</td>
-                                <td>5</td>
-                                <td><input type="text" class="datepicker form-control" value="5/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="5/31/2018" /></td>
-                                <td>May_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Jun</td>
-                                <td>2018</td>
-                                <td>2</td>
-                                <td>6</td>
-                                <td><input type="text" class="datepicker form-control" value="6/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="6/30/2018" /></td>
-                                <td>Jun_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Jul</td>
-                                <td>2018</td>
-                                <td>3</td>
-                                <td>7</td>
-                                <td><input type="text" class="datepicker form-control" value="7/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="7/31/2018" /></td>
-                                <td>Jul_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Aug</td>
-                                <td>2018</td>
-                                <td>3</td>
-                                <td>8</td>
-                                <td><input type="text" class="datepicker form-control" value="8/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="8/31/2018" /></td>
-                                <td>Aug_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Sep</td>
-                                <td>2018</td>
-                                <td>3</td>
-                                <td>9</td>
-                                <td><input type="text" class="datepicker form-control" value="9/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="9/30/2018" /></td>
-                                <td>Sep_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Oct</td>
-                                <td>2018</td>
-                                <td>4</td>
-                                <td>10</td>
-                                <td><input type="text" class="datepicker form-control" value="10/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="10/31/2018" /></td>
-                                <td>Oct_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Nov</td>
-                                <td>2018</td>
-                                <td>4</td>
-                                <td>11</td>
-                                <td><input type="text" class="datepicker form-control" value="11/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="11/30/2018" /></td>
-                                <td>Nov_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Dec</td>
-                                <td>2018</td>
-                                <td>4</td>
-                                <td>12</td>
-                                <td><input type="text" class="datepicker form-control" value="12/1/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="12/31/2018" /></td>
-                                <td>Dec_2018</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>ADJ-PD</td>
-                                <td>2018</td>
-                                <td>4</td>
-                                <td>13</td>
-                                <td><input type="text" class="datepicker form-control" value="12/31/2018" /></td>
-                                <td><input type="text" class="datepicker form-control" value="12/31/2018" /></td>
-                                <td>ADJ-PD_2018</td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="clear"></div>
-                    <br />
-                    <a class="btn btn-success pull-right">Submit</a>
-                    <div class="clear"></div>
-
-                </div>
-                <!--Period13 End-->
-
-                <div class="clear"></div>
-                <hr>
-                <div class="pull-right"> &copy; 2018 <a routerLink="/">PAS</a> </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="createwo" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" id="" name="">&times;</button>
-                    <h4 class="modal-title">Customer Work is saved. Would you like to create Work Order ?</h4>
-                </div>
-                <div class="modal-body">
-                    <button type="button" class="btn btn-success cwo-btn" data-dismiss="modal">Yes</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="myFunction()">No</button>
                 </div>
             </div>
+            <div class="col-sm-3">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Calender Description</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.calendarDescription">
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <hr class="hr-dark">
+            <div class="col-sm-3">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Fiscal Year</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" value="2018" [(ngModel)]="currentCalendarObj.fiscalYear">
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Period Type</label>
+                    <div class="col-sm-7">
+                        <select [(ngModel)]="currentCalendarObj.periodType">
+                            <option>-- Select --</option>
+                            <option>Calendar Months</option>
+                            <option>Fiscal Month</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Start Date</label>
+                    <div class="col-sm-7">
+                        <input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164112" [(ngModel)]="currentCalendarObj.fromDate">
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Num of periods</label>
+                    <div class="col-sm-7">
+                        <select name="noperiods" id="noperiods" (change)="setSelectedAttribute($event.target.value)">
+                            <option>-- Select --</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="16">16</option>
+                            <option value="0">Manual</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">End Date</label>
+                    <div class="col-sm-7">
+                        <input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164113" [(ngModel)]="currentCalendarObj.toDate">
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">Description</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <hr>
+            <button class="btn btn-success pull-right add-cal-btn" (click)="addCalendar()">Add Calendar</button>
+            <div class="clear"></div>
         </div>
     </div>
+    <div id="" class="table-responsive default-bg clear calendar-table-12 col-sm-6 input-85" *ngIf="showTable">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Calendar/Fiscal</th>
+                    <th>Year</th>
+                    <th>Qtr</th>
+                    <th>Period </th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Period Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let obj of calendarArray">
+                    <td>{{obj.periodName}}</td>
+                    <td>{{obj.fiscalYear}}</td>
+                    <td>{{obj.period}}</td>
+                    <td>1</td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker" value="1/1/2018" id="dp1555497164114"></td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker" value="1/31/2018" id="dp1555497164115"></td>
+                    <td>Jan-2018</td>
+                </tr>
+
+
+            </tbody>
+        </table>
+        <div class="clear"></div>
+        <br>
+        <a href="#" class="btn btn-success pull-right">Save</a>
+        <div class="clear"></div>
+    </div>
+
 
 </div>
