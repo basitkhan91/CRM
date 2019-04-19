@@ -169,16 +169,18 @@ export class CreateAssetComponent implements OnInit {
     filterAssetId(event) {
 
         this.localCollection = [];
-        for (let i = 0; i < this.allAssetInfo.length; i++) {
-            let assetId = this.allAssetInfo[i].assetId;
-            if (assetId) {
-                if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.allAssets.push([{
-                        "assetRecordId": this.allAssetInfo[i].assetRecordId,
-                        "assetId": this.allAssetInfo[i].assetId
-                    }]),
-                        this.localCollection.push(assetId)
+        if (this.allAssetInfo) {
+            for (let i = 0; i < this.allAssetInfo.length; i++) {
+                let assetId = this.allAssetInfo[i].assetId;
+                if (assetId) {
+                    if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                        this.allAssets.push([{
+                            "assetRecordId": this.allAssetInfo[i].assetRecordId,
+                            "assetId": this.allAssetInfo[i].assetId
+                        }]),
+                            this.localCollection.push(assetId)
 
+                    }
                 }
             }
         }
@@ -449,7 +451,7 @@ export class CreateAssetComponent implements OnInit {
     
     saveAsset(): void {
 
-        if (this.currentAsset.isIntangible == false) {
+        if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
                 && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
                 this.display = true;
@@ -465,7 +467,9 @@ export class CreateAssetComponent implements OnInit {
                     this.modelValue = true;
                 }
             }
-        if (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name) {
+        if ((this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
+            || (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
+            && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {
@@ -491,10 +495,10 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeId = "";
                     this.currentSelectedAssetType.selectedObj = "";
-                    this.currentAsset.assetType = "";
-                    this.currentAsset.currency = "";
-                    this.currentAsset.manufacturer = "";
-                    this.currentAsset.unitOfMeasure = "";
+                    delete this.currentAsset.assetType;
+                    delete this.currentAsset.currency;
+                    delete this.currentAsset.manufacturer;
+                    delete this.currentAsset.unitOfMeasure;
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
@@ -530,15 +534,19 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeId = "";
                     this.currentSelectedAssetType.selectedObj = "";
-                    this.currentAsset.assetType = "";
-                    this.currentAsset.currency = "";
-                    this.currentAsset.manufacturer = "";
-                    this.currentAsset.unitOfMeasure = "";
+                    delete this.currentAsset.assetType;
+                    delete this.currentAsset.currency;
+                    delete this.currentAsset.manufacturer;
+                    delete this.currentAsset.unitOfMeasure;
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;
                     this.currentSelectedIntangibleAssetType.selectedAssetObj = {};
                     this.currentAsset.assetIntangibleTypeId = "";
+                    delete this.currentAsset.assetType;
+                    delete this.currentAsset.currency;
+                    delete this.currentAsset.manufacturer;
+                    delete this.currentAsset.unitOfMeasure;
                 }
                 
                 this.assetService.updateAsset(this.currentAsset).subscribe(data => {

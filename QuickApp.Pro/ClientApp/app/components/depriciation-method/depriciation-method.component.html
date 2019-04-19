@@ -12,7 +12,7 @@
                 <h4 class="page-heading">Depreciation Method</h4>
                 <div class="col-sm-12 form-bg">
                     <div class="form-group add-inputs">
-                        <div class="form-group col-sm-4 w250">
+                        <div class="form-group col-sm-4 w200">
                             <label class="control-label col-sm-4">ID</label>
                             <div class="col-sm-7 cust-name">
                                 <div class="inner-addon right-addon w200 inline-block">
@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-sm-4 w250">
+                        <div class="form-group col-sm-3 w200">
                             <label class="control-label col-sm-4">Name<span class="clr-red">*</span></label>
                             <div class="col-sm-7 cust-name">
                                 <div class="inner-addon right-addon w200 inline-block">
@@ -30,13 +30,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-sm-4 w250">
+                        <div class="form-group col-sm-3 w250">
                             <label class="control-label col-sm-4">Depreciation Basis<span class="clr-red">*</span></label>
                             <div class="col-sm-7">
                                 <textarea class="form-control" [(ngModel)]="currentDepriciationmethod.assetDepreciationBasis"></textarea>
                             </div>
                         </div>
-                        <div class="form-group col-sm-4 w250">
+                        <div class="form-group col-sm-3 w250">
                             <label class="control-label col-sm-4">Memo<span class="clr-red">*</span></label>
                             <div class="col-sm-7">
                                 <textarea class="form-control" [(ngModel)]="currentDepriciationmethod.assetDepreciationMemo"></textarea>
@@ -44,7 +44,7 @@
                         </div>
                         <div class="form-group col-sm-2">
                             <button type="button" id="btnFilterdepriciationMethod" name="" class="btn btn-warning" data-toggle="tooltip" data-original-title="Filter"><i class="fa fa-search"></i></button>
-                            <button type="button" id="btnAdddepriciationMethod" *ngIf="!this.updateMode" (click)="adddepriciationmethod()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Add"><i class="fa fa-plus"></i></button>
+                            <button type="button" id="btnAdddepriciationMethod" data-toggle="tooltip" title="Add" *ngIf="!this.updateMode" (click)="adddepriciationmethod()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Add"><i class="fa fa-plus"></i></button>
                             <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
                             <button type="button" id="btnResetdepriciationMethod" *ngIf="this.updateMode" (click)="resetdepriciationmethod()" name="" class="btn btn-default nobg" data-toggle="tooltip" data-original-title="Reset"><i class="fa fa-edit"></i></button>
 

@@ -7,7 +7,6 @@ namespace DAL.Repositories.Interfaces
   public interface IAssetRepository : IRepository<DAL.Models.Asset>
     {
         IEnumerable<object> getAllAssetList();
-
     }
     
 }

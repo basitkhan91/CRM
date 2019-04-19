@@ -143,7 +143,7 @@
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetIntangibleTypeId" (change)="getSelectedIntangible(currentAsset.assetIntangibleTypeId)">
                             <option>--Select--</option>
                             <option class="form-control" *ngFor="let assetIntangible of allIntangibleInfo" [ngValue]="assetIntangible.assetIntangibleTypeId">
-                                {{assetIntangible.intangibleTypeName}}
+                                {{assetIntangible.assetIntangibleTypeSingle?.assetIntangibleName}}
                             </option>
                         </select>
                     </div>
@@ -292,7 +292,7 @@
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetTypeId" (change)="getSelectedAssetType(currentAsset.assetTypeId)">
                             <option>--Select--</option>
                             <option class="form-control" *ngFor="let assetType of allAssetTypeInfo" [ngValue]="assetType.assetTypeId">
-                                {{assetType.assetTypeName}}
+                                {{assetType.assetTypeSingleScreen?.assetTypeName}}
                             </option>
                         </select>
                     </div>

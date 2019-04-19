@@ -12,13 +12,17 @@ namespace DAL.Repositories
        
         IEnumerable<object> IAssetRepository.getAllAssetList()
         {
-            var data = _appContext.Asset.Include("Manufacturer").Include("GLAccount").Include("Currency").
-                Include("UnitOfMeasure").Include("AssetType").Where(c => c.IsDelete == false || c.IsDelete == null).
-                OrderByDescending(c => c.AssetRecordId).ToList();
+            var data = _appContext.Asset.Where(c => c.IsDelete == false || c.IsDelete == null);
+            var temp = data.Include("Manufacturer");
+            var temp1 = temp.Include("GLAccount");
+            var temp2 = temp1.Include("Currency");
+            var temp3 = temp2.Include("UnitOfMeasure");
+            var temp4 = temp3.Include("AssetType");
+              var temp5=temp4.OrderByDescending(c => c.AssetRecordId).ToList();
             return data;
         }
 
-    private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
    

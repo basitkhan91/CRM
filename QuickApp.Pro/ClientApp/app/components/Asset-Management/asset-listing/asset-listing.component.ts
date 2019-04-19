@@ -167,7 +167,10 @@ export class AssetListingComponent implements OnInit {
         if (row.currency) {
             this.currencyId = row.currency.symbol;
         }
-        else { this.currencyId = "" }
+        else
+        {
+            this.currencyId = ""
+        }
         if (row.glAccount) {
             this.glAccountId = row.glAccount.accountName;
         }
