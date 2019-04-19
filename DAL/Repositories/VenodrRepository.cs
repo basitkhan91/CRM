@@ -220,9 +220,10 @@ namespace DAL.Repositories
                                 im.PMA,
                                 im.DER,
                                 im.SalesDiscountPercent,
-                              // sto
+                                purchaseOrderPartPurchaseOrderId = purchaseOderPart.PurchaseOrderId
+                                // sto
 
-    
+
 
 
                             }).ToList();

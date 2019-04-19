@@ -1,4 +1,10 @@
-﻿
+﻿<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page">Asset</li>
+        <li class="breadcrumb-item active" aria-current="page">Asset Type List</li>
+    </ol>
+</nav>
+<h4 class="page-heading">List of Asset Types</h4>
 <div [@fadeInOut] class="page-content">
     <div class="col-xs-12">
         <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper no-footer">
@@ -45,17 +51,17 @@
         </div>
     </div>
 </div>
-    <ng-template #content let-c="close" let-d="dismiss">
-        <div class="modal-header">
-            <h4 class="modal-title">Are you sure you want to delete Asset Type</h4>
-            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you sure you want to delete Asset Type</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-success" (click)="removeAssetType()">Yes</button>
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-        </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="removeAssetType()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
 
-    </ng-template>
+</ng-template>
