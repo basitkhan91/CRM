@@ -14,7 +14,9 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.AssetIntangibleType> GetAllIntangibleType()
         {
-            return _appContext.AssetIntangibleType.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
+            var data = _appContext.AssetIntangibleType.Include("AssetIntangibleTypeSingle").Where(c => c.IsDelete == false || c.IsDelete == null).
+               OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
+            return data;
         }
 
 

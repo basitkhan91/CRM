@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAllIntangibleTypes")]
         public IActionResult getAll()
         {
-            var intangibleTypeData = unitOfWork.Repository<AssetIntangibleType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetIntangibleTypeId);
+            var intangibleTypeData = unitOfWork.assetIntangibleType.GetAllIntangibleType();
             return Ok(intangibleTypeData);
         }
 

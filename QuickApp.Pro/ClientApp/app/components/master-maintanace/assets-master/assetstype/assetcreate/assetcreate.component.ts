@@ -156,6 +156,7 @@ export class AssetcreateComponent implements OnInit {
         }
         else {
             this.currentAssetObj.updatedBy = this.userName;
+            delete this.currentAssetObj.assetTypeSingleScreen;
             this.assetTypeService.updateAssetType(this.currentAssetObj).subscribe(asset => {
                 this.alertService.showMessage('Asset Type updated successfully.');
                 this.assetTypeService.getAll().subscribe(assetTypeData => {

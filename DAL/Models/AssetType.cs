@@ -48,6 +48,8 @@ namespace DAL.Models
         public bool? IsDelete { get; set; }
 
         public long? AssetTypeSingleScreenId { get; set; }
-        //public ICollection<GLAccount> GLAccount { get; set; }
+       // public virtual GLAccount GLAccount { get; set; }
+        public virtual AssetTypeSingleScreen AssetTypeSingleScreen { get; set; }
+
     }
 }

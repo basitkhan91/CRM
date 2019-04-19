@@ -81,6 +81,7 @@ export class CreateIntangibletypeComponent implements OnInit {
         }
         else {
             this.currentIntangibleType.updatedBy = this.userName;
+            delete this.currentIntangibleType.assetIntangibleTypeSingle;
             this.intangibleService.update(this.currentIntangibleType).subscribe(intangible => {
                 this.alertService.showMessage('Intangible Type updated successfully.');
                 this.intangibleService.getAll().subscribe(intangibleTypeData => {
