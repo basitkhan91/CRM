@@ -102,9 +102,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Share with the Other Entities</label>
                 <div class="col-sm-7">
-                    <div class="input-group">
                         <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-                    </div>
                 </div>
             </div>
             <div class="form-group col-sm-12">
@@ -152,14 +150,12 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-4">
-                    <label for="description" class="control-label">Node Description</label>
-                </div>
+                <label class="control-label col-sm-4" for="description">Node Description</label>
                 <div class="control-data">
                     <textarea style="width: 300px;height: 100px;" [(ngModel)]="currentNodeSetup.description" [ngModelOptions]="{standalone: true}"></textarea>
                 </div>
-                <div class="clear"></div>
             </div>
+            <div class="clear"></div>
             <div class="modal-footer">
                 <button class="btn btn-success pull-right submit-btn" *ngIf="!this.updateMode" (click)="addNodeSetup()">Save</button>
                 <button class="btn btn-success pull-right submit-btn" *ngIf="this.updateMode" (click)="updateNodeSetup()">Update</button>
