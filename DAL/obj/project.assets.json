@@ -3337,23 +3337,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bharathi\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "2.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PAS\\DAL\\DAL.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Source\\Repos\\PASLatest\\DAL\\DAL.csproj",
       "projectName": "DAL",
-      "projectPath": "D:\\PAS\\DAL\\DAL.csproj",
-      "packagesPath": "C:\\Users\\bharathi\\.nuget\\packages\\",
-      "outputPath": "D:\\PAS\\DAL\\obj\\",
+      "projectPath": "C:\\Users\\User\\Source\\Repos\\PASLatest\\DAL\\DAL.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Source\\Repos\\PASLatest\\DAL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\bharathi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

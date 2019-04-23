@@ -26,6 +26,7 @@ export class AssetStatusComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
+
     constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal) {
     }
 
@@ -83,8 +84,7 @@ export class AssetStatusComponent implements OnInit {
         });
 
     }
-
-
+    
     resetAddAssetStatus(): void {
         this.currentAssetStatus = new AssetStatus();
     }
@@ -119,50 +119,10 @@ export class AssetStatusComponent implements OnInit {
 
     auditAssetStatus(assetStatusId: number): void {
         this.assetStatusService.getAssetAudit(assetStatusId).subscribe(audits => {
-            var columnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate","updatedDate"];
-            this.AuditDetails = this.extractAuditChangedValues(audits.result, columnsToAvoid);
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate", "updatedDate"];
+            }
         });
-    }
-
-    extractAuditChangedValues(audits: any[], columnsToAvoid: string[]): SingleScreenAuditDetails[] {
-        var singleScreenAuditList = [];
-        var index = 1;
-        audits.forEach(function (audit) {
-
-            var singleScreenAudit = new SingleScreenAuditDetails();
-            singleScreenAudit.LastUpdatedTime = audit.updatedDate.toString();
-            singleScreenAudit.LastUpdatedBy = audit.updatedBy != undefined ? audit.updatedBy : "admin";
-            singleScreenAudit.AuditChanges = [];
-            singleScreenAudit.Visible = false;
-            var properties = Object.keys(audit);
-            properties.forEach(function (property) {
-                if (audit[property] != null && columnsToAvoid.indexOf(property) == -1) {
-                    var auditChanges = new AuditChanges();
-                    auditChanges.FieldFriendlyname = property;
-                    auditChanges.NewValue = audit[property];
-
-                    if (index < audits.length) {
-                        var oldValueAudit = audits.slice(index, audits.length).filter(function (o) {
-                            return o[property] != null;
-                        })[0];
-                        auditChanges.OldValue = oldValueAudit != undefined ? oldValueAudit[property] : "";
-                    }
-                    else {
-                        auditChanges.OldValue = "-";
-                    }
-
-                    singleScreenAudit.AuditChanges.push(auditChanges);
-                }
-            });
-
-            singleScreenAuditList.push(singleScreenAudit);
-            index += 1;
-        });
-
-        return singleScreenAuditList;
-    }
-
-    ToggleChangedPropertiesSection(SingleScreenAudit: SingleScreenAuditDetails): void {
-        SingleScreenAudit.Visible = !SingleScreenAudit.Visible;
     }
 }

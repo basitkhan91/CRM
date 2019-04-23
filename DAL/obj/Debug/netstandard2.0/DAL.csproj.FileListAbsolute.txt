@@ -7,3 +7,12 @@ D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
 D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.dll
 D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.pdb
 D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache
+C:\Users\User\Source\Repos\PASLatest\DAL\bin\Debug\netstandard2.0\DAL.deps.json
+C:\Users\User\Source\Repos\PASLatest\DAL\bin\Debug\netstandard2.0\DAL.dll
+C:\Users\User\Source\Repos\PASLatest\DAL\bin\Debug\netstandard2.0\DAL.pdb
+C:\Users\User\Source\Repos\PASLatest\DAL\obj\Debug\netstandard2.0\DAL.csproj.CoreCompileInputs.cache
+C:\Users\User\Source\Repos\PASLatest\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfoInputs.cache
+C:\Users\User\Source\Repos\PASLatest\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
+C:\Users\User\Source\Repos\PASLatest\DAL\obj\Debug\netstandard2.0\DAL.dll
+C:\Users\User\Source\Repos\PASLatest\DAL\obj\Debug\netstandard2.0\DAL.pdb
+C:\Users\User\Source\Repos\PASLatest\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache
