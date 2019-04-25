@@ -181,7 +181,7 @@ namespace QuickApp.Pro.ViewModels
 
         public decimal? PurchaseListPrice { get; set; }
 
-        public Int16 PurchaseDiscountOffListPrice { get; set; }
+        public Int16? PurchaseDiscountOffListPrice { get; set; }
 
         public decimal? PurchaseListPriceAfterDiscount { get; set; }
 

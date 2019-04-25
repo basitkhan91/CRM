@@ -153,7 +153,7 @@ namespace DAL.Models
         public Byte? ExportClassificationId { get; set; }
 
 
-        public decimal? PurchaseDiscountOffListPrice { get; set; }
+        public Int16? PurchaseDiscountOffListPrice { get; set; }
 
         public decimal? PurchaseListPriceAfterDiscount { get; set; }
         [ForeignKey("PurchaseCurrencyId")]
