@@ -12,13 +12,15 @@ export class AssetEndpoint extends EndpointFactory  {
     private readonly _addAssetUrlNew: string = "/api/AssetModule/addAsset";
     private readonly removeByIdURL: string = "/api/AssetModule/removeById";
     private readonly _updateAssetUrl: string = "/api/AssetModule/updateAsset";
-    private readonly _capabilityListUrl: string = "/api/AssetModule/capabilityTypeList";
+    private readonly _capabilityListUrl: string = "/api/AssetModule/GetCapes";
+    private readonly _getCapabilityUrl: string = "/api/AssetModule/capabilityGet";
 
     private readonly capesPost: string = "/api/AssetModule/Mancapespost";
 
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
     get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
+    get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
@@ -66,10 +68,21 @@ export class AssetEndpoint extends EndpointFactory  {
     }
 
 
-    getCapabilityTypeListEndpoint<T>(): Observable<T> {
-        return this.http.get<T>(this.capabilityTypeListUrl, this.getRequestHeaders())
+    getCapabilityTypeListEndpoint<T>(assetRecordId): Observable<T> {
+        let endpointUrl = `${this.capabilityTypeListUrl}/${assetRecordId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getCapabilityTypeListEndpoint());
+                return this.handleError(error, () => this.getCapabilityTypeListEndpoint(assetRecordId));
+            });
+    }
+
+
+    getCapabilityDataEndpoint<T>(assetRecordId: any): Observable<T> {
+        let url = `${this.getCapabilityUrl}/${assetRecordId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCapabilityDataEndpoint(assetRecordId));
             });
     }
 }

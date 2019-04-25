@@ -7,6 +7,7 @@ import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AssetStatusAudit} from "../../models/asset-status-audit.model";
 import { forEach } from "@angular/router/src/utils/collection";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
     selector: 'asset-status',
@@ -26,7 +27,7 @@ export class AssetStatusComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
-    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal) {
+    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
@@ -39,12 +40,18 @@ export class AssetStatusComponent implements OnInit {
         this.currentAssetStatus = new AssetStatus();
     }
 
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
     addAssetStatus(): void {
         if (!(this.currentAssetStatus.identification && this.currentAssetStatus.name && this.currentAssetStatus.memo)) {
             this.display = true;
             return;
         }
-
+        this.currentAssetStatus.createdBy = this.userName;
+        this.currentAssetStatus.updatedBy = this.userName;
         this.assetStatusService.add(this.currentAssetStatus).subscribe(asset => {
             this.alertService.showMessage('Asset Status added successfully.');
             this.assetStatusService.getAll().subscribe(assets => {
@@ -63,6 +70,7 @@ export class AssetStatusComponent implements OnInit {
     }
 
     updateAssetStatus(): void {
+        this.currentAssetStatus.updatedBy = this.userName;
         this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
             this.alertService.showMessage('Asset Status updated successfully.');
             this.assetStatusService.getAll().subscribe(assets => {

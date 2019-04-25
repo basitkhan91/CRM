@@ -9,7 +9,7 @@
                     </ol>
                 </nav>-->
 
-                <h4 class="page-heading clr-green">ATA Main</h4>
+                <h4 class="page-heading clr-green">ATA Chapter</h4>
 
                 <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
                 <p-table #dt [value]="allATAMaininfo" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
@@ -25,7 +25,7 @@
                             </div>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a (click)="open(contentEdit)" matTooltip="Add ATA Main" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+                            <a (click)="open(contentEdit)" matTooltip="Add ATA Chapter" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
                             <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label for="upload">
@@ -108,8 +108,8 @@
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit ATA MAin</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add ATA MAin</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit ATA Chapter</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add ATA Chapter</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -224,7 +224,7 @@
                 <thead>
                     <tr>
                         <th>AID</th>
-                        <th>ATA Main Description</th>
+                        <th>ATA Chapter Description</th>
                         <th>Previous Value</th>
                         <th>New Value</th>
                         <th>Last Updated By</th>
@@ -252,7 +252,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">ATA Main Details</h4>
+            <h4 class="modal-title">ATA Chapter Details</h4>
         </div>
         <div class="modal-body viewform">
             <div class="col-sm-6">

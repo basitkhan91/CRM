@@ -167,13 +167,11 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(employeeViewModel)} cannot be null");
                 DAL.Models.Employee employeeobject = new DAL.Models.Employee();
 
-                employeeobject.MasterCompanyId = employeeViewModel.MasterCompanyId;
-                // employeeobject.IsActive = employeeViewModel.IsActive;
+                employeeobject.MasterCompanyId =1;
                 employeeobject.IsActive = true;
                 employeeobject.FirstName = employeeViewModel.FirstName;
                 employeeobject.LastName = employeeViewModel.LastName;
                 employeeobject.MiddleName = employeeViewModel.MiddleName;
-                //employeeobject.EmployeeId = employeeViewModel.EmployeeId;
                 employeeobject.MobilePhone = employeeViewModel.MobilePhone;
                 employeeobject.JobTitleId = employeeViewModel.JobTitleId;
                 employeeobject.EmployeeIdAsPerPayroll = employeeViewModel.EmployeeIdAsPerPayroll;
@@ -197,11 +195,55 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.IsHourly = employeeViewModel.IsHourly;
                 employeeobject.SupervisorId = employeeViewModel.SupervisorId;
                 employeeobject.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
-               // employeeobject.EmployeeLeaveTypeId = employeeViewModel.EmployeeLeaveTypeId;
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
-                // employeeobject.SupervisorName = employeeViewModel.SupervisorName;
                 employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
+
+                if (employeeViewModel.EmployeeLeaveTypeId != null)
+                {
+                    var integrationList = _unitOfWork.EmployeeLeaveTypeMappingRepository.GetAllData().ToList();
+                    _unitOfWork.SaveChanges();
+                    foreach (string s in employeeViewModel.EmployeeLeaveTypeId)
+                    {
+                        if (s != "")
+                        {
+                            var integrationTypes = new EmployeeLeaveTypeMapping();
+                            integrationTypes.EmployeeLeaveTypeId = Convert.ToByte(s);
+                            integrationTypes.MasterCompanyId = 1;
+                            integrationTypes.CreatedBy = employeeViewModel.CreatedBy;
+                            integrationTypes.UpdatedBy = employeeViewModel.UpdatedBy;
+                            integrationTypes.CreatedDate = DateTime.Now;
+                            integrationTypes.UpdatedDate = DateTime.Now;
+                            integrationTypes.IsActive = true;
+                            _unitOfWork.EmployeeLeaveTypeMappingRepository.Add(integrationTypes);
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+                }
+
+                if (employeeViewModel.ShiftId != null)
+                {
+                    var integrationList = _unitOfWork.EmployeeShiftMappingRepository.GetAllData().ToList();
+                    _unitOfWork.SaveChanges();
+                    foreach (string s in employeeViewModel.ShiftId)
+                    {
+                        if (s != "")
+                        {
+                            var integrationTypes = new EmployeeShiftMapping();
+                            integrationTypes.ShiftId = Convert.ToByte(s);
+                            integrationTypes.MasterCompanyId = 1;
+                            integrationTypes.CreatedBy = employeeViewModel.CreatedBy;
+                            integrationTypes.UpdatedBy = employeeViewModel.UpdatedBy;
+                            integrationTypes.CreatedDate = DateTime.Now;
+                            integrationTypes.UpdatedDate = DateTime.Now;
+                            integrationTypes.IsActive = true;
+                            _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
+                            _unitOfWork.SaveChanges();
+                        }
+
+                    }
+                }
+
                 if (employeeViewModel.EmployeeLeaveTypeId == null)
                 {
                     employeeViewModel.EmployeeLeaveTypeId = null;
@@ -211,26 +253,9 @@ namespace QuickApp.Pro.Controllers
                     employeeViewModel.ShiftId = null;
                 }
 
-                //if (employeeViewModel.BusinessUnitId == null)
-                //{
-                //    employeeobject.BusinessUnitId = null;
-                //}
-                //if (employeeViewModel.DepartmentId == null)
-                //{
-                //    employeeobject.DepartmentId = null;
-                //}
-                //if (employeeViewModel.DivisionId == null)
-                //{
-                //    employeeobject.DivisionId = null;
-                //}
-                //if (employeeViewModel.CompanyId == null)
-                //{
-                //    employeeobject.CompanyId = null;
-
-                //}
+              
                 _unitOfWork.employee.Add(employeeobject);
                 _unitOfWork.SaveChanges();
-                //addEmployeeShiftDetails(employeeobject.EmployeeId, employeeViewModel.shifId,employeeViewModel);
 
                 return Ok(employeeobject);
             }
@@ -255,7 +280,6 @@ namespace QuickApp.Pro.Controllers
                 existingResult.MiddleName = employeeViewModel.MiddleName;
                 existingResult.EmployeeIdAsPerPayroll = employeeViewModel.EmployeeIdAsPerPayroll;
                 existingResult.StationId = employeeViewModel.StationId;
-                // existingResult.EmployeeId = employeeViewModel.EmployeeId;
                 existingResult.JobTitleId = employeeViewModel.JobTitleId;
                 existingResult.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
                 existingResult.DateOfBirth = employeeViewModel.DateOfBirth;
@@ -278,9 +302,7 @@ namespace QuickApp.Pro.Controllers
 
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
-                //existingResult.EmployeeLeaveTypeId = employeeViewModel.EmployeeLeaveTypeId;
-                //existingResult.IsActive = employeeViewModel.IsActive;
-                existingResult.MasterCompanyId = employeeViewModel.MasterCompanyId;
+                existingResult.MasterCompanyId = 1;
 
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
@@ -333,12 +355,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.employee.Update(existingResult);
 
                 _unitOfWork.SaveChanges();
-                // updateShiftDetials(existingResult.EmployeeId, employeeViewModel.shifId, employeeViewModel);
-                //addEmployeeShiftDetails(existingResult.EmployeeId, employeeViewModel.shifId, employeeViewModel);
             }
             return Ok(ModelState);
         }
-        //[HttpPost("employeecertifi")]
+
         public IActionResult addEmployeeShiftDetails([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
         {
             EmployeeShiftMapping employeeLicensureViewModel = new EmployeeShiftMapping();
@@ -460,8 +480,8 @@ namespace QuickApp.Pro.Controllers
                 if (_context.EmployeeShiftMapping.Any(o => o.ShiftId == employeeShiftMappingViewModel.ShiftId))
                 {
                     // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
-                    var existingresule = _context.EmployeeLeaveTypeMapping.Where(c => c.EmployeeLeaveTypeId == employeeShiftMappingViewModel.ShiftId).FirstOrDefault();
-                    existingresule.EmployeeLeaveTypeId = employeeShiftMappingViewModel.ShiftId;
+                    var existingresule = _context.EmployeeShiftMapping.Where(c => c.EmployeeShiftMappingId == employeeShiftMappingViewModel.ShiftId).FirstOrDefault();
+                    existingresule.EmployeeShiftMappingId = employeeShiftMappingViewModel.ShiftId;
 
                     existingresule.EmployeeId = employeeShiftMappingViewModel.EmployeeId;
                     existingresule.CreatedBy = employeeShiftMappingViewModel.CreatedBy;
@@ -469,7 +489,7 @@ namespace QuickApp.Pro.Controllers
                     existingresule.MasterCompanyId = 1;
                     existingresule.CreatedDate = DateTime.Now;
                     existingresule.UpdatedDate = DateTime.Now;
-                    _context.EmployeeLeaveTypeMapping.Update(existingresule);
+                    _context.EmployeeShiftMapping.Update(existingresule);
                     _context.SaveChanges();
                 }
                 else

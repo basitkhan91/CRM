@@ -56,7 +56,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     private isSaving: boolean;
     modal: NgbModalRef;
     selectedColumn: Condition[];
-    conditionName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
     Active: string = "Active";
@@ -140,7 +139,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
 		this.sourceAction = new Condition();
 		this.sourceAction.isActive = true;
-        this.conditionName = "";
+        this.description = "";
 
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -178,11 +177,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 		this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-
-
-
         this.sourceAction = row;
-        this.conditionName = this.sourceAction.description;
+        this.description = this.sourceAction.description;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -254,14 +250,14 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
         this.localCollection = [];
         for (let i = 0; i < this.allConditionInfo.length; i++) {
-            let conditionName = this.allConditionInfo[i].description;
-            if (conditionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            let description = this.allConditionInfo[i].description;
+            if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.actionamecolle.push([{
                     "chargeId": this.allConditionInfo[i].conditionId,
-                    "conditionName": conditionName
+                    "description": description
                 }]),
 
-                this.localCollection.push(conditionName);
+                this.localCollection.push(description);
             }
         }
     }
@@ -316,7 +312,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.conditionName;
+            this.sourceAction.description = this.description;
               this.sourceAction.masterCompanyId= 1;
             this.conditionService.newAddCondition(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -325,7 +321,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.conditionName;
+            this.sourceAction.description = this.description;
               this.sourceAction.masterCompanyId= 1;
             this.conditionService.updateCondition(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),

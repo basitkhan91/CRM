@@ -46,8 +46,7 @@ namespace DAL.Repositories
 
                               join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
                               from employee in emp.DefaultIfEmpty()
-                                  //join com in _appContext.Company on stl.CompanyId equals com.CompanyId into compe
-                                  //from com in compe.DefaultIfEmpty()
+                              
 
                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
                               from ti in time.DefaultIfEmpty()
@@ -109,32 +108,16 @@ namespace DAL.Repositories
                                   stl.OwnerType,
                                   stl.TraceableTo,
                                   stl.Manufacturer,
-                                  stl.ManufacturerLotNumber,
                                   stl.ManufacturingDate,
                                   stl.PartCertificationNumber,
                                   stl.CertifiedBy,
                                   stl.TagType,
                                   stl.TraceableToType,
                                   stl.TimeLifeCyclesId,
-
-                                  //ti.CyclesRemaining,
-                                  //ti.CyclesSinceNew,
-                                  //ti.CyclesSinceOVH,
-                                  //ti.CyclesSinceRepair,
-                                  //ti.CyclesSinceInspection,
-                                  //ti.TimeRemaining,
-                                  //ti.TimeSinceInspection,
-                                  //ti.TimeSinceNew,
-                                  //ti.TimeSinceOVH,
-                                  //ti.TimeSinceRepair,
-                                  //ti.LastSinceInspection,
-                                  //ti.LastSinceNew,
-                                  //ti.LastSinceOVH,
                                   co,
                                   w,
                                   l,
                                   ti,
-                                  //com,
                                  
                                   conditionType = co.Description,
                                   im.ItemTypeId,

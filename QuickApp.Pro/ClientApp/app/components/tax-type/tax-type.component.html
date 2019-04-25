@@ -131,10 +131,10 @@
 				Name must be at least 5 characters long.
 			</div>
 		</div>-->
-					<p-autoComplete [(ngModel)]="taxTypeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterTaxTypes($event)" [size]="30"
+					<p-autoComplete [(ngModel)]="description" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterTaxTypes($event)" [size]="30"
 									[minLength]="1" [dropdown]="true">
-						<ng-template let-taxTypeName pTemplate="item">
-							<div class="ui-helper-clearfix">{{taxTypeName}}</div>
+						<ng-template let-description pTemplate="item">
+							<div class="ui-helper-clearfix">{{description}}</div>
 						</ng-template>
 					</p-autoComplete>
 					<div *ngIf="disableSave" style="color:red">Already Exists</div>

@@ -23,7 +23,7 @@ namespace DAL.Models
         public Byte? EmployeeLicenseTypeId  { get; set; }
         public string CertifyingInstitution { get; set; }
         public DateTime CertificationDate { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        //public DateTime ExpirationDate { get; set; }
         public bool IsLicenseInForce { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }

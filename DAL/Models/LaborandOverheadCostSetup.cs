@@ -20,10 +20,6 @@ namespace DAL.Models
         public bool AssignHoursBySpecificAction { get; set; }
 
         public bool AssignTotalHoursToWO { get; set; }
-        [ForeignKey("FunctionalCurrencyId")]
-        public int? FunctionalCurrencyId { get; set; }
-        [ForeignKey("TransactionalCurrencyId")]
-        public int? TransactionalCurrencyId { get; set; }
 
         public Byte AsPercentOfTechHourlyRate { get; set; }
 

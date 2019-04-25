@@ -49,7 +49,7 @@
                                 <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
                                 <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                <button class="btn-edit" mat-icon-button (click)="openAssetToEdit(rowData)" matTooltip="Edit">
+                                <button class="btn-edit" mat-icon-button (click)="openAssetToEdit(rowData)" matTooltip="edit">
                                     <mat-icon>edit</mat-icon>
                                 </button>
                                 <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
@@ -200,22 +200,22 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td>Min</td>
-                                                                    <td><span class="value">{{assetViewList.minTolerance1}}</span></td>
-                                                                    <td><span class="value">{{assetViewList.minTolerance2}}</span></td>
+                                                                    <td><span class="value">{{assetViewList.assetCalibrationMin}}</span></td>
+                                                                    <td><span class="value">{{assetViewList.assetCalibrationMinTolerance}}</span></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Max</td>
-                                                                    <td><span class="value">{{assetViewList.maxTolerance1}}</span></td>
-                                                                    <td><span class="value">{{assetViewList.maxTolerance2}}</span></td>
+                                                                    <td><span class="value">{{assetViewList.assetCalibratonMax}}</span></td>
+                                                                    <td><span class="value">{{assetViewList.assetCalibrationMaxTolerance}}</span></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Expected</td>
-                                                                    <td><span class="value">{{assetViewList.expectedTolerance1}}</span> </td>
-                                                                    <td><span class="value">{{assetViewList.expectedTolerance2}}</span></td>
+                                                                    <td><span class="value">{{assetViewList.assetCalibrationExpected}}</span> </td>
+                                                                    <td><span class="value">{{assetViewList.assetCalibrationExpectedTolerance}}</span></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td></td>
-                                                                    <td colspan="2"><span class="value">{{assetViewList.toleranceMemo}}</span></td>
+                                                                    <td colspan="2"><span class="value">{{assetViewList.assetCalibrationMemo}}</span></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>

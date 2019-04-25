@@ -85,7 +85,7 @@ namespace DAL
 
         IVendorShippingAddress _vendorShippingAddress;
 
-        IVendorShippingDetailsRepository _vendorShippingDetailsRepository;
+        //IVendorShippingDetailsRepository _vendorShippingDetailsRepository;
         IGLAccountClassRespository _gLAccountClassRespository;
         IAssetRepository _assetRepository;
 
@@ -105,7 +105,7 @@ namespace DAL
 
         IEmployeeLicensure _employeeLicensure;
 
-        IEmployeeShift _employeeShift;
+        //IEmployeeShift _employeeShift;
 
         IEmployeeTraining _employeeTraining;
         IShiftRepository _shift;
@@ -872,16 +872,16 @@ namespace DAL
                 return _vendorShippingAddress;
             }
         }
-        public IVendorShippingDetailsRepository VendorShippingDetailsRepository
+        //public IVendorShippingDetailsRepository VendorShippingDetailsRepository
 
-        {
-            get
-            {
-                if (_vendorShippingDetailsRepository == null)
-                    _vendorShippingDetailsRepository = new VendorShippingDetailsRepository(_context);
-                return _vendorShippingDetailsRepository;
-            }
-        }
+        //{
+        //    get
+        //    {
+        //        if (_vendorShippingDetailsRepository == null)
+        //            _vendorShippingDetailsRepository = new VendorShippingDetailsRepository(_context);
+        //        return _vendorShippingDetailsRepository;
+        //    }
+        //}
 
         public IGLAccountClassRespository GLAccountClassRespository
 
@@ -1056,15 +1056,15 @@ namespace DAL
             }
         }
 
-        public IEmployeeShift employeeShift
-        {
-            get
-            {
-                if (_employeeShift == null)
-                    _employeeShift = new EmployeeShiftRepository(_context);
-                return _employeeShift;
-            }
-        }
+        //public IEmployeeShift employeeShift
+        //{
+        //    get
+        //    {
+        //        if (_employeeShift == null)
+        //            _employeeShift = new EmployeeShiftRepository(_context);
+        //        return _employeeShift;
+        //    }
+        //}
 
         public ICustomerType customerType
         {

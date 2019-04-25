@@ -56,8 +56,9 @@ export class AssetService {
     navigationObjChangeObject$ = this.navigationObj.asObservable();
     public bredcrumbObj = new Subject<any>();
     public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
-
-   
+    isCapsEditMode: boolean;
+    capabilityCollection: any;
+         
 
     constructor(
         private router: Router,
@@ -85,9 +86,13 @@ export class AssetService {
         return this.assetEndpoint.saveAssetCapesInfo<any>(data);
     }
 
-    getcapabilityListData() {
+    getcapabilityListData(assetRecordId) {
         return Observable.forkJoin(
-            this.assetEndpoint.getCapabilityTypeListEndpoint<any[]>());
+            this.assetEndpoint.getCapabilityTypeListEndpoint<any[]>(assetRecordId));
+    }
+
+    getCapabilityData(assetRecordId?: number) {
+        return this.assetEndpoint.getCapabilityDataEndpoint<any>(assetRecordId);
     }
 
 }

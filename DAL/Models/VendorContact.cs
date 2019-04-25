@@ -24,7 +24,7 @@ namespace DAL.Models
     
         public System.DateTime RecordCreateDate { get; set; }
         public Nullable<System.DateTime> RecordModifiedDate { get; set; }
-        public int LastModifiedBy { get; set; }
+        //public int LastModifiedBy { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

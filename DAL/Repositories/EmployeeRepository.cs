@@ -19,7 +19,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.Employee> GetAllEmployeeData()
         {
-            return _appContext.Employee.Include("EmployeeShift").Where(a=>a.IsDelete==false || a.IsDelete==null).OrderByDescending(c => c.EmployeeId).ToList();
+            var empData = _appContext.Employee.Include("EmployeeShiftMapping").ToList().Where(t => t.IsDelete == null || t.IsDelete==false);
+            return empData;
         }
         
 
@@ -69,25 +70,25 @@ namespace DAL.Repositories
 
         }
        
-        public IEnumerable<object> employeeshiftData(long id)
-        {
+        //public IEnumerable<object> employeeshiftData(long id)
+        //{
 
-            {
-                var data = (from iM in _appContext.EmployeeShift
-                            where iM.EmployeeId == id
+        //    {
+        //        var data = (from iM in _appContext.EmployeeShift
+        //                    where iM.EmployeeId == id
 
-                            select new
-                            {
-                                iM.EmployeeShiftId,
-                                iM.EmployeeId,
-                                iM.ShiftId,
-                                iM.IsActive
+        //                    select new
+        //                    {
+        //                        iM.EmployeeShiftId,
+        //                        iM.EmployeeId,
+        //                        iM.ShiftId,
+        //                        iM.IsActive
 
 
-                            }).ToList();
-                return data;
-            }
-        }
+        //                    }).ToList();
+        //        return data;
+        //    }
+        //}
 
         public IEnumerable<object> getEmployeeLeaveData(long id)
         {

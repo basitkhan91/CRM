@@ -18,10 +18,32 @@ namespace DAL.Repositories
             var temp2 = temp1.Include("Currency");
             var temp3 = temp2.Include("UnitOfMeasure");
             var temp4 = temp3.Include("AssetType");
-              var temp5=temp4.OrderByDescending(c => c.AssetRecordId).ToList();
+            var temp5=temp4.OrderByDescending(c => c.AssetRecordId).ToList();
             return data;
         }
 
+        public IEnumerable<object> getCapabilityData(long id)
+        {
+            {
+                var data = (from capability in _appContext.Capability
+                            where capability.AssetRecordId == id
+
+                            select new
+                            {
+                               capability
+
+                            }).ToList();
+                return data;
+            }
+        }
+        public IEnumerable<object> getCapesList(long id)
+        {
+            {
+                var data = _appContext.Capability.Where(a => a.AssetRecordId == id).Include("Asset").Include("AircraftModel").Include("AircraftType").Include("CapabilityType").ToList();
+                  
+                return data;
+            }
+        }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

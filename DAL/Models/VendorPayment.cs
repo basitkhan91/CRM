@@ -20,18 +20,18 @@ namespace DAL.Models
         public long VendorPaymentId { get; set; }
         public long VendorId { get; set; }
         public byte DefaultPaymentMethod { get; set; }
-        public string CheckPaymentSite { get; set; }
-        public Nullable<long> CheckPaymentAddressId { get; set; }
-        public Nullable<bool> IsCheckPaymentPrimary { get; set; }
-        public string ABARoutingNumber { get; set; }
-        public string AccountNumer { get; set; }
+     //   public string CheckPaymentSite { get; set; }
+       // public Nullable<long> CheckPaymentAddressId { get; set; }
+       // public Nullable<bool> IsCheckPaymentPrimary { get; set; }
+        //public string ABARoutingNumber { get; set; }
+        //public string AccountNumer { get; set; }
         public string BankName { get; set; }
         public Nullable<long> BankAddressId { get; set; }
-        public string IntlBankSWIFT { get; set; }
-        public string IntlBeneficiaryBankAccount { get; set; }
-        public string IntlBank { get; set; }
-        public Nullable<long> IntlBankAddressId { get; set; }
-        public string IntlBeneficiaryCustomer { get; set; }
+       // public string IntlBankSWIFT { get; set; }
+        //public string IntlBeneficiaryBankAccount { get; set; }
+        //public string IntlBank { get; set; }
+       // public Nullable<long> IntlBankAddressId { get; set; }
+       // public string IntlBeneficiaryCustomer { get; set; }
         public Nullable<int> MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

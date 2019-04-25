@@ -32,7 +32,7 @@ namespace DAL.Models
         public bool? AllowOvertime { get; set; }
         public bool? AllowDoubleTime { get; set; }
         public bool? IsHourly { get; set; }
-        public bool? IsLaborChargedToJob { get; set; }
+       // public bool? IsLaborChargedToJob { get; set; }
         public decimal? HourlyPay { get; set; }
         public bool? EmployeeCertifyingStaff { get; set; }
         public Byte? EmployeeLeaveTypeId { get; set; }
@@ -48,7 +48,7 @@ namespace DAL.Models
         public virtual MasterCompany MasterCompany { get; set; }
 
 
-        public virtual EmployeeShift EmployeeShift { get; set; }
+        public virtual EmployeeShiftMapping EmployeeShiftMapping { get; set; }
 
         public virtual EmployeeLicensure EmployeeLicensure { get; set; }
         public virtual EmployeeTraining EmployeeTraining { get; set; }

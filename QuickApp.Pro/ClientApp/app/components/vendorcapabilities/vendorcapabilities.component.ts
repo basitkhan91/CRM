@@ -210,8 +210,8 @@ export class VendorcapabilitiesComponent implements OnInit, AfterViewInit {
 		//
 		if (this.allvendorcapabilities) {
 
-			for (let i = 0; i < this.allvendorcapabilities.length; i++) {
-				if (event == this.allvendorcapabilities[i].capabilityName) {
+            for (let i = 0; i < this.allvendorcapabilities.length; i++) {
+                if (event == this.allvendorcapabilities[i].capabilityName) {
 					this.sourcevendorcapabilities.capabilityName = this.allvendorcapabilities[i].capabilityName;
 					this.disableSavevendorcapabilities = true;
 
@@ -236,7 +236,6 @@ export class VendorcapabilitiesComponent implements OnInit, AfterViewInit {
 		else {
 
 			this.sourcevendorcapabilities.updatedBy = this.userName;
-			//this.sourcemanufacturer.name = this.name;
 			this.sourcevendorcapabilities.masterCompanyId = 1;
 			this.workFlowtService.updatevendorcapabilities(this.sourcevendorcapabilities).subscribe(
 				response => this.saveCompleted(this.sourcevendorcapabilities),
@@ -245,42 +244,25 @@ export class VendorcapabilitiesComponent implements OnInit, AfterViewInit {
 
 		this.modal.close();
 	}
-	//private  onvendorcapabilitiesSuccessful(allWorkFlows: any[]) {
-
-	//	this.alertService.stopLoadingMessage();
-	//	this.loadingIndicator = false;
-	//	this.dataSource.data = allWorkFlows;
-	//	this.allvendorcapabilitiesInfo = allWorkFlows;
-		
-	//}
+	
 	filtervendor(event) {
 
-		this.localCollection = [];
-		for (let i = 0; i < this.allvendorcapabilities.length; i++) {
-			let capabilityName = this.allvendorcapabilities[i].capabilityName;
-			if (capabilityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.capabilityNamecolle.push([{
-					"vendorCapabilityId": this.allvendorcapabilities[i].vendorCapabilityId,
-					"capabilityName": capabilityName
-				}]),
-					this.localCollection.push(capabilityName)
+        this.localCollection = [];
+        if (this.allvendorcapabilities) {
+            for (let i = 0; i < this.allvendorcapabilities.length; i++) {
+                let capabilityName = this.allvendorcapabilities[i].capabilityName;
+                if (capabilityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.capabilityNamecolle.push([{
+                        "vendorCapabilityId": this.allvendorcapabilities[i].vendorCapabilityId,
+                        "capabilityName": capabilityName
+                    }]),
+                        this.localCollection.push(capabilityName)
 
-			}
-		}
+                }
+            }
+        }
 	}
-
-	//filtervendor(event) {
-
-	//	this.localvendorcapabilities = [];
-	//	if (this.allvendorcapabilitiesInfo) {
-	//		for (let i = 0; i < this.allvendorcapabilitiesInfo.length; i++) {
-	//			let capabilityName = this.allvendorcapabilitiesInfo[i].capabilityName;
-	//			if (capabilityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-	//				this.localvendorcapabilities.push(capabilityName);
-	//			}
-	//		}
-	//	}
-	//}
+    
 	private saveSuccessHelper(role?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);

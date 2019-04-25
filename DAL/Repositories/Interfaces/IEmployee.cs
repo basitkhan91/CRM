@@ -11,7 +11,7 @@ namespace DAL.Repositories.Interfaces
        
         IEnumerable<object> GetEMployeelicensuerDetails(long employeeId);
         IEnumerable<object> GetEmpTariningDetails(long id);
-        IEnumerable<object> employeeshiftData(long id);
+      //IEnumerable<object> employeeshiftData(long id);
         IEnumerable<object> getEmployeeLeaveData(long id);
         IEnumerable<object> getEmployeeShiftData(long id);
     }

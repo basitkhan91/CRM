@@ -99,10 +99,8 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(VendorCapabilitiesViewModel)} cannot be null");
 
                 var existingResult = _unitOfWork.VendorCapabilities.GetSingleOrDefault(c => c.VendorCapabilityId == id);
-                // DAL.Models.Action updateObject = new DAL.Models.Action();
-
-
                 existingResult.UpdatedDate = DateTime.Now;
+                existingResult.CreatedBy = VendorCapabilitiesViewModel.CreatedBy;
                 existingResult.UpdatedBy = VendorCapabilitiesViewModel.UpdatedBy;
                 existingResult.VendorCapabilityId = VendorCapabilitiesViewModel.VendorCapabilityId;
                 existingResult.CapabilityId = VendorCapabilitiesViewModel.CapabilityId;

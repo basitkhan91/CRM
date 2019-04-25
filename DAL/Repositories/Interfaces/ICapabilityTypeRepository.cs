@@ -9,9 +9,9 @@ namespace DAL.Repositories.Interfaces
     public interface ICapabilityTypeRepository : IRepository<DAL.Models.CapabilityType>
     {
         IEnumerable<DAL.Models.CapabilityType> GetAllCapabilityListData();
+        IEnumerable<object> getAllCapesList(long id);
 
-
-        //  void CreateAction(DAL.Models.Action action);
+        
 
     }
 }

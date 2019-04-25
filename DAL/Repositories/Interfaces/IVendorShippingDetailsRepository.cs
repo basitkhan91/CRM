@@ -1,14 +1,14 @@
-﻿using DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//using DAL.Models;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
 
-namespace DAL.Repositories.Interfaces
-{
-   public interface IVendorShippingDetailsRepository : IRepository<VendorShippingDetails>
-    {
-        IEnumerable<VendorShippingDetails> GetVendorShippingDetails();
-       // IEnumerable<Object> GetAllShippingAddressDetails();
+//namespace DAL.Repositories.Interfaces
+//{
+//   public interface IVendorShippingDetailsRepository : IRepository<VendorShippingDetails>
+//    {
+//        IEnumerable<VendorShippingDetails> GetVendorShippingDetails();
+//       // IEnumerable<Object> GetAllShippingAddressDetails();
 
-    }
-}
+//    }
+//}

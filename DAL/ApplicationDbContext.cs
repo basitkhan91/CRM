@@ -27,7 +27,7 @@ namespace DAL
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<WorkflowAction> WorkflowAction { get; set; }
         public DbSet<DAL.Models.Action> Action { get; set; }
-        public DbSet<ATAMain> ATAMain { get; set; }
+       // public DbSet<ATAMain> ATAMain { get; set; }
         public DbSet<ATASubChapter> ATASubChapter { get; set; }
         public DbSet<ATASubChapter2> ATASubChapter2 { get; set; }
         public DbSet<Site> Site { get; set; }
@@ -106,7 +106,7 @@ namespace DAL
         public DbSet<InternationalwirePayment> InternationalWirePayment { get; set; }
 
         public DbSet<VendorShippingAddress> VendorShippingAddress { get; set; }
-        public DbSet<VendorShippingDetails> VendorShippingDetails { get; set; }
+       // public DbSet<VendorShippingDetails> VendorShippingDetails { get; set; }
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
         public DbSet<Employee> Employee { get; set; }
@@ -123,7 +123,7 @@ namespace DAL
         
         public DbSet<EmployeeTraining> EmployeeTraining { get; set; }
         public DbSet<EmployeeTrainingType> EmployeeTrainingType { get; set; }
-        public DbSet<EmployeeShift> EmployeeShift { get; set; }
+       // public DbSet<EmployeeShift> EmployeeShift { get; set; }
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
         public DbSet<ATAChapter> ATAChapter { get; set; }
 

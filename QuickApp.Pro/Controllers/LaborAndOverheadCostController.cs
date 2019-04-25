@@ -34,7 +34,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult Get()
         {
             var allLaborOverheadCost = _unitOfWork.LaborAndOverheadCost.GetAllGLLaborAndOverheadCostData(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<LaborAndOverheadCostViewModel>>(allLaborOverheadCost));
+            return Ok(allLaborOverheadCost);
 
         }
         [HttpGet("auditHistoryById/{id}")]
@@ -57,7 +57,6 @@ namespace QuickApp.Pro.Controllers
             }
         }
             [HttpPost("labourpost")]
-        //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] LaborAndOverheadCostViewModel LaborAndOverheadCostViewModel)
         {
             if (ModelState.IsValid)
@@ -101,9 +100,6 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(LaborAndOverheadCostViewModel)} cannot be null");
 
                 var existingResult = _unitOfWork.LaborAndOverheadCost.GetSingleOrDefault(c => c.LaborOverloadCostId == id);
-                // DAL.Models.Action updateObject = new DAL.Models.Action();
-
-
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = LaborAndOverheadCostViewModel.UpdatedBy;
                 existingResult.LaborOverloadCostId = LaborAndOverheadCostViewModel.LaborOverloadCostId;
@@ -136,9 +132,6 @@ namespace QuickApp.Pro.Controllers
             var existingResult = _unitOfWork.LaborAndOverheadCost.GetSingleOrDefault(c => c.LaborOverloadCostId == id);
             existingResult.IsDelete = true;
             _unitOfWork.LaborAndOverheadCost.Update(existingResult);
-
-            //_unitOfWork.ActionAttribute.Remove(existingResult);
-
             _unitOfWork.SaveChanges();
 
             return Ok(id);

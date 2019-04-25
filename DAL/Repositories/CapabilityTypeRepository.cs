@@ -1,13 +1,6 @@
 ﻿using DAL.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
 
 
 namespace DAL.Repositories
@@ -21,6 +14,18 @@ namespace DAL.Repositories
         {
             var data = _appContext.capabilityType.OrderByDescending(a => a.CapabilityTypeId).ToList();
             return data;
+        }
+
+        public IEnumerable<object> getAllCapesList()
+        {
+            var data = _appContext.Capability.Where(a => a.AssetRecordId > 0).OrderByDescending(a => a.AssetRecordId).ToList();
+           
+            return data;
+        }
+
+        public IEnumerable<object> getAllCapesList(long id)
+        {
+            throw new System.NotImplementedException();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

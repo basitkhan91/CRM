@@ -48,13 +48,6 @@ namespace DAL.Models
         [Required(ErrorMessage = "Name Is Required.")]
         public Nullable<long> AssetTypeId { get; set; }
         public Nullable<long> AssetIntangibleTypeId { get; set; }
-        public Nullable<long> AmortizationMethodId { get; set; }
-        public string IntangibleLife { get; set; }
-        public string AmortizationFrequency { get; set; }
-        public Nullable<long> IntangibleGLId { get; set; }
-        public Nullable<long> AmortizationExpenseGLId { get; set; }
-        public Nullable<long> AccAmortDeprGLId { get; set; }
-        public Nullable<long> IntangibleWriteDownGLId { get; set; }
         public string AssetCalibrationMin { get; set; }
         public string AssetCalibrationMinTolerance { get; set; }
         public string AssetCalibratonMax { get; set; }
@@ -108,13 +101,6 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public Nullable<Int32> MinTolerance1 { get; set; }
-        public Nullable<Int32> MinTolerance2 { get; set; }
-        public Nullable<Int32> MaxTolerance1 { get; set; }
-        public Nullable<Int32> MaxTolerance2 { get; set; }
-        public Nullable<Int32> ExpectedTolerance1 { get; set; }
-        public Nullable<Int32> ExpectedTolerance2 { get; set; }
-        public string ToleranceMemo { get; set; }
 
         public virtual AssetCapes AssetCapes { get; set; }
         public virtual Manufacturer Manufacturer { get; set; }

@@ -1,8 +1,5 @@
 ﻿using DAL.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
@@ -19,10 +16,6 @@ namespace QuickApp.Pro.ViewModels
         public bool AssignHoursBySpecificAction { get; set; }
 
         public bool AssignTotalHoursToWO { get; set; }
-
-        public int? FunctionalCurrencyId { get; set; }
-
-        public int? TransactionalCurrencyId { get; set; }
 
         public Byte AsPercentOfTechHourlyRate { get; set; }
 

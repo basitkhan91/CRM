@@ -130,7 +130,7 @@ namespace DAL
         IVendorShippingAddress VendorShippingAddress { get; }
        
 
-        IVendorShippingDetailsRepository VendorShippingDetailsRepository { get;  }
+        //IVendorShippingDetailsRepository VendorShippingDetailsRepository { get;  }
 
         IEmployee employee { get; }
         IShiftRepository shift { get; }
@@ -159,7 +159,7 @@ namespace DAL
 
         ICustomerShipping CustomerShipping { get; }
         ICustomerWarning CustomerWarning { get; }
-        IEmployeeShift employeeShift { get; }
+        //IEmployeeShift employeeShift { get; }
 
         ICustomerType customerType { get; }
 

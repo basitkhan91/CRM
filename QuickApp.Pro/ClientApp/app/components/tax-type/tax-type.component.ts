@@ -65,7 +65,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 	errorMessage: any;
     modal: NgbModalRef;
 
-    taxTypeName: string;
+    description: string;
     filteredBrands: any[];
     localCollection: any[] = [];
 	/** Actions ctor */
@@ -178,7 +178,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 		this.loadMasterCompanies();
 		this.sourceAction = new TaxType();
         this.sourceAction.isActive = true;
-        this.taxTypeName = "";
+        this.description = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 
@@ -230,7 +230,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 
 
         this.sourceAction = row;
-        this.taxTypeName = this.sourceAction.description;
+        this.description = this.sourceAction.description;
 
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'sm' });
@@ -269,7 +269,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
         //debugger;
 		for (let i = 0; i < this.actionamecolle.length; i++)
 		{
-			if (event == this.actionamecolle[i][0].taxTypeName)
+			if (event == this.actionamecolle[i][0].description)
 			{
                 //alert("Action Name already Exists");
                 this.disableSave = true;
@@ -283,15 +283,15 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 
         this.localCollection = [];
         for (let i = 0; i < this.allTaxTypes.length; i++) {
-            let taxTypeName = this.allTaxTypes[i].description;
-            if (taxTypeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            let description = this.allTaxTypes[i].description;
+            if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 
                 this.actionamecolle.push([{
                     "taxTypeId": this.allTaxTypes[i].taxTypeId,
-                    "taxTypeName": taxTypeName
+                    "description": description
                 }]),
 
-                this.localCollection.push(taxTypeName);
+                this.localCollection.push(description);
             }
         }
     }
@@ -330,7 +330,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 		if (this.isEditMode == false) {
 			this.sourceAction.createdBy = this.userName;
 			this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.taxTypeName;
+            this.sourceAction.description = this.description;
             this.sourceAction.masterCompanyId = 1;
 			this.workFlowtService.newAction(this.sourceAction).subscribe(
 				role => this.saveSuccessHelper(role),
@@ -339,7 +339,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 		else {
 
 			this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.taxTypeName;
+            this.sourceAction.description = this.description;
             this.sourceAction.masterCompanyId = 1;
 			this.workFlowtService.updateAction(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),

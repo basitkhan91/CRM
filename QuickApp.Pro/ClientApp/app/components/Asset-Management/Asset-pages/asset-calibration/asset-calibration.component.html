@@ -262,22 +262,22 @@
                         <tbody>
                             <tr>
                                 <td>Min</td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.minTolerance1"></td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.minTolerance2"></td>
+                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.assetCalibrationMin"></td>
+                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.assetCalibrationMinTolerance"></td>
                             </tr>
                             <tr>
                                 <td>Max</td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.maxTolerance1"></td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.maxTolerance2"></td>
+                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.assetCalibratonMax"></td>
+                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.assetCalibrationMaxTolerance"></td>
                             </tr>
                             <tr>
                                 <td>Expected</td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.expectedTolerance1"></td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.expectedTolerance2"></td>
+                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.assetCalibrationExpected"></td>
+                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.assetCalibrationExpectedTolerance"></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td colspan="2"><textarea class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.toleranceMemo"></textarea></td>
+                                <td colspan="2"><textarea class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentCalibration.assetCalibrationMemo"></textarea></td>
                             </tr>
                         </tbody>
                     </table>

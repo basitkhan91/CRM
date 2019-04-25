@@ -36,10 +36,8 @@ namespace QuickApp.Pro.ViewModels
         public bool? AllowOvertime { get; set; }
         public bool? AllowDoubleTime { get; set; }
         public bool? IsHourly { get; set; }
-        public bool? IsLaborChargedToJob { get; set; }
         public decimal? HourlyPay { get; set; }
         public bool? EmployeeCertifyingStaff { get; set; }
-       // public Byte EmployeeLeaveTypeId { get; set; }
         public long? SupervisorId { get; set; }
 
         [ForeignKey("MasterCompanyId")]
@@ -48,8 +46,6 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
         public string CreatedBy { get; set; }
-
-      //  public int? ShifId { get; set; }
         public string UpdatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; }

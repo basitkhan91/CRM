@@ -86,7 +86,6 @@ namespace QuickApp.Pro.Controllers
                 curreobj.SerialNumber = receivingCustomerWorkViewModel.SerialNumber;
                 curreobj.ConditionId = receivingCustomerWorkViewModel.ConditionId;
                 curreobj.WarehouseId = receivingCustomerWorkViewModel.WarehouseId;
-                curreobj.CompanyId = receivingCustomerWorkViewModel.CompanyId;
                 curreobj.Owner = receivingCustomerWorkViewModel.Owner;
                 curreobj.OwnerType = receivingCustomerWorkViewModel.OwnerType;
                 curreobj.IsCustomerStock = receivingCustomerWorkViewModel.IsCustomerStock;
@@ -98,7 +97,6 @@ namespace QuickApp.Pro.Controllers
                 curreobj.ObtainFrom = receivingCustomerWorkViewModel.ObtainFrom;
                 curreobj.ManufacturingTrace = receivingCustomerWorkViewModel.ManufacturingTrace;
                 curreobj.ManufacturingLotNumber = receivingCustomerWorkViewModel.ManufacturingLotNumber;
-                curreobj.ManufacturerLotNumber = receivingCustomerWorkViewModel.ManufacturerLotNumber;
                 curreobj.IsTimeLife = receivingCustomerWorkViewModel.IsTimeLife;
                 curreobj.IsMFGDate = receivingCustomerWorkViewModel.IsMFGDate;
                 curreobj.LocationId = receivingCustomerWorkViewModel.LocationId;
@@ -162,33 +160,6 @@ namespace QuickApp.Pro.Controllers
 
                     curreobj.LocationId = null;
                 }
-              
-                if (receivingCustomerWorkViewModel.CompanyId == null)
-                {
-
-                    curreobj.CompanyId = null;
-                }
-                if (receivingCustomerWorkViewModel.BusinessUnitId == null)
-                {
-
-                    curreobj.BusinessUnitId = null;
-                }
-                if (receivingCustomerWorkViewModel.DivisionId == null)
-                {
-
-                    curreobj.DivisionId = null;
-                }
-                if (receivingCustomerWorkViewModel.DepartmentId == null)
-                {
-
-                    curreobj.DepartmentId = null;
-                }
-                //if (receivingCustomerWorkViewModel.MasterCompanyId == null)
-                //{
-
-                //    curreobj.MasterCompanyId = null;
-                //}
-
                 _context.ReceivingCustomerWork.Add(curreobj);
                 _context.SaveChanges();
                 if (curreobj != null)
