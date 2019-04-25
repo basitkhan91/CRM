@@ -32,11 +32,11 @@ namespace DAL.Repositories.Interfaces
         TEntity Get(int id);
         IEnumerable<TEntity> GetAll();
 
-        TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
-                                         Expression<Func<TEntity, bool>> predicate = null,
-                                         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                         bool disableTracking = true);
+        //TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
+        //                                 Expression<Func<TEntity, bool>> predicate = null,
+        //                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+        //                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+        //                                 bool disableTracking = true);
     }
 
 }
