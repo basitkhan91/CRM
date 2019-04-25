@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DAL.Models
@@ -10,6 +11,7 @@ namespace DAL.Models
         [Key]
         public long PurchaseOrderPartRecordId { get; set; }
         public long PurchaseOrderId { get; set; }
+        [ForeignKey("ItemMasterId")]
         public long ItemMasterId { get; set; }
         public string SerialNumber { get; set; }
         public bool NonInventory { get; set; }
@@ -54,5 +56,7 @@ namespace DAL.Models
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
+        public virtual ItemMaster ItemMaster { get; set; }
+        public virtual List<PartStockLineMapper> PartStockLineMapper {get;set;}
     }
 }

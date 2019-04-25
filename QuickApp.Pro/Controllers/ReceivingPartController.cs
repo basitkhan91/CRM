@@ -6,6 +6,7 @@ using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -133,6 +134,14 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
 
+        }
+
+        [HttpGet("GetReceivingPurchaseList/{receivingId}")]
+        [Produces(typeof(List<PurchaseOrderViewModel>))]
+        public IActionResult GetReceivingPurchaseOrderListById(long receivingId)
+        {
+            var receivingData = unitOfWork.PartStockLineMapper.GetReceivingPurchaseOrderList(receivingId);
+            return Ok(receivingData);
         }
 
         #endregion Public Methods

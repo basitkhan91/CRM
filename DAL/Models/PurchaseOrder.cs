@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DAL.Models
@@ -19,6 +20,7 @@ namespace DAL.Models
         public Nullable<System.DateTime> NeedByDate { get; set; }
         public Nullable<short> StatusId { get; set; }
         public string EmployeeId { get; set; }
+        [ForeignKey("VendorId")]
         public Nullable<long> VendorId { get; set; }
         public Nullable<long> VendorContactId { get; set; }
         public Nullable<int> ShipToCompanyId { get; set; }
@@ -29,9 +31,9 @@ namespace DAL.Models
         public Nullable<long> SiteId { get; set; }
         public Nullable<long> WarehouseId { get; set; }
         public Nullable<long> LocationId { get; set; }
-        public Nullable<long> IssuedToAddressId { get; set; }
-        public string IssuedToContactName { get; set; }
-        public string IssuedToMemo { get; set; }
+        //public Nullable<long> IssuedToAddressId { get; set; }
+        //public string IssuedToContactName { get; set; }
+        //public string IssuedToMemo { get; set; }
         public Nullable<long> ShipToAddressId { get; set; }
         public string ShipToContactName { get; set; }
         public string ShipToMemo { get; set; }
@@ -47,5 +49,9 @@ namespace DAL.Models
         public bool? DeferredReceiver { get; set; }
         public bool? Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
+
+        public virtual ICollection<PurchaseOrderPart> PurchaseOderPart { get; set; }
+        public virtual List<StockLine> StockLine { get; set; }
+        public virtual Vendor Vendor { get; set; }
     }
 }

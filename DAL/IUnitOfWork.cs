@@ -242,8 +242,8 @@ namespace DAL
         IRepository<T> Repository<T>() where T : class;
 
         IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper { get; }
-        
-        
+
+        IPartStockLineMapper PartStockLineMapper { get; }
 
         void SaveChanges(Employee employeeobject);
     }

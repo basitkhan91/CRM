@@ -404,10 +404,11 @@
 			</select>
 	</td>-->
 									<td>
-										<select class="form-control w90" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
+                                        <select class="form-control w90" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
                                             <option value="0">Select</option>
-                                            <option *ngFor="let company of partList.companyList" value="{{company.managementStructureId}}" >{{company.code}}</option>
-										</select>
+                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
+                                            <!--<option *ngFor="let company of partList.companyList" value="{{company.managementStructureId}}" >{{company.code}}</option>-->
+                                        </select>
 									</td>
 									<td>
 										<select class="form-control w90" [(ngModel)]="partList.partBusinessUnitId" [ngModelOptions]="{standalone: true}" (change)="onPartBusinessUnitChange(partList)">

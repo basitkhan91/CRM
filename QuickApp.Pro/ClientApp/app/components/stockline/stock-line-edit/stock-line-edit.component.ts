@@ -153,10 +153,10 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	constructor(private empService: EmployeeService,public integrationService: IntegrationService,public vendorservice: VendorService, public manufacturerService: ManufacturerService, public itemser: ItemMasterService, public glAccountService: GLAccountClassService, public vendorService: VendorService, public customerService: CustomerService, public inteService: IntegrationService, public workFlowtService1: LegalEntityService, public workFlowtService: BinService, public siteService: SiteService, public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog) {
 		this.dataSource = new MatTableDataSource();
 
-		if (this.stocklineser.listCollection && this.stocklineser.isEditMode == true) {
 
+        if (this.stocklineser.listCollection && this.stocklineser.isEditMode == true)
+        {
 			this.showLable = true;
-
 			this.sourceStockLine = this.stocklineser.listCollection; // Storing List Collection into this
 			this.sourceStockLineSetup.managementStructureEntityId = this.sourceStockLine.managementStructureEntityId;
 			this.sourceStockLineSetup.itemMasterId = this.sourceStockLine.im.itemMasterId;
@@ -164,10 +164,10 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceStockLineSetup.purchaseOrderId = this.sourceStockLine.po.purchaseOrderId;
 			this.sourceStockLineSetup.stockLineId = this.sourceStockLine.stl.stockLineId;
 			this.sourceStockLineSetup.PartNumber = this.sourceStockLine.partNumber;
-			this.sourceStockLineSetup.CompanyId = this.sourceStockLine.com.companyId;
-			this.sourceStockLineSetup.businessUnitId = this.sourceStockLine.bu.businessUnitId;
-			this.sourceStockLineSetup.departmentId = this.sourceStockLine.de.departmentId;
-			this.sourceStockLineSetup.divisionId = this.sourceStockLine.di.divisionId;
+			//this.sourceStockLineSetup.CompanyId = this.sourceStockLine.com.companyId;
+			//this.sourceStockLineSetup.businessUnitId = this.sourceStockLine.bu.businessUnitId;
+			//this.sourceStockLineSetup.departmentId = this.sourceStockLine.de.departmentId;
+			//this.sourceStockLineSetup.divisionId = this.sourceStockLine.di.divisionId;
 			this.sourceStockLineSetup.partId = this.sourceStockLine.partId;
 			this.selectedPartId = this.sourceStockLineSetup.partId //By Default Value
 			this.sourceStockLineSetup.partNumber = this.sourceStockLine.partNumber;
@@ -344,7 +344,12 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			}
 		}
 
-	}
+    }
+
+    bindEditData()
+    {
+
+    }
 
 	private ptnumberlistdata() {
 		this.alertService.startLoadingMessage();

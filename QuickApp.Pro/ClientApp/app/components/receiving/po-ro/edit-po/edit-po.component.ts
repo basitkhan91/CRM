@@ -31,7 +31,7 @@ export class EditPoComponent implements OnInit {
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService, public priority: PriorityService, private vendorService: VendorService, public conditionService: ConditionService, public siteService: SiteService, public binservice: BinService, public legalEntityService: LegalEntityService, public manufacturerService: ManufacturerService) {
         //        debugger;
-        this.localData = this.receivingService.selectedPurchaseorderCollection;
+       // this.localData = this.receivingService.selectedPurchaseorderCollection;
         this.localPoData = this.vendorService.selectedPoCollection;
         this.editPoData = this.localData[0];
 

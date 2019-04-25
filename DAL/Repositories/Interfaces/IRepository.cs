@@ -3,6 +3,7 @@
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,12 @@ namespace DAL.Repositories.Interfaces
         
         TEntity Get(int id);
         IEnumerable<TEntity> GetAll();
+
+        TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
+                                         Expression<Func<TEntity, bool>> predicate = null,
+                                         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                         bool disableTracking = true);
     }
 
 }

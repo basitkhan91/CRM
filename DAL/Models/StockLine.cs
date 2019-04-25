@@ -12,7 +12,6 @@ namespace DAL.Models
         public long StockLineId { get; set; }
         public string PartNumber { get; set; }
         public string StockLineNumber { get; set; }
-        public string StocklineMatchKey { get; set; }
         public string ControlNumber { get; set; }
         //[FK]
         [ForeignKey("ItemMasterId")]
@@ -44,7 +43,7 @@ namespace DAL.Models
         public string Owner { get; set; }
         public string TraceableTo { get; set; }
         public long? ManufacturerId { get; set; }
-        public string Manufacturer { get; set; }
+        //public string Manufacturer { get; set; }
         public string ManufacturerLotNumber { get; set; }
         public DateTime? ManufacturingDate { get; set; }
         public string ManufacturingBatchNumber { get; set; }
@@ -75,7 +74,7 @@ namespace DAL.Models
         public decimal? CoreUnitCost { get; set; }
         public long? GLAccountId { get; set; }
         public long? AssetId { get; set; }
-        public bool? IsHazardousMaterial { get; set; }
+       // public bool? IsHazardousMaterial { get; set; }
         public bool? IsPMA { get; set; }
         public bool? IsDER { get; set; }
         public bool? OEM { get; set; }
@@ -83,33 +82,37 @@ namespace DAL.Models
         public long? ManagementStructureEntityId { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         
-        public string Site { get; set; }
-        public string Shelf { get; set; }
-        public string Bin { get; set; }
+        //public string Site { get; set; }
+        //public string Shelf { get; set; }
+        //public string Bin { get; set; }
 
         public Int32? ObtainFromType { get; set; }
         public Int32? OwnerType { get; set; }
         public Int32? TraceableToType { get; set; }
 
         public bool? TimeLife { get; set; }
+
+        [ForeignKey("TimeLifeId")]
         public long? TimeLifeId { get; set; }
         public Int32? UnitCostAdjustmentReasonTypeId { get; set; }
         public Int32? UnitSalePriceAdjustmentReasonTypeId { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
-        [ForeignKey("CompanyId")]
-        public Int32? CompanyId { get; set; }
-        [ForeignKey("BusinessUnitId")]
-        public Int32? BusinessUnitId { get; set; }
-        [ForeignKey("DivisionId")]
-        public Int32? DivisionId { get; set; }
-        [ForeignKey("DepartmentId")]
-        public Int32? DepartmentId { get; set; }
+        //[ForeignKey("CompanyId")]
+        //public Int32? CompanyId { get; set; }
+        //[ForeignKey("BusinessUnitId")]
+        //public Int32? BusinessUnitId { get; set; }
+        //[ForeignKey("DivisionId")]
+        //public Int32? DivisionId { get; set; }
+        //[ForeignKey("DepartmentId")]
+        //public Int32? DepartmentId { get; set; }
         public Int32? QuantityToReceive { get; set; }
         public bool? IsSerialized { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
         public string IdNumber { get; set; }
+    
+        public virtual TimeLife TimeLifeObject { get; set; }
 
     }
 }
