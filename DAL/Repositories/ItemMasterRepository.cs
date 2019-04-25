@@ -37,9 +37,6 @@ namespace DAL.Repositories
                                 t,
                                 t.PartDescription,
                                 t.IsSerialized,
-                                t.IsShelfLifeAvailable,
-                                t.TagDate,
-                                t.TagType,
                                 t.TagDays,
                                 t.PMA,
                                 t.DER,
@@ -74,9 +71,6 @@ namespace DAL.Repositories
                                 iM,
                                 iM.PartDescription,
                                 iM.IsSerialized,
-                                iM.IsShelfLifeAvailable,
-                                iM.TagDate,
-                                iM.TagType,
                                 iM.TagDays,
                                 iM.PMA,
                                 iM.DER,
@@ -283,13 +277,8 @@ namespace DAL.Repositories
         {
             var data = _appContext.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification")
 
-                   //join PT in _appContext.Part on IM.PartId equals PT.PartId
-                   //join MF in _appContext.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId
-                   //join PS in _appContext.Provision on IM.ProvisionId equals PS.ProvisionId
-                   //join PR in _appContext.Priority on IM.PriorityId equals PR.PriorityId
-
                    .Where(a => a.ItemTypeId == 1 && (a.IsDelete == true || a.IsDelete==null)).OrderByDescending(a => a.ItemMasterId).ToList();
-            // select new { t, ad, vt }).ToList();
+        
 
             return data;
         }
@@ -492,10 +481,6 @@ namespace DAL.Repositories
                                 iM.Memo,
                                 iM.ATAChapterId,
                                 iM.ManufacturerId,
-                                iM.CompanyId,
-                                iM.BuisinessUnitId,
-                                iM.DivisionId,
-                                iM.DepartmentId,
                                 iM.ManagementStructureId,
                                 iM.IsDelete
 

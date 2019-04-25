@@ -30,7 +30,6 @@ namespace DAL.Models
 
         public string DoingBuinessAsName { get; set; }
 
-        public short? CoreDueIn { get; set; }
 
         public long? Parent { get; set; }
 
@@ -46,8 +45,7 @@ namespace DAL.Models
 
         public string ContractReference { get; set; }
 
-        [ForeignKey("PriorityCustomerId")]
-        public byte? PriorityCustomerId { get; set; }
+       
 
         public bool IsPBHCustomer { get; set; }
 
@@ -73,10 +71,8 @@ namespace DAL.Models
 
         public bool IsCustomerAlsoVendor { get; set; }
 
-        public long? RelatedVendorId { get; set; }
 
 
-        public string Notes { get; set; }
 
         public string Discount { get; set; }
 
@@ -153,7 +149,6 @@ namespace DAL.Models
 
         public string AgentName { get; set; }
 
-        public bool? ExportLicenseRequired { get; set; }
 
         public long? ATAChapterId { get; set; }
 

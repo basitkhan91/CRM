@@ -5,7 +5,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Calender Name</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.calendarName">
+                        <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.name">
                     </div>
                 </div>
             </div>
@@ -13,7 +13,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Calender Description</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.calendarDescription">
+                        <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.description">
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                             <option value="12">12</option>
                             <option value="13">13</option>
                             <option value="16">16</option>
-                            <option value="0">Manual</option>
+                            <option value="Manual">Manual</option>
                         </select>
                     </div>
                 </div>
@@ -77,6 +77,8 @@
             <div class="clear"></div>
         </div>
     </div>
+    <button *ngIf="showManual" (click)="addPeriod()" class="btn btn-warning pull-right add-cal-btn" style="font-size: 12px;padding: 2px 5px;">Add Period <i class="fa fa-plus"></i></button>
+
     <div id="" class="table-responsive default-bg clear calendar-table-12 col-sm-6 input-85" *ngIf="showTable">
         <table class="table table-bordered table-striped">
             <thead>
@@ -88,25 +90,51 @@
                     <th>From Date</th>
                     <th>To Date</th>
                     <th>Period Name</th>
+                   
                 </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="!showManual">
                 <tr *ngFor="let obj of calendarArray">
-                    <td>{{obj.calendarType}}</td>
+                    <td>{{obj.fiscalName}}</td>
                     <td>{{obj.fiscalYear}}</td>
-                    <td>{{obj.quarter}}</td>
+                    <td>{{obj.quater}}</td>
                     <td>{{obj.period}}</td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker"  id="dp1555497164114" value="{{obj.fromDate}}"></td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker"  id="dp1555497164115" value="{{obj.toDate}}"></td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164114" value="{{obj.fromDate}}"></td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164115" value="{{obj.toDate}}"></td>
                     <td>{{obj.periodName}}</td>
+                    <!--<th><input type="checkbox" /></th>-->
                 </tr>
 
 
             </tbody>
+            <tbody *ngIf="showManual">
+                <tr *ngFor="let obj of calendarArray">
+                    <td>
+                        <select [(ngModel)]="obj.fiscalName" (change)="addPeriodName(obj,obj.fiscalName)">
+                            <option *ngFor="let name of obj.fiscalNameData" [ngValue]="name">
+                                {{name}}
+                            </option>
+                        </select>
+                    </td>
+                    <td>{{obj.fiscalYear}}</td>
+                    <td>
+                        <select [(ngModel)]="obj.quater">
+                            <option *ngFor="let qtr of obj.quaterData" [ngValue]="qtr">
+                                {{qtr}}
+                            </option>
+                        </select>
+                    </td>
+                    <td>{{obj.period}}</td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.fromDate}}"></td>
+                    <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.toDate}}"></td>
+                    <td>{{obj.periodName}}</td>
+                    <!--<th><input type="checkbox" /></th>-->
+                </tr>
+            </tbody>
         </table>
         <div class="clear"></div>
         <br>
-        <a href="#" class="btn btn-success pull-right">Save</a>
+        <button class="btn btn-success pull-right" (click)="saveCalendar()">Save</button>
         <div class="clear"></div>
     </div>
 

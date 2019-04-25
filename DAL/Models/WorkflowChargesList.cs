@@ -39,6 +39,5 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-        public string VendorName { get; set; }
     }
 }

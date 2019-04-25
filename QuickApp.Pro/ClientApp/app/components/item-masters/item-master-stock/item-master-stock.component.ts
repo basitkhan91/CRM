@@ -3888,7 +3888,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 				this.sourceItemMaster.updatedBy = this.userName;
 				//this.sourceItemMaster.defaultMessageCode = this.messageName;
-				this.sourceItemMaster.masterCompanyId = 1;
+                this.sourceItemMaster.masterCompanyId = 1;
+                this.sourceItemMaster.itemTypeId = 1;
 				this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
 					this.collectionofItemMaster = data;
 					this.saveCompleted(this.sourceItemMaster);

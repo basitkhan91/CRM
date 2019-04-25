@@ -19,10 +19,6 @@ namespace DAL.Models
        
     
         public long CapabilityId { get; set; }
-        public long? CompanyId { get; set; }
-        public long? BuisinessUnitId { get; set; }
-        public long? DepartmentId { get; set; }
-        public long? DivisionId { get; set; }
         public Nullable<int> CapabilityTypeId { get; set; }
         public string Description { get; set; }
         public Nullable<int> AircraftTypeId { get; set; }
@@ -37,10 +33,6 @@ namespace DAL.Models
         public Nullable<System.DateTime> DateVerified { get; set; }
         public string Memo { get; set; }
         public string ComponentDescription { get; set; }
-        public string CLCFNumber { get; set; }
-        public string CAT { get; set; }
-        public string ATA { get; set; }
-        public string CLCF_COMP_RATING_CATG { get; set; }
         public Nullable<short> LOC { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }

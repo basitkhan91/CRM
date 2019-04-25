@@ -105,7 +105,6 @@ namespace DAL.Repositories
                                    
                                   stl.Quantity,
                                   condition = co.Description,
-                                  shelfLife = im.IsShelfLifeAvailable,
                                   stl.ShelfLifeExpirationDate,
                                   stl.Shelf,
                                   stl.Bin,

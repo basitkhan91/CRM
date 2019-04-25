@@ -150,8 +150,8 @@ namespace QuickApp.Pro.Controllers
                     actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
                     actionobject.changedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
                     actionobject.CustomerId = workflowViewModel.CustomerId;
-                    actionobject.CustomerName = workflowViewModel.CustomerName;
-                    actionobject.CustomerCode = workflowViewModel.CustomerCode;
+                    //actionobject.CustomerName = workflowViewModel.CustomerName;
+                    //actionobject.CustomerCode = workflowViewModel.CustomerCode;
                     actionobject.CurrencyId = workflowViewModel.CurrencyId;
                     actionobject.WorkflowExpirationDate = workflowViewModel.WorkflowExpirationDate;
                     actionobject.IsCalculatedBERThreshold = workflowViewModel.IsCalculatedBERThreshold;
@@ -189,7 +189,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
                     actionobject.changedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
                     actionobject.CustomerId = workflowViewModel.CustomerId;
-                    actionobject.CustomerCode = workflowViewModel.CustomerCode;
+                    //actionobject.CustomerCode = workflowViewModel.CustomerCode;
                     actionobject.CurrencyId = workflowViewModel.CurrencyId;
                     actionobject.WorkflowExpirationDate = workflowViewModel.WorkflowExpirationDate;
                     actionobject.IsCalculatedBERThreshold = workflowViewModel.IsCalculatedBERThreshold;

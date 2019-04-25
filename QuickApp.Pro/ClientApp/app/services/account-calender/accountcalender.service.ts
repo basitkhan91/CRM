@@ -12,40 +12,13 @@ import { AccountCalenderEndpointService } from './accountcalender-endpoint.servi
 export class AccountCalenderService {
 
    
-    constructor(private glAccountEndpoint: AccountCalenderEndpointService) {
+    constructor(private calendarEndpointService: AccountCalenderEndpointService) {
     }
 
-    getAll() {
-        return Observable.forkJoin(
-            this.glAccountEndpoint.getAllGlAccounts<any[]>());
+   
+    add(calendarObj: any) {
+        return this.calendarEndpointService.addCalendar<any>(calendarObj);
     }
 
-    getById(glAccountId: number) {
-        return Observable.forkJoin(
-            this.glAccountEndpoint.getGlAccountById<any>(glAccountId)
-        );
-    }
-
-    add(glAccount: any) {
-        return this.glAccountEndpoint.addGlAccount<any>(glAccount);
-    }
-
-    update(glAccount: any) {
-        return this.glAccountEndpoint.updateGlAccount<any>(glAccount);
-    }
-
-    remove(glAccountId: number) {
-        return this.glAccountEndpoint.removeGlAccountById(glAccountId);
-    }
-    getMiscdata() {
-        return Observable.forkJoin(
-            this.glAccountEndpoint.getMiscData<any[]>());
-    }
-
-
-    //deleteAssetType(glAccountId: number) {
-
-    //    return this.glAccountEndpoint.removeGlAccountById(glAccountId);
-
-    //}
+    
 }

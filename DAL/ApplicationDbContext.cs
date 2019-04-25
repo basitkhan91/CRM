@@ -144,7 +144,6 @@ namespace DAL
 
         public DbSet<Warning> Warning { get; set; }
 
-        public DbSet<Equipment> Equipment { get; set; }
 
         public DbSet<Capability> Capability { get; set; }
         public DbSet<ItemMasterAircraftModel> ItemMasterAircraftModel { get; set; }
@@ -158,7 +157,6 @@ namespace DAL
         //public DbSet<Part> Part { get; set; }
 
         //public DbSet<Manufacturer> Manufacturer { get; set; }
-        public DbSet<EquipmentValidationType> EquipmentValidationType { get; set; }
         public DbSet<CustomerAffiliation> CustomerAffiliation { get; set; }
 
         public DbSet<StockLine> StockLine { get; set; }
