@@ -345,11 +345,9 @@ namespace QuickApp.Pro.Controllers
                             IM.ManufacturerId,
                             MF.Name,
 
-                            IM.ListPrice,
                             IM.PurchaseDiscountOffListPrice,
                             IM.PurchaseListPriceAfterDiscount,
                             
-                            IM.UnitCost,
                             
 
                             
@@ -357,9 +355,6 @@ namespace QuickApp.Pro.Controllers
                             IM.ReorderQuantiy,
                             IM.ItemTypeId,
                             IM.ItemMasterId,
-                            IM.DiscounSalesPercent,
-                            //MF.Name
-                            //IM.ItemMasterId,
                             IM.IsHazardousMaterial,
                             IM.PriorityId,
                             IM.GLAccountId,
@@ -403,7 +398,6 @@ namespace QuickApp.Pro.Controllers
                             //it.Description,
                             IM.ManufacturerId,
                             MF.Name,
-                            IM.UnitCost,
                             IM.ReorderQuantiy,
                             IM.ItemTypeId,
                             IM.ItemMasterId,

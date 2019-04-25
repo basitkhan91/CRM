@@ -92,7 +92,6 @@ namespace DAL.Repositories
                                   stl.ObtainFromType,
                                   stl.CustomerReference,
                                   condition = co.Description,
-                                  shelfLife = im.IsShelfLifeAvailable,
                                   stl.Shelf,
                                   stl.Bin,
                                   siteName = si.Name,

@@ -27,8 +27,6 @@ namespace DAL.Models
         public long ItemMasterId { get; set; }
         public string Sequence { get; set; }
         public string Stage { get; set; }
-        public string PartNumber { get; set; }
-        public string PartDescription { get; set; }
         public Nullable<decimal> Min { get; set; }
         public Nullable<decimal> Max { get; set; }
         public Nullable<decimal> Expected { get; set; }

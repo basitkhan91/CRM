@@ -153,11 +153,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 			this.nonStockTable = true;
 			//this.nonstockList();
 		}
-		if (itemMasterService.listEquipment == true) {
-			this.onRadioChange(2);
-			this.equipmentTable = true;
-			//this.EuipmentList();
-		}
+		
 	}
 	ngOnInit(): void {
 		if (this.itemMasterService.listStock == true) { this.loaddata('Stock'); }
@@ -279,7 +275,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 			this.equipmentTable = true;
 			this.exchangeTable = false;
 			this.loanTable = false;
-			this.loaddata(this.radioButtonValue);
+			//this.loaddata(this.radioButtonValue);
 		}
 		else if (val == 3) {
 			this.radioButtonValue = "Exchange";

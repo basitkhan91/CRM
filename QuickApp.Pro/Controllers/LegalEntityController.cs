@@ -96,8 +96,6 @@ namespace QuickApp.Pro.Controllers
                 //entityobject.InternationalWirePaymentId = legalEntityViewModel.InternationalWirePaymentId;
                 entityobject.IsBalancingEntity = legalEntityViewModel.IsBalancingEntity;
                 entityobject.IsLastLevel = legalEntityViewModel.IsLastLevel;
-                entityobject.LegalEntityCode = legalEntityViewModel.LegalEntityCode;
-                entityobject.LegalEntityType = legalEntityViewModel.LegalEntityType;
                 entityobject.LockBoxAddressId = legalEntityViewModel.LockBoxAddressId;
                 entityobject.ReportingCurrencyId = legalEntityViewModel.ReportingCurrencyId;
                 entityobject.TaxId = legalEntityViewModel.TaxId;
@@ -254,21 +252,15 @@ namespace QuickApp.Pro.Controllers
                     entityobject.Description = legalEntityViewModel.Description;
                     entityobject.DoingLegalAs = legalEntityViewModel.DoingLegalAs;
                     entityobject.CageCode = legalEntityViewModel.CageCode;
-                    //entityobject.DomesticWirePaymentId = legalEntityViewModel.DomesticWirePaymentId;
                     entityobject.FAALicense = legalEntityViewModel.FAALicense;
                     entityobject.FunctionalCurrencyId = legalEntityViewModel.FunctionalCurrencyId;
                     entityobject.FaxNumber = legalEntityViewModel.FaxNumber;
                     entityobject.PhoneNumber1 = legalEntityViewModel.PhoneNumber1;
-
-                    //entityobject.InternationalWirePaymentId = legalEntityViewModel.InternationalWirePaymentId;
                     entityobject.IsBalancingEntity = legalEntityViewModel.IsBalancingEntity;
                     entityobject.IsLastLevel = legalEntityViewModel.IsLastLevel;
-                    entityobject.LegalEntityCode = legalEntityViewModel.LegalEntityCode;
-                    entityobject.LegalEntityType = legalEntityViewModel.LegalEntityType;
                     entityobject.LockBoxAddressId = legalEntityViewModel.LockBoxAddressId;
                     entityobject.ReportingCurrencyId = legalEntityViewModel.ReportingCurrencyId;
                     entityobject.TaxId = legalEntityViewModel.TaxId;
-                   // entityobject.IsActive = legalEntityViewModel.IsActive;
                     entityobject.CreatedDate = DateTime.Now;
                     entityobject.UpdatedDate = DateTime.Now;
                     entityobject.CreatedBy = legalEntityViewModel.CreatedBy;
@@ -279,7 +271,6 @@ namespace QuickApp.Pro.Controllers
                         address.Line2 = legalEntityViewModel.Address2;
                         address.PostalCode = legalEntityViewModel.PostalCode;
                         address.StateOrProvince = legalEntityViewModel.BankProvince;
-                        //address.IsActive = legalEntityViewModel.IsActive;
                         address.Country = legalEntityViewModel.Country;
                         address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
                         address.MasterCompanyId = 1;
@@ -296,7 +287,6 @@ namespace QuickApp.Pro.Controllers
                     if (domesticWirePaymentObj != null)
                     {
                         domesticWirePaymentObj.MasterCompanyId = 1;
-                       // domesticWirePaymentObj.IsActive = legalEntityViewModel.IsActive;
                         domesticWirePaymentObj.ABA = legalEntityViewModel.DomesticABANumber;
                         domesticWirePaymentObj.AccountNumber = legalEntityViewModel.DomesticBankAccountNumber;
                         domesticWirePaymentObj.BankName = legalEntityViewModel.DomesticBankName;
@@ -308,13 +298,11 @@ namespace QuickApp.Pro.Controllers
                         domesticWirePaymentObj.UpdatedBy = legalEntityViewModel.UpdatedBy;
                         _unitOfWork.vendorDomesticPaymentRepository.Update(domesticWirePaymentObj);
                         _unitOfWork.SaveChanges();
-                        //entityobject.DomesticWirePaymentId = domesticWirePaymentObj.DomesticWirePaymentId.Value;
                     }
                     if (internationalWirePaymentObj != null)
                     {
                         internationalWirePaymentObj.IsActive = true;
                         internationalWirePaymentObj.MasterCompanyId = 1;
-                       // internationalWirePaymentObj.IsActive = legalEntityViewModel.IsActive;
                         internationalWirePaymentObj.SwiftCode = legalEntityViewModel.InternationalSWIFTID;
                         internationalWirePaymentObj.BeneficiaryBankAccount = legalEntityViewModel.InternationalBankAccountNumber.ToString();
                         internationalWirePaymentObj.BeneficiaryBank = legalEntityViewModel.InternationalBankName;
@@ -327,7 +315,6 @@ namespace QuickApp.Pro.Controllers
                         internationalWirePaymentObj.UpdatedBy = legalEntityViewModel.UpdatedBy;
                         _unitOfWork.vendorInternationalPaymentRepository.Update(internationalWirePaymentObj);
                         _unitOfWork.SaveChanges();
-                        // entityobject.InternationalWirePaymentId = internationalWirePaymentObj.InternationalWirePaymentId.Value;
                     }
                     if (ach != null)
                    {

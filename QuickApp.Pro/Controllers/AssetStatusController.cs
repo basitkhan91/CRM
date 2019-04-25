@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DAL;
 using DAL.Models;
@@ -136,8 +137,9 @@ namespace QuickApp.Pro.Controllers
                 .Find(x => x.Id == id)
                 .OrderByDescending(x => x.AssetStatusAuditId);
 
-            var auditResult = new AuditResult<AssetStatusAudit>();
-            auditResult.Result = audits.ToList();
+            var auditResult = new List<AuditResult<AssetStatusAudit>>();
+
+            auditResult.Add(new AuditResult<AssetStatusAudit> { AreaName="Asset Status", Result = audits.ToList() });
             
             return Ok(auditResult);
         }

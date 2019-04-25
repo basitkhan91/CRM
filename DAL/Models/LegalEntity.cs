@@ -13,10 +13,6 @@ namespace DAL.Models
 
         public string Description { get; set; }
 
-        public string LegalEntityType { get; set; }
-
-        public string LegalEntityCode { get; set; }
-
         public string DoingLegalAs { get; set; }
 
         public long? AddressId { get; set; }

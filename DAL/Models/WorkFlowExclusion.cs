@@ -22,7 +22,6 @@ namespace DAL.Models
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-        public string PartNumber { get; set; }
-        public string PartDescription { get; set; }
+      
     }
 }

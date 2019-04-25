@@ -8,15 +8,19 @@ namespace DAL.Models
   public  class AccountingCalendar:PasBase
     {
         [Key]
-        public long AccountingCalendarId { get; set; }
+        public long? AccountingCalendarId { get; set; }
 
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+        
         public string FiscalName { get; set; }
 
-        public byte FiscalYear { get; set; }
+        public Int32? FiscalYear { get; set; }
 
-        public byte Quater { get; set; }
+        public byte? Quater { get; set; }
 
-        public byte Period { get; set; }
+        public byte? Period { get; set; }
 
         public DateTime FromDate { get; set; }
 
@@ -24,7 +28,7 @@ namespace DAL.Models
 
         public string PeriodName { get; set; }
 
-        public int MasterCompanyId { get; set; }
+        public int? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
 

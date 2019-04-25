@@ -9,34 +9,20 @@ namespace DAL.Models
     {
         public long? ItemMasterId { get; set; }
 
-        //public int ItemCategoryId { get; set; }
-
-        public int ItemTypeId { get; set; }
-        //[ForeignKey("PartId")]
-        //public long? PartId { get; set; }
-
         public bool? IsAlternatePartChecked { get; set; }
 
         public long? PartAlternatePartId { get; set; }
         public string NHA { get; set; }
         public bool? IsSerialized { get; set; }
         public bool? IsTimeLife { get; set; }
-        public string SerialNumber { get; set; }
 
-        public string CertifiedBy { get; set; }
-
-        public DateTime? TagDate { get; set; }
-
-        public string TagType { get; set; }
-
-        public string PartsCertNum { get; set; }
+        public Int32? ItemTypeId { get; set; }
 
         public long? ItemGroupId { get; set; }
 
         public long? ItemClassificationId { get; set; }
         
 
-        public string AssetNumber { get; set; }
 
         public bool? IsAcquiredMethodBuy { get; set; }
 
@@ -72,15 +58,11 @@ namespace DAL.Models
       //  public string AlterPartNumber { get; set; }
         public int OtherDays { get; set; }
 
-        public bool? ActiveFlag { get; set; }
-        [ForeignKey("PartId")]
         public int? ProvisionId { get; set; }
 
         [ForeignKey("ManufacturerId")]
         public long? ManufacturerId { get; set; }
 
-        [ForeignKey("AircraftTypeId")]
-        public int? AircraftTypeId { get; set; }
 
         public bool? PMA { get; set; }
 
@@ -89,15 +71,12 @@ namespace DAL.Models
         public long? ATAChapterId { get; set; }
         [ForeignKey("ATASubChapterId")]
         public long? ATASubChapterId { get; set; }
-        [ForeignKey("ATAMainSub2Id")]
-        public long? ATAMainSub2Id { get; set; }
+       
 
 
         public string NationalStockNumber { get; set; }
 
         public bool? IsSchematic { get; set; }
-        //[ForeignKey("FileSystemId")]
-        //public long? FileSystemId { get; set; }
 
         public int OverhaulHours { get; set; }
 
@@ -173,9 +152,8 @@ namespace DAL.Models
         [ForeignKey("ExportClassificationId")]
         public Byte? ExportClassificationId { get; set; }
 
-        public decimal? PurchaseListPrice { get; set; }
 
-        public Int16? PurchaseDiscountOffListPrice { get; set; }
+        public decimal? PurchaseDiscountOffListPrice { get; set; }
 
         public decimal? PurchaseListPriceAfterDiscount { get; set; }
         [ForeignKey("PurchaseCurrencyId")]
@@ -218,122 +196,22 @@ namespace DAL.Models
 
         public bool? ComponentEquipment { get; set; }
 
-        public long? EquipmentId { get; set; }
-
-        public string AssetId { get; set; }
-
-        public bool? CalibrationRequired { get; set; }
-
-
-        public bool? FrequencyTypeMonths { get; set; }
-
-        public bool? FrequencyTypeDays { get; set; }
-
-        public bool? CertificationRequired { get; set; }
-
-        public string CertificationFrequency { get; set; }
-        [ForeignKey("EquipmentTypeId")]
-        public Int16? EquipmentTypeId { get; set; }
-        [ForeignKey("EquipmentValidationTypeId")]
-        public Byte? EquipmentValidationTypeId { get; set; }
-
-        public decimal? UnitCost { get; set; }
-        public long? EquipmentUOMId { get; set; }
-        public string CapabilityVerifiedBy { get; set; }
-
-        public DateTime? CapabilityVerificationDate { get; set; }
-
-        public DateTime? ManufacturingDate { get; set; }
-
-        public bool? IsShelfLifeAvailable { get; set; }
-
-        public DateTime? OpenDate { get; set; }
+       
 
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
 
-        public bool? IsProvisioned { get; set; }
+        
 
-        public bool? IsCapesAvailable { get; set; }
-
-        public DateTime? EntryDate { get; set; }
-
-        public bool? IsCMMExist { get; set; }
-
-        public string CMMLink { get; set; }
-
-        public bool? IsVerified { get; set; }
-
-        public string CapesMemo { get; set; }
-
-        public string ManufacturingDescription { get; set; }
-
-        public string OverhaulDescription { get; set; }
-
-        public string DistributeDescription { get; set; }
-
-        public string CertifiedDescription { get; set; }
-
-        public string RepairDescription { get; set; }
-
-        public string ExchangeDescription { get; set; }
-
-        public bool? VerifiedBy { get; set; }
-
-        public DateTime? DateVerified { get; set; }
-        [ForeignKey("PlatformId")]
-        public int? PlatformId { get; set; }
-
-        public string SchematicDiagramFile { get; set; }
-
-        public decimal? ListPrice { get; set; }
-
-        public DateTime? PriceDate { get; set; }
-
-        public bool? IsRFQTracking { get; set; }
+     
         [ForeignKey("CurrencyId")]
         public int? CurrencyId { get; set; }
 
-        public Byte MarkUpPercent { get; set; }
 
-        public Byte DiscountPurchasePercent { get; set; }
-        //public long? EquipId { get; set; }
-        public Byte DiscounSalesPercent { get; set; }
-
-        public long? StoredUOM { get; set; }
-
-        public long? ConsumeUOM { get; set; }
-
-        public int StockLevel { get; set; }
-
-        public int LeadTime { get; set; }
-
-        public string Notes { get; set; }
-
-        public string ToleranceMinimum { get; set; }
-
-        public string ToleranceMaximum { get; set; }
-
-        public string ToleranceExpected { get; set; }
-
-        public string IntegrateWith { get; set; }
-
-        public string Findings { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
-        [ForeignKey("CompanyId")]
-        public int? CompanyId { get; set; }
-        [ForeignKey("BusinessUnitId")]
-        public int? BusinessUnitId { get; set; }
-        [ForeignKey("DivisionId")]
-        public int? DivisionId { get; set; }
-        [ForeignKey("DepartmentId")]
-        public int? DepartmentId { get; set; }
-
-
-
-        //public virtual Part Part {get;set;}
+        
         public virtual Manufacturer Manufacturer { get;set;}
 
         public virtual Provision Provision {get;set;}
@@ -345,13 +223,6 @@ namespace DAL.Models
 
         public virtual Currency Currency { get; set; }
 
-        public virtual Equipment Equipment { get; set; }
-
-        //public virtual UnitOfMeasure UnitOfMeasure { get; set; }
-
-        //public virtual Countries Countries { get; set; }
-
-        public virtual EquipmentValidationType EquipmentValidationType { get; set; }
          public virtual ExportClassification ExportClassification { get; set; }
 
     }

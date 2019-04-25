@@ -80,11 +80,7 @@ namespace DAL.Repositories
                  c.CapabilityId,
                  at.AircraftTypeId,
                  am.AircraftModelId,
-                 masterComapnyId1 = c.CompanyId,
-                 buid1=c.BuisinessUnitId,
-                 depid1=c.DepartmentId,
-                 divid1 =c.DivisionId,
-                c.ManufacturerId
+                 c.ManufacturerId
 
              };
 

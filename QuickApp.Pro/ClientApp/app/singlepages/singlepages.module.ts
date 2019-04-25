@@ -110,6 +110,7 @@ import { AssetTypeSingleScreenEndpointService } from "../services/AssetTypeSingl
 import { AssetTypeSingleScreenService } from "../services/AssetTypeSingleScreen/assettypesinglescreen.service";
 import { AssetTypeSingleScreenComponent } from "../components/asset-type-single-screen/asset-type-single-screen.component";
 import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
+import { AuditComponent } from "../components/Audit/audit.component";
 
 //import { SharedModule } from '../shared/shared.module';
 //import { CompanyComponent } from '../shared/company/company.component';
@@ -191,7 +192,7 @@ import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages
         DepreciationIntervalsComponent,
         AssetIntangibleTypeSingleScreenComponent,
         AssetTypeSingleScreenComponent,
-
+        AuditComponent,
 		//DefaultMessageComponent
 
 

@@ -1,9 +1,15 @@
-﻿export class SingleScreenAuditDetails {
-    SubModuleName: string;
-    ChangesOverview: string;
+﻿export class Audit {
+    areaName: string;
+    memo: string;
+    result: SingleScreenAuditDetails[];
+}
+
+export class SingleScreenAuditDetails {
+   
     LastUpdatedBy: string;
     LastUpdatedTime: string;
     AuditChanges: AuditChanges[];
+    ColumnsToAvoid: string[];
     Visible: Boolean;
 }
 

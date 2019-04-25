@@ -53,8 +53,6 @@ namespace QuickApp.Pro.Controllers
                 actionobject.ChangedPartNumber = workFlow.ChangedPartNumber;
                 actionobject.changedPartNumberDescription = workFlow.changedPartNumberDescription;
                 actionobject.CustomerId = workFlow.CustomerId;
-                actionobject.CustomerCode = workFlow.CustomerCode;
-                actionobject.CustomerName = workFlow.CustomerName;
                 actionobject.CurrencyId = workFlow.CurrencyId;
                 actionobject.WorkflowExpirationDate = workFlow.WorkflowExpirationDate;
                 actionobject.IsCalculatedBERThreshold = workFlow.IsCalculatedBERThreshold;
@@ -65,8 +63,6 @@ namespace QuickApp.Pro.Controllers
                 actionobject.CostOfNew = workFlow.CostOfNew;
                 actionobject.PercentageOfNew = workFlow.PercentageOfNew;
                 actionobject.CostOfReplacement = workFlow.CostOfReplacement;
-                actionobject.PartNumber = workFlow.PartNumber;
-
                 actionobject.PercentageOfReplacement = workFlow.PercentageOfReplacement;
                 actionobject.Memo = workFlow.Memo;
                 actionobject.BERThresholdAmount = workFlow.BERThresholdAmount;

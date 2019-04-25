@@ -40,7 +40,6 @@ namespace DAL.Models
         public string ChangedPartNumber { get; set; }
         public string changedPartNumberDescription { get; set; }
         public Nullable<long> CustomerId { get; set; }
-        public string CustomerCode { get; set; }
         public Nullable<int> CurrencyId { get; set; }
         public Nullable<System.DateTime> WorkflowExpirationDate { get; set; }
         public Nullable<bool> IsCalculatedBERThreshold { get; set; }
@@ -64,8 +63,6 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-          public string PartNumber { get; set; }
-        public string CustomerName { get; set; }
         public virtual List<WorkflowChargesList> Charges { get; set; }
         public virtual List<WorkFlowDirection> Directions { get; set; }
         public virtual List<WorkflowEquipmentList> Equipments { get; set; }

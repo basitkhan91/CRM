@@ -27,7 +27,10 @@ export class AssetStatusComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
+
     constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService) {
+
+    
     }
 
     ngOnInit(): void {
@@ -91,9 +94,7 @@ export class AssetStatusComponent implements OnInit {
         });
 
     }
-
-
-    resetAddAssetStatus(): void {
+     resetAddAssetStatus(): void {
         this.currentAssetStatus = new AssetStatus();
     }
 
@@ -125,7 +126,7 @@ export class AssetStatusComponent implements OnInit {
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    auditAssetStatus(assetStatusId: number): void {
+     auditAssetStatus(assetStatusId: number): void {
         this.assetStatusService.getAssetAudit(assetStatusId).subscribe(audits => {
             var columnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate","updatedDate"];
             this.AuditDetails = this.extractAuditChangedValues(audits.result, columnsToAvoid);
