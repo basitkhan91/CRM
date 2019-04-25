@@ -12,7 +12,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Vendor> GetVendors();
 
         IEnumerable<object> GetVendorListDetails();
-        IEnumerable<object> Getvendorunit(long id);
+        IEnumerable<object> GetvendorPurchaseOrderList(long id);
         IEnumerable<object> Getvendorrepairunit(long vendorId);
 
         IEnumerable<object> GetVendorWithid(long vendorId);

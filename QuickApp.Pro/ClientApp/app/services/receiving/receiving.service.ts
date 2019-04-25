@@ -10,13 +10,14 @@ import 'rxjs/add/operator/map';
 import { Role } from '../../models/role.model';
 import { AuthService } from '../auth.service';
 import { ReceivingEndpointService } from './receiving-endpoint.service';
+import { PurchaseOrder } from '../../components/receiving/po-ro/receivng-po/PurchaseOrder.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
 
 @Injectable()
 export class ReceivingService {
-    selectedPurchaseorderCollection: any[];
+    selectedPurchaseorderCollection: PurchaseOrder;
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
@@ -56,6 +57,11 @@ export class ReceivingService {
     getItemMasterDataById(itemid: any) {
         return Observable.forkJoin(
             this.receivingEndpoing.getItemMasterDataById<any[]>(itemid));
+    }
+
+    getPurchaseOrderDataById(receivingId: any) {
+        return Observable.forkJoin(
+            this.receivingEndpoing.getReceivingPODataById<PurchaseOrder>(receivingId));
     }
 
     addPartStocklineMapper(mapperData: any) {

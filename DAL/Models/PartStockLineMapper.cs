@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -7,7 +8,8 @@ namespace DAL.Models
         [Key]
         public long Id { get; set; }
 
-        public string PurchaseOrderPartId { get; set; }
+        [ForeignKey("PurchaseOrderPartRecordId")]
+        public string PurchaseOrderPartRecordId { get; set; }
 
         public string StockLineId { get; set; }
     }

@@ -510,7 +510,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<PurchaseOrderViewModel>))]
         public IActionResult GetPurchaseListByVendor(long vendorId)
         {
-            var vendorList = _unitOfWork.Vendor.Getvendorunit(vendorId);
+            var vendorList = _unitOfWork.Vendor.GetvendorPurchaseOrderList(vendorId);
             return Ok(vendorList);
 
         }
@@ -583,9 +583,9 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Notes = poViewModel.Notes;
                     actionobject.ShipToCompanyId = poViewModel.ShipToCompanyId;
                     actionobject.ShipViaAccountId = poViewModel.ShipViaAccountId;
-                    actionobject.IssuedToAddressId = poViewModel.IssuedToAddressId;
-                    actionobject.IssuedToContactName = poViewModel.IssuedToContactName;
-                    actionobject.IssuedToMemo = poViewModel.IssuedToMemo;
+                    //actionobject.IssuedToAddressId = poViewModel.IssuedToAddressId;
+                    //actionobject.IssuedToContactName = poViewModel.IssuedToContactName;
+                    //actionobject.IssuedToMemo = poViewModel.IssuedToMemo;
                     actionobject.ShipToAddressId = poViewModel.ShipToAddressId;
                     actionobject.ShipToContactName = poViewModel.ShipToContactName;
                     actionobject.ShipToMemo = poViewModel.ShipToMemo;
@@ -637,9 +637,9 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Notes = poViewModel.Notes;
                     actionobject.ShipToCompanyId = poViewModel.ShipToCompanyId;
                     actionobject.ShipViaAccountId = poViewModel.ShipViaAccountId;
-                    actionobject.IssuedToAddressId = poViewModel.IssuedToAddressId;
-                    actionobject.IssuedToContactName = poViewModel.IssuedToContactName;
-                    actionobject.IssuedToMemo = poViewModel.IssuedToMemo;
+                    //actionobject.IssuedToAddressId = poViewModel.IssuedToAddressId;
+                    //actionobject.IssuedToContactName = poViewModel.IssuedToContactName;
+                    //actionobject.IssuedToMemo = poViewModel.IssuedToMemo;
                     actionobject.ShipToAddressId = poViewModel.ShipToAddressId;
                     actionobject.ShipToContactName = poViewModel.ShipToContactName;
                     actionobject.ShipToMemo = poViewModel.ShipToMemo;

@@ -369,7 +369,7 @@ namespace QuickApp.Pro.Controllers
 
                 actionobject1.ConditionId = stockLineViewModel.ConditionId;
                 actionobject1.StockLineNumber = stockLineViewModel.StockLineNumber;
-                actionobject1.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
+               // actionobject1.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
                 actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
                 actionobject1.Quantity = stockLineViewModel.Quantity;
                 actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
@@ -379,7 +379,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.Owner = stockLineViewModel.Owner;
                 actionobject1.TraceableTo = stockLineViewModel.TraceableTo;
                 actionobject1.ManufacturerId = stockLineViewModel.ManufacturerId;
-                actionobject1.Manufacturer = stockLineViewModel.Manufacturer;
+                //actionobject1.Manufacturer = stockLineViewModel.Manufacturer;
                 actionobject1.ManufacturerLotNumber = stockLineViewModel.ManufacturerLotNumber;
                 actionobject1.ManufacturingDate = stockLineViewModel.ManufacturingDate;
                 actionobject1.ManufacturingBatchNumber = stockLineViewModel.ManufacturingBatchNumber;
@@ -404,7 +404,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.CoreUnitCost = stockLineViewModel.CoreUnitCost;
                 actionobject1.GLAccountId = stockLineViewModel.GLAccountId;
                 actionobject1.AssetId = stockLineViewModel.AssetId;
-                actionobject1.IsHazardousMaterial = stockLineViewModel.IsHazardousMaterial;
+                //actionobject1.IsHazardousMaterial = stockLineViewModel.IsHazardousMaterial;
                 actionobject1.IsPMA = stockLineViewModel.IsPMA;
                 actionobject1.IsDER = stockLineViewModel.IsDER;
                 actionobject1.OEM = stockLineViewModel.OEM;
@@ -415,10 +415,10 @@ namespace QuickApp.Pro.Controllers
                     actionobject1.TimeLifeCyclesId = null;
                 }
 
-                actionobject1.CompanyId = 1;
-                actionobject1.BusinessUnitId = 1;
-                actionobject1.DivisionId = 1;
-                actionobject1.DepartmentId = 1;
+                //actionobject1.CompanyId = 1;
+                //actionobject1.BusinessUnitId = 1;
+                //actionobject1.DivisionId = 1;
+                //actionobject1.DepartmentId = 1;
 
                 //actionobject1.CompanyId = stockLineViewModel.CompanyId;
                 //actionobject1.BusinessUnitId = stockLineViewModel.BusinessUnitId;
@@ -445,10 +445,10 @@ namespace QuickApp.Pro.Controllers
                 //    actionobject1.DepartmentId = null;
                 //}
 
-                actionobject1.Site = stockLineViewModel.Site;
-                actionobject1.Shelf = stockLineViewModel.Shelf;
-                actionobject1.Bin = stockLineViewModel.Bin;
-                actionobject1.TimeLife = stockLineViewModel.TimeLife;
+                //actionobject1.Site = stockLineViewModel.Site;
+                //actionobject1.Shelf = stockLineViewModel.Shelf;
+                //actionobject1.Bin = stockLineViewModel.Bin;
+                //actionobject1.TimeLife = stockLineViewModel.TimeLife;
                 actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
                 actionobject1.OwnerType = stockLineViewModel.OwnerType;
                 actionobject1.TraceableToType = stockLineViewModel.TraceableToType;
@@ -524,7 +524,7 @@ namespace QuickApp.Pro.Controllers
             
             actionobject.PartNumber = stockLineViewModel.PartNumber;
             actionobject.StockLineNumber = stockLineViewModel.StockLineNumber;
-            actionobject.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
+            //actionobject.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
             actionobject.ControlNumber = stockLineViewModel.ControlNumber;
             actionobject.Quantity = stockLineViewModel.Quantity;
             actionobject.SerialNumber = stockLineViewModel.SerialNumber;
@@ -535,7 +535,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.ConditionId = stockLineViewModel.ConditionId;
             actionobject.TraceableTo = stockLineViewModel.TraceableTo;
             actionobject.ManufacturerId = stockLineViewModel.ManufacturerId;
-            actionobject.Manufacturer = stockLineViewModel.Manufacturer;
+           // actionobject.Manufacturer = stockLineViewModel.Manufacturer;
             actionobject.ManufacturerLotNumber = stockLineViewModel.ManufacturerLotNumber;
             actionobject.ManufacturingDate = stockLineViewModel.ManufacturingDate;
             actionobject.ManufacturingBatchNumber = stockLineViewModel.ManufacturingBatchNumber;
@@ -560,7 +560,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.CoreUnitCost = stockLineViewModel.CoreUnitCost;
             actionobject.GLAccountId = stockLineViewModel.GLAccountId;
             actionobject.AssetId = stockLineViewModel.AssetId;
-            actionobject.IsHazardousMaterial = stockLineViewModel.IsHazardousMaterial;
+            //actionobject.IsHazardousMaterial = stockLineViewModel.IsHazardousMaterial;
             actionobject.IsPMA = stockLineViewModel.IsPMA;
             actionobject.IsDER = stockLineViewModel.IsDER;
             actionobject.OEM = stockLineViewModel.OEM;
@@ -570,10 +570,12 @@ namespace QuickApp.Pro.Controllers
             //actionobject.BusinessUnitId = stockLineViewModel.BusinessUnitId;
             //actionobject.DivisionId = stockLineViewModel.DivisionId;
             //actionobject.DepartmentId = stockLineViewModel.DepartmentId;
-            actionobject.Site = stockLineViewModel.Site;
-            actionobject.Shelf = stockLineViewModel.Shelf;
-            actionobject.Bin = stockLineViewModel.Bin;
-            actionobject.TimeLife = stockLineViewModel.TimeLife;
+
+            //actionobject.Site = stockLineViewModel.Site;
+            //actionobject.Shelf = stockLineViewModel.Shelf;
+            //actionobject.Bin = stockLineViewModel.Bin;
+            //actionobject.TimeLife = stockLineViewModel.TimeLife;
+
             actionobject.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId;
             actionobject.ObtainFromType = stockLineViewModel.ObtainFromType;
             actionobject.OwnerType = stockLineViewModel.OwnerType;
@@ -903,9 +905,9 @@ namespace QuickApp.Pro.Controllers
             //actionobject.BusinessUnitId = managementStructureEntityViewModel.BusinessUnitId;
             //actionobject.DivisionId = managementStructureEntityViewModel.DivisionId;
             //actionobject.DepartmentId = managementStructureEntityViewModel.DepartmentId;
-            actionobject.Site = managementStructureEntityViewModel.Site;
-            actionobject.Shelf = managementStructureEntityViewModel.Shelf;
-            actionobject.Bin = managementStructureEntityViewModel.Bin;
+            //actionobject.Site = managementStructureEntityViewModel.Site;
+            //actionobject.Shelf = managementStructureEntityViewModel.Shelf;
+            //actionobject.Bin = managementStructureEntityViewModel.Bin;
             //actionobject.TimeLife = managementStructureEntityViewModel.TimeLife;
             //actionobject.TimeLifeId = managementStructureEntityViewModel.TimeLifeId;
             //actionobject.IsActive = customerViewModel.IsActive;

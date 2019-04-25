@@ -128,31 +128,18 @@ namespace DAL.Repositories
 
         }
 
-        public IEnumerable<object> Getvendorunit(long id)
+        public IEnumerable<object> GetvendorPurchaseOrderList(long id)
         {
 
             {
 
-               
                 var data = (from po in _appContext.PurchaseOrder
-                            join purchaseOderPart in _appContext.PurchaseOrderPart on po.PurchaseOrderId equals purchaseOderPart.PurchaseOrderId into purpart
-                            from purchaseOderPart in purpart.DefaultIfEmpty()
-                            join v in _appContext.Vendor on po.VendorId equals v.VendorId into ve
-                            from v in ve.DefaultIfEmpty()
-                            join im in _appContext.ItemMaster on purchaseOderPart.ItemMasterId equals im.ItemMasterId into item
-                            from im in item.DefaultIfEmpty()
-                            //join p in _appContext.Part on im.PartId equals p.PartId into part
-                            //from p in part.DefaultIfEmpty()
-                            join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId into gj
-                            from x in gj.DefaultIfEmpty()
+                            join purchaseOderPart in _appContext.PurchaseOrderPart on po.PurchaseOrderId equals purchaseOderPart.PurchaseOrderId
+                            join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                            join im in _appContext.ItemMaster on purchaseOderPart.ItemMasterId equals im.ItemMasterId
+                            //join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId
+                            //join uom in _appContext.UnitOfMeasure on im.PurchaseUnitOfMeasureId equals uom.UnitOfMeasureId
 
-                            join uom in _appContext.UnitOfMeasure on im.PurchaseUnitOfMeasureId equals uom.UnitOfMeasureId into um
-                            from uom in um.DefaultIfEmpty()
-
-                            //join sto in _appContext.StockLine on purchaseOderPart.PurchaseOrderId equals sto.PurchaseOrderId  into sto
-                           // from st in sto.DefaultIfEmpty()
-
-                                //join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId
                             where po.PurchaseOrderId == id
 
                             select new
@@ -192,14 +179,13 @@ namespace DAL.Repositories
                                 po.VendorContactId,
                                 po.ShipToCompanyId,
                                 po.ShipViaAccountId,
-                                purchaseOderPart,
                                 im.ItemMasterId,
                                 im.PartNumber,
                                 im.PartDescription,
                                 im.ItemTypeId,
                                 im.ManufacturerId,
-                                x.Name,
                                 im.GLAccountId,
+                                //im.SerialNumber,
                                 //pop.ConditionCode,
                                 //pop.UOMId,
                                 purchaseOderPart.UnitCost,
@@ -212,25 +198,25 @@ namespace DAL.Repositories
                                 po.BillToUserName,
                                 po.BillToContactName,
                                 po.BillToMemo,
-                                uom.ShortName,
+                                //uom.ShortName,
                                 v.VendorContact,
                                 v.VendorContractReference,
                                 im.Manufacturer,
                                 im.PMA,
                                 im.DER,
                                 im.SalesDiscountPercent,
-                                purchaseOrderPartPurchaseOrderId = purchaseOderPart.PurchaseOrderId
-                                // sto
-
-
+                                purchaseOrderPartPurchaseOrderId = purchaseOderPart.PurchaseOrderId,
+                                //purchaseOderPart,
 
 
                             }).ToList();
+
                 return data;
 
             }
 
         }
+
 
 
         public IEnumerable<object> GetPayments()

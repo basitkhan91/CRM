@@ -13,13 +13,13 @@ namespace DAL.Repositories
         { }
 
         public IEnumerable<object> GetAllStockLinelistData()
-         {
+        {
             try
             {
                 var result = (from stl in _appContext.StockLine
 
-                              join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId 
-                              
+                              join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+
 
                               join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
 
@@ -40,17 +40,17 @@ namespace DAL.Repositories
                               from bi in bin.DefaultIfEmpty()
 
 
-                              join com in _appContext.Company on stl.CompanyId equals com.CompanyId into compe
-                              from com in compe.DefaultIfEmpty()
+                                  //join com in _appContext.Company on stl.CompanyId equals com.CompanyId into compe
+                                  //from com in compe.DefaultIfEmpty()
 
-                              join bu in _appContext.BusinessUnit on stl.BusinessUnitId equals bu.BusinessUnitId into busu
-                              from bu in busu.DefaultIfEmpty()
+                                  //join bu in _appContext.BusinessUnit on stl.BusinessUnitId equals bu.BusinessUnitId into busu
+                                  //from bu in busu.DefaultIfEmpty()
 
-                              join di in _appContext.Division on stl.DivisionId equals di.DivisionId into divi
-                              from di in divi.DefaultIfEmpty()
+                                  //join di in _appContext.Division on stl.DivisionId equals di.DivisionId into divi
+                                  //from di in divi.DefaultIfEmpty()
 
-                              join de in _appContext.Department on stl.DepartmentId equals de.DepartmentId into dep
-                              from de in dep.DefaultIfEmpty()
+                                  //join de in _appContext.Department on stl.DepartmentId equals de.DepartmentId into dep
+                                  //from de in dep.DefaultIfEmpty()
 
 
                               join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId
@@ -88,27 +88,28 @@ namespace DAL.Repositories
                                   stl.ControlNumber,
                                   stl.TagDate,
                                   location = l.Name,
-                                  warehouse=w.Name,
+                                  warehouse = w.Name,
                                   im.ExpirationDate,
                                   stl.SerialNumber,
                                   conditionId = co.ConditionId,
                                   stl.IdNumber,
-                                  
-                                  com.CompanyName,
-                                  bu.BusinessUnitName,
-                                  di.DivisionName,
-                                  de.DepartmentName,
+
+                                  //com.CompanyName,
+                                  //bu.BusinessUnitName,
+                                  //di.DivisionName,
+                                  //de.DepartmentName,
                                   partDescription = im.PartDescription,
-                                 
+
 
                                   stl.ManagementStructureEntityId,
-                                   
+
                                   stl.Quantity,
                                   condition = co.Description,
+                                 // shelfLife = im.IsShelfLifeAvailable,
                                   stl.ShelfLifeExpirationDate,
-                                  stl.Shelf,
-                                  stl.Bin,
-                                  siteName=si.Name,
+                                  //stl.Shelf,
+                                  //stl.Bin,
+                                  siteName = si.Name,
                                   shelfName = sh.Name,
                                   binName = bi.Name,
                                   siteId = stl.SiteId,
@@ -121,7 +122,7 @@ namespace DAL.Repositories
                                   stl.ObtainFrom,
                                   stl.Owner,
                                   stl.TraceableTo,
-                                  stl.Manufacturer,
+                                  //stl.Manufacturer,
                                   stl.ManufacturerLotNumber,
                                   stl.ManufacturingDate,
                                   stl.ManufacturingBatchNumber,
@@ -134,7 +135,7 @@ namespace DAL.Repositories
                                   stl.OrderDate,
                                   po.PurchaseOrderNumber,
                                   stl.PurchaseOrderUnitCost,
-                                 ro.RepairOrderNumber,
+                                  ro.RepairOrderNumber,
                                   stl.RepairOrderUnitCost,
                                   stl.InventoryUnitCost,
 
@@ -151,7 +152,7 @@ namespace DAL.Repositories
                                   stl.GLAccountId,
                                   stl.AssetId,
 
-                                  stl.IsHazardousMaterial,
+                                  // stl.IsHazardousMaterial,
                                   stl.IsPMA,
                                   stl.IsDER,
                                   stl.OEM,
@@ -161,7 +162,7 @@ namespace DAL.Repositories
                                   stl.TraceableToType,
                                   stl.ManufacturerId,
 
-                                  
+
                                   stl.UnitCostAdjustmentReasonTypeId,
                                   stl.UnitSalePriceAdjustmentReasonTypeId,
                                   stl.TimeLifeCyclesId,
@@ -183,10 +184,10 @@ namespace DAL.Repositories
                                   co,
                                   w,
                                   l,
-                                 com,
-                                 bu,
-                                 di,
-                                  de,
+                                  //com,
+                                  //bu,
+                                  //di,
+                                  // de,
                                   po,
                                   ro,
                                   conditionType = co.Description,
@@ -208,7 +209,7 @@ namespace DAL.Repositories
             {
                 var result = (from ms in _appContext.ManagementStructure
                               join le in _appContext.LegalEntity on ms.LegalEntityId equals le.LegalEntityId
-                              
+
 
 
                               select new
@@ -234,7 +235,7 @@ namespace DAL.Repositories
                               where w.ShelfId == id
                               select new
                               {
-                                   w.Name,
+                                  w.Name,
                                   w.BinId,
                                   w.ShelfId
 
@@ -333,7 +334,7 @@ namespace DAL.Repositories
             }
         }
 
-        
+
 
         public IEnumerable<object> getStocklineDataById(long id)
         {
@@ -344,8 +345,8 @@ namespace DAL.Repositories
 
                               select new
                               {
-                                 st.PurchaseOrderId,
-                                 st.QuantityToReceive,
+                                  st.PurchaseOrderId,
+                                  st.QuantityToReceive,
 
 
                               }).ToList();
@@ -472,7 +473,7 @@ namespace DAL.Repositories
             }
         }
 
-        
+
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

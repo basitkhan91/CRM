@@ -11,6 +11,7 @@ import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
+import { PurchaseOrder } from '../receivng-po/PurchaseOrder.model';
 
 @Component({
     selector: 'app-purchase-order',
@@ -66,7 +67,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 	filteredBrands: any[];
 	localCollection: any[] = [];
 	allPolistInfo: any[] = [];
-	allPurchaseorderInfo: any[] = [];
+	allPurchaseorderInfo: PurchaseOrder;
 	/** Currency ctor */
     constructor(private receivingService: ReceivingService,private authService: AuthService, private _fb: FormBuilder, public _router: Router, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public vendorservice: VendorService, private dialog: MatDialog) {
 		this.displayedColumns.push('action');
@@ -141,11 +142,17 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 		this.allComapnies = allComapnies;
 
 	}
-	getSelectedColumn(rowData) {
-		this.vendorservice.getpurchasevendorlist(rowData.purchaseOrderId).subscribe(
+    getSelectedColumn(rowData) {
+
+        this.receivingService.getPurchaseOrderDataById(rowData.purchaseOrderId).subscribe(
 			results => this.onDataLoadordrSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
+
+		//this.vendorservice.getpurchasevendorlist(rowData.purchaseOrderId).subscribe(
+		//	results => this.onDataLoadordrSuccessful(results[0]),
+		//	error => this.onDataLoadFailed(error)
+		//);
 	}
 	public getSelectedRow() {
 		//this.vendorservice.selectedPoCollection = this.selectedRow;
@@ -156,9 +163,10 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
 
 
-	private onDataLoadordrSuccessful(getCreditTermsList: any[]) {
-		// alert('success');
-        this.allPurchaseorderInfo = getCreditTermsList;
+	private onDataLoadordrSuccessful(purchaseOrder: PurchaseOrder) {
+        // alert('success');
+        debugger
+        this.allPurchaseorderInfo = purchaseOrder;
         this.receivingService.selectedPurchaseorderCollection = this.allPurchaseorderInfo;
 		this.vendorservice.selectedPoCollection = this.allPurchaseorderInfo;
 		
@@ -216,12 +224,10 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
 	}
 	openEdit(row) {
-
-
-		this.vendorservice.getpurchasevendorlist(row.purchaseOrderId).subscribe(
-			results => this.onDataLoadordrSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+		//this.vendorservice.getpurchasevendorlist(row.purchaseOrderId).subscribe(
+		//	results => this.onDataLoadordrSuccessful(results[0]),
+		//	error => this.onDataLoadFailed(error)
+		//);
 		//this.modal = this.modalService.open(content, { size: 'sm' });
 		//this.modal.result.then(() => {
 		//	console.log('When user closes');

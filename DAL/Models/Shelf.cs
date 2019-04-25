@@ -12,10 +12,6 @@ namespace DAL.Models
         public long? LocationId { get; set; }
         public string Name { get; set; }
         public string Memo { get; set; }
-        public string Zone { get; set; }
-        public string Level { get; set; }
-        public string Aisle { get; set; }
-        public string Rack { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }

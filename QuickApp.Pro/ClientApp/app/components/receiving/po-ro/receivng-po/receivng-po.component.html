@@ -1,5 +1,5 @@
-﻿<div class="x_content">
-  
+﻿<div class="x_content" *ngIf="purchaseOrderData">
+
     <h4 class="page-heading">Receiving PO</h4>
 
     <div class="clear"></div>
@@ -55,13 +55,14 @@
                 <label class="control-label col-sm-4">Vendor Num</label>
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
-                        <p-autoComplete (onSelect)="onVendorCodeselected($event)" (onKeyUp)=eventvendorHandler($event) [(ngModel)]="purchaseOrderData.vendorCode" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
+                        <p-autoComplete (onSelect)="onVendorCodeselected($event)" (onKeyUp)=eventvendorHandler($event) [(ngModel)]="purchaseOrderData.vendor.vendorCode" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-vendorCode pTemplate="item">
                                 <div class="ui-helper-clearfix">{{vendorCode}}</div>
                             </ng-template>
                         </p-autoComplete>
                     </div>
+                    <!--{{purchaseOrderData.vendor.vendorCode}}-->
 
                 </div>
             </div>
@@ -71,7 +72,7 @@
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
 
-                        <p-autoComplete  [(ngModel)]="purchaseOrderData.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                        <p-autoComplete [(ngModel)]="purchaseOrderData.vendor.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-vendorName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{vendorName}}</div>
@@ -86,7 +87,7 @@
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
                         <i class="fa fa-search"></i>
-                        <input type="text" class="form-control names ui-autocomplete-input" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.firstName" autocomplete="off">
+                        <input type="text" class="form-control names ui-autocomplete-input" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -145,7 +146,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Status</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.statusId" >
+                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.statusId">
                 </div>
             </div>
         </div>
@@ -184,7 +185,7 @@
                         </select>
                     </div>
                 </div>
-            </div>            
+            </div>
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Memo</label>
                 <div class="col-sm-7">
@@ -203,599 +204,109 @@
                 <div id="adminsearchlocationajax">
                     <div class="table-responsive">
                         <div class="clear"></div>
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-striped table-wrap">
                             <thead>
                                 <tr>
-                                    <th>PN</th>
-                                    <th>Order Qty</th>
-                                    <th>Quantity Received</th>
-                                    <th>Qty BackOrderd</th>
-                                    <th class="from-item-master">Company</th>
-                                    <th class="from-item-master">BU</th>
-                                    <th class="from-item-master">Division</th>
-                                    <th class="from-item-master">Dept</th>
-                                    <th></th>
+                                    <th class="eachcol"></th>
+                                    <th class="eachcol">Line no</th>
+                                    <th class="eachcol">PN</th>
+                                    <th class="eachcol">Qty Ordered</th>
+                                    <th class="eachcol">Qty Received</th>
+                                    <th class="eachcol">Qty Approved</th>
+                                    <th class="eachcol">Qty Backordered</th>
+                                    <th class="eachcol">Status</th>
+                                    <th class="eachcol" colspan="3"></th>
+                                    <th class="eachcol">Company</th>
+                                    <th class="eachcol">BU</th>
+                                    <th class="eachcol">Division</th>
+                                    <th class="eachcol">Dep.</th>
+                                    <th class="eachcol"></th>
                                 </tr>
                             </thead>
-                            <tbody *ngFor="let partList of partListData;let row_index=index">
-                                <tr>
-                                    <td>
-                                        {{partList.partNumber}}
-                                    </td>
-                                    <td>
-                                    {{partList.quantityOrdered}}
-                                    </td>
-                                    <td>
-                                    {{partList.quantityReceived}}
-                                    </td>
-                                    <td>
-                                    {{partList.quantityBackOrdered}}
-                                    </td>
-                                    <td>
-                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="getPartBUList(partList.masterCompanyId)">
-                                            <option *ngFor="let ataName of mainPartcompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getPartDepartmentlist(partList.buid1)">
-                                                <option *ngFor="let ataName of allManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                         </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.departmentId" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionlist(partList.depid1)">
-                                                    <option *ngFor="let ataName of allManagemtninfo " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                         </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control w90" [disabled]="true" [(ngModel)]="partList.divid1" [ngModelOptions]="{standalone: true}" (change)="getPartDivisionChangeManagementCode(partList.divid1)">
-                                                 <option *ngFor="let ataName of allManagemtninfo " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                         </select>
-                                    </td>
-                                    <td>
-                                        <a *ngIf="partList.quantityBackOrdered" (click)="addDetailsClick(partList)" style="color:red">Add Details</a>
-
-                                    </td>
-                                </tr>
-                                <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th>PN</th>
-                                    <th>PN Des.</th>
-                                    <th>User Type</th>
-                                    <th>Name</th>
-                                    <th>Select Address</th>
-                                    <th>UOM</th>
-
-
-                                    <th>Order Qty</th>
-                                    <th>Need By </th>
-                                    <th colspan="20"><button type="button" class="btn btn-success btn-xs" (click)="addRow(partList)"><i class="fa fa-plus"></i></button></th>
-                                </tr>
-                                <tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index" [hidden]="!partList.ifSplitShip">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{partList?.partNumber}}</td>
-                                    <td>{{partList?.partdescription}}</td>
-                                    <td>
-                                        <select [(ngModel)]="partChildList.poPartSplitUserTypeId">
-                                            <option value="1">Customer</option>
-                                            <option value="2">Vendor</option>
-                                            <option value="3">Company</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==1">
-                                            <i class="fa fa-search"></i>
-                                            <p-autoComplete (onSelect)="onCustomerNameselected(partChildList,$event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="partChildList.poPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-                                                            [minLength]="1" [dropdown]="true">
-                                                <ng-template let-name pTemplate="item">
-                                                    <div class="ui-helper-clearfix">{{name}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                        </div>
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==2">
-                                            <p-autoComplete (onSelect)="onVendorselected(partChildList,$event)" (onKeyUp)=eventHandler($event) [(ngModel)]="partChildList.poPartSplitUserName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                                            [minLength]="1" [dropdown]="true">
-                                                <ng-template let-vendorName pTemplate="item">
-                                                    <div class="ui-helper-clearfix">{{vendorName}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                        </div>
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.poPartSplitUserTypeId==3">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" [(ngModel)]="partChildList.poPartSplitUserName" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.addressobject" (change)="getChildAddressValue(partChildList,partChildList.addressobject)">
-
-                                            <option *ngFor="let object of partChildList.addressData" [ngValue]="object">{{object.address1}} {{object.city}} {{object.country}} {{object.stateOrProvince}} {{object.postalCode}}</option>
-
-                                        </select>
-                                    </td>
-
-                                    <td>
-
-                                        {{partList?.shortName}}
-                                    </td>
-                                    <td><input type="number" min="1" max="1000" name="" id="" [(ngModel)]="partChildList.quantityOrdered" class="form-control"></td>
-                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
-                                    <td colspan="20"><a (click)="deleteSplitShipment(partChildList,row_no,row_index)"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <br />
-                                <ng-container *ngIf="partList.showGrid">
-                                    <tr *ngFor="let stocklineObj of partList.stocklineListObj;let tabindex=index">
-                                        <td colspan="9">
-                                            <div class="receiving-po-ro-edit-box">
-
-                                                <div class="col-sm-12" *ngIf="tabindex==0">
-                                                    <div class="form-group col-sm-3 w250">
-                                                        <label class="control-label col-sm-4 wauto">Sequence</label>
-
-                                                    </div>
-                                                    <div class="form-group col-sm-3 w250">
-                                                        <label class="control-label col-sm-4 wauto">PN</label>
-                                                        <div class="col-sm-7 wauto">{{partList.partNumber}} </div>
-                                                    </div>
-                                                    <div class="col-sm-3 w250">
-                                                        <div class="form-group col-sm-12">
-                                                            <label class="control-label col-sm-4 wauto">Qty to receive</label>
-                                                            <div class="col-sm-7">
-                                                                <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive">
-                                                                <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" maxlength="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive" (keyup)="restrictedQuantitytoReceive(partList,stocklineObj.quantityToReceive)">
-                                                                <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" max="partList.quantityBackOrdered" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive" (change)="changeQuantityToReceive(partList,stocklineObj.quantityToReceive)">
-
-                                                                <!--<input class="form-control w70" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.quantityToReceive">-->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-3 w250">
-                                                        <div class="form-group col-sm-12">
-                                                            <label class="control-label col-sm-4">Condtion</label>
-                                                            <div class="col-sm-7">
-                                                                <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.conditionId">
-                                                                    <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="clear"></div>
-                                                <hr>
-
-                                                <!-- Details Part for Stockline Start -->
-
-                                                <div id="owner-details-slider" class="banner banner-slider carousel slide carousel-fade bglight carousel-sync">
-                                                    <div class="carousel-inner ptop10">
-                                                        <div class="item active carousel-item">
-                                                            <div class="fill">
-                                                                <div class="banner-content">
-                                                                    <div class="container">
-                                                                        <div class="row">
-                                                                            <div class="col-sm-12 padding5 bglight">
-                                                                                <div class="col-sm-12">
-                                                                                    <h4 class="text-center">Details of Part </h4>
-                                                                                </div>
-                                                                                <div class="form-group col-sm-10" *ngIf="tabindex==0">
-                                                                                    <label class="control-label col-sm-4">Same Details for all Parts</label>
-                                                                                    <div class="col-sm-7" *ngIf="showRestrictQuantity">
-                                                                                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.resale" (change)="sameDetailsforAllParts(partList)">
-                                                                                        <!--<input [(ngModel)]="stocklineObj.checkbox" [ngModelOptions]="{standalone: true}" type="checkbox" (change)="sameDetailsforAllParts(partList)">-->
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-sm-4">
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Company <strong class="clr-red">*</strong></label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.companyId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartBUList(stocklineObj)">
-                                                                                                <option *ngFor="let company of maincompanylist" [ngValue]="company.managementStructureId">{{company.code}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">BU <strong *ngIf="showBuError" class="clr-red">*</strong></label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartDepartmentlist(stocklineObj)">
-                                                                                                <option *ngFor="let business of bulist" [ngValue]="business.managementStructureId">{{business.code}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Division <strong *ngIf="showDivError" class="clr-red">*</strong></label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.departmentId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartDivisionlist(stocklineObj)">
-                                                                                                <option *ngFor="let dep of departmentList " [ngValue]="dep.managementStructureId">{{dep.code}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Dept <strong *ngIf="showDepError" class="clr-red">*</strong></label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <div>
-                                                                                                <select [(ngModel)]="stocklineObj.divisionId" [ngModelOptions]="{standalone: true}" (change)="DetailsPartgetDivisionChangeManagementCode(stocklineObj)">
-                                                                                                    <option *ngFor="let div of divisionlist " [ngValue]="div.managementStructureId">{{div.code}}</option>
-                                                                                                </select>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Site <strong class="clr-red">*</strong></label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange(stocklineObj)">
-                                                                                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Warehouse</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(stocklineObj)">
-                                                                                                <option *ngFor="let warehouse of stocklineObj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Location</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(stocklineObj)">
-                                                                                                <option *ngFor="let location of stocklineObj.allLocations" [ngValue]="location.locationId">{{location.name}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Shelf</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(stocklineObj)">
-                                                                                                <option *ngFor="let shelf of stocklineObj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Bin</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.binId" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let bin of stocklineObj.allBins" [ngValue]="bin.binId">{{bin.name}}</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-sm-4">
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Obtain From</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select [(ngModel)]="stocklineObj.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control">
-
-                                                                                                <option value="1">Customer</option>
-                                                                                                <option value="2">Other </option>
-                                                                                                <option value="3">Vendor</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                        <label class="control-label col-sm-4"></label>
-                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.obtainFromType == 1">
-                                                                                            <select [(ngModel)]="stocklineObj.obtainFrom" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let customer of allCustomersForStockline" [ngValue]="customer.name">{{customer.name}}</option>
-                                                                                            </select>
-                                                                                            <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                                                                        </div>
-                                                                                        <div class="col-sm-7" *ngIf="stocklineObj.obtainFromType == 2">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.obtainFrom">
-                                                                                        </div>
-                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.obtainFromType == 3">
-                                                                                            <select [(ngModel)]="stocklineObj.obtainFrom" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let vendor of allVendorListForStockline" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                                                                                            </select>
-                                                                                            <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                                                                        </div>
-                                                                                    </div>
-
-
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4" for="obtainFrom">Owner</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select id="obtainFrom" [(ngModel)]="stocklineObj.ownerType" [ngModelOptions]="{standalone: true}" class="form-control">
-
-                                                                                                <option value="1">Customer</option>
-                                                                                                <option value="2">Other </option>
-                                                                                                <option value="3">Vendor</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12" *ngIf="stocklineObj.ownerType == 1">
-                                                                                        <label class="control-label col-sm-4"></label>
-                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                                                            <select [(ngModel)]="stocklineObj.owner" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let customer of allCustomersForStockline" [ngValue]="customer.name">{{customer.name}}</option>
-                                                                                            </select>
-                                                                                            <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12" *ngIf="stocklineObj.ownerType== 2">
-                                                                                        <label class="control-label col-sm-4"></label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.owner">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12" *ngIf="stocklineObj.ownerType == 3">
-                                                                                        <label class="control-label col-sm-4"></label>
-                                                                                        <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                                                            <select [(ngModel)]="stocklineObj.owner" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let vendor of allVendorListForStockline" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                                                                                            </select>
-                                                                                            <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4" for="obtainFrom">Tracable to</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <select id="obtainFrom" [(ngModel)]="stocklineObj.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
-
-                                                                                                <option [value]="1">Customer</option>
-                                                                                                <option [value]="2">Other </option>
-                                                                                                <option [value]="3">Vendor</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                        <div class="form-group col-sm-12">
-                                                                                            <label class="control-label col-sm-4"></label>
-                                                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.traceableToType == 1">
-                                                                                                <select [(ngModel)]="stocklineObj.traceableTo" [ngModelOptions]="{standalone: true}">
-                                                                                                    <option *ngFor="let customer of allCustomersForStockline" [ngValue]="customer.name">{{customer.name}}</option>
-                                                                                                </select>
-                                                                                                <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group col-sm-12">
-                                                                                            <label class="control-label col-sm-4"></label>
-                                                                                            <div class="col-sm-7" *ngIf="stocklineObj.traceableToType == 2">
-                                                                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.traceableTo">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group col-sm-12">
-                                                                                            <label class="control-label col-sm-4"></label>
-                                                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="stocklineObj.traceableToType == 3">
-                                                                                                <select [(ngModel)]="stocklineObj.traceableTo" [ngModelOptions]="{standalone: true}">
-                                                                                                    <option *ngFor="let vendor of allVendorListForStockline" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                                                                                                </select>
-                                                                                                <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">MFG</label>
-                                                                                        <div class="col-sm-7">
-
-                                                                                            <select [(ngModel)]="stocklineObj.manufacturerId" [ngModelOptions]="{standalone: true}">
-                                                                                                <option *ngFor="let manufacturer of allManufacturerInfo" [ngValue]="manufacturer.manufacturerId">{{manufacturer.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                                                                                            </select>
-                                                                                            <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturer">-->
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">MFG Lot Num</label>
-
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturerLotNumber">
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Mfg date</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturingDate"></p-calendar>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">MFG Trace</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturingTraceNumber">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">MFG Batch Num</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.manufacturingBatchNumber">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Expiration Date</label>
-                                                                                        <div class="col-sm-7">
-
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.expirationDate"></p-calendar>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Unit Cost</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.purchaseOrderUnitCost">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Extended Cost</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-sm-4">
-
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Parts Cert Num</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.partCertificationNumber">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Cert By:</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input type="text" [(ngModel)]="stocklineObj.certifiedBy" [ngModelOptions]="{standalone: true}" />
-                                                                                        </div>
-                                                                                    </div><div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Certified Date</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.certifiedDate"></p-calendar>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Tag Date</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.tagDate"></p-calendar>
-
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Tag Type</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.tagType">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Certified Due Date</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.certifiedDueDate"></p-calendar>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-
-
-                                                    </div>
-
-                                                    <div class="clear"></div>
-                                                </div>
-                                                <div class="clear"></div>
-                                                <hr>
-                                                <div id="pn-other-details" class="banner banner-slider carousel slide carousel-fade bglight carousel-sync" *ngIf="partList.isSerialized">
-                                                    <div class="carousel-inner ptop10">
-                                                        <div class="item active carousel-item">
-                                                            <div class="fill">
-                                                                <div class="banner-content">
-                                                                    <div class="container">
-                                                                        <div class="">
-                                                                            <div class="col-sm-12">
-                                                                                <div class="col-sm-12">
-                                                                                    <h4 class="text-center">Details of Part{{index}} </h4>
-                                                                                </div>
-                                                                                <div class="col-sm-12 clr-red">
-                                                                                </div>
-                                                                                <div class="form-group col-sm-12">
-                                                                                    <h4>Is Serialized</h4>
-                                                                                </div>
-                                                                                <div class="col-sm-4">
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Serial Num</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.serialNumber">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            </div>
-                                                                            <div class="col-sm-12" *ngIf="partList.isTimeLife">
-                                                                                <div class="form-group col-sm-12">
-                                                                                    <h4>Time Life</h4>
-                                                                                </div>
-                                                                                
-
-                                                                                <div class="table-responsive form-group col-sm-12"> 
-                                                                                         <table class="table table-bordered table-striped"> 
-                                                                                    <thead> 
-                                                                                        <tr> 
-                                                                                            <th colspan="2" class="text-center">Cycles</th> 
-                                                                                            <th colspan="2" class="text-center">Time</th>
-                                                                                            <th colspan="2" class="text-center">Last</th>
-                                                                                         </tr>
-                                                                                     </thead>
-                                                                                    <tbody> 
-                                                                                    <tr> 
-                                                                                        <!--<td>Remaining</td> <td><input type="text" class="w50" ></td>
-                                                                                        <td>Remaining</td><td><input type="text" class="w50" ></td>-->
-                                                                                        <td>Since New</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceNew" ></td>
-                                                                                        <td>Since New</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceNew"  ></td>
-                                                                                        <td>Since New</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.lastSinceNew" ></td>
-                                                                                     </tr>
-                                                                                    <tr>
-                                                                                        <td>Since Ovh</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceOVH" ></td>
-                                                                                        <td>Since Ovh</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceOVH" ></td>
-                                                                                        <td>Since Ovh</td><td><input  type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.lastSinceOVH" ></td>
-                                                                                     </tr>
-                                                                                    <tr> 
-                                                                                        <td>Since Insp</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceInspection"></td>
-                                                                                        <td>Since Insp</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceInspection"></td>
-                                                                                        <td>Since Insp</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.lastSinceInspection" ></td>
-                                                                                     </tr>
-                                                                                    <tr> 
-                                                                                        <td>Since Repair</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.cyclesSinceRepair"></td>
-                                                                                        <td>Since Repair</td><td><input   type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="stocklineObj.timeSinceRepair"></td>
-                                                                                        <td></td><td></td>
-                                                                                    </tr>
-                                                                                   </tbody>
-                                                                                  </table>
-                                                                                </div>
-
-                                                                            </div>
-                                                                            <div class="col-sm-12" *ngIf="partList.itemTypeId==3">
-
-                                                                                <div class="form-group col-sm-12">
-                                                                                    <h4>Calibrated Equipment</h4>
-                                                                                </div>
-                                                                                <div class="form-group col-sm-5">
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Inspection Date</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control datepicker" type="text">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group col-sm-12">
-                                                                                        <label class="control-label col-sm-4">Frequency</label>
-                                                                                        <div class="col-sm-7">
-                                                                                            <input class="form-control" type="text">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                    <div class="buttons" style="display: none;">
-                                                        <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
-                                                            <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
-                                                        </a>
-                                                        <span class="num">1/5</span>
-                                                        <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
-                                                            <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="clear"></div>
-                                                </div>
-                                                <div class="clear"></div>
-
-                                            </div>
+                            <tbody>
+                                <ng-container *ngFor="let partList of purchaseOrderData.purchaseOderPart;let row_index=index">
+                                    <tr class="basic-info" *ngIf="partList.isParent">
+                                        <td class="details-control eachcol">
+                                            <button type="button" class="btn btn-xs" (click)="showSplitShipmentRows(partList.itemMasterId)">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </td>
+                                        <td class="eachcol">{{row_index}}</td>
+                                        <td class="eachcol">
+                                            {{partList.itemMaster.partNumber}}
+                                        </td>
+                                        <td class="eachcol">
+                                            {{partList.quantityOrdered}}
+                                        </td>
+                                        <td class="eachcol">
+                                            {{partList.quantityReceived}}
+                                        </td>
+                                        <td class="eachcol">
+                                            {{partList.quantityApproved}}
+                                        </td>
+                                        <td class="eachcol">
+                                            {{partList.quantityBackOrdered}}
+                                        </td>
+                                        <td class="eachcol">status</td>
+                                        <td class="eachcol" colspan="3"></td>
+                                        <td class="eachcol">
+                                            {{"Company"}}
+                                        </td>
+                                        <td class="eachcol">
+                                            {{"BU"}}
+                                        </td>
+                                        <td class="eachcol">
+                                            {{"Dept"}}
+                                        </td>
+                                        <td class="eachcol">
+                                            {{"Division"}}
+                                        </td>
+                                        <td class="eachcol">
+                                            <a *ngIf="partList.quantityBackOrdered" (click)="addDetailsClick(partList)" style="color:red">Add Details</a>
                                         </td>
                                     </tr>
-                                    <button class="btn btn-success pull-right" (click)="saveStockline(partList)">Save</button>
+                                    <tr class="basic-info splitshipment" [hidden]="purchaseOrderData.purchaseOderPart[row_index+1] != undefined && !purchaseOrderData.purchaseOderPart[row_index+1].visible" *ngIf="partList.isParent && purchaseOrderData.purchaseOderPart[row_index+1] != undefined && (!purchaseOrderData.purchaseOderPart[row_index+1].isParent)">
+                                        <th class="eachcol6"></th>
+                                        <th class="eachcol6"></th>
+                                        <th class="eachcol6">PN</th>
+                                        <th class="eachcol6">Qty Ordered</th>
+                                        <th class="eachcol6">Qty Received</th>
+                                        <th class="eachcol6">Qty Approved</th>
+                                        <th class="eachcol6">Qty Backordered</th>
+                                        <th class="eachcol6">Status</th>
+                                        <th class="eachcol6">User Type</th>
+                                        <th class="eachcol6">User Name</th>
+                                        <th class="eachcol6">Address</th>
+                                        <th class="eachcol6">Company</th>
+                                        <th class="eachcol6">BU</th>
+                                        <th class="eachcol6">Division</th>
+                                        <th class="eachcol6">Dep.</th>
+                                        <th class="eachcol6"> </th>
+                                    </tr>
+                                    <tr class="basic-info splitshipment" [hidden]="!partList.visible" *ngIf="!partList.isParent">
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>{{partList?.itemMaster?.partNumber}}</td>
+                                        <td>{{partList?.quantityOrdered}}</td>
+                                        <td>{{partList?.stockline?.quantityReceived}}</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td>Data</td>
+                                        <td class="details-control"><button type="button" class="btn btn-success btn-xs" (click)="addRow(partList)"><i class="fa fa-plus"></i></button></td>
+                                    </tr>
                                 </ng-container>
-
-
                             </tbody>
                         </table>
 
                     </div>
-                  
+
                 </div>
             </div>
 
@@ -816,5 +327,13 @@
 <style>
     .disabled {
         cursor: not-allowed;
+    }
+
+    .eachcol {
+        width: 7%;
+    }
+
+    .eachcol6 {
+        width: 6%;
     }
 </style>

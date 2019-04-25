@@ -267,10 +267,10 @@ export class StockAdjustmentComponent implements OnInit {
 			else { this.hideSerialNumber = false;}
 			this.sourceStockLineSetup.controlNumber = this.sourceStockAdjustment.controlNumber;
 			this.sourceStockLineSetup.stockLineId = this.sourceStockAdjustment.stockLineId;
-			this.sourceStockLineSetup.BeforecompanyId = this.sourceStockAdjustment.com.companyId;
-			this.sourceStockLineSetup.BeforebusinessUnitId = this.sourceStockAdjustment.bu.businessUnitId;
-			this.sourceStockLineSetup.BeforedepartmentId = this.sourceStockAdjustment.de.departmentId;
-			this.sourceStockLineSetup.BeforedivisionId = this.sourceStockAdjustment.di.divisionId;
+			//this.sourceStockLineSetup.BeforecompanyId = this.sourceStockAdjustment.com.companyId;
+			//this.sourceStockLineSetup.BeforebusinessUnitId = this.sourceStockAdjustment.bu.businessUnitId;
+			//this.sourceStockLineSetup.BeforedepartmentId = this.sourceStockAdjustment.de.departmentId;
+			//this.sourceStockLineSetup.BeforedivisionId = this.sourceStockAdjustment.di.divisionId;
 			this.sourceStockLineSetup.BeforepartId = this.sourceStockAdjustment.partId;
 			this.sourceStockLineSetup.BeforepartNumber = this.sourceStockAdjustment.partNumber;
 			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantity;

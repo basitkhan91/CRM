@@ -32,9 +32,9 @@ namespace DAL.Models
         public Nullable<short> CreditLimit { get; set; }
         public string Notes { get; set; }
         
-        public Nullable<long> IssuedToAddressId { get; set; }
-        public string IssuedToContactName { get; set; }
-        public string IssuedToMemo { get; set; }
+        //public Nullable<long> IssuedToAddressId { get; set; }
+        //public string IssuedToContactName { get; set; }
+        //public string IssuedToMemo { get; set; }
         public Nullable<long> ShipToAddressId { get; set; }
         public string ShipToContactName { get; set; }
         public string ShipToMemo { get; set; }

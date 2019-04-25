@@ -25,6 +25,7 @@ import { BinService } from '../../../../services/bin.service';
 import { ManufacturerService } from '../../../../services/manufacturer.service';
 import { StocklineService } from '../../../../services/stockline.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
+import { PurchaseOrder } from './PurchaseOrder.model';
 
 @Component({
     selector: 'app-receivng-po',
@@ -32,7 +33,7 @@ import { ReceivingService } from '../../../../services/receiving/receiving.servi
     styleUrls: ['./receivng-po.component.scss']
 })
 /** purchase-setup component*/
-export class ReceivngPoComponent {
+export class ReceivngPoComponent implements OnInit {
     purchaseOrderdata: any;
     userName: any;
     collectionofstockLine: any;
@@ -45,7 +46,7 @@ export class ReceivngPoComponent {
     iValue: number;
     showInput: boolean;
     PoCollection: any;
-    purchaseOrderData: any = {};
+    purchaseOrderData: PurchaseOrder;
     allPriorityInfo: any[] = [];
     VendorCodesColl: any[] = [];
     vendorCodes: any[] = [];
@@ -89,6 +90,7 @@ export class ReceivngPoComponent {
     constructor(public binservice: BinService, public manufacturerService: ManufacturerService, public legalEntityservice: LegalEntityService, public receivingService: ReceivingService, public priorityService: PriorityService, public stocklineService: StocklineService, public siteService: SiteService, public warehouseService: WarehouseService, public vendorService: VendorService, public customerService: CustomerService, private masterComapnyService: MasterComapnyService, public customerservice: CustomerService, private itemservice: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorservice: VendorService, private alertService: AlertService)
     {
         this.loadManagementdata();//calling because we need Management Structure Data for Purchase Order part Management Structure
+        this.loadReceivePurchaseOrderData();
 
        
     }
@@ -106,87 +108,114 @@ export class ReceivngPoComponent {
        
     }
 
+    //Toggling the show hide for splitshipment.
+    showSplitShipmentRows(itemMasterId:number): void {
+        var selectedParts = this.purchaseOrderData.purchaseOderPart.filter(function (part) {
+            return part.itemMasterId == itemMasterId;
+        });
+
+        selectedParts.forEach(part => {
+            part.visible = !part.visible;
+        });
+    }
+
     loadReceivePurchaseOrderData()
     {
         if (this.receivingService.selectedPurchaseorderCollection) {
-            this.PoCollection = this.receivingService.selectedPurchaseorderCollection; //getting selected PurchaseOrder Collection
+            debugger
+            this.purchaseOrderData = this.receivingService.selectedPurchaseorderCollection;
 
-            if (this.PoCollection.length > 0) {
-                this.purchaseOrderData = this.PoCollection[0]; //for Top Grid in HTML
-                this.purchaseOrderData.dateRequested = new Date(this.purchaseOrderData.dateRequested);
-                this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
-                this.purchaseOrderData.needByDate = new Date(this.purchaseOrderData.needByDate);
-            }
-            for (let i = 0; i < this.receivingService.selectedPurchaseorderCollection.length; i++)
-            {
-                this.iValue = i;
-                if (this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.isParent == true) {
-                    if (this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate) {
-                        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date(this.vendorservice.selectedPoCollection[i].purchaseOderPart.needByDate);
-                    }
-                    else {
-                        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date();
-                    }
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partId = this.receivingService.selectedPurchaseorderCollection[i].partId;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partdescription = this.receivingService.selectedPurchaseorderCollection[i].partDescription;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.itemTypeId = this.receivingService.selectedPurchaseorderCollection[i].itemTypeId;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.name = this.receivingService.selectedPurchaseorderCollection[i].name;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.glAccountId = this.receivingService.selectedPurchaseorderCollection[i].glAccountId;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.serialNumber = this.receivingService.selectedPurchaseorderCollection[i].serialNumber;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partNumber = this.receivingService.selectedPurchaseorderCollection[i].partNumber;
+            this.purchaseOrderData.purchaseOderPart.forEach(part => {
+                part.visible = false;
+            });
 
-                    //calling Below for get Quantity Received from Stockline and find Quantity Back Order Value
-                    this.GetStockLineDataBasedonItemMasterId(this.receivingService.selectedPurchaseorderCollection[i], this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.itemMasterId);
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.shortName = this.receivingService.selectedPurchaseorderCollection[i].shortName;
-
-                    //getting Management Structure Id
-                    this.receivingService.selectedPurchaseorderCollection[i].managementStructureId = this.receivingService.selectedPurchaseorderCollection[i].managementStructureId;
-
-                    //Forming Management Structure Based on Management Structure Id
-                    this.formingManagementStructureForPurchaseOrderPart(this.allManagemtninfo, this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.managementStructureId, i);
-
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart["childList"] = [];
-                    this.partListData.push(this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart)
-
-                }
-                else {
-                    if (this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate) {
-                        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date(this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate);
-                    }
-                    else {
-                        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date();
-                    }
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.shortName = this.receivingService.selectedPurchaseorderCollection[i].shortName;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partId = this.receivingService.selectedPurchaseorderCollection[i].partId;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partdescription = this.receivingService.selectedPurchaseorderCollection[i].partDescription;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.itemTypeId = this.receivingService.selectedPurchaseorderCollection[i].itemTypeId;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.name = this.receivingService.selectedPurchaseorderCollection[i].name;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.glAccountId = this.receivingService.selectedPurchaseorderCollection[i].glAccountId;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.serialNumber = this.receivingService.selectedPurchaseorderCollection[i].serialNumber;
-                    this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partNumber = this.receivingService.selectedPurchaseorderCollection[i].partNumber;
-                    this.editChildList.push(this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart)
-
-                }
-            }
-
-            if (this.editChildList.length > 0) {
-
-                for (let k = 0; k < this.partListData.length; k++)
-                {
-                    for (let m = 0; m < this.editChildList.length; m++)
-                    {
-                        if ((this.partListData[k].itemMasterId == this.editChildList[m].itemMasterId) && (this.partListData[k].purchaseOrderId == this.editChildList[m].purchaseOrderId)) {
-                            this.partListData[k].ifSplitShip = true;
-                            this.partListData[k]["childList"].push(this.editChildList[m]);
-
-                        }
-
-                    }
-                }
-            }
-
-            console.log(this.partListData);
+            this.purchaseOrderData.dateRequested = new Date(this.purchaseOrderData.dateRequested);
+            this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
+            this.purchaseOrderData.needByDate = new Date(this.purchaseOrderData.needByDate);
+            
         }
+            //this.PoCollection = this.receivingService.selectedPurchaseorderCollection; //getting selected PurchaseOrder Collection
+
+            //if (this.PoCollection.length > 0) {
+
+            //    this.purchaseOrderData = this.PoCollection[0]; //for Top Grid in HTML
+            //    //this.purchaseOrderData will contain Vendor Collection as this.purchaseOrderData.vendordata
+            //    //[(ngModel)]="purchaseOrderData.resale" like we are using
+            //    //if i want vendor Data i should use
+            //    //[(ngModel)]="purchaseOrderData.vendor.vendorCode"
+
+            //    this.purchaseOrderData.dateRequested = new Date(this.purchaseOrderData.dateRequested);
+            //    this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
+            //    this.purchaseOrderData.needByDate = new Date(this.purchaseOrderData.needByDate);
+            //}
+            //for (let i = 0; i < this.receivingService.selectedPurchaseorderCollection.length; i++)
+            //{
+            //    this.iValue = i;
+            //    if (this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.isParent == true) {
+            //        if (this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate) {
+            //            this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date(this.vendorservice.selectedPoCollection[i].purchaseOderPart.needByDate);
+            //        }
+            //        else {
+            //            this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date();
+            //        }
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partId = this.receivingService.selectedPurchaseorderCollection[i].partId;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partdescription = this.receivingService.selectedPurchaseorderCollection[i].partDescription;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.itemTypeId = this.receivingService.selectedPurchaseorderCollection[i].itemTypeId;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.name = this.receivingService.selectedPurchaseorderCollection[i].name;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.glAccountId = this.receivingService.selectedPurchaseorderCollection[i].glAccountId;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.serialNumber = this.receivingService.selectedPurchaseorderCollection[i].serialNumber;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partNumber = this.receivingService.selectedPurchaseorderCollection[i].partNumber;
+
+            //        //calling Below for get Quantity Received from Stockline and find Quantity Back Order Value
+            //        this.GetStockLineDataBasedonItemMasterId(this.receivingService.selectedPurchaseorderCollection[i], this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.itemMasterId);
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.shortName = this.receivingService.selectedPurchaseorderCollection[i].shortName;
+
+            //        //getting Management Structure Id
+            //        this.receivingService.selectedPurchaseorderCollection[i].managementStructureId = this.receivingService.selectedPurchaseorderCollection[i].managementStructureId;
+
+            //        //Forming Management Structure Based on Management Structure Id
+            //        this.formingManagementStructureForPurchaseOrderPart(this.allManagemtninfo, this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.managementStructureId, i);
+
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart["childList"] = [];
+            //        this.partListData.push(this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart)
+
+            //    }
+            //    else {
+            //        if (this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate) {
+            //            this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date(this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate);
+            //        }
+            //        else {
+            //            this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.needByDate = new Date();
+            //        }
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.shortName = this.receivingService.selectedPurchaseorderCollection[i].shortName;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partId = this.receivingService.selectedPurchaseorderCollection[i].partId;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partdescription = this.receivingService.selectedPurchaseorderCollection[i].partDescription;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.itemTypeId = this.receivingService.selectedPurchaseorderCollection[i].itemTypeId;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.name = this.receivingService.selectedPurchaseorderCollection[i].name;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.glAccountId = this.receivingService.selectedPurchaseorderCollection[i].glAccountId;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.serialNumber = this.receivingService.selectedPurchaseorderCollection[i].serialNumber;
+            //        this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart.partNumber = this.receivingService.selectedPurchaseorderCollection[i].partNumber;
+            //        this.editChildList.push(this.receivingService.selectedPurchaseorderCollection[i].purchaseOderPart)
+
+            //    }
+            //}
+
+            //if (this.editChildList.length > 0) {
+
+            //    for (let k = 0; k < this.partListData.length; k++)
+            //    {
+            //        for (let m = 0; m < this.editChildList.length; m++)
+            //        {
+            //            if ((this.partListData[k].itemMasterId == this.editChildList[m].itemMasterId) && (this.partListData[k].purchaseOrderId == this.editChildList[m].purchaseOrderId)) {
+            //                this.partListData[k].ifSplitShip = true;
+            //                this.partListData[k]["childList"].push(this.editChildList[m]);
+
+            //            }
+
+            //        }
+            //    }
+            //}
+        
     }
     private priorityData()
     {
@@ -487,14 +516,14 @@ export class ReceivngPoComponent {
                 this.maincompanylist.push(this.allManagemtninfo[i]);
                 this.mainPartcompanylist.push(this.allManagemtninfo[i]);
 
-                this.purchaseOrderData.buid1 = null;
-                this.partList.buid1 = null;
+                //this.purchaseOrderData.buid1 = null;
+               // this.partList.buid1 = null;
             }
         }
     }
     getBUList(masterCompanyId)
     {
-        this.purchaseOrderData.managementStructureEntityId = masterCompanyId; //Saving Management Structure Id if there Company Id
+        //this.purchaseOrderData.managementStructureEntityId = masterCompanyId; //Saving Management Structure Id if there Company Id
 
         this.bulist = [];
         this.departmentList = [];
@@ -504,12 +533,12 @@ export class ReceivngPoComponent {
                 this.bulist.push(this.allManagemtninfo[i]);
             }
         }
-        this.purchaseOrderData.buid1 = null;
+       // this.purchaseOrderData.buid1 = null;
         console.log(this.bulist);
     }
 
     getDepartmentlist(buid) {
-        this.purchaseOrderData.managementStructureEntityId = buid; //Saving Management Structure Id if there Company Id
+       // this.purchaseOrderData.managementStructureEntityId = buid; //Saving Management Structure Id if there Company Id
 
         this.departmentList = [];
         this.divisionlist = [];
@@ -519,13 +548,13 @@ export class ReceivngPoComponent {
             }
         }
 
-        this.purchaseOrderData.depid1 = null;
+       // this.purchaseOrderData.depid1 = null;
 
         console.log(this.departmentList);
     }
 
     getDivisionlist(depid) {
-        this.purchaseOrderData.managementStructureEntityId = depid; //Saving Management Structure Id if there Company Id
+       // this.purchaseOrderData.managementStructureEntityId = depid; //Saving Management Structure Id if there Company Id
 
         this.divisionlist = [];
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -533,12 +562,12 @@ export class ReceivngPoComponent {
                 this.divisionlist.push(this.allManagemtninfo[i]);
             }
         }
-        this.purchaseOrderData.divid1 = true;
+       // this.purchaseOrderData.divid1 = true;
     }
 
     getDivisionChangeManagementCode(obj)
     {
-        this.purchaseOrderData.managementStructureEntityId = obj;
+        //this.purchaseOrderData.managementStructureEntityId = obj;
     }
 
     GetStockLineDataBasedonItemMasterId(Collection, itemMasterId: any) {
@@ -1016,8 +1045,8 @@ export class ReceivngPoComponent {
 
     saveReceivePurchaseOrder()
     {
-        this.purchaseOrderData.createdBy = this.userName;
-        this.purchaseOrderData.updatedBy = this.userName;
+        //this.purchaseOrderData.createdBy = this.userName;
+       // this.purchaseOrderData.updatedBy = this.userName;
         this.vendorservice.savePurchaseorder(this.purchaseOrderData).subscribe(purchaseOrderdata => {
             this.purchaseOrderdata = purchaseOrderdata;
             {

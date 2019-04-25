@@ -181,6 +181,9 @@ namespace DAL
 
         IGLAccountNodeShareWithEntityMapper gLAccountNodeShareWithEntityMapper;
 
+        IPartStockLineMapper partStockLineMapper;
+
+
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
         public UnitOfWork(ApplicationDbContext context)
@@ -1597,6 +1600,16 @@ namespace DAL
             addAuditMethod.Invoke(obj, new[] { auditData });
         }
 
+
+        public IPartStockLineMapper PartStockLineMapper
+        {
+            get
+            {
+                if (partStockLineMapper == null)
+                    partStockLineMapper = new PartStockLineMapperRepository(_context);
+                return partStockLineMapper;
+            }
+        }
     }
 }
 

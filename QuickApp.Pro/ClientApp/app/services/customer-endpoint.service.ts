@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
-
+    
 @Injectable()
 export class CustomerEndpoint extends EndpointFactory {
 
