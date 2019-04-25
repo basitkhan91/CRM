@@ -468,7 +468,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
 			'nha': roleObject.nha,
 			'isSerialized': roleObject.isSerialized,
 			'soldUnitOfMeasureId': roleObject.soldUnitOfMeasureId,
-			'isTimeLife': roleObject.isTimeLife
+            'isTimeLife': roleObject.isTimeLife,
+            'itemTypeId':roleObject.itemTypeId
             
 
            
