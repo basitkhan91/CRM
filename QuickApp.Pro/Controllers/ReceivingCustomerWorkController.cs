@@ -19,7 +19,6 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
-        //private IUnitOfWork UnitOfWork;
         public ReceivingCustomerWorkController(IUnitOfWork unitOfWork, ILogger<ReceivingCustomerWorkController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
@@ -27,9 +26,7 @@ namespace QuickApp.Pro.Controllers
             _logger = logger;
             _emailer = emailer;
         }
-
-        // GET: api/values
-
+        
         [HttpGet("Get")]
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
         public IActionResult Get()
@@ -61,7 +58,6 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPost("receivingCustomerWork")]
-        //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
         {
             if (ModelState.IsValid)
@@ -251,24 +247,24 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        //[HttpPut("deletereceivingCustomerWork/{id}")]
-        //public IActionResult DeleteCustomerWork(long id, [FromBody]ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var CustomerObj = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(a => a.ReceivingCustomerWorkId == id);
-        //        receivingCustomerWorkViewModel.MasterCompanyId = 1;
-        //        CustomerObj.IsDelete = receivingCustomerWorkViewModel.IsDelete;
-        //        CustomerObj.UpdatedDate = DateTime.Now;
-        //        CustomerObj.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
-        //        CustomerObj.ReceivingCustomerWorkId = receivingCustomerWorkViewModel.ReceivingCustomerWorkId;
-        //        _unitOfWork.receivingCustomerWork.Update(CustomerObj);
-        //        _unitOfWork.SaveChanges();
-        //        return Ok(CustomerObj);
-        //    }
+        [HttpPut("updateForActive/{id}")]
+        public IActionResult customersUpdateforActive(long id, [FromBody]ReceivingCustomerWork receivingCustomerWork)
+        {
+            if (ModelState.IsValid)
+            {
+                var customerWork = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(a => a.ReceivingCustomerWorkId == id);
+                receivingCustomerWork.MasterCompanyId = 1;
+                customerWork.IsActive = receivingCustomerWork.IsActive;
+                customerWork.UpdatedDate = DateTime.Now;
+                customerWork.UpdatedBy = receivingCustomerWork.UpdatedBy;
+                customerWork.ReceivingCustomerWorkId = receivingCustomerWork.ReceivingCustomerWorkId;
+                _unitOfWork.receivingCustomerWork.Update(customerWork);
+                _unitOfWork.SaveChanges();
+                return Ok(customerWork);
+            }
 
-        //    return Ok(ModelState);
-        //}
+            return Ok(ModelState);
+        }
 
 
         [HttpPut("timeLifeUpdate")]

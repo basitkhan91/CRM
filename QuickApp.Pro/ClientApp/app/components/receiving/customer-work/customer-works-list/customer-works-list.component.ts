@@ -49,6 +49,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     locationId: any;
     showViewProperties: any = {};
     selectedColumn: any;
+    Active: string = "Active";
    
 
     constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal) {
@@ -184,7 +185,6 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allComapnies = allComapnies;
@@ -201,8 +201,6 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 			error => this.saveFailedHelper(error));
 	}
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -265,5 +263,27 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         }
 
         this.loadData();
+    }
+
+    toggleIsActive(rowData, e) {
+        if (e.checked == false) {
+            this.sourcereceving = rowData;
+            this.sourcereceving.updatedBy = this.userName;
+            this.Active = "In Active";
+            this.sourcereceving.isActive == false;
+            this.receivingCustomerWorkService.updateActionforActive(this.sourcereceving).subscribe(
+                response => this.saveCompleted(this.sourcereceving),
+                error => this.saveFailedHelper(error));
+        }
+        else {
+            this.sourcereceving = rowData;
+            this.sourcereceving.updatedBy = this.userName;
+            this.Active = "Active";
+            this.sourcereceving.isActive == true;
+            this.receivingCustomerWorkService.updateActionforActive(this.sourcereceving).subscribe(
+                response => this.saveCompleted(this.sourcereceving),
+                error => this.saveFailedHelper(error));
+        }
+
     }
 }

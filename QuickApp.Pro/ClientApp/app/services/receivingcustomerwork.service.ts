@@ -72,6 +72,9 @@ export class ReceivingCustomerWorkService {
     updateStockLineTimelife(sourceTimeLife: any) {
         return this.receivingCustomerWorkEndpoint.getUpdatestockLineTimeLifeEndpoint<any>(sourceTimeLife, sourceTimeLife.timeLifeCyclesId);
     }
-
+    
+    updateActionforActive(receivingCustomerWork: any) {
+        return this.receivingCustomerWorkEndpoint.getUpdateActionforActive(receivingCustomerWork, receivingCustomerWork.receivingCustomerWorkId);
+    }
 }
 

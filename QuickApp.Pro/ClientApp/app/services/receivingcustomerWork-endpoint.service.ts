@@ -18,10 +18,9 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
     private readonly _actionsUrlAuditHistory: string = "/api/ReceivingCustomerWork/auditHistoryById";
     private readonly _actionsTimeUrlNew: string = "/api/ReceivingCustomerWork/PostTimeLine";
     private readonly _TimeLifeUpdate: string = "/api/ReceivingCustomerWork/timeLifeUpdate";
+    private readonly _updateActiveInactive: string = "/api/ReceivingCustomerWork/updateForActive";
 
-	// private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
-	// private readonly _actionsUrlNew: string = "/api/Action/actions";
-	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+    get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -156,13 +155,28 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
             });
     }
     getUpdatestockLineTimeLifeEndpoint<T>(roleObject: any, timeLifeCyclesId: number): Observable<T> {
-        //let endpointUrl = `${this._TimeLifeUpdate}/${roleObject.timeLifeCyclesId}`;
-
         return this.http.put<T>(this._TimeLifeUpdate, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getUpdatestockLineTimeLifeEndpoint(roleObject, timeLifeCyclesId));
             });
     }
+    getUpdateActionforActive<T>(roleObject: any, receivingCustomerWorkId: number): Observable<T> {
+        let endpointUrl = `${this._updateActiveInactive}/${roleObject.receivingCustomerWorkId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateForActive(roleObject, receivingCustomerWorkId));
+            });
+    }
+    getUpdateForActive<T>(roleObject: any, receivingCustomerWorkId: number): Observable<T> {
+        let endpointUrl = `${this._actionsUrlNew}/${roleObject.receivingCustomerWorkId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateForActive(roleObject, receivingCustomerWorkId));
+            });
+    }
+
 }
 
 

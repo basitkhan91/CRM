@@ -90,36 +90,7 @@ export class CustomerWorkEditComponent {
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
-            //this.sourcereceving.conditionId = this.sourcereceivingEdit.conditionId;
-            //this.sourcereceving.partNumber = this.sourcereceivingEdit.partNumber;
-            //this.sourcereceving.binId = this.sourcereceivingEdit.binId;
-            //this.sourcereceving.timeLifeOrigin = this.sourcereceivingEdit.timeLifeOrigin;
             this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
-            //this.sourcereceving.firstName = this.receivingCustomerWorkService.listCollection.employee.firstName;
-            //this.sourcereceving.partDescription = this.sourcereceivingEdit.partDescription;
-            //this.sourcereceving.certifiedBy = this.sourcereceivingEdit.certifiedBy;
-            //this.sourcereceving.changePartNumber = this.sourcereceivingEdit.changePartNumber;
-            //this.sourcereceving.isExpirationDate = this.sourcereceivingEdit.isExpirationDate;
-            //this.sourcereceving.expirationDate = this.sourcereceivingEdit.expirationDate;
-            //this.sourcereceving.serialNumber = this.sourcereceivingEdit.serialNumber;
-            //this.sourcereceving.locationId = this.sourcereceivingEdit.locationId;
-            //this.sourcereceving.siteId = this.sourcereceivingEdit.siteId;
-            //this.sourcereceving.isSerialized = this.sourcereceivingEdit.isSerialized;
-            //this.sourcereceving.warehouseId = this.sourcereceivingEdit.warehouseId;
-            //this.sourcereceving.quantity = this.sourcereceivingEdit.quantity;
-            //this.sourcereceving.tagType = this.sourcereceivingEdit.tagType;
-            //this.sourcereceving.tagDate = this.sourcereceivingEdit.tagDate;
-            //this.sourcereceving.isMfgDate = this.sourcereceivingEdit.isMfgDate;
-            //this.sourcereceving.partCertificationNumber = this.sourcereceivingEdit.partCertificationNumber;
-            //this.sourcereceving.manufacturingLotNumber = this.sourcereceivingEdit.manufacturingLotNumber;
-            //this.sourcereceving.manufacturingTrace = this.sourcereceivingEdit.manufacturingTrace;
-            //this.sourcereceving.manufacturingDate = this.sourcereceivingEdit.manufacturingDate;
-            //this.sourcereceving.createdBy = this.sourcereceivingEdit.createdBy;
-            //this.sourcereceving.updatedBy = this.sourcereceivingEdit.updatedBy;
-          
-            //this.sourcereceving.customerReference = this.sourcereceivingEdit.customerReference;
-            //this.sourcereceving.timeLifeDate = this.sourcereceivingEdit.timeLifeDate;
-            //this.sourcereceving.receivingCustomerWorkId = this.sourcereceivingEdit.receivingCustomerWorkId;
             if (this.sourcereceving.serialNumber) {
                 this.sourcereceving.isSerialized = true;
             }
@@ -368,25 +339,7 @@ export class CustomerWorkEditComponent {
     }
 
 
-
-    //openHist(content, row) {
-    //	this.alertService.startLoadingMessage();
-    //	this.loadingIndicator = true;
-    //	this.sourcereceving = row;
-    //	this.isSaving = true;
-    //	 debugger;
-    //	this.receivingCustomerWorkService.historyCharge(this.sourcereceving.chargeId).subscribe(
-    //		results => this.onHistoryLoadSuccessful(results[0], content),
-    //		error => this.saveFailedHelper(error));
-
-
-    //}
-
-
     editItemAndCloseModel() {
-
-        //debugger;
-
         this.isSaving = true;
 
         if (!this.sourcereceving.receivingCustomerWorkId) {

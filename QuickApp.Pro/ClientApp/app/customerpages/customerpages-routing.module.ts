@@ -17,12 +17,6 @@ import { CustomerBillingInformationComponent } from "../components/customer/cust
 import { CustomerShippingInformationComponent } from "../components/customer/customer-shipping-information/customer-shipping-information-component";
 import { CustomerSalesPersonComponent } from "../components/customer/customer-sales-person/customer-sales-person.component";
 import { CustomerWarningsComponent } from "../components/customer/customer-warnings/customer-warnings.component";
-
-//import { CustomerWorksListComponent } from "../components/receiving/customer-work/customer-works-list/customer-works-list.component";
-//import { CustomerWorkSetupComponent } from "../components/receiving/customer-work/customer-work-setup/customer-work-setup.component";
-//import { CustomerWorkEditComponent } from "../components/receiving/customer-work/customer-work-edit/customer-work-edit.component";
-
-
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
 
@@ -42,9 +36,6 @@ const customerPagesRoutes: Routes = [
             { path: "app-customer-shipping-information", component: CustomerShippingInformationComponent, data: { title: "Shipping-Information" } },
 			{ path: "app-customer-sales-person", component: CustomerSalesPersonComponent, data: { title: "Sales-Person" } },
 			{ path: "app-customer-warnings", component: CustomerWarningsComponent, data: { title: "Warnings" } },
-            //{ path: "app-receiving-customer-work-list", component: CustomerWorksListComponent, data: { title: "Customer Works List" } },
-            //{ path: "app-receiving-customer-work-add", component: CustomerWorkSetupComponent, data: { title: "Customer Work Setup" } },
-            //{ path: "app-receiving-customer-work-edit", component: CustomerWorkEditComponent, data: { title: "Customer Work Edit" } }
         ]
     }
 ];
