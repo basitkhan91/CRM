@@ -34,6 +34,7 @@ export class AccountingCalendarComponent {
     }
 
     loaddefualtObj(selectedMonth) {
+       
         if (this.selectedPeriod == '12' || this.selectedPeriod == '13') {
             this.showManual = false;
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "ADJ-PD"];
@@ -50,13 +51,34 @@ export class AccountingCalendarComponent {
                 this.currentCalendarObj.quarter = 4;
             }
             
-             let defualtCalendarObj = {
+            let month = selectedMonth + 1;
+            if (month <= 9) {
+                
+                var fromdate = this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01';
+                var date = new Date(fromdate);
+                var year = date.getFullYear();
+                var lastmonth = date.getMonth();
+                var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                var toDate = year + '-' + '0' + month + '-' + lastday;
+
+            }
+            else {
+                var fromdate = this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01';
+                var date = new Date(fromdate);
+                var year = date.getFullYear();
+                var lastmonth = date.getMonth();
+                var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                var toDate = year + '-' + month + '-' + lastday;
+            }
+            
+            let defualtCalendarObj = {
+
                 fiscalName: months[selectedMonth],
                 fiscalYear: this.currentCalendarObj.fiscalYear,
                 period: this.period,
                 quater: this.currentCalendarObj.quarter,
-                fromDate: this.currentCalendarObj.fromDate,
-                toDate: this.currentCalendarObj.toDate,
+                fromDate: fromdate,
+                toDate: toDate,
                 periodName: months[selectedMonth] + ' ' + this.currentCalendarObj.fiscalYear,
                 name: this.currentCalendarObj.name,
                 description: this.currentCalendarObj.description,
@@ -67,8 +89,9 @@ export class AccountingCalendarComponent {
             return defualtCalendarObj;
         }
         else if (this.selectedPeriod == '16') {
+            
             this.showManual = false;
-            var monthData = ["Jan", "Feb", "Mar", "ADJ-PD-Jan-Mar", "Apr", "May", "Jun", "ADJ-PD-Apr-Jun", "Jul", "Aug", "Sep", "ADJ-PD-Jul-Sep", "Oct", "Nov", "Dec", "ADJ-PD-Oct-Dec"];
+            var monthData = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             if (this.period <= 4) {
                 this.currentCalendarObj.quarter = 1;
             }
@@ -81,22 +104,101 @@ export class AccountingCalendarComponent {
             if (this.period >= 13 && this.period <= 16) {
                 this.currentCalendarObj.quarter = 4;
             }
-            let defualtCalendarObj = {
-                fiscalName: monthData[this.period],
-                fiscalYear: this.currentCalendarObj.fiscalYear,
-                period: this.period,
-                quater: this.currentCalendarObj.quarter,
-                fromDate: this.currentCalendarObj.fromDate,
-                toDate: this.currentCalendarObj.toDate,
-                periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
-                name: this.currentCalendarObj.name,
-                description: this.currentCalendarObj.description,
-                createdBy: this.userName,
-                updatedBy: this.userName,
+            let month = selectedMonth + 1;
+            if (month <= 9) {
+
+                var fromdate = this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01';
+                var date = new Date(fromdate);
+                var year = date.getFullYear();
+                var lastmonth = date.getMonth();
+                var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                var toDate = year + '-' + '0' + month + '-' + lastday;
 
             }
-            this.period++;
-            return defualtCalendarObj;
+            else {
+                var fromdate = this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01';
+                var date = new Date(fromdate);
+                var year = date.getFullYear();
+                var lastmonth = date.getMonth();
+                var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                var toDate = year + '-' + month + '-' + lastday;
+            }
+
+            if (this.calendarArray.length == 3) {
+                var fiscalName = 'ADJ - PD -' + this.calendarArray[0].fiscalName + '-' + this.calendarArray[2].fiscalname;
+                let defualtCalendarObj = {
+                    fiscalName: fiscalName,
+                    fiscalYear: this.currentCalendarObj.fiscalYear,
+                    period: this.period,
+                    quater: this.currentCalendarObj.quarter,
+                    fromDate: fromdate,
+                    toDate: toDate,
+                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    name: this.currentCalendarObj.name,
+                    description: this.currentCalendarObj.description,
+                    createdBy: this.userName,
+                    updatedBy: this.userName,
+
+                }
+                this.period++;
+                return defualtCalendarObj;
+            }
+            else if (this.calendarArray.length == 7) {
+                var fiscalName = 'ADJ - PD -' + this.calendarArray[4].fiscalName + '-' + this.calendarArray[6].fiscalname;
+                let defualtCalendarObj = {
+                    fiscalName: fiscalName,
+                    fiscalYear: this.currentCalendarObj.fiscalYear,
+                    period: this.period,
+                    quater: this.currentCalendarObj.quarter,
+                    fromDate: fromdate,
+                    toDate: toDate,
+                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    name: this.currentCalendarObj.name,
+                    description: this.currentCalendarObj.description,
+                    createdBy: this.userName,
+                    updatedBy: this.userName,
+
+                }
+                this.period++;
+                return defualtCalendarObj;
+            }
+            else if (this.calendarArray.length == 10) {
+                var fiscalName = 'ADJ - PD -' + this.calendarArray[7].fiscalName + '-' + this.calendarArray[9].fiscalname;
+                let defualtCalendarObj = {
+                    fiscalName: fiscalName,
+                    fiscalYear: this.currentCalendarObj.fiscalYear,
+                    period: this.period,
+                    quater: this.currentCalendarObj.quarter,
+                    fromDate: fromdate,
+                    toDate: toDate,
+                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    name: this.currentCalendarObj.name,
+                    description: this.currentCalendarObj.description,
+                    createdBy: this.userName,
+                    updatedBy: this.userName,
+
+                }
+                this.period++;
+                return defualtCalendarObj;
+            }
+            else {
+                let defualtCalendarObj = {
+                    fiscalName: monthData[selectedMonth],
+                    fiscalYear: this.currentCalendarObj.fiscalYear,
+                    period: this.period,
+                    quater: this.currentCalendarObj.quarter,
+                    fromDate: fromdate,
+                    toDate: toDate,
+                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    name: this.currentCalendarObj.name,
+                    description: this.currentCalendarObj.description,
+                    createdBy: this.userName,
+                    updatedBy: this.userName,
+
+                }
+                this.period++;
+                return defualtCalendarObj;
+            }
         }
         else {
            
@@ -144,14 +246,22 @@ export class AccountingCalendarComponent {
             this.period = 1;
             this.showCheckBox = true;
             for (let i = 0; i < this.selectedPeriod; i++) {
-                this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod));
+                this.calendarArray.push(this.loaddefualtObj(month));
+                month++;
+                if (month == 12) {
+                    month = 0;
+                }
             }
         }
         if (this.selectedPeriod == 16) {
             this.period = 1;
             this.showCheckBox = true;
             for (let i = 0; i < this.selectedPeriod; i++) {
-                this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod));
+                this.calendarArray.push(this.loaddefualtObj(month));
+                month++;
+                if (month == 12) {
+                    month = 0;
+                }
             }
         }
         if (this.selectedPeriod == 'Manual') {

@@ -406,27 +406,34 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	//}
 
 	filterpartItems(event) {
-
+        debugger;
 		this.partCollection = [];
 		this.itemclaColl = [];
-		if (this.allPartnumbersInfo) {
-			if (this.allPartnumbersInfo.length > 0) {
+        if (this.allPartnumbersInfo && this.allPartnumbersInfo.length > 0) {
+            this.itemclaColl = this.allPartnumbersInfo.filter(function (partNumberInfo) {
+                if (partNumberInfo.partNumber.toLowerCase() == event.query.toLowerCase()) {
+                    this.partCollection.push(partNumberInfo.partNumber);
+                    return {
+                        "partId": partNumberInfo.itemMasterId,
+                        "partName": event.query.toLowerCase()
+                    };
+                }
+            });
+        }
+				//for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+				//	let partName = this.allPartnumbersInfo[i].partNumber;
+				//	if (partName) {
+				//		if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+				//			this.itemclaColl.push([{
+				//				"partId": this.allPartnumbersInfo[i].itemMasterId,
+				//				"partName": partName
+				//			}]),
 
-				for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-					let partName = this.allPartnumbersInfo[i].partNumber;
-					if (partName) {
-						if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-							this.itemclaColl.push([{
-								"partId": this.allPartnumbersInfo[i].itemMasterId,
-								"partName": partName
-							}]),
-
-								this.partCollection.push(partName);
-						}
-					}
-				}
-			}
-		}
+				//				this.partCollection.push(partName);
+				//		}
+				//	}
+		  //  	}
+		
 	}
 
 
@@ -450,7 +457,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	//}
 
 	partnmId(event) {
-		//
+        debugger;
 		if (this.itemclaColl) {
 			for (let i = 0; i < this.itemclaColl.length; i++) {
 				if (event == this.itemclaColl[i][0].partName) {
