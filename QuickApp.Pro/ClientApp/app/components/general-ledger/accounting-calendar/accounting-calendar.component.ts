@@ -125,7 +125,7 @@ export class AccountingCalendarComponent {
             }
 
             if (this.calendarArray.length == 3) {
-                var fiscalName = 'ADJ - PD -' + this.calendarArray[0].fiscalName + '-' + this.calendarArray[2].fiscalname;
+                var fiscalName = 'ADJ - PD -' + this.calendarArray[0].fiscalName + '-' + this.calendarArray[2].fiscalName;
                 let defualtCalendarObj = {
                     fiscalName: fiscalName,
                     fiscalYear: this.currentCalendarObj.fiscalYear,
@@ -133,7 +133,7 @@ export class AccountingCalendarComponent {
                     quater: this.currentCalendarObj.quarter,
                     fromDate: fromdate,
                     toDate: toDate,
-                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    periodName: monthData[selectedMonth] + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.name,
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
@@ -144,7 +144,7 @@ export class AccountingCalendarComponent {
                 return defualtCalendarObj;
             }
             else if (this.calendarArray.length == 7) {
-                var fiscalName = 'ADJ - PD -' + this.calendarArray[4].fiscalName + '-' + this.calendarArray[6].fiscalname;
+                var fiscalName = 'ADJ - PD -' + this.calendarArray[4].fiscalName + '-' + this.calendarArray[6].fiscalName;
                 let defualtCalendarObj = {
                     fiscalName: fiscalName,
                     fiscalYear: this.currentCalendarObj.fiscalYear,
@@ -152,7 +152,7 @@ export class AccountingCalendarComponent {
                     quater: this.currentCalendarObj.quarter,
                     fromDate: fromdate,
                     toDate: toDate,
-                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    periodName: monthData[selectedMonth] + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.name,
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
@@ -162,8 +162,8 @@ export class AccountingCalendarComponent {
                 this.period++;
                 return defualtCalendarObj;
             }
-            else if (this.calendarArray.length == 10) {
-                var fiscalName = 'ADJ - PD -' + this.calendarArray[7].fiscalName + '-' + this.calendarArray[9].fiscalname;
+            else if (this.calendarArray.length == 11) {
+                var fiscalName = 'ADJ - PD -' + this.calendarArray[6].fiscalName + '-' + this.calendarArray[9].fiscalName;
                 let defualtCalendarObj = {
                     fiscalName: fiscalName,
                     fiscalYear: this.currentCalendarObj.fiscalYear,
@@ -171,7 +171,7 @@ export class AccountingCalendarComponent {
                     quater: this.currentCalendarObj.quarter,
                     fromDate: fromdate,
                     toDate: toDate,
-                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    periodName: monthData[selectedMonth] + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.name,
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
@@ -189,7 +189,7 @@ export class AccountingCalendarComponent {
                     quater: this.currentCalendarObj.quarter,
                     fromDate: fromdate,
                     toDate: toDate,
-                    periodName: monthData[this.period] + ' - ' + this.currentCalendarObj.fiscalYear,
+                    periodName: monthData[selectedMonth] + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.name,
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
