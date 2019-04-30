@@ -1,5 +1,4 @@
 ﻿import { Vendor } from "../../../../models/vendor.model";
-import { Stockline } from "../../../../models/stockline.model";
 
 export class PurchaseOrder {
 
@@ -43,7 +42,14 @@ export class PurchaseOrder {
 
     purchaseOderPart: PurchaseOrderPart[];
     vendor: Vendor;
-    stockline: StockLine;
+    stockLine: StockLine[];
+}
+
+export class PartStockLineMapper
+{
+    id: number;
+    purchaseOrderPartRecordId: number;
+    stockLineId: number;
 }
 
 export class PurchaseOrderPart {
@@ -94,13 +100,32 @@ export class PurchaseOrderPart {
     isParent: boolean;
     itemMaster: any;
     visible: boolean;
+    showStockLineGrid: boolean;
+    stocklineListObj: StockLine[];
 }
 
-export class ItemMaster {
+export class TimeLife {
 
+    timeLifeCyclesId: number;
+    cyclesRemaining: number;
+    cyclesSinceNew: number;
+    cyclesSinceOVH: number;
+    cyclesSinceInspection: number;
+    cyclesSinceRepair: number;
+    timeRemaining: number;
+    timeSinceNew: number;
+    timeSinceOVH: number;
+    timeSinceInspection: number;
+    timeSinceRepair: number;
+    lastSinceNew: number;
+    lastSinceOVH: number;
+    lastSinceInspection: number;
+    masterCompanyId: number;
+    isActive: boolean;
 }
 
-export class StockLine {
+export class StockLine
+{
     stockLineId: number;
     partNumber: string;
     stockLineNumber: string;
@@ -173,23 +198,5 @@ export class StockLine {
 
 }
 
-export class TimeLife {
 
-    timeLifeCyclesId: number;
-    cyclesRemaining: number;
-    cyclesSinceNew: number;
-    cyclesSinceOVH: number;
-    cyclesSinceInspection: number;
-    cyclesSinceRepair: number;
-    timeRemaining: number;
-    timeSinceNew: number;
-    timeSinceOVH: number;
-    timeSinceInspection: number;
-    timeSinceRepair: number;
-    lastSinceNew: number;
-    lastSinceOVH: number;
-    lastSinceInspection: number;
-    masterCompanyId: number;
-    isActive: boolean;
-}
 

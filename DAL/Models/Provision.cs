@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class Provision: PasBase
+   public class Provision: PasBase,IAudit
     {
         public int ProvisionId { get; set; }
 

@@ -14,7 +14,7 @@ export class ProvisionEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/Provision/Get";
     private readonly _actionsUrlNew: string = "/api/Provision/provision";
     private readonly _actionsUrlAuditHistory: string = "/api/Provision/auditHistoryById";
-
+    private readonly getProvisionAuditHistoryById: string = "/api/Provision/audits";
 
 
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
@@ -75,6 +75,15 @@ export class ProvisionEndpoint extends EndpointFactory {
         return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getDeleteProvisionEndpoint(provisionId));
+            });
+    }
+
+    getProvisionAuditById<T>(provisionId: number): Observable<T> {
+        let endpointUrl = `${this.getProvisionAuditHistoryById}/${provisionId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getProvisionAuditById(provisionId));
             });
     }
 

@@ -59,7 +59,10 @@ export class ProvisionService {
     deleteProvision(provisionId: number) {
 
         return this.provisionEndpoint.getDeleteProvisionEndpoint(provisionId);
+    }
 
+    getProvisionAudit(provisionId: number) {
+        return this.provisionEndpoint.getProvisionAuditById<any>(provisionId);
     }
 
 }

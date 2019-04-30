@@ -5,6 +5,7 @@
 
 using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,6 +84,38 @@ namespace DAL.Repositories
         public virtual IEnumerable<TEntity> GetAll()
         {
             return _entities.ToList();
+        }
+
+        public TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
+                                          Expression<Func<TEntity, bool>> predicate = null,
+                                          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                                          Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                          bool disableTracking = true)
+        {
+            IQueryable<TEntity> query = _entities;
+            if (disableTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).Select(selector).FirstOrDefault();
+            }
+            else
+            {
+                return query.Select(selector).FirstOrDefault();
+            }
         }
     }
 }

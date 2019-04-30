@@ -25,7 +25,8 @@ import { BinService } from '../../../../services/bin.service';
 import { ManufacturerService } from '../../../../services/manufacturer.service';
 import { StocklineService } from '../../../../services/stockline.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder } from './PurchaseOrder.model';
+import { PurchaseOrder, PurchaseOrderPart, StockLine } from './PurchaseOrder.model';
+import { Stockline } from '../../../../models/stockline.model';
 
 @Component({
     selector: 'app-receivng-po',
@@ -34,6 +35,7 @@ import { PurchaseOrder } from './PurchaseOrder.model';
 })
 /** purchase-setup component*/
 export class ReceivngPoComponent implements OnInit {
+    showGrid: boolean;
     purchaseOrderdata: any;
     userName: any;
     collectionofstockLine: any;
@@ -47,6 +49,8 @@ export class ReceivngPoComponent implements OnInit {
     showInput: boolean;
     PoCollection: any;
     purchaseOrderData: PurchaseOrder;
+    stockLineItems: StockLine;
+
     allPriorityInfo: any[] = [];
     VendorCodesColl: any[] = [];
     vendorCodes: any[] = [];
@@ -87,7 +91,7 @@ export class ReceivngPoComponent implements OnInit {
     allSites: Site[];
 
     /** po-approval ctor */
-    constructor(public binservice: BinService, public manufacturerService: ManufacturerService, public legalEntityservice: LegalEntityService, public receivingService: ReceivingService, public priorityService: PriorityService, public stocklineService: StocklineService, public siteService: SiteService, public warehouseService: WarehouseService, public vendorService: VendorService, public customerService: CustomerService, private masterComapnyService: MasterComapnyService, public customerservice: CustomerService, private itemservice: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorservice: VendorService, private alertService: AlertService)
+    constructor(public binservice: BinService, public manufacturerService: ManufacturerService, public legalEntityservice: LegalEntityService, public receivingService: ReceivingService, public priorityService: PriorityService, public stocklineService: StocklineService, public siteService: SiteService, public warehouseService: WarehouseService, public vendorService: VendorService, public customerService: CustomerService, private masterComapnyService: MasterComapnyService, public customerservice: CustomerService, private itemmaster: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorservice: VendorService, private alertService: AlertService)
     {
         this.loadManagementdata();//calling because we need Management Structure Data for Purchase Order part Management Structure
         this.loadReceivePurchaseOrderData();
@@ -127,6 +131,7 @@ export class ReceivngPoComponent implements OnInit {
 
             this.purchaseOrderData.purchaseOderPart.forEach(part => {
                 part.visible = false;
+                part.showStockLineGrid = false;
             });
 
             this.purchaseOrderData.dateRequested = new Date(this.purchaseOrderData.dateRequested);
@@ -641,113 +646,109 @@ export class ReceivngPoComponent implements OnInit {
 
         //this.sourceStockLineSetup.comId = null;
     }
-
-    addDetailsClick(selectedPart)
+    
+    
+    addDetailsClick(part:PurchaseOrderPart):void
     {
-        for (let i = 0; i < this.partListData.length; i++) {
-            if (this.partListData[i].partNumber == selectedPart.partNumber)
-            {
-                selectedPart["showGrid"] = true;
-                selectedPart["stocklineListObj"] = [];
+        part.showStockLineGrid = !part.showStockLineGrid;
 
-                //partList["quantityLength"] = partList.quantityOrdered;
-                // this.itemservice.getDescriptionbypart(selectedPart.partNumber).subscribe((data: any) => {
-                this.receivingService.getItemMasterDataById(selectedPart.itemMasterId).subscribe((data: any) => {
-                    console.log(data);
-                    debugger
-                    selectedPart["isSerialized"] = data[0][0].isSerialized;
-                    selectedPart["isTimeLife"] = data[0][0].isTimeLife;
-                    selectedPart["glAccountId"] = data[0][0].glAccountId;
-                    if (selectedPart["isSerialized"] == true)
-                    {
-                        this.showRestrictQuantity = true;
-                        this.showFreeQuantity = false;
-                        this.showNormalQuantity = false;
-                        selectedPart["isSerialized"] = true;
-                        this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
-
-                    }
-                    else {
-                        this.showRestrictQuantity = false;
-                        this.showFreeQuantity = true;
-                        this.showNormalQuantity = false;
-                        selectedPart["isSerialized"] = false;
-                        this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
-                    }
-                })
-                for (let i = 0; i < selectedPart.quantityOrdered; i++)
-                {
-                    selectedPart["stocklineListObj"].push(this.loadDefualtObj());
-                }
-            }
-            else
-            {
-                this.partListData[i]["showGrid"] = false;
+        this.itemmaster.getDescriptionbypart(part.itemMaster.partNumber).subscribe((data: any) => {
+            part["isSerialized"] = data[0][0].isSerialized;
+            part["isTimeLife"] = data[0][0].isTimeLife;
+            part["glAccountId"] = data[0][0].glAccountId;
+            if (part["isSerialized"] == true) {
+               // this.hideSerialNumber = true;
+                this.showRestrictQuantity = true;
+                this.showFreeQuantity = false;
+                this.showNormalQuantity = false;
+                part["isSerialized"] = true;
+                this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
 
             }
+            else {
+               // this.hideSerialNumber = false;
+                this.showRestrictQuantity = false;
+                this.showFreeQuantity = true;
+                this.showNormalQuantity = false;
+                part["isSerialized"] = false;
+
+                this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
+
+            }
+
+        })
+
+        for (let i = 0; i < part.quantityOrdered;i++)
+        {
+             part.stocklineListObj[i] = new StockLine(); 
+            //part["stocklineListObj"].push(this.loadDefualtObj());
         }
+       // var stockLineCount = part.quantityOrdered - this.purchaseOrderData.stockLine.quantityToReceive;
     }
 
     loadDefualtObj() {
-        let stockLineDefObj = {
-            companyId: '',
-            managementStructureEntityId: '',
-            businessUnitId: '',
-            partNumber: '',
-            partDescription: '',
-            isSerialized: '',
-            shelfLife: '',
-            isPMA: '',
-            isDER: '',
-            itemMasterId: '',
-            glAccountId: '',
-            quantity: '',
-            conditionId: '',
-            serialNumber: '',
-            siteId: '',
-            warehouseId: '',
-            locationId: '',
-            shelfId: '',
-            binId: '',
-            obtainFromType: '',
-            obtainFrom: '',
-            ownerType: '',
-            owner: '',
-            traceableToType: '',
-            traceableTo: '',
-            manufacturerId: '',
-            manufacturerLotNumber: '',
-            manufacturingDate: '',
-            manufacturingBatchNumber: '',
-            partCertificationNumber: '',
-            certifiedBy: '',
-            certifiedDate: '',
-            tagDate: '',
-            tagType: '',
-            certifiedDueDate: '',
-            orderDate: '',
-            PurchaseOrderId: '',
-            RepairOrderId: '',
-            receivedDate: '',
-            receiverNumber: '',
-            reconciliationNumber: '',
-            shelfLifeExpirationDate: '',
-            unitSalesPrice: '',
-            coreUnitCost: '',
-            oem: '',
-            memo: '',
-            conditionList: this.allconditioninfo,
-            //siteList: this.allSites,
-            //wareHouseList: this.allWareHouses,
-            //locationlist: this.allLocations,
-            //shelflist: this.allShelfs,
-            //binList: this.allBins,
-            manfacturerList: this.allManufacturerInfo,
-            timeLifeCyclesId: '',
+
+        let stocklineObject: StockLine;
+        return stocklineObject;
+        //let stockLineDefObj = {
+        //    companyId: '',
+        //    managementStructureEntityId: '',
+        //    businessUnitId: '',
+        //    partNumber: '',
+        //    partDescription: '',
+        //    isSerialized: '',
+        //    shelfLife: '',
+        //    isPMA: '',
+        //    isDER: '',
+        //    itemMasterId: '',
+        //    glAccountId: '',
+        //    quantity: '',
+        //    conditionId: '',
+        //    serialNumber: '',
+        //    siteId: '',
+        //    warehouseId: '',
+        //    locationId: '',
+        //    shelfId: '',
+        //    binId: '',
+        //    obtainFromType: '',
+        //    obtainFrom: '',
+        //    ownerType: '',
+        //    owner: '',
+        //    traceableToType: '',
+        //    traceableTo: '',
+        //    manufacturerId: '',
+        //    manufacturerLotNumber: '',
+        //    manufacturingDate: '',
+        //    manufacturingBatchNumber: '',
+        //    partCertificationNumber: '',
+        //    certifiedBy: '',
+        //    certifiedDate: '',
+        //    tagDate: '',
+        //    tagType: '',
+        //    certifiedDueDate: '',
+        //    orderDate: '',
+        //    PurchaseOrderId: '',
+        //    RepairOrderId: '',
+        //    receivedDate: '',
+        //    receiverNumber: '',
+        //    reconciliationNumber: '',
+        //    shelfLifeExpirationDate: '',
+        //    unitSalesPrice: '',
+        //    coreUnitCost: '',
+        //    oem: '',
+        //    memo: '',
+        //    conditionList: this.allconditioninfo,
+        //    //siteList: this.allSites,
+        //    //wareHouseList: this.allWareHouses,
+        //    //locationlist: this.allLocations,
+        //    //shelflist: this.allShelfs,
+        //    //binList: this.allBins,
+        //    manfacturerList: this.allManufacturerInfo,
+        //    timeLifeCyclesId: '',
 
 
-        };
-        return stockLineDefObj;
+        //};
+        //return stockLineDefObj;
     }
 
 
@@ -1060,6 +1061,8 @@ export class ReceivngPoComponent implements OnInit {
     private onDataLoadFailed(error: any)
     {
     }
+
+   
    
 
 }

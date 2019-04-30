@@ -25,9 +25,8 @@ namespace DAL.Repositories
 
             purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
                                    .Include("ItemMaster")
+                                   //.Include("StockLine")
                                    .Where(x => x.PurchaseOrderId == id).ToList();
-
-
 
             purchaseOrder.StockLine = _appContext.StockLine
                                     .Include("TimeLifeObject")

@@ -257,6 +257,7 @@ namespace DAL
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
         public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
+        public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

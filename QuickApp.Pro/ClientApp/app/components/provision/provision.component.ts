@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-provision',
@@ -68,6 +69,8 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     provisionName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+
+    AuditDetails: SingleScreenAuditDetails[];
 
     /** Actions ctor */
 
@@ -410,5 +413,21 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void
+    {
+        this.auditProvision(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditProvision(provisionId: number): void
+    {
+        this.provisionService.getProvisionAudit(provisionId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["provisionAuditId", "provisionId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }
