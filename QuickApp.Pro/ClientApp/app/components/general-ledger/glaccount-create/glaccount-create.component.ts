@@ -3,7 +3,6 @@ import { fadeInOut } from "../../../services/animations";
 import { AlertService } from "../../../services/alert.service";
 import { GlAccount } from "../../../models/GlAccount.model";
 import { GlAccountService } from "../../../services/glAccount/glAccount.service";
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'; 
 import { CurrencyService } from "../../../services/currency.service";
 import { GLAccountClassService } from "../../../services/glaccountclass.service";
 import { GlCashFlowClassificationService } from "../../../services/gl-cash-flow-classification.service";
@@ -55,7 +54,7 @@ export class GlaccountCreateComponent implements OnInit {
         if (!this.currentGLAccount.glAccountId) {
             this.glAccountService.add(this.currentGLAccount).subscribe(glData => {
                 this.currentGLAccount = glData;
-                this.alertService.showMessage('Asset Status added successfully.');
+                this.alertService.showMessage('GLAccount added successfully.');
                 this.glAccountService.getAll().subscribe(glAccountData => {
                     this.glAccountList = glAccountData[0];
                     this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-glaccount-list');
@@ -64,13 +63,12 @@ export class GlaccountCreateComponent implements OnInit {
         }
         else {
             this.currentGLAccount.updatedBy = this.userName;
-            this.glAccountService.update(this.currentGLAccount).subscribe(asset => {
-                this.alertService.showMessage('Asset Status updated successfully.');
-                this.glAccountService.getAll().subscribe(assets => {
-                    this.glAccountList = assets[0];
+            this.glAccountService.update(this.currentGLAccount).subscribe(glAccount => {
+                this.alertService.showMessage('GLAccount updated successfully.');
+                this.glAccountService.getAll().subscribe(glAccounts => {
+                    this.glAccountList = glAccounts[0];
                 });
                 this.updateMode = false;
-                //this.resetAssetStatus();
             });
         }
        
@@ -106,18 +104,7 @@ export class GlaccountCreateComponent implements OnInit {
         });
     } 
 
-    setAssetStatusToUpdate(id: number): void {
-        this.currentGLAccount = Object.assign({}, this.glAccountList.filter(function (asset) {
-            return asset.glAccountId == id;
-        })[0]);
-        this.updateMode = true;
-    }
-    
-    toggleIsDeleted(assetStatusId: number): void {
-        this.setAssetStatusToUpdate(assetStatusId);
-        this.currentGLAccount.isDeleted = !this.currentGLAccount.isDeleted;
-    }
-
+   
     resetAssetStatus(): void {
         this.updateMode = false;
         this.currentGLAccount = new GlAccount();
