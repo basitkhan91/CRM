@@ -316,7 +316,7 @@
                         </mat-expansion-panel>
                     </mat-accordion>
                 </mat-expansion-panel>
-              
+
 
                 <mat-expansion-panel [expanded]="step === 12" (opened)="setStep(12)">
                     <mat-expansion-panel-header>
@@ -380,6 +380,26 @@
                         </mat-expansion-panel>
                     </mat-accordion>
                 </mat-expansion-panel>
+
+
+                <mat-expansion-panel [expanded]="step === 12" (opened)="setStep(12)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Account Payble
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <a mat-list-item routerLinkActive="active" routerLink="/accountpayble/accountpayble/app-open-close-ap-subledger">open/close AP Subledger </a>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel [expanded]="step === 13" (opened)="setStep(13)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Account Receivable
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <a mat-list-item routerLinkActive="active" routerLink="/accountreceivable/accountreceivablepages/app-open-close-ar-subledger">open/close AR Subledger </a>
+                </mat-expansion-panel>
+
                 <!--Arun-->
                 <!--<mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
         <mat-expansion-panel-header>
