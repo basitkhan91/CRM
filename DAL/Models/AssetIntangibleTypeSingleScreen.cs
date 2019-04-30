@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DAL.Models
 {
-  public class AssetIntangibleTypeSingleScreen:PasBase
+  public class AssetIntangibleTypeSingleScreen:PasBase, IAudit
     {
         [Key]
         public long? AssetIntangibleTypeSingleId { get; set; }

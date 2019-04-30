@@ -119,12 +119,22 @@ namespace QuickApp.Pro.Controllers
             var existingResult = _unitOfWork.GLAccountClass.GetSingleOrDefault(c => c.GLAccountClassId == id);
             existingResult.IsDelete = true;
             _unitOfWork.GLAccountClass.Update(existingResult);
-
-            //_unitOfWork.ActionAttribute.Remove(existingResult);
-
             _unitOfWork.SaveChanges();
-
             return Ok(id);
+        }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<GLAccountClassAudit>()
+                .Find(x => x.GLAccountClassId == id)
+                .OrderByDescending(x => x.GLAccountClassAuditId);
+
+            var auditResult = new List<AuditResult<GLAccountClassAudit>>();
+
+            auditResult.Add(new AuditResult<GLAccountClassAudit> { AreaName = "GL Account Class", Result = audits.ToList() });
+
+            return Ok(auditResult);
         }
     }
 }

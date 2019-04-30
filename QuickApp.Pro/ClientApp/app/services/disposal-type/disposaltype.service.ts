@@ -41,4 +41,8 @@ export class DisposalTypeService {
         return this.disposalTypeEndpoint.removeDisposalTypeById(assetDisposalTypeId);
     }
 
+    getDisposalAudit(assetDisposalTypeId: number) {
+        return this.disposalTypeEndpoint.getDisposalAudit<any[]>(assetDisposalTypeId);
+    }
+
 }

@@ -275,7 +275,8 @@ namespace DAL.Repositories
 
         public IEnumerable<object> getAllItemMasterStockdata()
         {
-            var data = _appContext.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification")
+            var data = _appContext.ItemMaster.Include("Manufacturer").Include("Provision").Include("GLAccount").
+                Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification")
 
                    .Where(a => a.ItemTypeId == 1 && (a.IsDelete == true || a.IsDelete==null)).OrderByDescending(a => a.ItemMasterId).ToList();
         

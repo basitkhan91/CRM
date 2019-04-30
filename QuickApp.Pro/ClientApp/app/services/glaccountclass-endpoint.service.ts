@@ -12,7 +12,9 @@ export class GLAccountClassEndpoint extends EndpointFactory {
 
 	private readonly _glaccountclassUrl: string = "/api/GlAccountClass/Get";
 	private readonly _glaccountclassUrlNew: string = "/api/GlAccountClass/glaccountclasspost";
-	private readonly _glaccountclassUrlAuditHistory: string = "/api/GlAccountClass/auditHistoryById";
+    private readonly _glaccountclassUrlAuditHistory: string = "/api/GlAccountClass/auditHistoryById";
+    private readonly getGlById: string = "/api/GlAccountClass/audits";
+
 	get glaccountclassUrl() { return this.configurations.baseUrl + this._glaccountclassUrl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -68,6 +70,14 @@ export class GLAccountClassEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getHistoryGLAccountClassIdEndpoint(glAccountClassId));
 			});
-	}
+    }
+    getGlAccountAudit<T>(glAccountClassId: number): Observable<T> {
+        let endpointUrl = `${this.getGlById}/${glAccountClassId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getGlAccountAudit(glAccountClassId));
+            });
+    }
 
 }

@@ -19,6 +19,7 @@ export class DisposalTypeEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/DisposalType/add";
     private readonly updateURL: string = "/api/DisposalType/update";
     private readonly removeByIdURL: string = "/api/DisposalType/removeById";
+    private readonly getdisposalTypeHistById: string = "/api/DisposalType/audits";
 
 
 
@@ -75,6 +76,15 @@ export class DisposalTypeEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.removeDisposalTypeById(assetDisposalTypeId));
+            });
+    }
+
+    getDisposalAudit<T>(assetDisposalTypeId: number): Observable<T> {
+        let endpointUrl = `${this.getdisposalTypeHistById}/${assetDisposalTypeId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDisposalAudit(assetDisposalTypeId));
             });
     }
 

@@ -6,6 +6,7 @@ using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -119,6 +120,20 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = unitOfWork.Repository<AssetIntangibleTypeSingleScreenAudit>()
+                .Find(x => x.AssetIntangibleTypeSingleId == id)
+                .OrderByDescending(x => x.AssetIntangibleTypeSingleAuditId);
+
+            var auditResult = new List<AuditResult<AssetIntangibleTypeSingleScreenAudit>>();
+
+            auditResult.Add(new AuditResult<AssetIntangibleTypeSingleScreenAudit> { AreaName = "Intangible", Result = audits.ToList() });
+
+            return Ok(auditResult);
         }
 
         #endregion Public Methods

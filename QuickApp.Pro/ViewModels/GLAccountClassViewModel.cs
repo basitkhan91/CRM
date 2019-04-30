@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DAL.Models;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class GLAccountClassViewModel
+    public class GLAccountClassViewModel : IAudit
     {
         public long GLAccountClassId { get; set; }
 

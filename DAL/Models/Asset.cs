@@ -101,8 +101,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
-
-        public virtual AssetCapes AssetCapes { get; set; }
+        
         public virtual Manufacturer Manufacturer { get; set; }
         public virtual Currency Currency { get; set; }
         public virtual GLAccount GLAccount { get; set; }

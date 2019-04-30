@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+
 
 namespace DAL.Models
 {
-  public class AssetDepreciationIntervalType : PasBase
+  public class AssetDepreciationIntervalType : PasBase,IAudit
     {
         public long AssetDepreciationIntervalTypeId { get; set; }
         [Required(ErrorMessage = "Id Is Required.")]

@@ -357,10 +357,10 @@
                                         </div>
                                         <div class="col-sm-8 expdate-input" *ngIf="sourcereceving.isMFGDate">
                                             <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingDate"></p-calendar>
-                                           
+
                                         </div>
                                     </div>
-                                   
+
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">MFG Trace </label>
                                         <div class="col-sm-8">
@@ -405,60 +405,61 @@
                                         </div>
 
                                         <div class="clear"></div>
-                                        <div class="table-responsive form-group col-sm-12">
-                                            <table class="table table-bordered table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="2" class="text-center">Cycles</th>
-                                                        <th colspan="2" class="text-center">Time</th>
-                                                        <th colspan="2" class="text-center">Last</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Remaining</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
-                                                        <td>Remaining</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
-                                                        <td>Since New</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since New</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
 
-                                                        <td>Since New</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
-                                                        <td>Since Ovh</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Ovh</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
-                                                        <td>Since Ovh</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
-                                                        <td>Since Insp</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Insp</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
-                                                        <td>Since Insp</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Repair</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
-                                                        <td>Since Repair</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <!--<div class="table-responsive form-group col-sm-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="text-center">Cycles</th>
+                                <th colspan="2" class="text-center">Time</th>
+                                <th colspan="2" class="text-center">Last</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Remaining</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
+                                <td>Remaining</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
+                                <td>Since New</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
+                            </tr>
+                            <tr>
+                                <td>Since New</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
+
+                                <td>Since New</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
+                                <td>Since Ovh</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
+                            </tr>
+                            <tr>
+                                <td>Since Ovh</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
+                                <td>Since Ovh</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
+                                <td>Since Insp</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
+                            </tr>
+                            <tr>
+                                <td>Since Insp</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
+                                <td>Since Insp</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Since Repair</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
+                                <td>Since Repair</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>-->
 
                                         <div class="clear"></div>
 
@@ -466,9 +467,66 @@
                                 </div>
                                 <div class="clear"></div>
                                 <hr>
-                                <a class="btn btn-success pull-right" (click)="saveCustomerwork()">Submit</a>
+                                <!--<a class="btn btn-success pull-right" (click)="saveCustomerwork()">Submit</a>-->
                             </div>
 
+
+                            <div class="form-group col-sm-12" *ngIf="this.sourcereceving.isTimeLife">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped timelife-table">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="15" class="text-center"><strong>TIME LIFE ADJUSTMENTS</strong></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+
+                                                    <td>&nbsp;</td>
+                                                    <td colspan="4" class="text-center clr1"><strong>CYCLES</strong></td>
+                                                    <td colspan="4" class="text-center clr2"><strong>TIMES</strong></td>
+                                                    <td colspan="4" class="text-center clr3"><strong>LAST</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="clr1">Since Remaining</td>
+                                                    <td class="clr1">Since New</td>
+                                                    <td class="clr1">Since OVH</td>
+                                                    <td class="clr1">Since Insp</td>
+                                                    <td class="clr1">Since Repair</td>
+                                                    <td class="clr1">Since Remaining</td>
+                                                    <td class="clr2">Since New</td>
+                                                    <td class="clr2">Since OVH</td>
+                                                    <td class="clr2">Since Insp</td>
+                                                    <td class="clr2">Since Repair</td>
+                                                    <td class="clr3">Since New</td>
+                                                    <td class="clr3">Since OVH</td>
+                                                    <td class="clr3">Since Insp</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
+                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
+                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
+                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
+                                                    <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
+                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
+                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
+                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
+                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
+                                                    <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
+                                                    <td class="clr3"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
+                                                    <td class="clr3"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
+                                                    <td class="clr3"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
+                                                </tr>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <a class="btn btn-success pull-right" (click)="saveCustomerwork()">Submit</a>
                         </div>
                         <div class="clearfix"></div>
                     </div>

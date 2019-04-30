@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -109,6 +111,20 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = unitOfWork.Repository<AssetDepConventionTypeAudit>()
+                .Find(x => x.AssetDepConventionTypeId == id)
+                .OrderByDescending(x => x.AssetDepConventionTypeAuditId);
+
+            var auditResult = new List<AuditResult<AssetDepConventionTypeAudit>>();
+
+            auditResult.Add(new AuditResult<AssetDepConventionTypeAudit> { AreaName = "Intangible", Result = audits.ToList() });
+
+            return Ok(auditResult);
         }
 
         #endregion Public Methods

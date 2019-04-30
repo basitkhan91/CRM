@@ -14,7 +14,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Models.GLAccountClass> GetAllGLAccountClassData()
         {
-            return _appContext.GLAccountClass.Include("MasterCompany").Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.GLAccountClassId).ToList();
+            return _appContext.GLAccountClass.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.GLAccountClassId).ToList();
            
         }
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

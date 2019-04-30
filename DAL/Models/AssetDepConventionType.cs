@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DAL.Models
 {
-  public class AssetDepConventionType:PasBase
+  public class AssetDepConventionType:PasBase,IAudit
     {
         public long? AssetDepConventionTypeId { get; set; }
         [Required(ErrorMessage = "Id Is Required.")]

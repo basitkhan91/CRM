@@ -19,7 +19,7 @@ export class AssetDepConventionTypeEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/assetDepConventionType/add";
     private readonly updateURL: string = "/api/assetDepConventionType/update";
     private readonly removeByIdURL: string = "/api/assetDepConventionType/removeById";
-
+    private readonly getAuditById: string = "/api/assetDepConventionType/audits";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -78,4 +78,12 @@ export class AssetDepConventionTypeEndpointService extends EndpointFactory {
             });
     }
 
+    getDepAudit<T>(assetDepConventionTypeId: number): Observable<T> {
+        let endpointUrl = `${this.getAuditById}/${assetDepConventionTypeId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDepAudit(assetDepConventionTypeId));
+            });
+    }
 }

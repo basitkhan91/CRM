@@ -5,6 +5,7 @@ import { DepreciationIntervals } from '../../models/depriciationIntervals.model'
 import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-depreciation-intervals',
@@ -25,6 +26,7 @@ export class DepreciationIntervalsComponent implements OnInit {
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    AuditDetails: SingleScreenAuditDetails[];
 
     constructor(private alertService: AlertService, private authService: AuthService, private depreciationIntervalsService: DepreciationIntervalsService, private modalService: NgbModal) {
     }
@@ -147,4 +149,17 @@ export class DepreciationIntervalsComponent implements OnInit {
         }
     }
 
+    showAuditPopup(template, assetDepreciationIntervalTypeId): void {
+        this.auditInterval(assetDepreciationIntervalTypeId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditInterval(assetDepreciationIntervalTypeId: number): void {
+        this.depreciationIntervalsService.getAudit(assetDepreciationIntervalTypeId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationIntervalTypeAuditId", "assetDepreciationIntervalTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId","isActive"];
+            }
+        });
+    }
 }

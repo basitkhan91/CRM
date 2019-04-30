@@ -79,6 +79,7 @@ export class CustomerEndpoint extends EndpointFactory {
 	private readonly _multiintegrationsdataUrl: string = "/api/Customer/savemultiIntegrations";
     private readonly _getIntegrationUrl: string = "/api/Customer/IntegrationGet";
     private readonly _listsUrl: string = "/api/Customer/GetDescriptionbypart";
+    private readonly getMarkup: string = "api/customer/getMarkUpValues";
 
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
 	get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
@@ -820,6 +821,14 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.get<T>(url, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getDescriptionbypart(name));
+            });
+    }
+
+    getMarkUpEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.getMarkup, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getMarkUpEndpoint());
             });
     }
 }

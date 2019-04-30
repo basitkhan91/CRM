@@ -35,11 +35,11 @@
                                     <p-inputSwitch *ngIf="glAccount['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(glAccount,$event)" [(ngModel)]="glAccount['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="glAccount['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(glAccount,$event)" [(ngModel)]="glAccount['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="glAccount['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(glAccount,$event)" [(ngModel)]="glAccount['isActive']"></p-inputSwitch>
-                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" (click)="showViewData(contentView,glAccount)"><i class="fa fa-eye"></i></a> </span>
-                                    <a data-toggle="tooltip" title="" class="btn btn-primary boxed-float-btn nobg" data-original-title="Edit"><i class="fa fa-edit" (click)="glAccountEdit(glAccount)"></i></a>
-                                    <span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" matTooltip="View" (click)="showViewData(contentView,glAccount)"><i class="fa fa-eye"></i></a> </span>
+                                    <a data-toggle="tooltip" title="" class="btn btn-primary boxed-float-btn nobg" data-original-title="Edit"><i class="fa fa-edit" matTooltip="Edit" (click)="glAccountEdit(glAccount)"></i></a>
+                                    <span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" matTooltip="History" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
                                     <!--<span data-toggle="modal" data-target="#delete"> <a href="#" class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a> </span>-->
-                                    <span data-toggle="modal"> <a class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete" (click)="confirmDelete(content,glAccount.glAccountId)"><i class="fa fa-trash"></i></a> </span>
+                                    <span data-toggle="modal"> <a class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete" matTooltip="Delete" (click)="confirmDelete(content,glAccount.glAccountId)"><i class="fa fa-trash"></i></a> </span>
                                 </td>
                             </tr>
                         </tbody>
