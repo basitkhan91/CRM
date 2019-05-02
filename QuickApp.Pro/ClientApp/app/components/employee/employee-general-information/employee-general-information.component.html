@@ -19,94 +19,95 @@
 									<div class="tab-pane step-data active" id="step1">
 										<div class="tab-pane active">
 											<div class="col-sm-12">
-												<div class="col-sm-6 w400">
-													<div class="form-group col-sm-12 input-icon1">
+                                                <div class="col-sm-6 w400">
+                                                    <div class="form-group col-sm-12 input-icon1">
                                                         <label class="control-label col-sm-4">Employee First Name: </label>
-														<div class="col-sm-7">
-															<div class="inner-addon right-addon inline-block">
-																<p-autoComplete [(ngModel)]="sourceEmployee.firstName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
-																				[minLength]="1" [dropdown]="true">
-																	<ng-template let-firstName pTemplate="item">
-																		<div class="ui-helper-clearfix">{{firstName}}</div>
-																	</ng-template>
-																</p-autoComplete>
-															</div>
-														</div>
-													</div>
-													<div class="form-group col-sm-12 input-icon1">
-                                                        <label class="control-label col-sm-4">Employee Last Name: </label>
-														<div class="col-sm-7">
-															<div class="inner-addon right-addon inline-block">
-																<p-autoComplete [(ngModel)]="sourceEmployee.lastName" [ngModelOptions]="{standalone: true}" [suggestions]="lastNameCollection" (completeMethod)="filterlastName($event)" [size]="30"
-																				[minLength]="1" [dropdown]="true">
-																	<ng-template let-lastName pTemplate="item">
-																		<div class="ui-helper-clearfix">{{lastName}}</div>
-																	</ng-template>
-																</p-autoComplete>
-															</div>
-														</div>
-													</div>
-													<div class="form-group col-sm-12 input-icon1">
-                                                        <label class="control-label col-sm-4">Employee Middle Name:</label>
-														<div class="col-sm-7">
-															<div class="inner-addon right-addon inline-block">
-																<p-autoComplete [(ngModel)]="sourceEmployee.middleName" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
-																				[minLength]="1" [dropdown]="true">
-																	<ng-template let-middleName pTemplate="item">
-																		<div class="ui-helper-clearfix">{{middleName}}</div>
-																	</ng-template>
-																</p-autoComplete>
-															</div>
-														</div>
-													</div>
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">Emp ID</label>
-														<div class="col-sm-7">
-																<!--<p-autoComplete [(ngModel)]="sourceEmployee.employeeId" [ngModelOptions]="{standalone: true}" [suggestions]="empIdCollection" (completeMethod)="filterempIdName($event)" [size]="30"
-																			[minLength]="1" [dropdown]="true">
-																<ng-template let-employeeId pTemplate="item">
-																	<div class="ui-helper-clearfix">{{employeeId}}</div>
-																</ng-template>
-															</p-autoComplete>-->
-																<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly>
-															
-														</div>
-													</div>
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">Emp ID (Per Payroll)</label>
-														<div class="col-sm-7">
-															<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeIdAsPerPayroll">
-														</div>
-													</div>
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">Job Title</label>
-														<div class="inner-addon col-sm-7 inline-block display-flex">
-															<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.jobTitleId">
-																<option *ngFor="let jobtitleName of allJobTitlesinfo" [ngValue]="jobtitleName.jobTitleId">{{jobtitleName.description}}</option>
-															</select>
-															<a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtitle(content)"><i class="fa fa-plus"></i></a>
+                                                        <div class="col-sm-7">
+                                                            <div class="inner-addon right-addon inline-block">
+                                                                <p-autoComplete [(ngModel)]="sourceEmployee.firstName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                                                                [minLength]="1" [dropdown]="true">
+                                                                    <ng-template let-firstName pTemplate="item">
+                                                                        <div class="ui-helper-clearfix">{{firstName}}</div>
+                                                                    </ng-template>
+                                                                </p-autoComplete>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12 input-icon1">
+                                                        <label class="control-label col-sm-4">Middle Name:</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="inner-addon right-addon inline-block">
+                                                                <p-autoComplete [(ngModel)]="sourceEmployee.middleName" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
+                                                                                [minLength]="1" [dropdown]="true">
+                                                                    <ng-template let-middleName pTemplate="item">
+                                                                        <div class="ui-helper-clearfix">{{middleName}}</div>
+                                                                    </ng-template>
+                                                                </p-autoComplete>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12 input-icon1">
+                                                        <label class="control-label col-sm-4">Last Name: </label>
+                                                        <div class="col-sm-7">
+                                                            <div class="inner-addon right-addon inline-block">
+                                                                <p-autoComplete [(ngModel)]="sourceEmployee.lastName" [ngModelOptions]="{standalone: true}" [suggestions]="lastNameCollection" (completeMethod)="filterlastName($event)" [size]="30"
+                                                                                [minLength]="1" [dropdown]="true">
+                                                                    <ng-template let-lastName pTemplate="item">
+                                                                        <div class="ui-helper-clearfix">{{lastName}}</div>
+                                                                    </ng-template>
+                                                                </p-autoComplete>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-														</div>
-                                                     </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Emp ID</label>
+                                                        <div class="col-sm-7">
+                                                            <!--<p-autoComplete [(ngModel)]="sourceEmployee.employeeId" [ngModelOptions]="{standalone: true}" [suggestions]="empIdCollection" (completeMethod)="filterempIdName($event)" [size]="30"
+                            [minLength]="1" [dropdown]="true">
+                <ng-template let-employeeId pTemplate="item">
+                    <div class="ui-helper-clearfix">{{employeeId}}</div>
+                </ng-template>
+            </p-autoComplete>-->
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly>
 
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">Emp Expertise</label>
-														<div class="inner-addon col-sm-7 inline-block display-flex">
-																<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeExpertiseId">
-																	<option *ngFor="let employeeName of allEmployeeExpertiseInfo" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
-																</select>
-																<a data-toggle="modal" data-target="#addEmpExprt" class="add-icon" (click)="openemployeeExpertise(contentEdit)"><i class="fa fa-plus"></i></a>
-															</div>
-														</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Emp ID (Per Payroll)</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeIdAsPerPayroll">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Job Title</label>
+                                                        <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.jobTitleId">
+                                                                <option *ngFor="let jobtitleName of allJobTitlesinfo" [ngValue]="jobtitleName.jobTitleId">{{jobtitleName.description}}</option>
+                                                            </select>
+                                                            <a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtitle(content)"><i class="fa fa-plus"></i></a>
 
-														<div class="form-group col-sm-12">
-															<label class="control-label col-sm-4">Station ID</label>
-															<div class="col-sm-7">
-																<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.stationId">
+                                                        </div>
+                                                    </div>
 
-															</div>
-														</div>
-													</div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Emp Expertise</label>
+                                                        <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeExpertiseId">
+                                                                <option *ngFor="let employeeName of allEmployeeExpertiseInfo" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
+                                                            </select>
+                                                            <a data-toggle="modal" data-target="#addEmpExprt" class="add-icon" (click)="openemployeeExpertise(contentEdit)"><i class="fa fa-plus"></i></a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Station ID</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.stationId">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
 
 												<div class="col-sm-6 w400">
 													<div class="form-group col-sm-12">
