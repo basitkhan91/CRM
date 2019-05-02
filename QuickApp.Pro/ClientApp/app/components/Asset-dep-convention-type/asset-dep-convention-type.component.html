@@ -74,7 +74,7 @@
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         </span>
-                                        <span data-toggle="modal" data-target="#history">
+                                        <span (click)="showAuditPopup(auditContent,assetDep.assetDepConventionTypeId)" matTooltip="History" data-toggle="modal" data-target="#history">
                                             <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
                                                 <i class="fa fa-history"></i>
                                             </a>
@@ -116,9 +116,13 @@
 </ng-template>
 
 
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
+
 <ng-template #editpopup let-c="close" let-d="dismiss">
-
-
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>

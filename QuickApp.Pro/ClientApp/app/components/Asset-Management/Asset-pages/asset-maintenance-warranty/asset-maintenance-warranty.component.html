@@ -28,7 +28,7 @@
         </div>
         <div class="clear"></div>
         <hr class="hr-light-grey">
-        <div *ngIf="currentMaintenance.isDepreciable" class="col-sm-6 w400">
+        <div  class="col-sm-6 w400">
             <div class="col-sm-12">
                 <h5 class="heading">MAINTENANCE</h5>
             </div>
@@ -93,7 +93,7 @@
                 <div class="clear"></div>
             </div>
         </div>
-        <div *ngIf="currentMaintenance.isDepreciable" class="col-sm-6 w400">
+        <div class="col-sm-6 w400">
             <div class="col-sm-12">
                 <h5 class="heading">Warranty</h5>
             </div>
@@ -154,7 +154,7 @@
         <div class="clear"></div>
     </fieldset>
 </div>
-<div *ngIf="currentMaintenance.isDepreciable">
-    <button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveWarrenty()">Save</button>
+<div>
+    <button [disabled]="currentMaintenance.isIntangible" type="submit" class="btn btn-success pull-right submit-btn" (click)="saveWarrenty()">Save</button>
     <button type="button" class="btn btn-success pull-right submit-btn" (click)="backClick()">Previous</button>
 </div>
