@@ -44,7 +44,7 @@ export class StocklinepagesComponent {
 		if (this.currentUrl) {
 			if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-line-list') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'StockLine-List' }
 				];
 			}
@@ -56,26 +56,26 @@ export class StocklinepagesComponent {
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-line-setup') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'StockLine-Cretae ' }
 				];
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-line-edit') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'StockLine-Edit ' }
 				];
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-adjustment')
 			{
 			this.items = [
-				{ label: 'StockLine' },
+				{ label: 'Stock Line' },
 				{ label: 'StockLine-Adjustment' }
 				];
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'Adjustment Reason' }
 				];
 			}
@@ -86,31 +86,31 @@ export class StocklinepagesComponent {
 		if (this.otherurl) {
 			if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-line-list') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'StockLine-List' }
 				];
 			}
 			else if (this.otherurl == '/stocklinemodule/stocklinepages/app-stock-line-setup') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'StockLine-Create' }
 				];
 			}
 			else if (this.otherurl == '/stocklinemodule/stocklinepages/app-stock-line-edit') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'StockLine-Edit' }
 				];
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-adjustment') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'StockLine-Adjustment' }
 				];
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason') {
 				this.items = [
-					{ label: 'StockLine' },
+					{ label: 'Stock Line' },
 					{ label: 'Adjustment Reason' }
 				];
 			}
