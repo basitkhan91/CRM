@@ -20,5 +20,10 @@ export class AccountCalenderService {
         return this.calendarEndpointService.addCalendar<any>(calendarObj);
     }
 
+    getAll() {
+        return Observable.forkJoin(
+            this.calendarEndpointService.getCalendarData<any[]>());
+    }
+
     
 }
