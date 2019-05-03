@@ -86,7 +86,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div>
+            <div *ngIf="currentCalibration.certificationRequired">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Certification Frequency</label>
                     <div class="col-sm-7">
@@ -140,7 +140,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div>
+            <div *ngIf="currentCalibration.inspectionRequired">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Inspection Frequency</label>
                     <div class="col-sm-7">
@@ -194,7 +194,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div>
+            <div *ngIf="currentCalibration.verificationRequired">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Verification Frequency</label>
                     <div class="col-sm-7">
