@@ -224,7 +224,7 @@ namespace DAL.Models
         public virtual Currency Currency { get; set; }
 
          public virtual ExportClassification ExportClassification { get; set; }
-
+        public virtual GLAccount GLAccount { get; set; }
     }
 
 

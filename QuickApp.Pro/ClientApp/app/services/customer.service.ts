@@ -20,6 +20,7 @@ import { AuditHistory } from '../models/audithistory.model';
 import { CustomerEndpoint } from './customer-endpoint.service';
 import { Customer } from '../models/customer.model';
 import { DiscountValue } from '../models/discountvalue';
+import { MarkUpPercentage } from '../models/markUpPercentage.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -388,5 +389,10 @@ export class CustomerService {
     getDescriptionbypart(name) {
         return Observable.forkJoin(
             this.customerEndpoint.getDescriptionbypart<any[]>(name));
+    }
+
+    getMarkUpList() {
+        return Observable.forkJoin(
+            this.customerEndpoint.getMarkUpEndpoint<MarkUpPercentage[]>());
     }
 }

@@ -6,6 +6,7 @@ using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -119,5 +120,19 @@ namespace QuickApp.Pro.Controllers
         #region Private Methods
 
         #endregion Private Methods
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = unitOfWork.Repository<AssetDepreciationIntervalTypeAudit>()
+                .Find(x => x.AssetDepreciationIntervalTypeId == id)
+                .OrderByDescending(x => x.AssetDepreciationIntervalTypeAuditId);
+
+            var auditResult = new List<AuditResult<AssetDepreciationIntervalTypeAudit>>();
+
+            auditResult.Add(new AuditResult<AssetDepreciationIntervalTypeAudit> { AreaName = "DepreciationIntervals", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
     }
 }

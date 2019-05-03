@@ -1555,6 +1555,13 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("getMarkUpValues")]
+        public IActionResult getAll()
+        {
+            var markUpPercentages = _unitOfWork.Repository<MarkUpPercentage>().GetAll().OrderByDescending(x => x.MarkUpPercentageId);
+            return Ok(markUpPercentages);
+        }
+
     }
 }
 

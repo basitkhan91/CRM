@@ -34,4 +34,7 @@ export class AssetIntangibleTypeSingleScreenService {
         return this.assetIntangibleTypeSingleScreenEndpointService.removeAssetIntangibleById(assetIntangibleTypeSingleId);
     }
 
+    getAssetIntangibleAudit(assetIntangibleTypeSingleId: number) {
+        return this.assetIntangibleTypeSingleScreenEndpointService.getAssetIntangibleAudit<any[]>(assetIntangibleTypeSingleId);
+    }
 }

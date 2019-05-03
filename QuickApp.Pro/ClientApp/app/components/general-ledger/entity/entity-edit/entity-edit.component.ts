@@ -321,7 +321,12 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.sourceLegalEntity.masterCompanyId = 1;
 			this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(
 				role => this.saveSuccessHelper(role),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.workFlowtService.getEntityforEdit().subscribe(
+                results => this.onDataLoadSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+
 		}
 		else {
 
@@ -330,7 +335,12 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.sourceLegalEntity.masterCompanyId = 1;
 			this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(
 				response => this.saveCompleted(this.sourceLegalEntity),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.workFlowtService.getEntityforEdit().subscribe(
+                results => this.onDataLoadSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+
 		}
 		if (this.modal) { this.modal.close();}
 		if (this.modal1) { this.modal1.close();}

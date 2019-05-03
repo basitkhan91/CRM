@@ -257,7 +257,18 @@ namespace DAL
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
         public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
-        public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
+        // public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
+        public DbSet<AssetIntangibleTypeSingleScreenAudit> AssetIntangibleTypeSingleScreenAudit { get; set; }
+
+        public DbSet<AssetDisposalTypeAudit> AssetdisposalTypeAudit { get; set; }
+        public DbSet<AssetDepreciationIntervalTypeAudit> AssetDepreciationIntervalTypeAudit { get; set; }
+
+        public DbSet<AssetDepConventionTypeAudit> AssetDepConventionTypeAudit { get; set; }
+
+        public DbSet<GLAccountClassAudit> GLAccountClassAudit { get; set; }
+
+        public DbSet<MarkUpPercentage> MarkUpPercentage { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

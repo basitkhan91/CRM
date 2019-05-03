@@ -34,4 +34,7 @@ export class DepreciationIntervalsService {
         return this.depreciationIntervalsEndpoint.removedepreciationIntervalById(assetDepreciationIntervalTypeId);
     }
 
+    getAudit(assetDisposalTypeId: number) {
+        return this.depreciationIntervalsEndpoint.getAudit<any[]>(assetDisposalTypeId);
+    }
 }

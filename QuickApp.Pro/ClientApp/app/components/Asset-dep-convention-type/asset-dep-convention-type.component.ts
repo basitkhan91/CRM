@@ -5,6 +5,7 @@ import { AssetDepConventionType } from "../../models/assetDepConventionType.mode
 import { AssetDepConventionTypeService } from "../../services/assetDepConventionType/assetDepConventionType.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
+import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-asset-dep-convention-type',
@@ -25,6 +26,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    AuditDetails: SingleScreenAuditDetails[];
 
     constructor(private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal, private authService: AuthService) {
     }
@@ -141,5 +143,19 @@ export class AssetDepConventionTypeComponent implements OnInit {
                 });
             })
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditDepConvention(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditDepConvention(assetDepConventionTypeId: number): void {
+        this.assetDepConventionTypeService.getAudit(assetDepConventionTypeId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetDepConventionTypeAuditId", "assetDepConventionTypeId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

@@ -14,6 +14,7 @@ export class AssetIntangibleTypeSingleScreenEndpointService extends EndpointFact
     private readonly addURL: string = "/api/AssetIntangible/add";
     private readonly updateURL: string = "/api/AssetIntangible/update";
     private readonly removeByIdURL: string = "/api/AssetIntangible/removeById";
+    private readonly getAuditById: string = "/api/AssetIntangible/audits";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -72,4 +73,12 @@ export class AssetIntangibleTypeSingleScreenEndpointService extends EndpointFact
             });
     }
 
+    getAssetIntangibleAudit<T>(assetIntangibleTypeSingleId: number): Observable<T> {
+        let endpointUrl = `${this.getAuditById}/${assetIntangibleTypeSingleId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAssetIntangibleAudit(assetIntangibleTypeSingleId));
+            });
+    }
 }

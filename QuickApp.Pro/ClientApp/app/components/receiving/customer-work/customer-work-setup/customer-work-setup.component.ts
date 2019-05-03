@@ -562,7 +562,6 @@ export class CustomerWorkSetupComponent
     }
 
     filterFirstNames(event) {
-
         this.firstNames = [];
         if (this.allCustomer) {
         for (let i = 0; i < this.allActions.length; i++) {
@@ -576,14 +575,15 @@ export class CustomerWorkSetupComponent
     }
 
     filterContacts(event) {
-
         this.workPhone = [];
         if (this.allActions) {
             if (this.allActions.length > 0) {
                 for (let i = 0; i < this.allActions.length; i++) {
                     let workPhone = this.allActions[i].workPhone;
-                    if (workPhone.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                        this.workPhone.push(workPhone);
+                    if (workPhone) {
+                        if (workPhone.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                            this.workPhone.push(workPhone);
+                        }
                     }
                 }
             }

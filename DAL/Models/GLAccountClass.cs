@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DAL.Models
 {
-   public class GLAccountClass
+   public class GLAccountClass : IAudit
     {
+        [Key]
         public long GLAccountClassId { get; set; }
 
         public long GLCID { get; set; }
@@ -28,6 +30,6 @@ namespace DAL.Models
 
         public bool? IsDelete { get; set; }
 
-        public virtual MasterCompany MasterCompany { get; set; }
+        //public virtual ICollection <MasterCompany> MasterCompany { get; set; }
     }
 }

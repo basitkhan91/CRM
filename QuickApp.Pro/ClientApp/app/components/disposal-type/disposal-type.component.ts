@@ -5,6 +5,7 @@ import { DisposalType } from '../../models/disposal-type.model';
 import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-disposal-type',
@@ -24,6 +25,7 @@ export class DisposalTypeComponent implements OnInit {
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    AuditDetails: SingleScreenAuditDetails[];
 
     constructor(private alertService: AlertService, private disposalTypeService: DisposalTypeService, private authService: AuthService, private modalService: NgbModal) {
     }
@@ -142,5 +144,19 @@ export class DisposalTypeComponent implements OnInit {
                 });
             })
         }
+    }
+
+    showAuditPopup(template, assetDisposalId): void {
+        this.auditDisposal(assetDisposalId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditDisposal(assetDisposalId: number): void {
+        this.disposalTypeService.getDisposalAudit(assetDisposalId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetDisposalTypeAuditId", "assetDisposalTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
+            }
+        });
     }
 }

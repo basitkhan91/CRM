@@ -28,6 +28,8 @@ export class ItemMasterCapabilitiesModel {
     isDelete:boolean = false;
     componentDescription: any;
     clcfNumber: any;
+    assetRecordId: number;
+
     public constructor(init?: Partial<ItemMasterCapabilitiesModel>) {
         Object.assign(this, init);
     }

@@ -36,6 +36,7 @@ import { IntegrationService } from '../../../services/integration-service';
 import { CustomerClassificationService } from '../../../services/CustomerClassification.service';
 import { DiscountValue } from '../../../models/discountvalue';
 import { TaxTypeService } from '../../../services/taxtype.service';
+import { MarkUpPercentage } from '../../../models/markUpPercentage.model';
 
 @Component({
     selector: 'app-customer-financial-information',
@@ -93,6 +94,10 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     allTaxratedetails: any[];
     selectedActionName: any;
     disableSave: boolean;
+    disableSavefoMarkUp: boolean;
+    allMarkUpList: MarkUpPercentage[];
+    markUpCollection: any[];
+    markUppercentageCollection: any;
 	ngOnInit(): void {
 		this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-financial-information';
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -103,7 +108,8 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         this.loadCurrencyData();
         this.taxratedata();
 		this.loadData();
-		this.taxRate();
+        this.taxRate();
+        this.loadMarkUpData();
         this.integrationData();
         if (this.local) {
             this.getCustomerList();
@@ -120,7 +126,8 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
     sourceCustomer: any = {};
-	public sourceAction: any = {};
+    public sourceAction: any = {};
+    currentMarkUp: MarkUpPercentage;
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
 	loadingIndicator: boolean;
@@ -644,9 +651,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		this.creditTermName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -1223,5 +1227,111 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 			results => this.onTaxrateDetails(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
+    }
+
+    openMarkUpPercentage(content) {
+
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.currentMarkUp = new MarkUpPercentage();
+        this.currentMarkUp.markUpvalue = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    onKeymarkUp(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedConsume) {
+                if (value == this.selectedConsume.toLowerCase()) {
+                    this.disableSavefoMarkUp = true;
+                }
+                else {
+                    this.disableSavefoMarkUp = false;
+
+                }
+            }
+        }
+    }
+
+    onSelectmarkUp(event) {
+        //
+        if (this.allMarkUpList) {
+
+            for (let i = 0; i < this.allMarkUpList.length; i++) {
+                if (event == this.allMarkUpList[i].markUpvalue) {
+                    this.sourceCustomer.itemClassificationCode = this.allMarkUpList[i].markUpvalue;
+                    this.disableSaveConsume = true;
+
+                    this.selectedConsume = event;
+                }
+            }
+        }
+    }
+
+    private markUpLoadData(getMarkUpValues: MarkUpPercentage[]) {
+        this.loadingIndicator = false;
+        this.dataSource.data = getMarkUpValues;
+        this.allMarkUpList = getMarkUpValues;
+    }
+
+    private loadMarkUpData() {
+        this.loadingIndicator = true;
+        this.workFlowtService.getMarkUpList().subscribe(
+            results => this.markUpLoadData(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+
+    filterForMarkUp(event) {
+
+        this.markUpCollection = [];
+        if (this.allMarkUpList) {
+            for (let i = 0; i < this.allMarkUpList.length; i++) {
+                let markUpvalue = this.allMarkUpList[i].markUpvalue;
+                if (markUpvalue.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.markUppercentageCollection.push([{
+                        "markUpPercentageId": this.allMarkUpList[i].markUpPercentageId,
+                        "markUpvalue": markUpvalue
+                    }]),
+                        this.markUpCollection.push(markUpvalue)
+                }
+            }
+        }
+    }
+
+    saveMarkUpPercentage() {
+
+        this.isSaving = true;
+        if (this.isEditMode == false) {
+            this.sourceAction.createdBy = this.userName;
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.discontValue = this.discontValue;
+            this.workFlowtService.newAddDiscount(this.sourceAction).
+                subscribe(data => {
+                    this.loadDiscountData()
+
+                })
+
+            this.activeIndex = 2;
+        }
+        else {
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.discontValue = this.discontValue;
+            this.sourceAction.masterCompanyId = 1;
+            this.workFlowtService.updatediscount(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+
+            this.activeIndex = 2;
+
+
+        }
+        this.modal.close();
+    }
 }

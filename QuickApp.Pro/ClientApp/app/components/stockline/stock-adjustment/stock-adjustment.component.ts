@@ -1954,7 +1954,7 @@ export class StockAdjustmentComponent implements OnInit {
 				console.log("Update Timelife");
 				this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
 					this.collectionofstockLine = data;
-					this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+					//this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 				})
 
 			}
@@ -1963,7 +1963,7 @@ export class StockAdjustmentComponent implements OnInit {
 					this.collectionofstockLine = data;
 
 					this.value = 1;
-					this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+					//this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 				})
 			}
 
@@ -1971,13 +1971,6 @@ export class StockAdjustmentComponent implements OnInit {
 
 			this.sourceItemMaster.itemMasterId = this.sourceStockAdjustment.im.itemMasterId;
 			this.sourceItemMaster.partId = this.selectedPartId;
-			//this.sourceItemMaster.itemTypeId = parseInt(this.sourceStockLineSetup.afterItemTypeId);
-			////Update Item Master
-			//this.stocklineser.updateItemMasterPartPost(this.sourceItemMaster).subscribe(data => { });
-
-
-		// this.modal.close();
-			
 		}
 
 		

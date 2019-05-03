@@ -31,7 +31,12 @@ namespace QuickApp.Pro.Controllers
 
         #region Public Methods
 
-        
+        [HttpGet("getAllCalendarData")]
+        public IActionResult getAll()
+        {
+            var calendaData = unitOfWork.Repository<AccountingCalendar>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AccountingCalendarId);
+            return Ok(calendaData);
+        }
 
         [HttpPost("addCalendarData")]
         public IActionResult addCalendarData([FromBody] List<AccountingCalendar> calendarObj)

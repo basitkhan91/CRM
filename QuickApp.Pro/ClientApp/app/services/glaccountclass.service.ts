@@ -55,7 +55,9 @@ export class GLAccountClassService {
 	deleteGlAccountClass(glAccountClassId: number) {
 
 		return this.glaccountclassEndpoint.getDeleteGLAccountClassIdEndpoint(glAccountClassId);
+    }
 
-	}
-
+    getGlAudit(glAccountClassId: number) {
+        return this.glaccountclassEndpoint.getGlAccountAudit<any[]>(glAccountClassId);
+    }
 }

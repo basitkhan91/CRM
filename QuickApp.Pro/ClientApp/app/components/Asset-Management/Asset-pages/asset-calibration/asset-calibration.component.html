@@ -249,7 +249,7 @@
                 <div class="clear"></div>
             </div>
         </div>
-        <div *ngIf="currentCalibration.isDepreciable && currentCalibration.calibrationRequired" class="col-sm-6 w400">
+        <div class="col-sm-6 w400">
             <div class="form-group col-sm-12 calibration-block">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -287,8 +287,8 @@
         <div class="clear"></div>
     </fieldset>
 </div>
-<div *ngIf="currentCalibration.isDepreciable && (currentCalibration.calibrationRequired || currentCalibration.certificationRequired || currentCalibration.inspectionRequired || currentCalibration.verificationRequired)">
-    <button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCalibration()">Save</button>
-</div>
+
+ <button [disabled]="currentCalibration.isIntangible" type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCalibration()">Save</button>
+
 <button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
 <button type="button" class="btn btn-success pull-right submit-btn" (click)="backClick()">Previous</button>

@@ -5,7 +5,7 @@
 			<div class="x_content">
 
 
-				<h4 class="page-heading clr-green">Legal Entity</h4>
+				<h4 class="page-heading clr-green">Legal Entity List</h4>
 				<span class="help-icon"  data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
 				<p-table #dt [value]="allATAMaininfo" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
 					<ng-template pTemplate="caption">
@@ -18,8 +18,8 @@
 								<i class="fa fa-search"></i>
 								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
 							</div>
-							<button type="button" pButton icon="fa-download" iconPos="left" label="All Data" (click)="dt.exportCSV()"></button>
-							<button type="button" pButton icon="fa-download" iconPos="left" label="Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+							<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+							<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
 							<a (click)="open(contentEdit)" matTooltip="Add Entity" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
 							<div class="excel-upload">
 								<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -53,21 +53,24 @@
 								{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
 							</td>
 
-							<td>
+                            <td>
+                                <!--<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>-->
 
-								<!--<a (click)="openEdit(contentEdit,rowData)" matTooltip="Add Entity" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
+                                <!--<a (click)="openEdit(contentEdit,rowData)" matTooltip="Add Entity" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
 
-								<button class="btn-edit" mat-icon-button (click)="openContentEdit(contentEdit,rowData)" matTooltip="Edit">
-									<mat-icon>edit</mat-icon>
-								</button>
-								<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
-									<mat-icon color="warn">delete</mat-icon>
-								</button>
-								<!--<a (click)="openHist(content,rowData)" matTooltip="Hist" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
-								<button class="btn-history" mat-icon-button matTooltip="history">
-									<mat-icon color="green">history</mat-icon>
-								</button>
-							</td>
+                                <button class="btn-edit" mat-icon-button (click)="openContentEdit(contentEdit,rowData)" matTooltip="Edit">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
+                                    <mat-icon color="warn">delete</mat-icon>
+                                </button>
+                                <!--<a (click)="openHist(content,rowData)" matTooltip="Hist" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
+                                <button class="btn-history" mat-icon-button matTooltip="history">
+                                    <mat-icon color="green">history</mat-icon>
+                                </button>
+                            </td>
 						</tr>
 					</ng-template>
 				</p-table>		
@@ -126,7 +129,7 @@
 														<div class="col-sm-7"> <input type="text" class="form-control" id="cname" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.description"> </div>
 													</div>
 													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">d/b/a</label>
+                                                        <label class="control-label col-sm-4">Doing Business As</label>
 														<div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.doingLegalAs"> </div>
 													</div>
 													<div class="form-group col-sm-12">
@@ -214,22 +217,22 @@
 														<label class="control-label col-sm-4">Tax ID</label>
 														<div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.taxId"> </div>
 													</div>
-													<div class="form-group col-sm-12">
+													<!--<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Created By</label>
 														<div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.createdBy"> </div>
 													</div>
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Created Date</label>
-														<div class="col-sm-7"><p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.createdDate"></p-calendar> <!--<input type="date" class="form-control datepicker" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.createdDate">--> </div>
-													</div>
-													<div class="form-group col-sm-12">
+														<div class="col-sm-7"><p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.createdDate"></p-calendar> <input type="date" class="form-control datepicker" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.createdDate"> </div>
+													</div>-->
+													<!--<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Modify By</label>
 														<div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.modifiedBy"> </div>
 													</div>
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Modify Date</label>
-														<div class="col-sm-7"><p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.modifiedDate"></p-calendar> <!--<input type="date" class="form-control datepicker" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.modifiedDate">--> </div>
-													</div>
+														<div class="col-sm-7"><p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.modifiedDate"></p-calendar> <input type="date" class="form-control datepicker" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.modifiedDate"> </div>
+													</div>-->
 												</div>
 												<div class="col-sm-4 ">
 													<div class="form-group col-sm-12">

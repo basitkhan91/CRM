@@ -5,6 +5,7 @@ import { AssetIntangibleTypeSingleScreen } from "../../models/assetIntangibleTyp
 import { AssetIntangibleTypeSingleScreenService } from "../../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
+import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
 
 @Component({
      selector: 'app-asset-intangible-type-single-screen',
@@ -24,6 +25,7 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    AuditDetails: SingleScreenAuditDetails[];
 
     constructor(private alertService: AlertService, private assetIntangibleService: AssetIntangibleTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
     }
@@ -141,4 +143,19 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
             })
         }
     }
+
+    showAuditPopup(template, assetIntangibleTypeSingleId): void {
+        this.auditGlAccountClass(assetIntangibleTypeSingleId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditGlAccountClass(assetIntangibleTypeSingleId: number): void {
+        this.assetIntangibleService.getAssetIntangibleAudit(assetIntangibleTypeSingleId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetIntangibleTypeSingleAuditId", "assetIntangibleTypeSingleId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
+
 }

@@ -12,19 +12,14 @@ import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { ToastyModule } from 'ng2-toasty';
 import { ChartsModule } from 'ng2-charts';
 import { NgxCarouselModule } from 'ngx-carousel';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppErrorHandler } from './app-error.handler';
 import { Globals } from './globals';
-
-
 import { SharedModule } from './shared/shared.module'
 import { AdminModule } from './admin/admin.module';
-
 import { SettingsModule } from './settings/settings.module';
 import { FooterModule } from './shared/footer.component';
 import { ThemePickerModule } from './shared/theme-picker.component';
-
 import { AppTitleService } from './services/app-title.service';
 import { AppTranslationService, TranslateLanguageLoader } from './services/app-translation.service';
 import { ConfigurationService } from './services/configuration.service';
@@ -37,98 +32,58 @@ import { AccountService } from './services/account.service';
 import { AccountEndpoint } from './services/account-endpoint.service';
 import { WorkFlowtService } from './services/workflow.service';
 import { WorkFlowEndpoint } from './services/workflow-endpoint.service';
-
 import { ActionService} from './services/action.service';
 import { ActionEndpoint } from './services/action-endpoint.service';
-
 import { AtaMainService } from './services/atamain.service';
 import { ATAMainEndpoint } from './services/atamain-endpoint.service';
-
-
 import { AtaSubChapter1Service } from './services/atasubchapter1.service';
 import { ATASubChapter1Endpoint } from './services/atasubchapter1-endpoint.service';
-
 import { AtaSubChapter2Service } from './services/atasubchapter2.service';
 import { ATASubChapter2Endpoint } from './services/atasubchapter2-endpoint.service';
-
 import { SiteService } from './services/site.service';
 import { SiteEndpoint } from './services/site-endpoint.service';
-
-//import { WarehouseService } from './services/warehouse.service';
-//import { WarehouseEndpoint } from './services/warehouse-endpoint.service';
 import { BinService } from './services/bin.service';
 import { BinEndpoint } from './services/bin-endpoint.service';
 import { CurrencyService } from './services/currency.service';
 import { CurrencyEndpoint } from './services/currency-endpoint.service';
-
-
 import { ConditionService } from './services/condition.service';
 import { ConditionEndpoint } from './services/condition-endpoint.service';
-
 import { FindingService } from './services/finding.service';
 import { FindingEndpoint } from './services/finding-endpoint.service';
-
 import { TaxRateService } from './services/taxrate.service';
 import { TaxRateEndpointService } from './services/taxrate-endpoint.service';
-
 import { VendorClassificationService } from './services/vendorclassification.service';
 import { VendorClassificationEndpoint } from './services/vendorclassification-endpoint.service';
-
 import { WorkPerformedService } from './services/workperformed.service';
 import { WorkPerformedEndpointService } from './services/workperformed-endpoint.service';
-
-
-
 import { MasterCompanyEndpoint } from './services/mastercompany-endpoint.service';
 import { MasterComapnyService } from './services/mastercompany.service';
-
-
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./components/login/login.component";
 import { LoginControlComponent } from "./components/login/login-control.component";
 import { LoginDialogComponent } from "./components/login/login-dialog.component";
 import { HomeComponent } from "./components/home/home.component";
-
 import { ProductsComponent } from "./components/products/products.component";
 import { OrdersComponent } from "./components/orders/orders.component";
-
-
-
-
-//import { TaxTypeComponent } from "./components/tax-type/tax-type.component";
-//import { SearchPoRoComponent } from "./components/receiving/po-ro/search-po-ro/search-po-ro.component";
-//import { PoRoSetupComponent } from "./components/receiving/po-ro/po-ro-setup/po-ro-setup.component";
-//import { PoSetupComponent } from "./components/receiving/po-ro/po-setup/po-setup.component";
-//import { RoSetupComponent } from "./components/receiving/po-ro/ro-setup/ro-setup.component";
-//import { ReceivingPoComponent } from "./components/receiving/po-ro/receiving-po/receiving-po.component";
-//import { ReceivingRoComponent } from "./components/receiving/po-ro/receiving-ro/receiving-ro.component";
-//import { ReceivingPoGridComponent } from "./components/receiving/po-ro/receiving-po-grid/receiving-po-grid.component";
-//import { ReceivingRoGridComponent } from "./components/receiving/po-ro/receiving-ro-grid/receiving-ro-grid.component";
 import { RmaComponent } from "./components/receiving/rma/rma.component";
 import { SalesOrderComponent } from "./components/receiving/sales-order/sales-order.component";
 import { ShippingComponent } from "./components/receiving/shipping/shipping.component";
-//import { CapabilitiesComponent } from "./components/capabilities/capabilities.component";
 import { LicTypeComponent } from "./components/lic-type/lic-type.component";
 import { OwnerComponent } from "./components/owner/owner.component";
 import { PlatformComponent } from "./components/platform/platform.component";
 import { SupervisorComponent } from "./components/supervisor/supervisor.component";
-
 import { AboutComponent } from "./components/about/about.component";
 import { NotFoundComponent } from "./components/not-found/not-found.component";
-
 import { BannerDemoComponent } from "./components/controls/banner-demo.component";
 import { TodoDemoComponent } from "./components/controls/todo-demo.component";
 import { StatisticsDemoComponent } from "./components/controls/statistics-demo.component";
 import { NotificationsViewerComponent } from "./components/controls/notifications-viewer.component";
 import { AddTaskDialogComponent } from './components/controls/add-task-dialog.component';
 import { NgbModule,NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-//import { CreditTermsComponent } from "./components/credit-terms/credit-terms.component";
 import { CreditTermsService } from "./services/Credit Terms.service";
 import { CreditTermsEndpoint } from "./services/Credit Terms-endpoint.service";
-
 import { CustomerClassificationEndpoint } from "./services/Customer Classification -endpoint.service";
 import { CustomerClassificationService } from "./services/CustomerClassification.service";
-
 import { ActionAttributeEndpointService } from "./services/actionattribute-endpoint";
 import { ActionAttributeService } from "./services/actionattribute.service";
 import { GatecodeService } from "./services/gatecode.service";
@@ -174,7 +129,6 @@ import { EmployeeService } from "./services/employee.service";
 import { EmployeeEndpoint } from "./services/employee-endpoint.service";
 import { ItemMasterService } from "./services/itemMaster.service";
 import { ItemMasterEndpoint } from "./services/itemMaster-endpoint.service";
-
 import { StocklineService } from './services/stockline.service';
 import { StocklineEndpoint } from './services/stockline-endpoint.service';
 import { ReceivingCustomerWorkService } from "./services/receivingcustomerwork.service";
@@ -195,9 +149,6 @@ import { ManufacturerService } from "./services/manufacturer.service";
 import { ManufacturerEndpoint } from "./services/manufacturer-endpoint.service";
 import { VendorCapabilitiesService } from "./services/vendorcapabilities.service";
 import { VendorCapabilitiesEndpoint } from "./services/vendorcapabilities-endpoint.service";
-
-//import { BrowserModule } from "@angular/platform-browser";
-//import { FormsModule } from "@angular/forms";
 import { LocationService } from "./services/location.service";
 import { LocationEndpoint } from "./services/location-endpoint.service";
 import { laborAndOverheadCostEndpointservice } from "./services/laborandoverheadcost-endpoint.service";
@@ -229,27 +180,15 @@ import { AssetTypeEndpointService } from "./services/AssetType/assettype-endpoin
 import { AssetTypeService } from "./services/AssetType/assettype.service";
 import { GlAccountService } from "./services/glAccount/glAccount.service";
 import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoint.service";
+import { AccountCalenderService } from "./services/account-calender/accountcalender.service";
+import { AccountCalenderEndpointService } from "./services/account-calender/accountcalender-endpoint.service";
 
-//import { TreeviewModule } from 'ngx-treeview';
-//import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown"
-//import { ChargesCreateComponent } from "./shared/Charges-Create.component";
-//import { DirectionsCreateComponent } from "./shared/Directions-Create.component";
-//import { EquipmentCreateComponent } from "./shared/Equipment-Create.component";
-//import { ExpertiseCreateComponent } from "./shared/Expertise-Create.component";
-//import { MaterialListCreateComponent } from "./shared/Material-List-Create.component";
-//import { PublicationCreateComponent } from "./shared/Publication-Create.component";
-//import { ExclusionsCreateComponent } from "./shared/Exclusions-Create.component";
-//import { MeasurementCreateComponent } from "./shared/Measurement-Create.component";
-//import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+
 
 @NgModule({
 	imports: [
 		SharedModule,
-		//Http,
-		//HttpModule ,
-		//BrowserModule,
-		//FormsModule,
-        FooterModule,
+		FooterModule,
         ThemePickerModule,
 		HttpClientModule,		
         AdminModule,       
@@ -263,13 +202,8 @@ import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoin
             }
         }),
 		ToastyModule.forRoot(),
-		//NgMultiSelectDropDownModule.forRoot(),
-        ChartsModule,
-        //NgxCarouselModule,
-       
+	    ChartsModule,       
 		NgbModule.forRoot(),
-		//NgMultiSelectDropDownModule.forRoot()
-		//TreeviewModule.forRoot()
 		
     ],
     declarations: [
@@ -279,16 +213,6 @@ import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoin
         ProductsComponent,
         OrdersComponent,
         AboutComponent,
-       
-       
-        //SearchPoRoComponent,
-		//PoRoSetupComponent
-        /*PoSetupComponent*/
-        //RoSetupComponent,
-       // ReceivingPoComponent,
-        //ReceivingRoComponent,
-        //ReceivingPoGridComponent,
-        //ReceivingRoGridComponent,
         RmaComponent,
         SalesOrderComponent,
         ShippingComponent,
@@ -296,19 +220,10 @@ import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoin
         OwnerComponent,
         PlatformComponent,
         SupervisorComponent,
-
         NotFoundComponent,
         NotificationsViewerComponent,
         AddTaskDialogComponent,
 		StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
-		//ChargesCreateComponent,
-		//DirectionsCreateComponent,
-		//EquipmentCreateComponent,
-		//ExpertiseCreateComponent,
-		//MaterialListCreateComponent,
-		//PublicationCreateComponent,
-		//ExclusionsCreateComponent,
-		//MeasurementCreateComponent,
 		
     ],
     providers: [
@@ -453,7 +368,9 @@ import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoin
         AssetTypeSingleScreenEndpointService,
         AssetTypeSingleScreenService,
         GlAccountService,
-        GlAccountEndpointService
+        GlAccountEndpointService,
+        AccountCalenderService,
+        AccountCalenderEndpointService
 		
     ],
     entryComponents: [

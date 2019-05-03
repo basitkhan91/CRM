@@ -22,6 +22,7 @@ import { FormBuilder } from '@angular/forms';
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { MasterComapnyService } from '../../services/mastercompany.service';
 import { GLAccountClass } from '../../models/glaccountclass.model';
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 
 @Component({
@@ -64,7 +65,8 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	selectedColumn: any[];
 	Active: string = "Active";
 	glclassViewFileds: any = {};
-	disablesave: boolean = false;
+    disablesave: boolean = false;
+    AuditDetails: SingleScreenAuditDetails[];
 
 
 	/** GlAccountClass ctor */
@@ -79,11 +81,8 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 
 			
 			{ field: 'glAccountClassName', header: 'GL Account Type Name' },
-			//{ field: 'glCID', header: 'ID' },
 			{ field: 'createdBy', header: 'Created By' },
 			{ field: 'updatedBy', header: 'Updated By' },
-			//{ field: 'createdDate', header: 'Created Date' },
-			//{ field: 'updatedDate', header: 'Updated Date' }
 
 
 		];
@@ -130,16 +129,12 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 
 	}
 	private onDataLoadSuccessful(allWorkFlows: any[]) {
-
-		// alert('success');
 		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		//this.dataSource.data = allWorkFlows;
+        this.loadingIndicator = false;
 		this.allGLAccountClass = allWorkFlows;
 
 	}
 	private onDataLoadFailed(error: any) {
-		// alert(error);
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 
@@ -156,9 +151,6 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		this.sourceglaccountclass.isActive = true;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
@@ -201,14 +193,14 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-	openHist(content, row) {
+	//openHist(content, row) {
 
-		this.sourceglaccountclass = row;
+	//	this.sourceglaccountclass = row;
 
-		this.workFlowtService.historyGlAccountClass(this.sourceglaccountclass.glAccountClassId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
-	}
+	//	this.workFlowtService.historyGlAccountClass(this.sourceglaccountclass.glAccountClassId).subscribe(
+	//		results => this.onHistoryLoadSuccessful(results[0], content),
+	//		error => this.saveFailedHelper(error));
+	//}
 
 	handleChange(rowData, e) {
 		if (e.checked == false) {
@@ -233,49 +225,22 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		}
 
 }
-		//eventHandler(event) {
-		//	let value = event.target.value.toLowerCase();
-		//	if (this.selectedGlAccountClassName) {
-		//		if (value == this.selectedGlAccountClassName.toLowerCase()) {
-		//			//alert("Action Name already Exists");
-		//			this.disableSave = true;
-		//		}
-		//		else {
-		//			this.disableSave = false;
-		//		}
-		//	}
-		//	else {
-		//		for (let i = 0; i < this.glaccountclassnamecolle.length; i++) {
-		//			if (value == this.glaccountclassnamecolle[i][0].glAccountclassName.toLowerCase()) {
-		//				//alert("Action Name already Exists");
-		//				this.disableSave = true;
-		//				this.selectedGlAccountClassName = event;
-		//			}
-		//		}
-		//	}
-
-		//}
-
+	
 		eventHandler(event) {
 			if (event.target.value != "") {
 				let value = event.target.value.toLowerCase();
 				if (this.selectedGlAccountClassName) {
 					if (value == this.selectedGlAccountClassName.toLowerCase()) {
-						//alert("Action Name already Exists");
 						this.disablesave = true;
 
 					}
 					else {
 						this.disablesave = false;
-
 					}
 				}
 
 			}
 		}
-	
-
-
 
 	partnmId(event) {
 		if (this.allGLAccountClass) {
@@ -289,13 +254,6 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 				}
 			}
 		}
-		//for (let i = 0; i < this.allGLAccountClass.length; i++) {
-		//	if (event == this.allGLAccountClass[i][0].glAccountclassName) {
-		//		//alert("Action Name already Exists");
-		//		this.disableSave = true;
-		//		this.selectedGlAccountClassName = event;
-		//	}
-		//}
 	}
 	filterGlAccountclass(event) {
 
@@ -325,7 +283,6 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 				this.sourceglaccountclass.createdBy = this.userName;
 				this.sourceglaccountclass.updatedBy = this.userName;
 				this.sourceglaccountclass.masterCompanyId = 1;
-				//this.sourceglaccountclass.glaccountclassname = this.glAccountclassName;
 				this.workFlowtService.newGlAccountClass(this.sourceglaccountclass).subscribe(
 					role => this.saveSuccessHelper(role),
 					error => this.saveFailedHelper(error));
@@ -386,16 +343,10 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	}
 
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-		// debugger;
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-
 		this.auditHisory = auditHistory;
-
-
 		this.modal = this.modalService.open(content, { size: 'lg' });
-
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -417,6 +368,20 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		} else {
 			return `with: ${reason}`;
 		}
-	}
+    }
+
+    showAuditPopup(template, glAccountClassId): void {
+        this.auditGlAccountClass(glAccountClassId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditGlAccountClass(glAccountClassId: number): void {
+        this.workFlowtService.getGlAudit(glAccountClassId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["glAccountClassAuditId", "glAccountClassId", "createdBy", "createdDate", "updatedDate","isActive","isDelete"];
+            }
+        });
+    }
 
 }

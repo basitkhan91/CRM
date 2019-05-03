@@ -34,4 +34,7 @@ export class AssetDepConventionTypeService {
         return this.assetDepConventionTypeEndpointService.removeAssetDepById(assetDepConventionTypeId);
     }
 
+    getAudit(assetDepConventionTypeId: number) {
+        return this.assetDepConventionTypeEndpointService.getDepAudit<any[]>(assetDepConventionTypeId);
+    }
 }
