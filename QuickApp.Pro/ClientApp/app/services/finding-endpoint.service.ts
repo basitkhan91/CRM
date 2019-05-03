@@ -16,6 +16,7 @@ export class FindingEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/Finding/Get";
     private readonly _workflowActionsNewUrl: string = "/api/Finding/findingpost";
     private readonly _actionsUrlAuditHistory: string = "/api/Finding/auditHistoryById";
+    private readonly _getAuditById: string = "/api/Finding/audits";
   
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -73,6 +74,13 @@ export class FindingEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getHistoryActionEndpoint(actionId));
             });
     }
+    getAuditById<T>(findingId: number): Observable<T> {
+        let endpointUrl = `${this._getAuditById}/${findingId}`;
 
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAuditById(findingId));
+            });
+    }
 
 }

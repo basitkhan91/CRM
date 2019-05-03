@@ -65,5 +65,7 @@ export class GatecodeService {
     historyAcion(actionId: number) {
         return Observable.forkJoin(this.gateCodeEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
     }
-
+    getAudit(gateCodeId: number) {
+        return this.gateCodeEndpoint.getAuditById<any[]>(gateCodeId);
+    }
 }

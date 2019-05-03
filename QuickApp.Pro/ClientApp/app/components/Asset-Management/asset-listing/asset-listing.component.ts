@@ -39,6 +39,7 @@ export class AssetListingComponent implements OnInit {
     selectedColumns: { field: string; header: string; }[];
     constructor(private alertService: AlertService, private assetService: AssetService, private _route: Router, private modalService: NgbModal) {
         this.assetService.isEditMode = false;
+        this.assetService.listCollection = null;
     }
 
     private onDataLoadSuccessful(allWorkFlows: any[]) {

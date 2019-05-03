@@ -61,4 +61,8 @@ export class FindingService {
         return Observable.forkJoin(this.findingEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
     }
 
+    getAuditById(findingId: number) {
+        return this.findingEndpoint.getAuditById<any[]>(findingId);
+    }
+
 }

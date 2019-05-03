@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class IntegrationViewModel
-    {
+    public class IntegrationViewModel : IAudit
+    { 
         public Int32 IntegrationPortalId { get; set; }
         public string Description { get; set; }
         public string PortalURL { get; set; }

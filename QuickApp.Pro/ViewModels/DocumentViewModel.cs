@@ -1,12 +1,9 @@
 ﻿using DAL.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class DocumentViewModel
+    public class DocumentViewModel : IAudit
     {
        
         public long DocumentId { get; set; }
@@ -27,7 +24,6 @@ namespace QuickApp.Pro.ViewModels
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public bool? IsActive { get; set; }
-        public virtual MasterCompany MasterCompany { get; set; }
         public bool? IsDelete { get; set; }
 
     }

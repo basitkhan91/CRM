@@ -15,6 +15,7 @@ import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-boo
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-default-message',
@@ -62,6 +63,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
     messageName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+    AuditDetails: SingleScreenAuditDetails[];
 
     /** Currency ctor */
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public defaultmessageService: DefaultMessageService, private dialog: MatDialog) {
@@ -394,4 +396,17 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         }
     }
 
+    showAuditPopup(template, defaultMessageId): void {
+        this.auditDefault(defaultMessageId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditDefault(defaultMessageId: number): void {
+        this.defaultmessageService.getAudit(defaultMessageId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["defaultMessageAuditId", "defaultMessageId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }

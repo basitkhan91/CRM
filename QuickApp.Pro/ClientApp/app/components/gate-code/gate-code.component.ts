@@ -15,6 +15,7 @@ import { GatecodeEndpointService } from '../../services/gatecode-endpoint.servic
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-gate-code',
@@ -66,6 +67,7 @@ export class GateCodeComponent implements OnInit, AfterViewInit {
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    AuditDetails: SingleScreenAuditDetails[];
 
 	constructor(private breadCrumb: SingleScreenBreadcrumbService,private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: GatecodeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
@@ -394,5 +396,19 @@ export class GateCodeComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, gateCodeId): void {
+        this.auditGatecode(gateCodeId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditGatecode(gateCodeId: number): void {
+        this.workFlowtService.getAudit(gateCodeId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["gateCodeAuditId", "gateCodeId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

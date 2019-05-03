@@ -505,6 +505,50 @@ export class CreateAssetComponent implements OnInit {
                     this.currentSelectedIntangibleAssetType.selectedAssetObj = {};
                     this.currentAsset.assetIntangibleTypeId = "";
                 }
+                if (this.currentAsset.calibrationRequired == false) {
+                    this.currentAsset.calibrationFrequencyMonths = null;
+                    this.currentAsset.calibrationFrequencyDays = null;
+                    this.currentAsset.calibrationDefaultVendorId = null;
+                    this.currentAsset.calibrationDefaultCost = null;
+                    this.currentAsset.calibrationCurrencyId = null;
+                    this.currentAsset.calibrationGlAccountId = null;
+                    this.currentAsset.calibrationMemo = null;
+                    this.currentAsset.minTolerance1 = null;
+                    this.currentAsset.minTolerance2 = null;
+                    this.currentAsset.maxTolerance1 = null;
+                    this.currentAsset.maxTolerance2 = null;
+                    this.currentAsset.expectedTolerance1 = null;
+                    this.currentAsset.expectedTolerance2 = null;
+                    this.currentAsset.toleranceMemo = null;
+                }
+                if (this.currentAsset.certificationRequired == false) {
+                    this.currentAsset.certificationFrequencyMonths = null;
+                    this.currentAsset.certificationFrequencyDays = null;
+                    this.currentAsset.certificationDefaultVendorId = null;
+                    this.currentAsset.certificationDefaultCost = null;
+                    this.currentAsset.certificationCurrencyId = null;
+                    this.currentAsset.certificationGlAccountId = null;
+                    this.currentAsset.certificationMemo = null;
+                }
+                if (this.currentAsset.inspectionRequired == false) {
+                    this.currentAsset.inspectionFrequencyMonths = null;
+                    this.currentAsset.inspectionFrequencyDays = null;
+                    this.currentAsset.inspectionDefaultVendorId = null;
+                    this.currentAsset.inspectionDefaultCost = null;
+                    this.currentAsset.inspectionCurrencyId = null;
+                    this.currentAsset.inspectionGlaAccountId = null;
+                    this.currentAsset.inspectionMemo = null;
+                }
+                if (this.currentAsset.verificationRequired == false) {
+                    this.currentAsset.verificationFrequencyMonths = null;
+                    this.currentAsset.verificationFrequencyDays = null;
+                    this.currentAsset.verificationDefaultVendorId = null;
+                    this.currentAsset.verificationDefaultCost = null;
+                    this.currentAsset.verificationCurrencyId = null;
+                    this.currentAsset.verificationGlAccountId = null;
+                    this.currentAsset.verificationMemo = null;
+                }
+
                 this.assetService.addAsset(this.currentAsset).subscribe(data => {
                     this.currentAsset.updatedBy = this.userName;
                     this.listCollection = data;
@@ -548,7 +592,50 @@ export class CreateAssetComponent implements OnInit {
                     delete this.currentAsset.manufacturer;
                     delete this.currentAsset.unitOfMeasure;
                 }
-                
+                if (this.currentAsset.calibrationRequired == false) {
+                    this.currentAsset.calibrationFrequencyMonths = null;
+                    this.currentAsset.calibrationFrequencyDays = null;
+                    this.currentAsset.calibrationDefaultVendorId = null;
+                    this.currentAsset.calibrationDefaultCost = null;
+                    this.currentAsset.calibrationCurrencyId = null;
+                    this.currentAsset.calibrationGlAccountId = null;
+                    this.currentAsset.calibrationMemo = null;
+                    this.currentAsset.minTolerance1 = null;
+                    this.currentAsset.minTolerance2 = null;
+                    this.currentAsset.maxTolerance1 = null;
+                    this.currentAsset.maxTolerance2 = null;
+                    this.currentAsset.expectedTolerance1 = null;
+                    this.currentAsset.expectedTolerance2 = null;
+                    this.currentAsset.toleranceMemo = null;
+                }
+                if (this.currentAsset.certificationRequired == false) {
+                    this.currentAsset.certificationFrequencyMonths = null;
+                    this.currentAsset.certificationFrequencyDays = null;
+                    this.currentAsset.certificationDefaultVendorId = null;
+                    this.currentAsset.certificationDefaultCost = null;
+                    this.currentAsset.certificationCurrencyId = null;
+                    this.currentAsset.certificationGlAccountId = null;
+                    this.currentAsset.certificationMemo = null;
+                }
+                if (this.currentAsset.inspectionRequired == false) {
+                    this.currentAsset.inspectionFrequencyMonths = null;
+                    this.currentAsset.inspectionFrequencyDays = null;
+                    this.currentAsset.inspectionDefaultVendorId = null;
+                    this.currentAsset.inspectionDefaultCost = null;
+                    this.currentAsset.inspectionCurrencyId = null;
+                    this.currentAsset.inspectionGlaAccountId = null;
+                    this.currentAsset.inspectionMemo = null;
+                }
+                if (this.currentAsset.verificationRequired == false) {
+                    this.currentAsset.verificationFrequencyMonths = null;
+                    this.currentAsset.verificationFrequencyDays = null;
+                    this.currentAsset.verificationDefaultVendorId = null;
+                    this.currentAsset.verificationDefaultCost = null;
+                    this.currentAsset.verificationCurrencyId = null;
+                    this.currentAsset.verificationGlAccountId = null;
+                    this.currentAsset.verificationMemo = null;
+                }
+
                 this.assetService.updateAsset(this.currentAsset).subscribe(data => {
                     this.currentAsset.updatedBy = this.userName;
                     this.listCollection = data;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class GatecodeClass
+   public class GatecodeClass : IAudit
     {
         [Key]
         public long GateCodeId { get; set; }

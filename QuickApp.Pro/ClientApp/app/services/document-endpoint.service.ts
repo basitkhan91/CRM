@@ -14,6 +14,7 @@ export class DocumentEndpointService extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/Document/Get";
     private readonly _actionsUrlNew: string = "/api/Document/documentpost";
     private readonly _actionsUrlAuditHistory: string = "/api/Document/auditHistoryById";
+    private readonly _getAuditById: string = "/api/Document/audits";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -76,5 +77,13 @@ export class DocumentEndpointService extends EndpointFactory {
     }
 
 
+    getAuditById<T>(assetId: number): Observable<T> {
+        let endpointUrl = `${this._getAuditById}/${assetId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAuditById(assetId));
+            });
+    }
 
 }

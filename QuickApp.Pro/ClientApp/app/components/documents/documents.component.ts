@@ -25,6 +25,7 @@ import { DocumentModel } from '../../models/document.model';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-documents',
@@ -82,6 +83,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
     modal: NgbModalRef;
     /** Actions ctor */
 
+    AuditDetails: SingleScreenAuditDetails[];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
@@ -108,9 +110,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
         );
 
         this.cols = [
-            //{ field: 'actionId', header: 'Action Id' },
 			{ field: 'documentCode', header: 'Document Code' },
-			//{ field: 'memo', header: 'Memo' },
             { field: 'description', header: 'Description' },
             { field: 'customer', header: 'Cust' },
             { field: 'itemMaster', header: 'Item Master' },
@@ -120,10 +120,6 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
             { field: 'salesOrder', header: 'SO' },
             { field: 'workOrder', header: 'WO' },
             { field: 'vendor',header:'Vendor'},
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'createdDate' }
         ];
 
         this.selectedColumns = this.cols;
@@ -457,5 +453,19 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, documentId): void {
+        this.auditDocument(documentId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditDocument(documentId: number): void {
+        this.workFlowtService.getAudit(documentId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["documentAuditId", "documentId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

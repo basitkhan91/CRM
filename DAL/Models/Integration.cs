@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class IntegrationPortal
+    public class IntegrationPortal : IAudit
     {
         [Key]
         public Int32 IntegrationPortalId { get; set; }

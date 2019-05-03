@@ -13,6 +13,7 @@ export class CustomerClassificationEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/CustomerClassification/Get";
     private readonly _customerClassPostUrl: string = "/api/CustomerClassification/CustomerclassPost";
     private readonly _actionsUrlNewAuditHistory: string = "/api/CustomerClassification/auditHistoryById";
+    private readonly getAuditById: string = "/api/CustomerClassification/audits";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -68,6 +69,15 @@ export class CustomerClassificationEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getHistoryCustomerClassification(actionId));
             });
     }
-	
+
+
+    getAuditCustomerClassification<T>(CustomerClassificationId: number): Observable<T> {
+        let endpointUrl = `${this.getAuditById}/${CustomerClassificationId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAuditCustomerClassification(CustomerClassificationId));
+            });
+    }
 
 }

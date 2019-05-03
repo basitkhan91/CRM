@@ -14,7 +14,7 @@ export class EmployeeExpertiseEndpointService extends EndpointFactory {
     private readonly _employeeExpertiseGetUrl: string = "/api/EmployeeExpertise/Get";
     private readonly _employeeExpertiseUrlNew: string = "/api/EmployeeExpertise/EmployeeExpertiseepost";
     private readonly _actionsUrlAuditHistory: string = "/api/EmployeeExpertise/auditHistoryById";
-
+    private readonly _getAuditById: string = "/api/EmployeeExpertise/audits";
     get employeeExpertiseUrl() { return this.configurations.baseUrl + this._employeeExpertiseGetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -70,6 +70,14 @@ export class EmployeeExpertiseEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getHistoryActionEndpoint(actionId));
+            });
+    }
+    getAuditById<T>(employeeExpertiseId: number): Observable<T> {
+        let endpointUrl = `${this._getAuditById}/${employeeExpertiseId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAuditById(employeeExpertiseId));
             });
     }
 }

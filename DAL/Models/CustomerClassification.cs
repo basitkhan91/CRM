@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
-    public class CustomerClassification : PasBase
+    public class CustomerClassification : PasBase, IAudit
     {
         [Key]
         public long CustomerClassificationId { get; set; }

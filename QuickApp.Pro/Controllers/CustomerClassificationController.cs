@@ -26,8 +26,7 @@ namespace QuickApp.Pro.Controllers
             _emailer = emailer;
         }
 
-        // GET: api/values
-
+        
         [HttpGet("Get")]
         [Produces(typeof(List<CustomerClassificationViewModel>))]
         public IActionResult Get()
@@ -71,7 +70,6 @@ namespace QuickApp.Pro.Controllers
 
         }
         [HttpPost("CustomerclassPost")]
-        //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] CustomerClassificationViewModel customerClassificationViewModel)
         {
             if (ModelState.IsValid)
@@ -95,6 +93,8 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+        
+
         [HttpPut("CustomerclassPost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] CustomerClassificationViewModel customerClassificationViewModel)
         {
@@ -139,5 +139,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<CustomerClassificationAudit>()
+                .Find(x => x.CustomerClassificationId == id)
+                .OrderByDescending(x => x.CustomerClassificationAuditId);
+
+            var auditResult = new List<AuditResult<CustomerClassificationAudit>>();
+
+            auditResult.Add(new AuditResult<CustomerClassificationAudit> { AreaName = "Customer Classification", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
     }
+
 }

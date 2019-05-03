@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-  public  class EmployeeExpertise : PasBase
+  public  class EmployeeExpertise : PasBase, IAudit
     {
         [Key]
         public Int16 EmployeeExpertiseId { get; set; }

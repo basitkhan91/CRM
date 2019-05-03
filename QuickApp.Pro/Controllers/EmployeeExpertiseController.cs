@@ -115,5 +115,20 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<EmployeeExpertiseAudit>()
+                .Find(x => x.EmployeeExpertiseId == id)
+                .OrderByDescending(x => x.EmployeeExpertiseAuditId);
+
+            var auditResult = new List<AuditResult<EmployeeExpertiseAudit>>();
+
+            auditResult.Add(new AuditResult<EmployeeExpertiseAudit> { AreaName = "Employee Expertise", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
     }
 }

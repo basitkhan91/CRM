@@ -61,6 +61,8 @@ export class DefaultMessageService {
         return this.defaultmessageEndpoint.getDeleteDefaultMessageEndpoint(defaultMessageId);
 
     }
-
+    getAudit(defaultMessageId: number) {
+        return this.defaultmessageEndpoint.getDefaultAudit<any[]>(defaultMessageId);
+    }
 }
 

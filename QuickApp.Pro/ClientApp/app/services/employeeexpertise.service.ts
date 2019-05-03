@@ -66,5 +66,8 @@ export class EmployeeExpertiseService {
     historyAcion(actionId: number) {
         return Observable.forkJoin(this.employeeexpertiseEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
     }
+    getAudit(employeeExpertiseId: number) {
+        return this.employeeexpertiseEndpoint.getAuditById<any[]>(employeeExpertiseId);
+    }
 
 }

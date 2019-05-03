@@ -15,6 +15,7 @@ import { MasterCompany } from '../../models/mastercompany.model';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 @Component({
     selector: 'app-findings',
     templateUrl: './findings.component.html',
@@ -33,7 +34,7 @@ export class FindingsComponent {
     selectedActionName: any;
     disableSave: boolean;
     actionamecolle: any[] = [];
-
+    AuditDetails: SingleScreenAuditDetails[];
     auditHisory: AuditHistory[];
     Active: string = "Active";
     /** Findings ctor */
@@ -398,5 +399,19 @@ export class FindingsComponent {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, findingId): void {
+        this.auditFinding(findingId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditFinding(findingId: number): void {
+        this.findingService.getAuditById(findingId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["findingAuditId", "findingId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

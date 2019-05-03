@@ -15,6 +15,7 @@ import { EmployeeExpertiseEndpointService } from '../../services/employeeexperti
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-employee-expertise',
@@ -59,6 +60,8 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
     employeeName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+    AuditDetails: SingleScreenAuditDetails[];
+
     /** Actions ctor */
 
     private isEditMode: boolean = false;
@@ -395,5 +398,19 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, employeeExpertiseId): void {
+        this.empExpretiseAudit(employeeExpertiseId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    empExpretiseAudit(employeeExpertiseId: number): void {
+        this.workFlowtService.getAudit(employeeExpertiseId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["employeeExpertiseAuditId", "employeeExpertiseId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

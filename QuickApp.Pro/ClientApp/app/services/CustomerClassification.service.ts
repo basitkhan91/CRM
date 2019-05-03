@@ -56,6 +56,8 @@ export class CustomerClassificationService {
         return Observable.forkJoin(this.CustomerClassificationEndpoint.getHistoryCustomerClassification<AuditHistory[]>(actionId));
     }
 
-	
+    getCustomerclassification(CustomerClassificationId: number) {
+        return this.CustomerClassificationEndpoint.getAuditCustomerClassification<any[]>(CustomerClassificationId);
+    }
 	
 }

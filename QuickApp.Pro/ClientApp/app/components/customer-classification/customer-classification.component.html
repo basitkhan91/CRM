@@ -58,9 +58,11 @@
                                 <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
+                                <span (click)="showAuditPopup(auditContent,rowData.CustomerClassificationId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                        <i class="fa fa-history"></i>
+                                    </a>
+                                </span>
                             </td>
                         </tr>
                     </ng-template>
@@ -72,6 +74,12 @@
 
 </div>
 
+
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
 
 
 <ng-template #content let-c="close" let-d="dismiss">

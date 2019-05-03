@@ -14,6 +14,7 @@ export class GatecodeEndpointService extends EndpointFactory {
     private readonly _gateCodeGetUrl: string = "/api/GateCode/Get";
     private readonly _gateCodeUrlNew: string = "/api/GateCode/gatecodepost";
     private readonly _actionsUrlAuditHistory: string = "/api/GateCode/auditHistoryById";
+    private readonly _getAuditById: string = "/api/GateCode/audits";
 
     get getCodeUrl() { return this.configurations.baseUrl + this._gateCodeGetUrl; }
 
@@ -72,6 +73,15 @@ export class GatecodeEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getHistoryActionEndpoint(actionId));
+            });
+    }
+
+    getAuditById<T>(gateCodeId: number): Observable<T> {
+        let endpointUrl = `${this._getAuditById}/${gateCodeId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAuditById(gateCodeId));
             });
     }
 }

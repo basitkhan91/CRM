@@ -65,5 +65,9 @@ export class DocumentService {
 
     }
 
+    getAudit(documentId: number) {
+        return this.documentEndpoint.getAuditById<any[]>(documentId);
+    }
+
 
 }

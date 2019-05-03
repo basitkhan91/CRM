@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
-    public class DefaultMessage : PasBase
+    public class DefaultMessage : PasBase, IAudit
     {
+        [Key]
         public long DefaultMessageId { get; set; }        
         public string DefaultMessageCode { get; set; }
         public string Description { get; set; }

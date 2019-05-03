@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class Finding : PasBase
+    public class Finding : PasBase, IAudit
     {
         public long FindingId { get; set; }
 

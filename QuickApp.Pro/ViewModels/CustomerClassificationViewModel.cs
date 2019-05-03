@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class CustomerClassificationViewModel
+    public class CustomerClassificationViewModel : IAudit
     {
         public Int32 CustomerClassificationId { get; set; }
 

@@ -74,24 +74,29 @@
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
+                                <span (click)="showAuditPopup(auditContent,rowData.employeeExpertiseId)" data-toggle="modal" data-target="#history">
+                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                        <i class="fa fa-history"></i>
+                                    </a>
+                                </span>
 
                             </td>
 
                         </tr>
                     </ng-template>
-
-
-
-
-
                 </p-table>
             </div>
         </div>
     </div>
 </div>
+
+
+
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
 
 <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -118,34 +123,34 @@
     </div>
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-			<div class="form-group">
-				<label for="name" class="control-label">Employee Expertise<span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
+            <div class="form-group">
+                <label for="name" class="control-label">Employee Expertise<span class="clr-red">*</span></label>
+                <div class="inner-addon right-addon inline-block">
 
-					<!--<div class="control-data">
+                    <!--<div class="control-data">
 
-		<input type="text" name="description" class="form-control" required minlength="5" #description="ngModel" [(ngModel)]="sourceAction.description">
-		<div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-			Name required.
-		</div>
-		<div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
-			Name must be at least 5 characters long.
-		</div>
-	</div>-->
-					<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-employeeName pTemplate="item">
-							<div class="ui-helper-clearfix">{{employeeName}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disableSave" class="clr-red">Already Exists</div>
-					<div class="clear"></div>
-				</div>
-				</div>
+                        <input type="text" name="description" class="form-control" required minlength="5" #description="ngModel" [(ngModel)]="sourceAction.description">
+                        <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
+                            Name required.
+                        </div>
+                        <div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
+                            Name must be at least 5 characters long.
+                        </div>
+                    </div>-->
+                    <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                        <ng-template let-employeeName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{employeeName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                    <div class="clear"></div>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
-                    <input  #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
+                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
                     <!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>

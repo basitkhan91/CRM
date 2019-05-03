@@ -269,6 +269,14 @@ namespace DAL
 
         public DbSet<MarkUpPercentage> MarkUpPercentage { get; set; }
 
+        public DbSet<CustomerClassificationAudit> CustomerClassificationAudit { get; set; }
+        public DbSet<DocumentAudit> DocumentAudit { get; set; }
+        public DbSet<DefaultMessageAudit> DefaultMessageAudit { get; set; }
+        public DbSet<EmployeeExpertiseAudit> EmployeeExpertiseAudit { get; set; }
+        public DbSet<FindingAudit> FindingAudit { get; set; }
+        public DbSet<IntegrationPortalAudit> IntegrationPortalAudit { get; set; }
+        public DbSet<GateCodeAudit> GateCodeAudit { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

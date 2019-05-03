@@ -27,12 +27,7 @@
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <a (click)="open(contentEdit)" matTooltip="Add Document" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
-                            <!--<div class="excel-upload">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
-                            </div>-->
+                           
                         </div>
 
 
@@ -51,37 +46,7 @@
                         </tr>
                     </ng-template>
 
-                    <!--<ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData">
-
-
-                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
-
-                            </td>
-
-                            <td>
-
-                                <p-checkbox [(ngModel)]="rowData['customer']" binary="true"></p-checkbox>
-                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
-
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
-
-                            </td>
-
-                        </tr>
-                    </ng-template>-->
+                  
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr [pSelectableRow]="rowData" class="ui-resizable-column" pReorderableRowHandle>
                             <td>{{rowData.documentCode}}</td>
@@ -95,10 +60,7 @@
                             <td><p-checkbox [(ngModel)]="rowData['salesOrder']" binary="true" [disabled]="true"></p-checkbox></td>
                             <td><p-checkbox [(ngModel)]="rowData['workOrder']" binary="true" [disabled]="true"></p-checkbox></td>
                             <td><p-checkbox [(ngModel)]="rowData['vendor']" binary="true" [disabled]="true"></p-checkbox></td>
-                            <td>{{rowData.createdBy}}</td>
-                            <td>{{rowData.updatedBy}}</td>
-                            <!--<td>{{rowData.createdDate| date: 'MM/dd/yyyy h:mm:ss a'}}</td>
-                            <td>{{rowData.updatedDate| date: 'MM/dd/yyyy h:mm:ss a'}}</td>-->
+                            
                             <td>
                                 <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -112,9 +74,11 @@
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
+                                <span (click)="showAuditPopup(auditContent,rowData.documentId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                        <i class="fa fa-history"></i>
+                                    </a>
+                                </span>
                             </td>
                         </tr>
                     </ng-template>
@@ -123,6 +87,13 @@
         </div>
     </div>
 </div>
+
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
+
 
 <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -152,9 +123,7 @@
 
 			<div class="form-group">
 				<label for="netDays" class="control-label">Document code</label>
-				<!--<div>
-		<input type="text" name="documentCode" class="form-control" required #documentCode="ngModel" [(ngModel)]="sourceAction.documentCode">
-	</div>-->
+			
 				<div class="inner-addon right-addon inline-block">
 
 					<p-autoComplete [(ngModel)]="documentName" [ngModelOptions]="{standalone: true}" (onSelect)="documentId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterDocuments($event)" [size]="30"

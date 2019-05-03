@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class DefaultMessageViewModel
+    public class DefaultMessageViewModel : IAudit
     {
         public long DefaultMessageId { get; set; }
 

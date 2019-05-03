@@ -13,6 +13,7 @@ export class IntegrationEndpointService extends EndpointFactory {
 
     private readonly _integrationUrl: string = "/api/Integration/Get";
 	private readonly _integrationPostUrl: string = "/api/Integration/IntegrationPost";
+    private readonly _getAuditById: string = "/api/Integration/audits";
 
 	private readonly _actionsUrlNewAuditHistory: string = "/api/Integration/auditHistoryById";
     get integrationUrl() { return this.configurations.baseUrl + this._integrationUrl; }
@@ -73,6 +74,15 @@ export class IntegrationEndpointService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getHistoryintegrationEndpoint(actionId));
 			});
-	}
+    }
+
+    getAuditById<T>(integrationPortalId: number): Observable<T> {
+        let endpointUrl = `${this._getAuditById}/${integrationPortalId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAuditById(integrationPortalId));
+            });
+    }
 
 }

@@ -67,25 +67,25 @@
                                 <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
-
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
-
+                                <!--<span (click)="showAuditPopup(auditContent,rowData.gateCodeId)" data-toggle="modal" data-target="#history">
+                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                        <i class="fa fa-history"></i>
+                                    </a>
+                                </span>-->
                             </td>
-
                         </tr>
                     </ng-template>
-
-
-
-
-
                 </p-table>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
 
 <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -112,96 +112,96 @@
     </div>
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-			<div class="form-group">
-				<label for="name" class="control-label">Status Code<span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
+            <div class="form-group">
+                <label for="name" class="control-label">Status Code<span class="clr-red">*</span></label>
+                <div class="inner-addon right-addon inline-block">
 
-					<!--<div class="control-data">
-			<input type="text" name="code" class="form-control" required minlength="5" #gateCode="ngModel" [(ngModel)]="sourceAction.gateCode">
-			<div *ngIf="gateCode.dirty && gateCode.errors?.required && gateCode.errors" class="invalid-form-error-message">
-				Name required.
-			</div>
-			<div *ngIf="gateCode.dirty && gateCode.errors?.minlength && gateCode.errors" class="invalid-form-error-message">
-				Name must be at least 5 characters long.
-			</div>
-		</div>-->
-					<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="gateCodeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterGatecodes($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-gateCodeName pTemplate="item">
-							<div class="ui-helper-clearfix">{{gateCodeName}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disableSave" style="color:red">Already Exists</div>
-					<div class="clear"></div>
-				</div>
-				</div>
-				<div class="form-group">
-					<label for="netDays" class="control-label">Sequence<span class="clr-red">*</span></label>
-					<div>
-						<input type="text" name="sequence" class="form-control" required #sequence="ngModel" [(ngModel)]="sourceAction.sequence" minlength="2">
-						<div *ngIf="sequence.dirty && sequence.errors?.required && sequence.errors" class="invalid-form-error-message">
-							Sequence is required.
-						</div>
-						<div *ngIf="sequence.dirty && sequence.errors?.minlength && sequence.errors" class="invalid-form-error-message">
-							ASequence is must be at least 2 characters long.
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<label for="netDays" class="control-label">Status Code Description<span class="clr-red">*</span></label>
-					<div>
-						<input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2">
-						<div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-							Status Code is required.
-						</div>
-						<div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
-							Status Code must be at least 2 characters long.
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<label for="description" class="control-label">Memo</label>
-					<div class="control-data">
-						<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" />
-						<!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-				Memo is required.
-			</div>
-			<div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-				Memo must be at least 2 characters long.
-			</div>-->
-					</div>
-					<div class="clear"></div>
-				</div>
-				<!--<div class="form-group">
-		<label for="masterCompanyId" class="control-label">Company</label>
-		<div class="">
-			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-				<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-			</select>
-		</div>
-		<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-			Master company required.
-		</div>
-		<div class="clear"></div>
-	</div>-->
-				<div class="form-group">
-					<div class="col-sm-6">
-						<label class="form-check-label" for="isActive">
-							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-						</label>
-					</div>
-					<div class="clear"></div>
-				</div>
+                    <!--<div class="control-data">
+                        <input type="text" name="code" class="form-control" required minlength="5" #gateCode="ngModel" [(ngModel)]="sourceAction.gateCode">
+                        <div *ngIf="gateCode.dirty && gateCode.errors?.required && gateCode.errors" class="invalid-form-error-message">
+                            Name required.
+                        </div>
+                        <div *ngIf="gateCode.dirty && gateCode.errors?.minlength && gateCode.errors" class="invalid-form-error-message">
+                            Name must be at least 5 characters long.
+                        </div>
+                    </div>-->
+                    <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="gateCodeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterGatecodes($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                        <ng-template let-gateCodeName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{gateCodeName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="disableSave" style="color:red">Already Exists</div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="netDays" class="control-label">Sequence<span class="clr-red">*</span></label>
+                <div>
+                    <input type="text" name="sequence" class="form-control" required #sequence="ngModel" [(ngModel)]="sourceAction.sequence" minlength="2">
+                    <div *ngIf="sequence.dirty && sequence.errors?.required && sequence.errors" class="invalid-form-error-message">
+                        Sequence is required.
+                    </div>
+                    <div *ngIf="sequence.dirty && sequence.errors?.minlength && sequence.errors" class="invalid-form-error-message">
+                        ASequence is must be at least 2 characters long.
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
+                <label for="netDays" class="control-label">Status Code Description<span class="clr-red">*</span></label>
+                <div>
+                    <input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2">
+                    <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
+                        Status Code is required.
+                    </div>
+                    <div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
+                        Status Code must be at least 2 characters long.
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="control-label">Memo</label>
+                <div class="control-data">
+                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" />
+                    <!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                        Memo is required.
+                    </div>
+                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                        Memo must be at least 2 characters long.
+                    </div>-->
+                </div>
+                <div class="clear"></div>
+            </div>
+            <!--<div class="form-group">
+                <label for="masterCompanyId" class="control-label">Company</label>
+                <div class="">
+                    <select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
+                        <option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
+                    </select>
+                </div>
+                <div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
+                    Master company required.
+                </div>
+                <div class="clear"></div>
+            </div>-->
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label class="form-check-label" for="isActive">
+                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                    </label>
+                </div>
+                <div class="clear"></div>
+            </div>
 
 
-				<div class="modal-footer">
+            <div class="modal-footer">
 
-					<button class="btn btn-success" [disabled]="disableSave">Submit</button>
-					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-				</div>
-</form>
+                <button class="btn btn-success" [disabled]="disableSave">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
     </div>
 
 </ng-template>

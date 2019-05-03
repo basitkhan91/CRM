@@ -40,47 +40,47 @@ export class AssetCalibrationComponent implements OnInit {
                 this.currentCalibration = this.local;
             }
             if (this.currentCalibration.calibrationRequired == false) {
-                this.currentCalibration.calibrationFrequencyMonths = "";
-                this.currentCalibration.calibrationFrequencyDays = "";
-                this.currentCalibration.calibrationDefaultVendorId = "";
-                this.currentCalibration.calibrationDefaultCost = "";
-                this.currentCalibration.calibrationCurrencyId = "";
-                this.currentCalibration.calibrationGlAccountId = "";
-                this.currentCalibration.calibrationMemo = "";
-                this.currentCalibration.minTolerance1 = "";
-                this.currentCalibration.minTolerance2 = "";
-                this.currentCalibration.maxTolerance1 = "";
-                this.currentCalibration.maxTolerance2 = "";
-                this.currentCalibration.expectedTolerance1 = "";
-                this.currentCalibration.expectedTolerance2 = "";
-                this.currentCalibration.toleranceMemo = "";
+                this.currentCalibration.calibrationFrequencyMonths = null;
+                this.currentCalibration.calibrationFrequencyDays = null;
+                this.currentCalibration.calibrationDefaultVendorId = null;
+                this.currentCalibration.calibrationDefaultCost = null;
+                this.currentCalibration.calibrationCurrencyId = null;
+                this.currentCalibration.calibrationGlAccountId = null;
+                this.currentCalibration.calibrationMemo = null;
+                this.currentCalibration.minTolerance1 = null;
+                this.currentCalibration.minTolerance2 = null;
+                this.currentCalibration.maxTolerance1 = null;
+                this.currentCalibration.maxTolerance2 = null;
+                this.currentCalibration.expectedTolerance1 = null;
+                this.currentCalibration.expectedTolerance2 = null;
+                this.currentCalibration.toleranceMemo = null;
             }
             if (this.currentCalibration.certificationRequired == false) {
-                this.currentCalibration.certificationFrequencyMonths = "";
-                this.currentCalibration.certificationFrequencyDays = "";
-                this.currentCalibration.certificationDefaultVendorId = "";
-                this.currentCalibration.certificationDefaultCost = "";
-                this.currentCalibration.certificationCurrencyId = "";
-                this.currentCalibration.certificationGlAccountId = "";
-                this.currentCalibration.certificationMemo = "";
+                this.currentCalibration.certificationFrequencyMonths = null;
+                this.currentCalibration.certificationFrequencyDays = null;
+                this.currentCalibration.certificationDefaultVendorId = null;
+                this.currentCalibration.certificationDefaultCost = null;
+                this.currentCalibration.certificationCurrencyId = null;
+                this.currentCalibration.certificationGlAccountId = null;
+                this.currentCalibration.certificationMemo = null;
             }
             if (this.currentCalibration.inspectionRequired == false) {
-                this.currentCalibration.inspectionFrequencyMonths = "";
-                this.currentCalibration.inspectionFrequencyDays = "";
-                this.currentCalibration.inspectionDefaultVendorId = "";
-                this.currentCalibration.inspectionDefaultCost = "";
-                this.currentCalibration.inspectionCurrencyId = "";
-                this.currentCalibration.inspectionGlaAccountId = "";
-                this.currentCalibration.inspectionMemo = "";
+                this.currentCalibration.inspectionFrequencyMonths = null;
+                this.currentCalibration.inspectionFrequencyDays = null;
+                this.currentCalibration.inspectionDefaultVendorId = null;
+                this.currentCalibration.inspectionDefaultCost = null;
+                this.currentCalibration.inspectionCurrencyId = null;
+                this.currentCalibration.inspectionGlaAccountId = null;
+                this.currentCalibration.inspectionMemo = null;
             }
             if (this.currentCalibration.verificationRequired == false) {
-                this.currentCalibration.verificationFrequencyMonths = "";
-                this.currentCalibration.verificationFrequencyDays = "";
-                this.currentCalibration.verificationDefaultVendorId = "";
-                this.currentCalibration.verificationDefaultCost = "";
-                this.currentCalibration.verificationCurrencyId = "";
-                this.currentCalibration.verificationGlAccountId = "";
-                this.currentCalibration.verificationMemo = "";
+                this.currentCalibration.verificationFrequencyMonths = null;
+                this.currentCalibration.verificationFrequencyDays = null;
+                this.currentCalibration.verificationDefaultVendorId = null;
+                this.currentCalibration.verificationDefaultCost = null;
+                this.currentCalibration.verificationCurrencyId = null;
+                this.currentCalibration.verificationGlAccountId = null;
+                this.currentCalibration.verificationMemo = null;
             }
 
         }
@@ -157,40 +157,40 @@ export class AssetCalibrationComponent implements OnInit {
         }
         else {
             if (this.currentCalibration.calibrationRequired == false) {
-                this.currentCalibration.calibrationFrequencyMonths = "";
-                this.currentCalibration.calibrationFrequencyDays = "";
-                this.currentCalibration.calibrationDefaultVendorId = "";
-                this.currentCalibration.calibrationDefaultCost = "";
-                this.currentCalibration.calibrationCurrencyId = "";
-                this.currentCalibration.calibrationGlAccountId = "";
-                this.currentCalibration.calibrationMemo = "";
+                this.currentCalibration.calibrationFrequencyMonths = null;
+                this.currentCalibration.calibrationFrequencyDays = null;
+                this.currentCalibration.calibrationDefaultVendorId = null;
+                this.currentCalibration.calibrationDefaultCost = null;
+                this.currentCalibration.calibrationCurrencyId = null;
+                this.currentCalibration.calibrationGlAccountId = null;
+                this.currentCalibration.calibrationMemo = null;
             }
             if (this.currentCalibration.certificationRequired == false) {
-                this.currentCalibration.certificationFrequencyMonths = "";
-                this.currentCalibration.certificationFrequencyDays = "";
-                this.currentCalibration.certificationDefaultVendorId = "";
-                this.currentCalibration.certificationDefaultCost = "";
-                this.currentCalibration.certificationCurrencyId = "";
-                this.currentCalibration.certificationGlAccountId = "";
-                this.currentCalibration.certificationMemo = "";
+                this.currentCalibration.certificationFrequencyMonths = null;
+                this.currentCalibration.certificationFrequencyDays = null;
+                this.currentCalibration.certificationDefaultVendorId = null;
+                this.currentCalibration.certificationDefaultCost = null;
+                this.currentCalibration.certificationCurrencyId = null;
+                this.currentCalibration.certificationGlAccountId = null;
+                this.currentCalibration.certificationMemo = null;
             }
             if (this.currentCalibration.inspectionRequired == false) {
-                this.currentCalibration.inspectionFrequencyMonths = "";
-                this.currentCalibration.inspectionFrequencyDays = "";
-                this.currentCalibration.inspectionDefaultVendorId = "";
-                this.currentCalibration.inspectionDefaultCost = "";
-                this.currentCalibration.inspectionCurrencyId = "";
-                this.currentCalibration.inspectionGlaAccountId = "";
-                this.currentCalibration.inspectionMemo = "";
+                this.currentCalibration.inspectionFrequencyMonths = null;
+                this.currentCalibration.inspectionFrequencyDays = null;
+                this.currentCalibration.inspectionDefaultVendorId = null;
+                this.currentCalibration.inspectionDefaultCost = null;
+                this.currentCalibration.inspectionCurrencyId = null;
+                this.currentCalibration.inspectionGlaAccountId = null;
+                this.currentCalibration.inspectionMemo = null;
             }
             if (this.currentCalibration.verificationRequired == false) {
-                this.currentCalibration.verificationFrequencyMonths = "";
-                this.currentCalibration.verificationFrequencyDays = "";
-                this.currentCalibration.verificationDefaultVendorId = "";
-                this.currentCalibration.verificationDefaultCost = "";
-                this.currentCalibration.verificationCurrencyId = "";
-                this.currentCalibration.verificationGlAccountId = "";
-                this.currentCalibration.verificationMemo = "";
+                this.currentCalibration.verificationFrequencyMonths = null;
+                this.currentCalibration.verificationFrequencyDays = null;
+                this.currentCalibration.verificationDefaultVendorId = null;
+                this.currentCalibration.verificationDefaultCost = null;
+                this.currentCalibration.verificationCurrencyId = null;
+                this.currentCalibration.verificationGlAccountId = null;
+                this.currentCalibration.verificationMemo = null;
             }
             
             this.currentCalibration.updatedBy = this.userName;

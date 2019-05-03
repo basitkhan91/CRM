@@ -15,6 +15,7 @@ import { MasterComapnyService } from '../../services/mastercompany.service';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 
 @Component({
@@ -62,6 +63,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     classificationName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+    AuditDetails: SingleScreenAuditDetails[];
     /** Currency ctor */
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal,  public CustomerClassificationService: CustomerClassificationService, private dialog: MatDialog) {
         this.displayedColumns.push('action');
@@ -368,5 +370,19 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, CustomerClassificationId): void {
+        this.auditClassification(CustomerClassificationId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditClassification(CustomerClassificationId: number): void {
+        this.CustomerClassificationService.getCustomerclassification(CustomerClassificationId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["CustomerClassificationAuditId", "CustomerClassificationId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

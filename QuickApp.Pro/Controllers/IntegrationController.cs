@@ -119,5 +119,21 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<IntegrationPortalAudit>()
+                .Find(x => x.IntegrationPortalId == id)
+                .OrderByDescending(x => x.IntegrationPortalAuditId);
+
+            var auditResult = new List<AuditResult<IntegrationPortalAudit>>();
+
+            auditResult.Add(new AuditResult<IntegrationPortalAudit> { AreaName = "Integration Portal", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
     }
-    }
+}
+

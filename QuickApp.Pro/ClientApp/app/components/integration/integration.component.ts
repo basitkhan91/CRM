@@ -16,6 +16,7 @@ import { Integration } from '../../models/integration.model';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 @Component({
     selector: 'app-integration',
     templateUrl: './integration.component.html',
@@ -36,6 +37,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
 
+    AuditDetails: SingleScreenAuditDetails[];
 
     Active: string = "Active";
 	auditHisory: AuditHistory[];
@@ -398,6 +400,18 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
             return `with: ${reason}`;
         }
     }
+    showAuditPopup(template, integrationPortalId): void {
+        this.auditIntegration(integrationPortalId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
 
+    auditIntegration(integrationPortalId: number): void {
+        this.workFlowtService.getAudit(integrationPortalId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["integrationPortalAuditId", "integrationPortalId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 
 }

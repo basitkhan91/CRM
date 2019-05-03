@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class FindingViewModel
+    public class FindingViewModel : IAudit
     {
         public long FindingId { get; set; }
 
