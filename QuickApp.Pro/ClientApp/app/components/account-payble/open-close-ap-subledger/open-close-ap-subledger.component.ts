@@ -1,5 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
+import { ConstantPool } from '@angular/compiler';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
     selector: 'app-open-close-ap-subledger',
@@ -10,15 +12,17 @@ import { AccountCalenderService } from '../../../services/account-calender/accou
 export class OpenCloseApSubledgerComponent implements OnInit {
     /** open-close-ap-subledger ctor */
     calendarArray: any = {};
+    finalCalendarArry: any = [];
     completeCalendarData: any[] = [];
-    constructor(private calendarService:AccountCalenderService) {
+    constructor(private calendarService: AccountCalenderService, private alertService:AlertService) {
 
     }
+    //based on Ledger and fiscalyear and legal entity query////
     ngOnInit() {
         this.loadAccountCalendarData();
     }
     loadAccountCalendarData() {
-        debugger;
+        //debugger;
         this.calendarService.getAll().subscribe(data => {
             this.completeCalendarData = data[0];
             for (let i = 0; i < this.completeCalendarData.length; i++) {
@@ -44,7 +48,7 @@ export class OpenCloseApSubledgerComponent implements OnInit {
             completeObj.status = 1;
         }
         else if (formatMonth > month) {
-            completeObj.status = 3;
+            completeObj.status = 2;
         }
         else if (formatMonth < month) {
             completeObj.status = 4;
@@ -60,6 +64,16 @@ export class OpenCloseApSubledgerComponent implements OnInit {
         completeObj.toDate = year + '-' + month + '-' + day;
     }
     saveCalendar() {
-        this.calendarService.add(this.calendarArray).subscribe(data => { })
+        this.calendarService.add(this.calendarArray).subscribe(data => {
+            this.alertService.showMessage('Calendar data updated successfully.');})
+    }
+    getDataBasedonYear(event) {
+        this.finalCalendarArry = [];
+        for (let i = 0; i < this.completeCalendarData.length; i++) {
+            if (event == this.completeCalendarData[i].fiscalYear) {
+                this.finalCalendarArry.push(this.completeCalendarData[i]);
+            }
+        }
+        console.log(this.finalCalendarArry);
     }
 }

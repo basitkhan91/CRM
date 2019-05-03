@@ -50,7 +50,16 @@ namespace QuickApp.Pro.Controllers
                         calendarObj[i].MasterCompanyId = 1;
                         calendarObj[i].CreatedDate = DateTime.Now;
                         calendarObj[i].UpdatedDate = DateTime.Now;
-                        unitOfWork.Repository<AccountingCalendar>().Add(calendarObj[i]);
+                        if (calendarObj[i].AccountingCalendarId > 0)
+                        {
+                            unitOfWork.Repository<AccountingCalendar>().Update(calendarObj[i]);
+                        }
+                        else
+                        {
+                            unitOfWork.Repository<AccountingCalendar>().Add(calendarObj[i]);
+                        }
+                        
+                       // unitOfWork.Repository<AccountingCalendar>().Add(calendarObj[i]);
                         unitOfWork.SaveChanges();
                         
                     }

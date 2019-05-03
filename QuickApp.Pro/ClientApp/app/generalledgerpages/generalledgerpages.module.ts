@@ -75,8 +75,7 @@ import { AccountCalenderEndpointService } from "../services/account-calender/acc
     providers: [
         NodeSetupService,
         NodeSetupEndpointService,
-        AccountCalenderService,
-        AccountCalenderEndpointService
+       
 
     ],
     exports: [

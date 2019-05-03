@@ -30,7 +30,7 @@
                             <div class="form-group col-sm-12">
                                 <label class="control-label col-sm-4">Fiscal Year</label>
                                 <div class="col-sm-7">
-                                    <select id="fiscalyear" name="fiscalyear" class="w100">
+                                    <select id="fiscalyear" name="fiscalyear" class="w100" (change)="getDataBasedonYear($event.target.value)">
                                         <option value="2018">2018</option>
                                         <option value="2019" selected="">2019</option>
                                         <option value="2020">2020</option>
@@ -63,7 +63,7 @@
                 </thead>
                 <tbody>
                
-                    <tr *ngFor="let obj of completeCalendarData">
+                    <tr *ngFor="let obj of finalCalendarArry">
                         <td>
                             <select class="w120" [(ngModel)]="obj.status">
                                 <option value="1">Current</option>
@@ -75,8 +75,8 @@
                         <td>{{obj.fiscalName}}</td>
                         <td>{{obj.fiscalYear}}</td>
                         <td>{{obj.period}}</td>
-                        <td><input type="date"  value="{{obj.fromDate}}"></td>
-                        <td><input type="date"  value="{{obj.toDate}}"></td>
+                        <td><input type="date"  value="{{obj.fromDate}}" disabled></td>
+                        <td><input type="date"  value="{{obj.toDate}}" disabled></td>
                         <td>{{obj.periodName}}</td>
                         <!--<th><input type="checkbox" /></th>-->
                     </tr>

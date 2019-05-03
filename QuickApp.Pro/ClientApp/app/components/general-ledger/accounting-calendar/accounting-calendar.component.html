@@ -29,10 +29,10 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Period Type</label>
                     <div class="col-sm-7">
-                        <select [(ngModel)]="currentCalendarObj.periodType">
-                            <option>-- Select --</option>
-                            <option>Calendar Months</option>
-                            <option>Fiscal Month</option>
+                        <select [(ngModel)]="currentCalendarObj.periodType" (change)="showNumofPeriods($event.target.value)">
+                            <option>Select</option>
+                            <option value="Calendar Months">Calendar Months</option>
+                            <option value="Fiscal Month">Fiscal Month</option>
                         </select>
                     </div>
                 </div>
@@ -41,15 +41,36 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Start Date</label>
                     <div class="col-sm-7">
-                        <input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164112" [(ngModel)]="currentCalendarObj.fromDate">
+                        <input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164112" [(ngModel)]="currentCalendarObj.fromDate" [min]="minDate" >
                     </div>
                 </div>
-                <div class="form-group col-sm-12">
+                <div class="form-group col-sm-12" *ngIf="showDefualt==true">
                     <label class="control-label col-sm-4">Num of periods</label>
                     <div class="col-sm-7">
-                        <select name="noperiods" id="noperiods" (change)="setSelectedAttribute($event.target.value)">
-                            <option>-- Select --</option>
+                        <select name="noperiods" id="noperiods">
+                            <option>Select</option>
+                            
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12" *ngIf="showCalendarMonths">
+                    <label class="control-label col-sm-4">Num of periods</label>
+                    <div class="col-sm-7">
+                        <select name="noperiods" id="noperiods" [(ngModel)]="currentCalendarObj.noOfPeriods" (change)="setSelectedAttribute($event.target.value)">
+                            <option>Select</option>
                             <option value="12">12</option>
+                            <!--<option value="13">13</option>
+                <option value="16">16</option>-->
+                            <option value="Manual">Manual</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12" *ngIf="showFiscal">
+                    <label class="control-label col-sm-4">Num of periods</label>
+                    <div class="col-sm-7">
+                        <select name="noperiods" id="noperiods" [(ngModel)]="currentCalendarObj.noOfPeriods" (change)="setSelectedAttribute($event.target.value)">
+                            <option>Select</option>
+                            <!--<option value="12">12</option>-->
                             <option value="13">13</option>
                             <option value="16">16</option>
                             <option value="Manual">Manual</option>
@@ -90,7 +111,7 @@
                     <th>From Date</th>
                     <th>To Date</th>
                     <th>Period Name</th>
-                   
+                   <th></th>
                 </tr>
             </thead>
             <tbody *ngIf="!showManual">
@@ -102,7 +123,7 @@
                     <td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164114" value="{{obj.fromDate}}"></td>
                     <td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164115" value="{{obj.toDate}}"></td>
                     <td>{{obj.periodName}}</td>
-                    <!--<th><input type="checkbox" /></th>-->
+                    <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" /></td>
                 </tr>
 
 
@@ -128,7 +149,7 @@
                     <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.fromDate}}"></td>
                     <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.toDate}}"></td>
                     <td>{{obj.periodName}}</td>
-                    <!--<th><input type="checkbox" /></th>-->
+                    <th><input type="checkbox" /></th>
                 </tr>
             </tbody>
         </table>
@@ -140,3 +161,16 @@
 
 
 </div>
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+
+
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>
