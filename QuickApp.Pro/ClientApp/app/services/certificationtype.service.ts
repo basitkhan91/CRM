@@ -57,5 +57,8 @@ export class CertificationtypeService {
 		return this.certificationtypeEndpoint.getDeleteCertificationTypeEndpoint(employeeLicenseTypeId);
 
 	}
-
+    
+    getEmployeeLicenceAudit(employeeLicenseTypeId: number) {
+        return this.certificationtypeEndpoint.getEmployeeLiceneceAuditById<any>(employeeLicenseTypeId);
+    }
 }

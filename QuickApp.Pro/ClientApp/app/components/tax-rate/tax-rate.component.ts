@@ -23,7 +23,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { TaxTypeService } from '../../services/taxtype.service';
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-tax-rate',
     templateUrl: './tax-rate.component.html',
@@ -43,7 +43,9 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
 	updatedDate: any = "";
-	display: boolean = false;
+    display: boolean = false;
+    AuditDetails: SingleScreenAuditDetails[];
+
 	showDialog() {
 		this.display = true;
 	}
@@ -452,5 +454,19 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditAssetStatus(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAssetStatus(taxRateId: number): void {
+        this.taxRateService.getTaxRateAudit(taxRateId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["TaxRateAuditId", "TaxRateId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

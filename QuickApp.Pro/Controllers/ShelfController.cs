@@ -292,5 +292,22 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<ShelfAudit>()
+                .Find(x => x.ShelfId == id)
+                .OrderByDescending(x => x.ShelfAuditId);
+
+            var auditResult = new List<AuditResult<ShelfAudit>>();
+
+            auditResult.Add(new AuditResult<ShelfAudit> { AreaName = "Shelf Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
+
+
     }
 }

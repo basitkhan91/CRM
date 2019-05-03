@@ -23,7 +23,7 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { TreeNode} from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-charges',
     templateUrl: './charges.component.html',
@@ -70,6 +70,7 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
     purchaseOrderNumber: any;
     vendorName: any;
     gridData1: TreeNode[];
+    AuditDetails: SingleScreenAuditDetails[];
     ngOnInit(): void {
 		this.loadData();
 
@@ -728,5 +729,19 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditCharge(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditCharge(chargeId: number): void {
+        this.chargeService.getChargeAudit(chargeId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["chargeAuditId", "chargeId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

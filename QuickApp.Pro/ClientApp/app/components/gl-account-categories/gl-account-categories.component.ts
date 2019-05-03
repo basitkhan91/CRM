@@ -23,6 +23,8 @@ import { Action } from 'rxjs/scheduler/Action';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+
 
 @Component({
 	selector: 'app-glaccount-category',
@@ -65,6 +67,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
     disablecategory: boolean;
     secelectcategory: any;
 	categoryViewFileds: any = {};
+    AuditDetails: SingleScreenAuditDetails[];
 
 	constructor( private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: GLAccountCategoryService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		
@@ -409,7 +412,21 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-	}
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditGlAccountCategory(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditGlAccountCategory(glAccountcategoryId: number): void {
+        this.workFlowtService.getGlAccountcategoryAudit(glAccountcategoryId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["glAccountCategoryAuditId", "glAccountCategoryId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }
 
 

@@ -38,7 +38,7 @@ namespace DAL.Models
 
         public bool? IsDelete { get; set; }
         public long? AssetIntangibleTypeSingleId { get; set; }
-        public virtual AssetIntangibleTypeSingleScreen AssetIntangibleTypeSingle { get; set; }
+        public virtual AssetIntangibleTypeSingleScreen AssetIntangibleTypeSingleScreen { get; set; }
 
     }
 }

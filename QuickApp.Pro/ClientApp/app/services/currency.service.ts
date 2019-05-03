@@ -54,5 +54,8 @@ export class CurrencyService {
     historycurrency(actionId: number) {
         return Observable.forkJoin(this.currencyEndpoint.getHistorycurrencyEndpoint<AuditHistory[]>(actionId));
     }
-
+    
+    getCurrencyAudit(currencyId: number) {
+        return this.currencyEndpoint.getCurrencyDataAuditById<any>(currencyId);
+    }
 }

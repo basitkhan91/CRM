@@ -146,10 +146,21 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<VendorClassificationAudit>()
+                .Find(x => x.VendorClassificationId == id)
+                .OrderByDescending(x => x.VendorClassificationAuditId);
+
+            var auditResult = new List<AuditResult<VendorClassificationAudit>>();
+
+            auditResult.Add(new AuditResult<VendorClassificationAudit> { AreaName = "Vendor Classification Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
     }
-
-
-
 
 }
 

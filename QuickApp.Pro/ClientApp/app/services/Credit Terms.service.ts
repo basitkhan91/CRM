@@ -56,6 +56,8 @@ export class CreditTermsService {
     historycreditterms(actionId: number) {
         return Observable.forkJoin(this.CreditTermsEndpoint.getHistorycredittermsEndpoint<AuditHistory[]>(actionId));
     }
-
+    getCreaditTermsAudit(credittermId: number) {
+        return this.CreditTermsEndpoint.getCreaditTermsAuditById<any>(credittermId);
+    }
 
 }

@@ -23,7 +23,7 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { MasterComapnyService } from '../../services/mastercompany.service';
 import { CertificationtypeService } from '../../services/certificationtype.service';
 import { CertificationType } from '../../models/certificationtype.model';
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
 	selector: 'app-certification-type',
@@ -64,7 +64,8 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 	localCollection: any[] = [];
 	selectedColumn: any[];
 	Active: string = "Active";
-	certificationViewFileds: any = {};
+    certificationViewFileds: any = {};
+    AuditDetails: SingleScreenAuditDetails[];
 	//disablesave: boolean = false;
 
 
@@ -389,4 +390,17 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+    showAuditPopup(template, id): void {
+        this.certificationType(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    certificationType(certificationTypeId: number): void {
+        this.workFlowtService.getEmployeeLicenceAudit(certificationTypeId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["employeeLicenseTypeAuditId", "employeeLicenseTypeId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }

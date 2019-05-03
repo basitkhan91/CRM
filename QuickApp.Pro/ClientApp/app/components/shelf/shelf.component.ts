@@ -22,7 +22,7 @@ import { Location } from '../../models/location.model';
 import { ShelfService } from '../../services/shelf.service';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-shelf',
     templateUrl: './shelf.component.html',
@@ -113,6 +113,8 @@ export class ShelfComponent {
 	selectedShelf: any;
 	localCollection: any[] = [];
     shelfName: any;
+    AuditDetails: SingleScreenAuditDetails[];
+
 	ngOnInit(): void {
 		this.cols = [
 			{ field: 'name', header: 'Shelf Name' },
@@ -695,11 +697,17 @@ export class ShelfComponent {
 			this.workFlowtService.updateShelf(this.sourceShelf).subscribe( //Update
 				response => this.saveCompleted(this.sourceShelf),
 				error => this.saveFailedHelper(error));
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.workFlowtService.deleteManagementShelf(this.selectedNodeTest).subscribe(data => {
 
-			this.workFlowtService.deleteManagementShelf(this.selectedNodeTest).subscribe(data => {
-				
-			});
-			this.saveManagement(this.selectedNodeTest[0].data.shelfId, this.selectedNodeTest); // will call ManagementSite Edit Data
+                });
+            }
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.saveManagement(this.selectedNodeTest[0].data.shelfId, this.selectedNodeTest); // will call ManagementSite Edit Data
+            }
+			
 			this.selectedNodeTest = []; //after Edit making empty
 		}
 
@@ -734,5 +742,19 @@ export class ShelfComponent {
 
 
 		this.loadData();
-	}
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditShelf(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditShelf(shelfId: number): void {
+        this.workFlowtService.getShelfAudit(shelfId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["shelfAuditId", "shelfId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }

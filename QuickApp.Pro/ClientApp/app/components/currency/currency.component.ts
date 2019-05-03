@@ -15,7 +15,7 @@ import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-boo
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-currency',
@@ -36,7 +36,7 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
     selectedActionName: any;
     disableSave: boolean;
     actionamecolle: any[] = [];
-
+    AuditDetails: SingleScreenAuditDetails[];
 
     auditHisory: AuditHistory[];
     Active: string = "Active";
@@ -403,4 +403,17 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
         }
     }
 
+    showAuditPopup(template, id): void {
+        this.auditCurrency(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditCurrency(currencyId: number): void {
+        this.currencyService.getCurrencyAudit(currencyId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["currencyAuditId", "currencyId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }

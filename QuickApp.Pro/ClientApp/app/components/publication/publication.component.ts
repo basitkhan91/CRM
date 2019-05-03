@@ -14,6 +14,7 @@ import { PublicationService } from '../../services/publication.service';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-publication',
@@ -38,9 +39,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
-
     disableSave: boolean = false;
 
+    AuditDetails: SingleScreenAuditDetails[];
     auditHisory: AuditHistory[];
     Active: string = "Active";
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -424,5 +425,19 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditAssetStatus(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAssetStatus(publicationId: number): void {
+        this.workFlowtService.getPublicationAudit(publicationId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["publicationAuditId", "publicationRecordId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

@@ -6,10 +6,9 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class Itemgroup
-    {
-
-        
+   public class Itemgroup:IAudit
+    {  
+        [Key]
         public long ItemGroupId { get; set; }
         public string Memo { get; set; }
 

@@ -23,6 +23,7 @@ import { VendorService } from '../../services/vendor.service';
 import { Subscription } from 'rxjs';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-vendor-classification',
@@ -41,6 +42,7 @@ export class VendorClassificationComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
+    AuditDetails: SingleScreenAuditDetails[];
 
     isSaving: boolean;
     ngOnInit(): void {
@@ -411,4 +413,19 @@ export class VendorClassificationComponent implements OnInit, AfterViewInit {
             return `with: ${reason}`;
         }
     }
+
+    showAuditPopup(template, id): void {
+        this.auditVendorClassification(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditVendorClassification(vendorClassificationId: number): void {
+        this.vendorclassificationService.getVendorClassificationAudit(vendorClassificationId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["vendorClassificationAuditId", "vendorClassificationId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
+
 }

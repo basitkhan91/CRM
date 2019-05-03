@@ -25,11 +25,11 @@
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <a (click)="open(contentEdit)" matTooltip="Add Conditions" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
                             <!--<div class="excel-upload">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
-                            </div>-->
+                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                <label for="upload">
+                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                </label>
+            </div>-->
                         </div>
 
 
@@ -61,11 +61,16 @@
                                 <button mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
-                                <button mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                <button mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.id)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
                             </td>
                         </tr>
+                    </ng-template>
+                    <ng-template #auditContent let-c="close" let-d="dismiss">
+                        <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                            <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                        </div>
                     </ng-template>
                 </p-table>
             </div>

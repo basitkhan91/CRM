@@ -14,6 +14,7 @@ export class JobTitleEndpontService extends EndpointFactory {
     private readonly _JobTilesUrl: string = "/api/JobTitle/Get";
     private readonly _JobTilesUrlNew: string = "/api/JobTitle/jobTitlepost";
     private readonly _JobTilesUrlAuditHistory: string = "/api/JobTitle/auditHistoryById";
+    private readonly getJobTitleDataAuditById: string = "/api/JobTitle/audits";
 
     get jobtitleurl() { return this.configurations.baseUrl + this._JobTilesUrl; }
 
@@ -72,5 +73,14 @@ export class JobTitleEndpontService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getHistoryJobTitleEndpoint(jobTitleId));
 			});
-	}
+    }
+    
+    getJobTitleAuditById<T>(jobTitleId: number): Observable<T> {
+        let endpointUrl = `${this.getJobTitleDataAuditById}/${jobTitleId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getJobTitleAuditById(jobTitleId));
+            });
+    }
 }

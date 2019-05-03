@@ -63,7 +63,12 @@ export class JobTitleService {
 
 	historyJobTitle(actionId: number) {
 		return Observable.forkJoin(this.jobTitleEndpoint.getHistoryJobTitleEndpoint<AuditHistory[]>(actionId));
-	}
+    }
+
+    
+    getJobTitleAudit(jobTitleId: number) {
+        return this.jobTitleEndpoint.getJobTitleAuditById<any>(jobTitleId);
+    }
 
 
 }

@@ -24,6 +24,7 @@ import { BinService } from '../../services/bin.service';
 import { Bin } from '../../models/bin.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
 	selector: 'app-bin',
@@ -118,6 +119,7 @@ export class BinComponent {
 	localCollection: any[] = [];
 	disableSaveManufacturer: boolean = false;
     selectedBin: any;
+    AuditDetails: SingleScreenAuditDetails[];
 
 	ngOnInit(): void {
 		this.cols = [
@@ -795,5 +797,19 @@ export class BinComponent {
 
 
 		this.loadData();
-	}
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditBin(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditBin(binId: number): void {
+        this.workFlowtService.getBinAudit(binId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["binAuditId", "binId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }

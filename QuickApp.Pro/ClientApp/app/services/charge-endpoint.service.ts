@@ -20,6 +20,7 @@ export class ChargeEndpoint extends EndpointFactory {
 	private readonly _actionsIntegrationPortal: string = "/api/Charge/GetIntegrationPortalNames";
     private readonly _workflowActionsNewUrl: string = "/api/Charge/ChargePost";
     private readonly _actionsUrlAuditHistory: string = "/api/Charge/auditHistoryById";
+    private readonly getChargeAuditDataById: string = "/api/Charge/audits";
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 	get actionsCurrency() { return this.configurations.baseUrl + this._actionsCurrency; }
@@ -110,6 +111,15 @@ export class ChargeEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getHistoryChargeEndpoint(chargeId));
+            });
+    }
+
+    getChargeAuditById<T>(chargeId: number): Observable<T> {
+        let endpointUrl = `${this.getChargeAuditDataById}/${chargeId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getChargeAuditById(chargeId));
             });
     }
 

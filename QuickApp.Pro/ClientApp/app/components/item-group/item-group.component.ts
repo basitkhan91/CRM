@@ -14,7 +14,7 @@ import { ItemGroupService } from '../../services/item-group.service';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-item-group',
@@ -35,7 +35,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     disableSave: boolean = false;
-
+    AuditDetails: SingleScreenAuditDetails[];
 
     auditHisory: AuditHistory[];
     Active: string = "Active";
@@ -407,5 +407,19 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditItemGroup(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditItemGroup(itemGroupId: number): void {
+        this.workFlowtService.getItemGroupAudit(itemGroupId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["itemGroupAuditId", "itemGroupId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

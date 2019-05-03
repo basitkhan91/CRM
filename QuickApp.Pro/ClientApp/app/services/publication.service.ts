@@ -65,5 +65,9 @@ export class PublicationService {
         return Observable.forkJoin(this.publicationEndpoint.getHistoryActionEndpoin<AuditHistory[]>(actionId));
     }
 
+    getPublicationAudit(publicationId: number) {
+        return this.publicationEndpoint.getPublincationAuditById<any>(publicationId);
+    }
+
 
 }

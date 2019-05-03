@@ -14,7 +14,7 @@ export class VendorClassificationEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/VendorClassification/Get";
     private readonly _actionsUrlNew: string = "/api/VendorClassification/vendorclassification";
     private readonly _actionsUrlAuditHistory: string = "/api/VendorClassification/auditHistoryById";
-
+    private readonly getVendorClassificationAuditById: string = "/api/VendorClassification/audits";
 
 
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
@@ -78,6 +78,14 @@ export class VendorClassificationEndpoint extends EndpointFactory {
             });
     }
 
+    getVendorClassificationDataAuditById<T>(vendorclassificationId: number): Observable<T> {
+        let endpointUrl = `${this.getVendorClassificationAuditById}/${vendorclassificationId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorClassificationDataAuditById(vendorclassificationId));
+            });
+    }
 
 }
 

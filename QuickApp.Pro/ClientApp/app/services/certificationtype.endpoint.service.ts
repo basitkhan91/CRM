@@ -12,7 +12,10 @@ export class CertificationTypeEndpoint extends EndpointFactory {
 
 	private readonly _certoificationtypeUrl: string = "/api/CertificationType/Get";
 	private readonly _certoificationtypeUrlNew: string = "/api/CertificationType/certificationtypepost";
-	private readonly _certoificationtypeUrlAuditHistory: string = "/api/CertificationType/auditHistoryById";
+    private readonly _certoificationtypeUrlAuditHistory: string = "/api/CertificationType/auditHistoryById";
+
+    private readonly getCertificationAuditById: string = "/api/CertificationType/audits";
+
 	get certificationtypeUrl() { return this.configurations.baseUrl + this._certoificationtypeUrl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -68,6 +71,15 @@ export class CertificationTypeEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getHistoryCertificationTypeEndpoint(EmployeeLicenseTypeId));
 			});
-	}
+    }
+    
+    getEmployeeLiceneceAuditById<T>(EmployeeLicenseTypeId: number): Observable<T> {
+        let endpointUrl = `${this.getCertificationAuditById}/${EmployeeLicenseTypeId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getEmployeeLiceneceAuditById(EmployeeLicenseTypeId));
+            });
+    }
 
 }

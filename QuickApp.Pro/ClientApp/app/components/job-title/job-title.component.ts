@@ -21,7 +21,7 @@ import { JobTitle } from '../../models/jobtitle.model';
 import { JobTitleService } from '../../services/job-title.service';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-job-title',
     templateUrl: './job-title.component.html',
@@ -39,7 +39,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     disableSave: boolean = false;
-
+    AuditDetails: SingleScreenAuditDetails[];
 
     ngOnInit(): void {
 		this.loadData();
@@ -412,5 +412,19 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditJobTitle(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditJobTitle(jobTitleId: number): void {
+        this.workFlowtService.getJobTitleAudit(jobTitleId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["jobTitleAuditId", "jobTitleId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

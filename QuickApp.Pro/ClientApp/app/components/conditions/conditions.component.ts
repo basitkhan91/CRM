@@ -15,6 +15,7 @@ import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-boo
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-conditions',
     templateUrl: './conditions.component.html',
@@ -33,7 +34,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
-
+    AuditDetails: SingleScreenAuditDetails[];
     auditHisory: AuditHistory[];
     /** Conditions ctor */
    
@@ -388,6 +389,20 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditCondition(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditCondition(conditionId: number): void {
+        this.conditionService.getConditionAudit(conditionId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["conditionAuditId", "conditionId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 
 }

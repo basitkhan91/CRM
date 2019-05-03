@@ -14,7 +14,7 @@ export class ATAMainEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/ATAMain/Get";
     private readonly _actionsUrlNew: string = "/api/ATAMain/actions";
 	private readonly _actionsUrlAuditHistory: string = "/api/ATAMain/ataauditHistoryById";
-
+    private readonly getAtaChapterDataAuditById: string = "/api/ATAMain/audits";
 
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -72,6 +72,16 @@ export class ATAMainEndpoint extends EndpointFactory {
         return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getDeleteATAMainEndpoint(ataChapterId));
+            });
+    }
+
+    
+    getAtaChapterAuditById<T>(ataChapterId: number): Observable<T> {
+        let endpointUrl = `${this.getAtaChapterDataAuditById}/${ataChapterId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaChapterAuditById(ataChapterId));
             });
     }
 

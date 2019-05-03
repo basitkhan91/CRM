@@ -62,7 +62,7 @@ namespace DAL
 
         IReasonRepository Reasons { get; }
 
-        ITaxRateRepository TaxRates { get; }
+        ITaxRateRepository TaxRate { get; }
 
         ITaxTypeRepository TaxType { get; }
 

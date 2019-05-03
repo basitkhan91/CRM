@@ -2,11 +2,13 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-    public class Bin:PasBase
+    public class Bin:PasBase,IAudit
     {
+        [Key]
         public long BinId { get; set; }
         [ForeignKey("ShelfId")]
         public long? ShelfId { get; set; }

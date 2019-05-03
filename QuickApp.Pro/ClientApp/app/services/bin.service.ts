@@ -101,6 +101,9 @@ export class BinService {
 	deleteManagementBin(data: any) {
 		return this.binEndpoint.getDeleteManagementBinEndpoint(data[0].data.binId);
 	}
-
+    
+    getBinAudit(binId: number) {
+        return this.binEndpoint.getBinAuditDataById<any>(binId);
+    }
 
 }

@@ -14,7 +14,7 @@ export class WorkPerformedEndpointService extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/WorkPerformed/Get";
     private readonly _actionsUrlNew: string = "/api/WorkPerformed/workperformed";
     private readonly _actionsUrlAuditHistory: string = "/api/WorkPerformed/auditHistoryById";
-
+    private readonly workPerformedDataAuditById: string = "/api/WorkPerformed/audits";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -71,6 +71,14 @@ export class WorkPerformedEndpointService extends EndpointFactory {
         return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getDeleteWorkPerformedEndpoint(workPerformedId));
+            });
+    }
+    getWorkPerformedAuditById<T>(workPerformedId: number): Observable<T> {
+        let endpointUrl = `${this.workPerformedDataAuditById}/${workPerformedId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getWorkPerformedAuditById(workPerformedId));
             });
     }
 

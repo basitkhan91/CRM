@@ -61,6 +61,9 @@ export class ReasonService {
         return this.reasonEndpoint.getDeleteReasonEndpoint(reasonId);
 
     }
+    getReasonAudit(reasonId: number) {
+        return this.reasonEndpoint.getReasonAuditById<any>(reasonId);
+    }
 
 }
 

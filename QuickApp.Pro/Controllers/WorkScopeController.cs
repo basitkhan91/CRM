@@ -148,6 +148,21 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<WorkScopeAudit>()
+                .Find(x => x.WorkScopeId == id)
+                .OrderByDescending(x => x.WorkScopeAuditId);
+
+            var auditResult = new List<AuditResult<WorkScopeAudit>>();
+
+            auditResult.Add(new AuditResult<WorkScopeAudit> { AreaName = "WorkScope Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
     }
 
 

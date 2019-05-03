@@ -62,6 +62,10 @@ export class AtaSubChapter1Service {
 
 		return this.ataSubChapter1Endpoint.getDeleteATASubChapter1Endpoint(ataSubChapterId);
 
-	}
+    }
+    
+    getAtaSubChapterAudit(ataSubChapterId: number) {
+        return this.ataSubChapter1Endpoint.getATASubChapterAuditById<any>(ataSubChapterId);
+    }
 
 }

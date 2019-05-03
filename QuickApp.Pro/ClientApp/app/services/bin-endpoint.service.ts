@@ -20,7 +20,9 @@ export class BinEndpoint extends EndpointFactory {
 	private readonly _actionsUrlNew3: string = "/api/BinComponent/GetLocations";
 	private readonly _actionsUrlNew4: string = "/api/BinComponent/GetShelfs";
 	private readonly _actionsUrlNew5: string = "/api/BinComponent/GetBins";
-	private readonly _actionsUrlAuditHistory: string = "/api/BinComponent/ataauditHistoryById";
+    private readonly _actionsUrlAuditHistory: string = "/api/BinComponent/ataauditHistoryById";
+
+    private readonly getBinAuditById: string = "/api/BinComponent/audits";
 	//private readonly _countryUrl: string = "/api/Site/GetcountryList";
 	//private readonly _countryUrlNew: string = "api/Site/postCountryList";
 
@@ -173,5 +175,15 @@ export class BinEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getShelfDataEndpoint(binId));
 			});
-	}
+    }
+
+    
+    getBinAuditDataById<T>(binId: number): Observable<T> {
+        let endpointUrl = `${this.getBinAuditById}/${binId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getBinAuditDataById(binId));
+            });
+    }
 }

@@ -14,7 +14,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { AuthService } from '../../services/auth.service';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-credit-terms',
@@ -23,7 +23,8 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
     animations: [fadeInOut]
 })
 /** CreditTerms component*/
-export class CreditTermsComponent implements OnInit, AfterViewInit{
+export class CreditTermsComponent implements OnInit, AfterViewInit
+{
     selectedActionName: any;
     disableSave: boolean;
     actionamecolle: any[] = [];
@@ -38,6 +39,7 @@ export class CreditTermsComponent implements OnInit, AfterViewInit{
     updatedDate: any = "";
     auditHisory: AuditHistory[];
     Active: string = "Active";
+    AuditDetails: SingleScreenAuditDetails[];
     /** CreditTerms ctor */
    
 @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -381,4 +383,19 @@ ngAfterViewInit() {
             return `with: ${reason}`;
         }
     }
+
+    showAuditPopup(template, id): void {
+        this.auditCreditTerms(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditCreditTerms(creditTermId: number): void {
+        this.CreditTermsService.getCreaditTermsAudit(creditTermId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["creditTermsAuditId", "creditTermsId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
+
 }

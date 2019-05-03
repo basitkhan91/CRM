@@ -342,5 +342,22 @@ namespace QuickApp.Pro.Controllers
             //_unitOfWork.managementSite.Update(existingResult);
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<BinAudit>()
+                .Find(x => x.BinId == id)
+                .OrderByDescending(x => x.BinAuditId);
+
+            var auditResult = new List<AuditResult<BinAudit>>();
+
+            auditResult.Add(new AuditResult<BinAudit> { AreaName = "Bin Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
+
+
     }
 }

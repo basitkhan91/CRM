@@ -19,6 +19,8 @@ export class LocationEndpoint extends EndpointFactory {
 	private readonly _actionLOcationStock: string = "/api/Location/GetLocationStockData";
     private readonly _actionsUrlAuditHistory: string = "/api/Location/ataauditHistoryById";
     private readonly _actionsUrlManagementPost: string = "/api/Location/managementLocationPost"; //change
+
+    private readonly getLocationDataAuditById: string = "/api/Location/audits";
 	//private readonly _countryUrl: string = "/api/Site/GetcountryList";
 	//private readonly _countryUrlNew: string = "api/Site/postCountryList";
 
@@ -155,4 +157,13 @@ export class LocationEndpoint extends EndpointFactory {
 			});
 	}
 
+    
+    getLocationAuditById<T>(locationId: number): Observable<T> {
+        let endpointUrl = `${this.getLocationDataAuditById}/${locationId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getLocationAuditById(locationId));
+            });
+    }
 }

@@ -14,6 +14,7 @@ export class PriorityEndpointService extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/Priority/Get";
     private readonly _actionsUrlNew: string = "/api/Priority/priority";
     private readonly _actionsUrlNewAuditHistory: string = "/api/Priority/auditHistoryById";
+    private readonly getPrioriryDataAuditById: string = "/api/Priority/audits";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -72,4 +73,13 @@ export class PriorityEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getHistoryPriorityEndpoint(priorityId));
             });
     }
+    getPrioriryAuditById<T>(priorityId: number): Observable<T> {
+        let endpointUrl = `${this.getPrioriryDataAuditById}/${priorityId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPrioriryAuditById(priorityId));
+            });
+    }
+    
 }

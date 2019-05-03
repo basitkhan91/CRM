@@ -22,6 +22,7 @@ import { Warehouse } from '../../models/warehouse.model';
 import { Location } from '../../models/location.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-location',
@@ -107,7 +108,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
     showManagement: boolean;
 	Active: string = "Active";
 	actionamecolle: any[] = [];
-    
+    AuditDetails: SingleScreenAuditDetails[];
     localWareHouseManagementWarehouseCollection: any;
 	disableSaveManufacturer: boolean = false;;
     selectedLocation: any;
@@ -735,11 +736,14 @@ export class LocationComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateLocation(this.sourceLocation).subscribe( //Update
 				response => this.saveCompleted(this.sourceLocation),
 				error => this.saveFailedHelper(error));
-
-			this.workFlowtService.deleteManagementLocation(this.selectedNodeTest).subscribe(data => {
-				//alert("getting delete");
-			});
-			this.saveManagement(this.selectedNodeTest[0].data.locationId, this.selectedNodeTest); // will call ManagementSite Edit Data
+            if (this.selectedNodeTest && this.selectedNodeTest.length>0) {
+                this.workFlowtService.deleteManagementLocation(this.selectedNodeTest).subscribe(data => {
+                    //alert("getting delete");
+                });
+            }
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0) {
+                this.saveManagement(this.selectedNodeTest[0].data.locationId, this.selectedNodeTest);
+            }// will call ManagementSite Edit Data
 			this.selectedNodeTest = []; //after Edit making empty
 		}
 
@@ -772,7 +776,21 @@ export class LocationComponent implements OnInit, AfterViewInit {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 		this.loadData();
-	}
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditLocation(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditLocation(locationId: number): void {
+        this.workFlowtService.getLocationAudit(locationId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["locationAuditId", "locationId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 
 	
 }

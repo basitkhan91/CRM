@@ -157,6 +157,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<ATAChapterAudit>()
+                .Find(x => x.ATAChapterId == id)
+                .OrderByDescending(x => x.ATAChapterAuditId);
+
+            var auditResult = new List<AuditResult<ATAChapterAudit>>();
+
+            auditResult.Add(new AuditResult<ATAChapterAudit> { AreaName = "ATA Chapter Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
     }
 
 

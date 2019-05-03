@@ -23,7 +23,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { ATAChapter } from '../../models/atachapter.model';
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
 	selector: 'app-ata-sub-chapter1',
 	templateUrl: './ata-sub-chapter1.component.html',
@@ -46,6 +46,7 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 	actionamecolle: any[] = [];
     description: string;
     ataChapterCode: any;
+    AuditDetails: SingleScreenAuditDetails[];
 	/** AtaSubChapter1 ctor */
 	ngOnInit(): void {
 		this.loadData();
@@ -492,7 +493,21 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 		} else {
 			return `with: ${reason}`;
 		}
-	}
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditAtaSubchapter(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAtaSubchapter(ataSubChapterId: number): void {
+        this.ataSubChapter1Service.getAtaSubChapterAudit(ataSubChapterId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["ataSubChapterAuditId", "ataSubChapterId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }
 
 

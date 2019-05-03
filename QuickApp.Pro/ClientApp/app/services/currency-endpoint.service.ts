@@ -15,6 +15,8 @@ export class CurrencyEndpoint extends EndpointFactory {
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
     private readonly _currencyPostUrl: string = "/api/Currency/CurrencyPost";
     private readonly _actionsUrlNewAuditHistory: string = "/api/Currency/auditHistoryById";
+    private readonly getCurrencyAuditById: string = "/api/Currency/audits";
+
     get CurrencyUrl() { return this.configurations.baseUrl + this._currencyUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -69,6 +71,14 @@ export class CurrencyEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getHistorycurrencyEndpoint(actionId));
             });
     }
+    
+    getCurrencyDataAuditById<T>(currencyId: number): Observable<T> {
+        let endpointUrl = `${this.getCurrencyAuditById}/${currencyId}`;
 
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCurrencyDataAuditById(currencyId));
+            });
+    }
 
 }

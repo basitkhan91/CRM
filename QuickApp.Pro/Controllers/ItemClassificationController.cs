@@ -125,5 +125,20 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<ItemClassificationAudit>()
+                .Find(x => x.ItemClassificationId == id)
+                .OrderByDescending(x => x.ItemClassificationAuditId);
+
+            var auditResult = new List<AuditResult<ItemClassificationAudit>>();
+
+            auditResult.Add(new AuditResult<ItemClassificationAudit> { AreaName = "Item Classification Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
     }
 }

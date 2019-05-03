@@ -91,5 +91,8 @@ export class LocationService {
 
 	deleteManagementLocation(data: any) {
 		return this.locationEndpoint.getDeleteManagementLocationEndpoint(data[0].data.locationId);
-	}
+    }
+    getLocationAudit(locationId: number) {
+        return this.locationEndpoint.getLocationAuditById<any>(locationId);
+    }
 }

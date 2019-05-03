@@ -13,7 +13,7 @@ export class GLAccountCategoryEndpointservice extends EndpointFactory {
 	private readonly _glaccountcategoryUrl: string = "/api/GLAccountCategory/Get";
 	private readonly _glaccountcategoryUrlNew: string = "/api/GLAccountCategory/glaccountcategorypost";
 	private readonly _glaccountcategoryUrlAuditHistory: string = "/api/GLAccountCategory/auditHistoryById";
-
+    private readonly getGlAccountCategoryDataAuditById: string = "/api/GLAccountCategory/audits";
 
 
 	get glaccountcategoryUrl() { return this.configurations.baseUrl + this._glaccountcategoryUrl; }
@@ -72,5 +72,14 @@ export class GLAccountCategoryEndpointservice extends EndpointFactory {
 				return this.handleError(error, () => this.getHistoryGLAccountCategoryEndpoint(GLAccountCategoryId));
 			});
 	}
+    
 
+    getGlAccountCategoryAuditById<T>(GLAccountCategoryId: number): Observable<T> {
+        let endpointUrl = `${this.getGlAccountCategoryDataAuditById}/${GLAccountCategoryId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getGlAccountCategoryAuditById(GLAccountCategoryId));
+            });
+    }
 }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class Publication
+    public class Publication :IAudit
     {
 
         [Key]

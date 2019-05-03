@@ -71,7 +71,7 @@
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.ataChapterId)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
 
@@ -79,17 +79,16 @@
 
                         </tr>
                     </ng-template>
-
-
-
-
-
                 </p-table>
             </div>
         </div>
     </div>
 </div>
-
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
 <!-- Delete Contact Modal -->
 <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">

@@ -61,7 +61,10 @@ export class AtaMainService {
 	deleteATAMain(ataChapterId: number) {
 
 		return this.ataMainEndpoint.getDeleteATAMainEndpoint(ataChapterId);
-
+    }
+    
+    getAtaChapterAudit(ataChapterId: number) {
+        return this.ataMainEndpoint.getAtaChapterAuditById<any>(ataChapterId);
     }
 
 }

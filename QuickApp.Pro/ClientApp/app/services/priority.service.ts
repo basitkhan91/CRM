@@ -62,6 +62,8 @@ export class PriorityService {
     }
     historyPriority(priorityId: number) {
         return Observable.forkJoin(this.priorityEndpoint.getHistoryPriorityEndpoint<AuditHistory[]>(priorityId));
+    } 
+    getPriorityAudit(priorityId: number) {
+        return this.priorityEndpoint.getPrioriryAuditById<any>(priorityId);
     }
-
 }

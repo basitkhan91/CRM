@@ -60,7 +60,9 @@ export class TaxRateService {
     deleteTaxRate(taxrateId: number) {
 
         return this.taxRateEndpoint.getDeleteTaxRateEndpoint(taxrateId);
-
+    }
+    getTaxRateAudit(taxrateId: number) {
+        return this.taxRateEndpoint.getTaxRateAuditById<any>(taxrateId);
     }
 
 }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class ItemClassfication
+    public class ItemClassfication:IAudit
     {
         [Key]
         public long ItemClassificationId { get; set; }

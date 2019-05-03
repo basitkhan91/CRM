@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class TaxRates : PasBase
+   public class TaxRates : PasBase,IAudit
     {
         [Key]
         public long TaxRateId { get; set; }

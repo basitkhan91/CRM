@@ -22,7 +22,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { ATAChapter } from '../../models/atachapter.model';
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-ata-main',
@@ -43,7 +43,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     capabilityNamecolle: any[]=[];
-
+    AuditDetails: SingleScreenAuditDetails[];
 
     ngOnInit(): void {
 		this.loadData();
@@ -440,5 +440,19 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditAtaMain(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAtaMain(ataMainId: number): void {
+        this.ataMainService.getAtaChapterAudit(ataMainId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["aTAChapterAuditId", "aTAChapterId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

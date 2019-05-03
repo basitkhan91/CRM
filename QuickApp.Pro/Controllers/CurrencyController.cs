@@ -141,7 +141,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<CurrencyAudit>()
+                .Find(x => x.CurrencyId == id)
+                .OrderByDescending(x => x.CurrencyAuditId);
 
+            var auditResult = new List<AuditResult<CurrencyAudit>>();
+
+            auditResult.Add(new AuditResult<CurrencyAudit> { AreaName = "Currency Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
 
     }
 

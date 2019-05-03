@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class CreditTerms:PasBase
+   public class CreditTerms:PasBase,IAudit
     {
         [Key]
         public Int16 CreditTermsId { get; set; }

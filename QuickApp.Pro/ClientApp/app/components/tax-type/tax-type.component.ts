@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
 	selector: 'app-tax-type',
@@ -71,7 +72,9 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 	/** Actions ctor */
 
 	private isEditMode: boolean = false;
-	private isDeleteMode: boolean = false;
+    private isDeleteMode: boolean = false;
+    AuditDetails: SingleScreenAuditDetails[];
+
 
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: TaxTypeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.displayedColumns.push('taxType');
@@ -406,5 +409,19 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 		} else {
 			return `with: ${reason}`;
 		}
-	}
+    }
+
+    howAuditPopup(template, id): void {
+        this.auditAssetStatus(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAssetStatus(taxTypeId: number): void {
+        this.workFlowtService.getTaxTypeAudit(taxTypeId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["TaxTypeAuditId", "TaxTypeId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 }

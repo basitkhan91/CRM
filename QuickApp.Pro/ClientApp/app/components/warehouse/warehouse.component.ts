@@ -20,6 +20,8 @@ import { Site } from '../../models/site.model';
 import { Warehouse } from '../../models/warehouse.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+
 @Component({
     selector: 'app-warehouse',
     templateUrl: './warehouse.component.html',
@@ -105,6 +107,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	disableSaveManufacturer: boolean = false;
     selectedWareHouse: any;
     warehouseName: any;
+    AuditDetails: SingleScreenAuditDetails[];
 
 	ngOnInit(): void
 	{
@@ -742,11 +745,17 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			this.workFlowtService.updateWarehouse(this.sourceWarehouse).subscribe(
 				response => this.saveCompleted(this.sourceWarehouse),
 				error => this.saveFailedHelper(error));
-
-			this.workFlowtService.deleteManagementWarehouse(this.selectedNodeTest).subscribe(data => {
-				//alert("getting delete");
-			});
-			this.saveManagement(this.selectedNodeTest[0].data.warehouseId, this.selectedNodeTest); // will call ManagementSite Edit Data
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.workFlowtService.deleteManagementWarehouse(this.selectedNodeTest).subscribe(data => {
+                    //alert("getting delete");
+                });
+            }
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.saveManagement(this.selectedNodeTest[0].data.warehouseId, this.selectedNodeTest); // will call ManagementSite Edit Data
+            }
+			
 			this.selectedNodeTest = []; //after Edit making empty
 		}
 
@@ -754,5 +763,18 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.loadData();
 	}
 
-	
+    showAuditPopup(template, id): void {
+        this.auditWarehouse(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditWarehouse(warehouseId: number): void {
+        this.workFlowtService.getWarehouseAudit(warehouseId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["warehouseAuditId", "warehouseId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
+
 }

@@ -70,7 +70,7 @@
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
-                                <button mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                <button mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.priorityId)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
 
@@ -78,7 +78,11 @@
 
                         </tr>
                     </ng-template>
-
+                    <ng-template #auditContent let-c="close" let-d="dismiss">
+                        <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                            <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                        </div>
+                    </ng-template>
 
 
 

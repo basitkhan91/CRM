@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class Priority
+   public class Priority : IAudit
     {
         [Key]
         public long PriorityId { get; set; }

@@ -21,7 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-work-performed',
     templateUrl: './work-performed.component.html',
@@ -41,6 +41,7 @@ export class WorkPerformedComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
+    AuditDetails: SingleScreenAuditDetails[];
 
     isSaving: boolean;
     ngOnInit(): void {
@@ -403,5 +404,19 @@ export class WorkPerformedComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditworkPerformed(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditworkPerformed(workPerformedId: number): void {
+        this.workperformedService.getWorkPerformedAudit(workPerformedId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["workPerformedAuditId", "workPerformedId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

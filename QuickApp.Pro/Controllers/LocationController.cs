@@ -337,6 +337,23 @@ namespace QuickApp.Pro.Controllers
             //_unitOfWork.managementSite.Update(existingResult);
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<LocationAudit>()
+                .Find(x => x.LocationId == id)
+                .OrderByDescending(x => x.LocationAuditId);
+
+            var auditResult = new List<AuditResult<LocationAudit>>();
+
+            auditResult.Add(new AuditResult<LocationAudit> { AreaName = "Location Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
+
+
     }
 
 }

@@ -32,7 +32,7 @@ export class SiteService {
 		private router: Router,
 		private http: HttpClient,
 		private authService: AuthService,
-		private siteEndpoint: SiteEndpoint) { }
+        private siteEndpoint: SiteEndpoint ) { }
 
 	getSiteList()
 	{
@@ -88,6 +88,10 @@ export class SiteService {
 	deleteManagementSite(data: any)
 	{
 		return this.siteEndpoint.getDeleteManagementSiteEndpoint(data[0].data.siteId);
-	}
+    }
+
+    getSiteAudit(siteId: number) {
+        return this.siteEndpoint.getSiteAuditById<any>(siteId);
+    }
 
 }

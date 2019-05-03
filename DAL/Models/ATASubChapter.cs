@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-//using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class ATASubChapter: PasBase
+    public class ATASubChapter: PasBase,IAudit
     {
-        //PK
-        //[Key]
+        
+       [Key]
         public long ATASubChapterId { get; set; }
         //FK
         public long ATAChapterId { get; set; }
@@ -24,7 +24,5 @@ namespace DAL.Models
         public Int32 MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedBy { get; set; }
     }
 }

@@ -56,7 +56,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<TaxRateViewModel>))]
         public IActionResult Get()
         {
-            var allTaxrateInfo = _unitOfWork.TaxRates.GetAllTaxRateData(); //.GetAllCustomersData();
+            var allTaxrateInfo = _unitOfWork.TaxRate.GetAllTaxRateData(); //.GetAllCustomersData();
             return Ok(Mapper.Map<IEnumerable<TaxRateViewModel>>(allTaxrateInfo));
 
         }
@@ -102,7 +102,7 @@ namespace QuickApp.Pro.Controllers
                 taxrateobject.UpdatedDate = DateTime.Now;
                 taxrateobject.CreatedBy = taxrateViewModel.CreatedBy;
                 taxrateobject.UpdatedBy = taxrateViewModel.UpdatedBy;
-                _unitOfWork.TaxRates.Add(taxrateobject);
+                _unitOfWork.TaxRate.Add(taxrateobject);
                 _unitOfWork.SaveChanges();
 
             }
@@ -119,7 +119,7 @@ namespace QuickApp.Pro.Controllers
                 if (taxrateViewModel == null)
                     return BadRequest($"{nameof(taxrateViewModel)} cannot be null");
 
-                var existingResult = _unitOfWork.TaxRates.GetSingleOrDefault(c => c.TaxRateId == id);
+                var existingResult = _unitOfWork.TaxRate.GetSingleOrDefault(c => c.TaxRateId == id);
                 // DAL.Models.Action updateObject = new DAL.Models.Action();
 
 
@@ -131,7 +131,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IsActive = taxrateViewModel.IsActive;
                 existingResult.MasterCompanyId = taxrateViewModel.MasterCompanyId;
 
-                _unitOfWork.TaxRates.Update(existingResult);
+                _unitOfWork.TaxRate.Update(existingResult);
                 _unitOfWork.SaveChanges();
 
             }
@@ -145,15 +145,29 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(TaxRateViewModel))]
         public IActionResult DeleteAction(long id)
         {
-            var existingResult = _unitOfWork.TaxRates.GetSingleOrDefault(c => c.TaxRateId == id);
+            var existingResult = _unitOfWork.TaxRate.GetSingleOrDefault(c => c.TaxRateId == id);
             existingResult.IsDelete = true;
-            _unitOfWork.TaxRates.Update(existingResult);
+            _unitOfWork.TaxRate.Update(existingResult);
 
             //_unitOfWork.TaxRates.Remove(existingResult);
 
             _unitOfWork.SaveChanges();
 
             return Ok(id);
+        }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<TaxRateAudit>()
+                .Find(x => x.TaxRateId == id)
+                .OrderByDescending(x => x.TaxRateAuditId);
+
+            var auditResult = new List<AuditResult<TaxRateAudit>>();
+
+            auditResult.Add(new AuditResult<TaxRateAudit> { AreaName = "Tax Rate Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
         }
 
     }

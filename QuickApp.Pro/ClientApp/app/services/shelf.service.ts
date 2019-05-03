@@ -99,5 +99,9 @@ export class ShelfService {
 	deleteManagementShelf(data: any) {
 		return this.shelfEndpoint.getDeleteManagementShelfEndpoint(data[0].data.shelfId);
 	}
+    
+    getShelfAudit(shelfId: number) {
+        return this.shelfEndpoint.getShelfDataAuditById<any>(shelfId);
+    }
 
 }

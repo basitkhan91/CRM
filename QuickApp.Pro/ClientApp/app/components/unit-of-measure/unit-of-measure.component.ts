@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-unit-of-measure',
@@ -70,6 +71,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     unitName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+    AuditDetails: SingleScreenAuditDetails[];
 
     /** Actions ctor */
 
@@ -420,5 +422,19 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditAssetStatus(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAssetStatus(unitOfMeasureId: number): void {
+        this.unitofmeasureService.getUnitOfMeasureAudit(unitOfMeasureId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

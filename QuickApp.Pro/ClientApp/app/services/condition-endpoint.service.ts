@@ -15,6 +15,8 @@ export class ConditionEndpoint extends EndpointFactory {
     private readonly _workflowconditionsNewUrl: string = "/api/Workflowcondition/Get";
     private readonly _conditionPosturl: string = "/api/Condition/ConditionPost";
     private readonly _actionsUrlNewAuditHistory: string = "/api/Condition/auditHistoryById";
+    private readonly getConditionDataAuditById: string = "/api/Condition/audits";
+
     get ConditionUrl() { return this.configurations.baseUrl + this._conditionurl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -68,6 +70,15 @@ export class ConditionEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getHistoryConditionEndpoint(actionId));
+            });
+    }
+    
+    getConditionAuditById<T>(conditionId: number): Observable<T> {
+        let endpointUrl = `${this.getConditionDataAuditById}/${conditionId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getConditionAuditById(conditionId));
             });
     }
 

@@ -61,6 +61,9 @@ export class VendorClassificationService {
         return this.vendorclassificationEndpoint.getDeleteVendorClassificationEndpoint(vendorclassificationId);
 
     }
+    getVendorClassificationAudit(vendorclassificationId: number) {
+        return this.vendorclassificationEndpoint.getVendorClassificationDataAuditById<any>(vendorclassificationId);
+    }
 
 }
 

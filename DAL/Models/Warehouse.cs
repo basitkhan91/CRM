@@ -2,11 +2,13 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-    public class Warehouse:PasBase
+    public class Warehouse:PasBase,IAudit
     {
+        [Key]
         public long WarehouseId { get; set; }
         public long SiteId { get; set; }
         public string Name { get; set; }

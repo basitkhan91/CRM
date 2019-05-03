@@ -14,6 +14,8 @@ export class ItemClassificationEndpointService extends EndpointFactory {
     private readonly _itemclassificationGetUrl: string = "/api/ItemClassification/Get";
     private readonly _itemclassificationUrlNew: string = "/api/ItemClassification/itemclasspost";
     private readonly _actionsUrlAuditHistory: string = "/api/ItemClassification/auditHistoryById";
+    private readonly getItemClassificationAuditById: string = "/api/ItemClassification/audits";
+
     get getCodeUrl() { return this.configurations.baseUrl + this._itemclassificationGetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -70,6 +72,15 @@ export class ItemClassificationEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getHistoryActionEndpoint(actionId));
+            });
+    }
+    
+    getItemClassificationDataAuditById<T>(itemClassificationId: number): Observable<T> {
+        let endpointUrl = `${this.getItemClassificationAuditById}/${itemClassificationId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getItemClassificationDataAuditById(itemClassificationId));
             });
     }
 }

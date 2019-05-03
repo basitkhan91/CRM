@@ -57,7 +57,13 @@ export class TaxTypeService {
 
 		return this.taxTypeEndpoint.getDeleteTaxTypeEndpoint(actionId);
 
-	}
+    }
+
+    getTaxTypeAudit(taxTypeId: number) {
+        return this.taxTypeEndpoint.getTaxTypeAuditById<any>(taxTypeId);
+    }
+
+    
 
 
 }

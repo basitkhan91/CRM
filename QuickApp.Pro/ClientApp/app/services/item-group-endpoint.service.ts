@@ -14,6 +14,8 @@ export class ItemgroupEndpointService extends EndpointFactory {
     private readonly _itemgroupGetUrl: string = "/api/Itemgroup/Get";
     private readonly _itemgroupUrlNew: string = "/api/Itemgroup/Itemgrouppost";
     private readonly _actionsUrlAuditHistory: string = "/api/Itemgroup/auditHistoryById";
+    private readonly getItemGroupAuditDataById: string = "/api/Itemgroup/audits";
+
     get getitemgroupUrl() { return this.configurations.baseUrl + this._itemgroupGetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -70,6 +72,15 @@ export class ItemgroupEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getHistoryActionEndpoint(actionId));
+            });
+    }
+    
+    getItemGroupAuditById<T>(itemGroupId: number): Observable<T> {
+        let endpointUrl = `${this.getItemGroupAuditDataById}/${itemGroupId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getItemGroupAuditById(itemGroupId));
             });
     }
 }

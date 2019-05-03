@@ -59,7 +59,10 @@ export class WorkPerformedService {
     deleteWorkPerformed(workPerformedId: number) {
 
         return this.workperformedEndpoint.getDeleteWorkPerformedEndpoint(workPerformedId);
-
+    }
+    
+    getWorkPerformedAudit(workPerformedId: number) {
+        return this.workperformedEndpoint.getWorkPerformedAuditById<any>(workPerformedId);
     }
 
 }

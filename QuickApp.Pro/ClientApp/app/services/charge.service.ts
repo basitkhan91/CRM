@@ -81,5 +81,9 @@ export class ChargeService {
     historyCharge(chargeId: number) {
         return Observable.forkJoin(this.chargeEndpoint.getHistoryChargeEndpoint<AuditHistory[]>(chargeId));
     }
+    
+    getChargeAudit(chargeId: number) {
+        return this.chargeEndpoint.getChargeAuditById<any>(chargeId);
+    }
 
 }

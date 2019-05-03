@@ -582,7 +582,7 @@ namespace DAL
             }
         }
 
-        public ITaxRateRepository TaxRates
+        public ITaxRateRepository TaxRate
 
         {
             get

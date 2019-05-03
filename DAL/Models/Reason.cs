@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class Reason : PasBase
+    public class Reason : PasBase, IAudit
     {
         public long ReasonId { get; set; }
 

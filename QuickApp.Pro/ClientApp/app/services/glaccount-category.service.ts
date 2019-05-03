@@ -57,6 +57,9 @@ export class GLAccountCategoryService {
 	historyGLAccountCategory(GLAccountCategoryId: number) {
 		return Observable.forkJoin(this.glaccountcategoryEndpoint.getHistoryGLAccountCategoryEndpoint<AuditHistory[]>(GLAccountCategoryId));
 	}
-
+    
+    getGlAccountcategoryAudit(GLAccountCategoryId: number) {
+        return this.glaccountcategoryEndpoint.getGlAccountCategoryAuditById<any>(GLAccountCategoryId);
+    }
 
 }

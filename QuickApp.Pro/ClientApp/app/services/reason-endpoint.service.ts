@@ -14,6 +14,7 @@ export class ReasonEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/Reason/Get";
     private readonly _actionsUrlNew: string = "/api/Reason/reason";
     private readonly _actionsUrlAuditHistory: string = "/api/Reason/auditHistoryById";
+    private readonly getReasonAuditDataById: string = "/api/Reason/audits";
 
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
     // private readonly _actionsUrlNew: string = "/api/Action/actions";
@@ -74,7 +75,15 @@ export class ReasonEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getDeleteReasonEndpoint(reasonId));
             });
     }
+    
+    getReasonAuditById<T>(reasonId: number): Observable<T> {
+        let endpointUrl = `${this.getReasonAuditDataById}/${reasonId}`;
 
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getReasonAuditById(reasonId));
+            });
+    }
 
 }
 

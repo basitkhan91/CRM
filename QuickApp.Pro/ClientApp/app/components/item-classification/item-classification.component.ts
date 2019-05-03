@@ -15,6 +15,7 @@ import { ItemClassificationModel } from '../../models/item-classification.model'
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-item-classification',
@@ -33,7 +34,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     auditHisory: AuditHistory[];
-  
+    AuditDetails: SingleScreenAuditDetails[];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     cols: any[];
@@ -508,4 +509,20 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
             return `with: ${reason}`;
         }
     }
+
+    showAuditPopup(template, id): void {
+        this.auditItemClassification(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditItemClassification(itemClassificationId: number): void {
+        this.workFlowtService.getItemClassificationAudit(itemClassificationId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["itemClassificationAuditId", "itemClassificationId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
+
+
 }

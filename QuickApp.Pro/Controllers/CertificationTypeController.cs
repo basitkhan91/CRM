@@ -123,6 +123,20 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<EmployeeLicenseTypeAudit>()
+                .Find(x => x.EmployeeLicenseTypeId == id)
+                .OrderByDescending(x => x.EmployeeLicenseTypeAuditId);
+
+            var auditResult = new List<AuditResult<EmployeeLicenseTypeAudit>>();
+
+            auditResult.Add(new AuditResult<EmployeeLicenseTypeAudit> { AreaName = "Employee licenece Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
     }
     
 }

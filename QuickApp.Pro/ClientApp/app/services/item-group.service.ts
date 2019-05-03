@@ -66,4 +66,9 @@ export class ItemGroupService {
         return Observable.forkJoin(this.ItemgroupEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
     }
 
+    getItemGroupAudit(itemGroupId: number) {
+        return this.ItemgroupEndpoint.getItemGroupAuditById<any>(itemGroupId);
+    }
+    
+
 }

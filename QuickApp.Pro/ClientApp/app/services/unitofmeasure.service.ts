@@ -59,7 +59,8 @@ export class UnitOfMeasureService {
     deleteUnitOfMeasure(unitofmeasureId: number) {
 
         return this.unitofmeasureEndpoint.getDeleteUnitOfMeasureEndpoint(unitofmeasureId);
-
     }
-
+    getUnitOfMeasureAudit(unitofmeasureId: number) {
+        return this.unitofmeasureEndpoint.getUnitOfMeasureAuditById<any>(unitofmeasureId);
+    }
 }

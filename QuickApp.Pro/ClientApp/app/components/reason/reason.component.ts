@@ -15,6 +15,8 @@ import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-
 import { MasterComapnyService } from '../../services/mastercompany.service';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+
 @Component({
     selector: 'app-reason',
     templateUrl: './reason.component.html',
@@ -60,7 +62,7 @@ export class ReasonComponent {
     reasonName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-
+    AuditDetails: SingleScreenAuditDetails[];
   
     public allWorkFlows: Reason[] = [];
     private isEditMode: boolean = false;
@@ -407,5 +409,19 @@ export class ReasonComponent {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.auditAssetStatus(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAssetStatus(reasonId: number): void {
+        this.reasonService.getReasonAudit(reasonId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["ReasonAuditId", "ReasonId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

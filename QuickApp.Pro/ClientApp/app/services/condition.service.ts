@@ -54,5 +54,9 @@ export class ConditionService {
     historyCondition(actionId: number) {
         return Observable.forkJoin(this.conditionEndpoint.getHistoryConditionEndpoint<AuditHistory[]>(actionId));
     }
+    
+    getConditionAudit(conditionId: number) {
+        return this.conditionEndpoint.getConditionAuditById<any>(conditionId);
+    }
 
 }

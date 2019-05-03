@@ -94,5 +94,10 @@ export class WarehouseService {
 
 	deleteManagementWareHouse(data: any) {
 		return this.warehouseEndpoint.getDeleteManagementWarehouseEndpoint(data[0].data.warehouseId);
-	}
+    }
+    
+    getWarehouseAudit(warehouseId: number) {
+        return this.warehouseEndpoint.getWarehouseAuditById<any>(warehouseId);
+    }
+
 }

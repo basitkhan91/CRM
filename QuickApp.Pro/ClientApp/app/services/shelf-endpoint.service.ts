@@ -19,7 +19,8 @@ export class ShelfEndpoint extends EndpointFactory {
 	private readonly _actionsUrlNew3: string = "/api/Shelf/GetLocations";
 	private readonly _actionsUrlStock: string = "/api/Shelf/GetAllShelfStockData";
 	private readonly _actionsUrlAuditHistory: string = "/api/Shelf/ataauditHistoryById";
-	private readonly _actionsUrlManagementPost: string = "/api/Shelf/managementShelfPost"; //change
+    private readonly _actionsUrlManagementPost: string = "/api/Shelf/managementShelfPost"; //change
+    private readonly getShelfAuditById: string = "/api/Shelf/audits";
 	//private readonly _countryUrl: string = "/api/Site/GetcountryList";
 	//private readonly _countryUrlNew: string = "api/Site/postCountryList";
 
@@ -164,6 +165,14 @@ export class ShelfEndpoint extends EndpointFactory {
 				return this.handleError(error, () => this.getLocationDataEndpoint(shelfId));
 			});
 	}
+    
+    getShelfDataAuditById<T>(shelfId: number): Observable<T> {
+        let endpointUrl = `${this.getShelfAuditById}/${shelfId}`;
 
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getShelfDataAuditById(shelfId));
+            });
+    }
 
 }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
- public class JobTitle
+ public class JobTitle:IAudit
     {
         [Key]
         public Int16 JobTitleId { get; set; }

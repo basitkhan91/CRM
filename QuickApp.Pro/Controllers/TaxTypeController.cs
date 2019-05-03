@@ -140,6 +140,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<TaxTypeAudit>()
+                .Find(x => x.TaxTypeId == id)
+                .OrderByDescending(x => x.TaxTypeAuditId);
+
+            var auditResult = new List<AuditResult<TaxTypeAudit>>();
+
+            auditResult.Add(new AuditResult<TaxTypeAudit> { AreaName = "Tax Type Status", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
     }
 
 

@@ -14,7 +14,7 @@ export class ATASubChapter1Endpoint extends EndpointFactory {
 	private readonly _actionsUrl: string = "/api/ATASubChapter1/Get";
 	private readonly _actionsUrlNew: string = "/api/ATASubChapter1/actions";
 	private readonly _actionsUrlAuditHistory: string = "/api/ATASubChapter1/ataauditHistoryById";
-
+    private readonly getAtaSubChapterAuditById: string = "/api/ATASubChapter1/audits";
 
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -74,6 +74,15 @@ export class ATASubChapter1Endpoint extends EndpointFactory {
 				return this.handleError(error, () => this.getDeleteATASubChapter1Endpoint(ataSubChapterId));
 			});
 	}
+    
 
+    getATASubChapterAuditById<T>(ataSubChapterId: number): Observable<T> {
+        let endpointUrl = `${this.getAtaSubChapterAuditById}/${ataSubChapterId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATASubChapterAuditById(ataSubChapterId));
+            });
+    }
 
 }

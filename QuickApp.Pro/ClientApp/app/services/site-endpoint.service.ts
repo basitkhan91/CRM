@@ -14,7 +14,9 @@ export class SiteEndpoint extends EndpointFactory {
 	private readonly _actionsManagemetUrl: string = "/api/Site/GetMangementSite";
 	private readonly _actionsUrlNew: string = "/api/Site/sitesPost";
 	private readonly _actionsUrlAuditHistory: string = "/api/Site/ataauditHistoryById";
-	private readonly _actionsUrlManagementPost: string = "/api/Site/managementSitesPost";
+    private readonly _actionsUrlManagementPost: string = "/api/Site/managementSitesPost";
+    private readonly getSiteAuditDataById: string = "/api/Site/audits";
+
 	//private readonly _countryUrl: string = "/api/Site/GetcountryList";
 	//private readonly _countryUrlNew: string = "api/Site/postCountryList";
 
@@ -122,7 +124,16 @@ export class SiteEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getDeleteManagementSiteEndpoint(siteId));
 			});
-	}
+    }
+
+    getSiteAuditById<T>(siteId: number): Observable<T> {
+        let endpointUrl = `${this.getSiteAuditDataById}/${siteId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getSiteAuditById(siteId));
+            });
+    }
 
 
 }

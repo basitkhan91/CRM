@@ -21,7 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
     selector: 'app-work-scope',
@@ -70,7 +70,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
     workScopeName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-
+    AuditDetails: SingleScreenAuditDetails[];
 
     /** Actions ctor */
 
@@ -391,5 +391,20 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void
+    {
+        this.auditWorkScope(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditWorkScope(workScopeId: number): void {
+        this.workscopeService.getWorkScopeAudit(workScopeId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["workflowScopeAuditId", "workflowScopeId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

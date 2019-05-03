@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class TaxType 
+    public class TaxType :IAudit
     {
         [Key]
         public byte TaxTypeId { get; set; }

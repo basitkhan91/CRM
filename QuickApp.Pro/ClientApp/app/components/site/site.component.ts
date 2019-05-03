@@ -18,6 +18,8 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { Site } from '../../models/site.model';
 import { LegalEntityService } from '../../services/legalentity.service';
 import { TreeNode, MenuItem } from 'primeng/api';
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+
 @Component({
 	selector: 'app-site',
 	templateUrl: './site.component.html',
@@ -92,6 +94,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
     disableSaveManufacturer: boolean;
     selectedSite: any;
     siteNamecolle: any;
+    AuditDetails: SingleScreenAuditDetails[];
+
 	ngOnInit(): void {
 		//This Headers will Place in Html
 		this.cols = [
@@ -747,5 +751,18 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.loadData();
 	}
 
+    showAuditPopup(template, id): void {
+        this.auditAssetStatus(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    auditAssetStatus(siteId: number): void {
+        this.workFlowtService.getSiteAudit(siteId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["SiteAuditId", "SiteId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 	
 }

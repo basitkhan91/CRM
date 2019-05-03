@@ -17,7 +17,9 @@ export class WarehouseEndpoint extends EndpointFactory {
 	private readonly _actionsManagemetUrl: string = "/api/Warehouse/GetMangementWarehouse"; //change
 	private readonly _actionsWarehouseUrl: string = "/api/Warehouse/GetAllWareHouseData"; //change
 	private readonly _actionsUrlNew1: string = "/api/Warehouse/GetAddress";
-	private readonly _actionsUrlAuditHistory: string = "/api/Warehouse/ataauditHistoryById";
+    private readonly _actionsUrlAuditHistory: string = "/api/Warehouse/ataauditHistoryById";
+
+    private readonly getWarehouseDataAuditById: string = "/api/Warehouse/audits";
 	
 	//private readonly _countryUrl: string = "/api/Site/GetcountryList";
 
@@ -144,6 +146,13 @@ export class WarehouseEndpoint extends EndpointFactory {
 				return this.handleError(error, () => this.getAddressDataWarehouseEndpoint(siteID));
 			});
 	}
+    getWarehouseAuditById<T>(warehouseId: number): Observable<T> {
+        let endpointUrl = `${this.getWarehouseDataAuditById}/${warehouseId}`;
 
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getWarehouseAuditById(warehouseId));
+            });
+    }
 
 }
