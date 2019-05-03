@@ -276,7 +276,32 @@ namespace DAL
         public DbSet<FindingAudit> FindingAudit { get; set; }
         public DbSet<IntegrationPortalAudit> IntegrationPortalAudit { get; set; }
         public DbSet<GateCodeAudit> GateCodeAudit { get; set; }
-
+        public DbSet<PublicationAudit> PublicationAudit { get; set; }
+        public DbSet<ReasonAudit> ReasonAudit { get; set; }
+        public DbSet<SiteAudit> SiteAudit { get; set; }
+        public DbSet<TaxRateAudit> TaxRateAudit { get; set; }
+        public DbSet<TaxTypeAudit> TaxTypeAudit { get; set; }
+        public DbSet<UnitOfMeasureAudit> UnitOfMeasureAudit { get; set; }
+        public DbSet<VendorClassificationAudit> VendorClassificationAudit { get; set; }
+        public DbSet<WorkPerformedAudit> WorkPerformedAudit { get; set; }
+        public DbSet<WorkflowScopeAudit> WorkflowScopeAudit { get; set; }
+        public DbSet<WorkScopeAudit> WorkScopeAudit { get; set; }
+        public DbSet<ATAChapterAudit> ATAChapterAudit { get; set; }
+        public DbSet<ATASubChapterAudit> ATASubChapterAudit { get; set; }
+        public DbSet<EmployeeLicenseTypeAudit> EmployeeLicenseTypeAudit { get; set; }
+        public DbSet<ChargeAudit> ChargeAudit { get; set; }
+        public DbSet<ConditionAudit> ConditionAudit { get; set; }
+        public DbSet<CreditTermsAudit> CreditTermsAudit { get; set; }
+        public DbSet<CurrencyAudit> CurrencyAudit { get; set; }
+        public DbSet<ItemClassificationAudit> ItemClassificationAudit { get; set; }
+        public DbSet<ItemGroupAudit> ItemGroupAudit { get; set; }
+        public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
+        public DbSet<PriorityAudit> PriorityAudit { get; set; }
+        public DbSet<WarehouseAudit> WarehouseAudit { get; set; }
+        public DbSet<LocationAudit> LocationAudit { get; set; }
+        public DbSet<ShelfAudit> ShelfAudit { get; set; }
+        public DbSet<BinAudit> BinAudit { get; set; }
+        public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
