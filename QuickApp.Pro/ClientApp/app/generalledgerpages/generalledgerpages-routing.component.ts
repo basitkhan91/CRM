@@ -18,6 +18,7 @@ import { EntityEditComponent } from '../components/general-ledger/entity/entity-
 import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 import { GlaccountListComponent } from '../components/general-ledger/glaccount-list/glaccount-list.component';
 import { GlaccountCreateComponent } from '../components/general-ledger/glaccount-create/glaccount-create.component';
+import { PoRoCategoryComponent } from '../components/general-ledger/po-ro-category/po-ro-category.component';
 //import { GLAccountCategoryComponent } from '../components/gl-account-categories/gl-account-categories.component';
 
 
@@ -42,7 +43,7 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-node-setup", component: NodeSetupComponent, data: { title: "NodeSetupComponent" } },
             { path: "app-glaccount-list", component: GlaccountListComponent, data: { title: "GlAccountList" } },
             { path: "app-glaccount-create", component: GlaccountCreateComponent, data: { title: "GlAccountCreate" } },
-
+            { path: "app-po-ro-category", component: PoRoCategoryComponent, data: {title:"POROCategory"}}
 		]
 	}
 ];

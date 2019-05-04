@@ -1,0 +1,181 @@
+﻿
+        <div class="x_panel">
+            <div class="x_content">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" aria-current="page">Accounting</li>
+                        <li class="breadcrumb-item" aria-current="page">General Ledger</li>
+                        <li class="breadcrumb-item active" aria-current="page">PO-RO Category</li>
+                    </ol>
+                </nav>
+                <h4 class="page-heading">PO-RO Category</h4>
+                <div class="col-sm-12 form-bg">
+         
+                    <div class="form-group add-inputs">
+                       
+                            <div class="form-group col-sm-3 w300">
+                                <label class="control-label col-sm-4">Name</label>
+                                <div class="col-sm-7 cust-name">
+                                    <div class="inner-addon right-addon w200 inline-block">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text" class="names form-control  ui-autocomplete-input" [(ngModel)]="currentporo.categoryName">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 search-wauto-block w50">
+                                <label><input class="form-control" type="checkbox" [(ngModel)]="currentporo.isPO"> PO</label>
+                            </div>
+                            <div class="col-sm-2 search-wauto-block w100">
+                                <label><input class="form-control" type="checkbox" [(ngModel)]="currentporo.isRO"> RO</label>
+                            </div>
+
+                            <div class="form-group col-sm-2">
+                                <button type="button" id="" name="" data-toggle="tooltip" data-original-title="Filter" class="btn btn-warning"><i class="fa fa-search"></i></button>
+                                <button type="button" (click)="addporoCategory()" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                            </div>
+                        
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>PO</th>
+                                    <th>RO</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let poroCategory of poroCategoryList">
+                                    <td>{{poroCategory.categoryName}}</td>
+                                    <td><input type="checkbox" [(ngModel)]="poroCategory.isPO" disabled /></td>
+                                    <td><input type="checkbox" [(ngModel)]="poroCategory.isRO" disabled  /></td>
+                                    <td>
+                                        <p-inputSwitch *ngIf="poroCategory.isActive" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(poroCategory,$event)" [(ngModel)]="poroCategory.isActive"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="poroCategory.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(poroCategory,$event)" [(ngModel)]="poroCategory.isActive"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="poroCategory.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(poroCategory,$event)" [(ngModel)]="poroCategory.isActive"></p-inputSwitch>
+                                        <span (click)="setporoCategoryToUpdate(editporoCategory,poroCategory.poroCategoryId)" data-toggle="modal" data-target="#edit">
+                                            <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </span>
+                                        <span (click)="showAuditPopup(auditContent,poroCategory.poroCategoryId)" data-toggle="modal" data-target="#history">
+            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                <i class="fa fa-history"></i>
+            </a>
+        </span>
+                                        <span (click)="confirmDelete(content,poroCategory.poroCategoryId)" data-toggle="modal" data-target="#data">
+                                            <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                </div>
+
+            </div>
+        </div>
+
+        <ng-template #auditContent let-c="close" let-d="dismiss">
+            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+            </div>
+        </ng-template>
+
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure you want to delete PO-RO-Category{{poroCategoryToRemove.categoryName}}?</h4>
+                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="removeporoCategory()">Yes</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+            </div>
+
+        </ng-template>
+
+        <ng-template #editporoCategory let-c="close" let-d="dismiss">
+
+
+            <!--<div class="modal-content">
+        <div class="modal-header">
+            <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+            <h4 class="modal-title"> Edit {{poroCategoryToUpdate.categoryName}} PO-RO</h4>
+        </div>
+        <div class="modal-body">
+            <p>
+                <span class="col-sm-3"><b>Category Name: </b></span> <span class="col-sm-6">
+                    <input type="text" [(ngModel)]="poroCategoryToUpdate.categoryName" class="form-control">
+                </span>
+                <span class="col-sm-3"><b>PO : </b></span> <span class="col-sm-6">
+                    <input type="checkbox" [(ngModel)]="poroCategoryToUpdate.isPO" class="form-control">
+                </span>
+                <span class="col-sm-3"><b>RO : </b></span> <span class="col-sm-6">
+                    <input type="checkbox" [(ngModel)]="poroCategoryToUpdate.isRO" class="form-control">
+                </span>
+            </p>
+            <hr>
+
+            <hr>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" (click)="updateporoCategory()" class="btn btn-success" data-dismiss="modal">Update</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
+        </div>
+    </div>-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
+                    <h4 class="modal-title"> Edit {{poroCategoryToUpdate.categoryName}}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <p>
+                        <span class="col-sm-3"><b>Category Name: </b></span> <span class="col-sm-6">
+                            <input type="text" [(ngModel)]="poroCategoryToUpdate.categoryName" class="form-control">
+                        </span>
+                    </p>
+                    <hr>
+                    <p>
+                        <span class="col-sm-3"><b>PO: </b></span> <span class="col-sm-6">
+                            <input type="checkbox" [(ngModel)]="poroCategoryToUpdate.isPO" class="form-control">
+                        </span>
+                    </p>
+                    <hr>
+                    <p>
+                        <span class="col-sm-3"><b>RO: </b></span> <span class="col-sm-6">
+                            <input type="checkbox" [(ngModel)]="poroCategoryToUpdate.isRO" class="form-control">
+                        </span>
+                    </p>
+                    <hr>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" (click)="updateporoCategory()">Update</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                </div>
+            </div>
+
+        </ng-template>
+       
+
+        <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+                  [width]="350" [minWidth]="200" [responsive]="true"
+                  [minY]="1050" [baseZIndex]="1100000">
+            <h5 [ngStyle]="{'color':'red'}">
+                Please Enter (*) Mandatory Fields
+            </h5>
+            <p-footer>
+                <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+            </p-footer>
+
+        </p-dialog>

@@ -36,6 +36,10 @@ import { GlaccountListComponent } from "../components/general-ledger/glaccount-l
 import { GlaccountCreateComponent } from "../components/general-ledger/glaccount-create/glaccount-create.component";
 import { AccountCalenderService } from "../services/account-calender/accountcalender.service";
 import { AccountCalenderEndpointService } from "../services/account-calender/accountcalender-endpoint.service";
+import { PoRoCategoryComponent } from "../components/general-ledger/po-ro-category/po-ro-category.component";
+import { POROCategoryEndpoint } from "../services/porocategory/po-ro-category-endpoint.service";
+import { POROCategoryService } from "../services/porocategory/po-ro-category.service";
+import { AuditComponent } from "../components/Audit/audit.component";
 //import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
 @NgModule({
     imports: [
@@ -69,12 +73,16 @@ import { AccountCalenderEndpointService } from "../services/account-calender/acc
         NodeSetupComponent,
         GlaccountListComponent,
         GlaccountCreateComponent,
+        PoRoCategoryComponent,
+        AuditComponent
 
        
     ],
     providers: [
         NodeSetupService,
         NodeSetupEndpointService,
+        POROCategoryEndpoint,
+        POROCategoryService
        
 
     ],

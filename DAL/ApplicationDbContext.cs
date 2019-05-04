@@ -302,6 +302,9 @@ namespace DAL
         public DbSet<ShelfAudit> ShelfAudit { get; set; }
         public DbSet<BinAudit> BinAudit { get; set; }
         public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
+
+        public DbSet<POROCategory> POROCategory { get; set; }
+        public DbSet<POROCategoryAudit> POROCategoryAudit { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
