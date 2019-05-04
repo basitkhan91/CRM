@@ -156,7 +156,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<VendorClassificationAudit>>();
 
-            auditResult.Add(new AuditResult<VendorClassificationAudit> { AreaName = "Vendor Classification Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<VendorClassificationAudit> { AreaName = "Vendor Classification", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

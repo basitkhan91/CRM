@@ -147,19 +147,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        //[HttpGet("audits/{id}")]
-        //public IActionResult AuditDetails(long id)
-        //{
-        //    var audits = _unitOfWork.Repository<ProvisionAudit>()
-        //        .Find(x => x.ProvisionId == id)
-        //        .OrderByDescending(x => x.ProvisionAuditId);
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<ProvisionAudit>()
+                .Find(x => x.ProvisionId == id)
+                .OrderByDescending(x => x.ProvisionAuditId);
 
-        //    var auditResult = new List<AuditResult<ProvisionAudit>>();
+            var auditResult = new List<AuditResult<ProvisionAudit>>();
 
-        //    auditResult.Add(new AuditResult<ProvisionAudit> { AreaName = "provision", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<ProvisionAudit> { AreaName = "provision", Result = audits.ToList() });
 
-        //    return Ok(auditResult);
-        //}
+            return Ok(auditResult);
+        }
 
     }
 

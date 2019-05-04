@@ -756,12 +756,20 @@ export class BinComponent {
 			this.sourceBin.masterCompanyId = 1;
 			this.workFlowtService.updateBin(this.sourceBin).subscribe( //Update
 				response => this.saveCompleted(this.sourceBin),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.workFlowtService.deleteManagementBin(this.selectedNodeTest).subscribe(data => {
+                    //alert("getting delete");
+                });
+            }
 
-			this.workFlowtService.deleteManagementBin(this.selectedNodeTest).subscribe(data => {
-				//alert("getting delete");
-			});
-			this.saveManagement(this.selectedNodeTest[0].data.binId, this.selectedNodeTest); // will call ManagementSite Edit Data
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.saveManagement(this.selectedNodeTest[0].data.binId, this.selectedNodeTest); // will call ManagementSite Edit Data
+            }
+			
+			
 			this.selectedNodeTest = []; //after Edit making empty
 		}
 

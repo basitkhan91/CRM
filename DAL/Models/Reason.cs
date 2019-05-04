@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -7,6 +8,7 @@ namespace DAL.Models
 {
     public class Reason : PasBase, IAudit
     {
+        [Key]
         public long ReasonId { get; set; }
 
         public string ReasonCode { get; set; }

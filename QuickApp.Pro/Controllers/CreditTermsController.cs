@@ -157,7 +157,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<CreditTermsAudit>>();
 
-            auditResult.Add(new AuditResult<CreditTermsAudit> { AreaName = "Credit terms Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<CreditTermsAudit> { AreaName = "Credit terms ", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

@@ -411,7 +411,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 		}
     }
 
-    howAuditPopup(template, id): void {
+    showAuditPopup(template, id): void {
         this.auditAssetStatus(id);
         this.modal = this.modalService.open(template, { size: 'sm' });
     }

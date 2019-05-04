@@ -150,7 +150,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<CurrencyAudit>>();
 
-            auditResult.Add(new AuditResult<CurrencyAudit> { AreaName = "Currency Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<CurrencyAudit> { AreaName = "Currency ", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

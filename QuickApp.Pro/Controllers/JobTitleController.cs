@@ -147,7 +147,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<JobTitleAudit>>();
 
-            auditResult.Add(new AuditResult<JobTitleAudit> { AreaName = "Job title Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<JobTitleAudit> { AreaName = "Job title", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

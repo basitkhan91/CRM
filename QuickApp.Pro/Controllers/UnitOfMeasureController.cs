@@ -141,7 +141,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<UnitOfMeasureAudit>>();
 
-            auditResult.Add(new AuditResult<UnitOfMeasureAudit> { AreaName = "UnitOfMeasure Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<UnitOfMeasureAudit> { AreaName = "UnitOfMeasure", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

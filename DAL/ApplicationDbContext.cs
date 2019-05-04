@@ -279,7 +279,7 @@ namespace DAL
         public DbSet<PublicationAudit> PublicationAudit { get; set; }
         public DbSet<ReasonAudit> ReasonAudit { get; set; }
         public DbSet<SiteAudit> SiteAudit { get; set; }
-        public DbSet<TaxRateAudit> TaxRateAudit { get; set; }
+        public DbSet<TaxRatesAudit> TaxRatesAudit { get; set; }
         public DbSet<TaxTypeAudit> TaxTypeAudit { get; set; }
         public DbSet<UnitOfMeasureAudit> UnitOfMeasureAudit { get; set; }
         public DbSet<VendorClassificationAudit> VendorClassificationAudit { get; set; }
@@ -293,8 +293,8 @@ namespace DAL
         public DbSet<ConditionAudit> ConditionAudit { get; set; }
         public DbSet<CreditTermsAudit> CreditTermsAudit { get; set; }
         public DbSet<CurrencyAudit> CurrencyAudit { get; set; }
-        public DbSet<ItemClassificationAudit> ItemClassificationAudit { get; set; }
-        public DbSet<ItemGroupAudit> ItemGroupAudit { get; set; }
+        public DbSet<ItemClassficationAudit> ItemClassficationAudit { get; set; }
+        public DbSet<ItemgroupAudit> ItemgroupAudit { get; set; }
         public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
         public DbSet<PriorityAudit> PriorityAudit { get; set; }
         public DbSet<WarehouseAudit> WarehouseAudit { get; set; }

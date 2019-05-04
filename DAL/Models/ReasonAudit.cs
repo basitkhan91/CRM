@@ -7,6 +7,7 @@ namespace DAL.Models
 {
     public class ReasonAudit : PasBase
     {
+        [Key]
         public long ReasonAuditId { get; set; }
         public long ReasonId { get; set; }
         public string ReasonCode { get; set; }

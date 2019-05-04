@@ -347,7 +347,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<LocationAudit>>();
 
-            auditResult.Add(new AuditResult<LocationAudit> { AreaName = "Location Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<LocationAudit> { AreaName = "Location ", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

@@ -173,7 +173,6 @@ namespace QuickApp.Pro.Controllers
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
                 //
-
                 _unitOfWork.Address.Update(address);
                 _unitOfWork.SaveChanges();
                 _unitOfWork.Sites.Update(existingResult);
@@ -261,7 +260,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<SiteAudit>>();
 
-            auditResult.Add(new AuditResult<SiteAudit> { AreaName = "Site Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<SiteAudit> { AreaName = "Site", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

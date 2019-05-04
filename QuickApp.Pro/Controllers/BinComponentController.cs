@@ -352,7 +352,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<BinAudit>>();
 
-            auditResult.Add(new AuditResult<BinAudit> { AreaName = "Bin Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<BinAudit> { AreaName = "Bin ", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

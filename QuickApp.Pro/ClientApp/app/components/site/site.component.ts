@@ -737,11 +737,18 @@ export class SiteComponent implements OnInit, AfterViewInit {
 				response => this.saveCompleted(this.sourceSite),
 				error => this.saveFailedHelper(error));
 
-			this.workFlowtService.deleteManagementSite(this.selectedNodeTest).subscribe(data => {
-			});
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.workFlowtService.deleteManagementSite(this.selectedNodeTest).subscribe(data => {
+                });
+            }
+			
+            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
+            {
+                this.saveManagement(this.selectedNodeTest[0].data.siteId, this.selectedNodeTest); // will call ManagementSite Edit Data
 
-			this.saveManagement(this.selectedNodeTest[0].data.siteId, this.selectedNodeTest); // will call ManagementSite Edit Data
-
+            }
+			
 			
 
 			this.selectedNodeTest = []; //after Edit making empty
