@@ -21,7 +21,7 @@
                                 <div class="col-sm-7">
                                     <div class="inner-addon right-addon inline-block">
                                         <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control compnames ui-autocomplete-input" value="PAS" autocomplete="off">
+                                        <input type="text" [(ngModel)]="currentApledgerObj.ledgerName" [ngModelOptions]="{standalone: true}" >
                                     </div>
                                 </div>
                             </div>
@@ -30,7 +30,7 @@
                             <div class="form-group col-sm-12">
                                 <label class="control-label col-sm-4">Fiscal Year</label>
                                 <div class="col-sm-7">
-                                    <select id="fiscalyear" name="fiscalyear" class="w100" (change)="getDataBasedonYear($event.target.value)">
+                                    <select id="fiscalyear" name="fiscalyear" class="w100" [(ngModel)]="currentApledgerObj.fiscalYear" [ngModelOptions]="{standalone: true}">
                                         <option value="2018">2018</option>
                                         <option value="2019" selected="">2019</option>
                                         <option value="2020">2020</option>
@@ -38,9 +38,17 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">Ledger Name</label>
+                                <div class="col-sm-7">
+                                    <select [(ngModel)]="currentApledgerObj.legalEntityId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-2">
-                            <div class="form-group col-sm-12"> <a href="#" class="btn btn-success show-cal-btn">Show Calendar</a> </div>
+                            <div class="form-group col-sm-12"> <button class="btn btn-success show-cal-btn" (click)="getDataBasedonYear()">Show Calendar</button> </div>
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -65,7 +73,7 @@
                
                     <tr *ngFor="let obj of finalCalendarArry">
                         <td>
-                            <select class="w120" [(ngModel)]="obj.status">
+                            <select class="w120" (change)="setIsUpdate($event.target.value,obj)" [(ngModel)]="obj.status" [disabled]="obj.status === '3' && obj.isUpdate==true">
                                 <option value="1">Current</option>
                                 <option value="2">Open</option>
                                 <option value="3">Closed</option>
@@ -85,7 +93,7 @@
             </table>
             <div class="clear"></div>
             <br>
-            <a href="#" class="btn btn-success pull-right">Save</a>
+            <button  class="btn btn-success pull-right" (click)="saveCalendar()">Save</button>
             <div class="clear"></div>
             <hr>
             <br>
@@ -671,7 +679,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <select class="w120">
+                            <select class="w120" >
                                 <option>Current</option>
                                 <option>Open</option>
                                 <option>Closed</option>

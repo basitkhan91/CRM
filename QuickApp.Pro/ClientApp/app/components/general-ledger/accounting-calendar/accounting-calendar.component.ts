@@ -3,6 +3,7 @@ import { fadeInOut } from '../../../services/animations';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService } from '../../../services/alert.service';
+import { LegalEntityService } from '../../../services/legalentity.service';
 
 @Component({
     selector: 'app-accounting-calendar',
@@ -27,21 +28,30 @@ export class AccountingCalendarComponent implements OnInit {
     showDefualt: boolean = true;
     completeCalendarData: any[] = [];
     isBoolean: boolean = false;
-    public minDate: Date = new Date();
-    constructor(private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
-     
+    public minDate: any;
+    companyList: any[] = [];
+    constructor(private legalEntityservice:LegalEntityService,private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
+        this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
     //add Legal Entity///
     ngOnInit() {
+        let date = new Date();
+        let year = date.getFullYear();
+        this.minDate= new Date(year + '-' + '01-01');
         this.calendarService.getAll().subscribe(data => {
             this.completeCalendarData = data[0];
          
         })
+        this.loadCompaniesData();
     }
     setSelectedAttribute(value) {
         this.selectedPeriod = value;
     }
-
+    private loadCompaniesData() {
+        this.legalEntityservice.getEntityList().subscribe(entitydata => {
+            this.companyList = entitydata[0];
+        });
+    }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -77,7 +87,7 @@ export class AccountingCalendarComponent implements OnInit {
                     else {
                         var fiscalYear = Number(this.currentCalendarObj.fiscalYear);
                     }
-                    var fromdate = fiscalYear + '-' + '0' + month + '-' + '01';
+                    var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
                     var date = new Date(fromdate);
                     if (this.isBoolean) {
                         var year = date.getFullYear() + 1;
@@ -88,16 +98,16 @@ export class AccountingCalendarComponent implements OnInit {
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
                     var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = year + '-' + '0' + month + '-' + lastday;
+                    var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
 
                 }
                 else {
-                    var fromdate = this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01';
+                    var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
                     var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = year + '-' + month + '-' + lastday;
+                    var toDate = new Date(year + '-' + month + '-' + lastday);
                 }
 
                 let defualtCalendarObj = {
@@ -113,6 +123,7 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
+                    legalEntityId:this.currentCalendarObj.legalEntityId
                 }
                 this.period++;
                 return defualtCalendarObj;
@@ -121,21 +132,21 @@ export class AccountingCalendarComponent implements OnInit {
                 let month = selectedMonth + 1;
                 if (month <= 9) {
 
-                    var fromdate = this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01';
+                    var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01');
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
                     var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = year + '-' + '0' + month + '-' + lastday;
+                    var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
 
                 }
                 else {
-                    var fromdate = this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01';
+                    var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
                     var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = year + '-' + month + '-' + lastday;
+                    var toDate = new Date(year + '-' + month + '-' + lastday);
                 }
 
                 let defualtCalendarObj = {
@@ -151,7 +162,8 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    adjusting: 'yes'
+                    adjusting: 'yes',
+                    legalEntityId: this.currentCalendarObj.legalEntityId
                 }
                 this.period++;
                 return defualtCalendarObj;
@@ -181,7 +193,7 @@ export class AccountingCalendarComponent implements OnInit {
                 else {
                     var fiscalYear = Number(this.currentCalendarObj.fiscalYear);
                 }
-                var fromdate = fiscalYear + '-' + '0' + month + '-' + '01';
+                var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
                 var date = new Date(fromdate);
                 if (this.isBoolean) {
                     var year = date.getFullYear() + 1;
@@ -192,16 +204,16 @@ export class AccountingCalendarComponent implements OnInit {
                 var year = date.getFullYear();
                 var lastmonth = date.getMonth();
                 var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                var toDate = year + '-' + '0' + month + '-' + lastday;
+                var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
 
             }
             else {
-                var fromdate = this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01';
+                var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
                 var date = new Date(fromdate);
                 var year = date.getFullYear();
                 var lastmonth = date.getMonth();
                 var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                var toDate = year + '-' + month + '-' + lastday;
+                var toDate = new Date(year + '-' + month + '-' + lastday);
             }
 
             if (this.calendarArray.length == 3) {
@@ -218,7 +230,8 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    adjusting:'yes'
+                    adjusting: 'yes',
+                    legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
                 this.period++;
@@ -239,7 +252,8 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    adjusting: 'yes'
+                    adjusting: 'yes',
+                    legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
                 this.period++;
@@ -256,6 +270,7 @@ export class AccountingCalendarComponent implements OnInit {
                     toDate: toDate,
                     periodName: fiscalName + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.name,
+                    legalEntityId: this.currentCalendarObj.legalEntityId,
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
@@ -279,7 +294,8 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    adjusting: 'yes'
+                    adjusting: 'yes',
+                    legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
                 this.period++;
@@ -298,6 +314,7 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
+                    legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
                 this.period++;
@@ -321,6 +338,7 @@ export class AccountingCalendarComponent implements OnInit {
                 description: this.currentCalendarObj.description,
                 createdBy: this.userName,
                 updatedBy: this.userName,
+                legalEntityId: this.currentCalendarObj.legalEntityId
 
             }
             
@@ -406,30 +424,61 @@ export class AccountingCalendarComponent implements OnInit {
         }
     }
     saveCalendar() {
+        debugger;
         let date = new Date(this.currentCalendarObj.fromDate);
         let year = date.getFullYear();
         let addDetails = false;
-        if (this.completeCalendarData.length > 0) {
-            for (let i = 0; i < this.completeCalendarData.length; i++) {
-                if (year == this.completeCalendarData[i].fiscalYear) {
-                    addDetails = true;
-                    alert("We already have data with this Calendar Year");
-                    break;
-                   
-                }
-                if (!addDetails) {
-                    this.calendarService.add(this.calendarArray).subscribe(data => {
-                        this.alertService.showMessage('Calendar data added successfully.');
+        let showDiff = true;
+        if (this.calendarArray && this.calendarArray.length > 0) {
+            let index = 0;
+            for (let i = 0; i < this.calendarArray.length; i++) {
+                index = i + 1;
+                if (this.calendarArray[i].adjusting && this.calendarArray[i].adjusting == 'yes') {
+                    
+                } else {
+                    if (this.calendarArray.length == index) {
+                        break;
+                    }
+                    else {
 
-                    })
+                        var date2 = new Date(this.calendarArray[i].toDate);
+                        let newDate = this.calendarArray[index].fromDate;
+                        var date1 = new Date(newDate);
+                        var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+                        var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDifference > 1) {
+                            alert("Please Enter valid dates");
+                            showDiff = false;
+                            break;
+                        }
+                    }
+
                 }
             }
         }
-        else {
-            this.calendarService.add(this.calendarArray).subscribe(data => {
-                this.alertService.showMessage('Calendar data added successfully.');
+        if (showDiff) {
+            if (this.completeCalendarData.length > 0) {
+                for (let i = 0; i < this.completeCalendarData.length; i++) {
+                    if (year == this.completeCalendarData[i].fiscalYear) {
+                        addDetails = true;
+                        alert("We already have data with this Calendar Year");
+                        break;
 
-            })
+                    }
+                    if (!addDetails) {
+                        this.calendarService.add(this.calendarArray).subscribe(data => {
+                            this.alertService.showMessage('Calendar data added successfully.');
+
+                        })
+                    }
+                }
+            }
+            else {
+                this.calendarService.add(this.calendarArray).subscribe(data => {
+                    this.alertService.showMessage('Calendar data added successfully.');
+
+                })
+            }
         }
        
     }

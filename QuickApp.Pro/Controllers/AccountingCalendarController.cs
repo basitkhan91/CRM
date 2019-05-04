@@ -52,6 +52,7 @@ namespace QuickApp.Pro.Controllers
                         calendarObj[i].UpdatedDate = DateTime.Now;
                         if (calendarObj[i].AccountingCalendarId > 0)
                         {
+                            //calendarObj[i].isUpdate = true;
                             unitOfWork.Repository<AccountingCalendar>().Update(calendarObj[i]);
                         }
                         else

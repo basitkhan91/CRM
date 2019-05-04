@@ -5,6 +5,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Calender Name</label>
                     <div class="col-sm-7">
+                        <span class="clr-red">*</span>
                         <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.name">
                     </div>
                 </div>
@@ -13,7 +14,18 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Calender Description</label>
                     <div class="col-sm-7">
+                        <span class="clr-red">*</span>
                         <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.description">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class=" col-sm-12">
+                    <label class="control-label col-sm-4">Ledger Name</label>
+                    <div class="col-sm-7">
+                        <select [(ngModel)]="currentCalendarObj.legalEntityId" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}} Ledger</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -22,12 +34,15 @@
             <div class="col-sm-3">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Fiscal Year</label>
+                    <span class="clr-red">*</span>
                     <div class="col-sm-7">
+
                         <input class="form-control" type="text" value="2018" [(ngModel)]="currentCalendarObj.fiscalYear">
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Period Type</label>
+                    <span class="clr-red">*</span>
                     <div class="col-sm-7">
                         <select [(ngModel)]="currentCalendarObj.periodType" (change)="showNumofPeriods($event.target.value)">
                             <option>Select</option>
@@ -41,20 +56,24 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Start Date</label>
                     <div class="col-sm-7">
-                        <input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164112" [(ngModel)]="currentCalendarObj.fromDate" [min]="minDate" >
+                        <span class="clr-red">*</span>
+                        <p-calendar [(ngModel)]="currentCalendarObj.fromDate" [showIcon]="true" [minDate]="minDate" [readonlyInput]="true"></p-calendar>
+                        <!--<input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164112" [(ngModel)]="currentCalendarObj.fromDate" [min]="minDate">-->
                     </div>
                 </div>
                 <div class="form-group col-sm-12" *ngIf="showDefualt==true">
                     <label class="control-label col-sm-4">Num of periods</label>
+                    <span class="clr-red">*</span>
                     <div class="col-sm-7">
                         <select name="noperiods" id="noperiods">
                             <option>Select</option>
-                            
+
                         </select>
                     </div>
                 </div>
                 <div class="form-group col-sm-12" *ngIf="showCalendarMonths">
                     <label class="control-label col-sm-4">Num of periods</label>
+                    <span class="clr-red">*</span>
                     <div class="col-sm-7">
                         <select name="noperiods" id="noperiods" [(ngModel)]="currentCalendarObj.noOfPeriods" (change)="setSelectedAttribute($event.target.value)">
                             <option>Select</option>
@@ -67,6 +86,7 @@
                 </div>
                 <div class="form-group col-sm-12" *ngIf="showFiscal">
                     <label class="control-label col-sm-4">Num of periods</label>
+                    <span class="clr-red">*</span>
                     <div class="col-sm-7">
                         <select name="noperiods" id="noperiods" [(ngModel)]="currentCalendarObj.noOfPeriods" (change)="setSelectedAttribute($event.target.value)">
                             <option>Select</option>
@@ -77,12 +97,16 @@
                         </select>
                     </div>
                 </div>
+                
             </div>
             <div class="col-sm-3">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">End Date</label>
                     <div class="col-sm-7">
-                        <input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164113" [(ngModel)]="currentCalendarObj.toDate">
+                        <span class="clr-red">*</span>
+                        <!--<input class="form-control datepicker hasDatepicker" type="date" id="dp1555497164113" [(ngModel)]="currentCalendarObj.toDate">-->
+                        <p-calendar [(ngModel)]="currentCalendarObj.toDate" [showIcon]="true"></p-calendar>
+
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -120,8 +144,14 @@
                     <td>{{obj.fiscalYear}}</td>
                     <td>{{obj.quater}}</td>
                     <td>{{obj.period}}</td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164114" value="{{obj.fromDate}}"></td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164115" value="{{obj.toDate}}"></td>
+                    <td>
+                        <p-calendar [(ngModel)]="obj.fromDate" [showIcon]="true"></p-calendar>
+                    </td>
+                    <td>
+                        <p-calendar [(ngModel)]="obj.toDate" [showIcon]="true"></p-calendar>
+                    </td>
+                    <!--<td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164114" value="{{obj.fromDate}}"></td>-->
+                    <!--<td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164115" value="{{obj.toDate}}"></td>-->
                     <td>{{obj.periodName}}</td>
                     <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" /></td>
                 </tr>

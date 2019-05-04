@@ -33,6 +33,11 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
+
         public string Status { get; set; }
+
+        public long? LegalEntityId { get; set; }
+
+        public bool? isUpdate { get; set; }
     }
 }
