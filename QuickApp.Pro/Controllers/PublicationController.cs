@@ -146,7 +146,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<PublicationAudit>>();
 
-            auditResult.Add(new AuditResult<PublicationAudit> { AreaName = "Publication Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<PublicationAudit> { AreaName = "Publication", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

@@ -166,7 +166,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<ATAChapterAudit>>();
 
-            auditResult.Add(new AuditResult<ATAChapterAudit> { AreaName = "ATA Chapter Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<ATAChapterAudit> { AreaName = "ATA Chapter", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

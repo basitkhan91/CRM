@@ -129,13 +129,13 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            var audits = _unitOfWork.Repository<ItemClassificationAudit>()
+            var audits = _unitOfWork.Repository<ItemClassficationAudit>()
                 .Find(x => x.ItemClassificationId == id)
                 .OrderByDescending(x => x.ItemClassificationAuditId);
 
-            var auditResult = new List<AuditResult<ItemClassificationAudit>>();
+            var auditResult = new List<AuditResult<ItemClassficationAudit>>();
 
-            auditResult.Add(new AuditResult<ItemClassificationAudit> { AreaName = "Item Classification Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<ItemClassficationAudit> { AreaName = "Item Classification", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

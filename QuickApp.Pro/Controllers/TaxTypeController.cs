@@ -149,7 +149,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<TaxTypeAudit>>();
 
-            auditResult.Add(new AuditResult<TaxTypeAudit> { AreaName = "Tax Type Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<TaxTypeAudit> { AreaName = "Tax Type", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

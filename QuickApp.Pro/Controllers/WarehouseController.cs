@@ -293,7 +293,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<WarehouseAudit>>();
 
-            auditResult.Add(new AuditResult<WarehouseAudit> { AreaName = "Warehouse Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<WarehouseAudit> { AreaName = "Warehouse ", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

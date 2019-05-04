@@ -139,7 +139,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<PriorityAudit>>();
 
-            auditResult.Add(new AuditResult<PriorityAudit> { AreaName = "priority Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<PriorityAudit> { AreaName = "priority", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

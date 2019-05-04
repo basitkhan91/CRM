@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class ItemGroupAudit
+    public class ItemgroupAudit
     {
         [Key]
         public long ItemGroupAuditId { get; set; }
@@ -26,6 +26,5 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
 
         public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
     }
 }

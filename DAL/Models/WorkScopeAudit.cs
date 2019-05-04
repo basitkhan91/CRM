@@ -7,7 +7,7 @@ namespace DAL.Models
 {
     public class WorkScopeAudit:PasBase
     {
-        
+        [Key]
         public long WorkScopeAuditId { get; set; }
         public long WorkScopeId { get; set; }
         public string WorkScopeCode { get; set; }

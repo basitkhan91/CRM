@@ -75,7 +75,13 @@
                             </td>
                         </tr>
                     </ng-template>
-                    
+
+                    <ng-template #auditContent let-c="close" let-d="dismiss">
+                        <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                            <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                        </div>
+                    </ng-template>
+
                 </p-table>
 			</div>
 
@@ -84,11 +90,7 @@
 	</div>
 </div>
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
-    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-    </div>
-</ng-template>
+
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
 	<div class="modal-header">

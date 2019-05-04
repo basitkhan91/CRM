@@ -8,7 +8,7 @@ namespace DAL.Models
     public class EmployeeLicenseTypeAudit:PasBase
     {
         [Key]
-        public Byte EmployeeLicenseTypeAuditId { get; set; }
+        public long EmployeeLicenseTypeAuditId { get; set; }
         public Byte EmployeeLicenseTypeId { get; set; }
         public string Description { get; set; }
         public bool? IsActive { get; set; }

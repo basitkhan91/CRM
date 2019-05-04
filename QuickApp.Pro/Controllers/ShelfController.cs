@@ -302,7 +302,7 @@ namespace QuickApp.Pro.Controllers
 
             var auditResult = new List<AuditResult<ShelfAudit>>();
 
-            auditResult.Add(new AuditResult<ShelfAudit> { AreaName = "Shelf Status", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<ShelfAudit> { AreaName = "Shelf ", Result = audits.ToList() });
 
             return Ok(auditResult);
         }
