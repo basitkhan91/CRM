@@ -110,14 +110,10 @@ import { AssetTypeSingleScreenEndpointService } from "../services/AssetTypeSingl
 import { AssetTypeSingleScreenService } from "../services/AssetTypeSingleScreen/assettypesinglescreen.service";
 import { AssetTypeSingleScreenComponent } from "../components/asset-type-single-screen/asset-type-single-screen.component";
 import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
-import { AuditComponent } from "../components/Audit/audit.component";
-
-//import { SharedModule } from '../shared/shared.module';
-//import { CompanyComponent } from '../shared/company/company.component';
+import { AuditModule } from "../audit/audit.module";
 
 @NgModule({
 	imports: [
-	//	SharedModule,
         FlexLayoutModule,
         FormsModule, ReactiveFormsModule,
         QuickAppProMaterialModule,
@@ -131,8 +127,8 @@ import { AuditComponent } from "../components/Audit/audit.component";
         MultiSelectModule,
         AutoCompleteModule,
         InputSwitchModule,
-		CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule
-		//CompanyComponent
+		CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule,
+		AuditModule
     ],
     declarations: [
         SingleComponent,
@@ -192,10 +188,6 @@ import { AuditComponent } from "../components/Audit/audit.component";
         DepreciationIntervalsComponent,
         AssetIntangibleTypeSingleScreenComponent,
         AssetTypeSingleScreenComponent,
-        AuditComponent,
-		//DefaultMessageComponent
-
-
     ],
     providers: [
         SingleScreenBreadcrumbService,

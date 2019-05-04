@@ -182,6 +182,7 @@ import { GlAccountService } from "./services/glAccount/glAccount.service";
 import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoint.service";
 import { AccountCalenderService } from "./services/account-calender/accountcalender.service";
 import { AccountCalenderEndpointService } from "./services/account-calender/accountcalender-endpoint.service";
+//import { AuditComponent } from "./components/Audit/audit.component";
 
 
 
@@ -223,7 +224,8 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
         NotFoundComponent,
         NotificationsViewerComponent,
         AddTaskDialogComponent,
-		StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
+        StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
+        //AuditComponent
 		
     ],
     providers: [

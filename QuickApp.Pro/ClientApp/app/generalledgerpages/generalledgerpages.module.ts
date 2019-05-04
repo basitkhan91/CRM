@@ -39,8 +39,8 @@ import { AccountCalenderEndpointService } from "../services/account-calender/acc
 import { PoRoCategoryComponent } from "../components/general-ledger/po-ro-category/po-ro-category.component";
 import { POROCategoryEndpoint } from "../services/porocategory/po-ro-category-endpoint.service";
 import { POROCategoryService } from "../services/porocategory/po-ro-category.service";
-import { AuditComponent } from "../components/Audit/audit.component";
-//import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
+import { AuditModule } from "../audit/audit.module";
+
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -55,7 +55,8 @@ import { AuditComponent } from "../components/Audit/audit.component";
         InputTextModule,
         MultiSelectModule,
         TreeTableModule,
-        TreeModule, DialogModule, CalendarModule, InputSwitchModule
+        TreeModule, DialogModule, CalendarModule, InputSwitchModule,
+        AuditModule
 
     ],
     declarations: [
@@ -66,7 +67,6 @@ import { AuditComponent } from "../components/Audit/audit.component";
         AccountReportsComponent,
         AccountSetupComponent,
         GeneralLedgerCurrencyComponent,
-        //GLAccountCategoryComponent,
         LegalEntityStructureComponent,
         ManagementStructureComponent,
         EntityEditComponent,
@@ -74,7 +74,6 @@ import { AuditComponent } from "../components/Audit/audit.component";
         GlaccountListComponent,
         GlaccountCreateComponent,
         PoRoCategoryComponent,
-        AuditComponent
 
        
     ],

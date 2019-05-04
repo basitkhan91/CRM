@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-  public class AssetDepConventionTypeAudit
+  public class AssetDepConventionTypeAudit : PasBase
     {
         [Key]
         public long? AssetDepConventionTypeAuditId { get; set; }
