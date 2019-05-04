@@ -17,6 +17,7 @@ export class AuditComponent implements OnInit{
     AuditDetails: Audit[];
 
     ngOnInit(): void {
+        this.AuditDetails = [];
         this.AuditDetails = this.extractAuditChangedValues(this.Data);
     }
 

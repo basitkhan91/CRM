@@ -120,11 +120,12 @@ export class PoRoCategoryComponent implements OnInit {
     }
 
     showAuditPopup(template, id): void {
-        this.auditporoCategory(id);
+        this.auditPOROCategory(id);
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    auditporoCategory(poroCategoryId: number): void {
+    auditPOROCategory(poroCategoryId: number): void {
+        this.AuditDetails = [];
         this.poroCategoryService.getAudit(poroCategoryId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
