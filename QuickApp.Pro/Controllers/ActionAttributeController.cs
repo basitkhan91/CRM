@@ -25,13 +25,13 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
-           
+
         }
         [HttpGet("Get")]
         [Produces(typeof(List<ActionAttributeViewModel>))]
         public IActionResult Get()
         {
-            var allActionattributes= _unitOfWork.ActionAttribute.GetActionAttributes(); //.GetAllCustomersData();
+            var allActionattributes = _unitOfWork.ActionAttribute.GetActionAttributes(); //.GetAllCustomersData();
             return Ok(Mapper.Map<IEnumerable<ActionAttributeViewModel>>(allActionattributes));
 
         }
@@ -128,5 +128,25 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(id);
         }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult GetActionAttributeAuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<ActionAttributeAudit>()
+                  .Find(X => X.ActionAttributeId == id)
+                  .OrderByDescending(X => X.ActionAttributeAuditId)
+                  .ToList();
+
+            var auditResult = new List<AuditResult<ActionAttributeAudit>>();
+            auditResult.Add(
+                new AuditResult<ActionAttributeAudit>
+                {
+                    AreaName = "Action Attribute",
+                    Memo = "Action Attribute",
+                    Result = audits
+                });
+            return Ok(auditResult);
+        }
+
     }
 }

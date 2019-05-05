@@ -20,7 +20,7 @@ namespace QuickApp.Pro.Controllers
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
-        
+
 
         public LaborAndOverheadCostController(IUnitOfWork unitOfWork, ILogger<LaborAndOverheadCostController> logger, IEmailer emailer)
         {
@@ -56,7 +56,7 @@ namespace QuickApp.Pro.Controllers
                 throw;
             }
         }
-            [HttpPost("labourpost")]
+        [HttpPost("labourpost")]
         public IActionResult CreateAction([FromBody] LaborAndOverheadCostViewModel LaborAndOverheadCostViewModel)
         {
             if (ModelState.IsValid)
@@ -137,7 +137,25 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("audits/{Id}")]
+        public IActionResult getLaborAndOverheadCostAuditDetails(long Id)
+        {
+            var audits = _unitOfWork.Repository<LaborOverloadCostAudit>()
+                .Find(x => x.LaborOverloadCostId == Id)
+                .OrderByDescending(x => x.LaborOverloadCostAuditId)
+                .ToList();
+
+            var auditResult = new List<AuditResult<LaborOverloadCostAudit>>();
+
+            auditResult.Add(new AuditResult<LaborOverloadCostAudit>
+            {
+                AreaName = "Labour and Over Load Cost",
+                Memo = "",
+                Result = audits
+            });
+            return Ok(auditResult);
+        }
+
 
     }
 }
-  

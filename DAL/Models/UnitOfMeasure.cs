@@ -6,8 +6,8 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class UnitOfMeasure : PasBase,IAudit
-    { 
+    public class UnitOfMeasure : PasBase, IAudit
+    {
         [Key]
         public long UnitOfMeasureId { get; set; }
 

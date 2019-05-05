@@ -63,5 +63,8 @@ export class ActionService {
 
     }
 
+    getTaskAuditDetails(actionId: number) {
+        return this.actionEndpoint.getTaskAuditDetails<any[]>(actionId);
+    }
   
 }

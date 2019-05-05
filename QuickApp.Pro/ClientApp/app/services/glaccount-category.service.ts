@@ -21,45 +21,45 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class GLAccountCategoryService {
-	public static readonly roleAddedOperation: RolesChangedOperation = "add";
-	public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
-	public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
+    public static readonly roleAddedOperation: RolesChangedOperation = "add";
+    public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
+    public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
-	private _rolesChanged = new Subject<RolesChangedEventArg>();
+    private _rolesChanged = new Subject<RolesChangedEventArg>();
 
-	constructor(
-		private router: Router,
-		private http: HttpClient,
-		private authService: AuthService,
-		private glaccountcategoryEndpoint: GLAccountCategoryEndpointservice) { }
+    constructor(
+        private router: Router,
+        private http: HttpClient,
+        private authService: AuthService,
+        private glaccountcategoryEndpoint: GLAccountCategoryEndpointservice) { }
 
-	getWorkFlows() {
-		return Observable.forkJoin(
-			this.glaccountcategoryEndpoint.getGLaccountcategoryEndpoint<any[]>());
-	}
-	newGLAccountCategory(action: any) {
-		return this.glaccountcategoryEndpoint.getNewGatecodeEndpoint<any>(action);
-	}
+    getWorkFlows() {
+        return Observable.forkJoin(
+            this.glaccountcategoryEndpoint.getGLaccountcategoryEndpoint<any[]>());
+    }
+    newGLAccountCategory(action: any) {
+        return this.glaccountcategoryEndpoint.getNewGatecodeEndpoint<any>(action);
+    }
 
-	getGLAccountCategory(GLAccountCategoryId?: number) {
-		return this.glaccountcategoryEndpoint.getEditGLAccountCategoryEndpoint<any>(GLAccountCategoryId);
-	}
+    getGLAccountCategory(GLAccountCategoryId?: number) {
+        return this.glaccountcategoryEndpoint.getEditGLAccountCategoryEndpoint<any>(GLAccountCategoryId);
+    }
 
-	updateGLAccountCategory(action: any) {
-		return this.glaccountcategoryEndpoint.getUpdateGLAccountCategoryEndpoint(action, action.glAccountCategoryId);
-	}
+    updateGLAccountCategory(action: any) {
+        return this.glaccountcategoryEndpoint.getUpdateGLAccountCategoryEndpoint(action, action.glAccountCategoryId);
+    }
 
-	deleteGLAccountCategory(glAccountCategoryId: number) {
+    deleteGLAccountCategory(glAccountCategoryId: number) {
 
-		return this.glaccountcategoryEndpoint.getDeleteGLAccountCategoryEndpoint(glAccountCategoryId);
+        return this.glaccountcategoryEndpoint.getDeleteGLAccountCategoryEndpoint(glAccountCategoryId);
 
-	}
-	historyGLAccountCategory(GLAccountCategoryId: number) {
-		return Observable.forkJoin(this.glaccountcategoryEndpoint.getHistoryGLAccountCategoryEndpoint<AuditHistory[]>(GLAccountCategoryId));
-	}
-    
-    getGlAccountcategoryAudit(GLAccountCategoryId: number) {
-        return this.glaccountcategoryEndpoint.getGlAccountCategoryAuditById<any>(GLAccountCategoryId);
+    }
+    historyGLAccountCategory(GLAccountCategoryId: number) {
+        return Observable.forkJoin(this.glaccountcategoryEndpoint.getHistoryGLAccountCategoryEndpoint<AuditHistory[]>(GLAccountCategoryId));
+    }
+
+    getGLAccountCategoryAudiitDetails(Id: number) {
+        return this.glaccountcategoryEndpoint.getGLAccountCategoryAuditDetails<any[]>(Id);
     }
 
 }

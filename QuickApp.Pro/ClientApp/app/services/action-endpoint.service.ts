@@ -13,7 +13,8 @@ export class ActionEndpoint extends EndpointFactory {
 
     private readonly _actionsUrl: string = "/api/Action/Get";
     private readonly _actionsUrlNew: string = "/api/Action/actions";
-    private readonly _actionsUrlAuditHistory: string = "/api/Action/auditHistoryById";
+    private readonly _actionsUrlAuditHistory: string = "c/auditHistoryById";
+    private readonly _auditUrl: string = '/api/Action/audits'
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -75,6 +76,12 @@ export class ActionEndpoint extends EndpointFactory {
             });
     }
 
-   
-    
+    getTaskAuditDetails<T>(Id: number): Observable<T> {
+        let endPointUrl = `${this._auditUrl}/${Id}`;
+
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getTaskAuditDetails(Id));
+            });
+    }
 }

@@ -20,42 +20,46 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class ManufacturerService {
-	public static readonly roleAddedOperation: RolesChangedOperation = "add";
-	public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
-	public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
-	private _rolesChanged = new Subject<RolesChangedEventArg>();
+    public static readonly roleAddedOperation: RolesChangedOperation = "add";
+    public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
+    public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
+    private _rolesChanged = new Subject<RolesChangedEventArg>();
 
-	constructor(
-		private router: Router,
-		private http: HttpClient,
-		private authService: AuthService,
-		private manufacturerEndpoint: ManufacturerEndpoint) { }
+    constructor(
+        private router: Router,
+        private http: HttpClient,
+        private authService: AuthService,
+        private manufacturerEndpoint: ManufacturerEndpoint) { }
 
-	getWorkFlows() {
-		return Observable.forkJoin(
-			this.manufacturerEndpoint.getManufacturerEndpoint<any[]>());
-	}
+    getWorkFlows() {
+        return Observable.forkJoin(
+            this.manufacturerEndpoint.getManufacturerEndpoint<any[]>());
+    }
 
-	historyManufacturer(ManufacturerId: number) {
-		return Observable.forkJoin(this.manufacturerEndpoint.getHistoryManufacturerIdEndpoint<any>(ManufacturerId));
-	}
+    historyManufacturer(ManufacturerId: number) {
+        return Observable.forkJoin(this.manufacturerEndpoint.getHistoryManufacturerIdEndpoint<any>(ManufacturerId));
+    }
 
-	newManufacturer(action: any) {
-		return this.manufacturerEndpoint.getNewGatecodeEndpoint<any>(action);
-	}
+    newManufacturer(action: any) {
+        return this.manufacturerEndpoint.getNewGatecodeEndpoint<any>(action);
+    }
 
-	getManufacturer(ManufacturerId?: number) {
-		return this.manufacturerEndpoint.getEditManufacturerEndpoint<any>(ManufacturerId);
-	}
+    getManufacturer(ManufacturerId?: number) {
+        return this.manufacturerEndpoint.getEditManufacturerEndpoint<any>(ManufacturerId);
+    }
 
-	updateManufacturer(action: any) {
-		return this.manufacturerEndpoint.getUpdateManufacturerEndpoint(action, action.manufacturerId);
-	}
+    updateManufacturer(action: any) {
+        return this.manufacturerEndpoint.getUpdateManufacturerEndpoint(action, action.manufacturerId);
+    }
 
-	deleteManufacturer(manufacturerId: number) {
+    deleteManufacturer(manufacturerId: number) {
 
-		return this.manufacturerEndpoint.getDeleteManufacturerIdEndpoint(manufacturerId);
+        return this.manufacturerEndpoint.getDeleteManufacturerIdEndpoint(manufacturerId);
 
-	}
+    }
+
+    getManufacturerAuditDetails(Id: number) {
+        return this.manufacturerEndpoint.getManufacturerAuditDetails<any[]>(Id);
+    }
 
 }

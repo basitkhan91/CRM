@@ -57,7 +57,13 @@ export class LaborAndOverheadCostService {
 
 		return this.laborandoverheadcostEndpoint.getDeleteLaborAndOverheadCostEndpoint(laborOverloadCostId);
 
-	}
+    }
+
+    getHistoryLaborandOverheadCostAuditDetails(Id: number) {
+
+        return this.laborandoverheadcostEndpoint.getHistoryLaborandOverheadCostAuditDetails<any>(Id);
+
+    }
 
 
 }

@@ -61,6 +61,9 @@ export class ActionAttributeService {
     historyAcion(actionId: number) {
         return Observable.forkJoin(this.actionEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
     }
-    
+
+    getTaskAttributeAuditeDetails(actionAttributeId: number) {
+        return this.actionEndpoint.getTaskAttributeAuditeDetails<any[]>(actionAttributeId);
+    }
 
 }

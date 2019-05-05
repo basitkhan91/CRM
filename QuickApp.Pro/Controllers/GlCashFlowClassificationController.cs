@@ -19,7 +19,7 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
-        public GlCashFlowClassificationController( ApplicationDbContext context,IUnitOfWork unitOfWork, ILogger<GlCashFlowClassificationController> logger, IEmailer emailer)
+        public GlCashFlowClassificationController(ApplicationDbContext context, IUnitOfWork unitOfWork, ILogger<GlCashFlowClassificationController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -35,7 +35,8 @@ namespace QuickApp.Pro.Controllers
             {
                 var allcashflows = _context.GlClassFlowClassification.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.GlClassFlowClassificationId).ToList();
                 return Ok(allcashflows);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
 
             }
@@ -133,6 +134,23 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
 
             return Ok(id);
+        }
+
+        [HttpGet("audits/{Id}")]
+        public IActionResult GetGLCashFlowClassificationAuditDetails(long Id)
+        {
+            var audits = _unitOfWork.Repository<GlClassFlowClassificationAudit>()
+                 .Find(x => x.GlClassFlowClassificationId == Id)
+                 .OrderByDescending(x => x.GlClassFlowClassificationAuditId).ToList();
+
+            var auditResult = new List<AuditResult<GlClassFlowClassificationAudit>>();
+            auditResult.Add(new AuditResult<GlClassFlowClassificationAudit>
+            {
+                AreaName = "GL Cash Flow Classification",
+                Memo = "",
+                Result = audits
+            });
+            return Ok(auditResult);
         }
     }
 

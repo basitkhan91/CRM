@@ -9,7 +9,7 @@ namespace DAL.Models
     {
         [Key]
         public long TaxTypeAuditId { get; set; }
-        public byte TaxTypeId { get; set; }
+        public int TaxTypeId { get; set; }
         public string Description { get; set; }
         public string Memo { get; set; }
         public Int32 MasterCompanyId { get; set; }

@@ -81,11 +81,7 @@
                         </tr>
                     </ng-template>
 
-                    <ng-template #auditContent let-c="close" let-d="dismiss">
-                        <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                            <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-                        </div>
-                    </ng-template>
+
 
 
 
@@ -96,6 +92,12 @@
 
 
 </div>
+
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
 
 
 <ng-template #content let-c="close" let-d="dismiss">

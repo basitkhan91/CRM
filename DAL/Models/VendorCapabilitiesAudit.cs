@@ -6,30 +6,19 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class Manufacturer : IAudit
+    public class VendorCapabiliyAudit
     {
         [Key]
-        public long ManufacturerId { get; set; }
-
-        public string Name { get; set; }
-        //public string Memo { get; set; }
-
-        [ForeignKey("MasterCompanyId")]
-        public Int32 MasterCompanyId { get; set; }
-        public string Comments { get; set; }
+        public long VendorCapabiliyAuditId { get; set; }
+        public long VendorCapabilityId { get; set; }
+        public long CapabilityId { get; set; }
+        public string CapabilityName { get; set; }
+        public Int32? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
-
         public string UpdatedBy { get; set; }
-
         public DateTime CreatedDate { get; set; }
-
         public DateTime UpdatedDate { get; set; }
-
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
-
-        public virtual MasterCompany MasterCompany { get; set; }
-
     }
 }
-

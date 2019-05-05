@@ -6,25 +6,15 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class Action : PasBase, IAudit
+    public class GlClassFlowClassificationAudit : PasBase
     {
         [Key]
-        public long ActionId { get; set; }
-
-        public string Description { get; set; }
-
-        public string Memo { get; set; }
-
-        [ForeignKey("MasterCompanyId")]
+        public long GlClassFlowClassificationAuditId { get; set; }
+        public long GlClassFlowClassificationId { get; set; }
+        public long GLCID { get; set; }
+        public string GLClassFlowClassificationName { get; set; }
         public Int32 MasterCompanyId { get; set; }
-
         public bool? IsActive { get; set; }
-
         public bool? IsDelete { get; set; }
-
-        public virtual MasterCompany MasterCompany { get; set; }
-
-
-        // public bool? IsDelete { get; set; }
     }
 }

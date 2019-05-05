@@ -140,17 +140,21 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        [HttpGet("audits/{id}")]
-        public IActionResult AuditDetails(long id)
+        [HttpGet("audits/{Id}")]
+        public IActionResult GetTextTypeAuditDetails(long Id)
         {
-            var audits = _unitOfWork.Repository<TaxTypeAudit>()
-                .Find(x => x.TaxTypeId == id)
-                .OrderByDescending(x => x.TaxTypeAuditId);
+            var audits = _unitOfWork.Repository<TaxTypeAudit>().Find(x => x.TaxTypeId == Id)
+                .OrderByDescending(x => x.TaxTypeAuditId).ToList();
 
             var auditResult = new List<AuditResult<TaxTypeAudit>>();
 
-            auditResult.Add(new AuditResult<TaxTypeAudit> { AreaName = "Tax Type", Result = audits.ToList() });
-
+            auditResult.Add(new AuditResult<TaxTypeAudit>
+            {
+                AreaName = "Tax Type",
+                Memo = "Tax Type",
+                Result = audits
+            }
+            );
             return Ok(auditResult);
         }
 

@@ -14,8 +14,7 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/UnitOfMeasure/Get";
     private readonly _actionsUrlNew: string = "/api/UnitOfMeasure/unitofmeasure";
     private readonly _actionsUrlAuditHistory: string = "/api/UnitOfMeasure/auditHistoryById";
-    private readonly getUnitOfMeasureAuditDataById: string = "/api/UnitOfMeasure/audits";
-
+    private readonly _auditsUrl: string = "/api/UnitOfMeasure/audits";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -75,12 +74,12 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
             });
     }
 
-    getUnitOfMeasureAuditById<T>(assetId: number): Observable<T> {
-        let endpointUrl = `${this.getUnitOfMeasureAuditDataById}/${assetId}`;
+    getUnitOfWorkAuditDetails<T>(Id: number): Observable<T> {
+        let endPointUrl = `${this._auditsUrl}/${Id}`;
 
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getUnitOfMeasureAuditById(assetId));
+                return this.handleError(error, () => this.getUnitOfWorkAuditDetails(Id));
             });
     }
 

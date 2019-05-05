@@ -21,7 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-unit-of-measure',
@@ -43,6 +43,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
+    AuditDetails: SingleScreenAuditDetails[];
 
     isSaving: boolean;
     ngOnInit(): void {
@@ -71,7 +72,6 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     unitName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-    AuditDetails: SingleScreenAuditDetails[];
 
     /** Actions ctor */
 
@@ -415,6 +415,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     }
 
     private getDismissReason(reason: any): string {
+        debugger;
         if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
         } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -425,17 +426,19 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     }
 
     showAuditPopup(template, id): void {
-        this.auditAssetStatus(id);
+        debugger;
+        this.getUnitOfMeasureAuditDetails(id);
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    auditAssetStatus(unitOfMeasureId: number): void {
-        this.AuditDetails = [];
-        this.unitofmeasureService.getUnitOfMeasureAudit(unitOfMeasureId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "masterCompanyId","createdBy", "createdDate", "updatedDate"];
-            }
+    getUnitOfMeasureAuditDetails(Id: number): void {
+        this.unitofmeasureService.getUnitOfWorkAuditDetails(Id).subscribe(audits => {
+            console.log(audits);
+            if (audits != null)
+                if (audits.length > 0) {
+                    this.AuditDetails = audits;
+                    this.AuditDetails[0].ColumnsToAvoid = ["unitOfMeasureAuditId", "unitOfMeasureId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+                }
         });
     }
 }

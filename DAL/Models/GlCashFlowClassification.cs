@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class GlClassFlowClassification : PasBase
+    public class GlClassFlowClassification : PasBase,IAudit
     {
         [Key]
         public long GlClassFlowClassificationId { get; set; }

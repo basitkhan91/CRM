@@ -21,7 +21,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+
 
 @Component({
     selector: 'app-work-scope',
@@ -32,10 +33,10 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 /** Actions component*/
 export class WorkScopeComponent implements OnInit, AfterViewInit {
 
-    allcolletion: any[]=[];
+    allcolletion: any[] = [];
     disableSave: boolean = false;
     selectedworkscope: any;
-   workScope_Name: any = "";
+    workScope_Name: any = "";
     description: any = "";
     memo: any = "";
     createdBy: any = "";
@@ -44,9 +45,9 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
     updatedDate: any = "";
     isSaving: boolean;
     ngOnInit(): void {
-		this.loadData();
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-work-scope';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        this.loadData();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-work-scope';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -57,7 +58,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
     sourceAction: WorkScope;
     allComapnies: MasterCompany[] = [];
     public auditHisory: AuditHistory[] = [];
-   
+
     loadingIndicator: boolean;
     actionForm: FormGroup;
     title: string = "Create";
@@ -72,12 +73,13 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
     localCollection: any[] = [];
     AuditDetails: SingleScreenAuditDetails[];
 
+
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workscopeService: WorkScopeService,  private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workscopeService: WorkScopeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new WorkScope();
@@ -106,7 +108,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
-           // { field: 'createdDate', header: 'Created Date' }
+            // { field: 'createdDate', header: 'Created Date' }
         ];
         this.selectedColumns = this.cols;
     }
@@ -171,10 +173,10 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-		this.isSaving = true;
-		this.disableSave = false;
+        this.isSaving = true;
+        this.disableSave = false;
         this.loadMasterCompanies();
-		this.sourceAction = new WorkScope();
+        this.sourceAction = new WorkScope();
         this.sourceAction.isActive = true;
         this.workScopeName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -196,7 +198,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
     }
 
     openEdit(content, row) {
-		this.disableSave = false;
+        this.disableSave = false;
         this.isEditMode = true;
         this.isSaving = true;
         this.loadMasterCompanies();
@@ -213,7 +215,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.sourceAction = row;
-       //this.isSaving = true;
+        //this.isSaving = true;
         // debugger;
         this.workscopeService.historyWorkScope(this.sourceAction.workScopeId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
@@ -260,7 +262,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
                     "workScopeId": this.allWorkScopeinfo[i].workScopeId,
                     "workScopeName": workScopeName
                 }]),
-                this.localCollection.push(workScopeName);
+                    this.localCollection.push(workScopeName);
             }
         }
     }
@@ -309,7 +311,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    
+
 
     editItemAndCloseModel() {
 
@@ -353,7 +355,7 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
 
     private saveCompleted(user?: WorkScope) {
         this.isSaving = false;
-       if (this.isDeleteMode == true) {
+        if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
         }
@@ -393,17 +395,17 @@ export class WorkScopeComponent implements OnInit, AfterViewInit {
         }
     }
 
-    showAuditPopup(template, id): void
-    {
-        this.auditWorkScope(id);
+    showAuditPopup(template, id): void {
+        debugger;
+        this.getWorkScopeAuditDetails(id);
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    auditWorkScope(workScopeId: number): void {
-        this.workscopeService.getWorkScopeAudit(workScopeId).subscribe(audits => {
+    getWorkScopeAuditDetails(Id: number): void {
+        this.workscopeService.getWorkScopeAuditDetails(Id).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["workflowScopeAuditId", "workflowScopeId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["workScopeAuditId", "workScopeId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

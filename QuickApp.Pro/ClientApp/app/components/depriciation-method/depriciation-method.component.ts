@@ -5,6 +5,7 @@ import { DepriciationMethod } from '../../models/depriciation-method.model';
 import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-depriciation-method',
@@ -24,7 +25,7 @@ export class DepriciationMethodComponent implements OnInit {
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
-
+    AuditDetails: SingleScreenAuditDetails[];
     /** DepriciationMethod ctor */
     constructor(private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal) {
     }
@@ -117,29 +118,26 @@ export class DepriciationMethodComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    toggleIsActive(depriciationMethod: any, e) {
-        if (e.checked == false) {
-            this.depriciationToUpdate = depriciationMethod;
-            this.Active = "In Active";
-            this.depriciationToUpdate.isActive == false;
-            this.depriciationMethodService.update(this.depriciationToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Depriciation Method updated successfully.');
-                this.depriciationMethodService.getAll().subscribe(assets => {
-                    this.depriciationMethodList = assets[0];
-                });
+    toggleIsActive(depriciationMethod: any, event) {
+        debugger;
+        this.currentDepriciationmethod.assetDepreciationId = depriciationMethod.assetDepreciationMethodId;
+        this.depriciationToUpdate = depriciationMethod;
+        this.depriciationToUpdate.isActive = event.checked == false ? false : true;
+        this.updatedepriciationmethod();
+    }
 
-            })
-        }
-        else {
-            this.depriciationToUpdate = depriciationMethod;
-            this.Active = "Active";
-            this.depriciationToUpdate.isActive == true;
-            this.depriciationMethodService.update(this.depriciationToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Depriciation Method updated successfully.');
-                this.depriciationMethodService.getAll().subscribe(assets => {
-                    this.depriciationMethodList = assets[0];
-                });
-            })
-        }
+    showAuditPopup(template, id): void {
+        this.getAssetDepreciationAudits(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    getAssetDepreciationAudits(assetdepreciationMethodId: number): void {
+        this.AuditDetails = [];
+        this.depriciationMethodService.getAssetDepriciationMethodAudits(assetdepreciationMethodId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationMethodAuditId", "assetDepreciationMethodId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

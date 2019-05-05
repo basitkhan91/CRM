@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace QuickApp.Pro.Controllers
 {
     [Route("api/[controller]")]
-    public class ManufacturerController: Controller
+    public class ManufacturerController : Controller
     {
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
@@ -124,6 +124,24 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
 
             return Ok(id);
+        }
+
+        [HttpGet("audits/{Id}")]
+        public IActionResult GetManufacturerAuditDetails(long Id)
+        {
+            var audits = _unitOfWork.Repository<ManufacturerAudit>()
+                .Find(x => x.ManufacturerId == Id)
+                .OrderByDescending(x => x.ManufacturerAuditId).ToList();
+            var auditResult = new List<AuditResult<ManufacturerAudit>>();
+
+            auditResult.Add(new AuditResult<ManufacturerAudit>
+            {
+                AreaName = "Manufacturer",
+                Memo = "",
+                Result = audits
+            });
+
+            return Ok(auditResult);
         }
     }
 

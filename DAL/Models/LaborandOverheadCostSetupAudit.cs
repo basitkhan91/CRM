@@ -6,9 +6,11 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class LaborOverloadCost : IAudit
+    public class LaborOverloadCostAudit
     {
         [Key]
+        public long LaborOverloadCostAuditId { get; set; }
+
         public long? LaborOverloadCostId { get; set; }
 
         public bool UseIndTechLaborRate { get; set; }
@@ -27,14 +29,11 @@ namespace DAL.Models
 
         public bool FlatAmtPerWO { get; set; }
 
-        [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
-
-        public virtual MasterCompany MasterCompany { get; set; }
 
         public string CreatedBy { get; set; }
 

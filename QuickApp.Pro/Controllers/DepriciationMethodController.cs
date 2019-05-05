@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -97,7 +99,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removedepreciationMethodById(long id)
         {
-            var depriciation = unitOfWork.Repository<AssetDepreciationMethod> ().Find(x => x.AssetDepreciationMethodId == id).FirstOrDefault();
+            var depriciation = unitOfWork.Repository<AssetDepreciationMethod>().Find(x => x.AssetDepreciationMethodId == id).FirstOrDefault();
             if (depriciation != null)
             {
                 depriciation.IsDelete = true;
@@ -109,6 +111,20 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = unitOfWork.Repository<AssetDepreciationMethodAudit>()
+                .Find(X => X.AssetDepreciationMethodId == id)
+                .OrderByDescending(x => x.AssetDepreciationMethodAuditId).ToList();
+
+            var auditResult = new List<AuditResult<AssetDepreciationMethodAudit>>();
+            auditResult.Add(new AuditResult<AssetDepreciationMethodAudit>
+            { AreaName = "Asset Deprecation Method", Memo = "", Result = audits });
+
+            return Ok(auditResult);
         }
 
         #endregion Public Methods

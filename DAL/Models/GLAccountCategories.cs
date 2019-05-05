@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class GLAccountCategories:IAudit
+    public class GLAccountCategories : IAudit
     {
         [Key]
         public long GLAccountCategoryId { get; set; }

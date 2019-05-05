@@ -22,6 +22,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 @Component({
     selector: 'app-actions',
     templateUrl: './actions.component.html',
@@ -69,7 +70,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     Active: string = "Active";
     length: number;
     localCollection: any[] = [];
-
+    AuditDetails: SingleScreenAuditDetails[];
     /** Actions ctor */
 
     private isEditMode: boolean = false;
@@ -414,5 +415,22 @@ export class ActionsComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(templateId, Id): void {
+        this.getTaskAuditDetails(Id);
+        this.modal = this.modalService.open(templateId, { size: 'sm' });       
+
+    }
+
+    getTaskAuditDetails(Id: number): void {
+        debugger;
+        this.workFlowtService.getTaskAuditDetails(Id).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["actionAuditId", "actionId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+
     }
 }

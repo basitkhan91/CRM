@@ -82,7 +82,7 @@
                                             </a>
                                         </span>
                                         <span data-toggle="modal" data-target="#history">
-                                            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                            <a data-toggle="tooltip" (click)="showAuditPopup(auditContent,depriciationMethod.assetDepreciationMethodId)" title="" class="btn btn-success nobg" data-original-title="History">
                                                 <i class="fa fa-history"></i>
                                             </a>
                                         </span>
@@ -120,6 +120,11 @@
     </div>
 </ng-template>
 
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal" title='Asset Depreciation Method Audit Details'></app-audit>
+    </div>
+</ng-template>
 
 <ng-template #editAssetTypes let-c="close" let-d="dismiss">
 

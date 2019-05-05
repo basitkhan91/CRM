@@ -23,6 +23,7 @@ import { Action } from 'rxjs/scheduler/Action';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-gl-cash-flow-classification',
@@ -69,7 +70,8 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 	public sourceglcashflowclassification: any = {}
 	GLClassFlowClassificationName: string;
    // allGLcashflow: any[];
-	cashflowViewFileds: any = {};
+    cashflowViewFileds: any = {};
+    AuditDetails: SingleScreenAuditDetails[];
 	
 	
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private workFlowtService:GlCashFlowClassificationService) {
@@ -396,7 +398,22 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-	}
+    }
+
+    showAuditPopup(template, id): void {
+        debugger;
+        this.getAuditDetails(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    getAuditDetails(Id: number): void {
+        this.workFlowtService.getGLCashFlowClassificationAuditDetails(Id).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["glClassFlowClassificationAuditId", "glClassFlowClassificationId", "glcid","masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
+    }
 
 }
 

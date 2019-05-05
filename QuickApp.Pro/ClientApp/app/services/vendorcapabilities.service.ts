@@ -21,43 +21,47 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class VendorCapabilitiesService {
-	public static readonly roleAddedOperation: RolesChangedOperation = "add";
-	public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
-	public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
+    public static readonly roleAddedOperation: RolesChangedOperation = "add";
+    public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
+    public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
-	private _rolesChanged = new Subject<RolesChangedEventArg>();
+    private _rolesChanged = new Subject<RolesChangedEventArg>();
 
-	constructor(
-		private router: Router,
-		private http: HttpClient,
-		private authService: AuthService,
-		private vendorCapabilitiesEndpoint: VendorCapabilitiesEndpoint) { }
+    constructor(
+        private router: Router,
+        private http: HttpClient,
+        private authService: AuthService,
+        private vendorCapabilitiesEndpoint: VendorCapabilitiesEndpoint) { }
 
-	getWorkFlows() {
-		return Observable.forkJoin(
-			this.vendorCapabilitiesEndpoint.getvendorcapabilitiesEndpoint<any[]>());
-	}
+    getWorkFlows() {
+        return Observable.forkJoin(
+            this.vendorCapabilitiesEndpoint.getvendorcapabilitiesEndpoint<any[]>());
+    }
 
-	historyvendorcapabilities(VendorCapabilityId: number) {
-		return Observable.forkJoin(this.vendorCapabilitiesEndpoint.getHistoryvendorcapabilitiesEndpoint<any>(VendorCapabilityId));
-	}
+    historyvendorcapabilities(VendorCapabilityId: number) {
+        return Observable.forkJoin(this.vendorCapabilitiesEndpoint.getHistoryvendorcapabilitiesEndpoint<any>(VendorCapabilityId));
+    }
 
-	newvendorcapabilities(action: any) {
-		return this.vendorCapabilitiesEndpoint.getNewGatecodeEndpoint<any>(action);
-	}
+    newvendorcapabilities(action: any) {
+        return this.vendorCapabilitiesEndpoint.getNewGatecodeEndpoint<any>(action);
+    }
 
-	getvendorcapabilities(VendorCapabilityId?: number) {
-		return this.vendorCapabilitiesEndpoint.getEditvendorcapabilitiesEndpoint<any>(VendorCapabilityId);
-	}
+    getvendorcapabilities(VendorCapabilityId?: number) {
+        return this.vendorCapabilitiesEndpoint.getEditvendorcapabilitiesEndpoint<any>(VendorCapabilityId);
+    }
 
-	updatevendorcapabilities(action: any) {
-		return this.vendorCapabilitiesEndpoint.getUpdatevendorcapabilitiesEndpoint(action, action.vendorCapabilityId);
-	}
+    updatevendorcapabilities(action: any) {
+        return this.vendorCapabilitiesEndpoint.getUpdatevendorcapabilitiesEndpoint(action, action.vendorCapabilityId);
+    }
 
-	deletevendorcapabilities(vendorCapabilityId: number) {
+    deletevendorcapabilities(vendorCapabilityId: number) {
 
-		return this.vendorCapabilitiesEndpoint.getDeletevendorcapabilitiesEndpoint(vendorCapabilityId);
+        return this.vendorCapabilitiesEndpoint.getDeletevendorcapabilitiesEndpoint(vendorCapabilityId);
 
-	}
+    }
+
+    getVendorCapabilityAuditDetails(Id: number) {
+        return this.vendorCapabilitiesEndpoint.getVendorCapabilityAuditDetails<any[]>(Id);
+    }
 
 }

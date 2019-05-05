@@ -44,7 +44,6 @@ export class AccountService
 
     getUserAndRoles(userId?: string)
     {
-
         return Observable.forkJoin(
             this.accountEndpoint.getUserEndpoint<User>(userId),
             this.accountEndpoint.getRolesEndpoint<Role[]>());
@@ -52,9 +51,6 @@ export class AccountService
 
     getUsers(page?: number, pageSize?: number)
     {
-
-
-
         return this.accountEndpoint.getUsersEndpoint<User[]>(page, pageSize);
     }
 

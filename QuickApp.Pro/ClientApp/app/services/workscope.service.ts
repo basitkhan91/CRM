@@ -59,9 +59,11 @@ export class WorkScopeService {
     deleteWorkScope(workScopeId: number) {
 
         return this.workscopeEndpoint.getDeleteWorkScopeEndpoint(workScopeId);
+
     }
-    getWorkScopeAudit(workScopeId: number) {
-        return this.workscopeEndpoint.getWorkScopeAuditById<any>(workScopeId);
+
+    getWorkScopeAuditDetails(Id: number) {
+        return this.workscopeEndpoint.getWorkScopeAuditDetails<any[]>(Id);
     }
 
 }

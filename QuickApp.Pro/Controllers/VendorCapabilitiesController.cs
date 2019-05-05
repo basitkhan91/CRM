@@ -17,7 +17,7 @@ namespace QuickApp.Pro.Controllers
    : Controller
     {
         private IUnitOfWork _unitOfWork;
-       // private readonly ApplicationDbContext _context;
+        // private readonly ApplicationDbContext _context;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         //private readonly ApplicationDbContext _context;
@@ -129,6 +129,25 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
 
             return Ok(id);
+        }
+
+        [HttpGet("audits/{Id}")]
+        public IActionResult GetVendorCapabilityAuditDetails(long Id)
+        {
+            var audits = _unitOfWork.Repository<VendorCapabiliyAudit>()
+                .Find(x => x.VendorCapabilityId == Id)
+                .OrderByDescending(x => x.VendorCapabiliyAuditId).ToList();
+
+            var auditResult = new List<AuditResult<VendorCapabiliyAudit>>();
+
+            auditResult.Add(new AuditResult<VendorCapabiliyAudit>
+            {
+                AreaName = "Vendor Capabilities",
+                Memo = "",
+                Result = audits
+            });
+
+            return Ok(auditResult);
         }
     }
 }

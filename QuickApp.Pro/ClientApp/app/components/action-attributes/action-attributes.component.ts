@@ -23,6 +23,7 @@ import { Action } from 'rxjs/scheduler/Action';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 @Component({
     selector: 'app-action-attributes',
     templateUrl: './action-attributes.component.html',
@@ -31,17 +32,17 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 })
 /** ActionsAttribute component*/
 export class ActionAttributesComponent implements OnInit, AfterViewInit {
-	sourceView: any = {};
+    sourceView: any = {};
     disableSave: boolean;
     selectedActionName: any;
-    actionamecolle: any[]=[];
+    actionamecolle: any[] = [];
     auditHisory: any[];
-   
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     cols: any[];
     selectedColumns: any[];
-    displayedColumns = ['actionattributeid', 'description', 'createdDate','companyName'];
+    displayedColumns = ['actionattributeid', 'description', 'createdDate', 'companyName'];
     dataSource: MatTableDataSource<ActionAttribute>;
     allActionAttribute: ActionAttribute[] = [];
     allComapnies: MasterCompany[] = [];
@@ -67,28 +68,29 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
     updatedBy: any;
     createdBy: any;
     updatedDate: any;
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ActionAttributeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    AuditDetails: SingleScreenAuditDetails[];
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ActionAttributeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new ActionAttribute();
 
     }
     ngOnInit(): void {
-        
+
         this.loadData();
         this.cols = [
             //{ field: 'actionAttributeId', header: 'ACID' },
-			{ field: 'description', header: 'Action Attribute Name' },
-			{ field: 'memo', header: 'Memo' },
+            { field: 'description', header: 'Action Attribute Name' },
+            { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
             //{ field: 'createdDate', header: 'Created Date' },
             //{ field: 'updatedDate', header: 'Updated Date' }
-          
-        
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-action-attributes';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+
+
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-action-attributes';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
     }
     ngAfterViewInit() {
@@ -97,12 +99,12 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
     }
     public allWorkFlows: ActionAttribute[] = [];
     private loadData() {
-       this.alertService.startLoadingMessage();
+        this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.workFlowtService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
-       );
+        );
     }
 
 
@@ -114,17 +116,17 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
             error => this.onDataLoadFailed(error)
         );
 
-	}
-	openView(content, row) {
+    }
+    openView(content, row) {
 
-		this.sourceView = row;
-		
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+        this.sourceView = row;
+
+        this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
@@ -133,19 +135,19 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
     private refresh() {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
-	}
+    }
 
     private onDataLoadSuccessful(allWorkFlows: ActionAttribute[]) {
-       
+
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActionAttribute = allWorkFlows;
-       
+
     }
 
-  
+
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         // alert('success');
@@ -154,7 +156,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
         this.allComapnies = allComapnies;
 
     }
-    
+
     private onDataLoadFailed(error: any) {
         // alert(error);
         this.alertService.stopLoadingMessage();
@@ -170,7 +172,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.sourceAction = new ActionAttribute();
         this.actionAttributeName = "";
-		this.sourceAction.isActive = true;
+        this.sourceAction.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
 
@@ -195,8 +197,8 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
     openEdit(content, row) {
 
         this.isEditMode = true;
-		this.isSaving = true;
-		this.disableSave = false;
+        this.isSaving = true;
+        this.disableSave = false;
         this.loadMasterCompanies();
         this.sourceAction = row;
         this.actionAttributeName = this.sourceAction.description;
@@ -210,7 +212,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
     openHist(content, row) {
 
         this.sourceAction = row;
-           
+
         this.workFlowtService.historyAcion(this.sourceAction.actionAttributeId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
@@ -238,7 +240,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
         }
 
     }
-	
+
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
@@ -281,8 +283,8 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
                     "actionAttributeId": this.allActionAttribute[i].actionAttributeId,
                     "actionAttributeName": actionAttributeName
                 }]),
-                this.localCollection.push(actionAttributeName)
-                
+                    this.localCollection.push(actionAttributeName)
+
             }
         }
     }
@@ -305,7 +307,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
 
 
     }
-   
+
 
     editItemAndCloseModel() {
 
@@ -314,7 +316,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-              this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
             this.sourceAction.description = this.actionAttributeName;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -324,7 +326,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.actionAttributeName;
-              this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -391,7 +393,21 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
             return `with: ${reason}`;
         }
     }
+    showAuditPopup(templateId, Id): void {
+        this.getTaskAttributeAuditDetails(Id);
+        this.modal = this.modalService.open(templateId, { size: 'sm' });
+    }
+
+    getTaskAttributeAuditDetails(Id: number): void {
+        this.workFlowtService.getTaskAttributeAuditeDetails(Id).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["actionAttributeAuditId", "actionAttributeId", "masterCompanyId"];
+            }
+        });
+    }
+
 }
 
-   
+
 

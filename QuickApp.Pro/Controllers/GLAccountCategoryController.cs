@@ -129,17 +129,22 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        [HttpGet("audits/{id}")]
-        public IActionResult AuditDetails(long id)
+        [HttpGet("audits/{Id}")]
+        public IActionResult getGLAccountCategoryAuditDetails(long Id)
         {
-            var audits = _unitOfWork.Repository<GLAccountCategoryAudit>()
-                .Find(x => x.GLAccountCategoryId == id)
-                .OrderByDescending(x => x.GLAccountCategoryAuditId);
+            var audits = _unitOfWork.Repository<GLAccountCategoriesAudit>()
+                .Find(x => x.GLAccountCategoryId == Id)
+                .OrderByDescending(x => x.GLAccountCategoryAuditId)
+                .ToList();
 
-            var auditResult = new List<AuditResult<GLAccountCategoryAudit>>();
+            var auditResult = new List<AuditResult<GLAccountCategoriesAudit>>();
 
-            auditResult.Add(new AuditResult<GLAccountCategoryAudit> { AreaName = "Expenditure Status", Result = audits.ToList() });
-
+            auditResult.Add(new AuditResult<GLAccountCategoriesAudit>
+            {
+                AreaName = "GL Account Category",
+                Memo = "",
+                Result = audits
+            });
             return Ok(auditResult);
         }
     }

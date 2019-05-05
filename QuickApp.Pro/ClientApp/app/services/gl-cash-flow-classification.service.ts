@@ -20,45 +20,47 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class GlCashFlowClassificationService {
-	public static readonly roleAddedOperation: RolesChangedOperation = "add";
-	public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
-	public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
+    public static readonly roleAddedOperation: RolesChangedOperation = "add";
+    public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
+    public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
-	private _rolesChanged = new Subject<RolesChangedEventArg>();
+    private _rolesChanged = new Subject<RolesChangedEventArg>();
 
-	constructor(
-		private router: Router,
-		private http: HttpClient,
-		private authService: AuthService,
+    constructor(
+        private router: Router,
+        private http: HttpClient,
+        private authService: AuthService,
 
-		private glCashFlowClassificationEndpoint: GlCashFlowClassificationEndpoint) { }
+        private glCashFlowClassificationEndpoint: GlCashFlowClassificationEndpoint) { }
 
-	getWorkFlows() {
-		return Observable.forkJoin(
-			this.glCashFlowClassificationEndpoint.getGlCashFlowClassificationEndpoint<any[]>());
-	}
+    getWorkFlows() {
+        return Observable.forkJoin(
+            this.glCashFlowClassificationEndpoint.getGlCashFlowClassificationEndpoint<any[]>());
+    }
 
-	historyGlCashFlowClassification(glclassflowclassificationId: number) {
-		return Observable.forkJoin(this.glCashFlowClassificationEndpoint.getHistoryGlCashFlowClassificationEndpoint<AuditHistory[]>(glclassflowclassificationId));
-	}
+    historyGlCashFlowClassification(glclassflowclassificationId: number) {
+        return Observable.forkJoin(this.glCashFlowClassificationEndpoint.getHistoryGlCashFlowClassificationEndpoint<AuditHistory[]>(glclassflowclassificationId));
+    }
 
-	newGlCashFlowClassification(glclassflowclassification: any) {
-		return this.glCashFlowClassificationEndpoint.getNewGlCashFlowClassificationEndpoint<any>(glclassflowclassification);
-	}
+    newGlCashFlowClassification(glclassflowclassification: any) {
+        return this.glCashFlowClassificationEndpoint.getNewGlCashFlowClassificationEndpoint<any>(glclassflowclassification);
+    }
 
-	getCashFlowClassification(glclassflowclassificationId?: number) {
-		return this.glCashFlowClassificationEndpoint.getEditGlCashFlowClassificationEndpoint<any>(glclassflowclassificationId);
-	}
+    getCashFlowClassification(glclassflowclassificationId?: number) {
+        return this.glCashFlowClassificationEndpoint.getEditGlCashFlowClassificationEndpoint<any>(glclassflowclassificationId);
+    }
 
-	updateCashFlowClassification(glclassflowclassification: any) {
-		return this.glCashFlowClassificationEndpoint.getUpdateGlCashFlowClassificationEndpoint(glclassflowclassification, glclassflowclassification.glClassFlowClassificationId);
-	}
+    updateCashFlowClassification(glclassflowclassification: any) {
+        return this.glCashFlowClassificationEndpoint.getUpdateGlCashFlowClassificationEndpoint(glclassflowclassification, glclassflowclassification.glClassFlowClassificationId);
+    }
 
-	deleteCashFlowClassification(glClassFlowClassificationId: number) {
+    deleteCashFlowClassification(glClassFlowClassificationId: number) {
 
-		return this.glCashFlowClassificationEndpoint.getDeleteGlCashFlowClassificationEndpoint(glClassFlowClassificationId);
+        return this.glCashFlowClassificationEndpoint.getDeleteGlCashFlowClassificationEndpoint(glClassFlowClassificationId);
 
-	}
+    }
 
-
+    getGLCashFlowClassificationAuditDetails(Id: number) {
+        return this.glCashFlowClassificationEndpoint.getGLCashFlowClassificationAuditDetails<any[]>(Id);
+    }
 }

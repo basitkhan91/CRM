@@ -14,8 +14,8 @@ export class WorkScopeEndpointService extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/WorkScope/Get";
     private readonly _actionsUrlNew: string = "/api/WorkScope/workscope";
     private readonly _actionsUrlAuditHistory: string = "/api/WorkScope/auditHistoryById";
-    private readonly getWorkScopeAuditDataById: string = "/api/WorkScope/audits";
-   
+    private readonly _auditUrl: string = '/api/WorkScope/audits';
+
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -73,15 +73,14 @@ export class WorkScopeEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getDeleteWorkScopeEndpoint(workscopeId));
             });
     }
-    getWorkScopeAuditById<T>(workscopeId: number): Observable<T> {
-        let endpointUrl = `${this.getWorkScopeAuditDataById}/${workscopeId}`;
 
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+    getWorkScopeAuditDetails<T>(Id: number): Observable<T> {
+        let endPointUrl = `${this._auditUrl}/${Id}`;
+
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getWorkScopeAuditById(workscopeId));
+                return this.handleError(error, () => this.getWorkScopeAuditDetails(Id));
             });
     }
-
-
 }
 
