@@ -20,7 +20,7 @@ namespace DAL
     public class UnitOfWork : IUnitOfWork
     {
         readonly ApplicationDbContext _context;
-       
+        IUserRoleRepository _userRole { get; set; }
         ICustomerRepository _customer;
         ICustomerBillingInformationRepository _customerBillingInformation;
         IProductRepository _products;
@@ -194,6 +194,16 @@ namespace DAL
 
         IVendorWarning _vendorWarning;
 
+        public IUserRoleRepository UserRole
+        {
+            get
+            {
+                if (_userRole == null)
+                    _userRole = new UserRoleRepository(_context);
+
+                return _userRole;
+            }
+        }
 
         public IVendorWarning VendorWarning
         {

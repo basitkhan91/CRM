@@ -6,3 +6,5 @@
 /QuickApp.Pro/node_modules
 /QuickApp.Pro/wwwroot/dist
 /.vs
+/QuickApp.Pro/obj
+/QuickApp.Pro/Logs
