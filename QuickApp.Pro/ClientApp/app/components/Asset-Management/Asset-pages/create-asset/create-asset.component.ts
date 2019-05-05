@@ -578,10 +578,29 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeId = "";
                     this.currentSelectedAssetType.selectedObj = "";
+                    this.currentAsset.assetIsMaintenanceReqd = "";
+                    this.currentAsset.isWarrantyRequired = "";
                     delete this.currentAsset.assetType;
                     delete this.currentAsset.currency;
                     delete this.currentAsset.manufacturer;
                     delete this.currentAsset.unitOfMeasure;
+                    if (this.currentAsset.assetIsMaintenanceReqd == false || this.currentAsset.isDepreciable == false) {
+                        this.currentAsset.assetMaintenanceIsContract = false;
+                        this.currentAsset.assetMaintenanceContractFile = "";
+                        this.currentAsset.maintenanceFrequencyMonths = "";
+                        this.currentAsset.maintenanceFrequencyDays = "";
+                        this.currentAsset.maintenanceMemo = "";
+                        this.currentAsset.defaultVendorId = "";
+                        this.currentAsset.glAccountId = "";
+                    }
+                    if (this.currentAsset.isWarrantyRequired == false || this.currentAsset.isDepreciable == false) {
+                        this.currentAsset.warranty = "";
+                        this.currentAsset.warrantyCompany = "";
+                        this.currentAsset.warrantyStartDate = "";
+                        this.currentAsset.warrantyEndDate = "";
+                        this.currentAsset.warrantyStatus = "";
+                        this.currentAsset.unexpiredTime = "";
+                    }
                 }
                 if (this.currentAsset.isDepreciable == true) {
                     this.currentAsset.isIntangible = false;

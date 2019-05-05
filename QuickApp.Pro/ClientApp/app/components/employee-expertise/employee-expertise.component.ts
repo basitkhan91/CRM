@@ -406,6 +406,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
     }
 
     empExpretiseAudit(employeeExpertiseId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getAudit(employeeExpertiseId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

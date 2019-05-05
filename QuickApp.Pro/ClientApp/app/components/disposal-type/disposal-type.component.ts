@@ -152,6 +152,7 @@ export class DisposalTypeComponent implements OnInit {
     }
 
     auditDisposal(assetDisposalId: number): void {
+        this.AuditDetails = [];
         this.disposalTypeService.getDisposalAudit(assetDisposalId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

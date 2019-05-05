@@ -376,6 +376,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
     }
 
     auditGlAccountClass(glAccountClassId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getGlAudit(glAccountClassId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

@@ -127,6 +127,7 @@ export class AssetStatusComponent implements OnInit {
     }
 
     auditAssetStatus(assetStatusId: number): void {
+        this.AuditDetails = [];
         this.assetStatusService.getAssetAudit(assetStatusId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

@@ -402,6 +402,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
     }
 
     auditDefault(defaultMessageId: number): void {
+        this.AuditDetails = [];
         this.defaultmessageService.getAudit(defaultMessageId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

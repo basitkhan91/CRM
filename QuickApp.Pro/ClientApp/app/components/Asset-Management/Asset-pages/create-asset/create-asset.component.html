@@ -9,11 +9,11 @@
                 <label class="control-label col-sm-4"></label>
                 <div class="col-sm-7">
                     <label class="radio-inline">
-                        <input type="radio" value="1" name="assetRadio" class="form-check-inline" (change)="onDepreciable()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isDepreciable">
+                        <input type="radio" value="1" name="assetRadio" class="form-check-inline" [checked]="currentAsset.isDepreciable == true" (change)="onDepreciable()"  >
                         Depreciable
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" value="2" name="assetRadio" (change)="onIntangible()" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.isIntangible">
+                        <input type="radio" value="2" name="assetRadio" (change)="onIntangible()" [checked]="currentAsset.isIntangible == true"  >
                         Intangible
                     </label>
                 </div>

@@ -145,11 +145,12 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
     }
 
     showAuditPopup(template, assetIntangibleTypeSingleId): void {
-        this.auditGlAccountClass(assetIntangibleTypeSingleId);
+        this.auditIntangible(assetIntangibleTypeSingleId);
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    auditGlAccountClass(assetIntangibleTypeSingleId: number): void {
+    auditIntangible(assetIntangibleTypeSingleId: number): void {
+        this.AuditDetails = [];
         this.assetIntangibleService.getAssetIntangibleAudit(assetIntangibleTypeSingleId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

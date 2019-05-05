@@ -155,6 +155,7 @@ export class DepreciationIntervalsComponent implements OnInit {
     }
 
     auditInterval(assetDepreciationIntervalTypeId: number): void {
+        this.AuditDetails = [];
         this.depreciationIntervalsService.getAudit(assetDepreciationIntervalTypeId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

@@ -404,6 +404,7 @@ export class GateCodeComponent implements OnInit, AfterViewInit {
     }
 
     auditGatecode(gateCodeId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getAudit(gateCodeId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

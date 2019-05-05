@@ -406,6 +406,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     }
 
     auditIntegration(integrationPortalId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getAudit(integrationPortalId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

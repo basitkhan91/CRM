@@ -81,6 +81,8 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 this.currentMaintenance.maintenanceFrequencyMonths = "";
                 this.currentMaintenance.maintenanceFrequencyDays = "";
                 this.currentMaintenance.maintenanceMemo = "";
+                this.currentMaintenance.defaultVendorId = "";
+                this.currentMaintenance.glAccountId = "";
             }
             if (this.currentMaintenance.isWarrantyRequired == false || this.currentMaintenance.isDepreciable == false) {
                 this.currentMaintenance.warranty = "";

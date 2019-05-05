@@ -378,6 +378,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     }
 
     auditClassification(CustomerClassificationId: number): void {
+        this.AuditDetails = [];
         this.CustomerClassificationService.getCustomerclassification(CustomerClassificationId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

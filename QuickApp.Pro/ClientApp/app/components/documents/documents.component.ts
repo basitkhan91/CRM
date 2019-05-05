@@ -461,6 +461,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
     }
 
     auditDocument(documentId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getAudit(documentId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
