@@ -10,7 +10,7 @@ namespace QuickApp.Pro.Controllers
 {
 
     [Route("api/depreciationMethod")]
-    public class AssetDepriciationMethodController : Controller
+    public class AssetDepreciationMethodController : Controller
     {
         #region Private Members
 
@@ -20,7 +20,7 @@ namespace QuickApp.Pro.Controllers
 
         #region Constructor
 
-        public AssetDepriciationMethodController(IUnitOfWork unitOfWork)
+        public AssetDepreciationMethodController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
