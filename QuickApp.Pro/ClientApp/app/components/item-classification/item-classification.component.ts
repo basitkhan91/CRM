@@ -516,10 +516,11 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     }
 
     auditItemClassification(itemClassificationId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getItemClassificationAudit(itemClassificationId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["itemClassificationAuditId", "itemClassificationId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["itemClassificationAuditId", "itemClassificationId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

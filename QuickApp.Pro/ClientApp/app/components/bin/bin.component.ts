@@ -813,6 +813,7 @@ export class BinComponent {
     }
 
     auditBin(binId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getBinAudit(binId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

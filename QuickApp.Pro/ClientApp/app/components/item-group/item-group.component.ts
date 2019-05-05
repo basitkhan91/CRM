@@ -415,10 +415,11 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     }
 
     auditItemGroup(itemGroupId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getItemGroupAudit(itemGroupId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["itemGroupAuditId", "itemGroupId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["itemGroupAuditId", "itemGroupId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

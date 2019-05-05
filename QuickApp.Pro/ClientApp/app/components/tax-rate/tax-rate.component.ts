@@ -461,11 +461,14 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    auditAssetStatus(taxRateId: number): void {
+    auditAssetStatus(taxRateId: number): void
+    {
+        this.AuditDetails = [];
+
         this.taxRateService.getTaxRateAudit(taxRateId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["TaxRateAuditId", "TaxRateId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["TaxRateAuditId", "TaxRateId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

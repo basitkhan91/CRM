@@ -420,10 +420,11 @@ export class VendorClassificationComponent implements OnInit, AfterViewInit {
     }
 
     auditVendorClassification(vendorClassificationId: number): void {
+        this.AuditDetails = [];
         this.vendorclassificationService.getVendorClassificationAudit(vendorClassificationId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["vendorClassificationAuditId", "vendorClassificationId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["vendorClassificationAuditId", "vendorClassificationId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

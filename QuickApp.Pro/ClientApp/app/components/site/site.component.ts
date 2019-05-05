@@ -764,6 +764,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
     }
 
     auditAssetStatus(siteId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getSiteAudit(siteId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

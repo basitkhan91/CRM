@@ -501,10 +501,11 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
     }
 
     auditAtaSubchapter(ataSubChapterId: number): void {
+        this.AuditDetails = [];
         this.ataSubChapter1Service.getAtaSubChapterAudit(ataSubChapterId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["ataSubChapterAuditId", "ataSubChapterId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["ataSubChapterAuditId", "ataSubChapterId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

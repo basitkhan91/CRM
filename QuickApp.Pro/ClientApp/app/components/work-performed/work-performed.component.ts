@@ -412,10 +412,11 @@ export class WorkPerformedComponent implements OnInit, AfterViewInit {
     }
 
     auditworkPerformed(workPerformedId: number): void {
+        this.AuditDetails = [];
         this.workperformedService.getWorkPerformedAudit(workPerformedId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["workPerformedAuditId", "workPerformedId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["workPerformedAuditId", "workPerformedId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

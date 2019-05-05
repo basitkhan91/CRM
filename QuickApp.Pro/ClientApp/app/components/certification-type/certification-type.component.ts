@@ -395,7 +395,9 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    certificationType(certificationTypeId: number): void {
+    certificationType(certificationTypeId: number): void
+    {
+        this.AuditDetails = [];
         this.workFlowtService.getEmployeeLicenceAudit(certificationTypeId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

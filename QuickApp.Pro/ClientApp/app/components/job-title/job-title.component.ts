@@ -420,10 +420,11 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     }
 
     auditJobTitle(jobTitleId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getJobTitleAudit(jobTitleId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["jobTitleAuditId", "jobTitleId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["jobTitleAuditId", "jobTitleId", "masterCompanyId","createdBy", "createdDate", "updatedDate"];
             }
         });
     }

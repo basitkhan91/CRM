@@ -16,6 +16,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-conditions',
     templateUrl: './conditions.component.html',
@@ -61,7 +62,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     localCollection: any[] = [];
     Active: string = "Active";
     /** Currency ctor */
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public conditionService: ConditionService, private dialog: MatDialog) {
+    constructor(public router: Router, private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public conditionService: ConditionService, private dialog: MatDialog) {
+        console.log(this.router.url);
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
 
@@ -397,10 +399,11 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     }
 
     auditCondition(conditionId: number): void {
+        this.AuditDetails = [];
         this.conditionService.getConditionAudit(conditionId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["conditionAuditId", "conditionId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["conditionAuditId", "conditionId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

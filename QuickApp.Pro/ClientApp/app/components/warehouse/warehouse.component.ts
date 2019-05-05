@@ -769,10 +769,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
     }
 
     auditWarehouse(warehouseId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getWarehouseAudit(warehouseId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["warehouseAuditId", "warehouseId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["warehouseAuditId", "warehouseId", "lastModifiedBy", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

@@ -390,10 +390,11 @@ ngAfterViewInit() {
     }
 
     auditCreditTerms(creditTermId: number): void {
+        this.AuditDetails = [];
         this.CreditTermsService.getCreaditTermsAudit(creditTermId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["creditTermsAuditId", "creditTermsId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["creditTermsAuditId", "creditTermsId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

@@ -433,10 +433,11 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     }
 
     auditAssetStatus(publicationId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getPublicationAudit(publicationId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["publicationAuditId", "publicationRecordId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["publicationAuditId", "publicationRecordId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

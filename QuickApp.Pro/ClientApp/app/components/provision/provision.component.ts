@@ -417,17 +417,21 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
 
     showAuditPopup(template, id): void
     {
-        this.auditProvision(id);
         this.modal = this.modalService.open(template, { size: 'sm' });
+        this.auditProvision(id);
+       
     }
 
     auditProvision(provisionId: number): void
     {
+        this.AuditDetails = [];
         this.provisionService.getProvisionAudit(provisionId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["provisionAuditId", "provisionId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["provisionAuditId", "provisionId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
+
+           
         });
     }
 }

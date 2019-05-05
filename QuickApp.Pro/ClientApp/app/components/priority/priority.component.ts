@@ -411,10 +411,11 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     }
 
     auditPriority(priorityid: number): void {
+        this.AuditDetails = [];
         this.priorityService.getPriorityAudit(priorityid).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["priorityAuditId", "priorityId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["priorityAuditId", "priorityId", "masterCompanyId","createdBy", "createdDate", "updatedDate"];
             }
         });
     }

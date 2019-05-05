@@ -750,6 +750,7 @@ export class ShelfComponent {
     }
 
     auditShelf(shelfId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getShelfAudit(shelfId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;

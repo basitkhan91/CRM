@@ -409,10 +409,11 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
     }
 
     auditCurrency(currencyId: number): void {
+        this.AuditDetails = [];
         this.currencyService.getCurrencyAudit(currencyId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["currencyAuditId", "currencyId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["currencyAuditId", "currencyId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DAL.Models
 {
     public class SiteAudit : PasBase
     {
+        [Key]
         public long SiteAuditId { get; set; }
         public long SiteId { get; set; }
         public string Name { get; set; }

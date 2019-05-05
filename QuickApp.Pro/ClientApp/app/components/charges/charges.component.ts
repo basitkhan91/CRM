@@ -736,11 +736,13 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
         this.modal = this.modalService.open(template, { size: 'sm' });
     }
 
-    auditCharge(chargeId: number): void {
+    auditCharge(chargeId: number): void
+    {
+        this.AuditDetails = [];
         this.chargeService.getChargeAudit(chargeId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["chargeAuditId", "chargeId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["chargeAuditId", "chargeId", "masterCompanyId", "managementStructureId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

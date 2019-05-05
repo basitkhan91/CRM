@@ -430,10 +430,11 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     }
 
     auditAssetStatus(unitOfMeasureId: number): void {
+        this.AuditDetails = [];
         this.unitofmeasureService.getUnitOfMeasureAudit(unitOfMeasureId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "masterCompanyId","createdBy", "createdDate", "updatedDate"];
             }
         });
     }

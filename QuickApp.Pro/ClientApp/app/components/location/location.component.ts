@@ -784,6 +784,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
     }
 
     auditLocation(locationId: number): void {
+        this.AuditDetails = [];
         this.workFlowtService.getLocationAudit(locationId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
