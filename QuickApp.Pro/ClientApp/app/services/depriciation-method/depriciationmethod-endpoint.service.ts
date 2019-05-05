@@ -19,7 +19,7 @@ export class DepriciationMethodEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/depreciationMethod/add";
     private readonly updateURL: string = "/api/depreciationMethod/update";
     private readonly removeByIdURL: string = "/api/depreciationMethod/removeById";
-
+    private readonly audits: string = "/api/depreciationMethod/audits";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -71,6 +71,15 @@ export class DepriciationMethodEndpointService extends EndpointFactory {
 
     removedepriciationMethodById<T>(assetDepreciationMethodId: number): Observable<T> {
         let endpointUrl = `${this.removeById}/${assetDepreciationMethodId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.removedepriciationMethodById(assetDepreciationMethodId));
+            });
+    }
+
+    getAssetDepreciationAudits<T>(assetDepreciationMethodId: number): Observable<T> {
+        let endpointUrl = `${this.audits}/${assetDepreciationMethodId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {

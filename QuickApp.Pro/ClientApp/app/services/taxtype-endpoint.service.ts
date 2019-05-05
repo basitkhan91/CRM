@@ -15,6 +15,7 @@ export class TaxTypeEndpointService extends EndpointFactory {
 	private readonly _taxTypeUrlNew: string = "/api/TaxType/taxType";
 	private readonly _taxTypeUrlAuditHistory: string = "/api/TaxType/auditHistoryById";
     private readonly getTaxTypeDataAuditById: string = "/api/TaxType/audits";
+    private readonly _auditUrl: string = "/api/TaxType/audits";
 
 	get taxTypeUrl() { return this.configurations.baseUrl + this._taxTypeUrl; }
 
@@ -82,6 +83,15 @@ export class TaxTypeEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getTaxTypeAuditById(taxTypeId));
+            });
+    }
+
+    getTaxTypeAuditDetails<T>(Id: number): Observable<T> {
+        let endpointUrl = `${this._auditUrl}/${Id}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDeleteTaxTypeEndpoint(Id));
             });
     }
 

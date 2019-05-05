@@ -63,7 +63,8 @@ export class TaxTypeService {
         return this.taxTypeEndpoint.getTaxTypeAuditById<any>(taxTypeId);
     }
 
-    
-
+    getTaxTypeAuditDetails(Id: number) {
+        return this.taxTypeEndpoint.getTaxTypeAuditDetails<any[]>(Id);
+    }
 
 }

@@ -41,4 +41,7 @@ export class DepriciationMethodService {
         return this.depriciationMethodEndpointService.removedepriciationMethodById(assetDepreciationMethodId);
     }
 
+    getAssetDepriciationMethodAudits(assetDepriciationMethodId: number) {
+        return this.depriciationMethodEndpointService.getAssetDepreciationAudits<any[]>(assetDepriciationMethodId);
+    }
 }
