@@ -29,6 +29,8 @@ import { CalendarModule } from "primeng/calendar";
 import { AccountingPagesComponent } from "./accounting-pages.component";
 //import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 import { AccountingPagesRoutingModule } from "./accountingpages-routing.module";
+import { CreateBatchComponent } from "../components/accounting/general-ledger/Journals/create-batch/create-batch.component";
+import { ViewBatchTsComponent } from "../components/accounting/general-ledger/Journals/view-batch/view-batch.component";
 
 
 
@@ -51,6 +53,8 @@ import { AccountingPagesRoutingModule } from "./accountingpages-routing.module";
     ],
     declarations: [AccountingPagesComponent,
         // NodeSetupComponent,
+        CreateBatchComponent,
+        ViewBatchTsComponent
 
     ],
     providers: [

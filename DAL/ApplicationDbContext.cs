@@ -292,7 +292,7 @@ namespace DAL
         public DbSet<EmployeeExpertiseAudit> EmployeeExpertiseAudit { get; set; }
         public DbSet<FindingAudit> FindingAudit { get; set; }
         public DbSet<IntegrationPortalAudit> IntegrationPortalAudit { get; set; }
-        public DbSet<GateCodeAudit> GateCodeAudit { get; set; }
+        //public DbSet<GateCodeAudit> GateCodeAudit { get; set; }
         public DbSet<PublicationAudit> PublicationAudit { get; set; }
         public DbSet<ReasonAudit> ReasonAudit { get; set; }
         public DbSet<SiteAudit> SiteAudit { get; set; }

@@ -67,7 +67,7 @@ import { AuthGuard } from './services/auth-guard.service';
 
 			{ path: "customersmodule", loadChildren: './customerpages/customerpages.module#CustomerPagesModule' },
 
-            //{ path: "accountmodule", loadChildren: './accountpages/accountpages.module#AccountingPagesModule' },
+            { path: "accountmodule", loadChildren: './accounting-pages/accountingpages.module#AccountingPagesModule' },
 
             { path: "vendorsmodule", loadChildren: './vendorpages/vendorpages.module#VendorPagesModule' },
 
