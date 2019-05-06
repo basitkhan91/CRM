@@ -12,7 +12,7 @@ namespace DAL.Models
        [Key]
         public long ATASubChapterId { get; set; }
         //FK
-        public long ATAChapterId { get; set; }
+        public long? ATAChapterId { get; set; }
 
         public string Memo { get; set; }
         public string Description { get; set; }

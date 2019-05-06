@@ -60,5 +60,7 @@ export class ExpenditureCategoryService {
     historyExpenditureCategory(expenditurecategoryId: number) {
         return Observable.forkJoin(this.expenditurecategoryEndpoint.getHistoryExpenditureCategoryEndpoint<AuditHistory[]>(expenditurecategoryId));
     }
-
+    getExpenditureAudit(expenditurecategoryId: number) {
+        return this.expenditurecategoryEndpoint.getExpenditureAuditById<any>(expenditurecategoryId);
+    }
 }

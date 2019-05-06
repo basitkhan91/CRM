@@ -15,7 +15,7 @@ import { ExpenditureCategory } from '../../models/expenditurecategory.model';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-expenditure',
     templateUrl: './expenditure.component.html',
@@ -62,7 +62,7 @@ export class ExpenditureComponent implements OnInit, AfterViewInit {
     expenditureName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-
+    AuditDetails: SingleScreenAuditDetails[];
     /** Actions ctor */
     cols: any[];
     selectedColumns: any[];
@@ -394,5 +394,20 @@ export class ExpenditureComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
+    }
+
+    showAuditPopup(template, id): void {
+        this.expenditureCategoryAudit(id);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    expenditureCategoryAudit(expenditureCategoryId: number): void {
+        this.AuditDetails = [];
+        this.expenditurecategoryService.getExpenditureAudit(expenditureCategoryId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["expenditureCategoryAuditId", "expenditureCategoryId", "masterCompanyId", "createdBy", "createdDate", "updatedDate","updatedBy"];
+            }
+        });
     }
 }

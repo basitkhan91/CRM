@@ -153,7 +153,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult AuditDetails(long id)
         {
             var audits = _unitOfWork.Repository<ATASubChapterAudit>()
-                .Find(x => x.ATAChapterId == id)
+                .Find(x => x.ATASubChapterId == id)
                 .OrderByDescending(x => x.ATASubChapterAuditId);
 
             var auditResult = new List<AuditResult<ATASubChapterAudit>>();

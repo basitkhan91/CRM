@@ -10,7 +10,7 @@ namespace DAL.Models
         [Key]
         public long ATASubChapterAuditId { get; set; }
         public long ATASubChapterId { get; set; }
-        public long ATAChapterId { get; set; }
+        public long? ATAChapterId { get; set; }
         public string Memo { get; set; }
         public string Description { get; set; }
         public Int32? ATASubChapterCode { get; set; }

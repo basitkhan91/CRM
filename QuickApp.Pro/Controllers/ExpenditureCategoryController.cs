@@ -133,6 +133,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<ExpenditureCategoryAudit>()
+                .Find(x => x.ExpenditureCategoryId == id)
+                .OrderByDescending(x => x.ExpenditureCategoryAuditId);
+
+            var auditResult = new List<AuditResult<ExpenditureCategoryAudit>>();
+
+            auditResult.Add(new AuditResult<ExpenditureCategoryAudit> { AreaName = "Expenditure", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
     }
 
 

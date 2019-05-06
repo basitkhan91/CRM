@@ -13,6 +13,7 @@ export class ExpenditureCategoryEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/ExpenditureCategory/Get";
     private readonly _actionsUrlNew: string = "/api/ExpenditureCategory/expenditurecategory";
     private readonly _actionsUrlNewAuditHistory: string = "/api/ExpenditureCategory/auditHistoryById";
+    private readonly getExpenditureCategoryAuditById: string = "/api/ExpenditureCategory/audits";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -69,6 +70,16 @@ export class ExpenditureCategoryEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getHistoryExpenditureCategoryEndpoint(expenditurecategoryId));
+            });
+    }
+
+    
+    getExpenditureAuditById<T>(expenditurecategoryId: number): Observable<T> {
+        let endpointUrl = `${this.getExpenditureCategoryAuditById}/${expenditurecategoryId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getExpenditureAuditById(expenditurecategoryId));
             });
     }
 }
