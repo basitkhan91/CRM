@@ -52,6 +52,7 @@ export class AssetCapesComponent implements OnInit {
     allManufacturerInfo: any[];
     allATAMaininfo1: ATAMain[];
     assetRecordId: number = 0;
+    selectedColumn: any;
     selectedManufacturer: any = [];//To Store selected Aircraft Manufacturer Data
     selectedModel: any = [];//To Store selected Aircraft Modal Data
     capabilitiesForm: FormGroup;
@@ -75,7 +76,7 @@ export class AssetCapesComponent implements OnInit {
     
     constructor(private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService,
         private assetServices: AssetService, private formBuilder: FormBuilder) {
-
+       
         if (this.assetServices.listCollection != null && this.assetServices.isEditMode == true) {
 
             this.showLable = true;
