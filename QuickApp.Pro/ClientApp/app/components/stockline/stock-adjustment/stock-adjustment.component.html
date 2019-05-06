@@ -426,39 +426,40 @@
 									<td colspan="5">&nbsp;</td>
 								</tr>
 
-								<tr>
-									<td><input type="checkbox" class="check" [ngModelOptions]="{standalone: true}" [(ngModel)]="categoryAllow" (change)="isCategoryEnable(categoryAllow ?'A':'B')"></td>
-									<td>Category</td>
-									<td>
+                                <tr>
+                                    <td>Category</td>
+                                    <!--<td><input type="checkbox" class="check" [ngModelOptions]="{standalone: true}" [(ngModel)]="categoryAllow" (change)="isCategoryEnable(categoryAllow ?'A':'B')"></td>-->
+                                    <td>Category</td>
+                                    <td>
 
-										<div *ngIf="sourceStockLineSetup.itemTypeId==0"></div>
-										<div *ngIf="sourceStockLineSetup.itemTypeId==1">
-											Stock
-										</div>
-										<div *ngIf="sourceStockLineSetup.itemTypeId==2">non-Stock</div>
-										<div *ngIf="sourceStockLineSetup.itemTypeId==3">Equipment</div>
-									</td>
-									<td *ngIf="hideCategory">
-										<select class="w100 editable-field" style="display: none;">
-											<option>Stock</option>categoryChange
-											<option>Non-Stock</option>
-											<option>Equipment</option>
-											<option>Exchange</option>
-											<option>Loan</option>
-										</select>
-									</td>
-									<td *ngIf="hideCategory"><textarea style="height: 80px; display: none;" class="editable-field"></textarea></td>
-									<td *ngIf="showCategory">
-										<select class="w100 editable-field" style="display: inline-block;" [(ngModel)]="sourceStockLineSetup.afterItemTypeId" (change)="categoryChange(18,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}">
-											<option value="1">Stock</option>
-											<option value="2">Non-Stock</option>
-											<option value="3">Equipment</option>
-											<option value="4">Exchange</option>
-											<option value="5">Loan</option>
-										</select>
-									</td>
-									<td *ngIf="showCategory"><textarea style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.StockAdjustmentReason" (change)="categoryChange(18,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}"></textarea></td>
-								</tr>
+                                        <div *ngIf="sourceStockLineSetup.itemTypeId==0"></div>
+                                        <div *ngIf="sourceStockLineSetup.itemTypeId==1">
+                                            Stock
+                                        </div>
+                                        <div *ngIf="sourceStockLineSetup.itemTypeId==2">non-Stock</div>
+                                        <div *ngIf="sourceStockLineSetup.itemTypeId==3">Equipment</div>
+                                    </td>
+                                    <!--<td *ngIf="hideCategory">
+        <select class="w100 editable-field" style="display: none;">
+            <option>Stock</option>categoryChange
+            <option>Non-Stock</option>
+            <option>Equipment</option>
+            <option>Exchange</option>
+            <option>Loan</option>
+        </select>
+    </td>-->
+                                    <td *ngIf="hideCategory"><textarea style="height: 80px; display: none;" class="editable-field"></textarea></td>
+                                    <td *ngIf="showCategory">
+                                        <select class="w100 editable-field" style="display: inline-block;" [(ngModel)]="sourceStockLineSetup.afterItemTypeId" (change)="categoryChange(18,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}">
+                                            <option value="1">Stock</option>
+                                            <option value="2">Non-Stock</option>
+                                            <option value="3">Equipment</option>
+                                            <option value="4">Exchange</option>
+                                            <option value="5">Loan</option>
+                                        </select>
+                                    </td>
+                                    <td *ngIf="showCategory"><textarea style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.StockAdjustmentReason" (change)="categoryChange(18,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}"></textarea></td>
+                                </tr>
 
 								<!-- Part Number Start -->
 								<tr>

@@ -195,9 +195,7 @@ namespace DAL.Models
         public bool? StandAloneEquipment { get; set; }
 
         public bool? ComponentEquipment { get; set; }
-
-       
-
+        public bool? ShelfLife { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
 
