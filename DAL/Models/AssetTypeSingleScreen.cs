@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class AssetTypeSingleScreen:PasBase
+   public class AssetTypeSingleScreen:PasBase,IAudit
     {
         [Key]
         public long? AssetTypeSingleScreenId { get; set; }

@@ -6,8 +6,8 @@ namespace DAL.Models
    public class AssetDepreciationIntervalTypeAudit :PasBase
     {
         [Key]
-        public long? AssetDepreciationIntervalTypeAuditId { get; set; }
-        public long? AssetDepreciationIntervalTypeId { get; set; }
+        public long AssetDepreciationIntervalTypeAuditId { get; set; }
+        public long AssetDepreciationIntervalTypeId { get; set; }
         public string AssetDepreciationIntervalId { get; set; }
         public string AssetDepreciationIntervalName { get; set; }
         public string AssetDepreciationIntervalMemo { get; set; }

@@ -12,7 +12,7 @@ namespace DAL.Models
         public string AssetIntangibleName { get; set; }
         public Int32? MasterCompanyId { get; set; }
         public string AssetIntangibleMemo { get; set; }
-        public bool IsDelete { get; set; }
-        public bool IsActive { get; set; }
+        public bool? IsDelete { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
