@@ -58,9 +58,9 @@ export class AccountingCalendarComponent implements OnInit {
     }
     
 
-    loaddefualtObj(selectedMonth) {
+    loaddefualtObj(selectedMonth,bool) {
         
-        if (selectedMonth == 0) {
+        if (selectedMonth == 0 && bool==true) {
              this.isBoolean = true;
         }
         if (this.selectedPeriod == '12' || this.selectedPeriod == '13') {
@@ -363,35 +363,37 @@ export class AccountingCalendarComponent implements OnInit {
                 this.calendarArray = [];
                 var date = new Date(this.currentCalendarObj.fromDate);
                 var month = date.getMonth();
-
                 if (this.selectedPeriod == 12) {
                    
                     this.period = 1;
-
+                    let setBool;
                     for (let i = 0; i < this.selectedPeriod; i++) {
-                        this.calendarArray.push(this.loaddefualtObj(month));
+                        this.calendarArray.push(this.loaddefualtObj(month, setBool));
                         month++;
                         if (month == 12) {
                             month = 0;
+                             setBool= true;
                         }
                     }
 
                 }
                 if (this.selectedPeriod == 13) {
                     this.period = 1;
+                    let setBool;
                     this.showCheckBox = true;
                     for (let i = 0; i < this.selectedPeriod; i++) {
-                        this.calendarArray.push(this.loaddefualtObj(month));
+                        this.calendarArray.push(this.loaddefualtObj(month, setBool));
                         month++;
                         if (month == 12) {
                             month = 0;
+                            setBool = true;
                         }
                     }
                 }
                 if (this.selectedPeriod == 16) {
                     this.period = 1;
                     this.showCheckBox = true;
-
+                    let setBool;
                     for (let i = 0; i < this.selectedPeriod; i++) {
                         if (this.calendarArray.length == 3) {
                             month = month - 1;
@@ -402,17 +404,19 @@ export class AccountingCalendarComponent implements OnInit {
                         if (this.calendarArray.length == 11) {
                             month = month - 1;
                         }
-                        this.calendarArray.push(this.loaddefualtObj(month));
+                        this.calendarArray.push(this.loaddefualtObj(month, setBool));
                         month++;
                         if (month == 12) {
                             month = 0;
+                            setBool = true;
                         }
 
                     }
                 }
                 if (this.selectedPeriod == 'Manual') {
                     this.period = 1;
-                    this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod));
+                    let setBool = false;
+                    this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod,setBool));
                 }
             }
             else {
@@ -488,7 +492,7 @@ export class AccountingCalendarComponent implements OnInit {
     }
     addPeriod() {
         this.period++;
-        this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod));
+        this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod,false));
     }
     showNumofPeriods(event) {
        // debugger;

@@ -135,7 +135,7 @@
                     <th>From Date</th>
                     <th>To Date</th>
                     <th>Period Name</th>
-                   <th></th>
+                   <th>Adjusting Period</th>
                 </tr>
             </thead>
             <tbody *ngIf="!showManual">
@@ -154,6 +154,7 @@
                     <!--<td><input type="date" class="datepicker form-control hasDatepicker" id="dp1555497164115" value="{{obj.toDate}}"></td>-->
                     <td>{{obj.periodName}}</td>
                     <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" /></td>
+
                 </tr>
 
 

@@ -283,7 +283,8 @@ namespace DAL
         public DbSet<GLAccountClassAudit> GLAccountClassAudit { get; set; }
 
         public DbSet<MarkUpPercentage> MarkUpPercentage { get; set; }
-
+        public DbSet<POROCategory> POROCategory { get; set; }
+        public DbSet<POROCategoryAudit> POROCategoryAudit { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
