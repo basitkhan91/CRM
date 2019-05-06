@@ -7,9 +7,9 @@ namespace DAL.Models
    public class AssetDisposalTypeAudit : PasBase
     {
         [Key]
-        public long AssetDisposalTypeAuditId { get; set; }
+        public long? AssetDisposalTypeAuditId { get; set; }
 
-        public long AssetDisposalTypeId { get; set; }        
+        public long? AssetDisposalTypeId { get; set; }        
         public string AssetDisposalId { get; set; }        
         public string AssetDisposalName { get; set; }
         public string AssetDisposalMemo { get; set; }

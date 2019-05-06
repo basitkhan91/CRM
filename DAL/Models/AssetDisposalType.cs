@@ -6,7 +6,8 @@ namespace DAL.Models
 {
   public class AssetDisposalType:PasBase, IAudit
     {
-        public long AssetDisposalTypeId { get; set; }
+        [Key]
+        public long? AssetDisposalTypeId { get; set; }
 
         [Required(ErrorMessage = "Id Is Required.")]
         public string AssetDisposalId { get; set; }
