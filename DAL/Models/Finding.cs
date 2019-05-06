@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
     public class Finding : PasBase, IAudit
     {
+        [Key]
         public long FindingId { get; set; }
 
         public string FindingCode { get; set; }

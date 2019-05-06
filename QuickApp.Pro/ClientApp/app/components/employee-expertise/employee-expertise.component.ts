@@ -410,7 +410,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getAudit(employeeExpertiseId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["employeeExpertiseAuditId", "employeeExpertiseId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["employeeExpertiseAuditId", "employeeExpertiseId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

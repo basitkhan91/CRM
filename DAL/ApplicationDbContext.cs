@@ -292,7 +292,7 @@ namespace DAL
         public DbSet<EmployeeExpertiseAudit> EmployeeExpertiseAudit { get; set; }
         public DbSet<FindingAudit> FindingAudit { get; set; }
         public DbSet<IntegrationPortalAudit> IntegrationPortalAudit { get; set; }
-        //public DbSet<GateCodeAudit> GateCodeAudit { get; set; }
+        //public DbSet<GatecodeClassAudit> GatecodeClassAudit { get; set; }
         public DbSet<PublicationAudit> PublicationAudit { get; set; }
         public DbSet<ReasonAudit> ReasonAudit { get; set; }
         public DbSet<SiteAudit> SiteAudit { get; set; }
@@ -319,7 +319,11 @@ namespace DAL
         public DbSet<ShelfAudit> ShelfAudit { get; set; }
         public DbSet<BinAudit> BinAudit { get; set; }
         public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
+        public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
+        public DbSet<AssetTypeSingleScreenAudit> AssetTypeSingleScreenAudit { get; set; }
 
+       
+        public DbSet<GatecodeClassAudit> GatecodeAudit { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
