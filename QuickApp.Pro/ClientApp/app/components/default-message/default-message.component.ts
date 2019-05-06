@@ -406,7 +406,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.defaultmessageService.getAudit(defaultMessageId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["defaultMessageAuditId", "defaultMessageId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["defaultMessageAuditId", "defaultMessageId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

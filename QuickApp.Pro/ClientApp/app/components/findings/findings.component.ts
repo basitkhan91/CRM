@@ -411,7 +411,7 @@ export class FindingsComponent {
         this.findingService.getAuditById(findingId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["findingAuditId", "findingId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["findingAuditId", "findingId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

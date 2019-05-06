@@ -465,7 +465,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getAudit(documentId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["documentAuditId", "documentId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["documentAuditId", "documentId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }
