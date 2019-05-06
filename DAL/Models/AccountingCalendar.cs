@@ -40,6 +40,6 @@ namespace DAL.Models
 
         public bool? isUpdate { get; set; }
 
-        public bool? isAdjustPeriod { get; set; }
+        public bool? IsAdjustPeriod { get; set; }
     }
 }
