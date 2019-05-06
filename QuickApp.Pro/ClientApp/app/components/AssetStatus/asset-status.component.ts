@@ -8,6 +8,7 @@ import { AssetStatusAudit} from "../../models/asset-status-audit.model";
 import { forEach } from "@angular/router/src/utils/collection";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { AuthService } from "../../services/auth.service";
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 
 @Component({
     selector: 'asset-status',
@@ -28,12 +29,15 @@ export class AssetStatusComponent implements OnInit {
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
 
-    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService) {
+    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService) {
 
     
     }
 
     ngOnInit(): void {
+
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/asset-status';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.assetStatusService.getAll().subscribe(assets => {
             this.assetStatusList = assets[0];
             this.assetStatusList.forEach(function (assetStatus) {

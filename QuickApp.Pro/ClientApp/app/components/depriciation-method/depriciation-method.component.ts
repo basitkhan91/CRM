@@ -6,6 +6,7 @@ import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { SingleScreenBreadcrumbService } from '../../services/single-screens-breadcrumb.service';
 
 @Component({
     selector: 'app-depriciation-method',
@@ -27,10 +28,12 @@ export class DepriciationMethodComponent implements OnInit {
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
     /** DepriciationMethod ctor */
-    constructor(private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-depriciation-method';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
             this.depriciationMethodList = depriciationmethods[0];
         });

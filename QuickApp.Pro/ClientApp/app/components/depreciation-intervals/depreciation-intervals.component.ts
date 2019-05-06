@@ -6,6 +6,7 @@ import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { SingleScreenBreadcrumbService } from '../../services/single-screens-breadcrumb.service';
 
 @Component({
     selector: 'app-depreciation-intervals',
@@ -28,10 +29,13 @@ export class DepreciationIntervalsComponent implements OnInit {
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
 
-    constructor(private alertService: AlertService, private authService: AuthService, private depreciationIntervalsService: DepreciationIntervalsService, private modalService: NgbModal) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private authService: AuthService, private depreciationIntervalsService: DepreciationIntervalsService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-depreciation-intervals';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+    
         this.depreciationIntervalsService.getAll().subscribe(depreciationIntervals => {
             this.depreciationIntervalsList = depreciationIntervals[0];
         });
