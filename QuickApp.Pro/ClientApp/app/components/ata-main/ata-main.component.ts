@@ -452,7 +452,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
         this.ataMainService.getAtaChapterAudit(ataMainId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["aTAChapterAuditId", "aTAChapterId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["ataChapterAuditId", "ataChapterId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

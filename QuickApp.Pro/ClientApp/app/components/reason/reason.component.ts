@@ -421,7 +421,7 @@ export class ReasonComponent {
         this.reasonService.getReasonAudit(reasonId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["ReasonAuditId", "ReasonId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["reasonAuditId", "reasonId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

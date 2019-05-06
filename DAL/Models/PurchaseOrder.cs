@@ -9,7 +9,7 @@ namespace DAL.Models
     public class PurchaseOrder : PasBase
     {
         [Key]
-        public long PurchaseOrderId { get; set; }
+        public long? PurchaseOrderId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public string ReferenceId { get; set; }
         public Nullable<short> PriorityId { get; set; }

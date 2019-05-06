@@ -10,34 +10,34 @@ namespace DAL.Models
 
     {
         [Key]
-        public long  ChargeId { get; set; }
+        public long?  ChargeId { get; set; }
 
         public string ChargeName { get; set; }
 
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
 
-        public int MarkUp { get; set; }
+        public int? MarkUp { get; set; }
 
-        public int CurrencyId { get; set; }
-        public int PurchaseOrderId { get; set; }
+        public int? CurrencyId { get; set; }
+        public int? PurchaseOrderId { get; set; }
 
-        public long VendorId { get; set; }
+        public long? VendorId { get; set; }
 
         public string Memo { get; set; }
 
-        public int IntegrationPortalId { get; set; }
+        public int? IntegrationPortalId { get; set; }
 
-        public long GeneralLedgerId { get; set; }
+        public long? GeneralLedgerId { get; set; }
 
-        public int FunctionalCurrencyId { get; set; }
+        public int? FunctionalCurrencyId { get; set; }
 
-        public decimal Cost { get; set; }
+        public decimal? Cost { get; set; }
 
         public string Description { get; set; }
         public string BillableAmount { get; set; }
         public Int32 ManagementStructureId { get; set; }
 
-        public Int32 MasterCompanyId { get; set; }
+        public Int32? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }

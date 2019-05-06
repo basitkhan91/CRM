@@ -8,7 +8,7 @@ namespace DAL.Models
     public class IntegrationPortal : IAudit
     {
         [Key]
-        public Int32 IntegrationPortalId { get; set; }
+        public Int32? IntegrationPortalId { get; set; }
         public string Description { get; set; }
         public string PortalURL { get; set; }
         public string CreatedBy { get; set; }

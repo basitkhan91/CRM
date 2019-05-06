@@ -192,14 +192,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-
         this.sourceAction = row;
-
-
-
         this.isSaving = true;
-
         this.conditionService.historyCondition(this.sourceAction.conditionId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));

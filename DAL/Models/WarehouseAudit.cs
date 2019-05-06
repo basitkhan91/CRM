@@ -10,7 +10,7 @@ namespace DAL.Models
         [Key]
         public long WarehouseAuditId { get; set; }
         public long WarehouseId { get; set; }
-        public long SiteId { get; set; }
+        public long? SiteId { get; set; }
         public string Name { get; set; }
         public string Memo { get; set; }
         public Int32? MasterCompanyId { get; set; }

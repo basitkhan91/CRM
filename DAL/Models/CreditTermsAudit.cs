@@ -15,11 +15,11 @@ namespace DAL.Models
         public string Name { get; set; }
         public string Memo { get; set; }
 
-        public byte Percentage { get; set; }
+        public byte? Percentage { get; set; }
 
-        public byte Days { get; set; }
+        public byte? Days { get; set; }
 
-        public byte NetDays { get; set; }
+        public byte? NetDays { get; set; }
         public Int32 MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }

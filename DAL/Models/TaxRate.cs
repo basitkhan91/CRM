@@ -16,7 +16,7 @@ namespace DAL.Models
         public string Memo { get; set; }
 
 
-        public decimal TaxRate { get; set; }
+        public decimal? TaxRate { get; set; }
  
 
         [ForeignKey("MasterCompanyId")]

@@ -10,7 +10,7 @@ namespace DAL.Models
     {
         [Key]
         public long WarehouseId { get; set; }
-        public long SiteId { get; set; }
+        public long? SiteId { get; set; }
         public string Name { get; set; }
         public string Memo { get; set; }
         [ForeignKey("MasterCompanyId")]
