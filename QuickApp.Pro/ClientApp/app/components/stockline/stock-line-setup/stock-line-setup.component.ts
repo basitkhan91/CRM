@@ -379,82 +379,50 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.selectedModels.push(selectedRow);
 		}
 		console.log(this.selectedModels);
-	}
+    }
+
+
+    filterpartItems(event) {
+
+        this.partCollection = [];
+        this.itemclaColl = [];
+        if (this.allPartnumbersInfo) {
+            if (this.allPartnumbersInfo.length > 0) {
+
+                for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+                    let partName = this.allPartnumbersInfo[i].partNumber;
+                    if (partName) {
+                        if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                            this.itemclaColl.push([{
+                                "partId": this.allPartnumbersInfo[i].itemMasterId,
+                                "partName": partName
+                            }]),
+
+                                this.partCollection.push(partName);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 	//filterpartItems(event) {
-
 	//	this.partCollection = [];
 	//	this.itemclaColl = [];
-	//	if (this.allPartnumbersInfo) {
-	//		if (this.allPartnumbersInfo.length > 0) {
-
-	//			for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-	//				let partName = this.allPartnumbersInfo[i].partNumber;
-	//				if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0)
-	//				{
-	//					this.itemclaColl.push([{
-	//						"partId": this.allPartnumbersInfo[i].itemMasterId,
-	//						"partName": partName
-	//					}]),
-
-	//						this.partCollection.push(partName);
-	//				}
-	//			}
-	//		}
-	//	}
-		
+ //       if (this.allPartnumbersInfo && this.allPartnumbersInfo.length > 0) {
+ //           this.itemclaColl = this.allPartnumbersInfo.filter(function (partNumberInfo) {
+ //               if (partNumberInfo.partNumber.toLowerCase() == event.query.toLowerCase()) {
+ //                   this.partCollection.push(partNumberInfo.partNumber);
+ //                   return {
+ //                       "partId": partNumberInfo.itemMasterId,
+ //                       "partName": event.query.toLowerCase()
+ //                   };
+ //               }
+ //           });
+ //       }
 	//}
 
-	filterpartItems(event) {
-        debugger;
-		this.partCollection = [];
-		this.itemclaColl = [];
-        if (this.allPartnumbersInfo && this.allPartnumbersInfo.length > 0) {
-            this.itemclaColl = this.allPartnumbersInfo.filter(function (partNumberInfo) {
-                if (partNumberInfo.partNumber.toLowerCase() == event.query.toLowerCase()) {
-                    this.partCollection.push(partNumberInfo.partNumber);
-                    return {
-                        "partId": partNumberInfo.itemMasterId,
-                        "partName": event.query.toLowerCase()
-                    };
-                }
-            });
-        }
-				//for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-				//	let partName = this.allPartnumbersInfo[i].partNumber;
-				//	if (partName) {
-				//		if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				//			this.itemclaColl.push([{
-				//				"partId": this.allPartnumbersInfo[i].itemMasterId,
-				//				"partName": partName
-				//			}]),
 
-				//				this.partCollection.push(partName);
-				//		}
-				//	}
-		  //  	}
-		
-	}
-
-
-	//partnmId(event) {
-	//	//
-	//	if (this.itemclaColl) {
-	//		for (let i = 0; i < this.itemclaColl.length; i++) {
-	//			if (event == this.itemclaColl[i][0].partName) {
-	//				//this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
-	//				this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
-
-	//				console.log(this.selectedPartId);
-	//				this.selectedActionName = event;
-	//			}
-	//		}
-	//		this.itemser.getDescriptionbypart(event).subscribe(
-	//			results => this.onpartnumberloadsuccessfull(results[0]),
-	//			error => this.onDataLoadFailed(error)
-	//		);
-	//	}
-	//}
 
 	partnmId(event) {
         debugger;
@@ -485,8 +453,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 		this.descriptionbyPart = allWorkFlows[0]
 		this.sourcePartAction = this.descriptionbyPart;
-		this.sourceStockLineSetup.partDescription = allWorkFlows[0].partDescription; //Passing Part Description based on Change Part
-
+        this.sourceStockLineSetup.partDescription = allWorkFlows[0].partDescription; //Passing Part Description based on Change Part
+        this.sourceStockLineSetup.shelfLife = allWorkFlows[0].shelfLife;
 		this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
 
 		if (this.sourceStockLineSetup.isSerialized == true) {

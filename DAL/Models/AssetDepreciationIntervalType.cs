@@ -7,6 +7,7 @@ namespace DAL.Models
 {
   public class AssetDepreciationIntervalType : PasBase,IAudit
     {
+        [Key]
         public long AssetDepreciationIntervalTypeId { get; set; }
         [Required(ErrorMessage = "Id Is Required.")]
         public string AssetDepreciationIntervalId { get; set; }

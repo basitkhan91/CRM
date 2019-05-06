@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
 import { AccountingPagesComponent } from './accounting-pages.component';
+import { CreateBatchComponent } from '../components/accounting/general-ledger/Journals/create-batch/create-batch.component';
+import { ViewBatchTsComponent } from '../components/accounting/general-ledger/Journals/view-batch/view-batch.component';
 //import { NodeSetupComponent } from '../components/accounting/general-ledger/node-setup/node-setup.component';
 
 const accountingPagesRoutes: Routes = [
@@ -12,7 +14,8 @@ const accountingPagesRoutes: Routes = [
         component: AccountingPagesComponent,
         children: [
 
-            //{ path: "app-node-setup", component: NodeSetupComponent, data: { title: "Nodes" } },
+            { path: "app-view-batch", component: ViewBatchTsComponent, data: { title: "ViewBatch" } },
+            { path: "app-create-batch", component: CreateBatchComponent, data: { title: "CreateBatch" } },
             
         ]
     }

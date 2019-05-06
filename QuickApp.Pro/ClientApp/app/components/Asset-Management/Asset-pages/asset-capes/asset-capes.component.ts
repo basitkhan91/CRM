@@ -798,21 +798,21 @@ export class AssetCapesComponent implements OnInit {
     private loadCapesData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        if (this.currentAsset) {
+            this.assetServices.getcapabilityListData(this.currentAsset.assetRecordId).subscribe(
+                results => this.onCapesLoaded(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
 
-        this.assetServices.getcapabilityListData(this.currentAsset.assetRecordId).subscribe(
-            results => this.onCapesLoaded(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
+            this.cols = [
 
-        this.cols = [
-
-            { field: 'assetId', header: 'PN' },
-            { field: 'aircraftTypeId', header: 'Aircraft Type' },
-            { field: 'aircraftModelId', header: ' Aircraft Model' },
-            { field: 'aircraftManufacturer', header: 'Aircraft Manufacturer' },
-        ];
-        this.selectedColumns = this.cols;
-        
+                { field: 'assetId', header: 'PN' },
+                { field: 'aircraftTypeId', header: 'Aircraft Type' },
+                { field: 'aircraftModelId', header: ' Aircraft Model' },
+                { field: 'aircraftManufacturer', header: 'Aircraft Manufacturer' },
+            ];
+            this.selectedColumns = this.cols;
+        }
     }
 
 

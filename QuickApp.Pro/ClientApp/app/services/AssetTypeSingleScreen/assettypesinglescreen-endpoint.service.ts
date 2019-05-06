@@ -15,7 +15,7 @@ export class AssetTypeSingleScreenEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/AssetType/add";
     private readonly updateURL: string = "/api/AssetType/update";
     private readonly removeByIdURL: string = "/api/AssetType/removeById";
-
+    private readonly getAuditById: string = "/api/AssetType/audits";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
@@ -73,4 +73,12 @@ export class AssetTypeSingleScreenEndpointService extends EndpointFactory {
             });
     }
 
+    getAudit<T>(assetTypeSingleScreenId: number): Observable<T> {
+        let endpointUrl = `${this.getAuditById}/${assetTypeSingleScreenId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAudit(assetTypeSingleScreenId));
+            });
+    }
 }

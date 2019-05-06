@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-  public class GateCodeAudit : PasBase
+  public class GatecodeClassAudit : PasBase
     {
         [Key]
         public long? GateCodeAuditId { get; set; }

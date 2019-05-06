@@ -6,6 +6,7 @@ import { AssetIntangibleTypeSingleScreenService } from "../../services/AssetInta
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 
 @Component({
      selector: 'app-asset-intangible-type-single-screen',
@@ -27,10 +28,14 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
 
-    constructor(private alertService: AlertService, private assetIntangibleService: AssetIntangibleTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private assetIntangibleService: AssetIntangibleTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-intangible-type-single-screen';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+    
+
         this.assetIntangibleService.getAll().subscribe(assetIntangible => {
             this.assetIntangibleList = assetIntangible[0];
         });

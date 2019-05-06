@@ -5,6 +5,9 @@ import { AssetTypeSingleScreenService } from "../../services/AssetTypeSingleScre
 import { AssetTypeSingleScreen } from "../../models/assettypesinglescreen.model";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
+import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+
 
 @Component({
     selector: 'app-asset-type-single-screen',
@@ -24,11 +27,14 @@ export class AssetTypeSingleScreenComponent implements OnInit {
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    AuditDetails: SingleScreenAuditDetails[];
 
-    constructor(private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-type-single-screen';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.assetTypeService.getAll().subscribe(AssetTypes => {
             this.assetTypeList = AssetTypes[0];
         });
@@ -144,5 +150,20 @@ export class AssetTypeSingleScreenComponent implements OnInit {
                 });
             })
         }
+    }
+
+    showAuditPopup(template, assetTypeSingleScreenId): void {
+        this.audit(assetTypeSingleScreenId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    audit(assetTypeSingleScreenId: number): void {
+        this.AuditDetails = [];
+        this.assetTypeService.getAudit(assetTypeSingleScreenId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["assetTypeSingleScreenAuditId", "assetTypeSingleScreenId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }

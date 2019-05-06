@@ -5,6 +5,7 @@ namespace DAL.Models
 {
   public class AssetDepConventionType:PasBase,IAudit
     {
+        [Key]
         public long? AssetDepConventionTypeId { get; set; }
         [Required(ErrorMessage = "Id Is Required.")]
         public string AssetDepConventionId { get; set; }

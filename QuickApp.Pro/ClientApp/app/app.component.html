@@ -402,14 +402,16 @@
                 </mat-expansion-panel>
 
                 <!--Arun-->
-                <!--<mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-               Accounting
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-node-setup">Node</a>
-    </mat-expansion-panel>-->
+                <mat-expansion-panel [expanded]="step === 16" (opened)="setStep(16)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Accounting
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-create-batch">Create Batch</a>
+                    <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-view-batch">View Batch</a>
+
+                </mat-expansion-panel>
 
                 <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
                     <mat-expansion-panel-header>

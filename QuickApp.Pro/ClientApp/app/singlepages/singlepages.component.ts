@@ -31,10 +31,9 @@ export class SingleComponent {
 
 	}
 
-	ngOnInit() {
-
-
-
+    ngOnInit()
+    {
+        
 		this.currentUrl = this.route.url;
 		//debugger
 		this.loadmethod(this.currentUrl)
@@ -62,7 +61,59 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Vendor Capabilities' }
 				];
-			}
+            }
+
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-asset-intangible-type-single-screen') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Intangible Type' }
+                ];
+            }
+
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Disposal Type' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-depreciation-intervals') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Depreciation Intervals' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-depriciation-method') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Depreciation Method'}
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-asset-dep-convention-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Depreciation Convension' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/asset-status') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Asset Status ' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-asset-type-single-screen') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Asset Type ' }
+                ];
+            }
+
 			else if (this.currentUrl == '/singlepages/singlepages/app-labor-and-overhead-cost-setup') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -685,7 +736,60 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Vendor Capabilities' }
 				];
-			}
+            }
+
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-asset-intangible-type-single-screen') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Intangible Type' }
+                ];
+            }
+
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Disposal Type' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-depreciation-intervals') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Depreciation Intervals' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-depriciation-method') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Depreciation Method' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-asset-dep-convention-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Depreciation Convension' }
+                ];
+            }
+
+
+            else if (this.currentUrl == '/singlepages/singlepages/asset-status') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Asset Status ' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-asset-type-single-screen') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Asset Type ' }
+                ];
+            }
+
 			else if (this.currentUrl == '/singlepages/singlepages/app-shelf') {
 				this.items = [
 					{ label: 'Single Screens' },
