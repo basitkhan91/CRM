@@ -38,11 +38,14 @@ export class AccountingCalendarComponent implements OnInit {
         let date = new Date();
         let year = date.getFullYear();
         this.minDate= new Date(year + '-' + '01-01');
+        this.loadCompleteCalendarData();
+        this.loadCompaniesData();
+    }
+    loadCompleteCalendarData() {
         this.calendarService.getAll().subscribe(data => {
             this.completeCalendarData = data[0];
-         
+
         })
-        this.loadCompaniesData();
     }
     setSelectedAttribute(value) {
         this.selectedPeriod = value;
@@ -348,7 +351,7 @@ export class AccountingCalendarComponent implements OnInit {
     }
     addCalendar() {
         this.isBoolean = false;
-        if (!(this.currentCalendarObj.name && this.currentCalendarObj.description && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType && this.currentCalendarObj.fiscalYear
+        if (!(this.currentCalendarObj.name && this.currentCalendarObj.legalEntityId && this.currentCalendarObj.description && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType && this.currentCalendarObj.fiscalYear
             && this.currentCalendarObj.noOfPeriods)) {
             this.display = true;
         }
@@ -469,18 +472,19 @@ export class AccountingCalendarComponent implements OnInit {
                         break;
 
                     }
-                    if (!addDetails) {
-                        this.calendarService.add(this.calendarArray).subscribe(data => {
-                            this.alertService.showMessage('Calendar data added successfully.');
-
-                        })
-                    }
+                    
+                }
+                if (!addDetails) {
+                    this.calendarService.add(this.calendarArray).subscribe(data => {
+                        this.alertService.showMessage('Calendar data added successfully.');
+                        this.loadCompleteCalendarData();
+                    })
                 }
             }
             else {
                 this.calendarService.add(this.calendarArray).subscribe(data => {
                     this.alertService.showMessage('Calendar data added successfully.');
-
+                    this.loadCompleteCalendarData();
                 })
             }
         }
