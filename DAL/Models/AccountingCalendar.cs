@@ -39,5 +39,7 @@ namespace DAL.Models
         public long? LegalEntityId { get; set; }
 
         public bool? isUpdate { get; set; }
+
+        public bool? IsAdjustPeriod { get; set; }
     }
 }

@@ -327,7 +327,7 @@ export class AccountingCalendarComponent implements OnInit {
         else {
            
             this.showManual = true;
-            var months = ["Select","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var months = ["Select","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec","APJ-PD"];
             var qtr = [1, 2, 3,4,5,6,7,8,9,10,11,12];
             let defualtCalendarObj = {
                 fiscalNameData: months,
@@ -346,6 +346,18 @@ export class AccountingCalendarComponent implements OnInit {
             }
             
             return defualtCalendarObj;
+        }
+        
+    }
+    setAdjustingPeriod(selectedObj) {
+        var months = ["Select", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "APJ-PD"];
+        if (selectedObj.isAdjustPeriod == true) {
+            selectedObj.fiscalName = months[13];
+            selectedObj.periodName = selectedObj.fiscalName + ' - ' + this.currentCalendarObj.fiscalYear;
+        }
+        else {
+            selectedObj.fiscalName = months[0];
+            selectedObj.periodName = "";
         }
         
     }
