@@ -6,6 +6,7 @@ import { fadeInOut } from '../../services/animations';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { SingleScreenBreadcrumbService } from '../../services/single-screens-breadcrumb.service';
 
 @Component({
     selector: 'app-disposal-type',
@@ -27,10 +28,12 @@ export class DisposalTypeComponent implements OnInit {
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
 
-    constructor(private alertService: AlertService, private disposalTypeService: DisposalTypeService, private authService: AuthService, private modalService: NgbModal) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private disposalTypeService: DisposalTypeService, private authService: AuthService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-disposal-type';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.disposalTypeService.getAll().subscribe(disposalTypes => {
             this.disposalTypeList = disposalTypes[0];
         });

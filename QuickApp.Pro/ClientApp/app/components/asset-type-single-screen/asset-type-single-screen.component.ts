@@ -6,6 +6,7 @@ import { AssetTypeSingleScreen } from "../../models/assettypesinglescreen.model"
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 
 
 @Component({
@@ -28,10 +29,12 @@ export class AssetTypeSingleScreenComponent implements OnInit {
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
 
-    constructor(private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-type-single-screen';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.assetTypeService.getAll().subscribe(AssetTypes => {
             this.assetTypeList = AssetTypes[0];
         });

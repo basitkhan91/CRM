@@ -531,6 +531,7 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.IsOtherDateAvailable = itemMasterViewModel.IsOtherDateAvailable;
                 itemmaserObj.OtherDays = itemMasterViewModel.OtherDays;
                 itemmaserObj.ProvisionId = itemMasterViewModel.ProvisionId;
+                itemmaserObj.ShelfLife = itemMasterViewModel.ShelfLife;
                 itemmaserObj.ManufacturerId = itemMasterViewModel.ManufacturerId;
                 itemmaserObj.PMA = itemMasterViewModel.PMA;
                 itemmaserObj.DER = itemMasterViewModel.DER;
@@ -734,6 +735,7 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.ShippedDays = itemMasterViewModel.ShippedDays;
                 itemmaserObj.IsOtherDateAvailable = itemMasterViewModel.IsOtherDateAvailable;
                 itemmaserObj.OtherDays = itemMasterViewModel.OtherDays;
+                itemmaserObj.ShelfLife = itemMasterViewModel.ShelfLife;
                 itemmaserObj.ProvisionId = itemMasterViewModel.ProvisionId;
                 itemmaserObj.ManufacturerId = itemMasterViewModel.ManufacturerId;
                 itemmaserObj.PurchaseLastListPriceDate = itemMasterViewModel.PurchaseLastListPriceDate;

@@ -251,7 +251,7 @@ namespace QuickApp.Pro.ViewModels
 
         public DateTime ManufacturingDate { get; set; }
 
-        public bool? IsShelfLifeAvailable { get; set; }
+        public bool? ShelfLife { get; set; }
 
         public DateTime OpenDate { get; set; }
 
@@ -347,8 +347,6 @@ namespace QuickApp.Pro.ViewModels
         public DateTime UpdatedDate { get; set; }
 
         public string PartNumber { get; set; }
-
-      //  public string AlterPartNumber { get; set; }
 
         public  string Partdescription { get; set; }
         public string ParentPartId { get; set; }

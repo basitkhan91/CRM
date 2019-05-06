@@ -6,6 +6,7 @@ import { AssetDepConventionTypeService } from "../../services/assetDepConvention
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 
 @Component({
     selector: 'app-asset-dep-convention-type',
@@ -28,10 +29,12 @@ export class AssetDepConventionTypeComponent implements OnInit {
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
 
-    constructor(private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal, private authService: AuthService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-dep-convention-type';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.assetDepConventionTypeService.getAll().subscribe(assetDeps => {
             this.assetDepList = assetDeps[0];
         });

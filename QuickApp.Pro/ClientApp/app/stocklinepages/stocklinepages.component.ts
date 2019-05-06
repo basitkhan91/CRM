@@ -45,7 +45,7 @@ export class StocklinepagesComponent {
 			if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-line-list') {
 				this.items = [
 					{ label: 'Stock Line' },
-					{ label: 'StockLine-List' }
+					{ label: 'Stock Line-List' }
 				];
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-line-setup') {
@@ -87,19 +87,19 @@ export class StocklinepagesComponent {
 			if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-line-list') {
 				this.items = [
 					{ label: 'Stock Line' },
-					{ label: 'StockLine-List' }
+					{ label: 'Stock Line-List' }
 				];
 			}
 			else if (this.otherurl == '/stocklinemodule/stocklinepages/app-stock-line-setup') {
 				this.items = [
 					{ label: 'Stock Line' },
-					{ label: 'StockLine-Create' }
+					{ label: 'Stock Line-Create' }
 				];
 			}
 			else if (this.otherurl == '/stocklinemodule/stocklinepages/app-stock-line-edit') {
 				this.items = [
 					{ label: 'Stock Line' },
-					{ label: 'StockLine-Edit' }
+					{ label: 'Stock Line-Edit' }
 				];
 			}
 			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stock-adjustment') {
