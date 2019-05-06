@@ -285,6 +285,42 @@ namespace DAL
         public DbSet<MarkUpPercentage> MarkUpPercentage { get; set; }
         public DbSet<POROCategory> POROCategory { get; set; }
         public DbSet<POROCategoryAudit> POROCategoryAudit { get; set; }
+
+        public DbSet<CustomerClassificationAudit> CustomerClassificationAudit { get; set; }
+        public DbSet<DocumentAudit> DocumentAudit { get; set; }
+        public DbSet<DefaultMessageAudit> DefaultMessageAudit { get; set; }
+        public DbSet<EmployeeExpertiseAudit> EmployeeExpertiseAudit { get; set; }
+        public DbSet<FindingAudit> FindingAudit { get; set; }
+        public DbSet<IntegrationPortalAudit> IntegrationPortalAudit { get; set; }
+        public DbSet<GateCodeAudit> GateCodeAudit { get; set; }
+        public DbSet<PublicationAudit> PublicationAudit { get; set; }
+        public DbSet<ReasonAudit> ReasonAudit { get; set; }
+        public DbSet<SiteAudit> SiteAudit { get; set; }
+        public DbSet<TaxRatesAudit> TaxRateAudit { get; set; }
+        
+        //public DbSet<UnitOfMeasureAudit> UnitOfMeasureAudit { get; set; }
+        public DbSet<VendorClassificationAudit> VendorClassificationAudit { get; set; }
+        public DbSet<WorkPerformedAudit> WorkPerformedAudit { get; set; }
+        public DbSet<WorkflowScopeAudit> WorkflowScopeAudit { get; set; }
+        //public DbSet<WorkScopeAudit> WorkScopeAudit { get; set; }
+        public DbSet<ATAChapterAudit> ATAChapterAudit { get; set; }
+        public DbSet<ATASubChapterAudit> ATASubChapterAudit { get; set; }
+        public DbSet<EmployeeLicenseTypeAudit> EmployeeLicenseTypeAudit { get; set; }
+        public DbSet<ChargeAudit> ChargeAudit { get; set; }
+        public DbSet<ConditionAudit> ConditionAudit { get; set; }
+        public DbSet<CreditTermsAudit> CreditTermsAudit { get; set; }
+        public DbSet<CurrencyAudit> CurrencyAudit { get; set; }
+        public DbSet<ItemClassficationAudit> ItemClassificationAudit { get; set; }
+        public DbSet<ItemgroupAudit> ItemGroupAudit { get; set; }
+        public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
+        public DbSet<PriorityAudit> PriorityAudit { get; set; }
+        public DbSet<WarehouseAudit> WarehouseAudit { get; set; }
+        public DbSet<LocationAudit> LocationAudit { get; set; }
+        public DbSet<ShelfAudit> ShelfAudit { get; set; }
+        public DbSet<BinAudit> BinAudit { get; set; }
+        public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
+
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
