@@ -57,7 +57,7 @@
                     <label class="control-label col-sm-4">Start Date<strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
 
-                        <p-calendar [(ngModel)]="currentCalendarObj.fromDate" [showIcon]="true" [minDate]="minDate" [readonlyInput]="true"></p-calendar>
+                        <p-calendar [(ngModel)]="currentCalendarObj.fromDate" [showIcon]="true" [minDate]="minDate"></p-calendar>
                     </div>
                 </div>
                
@@ -128,7 +128,7 @@
                         <p-calendar [(ngModel)]="obj.toDate" [showIcon]="true"></p-calendar>
                     </td>
                     <td>{{obj.periodName}}</td>
-                    <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" /></td>
+                    <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" [(ngModel)]="obj.isAdjustPeriod"  /></td>
                     <td *ngIf="obj.adjusting!='yes' "></td>
                 </tr>
 
@@ -155,7 +155,7 @@
                     <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.fromDate}}"></td>
                     <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.toDate}}"></td>
                     <td>{{obj.periodName}}</td>
-                    <th><input type="checkbox" /></th>
+                    <th><input type="checkbox" [(ngModel)]="obj.isAdjustPeriod" (change)="setAdjustingPeriod(obj)" /></th>
                 </tr>
             </tbody>
         </table>
