@@ -158,7 +158,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
         this.assetDepConventionTypeService.getAudit(assetDepConventionTypeId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetDepConventionTypeAuditId", "assetDepConventionTypeId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["assetDepConventionTypeAuditId", "assetDepConventionTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
             }
         });
     }

@@ -159,7 +159,7 @@ export class AssetIntangibleTypeSingleScreenComponent implements OnInit {
         this.assetIntangibleService.getAssetIntangibleAudit(assetIntangibleTypeSingleId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetIntangibleTypeSingleAuditId", "assetIntangibleTypeSingleId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["assetIntangibleTypeSingleAuditId", "assetIntangibleTypeSingleId", "createdBy", "createdDate", "updatedDate","masterCompanyId"];
             }
         });
     }

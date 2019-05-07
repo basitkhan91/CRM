@@ -382,7 +382,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         this.CustomerClassificationService.getCustomerclassification(CustomerClassificationId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["customerClassificationAuditId", "customerClassificationId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["customerClassificationAuditId", "customerClassificationId", "masterCompanyId","createdBy", "createdDate", "updatedDate"];
             }
         });
     }
