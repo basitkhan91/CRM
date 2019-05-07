@@ -31,7 +31,7 @@ export class AccountingCalendarComponent implements OnInit {
     public minDate: any;
     companyList: any[] = [];
     constructor(private legalEntityservice:LegalEntityService,private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
-        this.currentCalendarObj.fromDate = new Date('2019-01-01');
+        //this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
     //add Legal Entity///
     ngOnInit() {
@@ -166,6 +166,7 @@ export class AccountingCalendarComponent implements OnInit {
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
+                    isAdjustPeriod: true,
                     legalEntityId: this.currentCalendarObj.legalEntityId
                 }
                 this.period++;
@@ -234,6 +235,7 @@ export class AccountingCalendarComponent implements OnInit {
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
+                    isAdjustPeriod: true,
                     legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
@@ -256,6 +258,7 @@ export class AccountingCalendarComponent implements OnInit {
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
+                    isAdjustPeriod: true,
                     legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
@@ -277,7 +280,9 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    adjusting: 'yes'
+                    adjusting: 'yes',
+                    isAdjustPeriod: true,
+                 
 
                 }
                 this.period++;
@@ -298,6 +303,7 @@ export class AccountingCalendarComponent implements OnInit {
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
+                    isAdjustPeriod: true,
                     legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
@@ -442,8 +448,15 @@ export class AccountingCalendarComponent implements OnInit {
 
         }
     }
+    deleteRow(index) {
+        this.calendarArray.splice(index, 1);
+    }
+    setMonthDate() {
+        this.currentCalendarObj.fromDate = new Date(this.currentCalendarObj.fiscalYear + '-' + '01-01');
+        this.currentCalendarObj.toDate = "";
+    }
     saveCalendar() {
-        debugger;
+      
         let date = new Date(this.currentCalendarObj.fromDate);
         let year = date.getFullYear();
         let addDetails = false;
@@ -503,10 +516,26 @@ export class AccountingCalendarComponent implements OnInit {
        
     }
     addPeriodName(obj, selectedName) {
-        //debugger;
         obj["periodName"] = selectedName + ' - ' + obj.fiscalYear
     }
+    setDate(obj,index) {
+        debugger;
+        var date = new Date(obj.fromDate);
+        var newdate = new Date(date);
+        newdate.setDate(newdate.getDate() + 1);
+        var dd = newdate.getDate();
+        var mm = newdate.getMonth() + 1;
+        var y = newdate.getFullYear();
+        let nextIndex = index + 1;
+        var date = new Date(obj.toDate);
+        this.calendarArray[nextIndex].fromDate = y + '-' + mm + '-' + dd;
+       
+    }
     addPeriod() {
+        //debugger;
+        if (this.calendarArray && this.calendarArray.length > 0) {
+
+        }
         this.period++;
         this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod,false));
     }

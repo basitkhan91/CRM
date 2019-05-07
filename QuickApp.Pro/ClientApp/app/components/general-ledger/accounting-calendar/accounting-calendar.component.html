@@ -37,7 +37,7 @@
                    
                     <div class="col-sm-7">
 
-                        <input class="form-control" type="text" value="2018" [(ngModel)]="currentCalendarObj.fiscalYear">
+                        <input class="form-control" type="text" value="2018" [(ngModel)]="currentCalendarObj.fiscalYear" (change)="setMonthDate(currentCalendarObj.fiscalYear)">
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -116,26 +116,26 @@
                 </tr>
             </thead>
             <tbody *ngIf="!showManual">
-                <tr *ngFor="let obj of calendarArray">
+                <tr *ngFor="let obj of calendarArray;let row_no = index">
                     <td>{{obj.fiscalName}}</td>
                     <td>{{obj.fiscalYear}}</td>
                     <td>{{obj.quater}}</td>
                     <td>{{obj.period}}</td>
                     <td>
-                        <p-calendar [(ngModel)]="obj.fromDate" [showIcon]="true"></p-calendar>
+                        <p-calendar [(ngModel)]="obj.fromDate" [showIcon]="true" ></p-calendar>
                     </td>
                     <td>
-                        <p-calendar [(ngModel)]="obj.toDate" [showIcon]="true"></p-calendar>
+                        <p-calendar [(ngModel)]="obj.toDate" [showIcon]="true" ></p-calendar>
                     </td>
                     <td>{{obj.periodName}}</td>
-                    <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" [(ngModel)]="obj.isAdjustPeriod"  /></td>
+                    <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" [(ngModel)]="obj.isAdjustPeriod" disabled  /></td>
                     <td *ngIf="obj.adjusting!='yes' "></td>
                 </tr>
 
 
             </tbody>
             <tbody *ngIf="showManual">
-                <tr *ngFor="let obj of calendarArray">
+                <tr *ngFor="let obj of calendarArray;let row_no = index">
                     <td>
                         <select [(ngModel)]="obj.fiscalName" (change)="addPeriodName(obj,obj.fiscalName)">
                             <option *ngFor="let name of obj.fiscalNameData" [ngValue]="name">
@@ -155,7 +155,12 @@
                     <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.fromDate}}"></td>
                     <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.toDate}}"></td>
                     <td>{{obj.periodName}}</td>
-                    <th><input type="checkbox" [(ngModel)]="obj.isAdjustPeriod" (change)="setAdjustingPeriod(obj)" /></th>
+                    <th *ngIf="row_no>0"><input type="checkbox" [(ngModel)]="obj.isAdjustPeriod" (change)="setAdjustingPeriod(obj)" /></th>
+                    <th *ngIf="row_no==0"><input type="checkbox" disabled /></th>
+                    <th>
+                        <span class="fa fa-trash-o delete-btn"
+                              (click)="deleteRow(row_no)"></span>
+                    </th>
                 </tr>
             </tbody>
         </table>
