@@ -156,10 +156,8 @@
                 </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Depreciation Method</label>
-                    <div class="col-sm-7">
-                        <select disabled="" class="form-control" [(ngModel)]="currentSelectedIntangibleAssetType.depreciationMethod" [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let depMethod of depriciationMethodList" [ngValue]="depMethod.assetDepreciationMethodId">  {{depMethod.assetDepreciationMethodName}}</option>
-                        </select>
+                    <div class="col-sm-7">                        
+                            <input disabled class="form-control amount" type="text" [(ngModel)]="currentSelectedIntangibleAssetType.amortizationMethod">
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -371,39 +369,39 @@
                             </select>
                         </div>
                     </div>
-                    <!--<div class="form-group col-sm-12">
+                    <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4">Sale GL</label>
                         <div class="col-sm-7">
-                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
+                            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.assetWriteOff" [ngModelOptions]="{standalone: true}">
                                 <option>--Select--</option>
-                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                    {{glAccounts.accountName}}
-                                </option>
+                                <option>70000</option>
+                                <option>80000</option>
+                                <option>90000</option>
                             </select>
                         </div>
-                    </div>-->
-                    <!--<div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Write Off GL</label>
-                        <div class="col-sm-7">
-                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
-                                <option>--Select--</option>
-                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                    {{glAccounts.accountName}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>-->
-                    <!--<div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Write Down GL</label>
-                        <div class="col-sm-7">
-                            <select disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.intangibleWriteDownGLAccountId">
-                                <option>--Select--</option>
-                                <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
-                                    {{glAccounts.accountName}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>-->
+                    </div>
+                    <div class="form-group col-sm-12">
+        <label class="control-label col-sm-4">Write Off GL</label>
+        <div class="col-sm-7">
+            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.assetWriteOff" [ngModelOptions]="{standalone: true}">
+                <option></option>
+                <option>70000</option>
+                <option>80000</option>
+                <option>90000</option>
+            </select>
+        </div>
+    </div>
+                    <div class="form-group col-sm-12">
+        <label class="control-label col-sm-4">Write Down GL</label>
+        <div class="col-sm-7">
+            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.assetWriteDown" [ngModelOptions]="{standalone: true}">
+                <option></option>
+                <option>70000</option>
+                <option>80000</option>
+                <option>90000</option>
+            </select>
+        </div>
+    </div>
                     <div class="clear"></div>
                 </div>
 
