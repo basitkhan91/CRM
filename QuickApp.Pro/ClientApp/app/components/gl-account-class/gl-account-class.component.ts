@@ -380,7 +380,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getGlAudit(glAccountClassId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["glAccountClassAuditId", "glAccountClassId", "createdBy", "createdDate", "updatedDate","isActive","isDelete"];
+                this.AuditDetails[0].ColumnsToAvoid = ["glAccountClassAuditId", "glAccountClassId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
             }
         });
     }

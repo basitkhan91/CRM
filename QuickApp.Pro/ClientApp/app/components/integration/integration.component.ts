@@ -410,7 +410,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getAudit(integrationPortalId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["integrationPortalAuditId", "integrationPortalId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["integrationPortalAuditId", "integrationPortalId", "createdBy", "createdDate", "updatedDate","masterCompanyId",];
             }
         });
     }

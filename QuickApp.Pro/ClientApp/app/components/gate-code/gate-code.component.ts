@@ -408,7 +408,7 @@ export class GateCodeComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getAudit(gateCodeId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["gateCodeAuditId", "gateCodeId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["gateCodeAuditId", "gateCodeId", "createdBy", "createdDate", "updatedDate","masterCompanyId"];
             }
         });
     }

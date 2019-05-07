@@ -163,7 +163,7 @@ export class DepreciationIntervalsComponent implements OnInit {
         this.depreciationIntervalsService.getAudit(assetDepreciationIntervalTypeId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationIntervalTypeAuditId", "assetDepreciationIntervalTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId","isActive"];
+                this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationIntervalTypeAuditId", "assetDepreciationIntervalTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
             }
         });
     }
