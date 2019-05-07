@@ -457,7 +457,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
-        this.vendorId = this.allActions[0].vendorId;
+        //this.vendorId = this.allActions[0].vendorId;
         //console.log(this.allActions);
 
 
@@ -479,7 +479,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewCheck
             if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 //this.vendorNames.push(vendorName);
                 this.VendorNamecoll.push([{
-                    "vendorId": this.allActions[i].vendorClassificationId,
+                    "vendorId": this.allActions[i].vendorId,
                     "vendorName": vendorName
                 }]),
                     this.vendorNames.push(vendorName);
