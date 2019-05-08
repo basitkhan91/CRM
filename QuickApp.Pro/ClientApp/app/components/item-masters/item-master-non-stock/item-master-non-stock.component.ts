@@ -1250,9 +1250,10 @@ export class ItemMasterNonStockComponent {
 			}
 			else {
 
-				this.sourceItemMaster.updatedBy = this.userName;
+                this.sourceItemMaster.updatedBy = this.userName;
+                this.sourceItemMaster.itemTypeId = 2;
 				this.sourceItemMaster.itemClassificationCode = this.itemName;
-				this.sourceItemMaster.masterCompanyId = 1;
+                this.sourceItemMaster.masterCompanyId = 1;               
 				this.itemser.updateNonStockItemMaster(this.sourceItemMaster).subscribe(
 					response => this.saveCompleted(this.sourceItemMaster),
 					error => this.saveFailedHelper(error));
