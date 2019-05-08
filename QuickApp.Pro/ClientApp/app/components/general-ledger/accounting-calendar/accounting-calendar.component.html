@@ -24,7 +24,7 @@
                     <label class="control-label col-sm-4">Ledger Name<strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="currentCalendarObj.legalEntityId" [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}} Ledger</option>
+                            <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
                         </select>
                     </div>
                 </div>
@@ -122,10 +122,10 @@
                     <td>{{obj.quater}}</td>
                     <td>{{obj.period}}</td>
                     <td>
-                        <p-calendar [(ngModel)]="obj.fromDate" [showIcon]="true" ></p-calendar>
+                        <p-calendar [(ngModel)]="obj.fromDate" [showIcon]="true"  ></p-calendar>
                     </td>
                     <td>
-                        <p-calendar [(ngModel)]="obj.toDate" [showIcon]="true" ></p-calendar>
+                        <p-calendar [(ngModel)]="obj.toDate" [showIcon]="true"  (onSelect)="setDate(obj,row_no)"></p-calendar>
                     </td>
                     <td>{{obj.periodName}}</td>
                     <td *ngIf="obj.adjusting=='yes' "> <input type="checkbox" [(ngModel)]="obj.isAdjustPeriod" disabled  /></td>
@@ -152,10 +152,14 @@
                         </select>
                     </td>
                     <td>{{obj.period}}</td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.fromDate}}"></td>
-                    <td><input type="date" class="datepicker form-control hasDatepicker" value="{{obj.toDate}}"></td>
+                    <td>
+                        <p-calendar [(ngModel)]="obj.fromDate" [showIcon]="true"></p-calendar>
+                    </td>
+                    <td>
+                        <p-calendar [(ngModel)]="obj.toDate" [showIcon]="true"></p-calendar>
+                    </td>
                     <td>{{obj.periodName}}</td>
-                    <th *ngIf="row_no>0"><input type="checkbox" [(ngModel)]="obj.isAdjustPeriod" (change)="setAdjustingPeriod(obj)" /></th>
+                    <th *ngIf="row_no>0"><input type="checkbox" [(ngModel)]="obj.isAdjustPeriod" (change)="setAdjustingPeriod(obj,row_no)" /></th>
                     <th *ngIf="row_no==0"><input type="checkbox" disabled /></th>
                     <th>
                         <span class="fa fa-trash-o delete-btn"

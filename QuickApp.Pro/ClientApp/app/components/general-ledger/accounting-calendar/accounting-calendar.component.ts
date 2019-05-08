@@ -331,7 +331,7 @@ export class AccountingCalendarComponent implements OnInit {
             }
         }
         else {
-           
+            
             this.showManual = true;
             var months = ["Select","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec","APJ-PD"];
             var qtr = [1, 2, 3,4,5,6,7,8,9,10,11,12];
@@ -340,8 +340,8 @@ export class AccountingCalendarComponent implements OnInit {
                 fiscalYear: this.currentCalendarObj.fiscalYear,
                 period: this.period,
                 quaterData: qtr,
-                fromDate: this.currentCalendarObj.fromDate,
-                toDate: this.currentCalendarObj.toDate,
+                fromDate: fromdate,
+                toDate: toDate,
                 periodName: '',
                 name: this.currentCalendarObj.name,
                 description: this.currentCalendarObj.description,
@@ -355,7 +355,10 @@ export class AccountingCalendarComponent implements OnInit {
         }
         
     }
-    setAdjustingPeriod(selectedObj) {
+    setAdjustingPeriod(selectedObj,selectedIndex) {
+        let index = selectedIndex-1;
+        selectedObj.toDate = this.calendarArray[index].toDate;
+        selectedObj.fromDate = this.calendarArray[index].toDate;
         var months = ["Select", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "APJ-PD"];
         if (selectedObj.isAdjustPeriod == true) {
             selectedObj.fiscalName = months[13];
@@ -437,7 +440,7 @@ export class AccountingCalendarComponent implements OnInit {
                 if (this.selectedPeriod == 'Manual') {
                     this.period = 1;
                     let setBool = false;
-                    this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod,setBool));
+                    this.calendarArray.push(this.loaddefualtObj(month,setBool));
                 }
             }
             else {
@@ -516,19 +519,54 @@ export class AccountingCalendarComponent implements OnInit {
        
     }
     addPeriodName(obj, selectedName) {
+        let selectedMonth;
+        var months = ["Select","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        for (let i = 0; i < months.length; i++){
+            if (selectedName == months[i]) {
+                selectedMonth = i;
+            }
+        }
+        let month = selectedMonth;
+        if (month <= 9) {
+
+            var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01');
+            var date = new Date(fromdate);
+            var year = date.getFullYear();
+            var lastmonth = date.getMonth();
+            var lastday = new Date(year, lastmonth + 1, 0).getDate();
+            var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
+            obj.fromDate = fromdate;
+            obj.toDate = toDate;
+
+        }
+        else {
+            var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+            var date = new Date(fromdate);
+            var year = date.getFullYear();
+            var lastmonth = date.getMonth();
+            var lastday = new Date(year, lastmonth + 1, 0).getDate();
+            var toDate = new Date(year + '-' + month + '-' + lastday);
+            obj.fromDate = fromdate;
+            obj.toDate = toDate;
+        }
         obj["periodName"] = selectedName + ' - ' + obj.fiscalYear
     }
     setDate(obj,index) {
-        debugger;
-        var date = new Date(obj.fromDate);
-        var newdate = new Date(date);
-        newdate.setDate(newdate.getDate() + 1);
-        var dd = newdate.getDate();
-        var mm = newdate.getMonth() + 1;
-        var y = newdate.getFullYear();
+          
         let nextIndex = index + 1;
-        var date = new Date(obj.toDate);
-        this.calendarArray[nextIndex].fromDate = y + '-' + mm + '-' + dd;
+        let yourDate = new Date(obj.toDate.getTime() + (1000 * 60 * 60 * 24));
+        if (this.calendarArray[nextIndex] && obj.adjusting != 'yes') {
+            if (this.calendarArray[nextIndex].adjusting == 'yes') {
+                this.calendarArray[nextIndex].fromDate = obj.toDate;
+                this.calendarArray[nextIndex].toDate = obj.toDate;
+            } else {
+                this.calendarArray[nextIndex].fromDate = new Date(yourDate);
+                //this.calendarArray[nextIndex].toDate = new Date(yourDate);
+            }
+           
+        }
+       
+        
        
     }
     addPeriod() {
