@@ -68,6 +68,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    glAccountData.IsActive = true;
                     glAccountData.MasterCompanyId = 1;
                     glAccountData.CreatedDate = DateTime.Now;
                     unitOfWork.Repository<GLAccount>().Add(glAccountData);
@@ -94,6 +95,8 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
+                    glAccount.UpdatedDate = DateTime.Now;
                     unitOfWork.Repository<GLAccount>().Update(glAccount);
                     unitOfWork.SaveChanges();
                     return Ok(glAccount);
