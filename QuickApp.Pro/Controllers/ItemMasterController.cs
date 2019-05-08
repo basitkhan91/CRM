@@ -608,6 +608,11 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.SalesIsFixedPrice = itemMasterViewModel.SalesIsFixedPrice;
                 itemmaserObj.IsTimeLife = itemMasterViewModel.IsTimeLife;
                 itemmaserObj.MasterCompanyId = itemMasterViewModel.MasterCompanyId;
+
+                itemmaserObj.ListPrice = itemMasterViewModel.ListPrice;
+                itemmaserObj.PriceDate = itemMasterViewModel.PriceDate;
+                itemmaserObj.UnitCost = itemMasterViewModel.UnitCost;
+                itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
                 itemmaserObj.CreatedDate = DateTime.Now;
                 itemmaserObj.UpdatedDate = DateTime.Now;
                 itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
@@ -807,8 +812,12 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.ComponentEquipment = itemMasterViewModel.ComponentEquipment;
                 itemmaserObj.MasterCompanyId = itemMasterViewModel.MasterCompanyId;
                 itemmaserObj.IsTimeLife = itemMasterViewModel.IsTimeLife;
+                itemmaserObj.ListPrice = itemMasterViewModel.ListPrice;
+                itemmaserObj.PriceDate = itemMasterViewModel.PriceDate;
+                itemmaserObj.UnitCost = itemMasterViewModel.UnitCost;
+                itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
 
-                    if (itemMasterViewModel.AircraftTypeId != null)
+                if (itemMasterViewModel.AircraftTypeId != null)
                     {
                         var aircraftTypeList = _unitOfWork.ItemMasterAircraftManafacturerRepository.GetAllData().ToList();
                         aircraftTypeList.Where(a => a.ItemMasterId == id).ToList().ForEach(a => _unitOfWork.ItemMasterAircraftManafacturerRepository.Remove(a));
@@ -1133,6 +1142,21 @@ namespace QuickApp.Pro.Controllers
             var capabilityData = _unitOfWork.itemMaster.getCapabilityData(id); //.GetAllCustomersData();
             return Ok(capabilityData);
 
+        }
+
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<ItemMasterAudit>()
+                .Find(x => x.ItemMasterId == id)
+                .OrderByDescending(x => x.ItemMasterAuditId);
+
+            var auditResult = new List<AuditResult<ItemMasterAudit>>();
+
+            auditResult.Add(new AuditResult<ItemMasterAudit> { AreaName = "Item Master", Result = audits.ToList() });
+
+            return Ok(auditResult);
         }
     }
 

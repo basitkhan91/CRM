@@ -13,7 +13,7 @@ namespace QuickApp.Pro.ViewModels
 
         public int? ItemCategoryId { get; set; }
 
-        public int ItemTypeId { get; set; }
+        public int? ItemTypeId { get; set; }
 
         public long? PartId { get; set; }
 
@@ -29,7 +29,7 @@ namespace QuickApp.Pro.ViewModels
 
         public string CertifiedBy { get; set; }
 
-        public DateTime TagDate { get; set; }
+        public DateTime? TagDate { get; set; }
 
         public string TagType { get; set; }
 
@@ -47,15 +47,15 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsExpirationDateAvailable { get; set; }
 
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         public bool? IsReceivedDateAvailable { get; set; }
 
-        public int DaysReceived { get; set; }
+        public int? DaysReceived { get; set; }
 
         public bool? IsManufacturingDateAvailable { get; set; }
 
-        public int ManufacturingDays { get; set; }
+        public int? ManufacturingDays { get; set; }
 
         public bool? IsTagDateAvailable { get; set; }
 
@@ -63,12 +63,12 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsOpenDateAvailable { get; set; }
 
-        public int OpenDays { get; set; }
+        public int? OpenDays { get; set; }
         public bool? IsDelete { get; set; }
 
         public bool? IsShippedDateAvailable { get; set; }
 
-        public int ShippedDays { get; set; }
+        public int? ShippedDays { get; set; }
 
         public bool? IsOtherDateAvailable { get; set; }
 
@@ -99,11 +99,11 @@ namespace QuickApp.Pro.ViewModels
 
         public long? FileSystemId { get; set; }
 
-        public int OverhaulHours { get; set; }
+        public int? OverhaulHours { get; set; }
 
-        public int RPHours { get; set; }
+        public int? RPHours { get; set; }
 
-        public int TestHours { get; set; }
+        public int? TestHours { get; set; }
 
         public string CSE { get; set; }
 
@@ -121,15 +121,15 @@ namespace QuickApp.Pro.ViewModels
 
         public long? SoldUnitOfMeasureId { get; set; }
 
-        public int LeadTimeDays { get; set; }
+        public int? LeadTimeDays { get; set; }
 
-        public int LeadTimeHours { get; set; }
+        public int? LeadTimeHours { get; set; }
 
-        public int ReorderPoint { get; set; }
+        public int? ReorderPoint { get; set; }
 
-        public int ReorderQuantiy { get; set; }
+        public int? ReorderQuantiy { get; set; }
 
-        public int MinimumOrderQuantity { get; set; }
+        public int? MinimumOrderQuantity { get; set; }
 
         public bool? IsExchangeInfoAvailable { get; set; }
 
@@ -187,11 +187,11 @@ namespace QuickApp.Pro.ViewModels
 
         public int? PurchaseCurrencyId { get; set; }
 
-        public DateTime PurchaseLastListPriceDate { get; set; }
+        public DateTime? PurchaseLastListPriceDate { get; set; }
 
-        public DateTime PurchaseLastDiscountPercentDate { get; set; }
+        public DateTime? PurchaseLastDiscountPercentDate { get; set; }
 
-        public DateTime PurchaseLastListPriceAfterDiscountDate { get; set; }
+        public DateTime? PurchaseLastListPriceAfterDiscountDate { get; set; }
 
         public bool? SalesIsFixedPrice { get; set; }
 
@@ -199,7 +199,7 @@ namespace QuickApp.Pro.ViewModels
 
         public int? SalesCurrencyId { get; set; }
 
-        public DateTime SalesLastSalePriceDate { get; set; }
+        public DateTime? SalesLastSalePriceDate { get; set; }
 
         public bool? SalesMarkUpOnPurchaseListPriceActive { get; set; }
 
@@ -211,13 +211,13 @@ namespace QuickApp.Pro.ViewModels
 
         public decimal? SalesDiscountPercent { get; set; }
 
-        public DateTime SalesLastMarkUpPercentOnListPriceDate { get; set; }
+        public DateTime? SalesLastMarkUpPercentOnListPriceDate { get; set; }
 
-        public DateTime SalesLastMakUpPercentOnListPriceAfterDiscDate { get; set; }
+        public DateTime? SalesLastMakUpPercentOnListPriceAfterDiscDate { get; set; }
 
-        public DateTime SalesLastBaselineSalesPriceDate { get; set; }
+        public DateTime? SalesLastBaselineSalesPriceDate { get; set; }
 
-        public DateTime SalesLastSalesDiscountPercentDate { get; set; }
+        public DateTime? SalesLastSalesDiscountPercentDate { get; set; }
 
         public bool? StandAloneEquipment { get; set; }
 
@@ -247,13 +247,13 @@ namespace QuickApp.Pro.ViewModels
 
         public string CapabilityVerifiedBy { get; set; }
 
-        public DateTime CapabilityVerificationDate { get; set; }
+        public DateTime? CapabilityVerificationDate { get; set; }
 
-        public DateTime ManufacturingDate { get; set; }
+        public DateTime? ManufacturingDate { get; set; }
 
         public bool? ShelfLife { get; set; }
 
-        public DateTime OpenDate { get; set; }
+        public DateTime? OpenDate { get; set; }
 
         public bool? IsActive { get; set; }
 
@@ -261,7 +261,7 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsCapesAvailable { get; set; }
 
-        public DateTime EntryDate { get; set; }
+        public DateTime? EntryDate { get; set; }
 
         public bool? IsCMMExist { get; set; }
 
@@ -285,7 +285,7 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? VerifiedBy { get; set; }
 
-        public DateTime DateVerified { get; set; }
+        public DateTime? DateVerified { get; set; }
 
         public int? PlatformId { get; set; }
 
@@ -293,27 +293,27 @@ namespace QuickApp.Pro.ViewModels
 
         public decimal? ListPrice { get; set; }
 
-        public DateTime PriceDate { get; set; }
+        public DateTime? PriceDate { get; set; }
 
         public bool? IsRFQTracking { get; set; }
 
         public int? CurrencyId { get; set; }
 
-        public Byte MarkUpPercent { get; set; }
+        public Byte? MarkUpPercent { get; set; }
 
-        public Byte DiscountPurchasePercent { get; set; }
+        public Byte? DiscountPurchasePercent { get; set; }
 
         //public long? EquipId { get; set; }
 
-        public Byte DiscounSalesPercent { get; set; }
+        public Byte? DiscounSalesPercent { get; set; }
 
         public long? StoredUOM { get; set; }
 
         public long? ConsumeUOM { get; set; }
 
-        public int StockLevel { get; set; }
+        public int? StockLevel { get; set; }
 
-        public int LeadTime { get; set; }
+        public int? LeadTime { get; set; }
 
         public string Notes { get; set; }
 
@@ -342,9 +342,9 @@ namespace QuickApp.Pro.ViewModels
 
         public string UpdatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public string PartNumber { get; set; }
 
