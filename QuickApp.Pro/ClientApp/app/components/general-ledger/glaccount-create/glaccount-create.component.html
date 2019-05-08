@@ -36,15 +36,15 @@
                                 </div>
                             </div>
 
-                            <div class=" col-sm-12">
+                            <div class=" col-sm-12 input-icon1">
                                 <label class="control-label col-sm-4">Account Type<strong class="clr-red">*</strong></label>
                                 <div class="col-sm-7">
-
-
-                                    <select class="w80" [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
-                                        <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">  {{accounttype.glAccountClassName}}</option>
-                                    </select>
-                                </div>
+                                    
+                                        <select  [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
+                                            <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">  {{accounttype.glAccountClassName}}</option>
+                                        </select>
+                                    </div>
+                                
                             </div>
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Account Description</label>
@@ -62,14 +62,15 @@
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Node Name<strong class="clr-red">*</strong></label>
                                 <div class="col-sm-7">
-                                    <select class="w80" [(ngModel)]="currentGLAccount.glAccountNodeId" [ngModelOptions]="{standalone: true}">
-                                        <option *ngFor="let nodeType of nodeSetupList" [ngValue]="nodeType.glAccountNodeId">  {{nodeType.nodeName}}</option>
-                                    </select>
+                                  
+                                        <select [(ngModel)]="currentGLAccount.glAccountNodeId" [ngModelOptions]="{standalone: true}">
+                                            <option *ngFor="let nodeType of nodeSetupList" [ngValue]="nodeType.glAccountNodeId">  {{nodeType.nodeName}}</option>
+                                        </select>
+                                    </div>
                                 </div>
+                                
+
                             </div>
-                          
-                         
-                        </div>
                         <div class="col-sm-4">
 
                             <div class=" col-sm-12">
@@ -97,24 +98,25 @@
                             </div>
                             <div>
                                 <label class="control-label col-sm-4">C-Flows Classification<strong class="clr-red">*</strong></label>
-                                <div class="col-sm-7 inner-addon right-addon autosuggesions-add inline-block">
-
-                                    <select class="w80" [(ngModel)]="currentGLAccount.glClassFlowClassificationId" [ngModelOptions]="{standalone: true}">
+                                <div class="inner-addon col-sm-7 inline-block display-flex">
+                                    <select [(ngModel)]="currentGLAccount.glClassFlowClassificationId" [ngModelOptions]="{standalone: true}">
                                         <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
                                     </select>
                                     <a href="#" data-toggle="modal" data-target="#addGl" class="add-icon" (click)="open(contentEdit)"><i class="fa fa-plus"></i></a>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12">
-                                <label class="control-label col-sm-4">PO Category<strong class="clr-red">*</strong></label>
-                                <div class="col-sm-7">
-                                    <select class="w80" [(ngModel)]="currentGLAccount.poroCategoryId">
-                                        <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                        </div>
+                                </div>
+                            </div>
+                                <div class=" col-sm-12">
+                                    <label class="control-label col-sm-4">PO Category<strong class="clr-red">*</strong></label>
+                                    <div class="col-sm-7">
+                                       
+                                            <select [(ngModel)]="currentGLAccount.poroCategoryId">
+                                                <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
+                                            </select>
+                                        </div>
+                                   
+                                </div>
+                            </div>
                            
                            
                             
