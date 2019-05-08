@@ -11,7 +11,6 @@ namespace DAL.Models
         [Key]
         public long? GLAccountId { get; set; }
 
-        public string LedgerName { get; set; }
 
         public string OldAccountCode { get; set; }
 
@@ -21,13 +20,7 @@ namespace DAL.Models
 
         public string AccountDescription { get; set; }
 
-        public bool SummaryAccount { get; set; }
-
         public bool AllowManualJE { get; set; }
-
-        public Int32? CurrencyId { get; set; }
-
-        public bool InterCompany { get; set; }
 
         public bool ActiveFlag { get; set; }
 
@@ -36,8 +29,6 @@ namespace DAL.Models
         public bool BalanceTypeBudget { get; set; }
 
         public bool BalanceTypeForecast { get; set; }
-
-        public long? SubAccountOf { get; set; }
 
         public string AccountCodeDescription { get; set; }
 
@@ -50,22 +41,17 @@ namespace DAL.Models
         public bool IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
-
-       // public long? LegalEntityId { get; set; }
        
         public long? GLAccountTypeId { get; set; }
 
+        public long? GLAccountNodeId { get; set; }
+
+        public long? POROCategoryId { get; set; }
+
         [ForeignKey("GLClassFlowClassificationId")]
-        public long? GLClassFlowClassificationId { get; set; }
-
-        [ForeignKey("GLAccountMiscCategoryId")]
-        public long? GLAccountMiscCategoryId { get; set; }
-
+        public long? GLClassFlowClassificationId { get; set; }        
        
         public virtual GlClassFlowClassification GlClassFlowClassification { get; set; }
-        public virtual GLAccountMiscCategory GLAccountMiscCategory { get; set; }       
         public virtual MasterCompany MasterCompany { get; set; }
-        //public virtual ICollection<GlClassFlowClassification> GlClassFlowClassification { get; set; }
-        //public virtual ICollection<GLAccountMiscCategory> GLAccountMiscCategory { get; }
     }
 }

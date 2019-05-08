@@ -87,7 +87,7 @@ namespace QuickApp.Pro.Controllers
                 glclassflowobject.UpdatedBy = GlCashFlowClassificationViewModel.UpdatedBy;
                 _unitOfWork.GlClassFlowsClassification.Add(glclassflowobject);
                 _unitOfWork.SaveChanges();
-
+                return Ok(glclassflowobject);
             }
 
             return Ok(ModelState);

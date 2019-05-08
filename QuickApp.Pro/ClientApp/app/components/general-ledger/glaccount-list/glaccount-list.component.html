@@ -13,23 +13,31 @@
                     <table class="table table-bordered table-striped table-sorting dataTable no-footer" role="grid" style="margin-left: 0px; width: 1138px;">
                         <thead>
                             <tr role="row">
-                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 125px;" aria-label="Ledger Name: activate to sort column ascending">Ledger Name</th>
+
                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 202px;" aria-label="Old GL Account Code: activate to sort column ascending">Old GL Account Code</th>
                                 <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 165px;" aria-label="GL Account Code: activate to sort column descending" aria-sort="ascending">GL Account Code</th>
-                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Account Type</th>
-                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 271px;" aria-label="Financial Statement Mapping: activate to sort column ascending">Financial Statement Mapping</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Account Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Account Description</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 271px;" aria-label="Financial Statement Mapping: activate to sort column ascending">Active</th>
                                 <th class="events5 sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 246px;" aria-label=": activate to sort column ascending"></th>
                             </tr>
                         </thead>
                         <tbody>
 
                             <tr *ngFor="let glAccount of glAccountList">
-                                <td>{{glAccount.ledgerName}}</td>
                                 <td>{{glAccount.oldAccountCode}}</td>
                                 <td>{{glAccount.accountCode}}</td>
                                 <td>{{glAccount.accountName}}</td>
                                 <!--<td>Accounts Payable</td>-->
                                 <td>{{glAccount.accountDescription}}</td>
+                                <td>
+                                <div *ngIf="glAccount.activeFlag==true">
+                                    Yes
+                                </div>
+                                <div *ngIf="glAccount.activeFlag==false || glAccount.activeFlag==null ">
+                                    No
+                                </div>
+                               </td>
                                 <td>
 
                                     <p-inputSwitch *ngIf="glAccount['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(glAccount,$event)" [(ngModel)]="glAccount['isActive']"></p-inputSwitch>
@@ -73,16 +81,12 @@
         <div class="modal-body viewform">
             <div class="panel-body">
                 <div class="col-sm-6">
-                    <p><span class="label"><b>Ledger Name: </b></span><span class="value">{{glAccountViewData.ledgerName}}</span></p>
                     <p><span class="label"><b>Old Account Code: </b></span><span class="value">{{glAccountViewData.oldAccountCode}}</span></p>
                     <p><span class="label"><b>Account Code: </b></span><span class="value">{{glAccountViewData.accountCode}}</span></p>
                     <p><span class="label"><b>Account Name: </b></span><span class="value">{{glAccountViewData.accountName}}</span></p>
                     <p><span class="label"><b>Account Description: </b></span><span class="value">{{glAccountViewData.accountCode}}_{{glAccountViewData.accountDescription}}</span></p>
-                    <p><span class="label"><b>Summary Account: </b></span><span class="value">{{glAccountViewData.summaryAccount}}</span></p>
                     <p><input type="checkbox" [disabled]="true" [checked]="glAccountViewData.allowManualJE"   /></p>
                     <p><span class="label"><b>Allow Manual JE: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
-                    <p><span class="label"><b>Currency: </b></span><span class="value">{{glAccountViewData.currency?.symbol}}</span></p>
-                    <p><span class="label"><b>Intercompany: </b></span><span class="value">{{glAccountViewData.interCompany}}</span></p>
                     <p><span class="label"><b>Active: </b></span><span class="value">{{glAccountViewData.isActive}}</span></p>
 
                 </div>
@@ -90,11 +94,8 @@
                     <p><span class="label"><b>Balance Type: </b></span><span class="value">{{glAccountViewData.balanceTypeActual}}</span></p>
                     <p><span class="label"><b>Account Type: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
                     <!--<p><span class="label"><b>Expenditure Type: </b></span><span class="value">Accounts Payable</span></p>                  -->
-                    <p><span class="label"><b>Sub Account of: </b></span><span class="value">{{glAccountViewData.subAccountOf}}</span></p>
                     <p><span class="label"><b>C-Flows Classification: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
-                    <p><span class="label"><b>Account Code Description: </b></span><span class="value">{{glAccountViewData.accountDescription}}</span></p>
                  
-                    <p><span class="label"><b>1099 Misc Categories: </b></span><span class="value">{{glAccountViewData.glAccountMiscCategory?.name}}</span></p>
                     <p><span class="label"><b>Created By: </b></span><span class="value">{{glAccountViewData.createdBy}}</span></p>
                     <p><span class="label"><b>Created Date: </b></span><span class="value">{{glAccountViewData.createdDate}}</span></p>
                 </div>

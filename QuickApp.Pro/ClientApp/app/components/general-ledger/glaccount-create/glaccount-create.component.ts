@@ -9,6 +9,11 @@ import { GlCashFlowClassificationService } from "../../../services/gl-cash-flow-
 import { LegalEntityService } from "../../../services/legalentity.service";
 import { AuthService } from "../../../services/auth.service";
 import { Router } from "@angular/router";
+import { NodeSetupService } from "../../../services/node-setup/node-setup.service";
+import { POROCategoryService } from "../../../services/porocategory/po-ro-category.service";
+import { GlCashFlowClassification } from "../../../models/glcashflowclassification.model";
+import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ModalService } from "../../../services/Index";
 @Component({
     selector: 'app-glaccount-create',
     templateUrl: './glaccount-create.component.html',
@@ -27,7 +32,18 @@ export class GlaccountCreateComponent implements OnInit {
     allManagemtninfo: any[] = [];
     companyList: any[] = [];
     miscData: any[] = [];
-    constructor(private legalEntityservice: LegalEntityService,private router:Router, private authService: AuthService,private glcashFlowClassifcationService:GlCashFlowClassificationService,private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
+    nodeSetupList: any[] = [];
+    poroCategoryList: any[] = [];
+    modal: NgbModalRef;
+    disableSave: boolean;
+    loadingIndicator: boolean;
+    GLClassFlowClassificationName: string;
+    public sourceglcashflowclassification: any = {}
+    isEditMode: boolean;
+    isSaving: boolean;
+    isDeleteMode: boolean;
+    display: boolean = false; 
+    constructor(private legalEntityservice: LegalEntityService, private modalService:NgbModal, private poroCategoryService: POROCategoryService, private nodeSetupService: NodeSetupService,private router:Router, private authService: AuthService,private glcashFlowClassifcationService:GlCashFlowClassificationService,private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
         if (this.glAccountService.glAccountEditCollection) {
             this.currentGLAccount = this.glAccountService.glAccountEditCollection;
         }
@@ -45,10 +61,17 @@ export class GlaccountCreateComponent implements OnInit {
         this.loadCompaniesData();
         this.load1099Miscdata();
         this.loadGLCashFlowClassification();
-       
+        this.loadNodeSetup();
+        this.loadPOCategory();
+        this.currentGLAccount.allowManualJE = true;
     }
 
     addGLAccount(): void {
+        if (!(this.currentGLAccount.accountCode && this.currentGLAccount.accountName && this.currentGLAccount.glAccountTypeId && this.currentGLAccount.activeFlag && this.currentGLAccount.glAccountNodeId && this.currentGLAccount.allowManualJE && this.currentGLAccount.glClassFlowClassificationId && this.currentGLAccount.poroCategoryId && (this.currentGLAccount.balanceTypeActual || this.currentGLAccount.balanceTypeBudget || this.currentGLAccount.balanceTypeForecast )
+        )) {
+            this.display = true;
+        }
+        if (!this.display) { 
         this.currentGLAccount.createdBy = this.userName;
         this.currentGLAccount.updatedBy = this.userName;
         if (!this.currentGLAccount.glAccountId) {
@@ -71,9 +94,21 @@ export class GlaccountCreateComponent implements OnInit {
                 this.updateMode = false;
             });
         }
-       
     }
-
+    }
+    private loadNodeSetup() {
+        this.nodeSetupService.getAll().subscribe(nodes => {
+            this.nodeSetupList = nodes[0];
+        })
+    }
+    private loadPOCategory() {
+    
+        let poroCategoryList = [];
+        this.poroCategoryService.getAll().subscribe(poroCategory => {
+            this.poroCategoryList = poroCategory[0];
+            
+        })
+    }
     private loadcurrencyData() {
         this.currencyService.getCurrencyList().subscribe(currencydata => {
             this.allCurrencyInfo = currencydata[0];
@@ -112,5 +147,46 @@ export class GlaccountCreateComponent implements OnInit {
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+    open(content) {
+        this.sourceglcashflowclassification = new GlCashFlowClassification();
+        this.GLClassFlowClassificationName = "";
+        this.sourceglcashflowclassification.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    saveGlcahsFlow() {
+        this.isSaving = true;
+        if (!this.sourceglcashflowclassification.glCashFlowClassificationId) {
+
+            this.sourceglcashflowclassification.createdBy = this.userName;
+            this.sourceglcashflowclassification.updatedBy = this.userName;
+            this.sourceglcashflowclassification.masterCompanyId = 1;
+            this.glcashFlowClassifcationService.newGlCashFlowClassification(this.sourceglcashflowclassification).subscribe(cashFlow => {
+                this.loadGLCashFlowClassification();
+                this.currentGLAccount.glClassFlowClassificationId = cashFlow.glClassFlowClassificationId;
+                this.alertService.showMessage('C-Flow added successfully.');
+            }
+            );
+        }
+        else {
+
+            this.sourceglcashflowclassification.updatedBy = this.userName;
+            this.sourceglcashflowclassification.masterCompanyId = 1;
+            this.glcashFlowClassifcationService.updateCashFlowClassification(this.sourceglcashflowclassification).subscribe(cashFlow => {
+                this.alertService.showMessage('C-Flow Updated successfully.');
+            }
+            );
+        }
+        this.modal.close();
+    }
+
+    dismissModel() {
+        this.isDeleteMode = false;
+        this.isEditMode = false;
+        this.modal.close();
     }
 }
