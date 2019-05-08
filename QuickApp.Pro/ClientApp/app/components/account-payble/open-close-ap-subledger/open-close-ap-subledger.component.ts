@@ -97,27 +97,7 @@ export class OpenCloseApSubledgerComponent implements OnInit {
         completeObj.toDate = year + '-' + month + '-' + day;
     }
     saveCalendar() {
-        debugger;
-        //let isBoolean = false;
-        //for (let previousindex = 0; this.calendarArray.length; previousindex++) {
-        //    for (let currentIndex = 0; this.finalCalendarArry.lenth; currentIndex++) {
-        //        if (this.calendarArray[previousindex].accountingCalendarId == this.finalCalendarArry[currentIndex].accountingCalendarId) {
-        //            if (this.calendarArray[previousindex].status == 3) {
-        //                if (this.calendarArray[previousindex].status != this.finalCalendarArry[currentIndex].status) {
-        //                    alert('we can not open which is closed status');
-        //                    isBoolean = true;
-        //                    break;
-                           
-        //                }
-        //                else {
-
-        //                }
-        //              }
-        //        }
-
-        //    }
-        //}
-
+     
         if (this.finalCalendarArry && this.finalCalendarArry.length > 0) {
             for (let i = 0; i < this.finalCalendarArry.length; i++) {
                 if (this.finalCalendarArry[i].status == 3) {

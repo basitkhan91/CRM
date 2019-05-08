@@ -47,20 +47,21 @@ namespace QuickApp.Pro.Controllers
                 {
                     for (var i = 0; i < calendarObj.Count; i++)
                     {
-                        calendarObj[i].MasterCompanyId = 1;
-                        calendarObj[i].CreatedDate = DateTime.Now;
-                        calendarObj[i].UpdatedDate = DateTime.Now;
+                        
                         if (calendarObj[i].AccountingCalendarId > 0)
                         {
-                            //calendarObj[i].isUpdate = true;
+                            calendarObj[i].UpdatedDate = DateTime.Now.Date;
+                           
                             unitOfWork.Repository<AccountingCalendar>().Update(calendarObj[i]);
                         }
                         else
                         {
+                            calendarObj[i].MasterCompanyId = 1;
+                            calendarObj[i].CreatedDate = DateTime.Now;
+                            calendarObj[i].UpdatedDate = DateTime.Now;
                             unitOfWork.Repository<AccountingCalendar>().Add(calendarObj[i]);
                         }
                         
-                       // unitOfWork.Repository<AccountingCalendar>().Add(calendarObj[i]);
                         unitOfWork.SaveChanges();
                         
                     }
