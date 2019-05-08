@@ -229,5 +229,9 @@ export class ItemMasterService {
         return this.itemMasterEndpoint.getCapabilityDataEndpoint<any>(itemMasterId);
     }
 
+    getAudit(itemMasterId: number) {
+        return this.itemMasterEndpoint.getAudit<any[]>(itemMasterId);
+    }
+
 }
 

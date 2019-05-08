@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+
 
 namespace DAL.Models
 {
-    public class ItemMaster : PasBase
+    public class ItemMaster : PasBase, IAudit
     {
+        [Key]
         public long? ItemMasterId { get; set; }
 
         public bool? IsAlternatePartChecked { get; set; }
@@ -34,11 +36,11 @@ namespace DAL.Models
 
         public bool? IsReceivedDateAvailable { get; set; }
 
-        public int DaysReceived { get; set; }
+        public int? DaysReceived { get; set; }
 
         public bool? IsManufacturingDateAvailable { get; set; }
 
-        public int ManufacturingDays { get; set; }
+        public int? ManufacturingDays { get; set; }
 
         public bool? IsTagDateAvailable { get; set; }
 
@@ -46,17 +48,17 @@ namespace DAL.Models
 
         public bool? IsOpenDateAvailable { get; set; }
 
-        public int OpenDays { get; set; }
+        public int? OpenDays { get; set; }
 
         public bool? IsShippedDateAvailable { get; set; }
 
-        public int ShippedDays { get; set; }
+        public int? ShippedDays { get; set; }
 
         public bool? IsOtherDateAvailable { get; set; }
         public string PartNumber { get; set; }
         public string PartDescription { get; set; }
       //  public string AlterPartNumber { get; set; }
-        public int OtherDays { get; set; }
+        public int? OtherDays { get; set; }
 
         public int? ProvisionId { get; set; }
 
@@ -78,11 +80,11 @@ namespace DAL.Models
 
         public bool? IsSchematic { get; set; }
 
-        public int OverhaulHours { get; set; }
+        public int? OverhaulHours { get; set; }
 
-        public int RPHours { get; set; }
+        public int? RPHours { get; set; }
 
-        public int TestHours { get; set; }
+        public int? TestHours { get; set; }
 
         public string CSE { get; set; }
 
@@ -98,15 +100,15 @@ namespace DAL.Models
 
         public long? ExportUomId { get; set; }
         public long? SoldUnitOfMeasureId { get; set; }
-        public int LeadTimeDays { get; set; }
+        public int? LeadTimeDays { get; set; }
 
-        public int LeadTimeHours { get; set; }
+        public int? LeadTimeHours { get; set; }
 
-        public int ReorderPoint { get; set; }
+        public int? ReorderPoint { get; set; }
 
-        public int ReorderQuantiy { get; set; }
+        public int? ReorderQuantiy { get; set; }
 
-        public int MinimumOrderQuantity { get; set; }
+        public int? MinimumOrderQuantity { get; set; }
 
         public bool? IsExchangeInfoAvailable { get; set; }
 
@@ -209,7 +211,14 @@ namespace DAL.Models
 
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
-        
+
+        public decimal? ListPrice { get; set; }
+
+        public DateTime? PriceDate { get; set; }
+        public decimal? UnitCost { get; set; }
+
+        public Byte? DiscountPurchasePercent { get; set; }
+
         public virtual Manufacturer Manufacturer { get;set;}
 
         public virtual Provision Provision {get;set;}

@@ -46,6 +46,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
 	private readonly _multiintegrationsdataUrl: string = "/api/ItemMaster/savemultiIntegrations";
     private readonly _multiintegrationurl: string = "/api/ItemMaster/savemultiintegrationTypes";
     private readonly _getCapabilityUrl: string = "/api/ItemMaster/capabilityGet";
+    private readonly getAuditById: string = "/api/ItemMaster/audits";
+
 
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -484,7 +486,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
         let endpointUrl = `${this._actionsUrlNew}/${roleObject.itemMasterId}`;
         let finalobj = {
             'partId': roleObject.partId,
-            //'pratNumber': roleObject.serialNumber,
+            'itemTypeId': roleObject.itemTypeId,
             'updatedBy': roleObject.updatedBy,
             'createdBy': roleObject.createdBy,
             'itemClassificationId': roleObject.itemClassificationId,
@@ -664,6 +666,15 @@ export class ItemMasterEndpoint extends EndpointFactory {
         return this.http.get<T>(url, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getCapabilityDataEndpoint(ItemMasterId));
+            });
+    }
+
+    getAudit<T>(ItemMasterId: number): Observable<T> {
+        let endpointUrl = `${this.getAuditById}/${ItemMasterId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAudit(ItemMasterId));
             });
     }
 }
