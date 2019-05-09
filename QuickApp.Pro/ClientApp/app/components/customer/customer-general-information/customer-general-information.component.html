@@ -20,76 +20,14 @@
 									{{local?.customerCode}}
 								</p>
 							</div>
-						
-							<!--<nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Customer General Information</li>
-			</ol>
-		</nav>-->
-							<!--<div class="pheading">
-			<h4 class="page-heading">Customer General Information</h4>
-		</div>-->
-
-							<div class="clear"></div>
-
+						<div class="clear"></div>
 							<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
-								<!--<div class="form-group row form-bg" style="padding:8px 5px 5px 5px;border: 1px solid #ccc;">
-
-				<div class="form-group col-sm-4 Customer-details-heading" *ngIf="showLable">
-					<p class="fs10">
-						<label class="control-label w100">Customer Name:</label>{{sourceCustomer?.name}}
-
-					</p>
-				</div>
-				<div class="form-group col-sm-4 Customer-details-heading" *ngIf="showLable">
-					<p class="fs10">
-						<label class="control-label w100">Customer Code:</label>{{sourceCustomer?.customerCode}}
-
-					</p>
-				</div>
-			</div>-->
-								<!--<div class="form-group row form-bg" style="padding:8px 5px 5px 5px;border: 1px solid #ccc;">
-				<div class="checkbox col-sm-3">
-					<label class="wauto">
-						<input type="checkbox" value="" id="" style="margin-top: 1px;">
-						Is this Customer also a Vendor
-					</label>
-				</div>
-				<div class="form-group col-sm-4 cust-details-heading" *ngIf="showLable">
-					<p class="fs10">
-						<label class="control-label w100">Customer Name</label>
-						{{sourceCustomer?.name}}
-					</p>
-				</div>
-				<div class="form-group col-sm-4 vendor-details-heading" *ngIf="showLable">
-					<p class="fs10">
-						<label class="control-label w100">Customer Code</label>
-						{{sourceCustomer?.customerCode}}
-					</p>
-				</div>
-			</div>-->
+							
 								<div class="col-md-12 col-sm-12 col-12">
 									<div class="tab-content form-bg">
 										<div class="tab-pane active" id="home">
 
 											<p class="lead" style="font-size:medium">General Information </p>
-
-
-											<!--<div class="form-group col-sm-12 vendor-details-heading">
-							<p class="fs10" *ngIf="showCustomerTypeId">Please Enter User type</p>
-							<p class="fs10" *ngIf="showCustomerName">Please Enter Customer Name</p>
-							<p class="fs10" *ngIf="showCustomerCode">Please Enter Customer Code</p>
-							<p class="fs10" *ngIf="showCustomerEmail">Please Enter Customer Email</p>
-							<p class="fs10" *ngIf="showCustomerPhone">Please Enter Customer Phone</p>
-							<p class="fs10" *ngIf="showCustomerAddress1">Please Enter Customer Address Line1</p>
-							<p class="fs10" *ngIf="showCustomerCity">Please Enter Customer City</p>
-							<p class="fs10" *ngIf="showCustomerState">Please Enter Customer State</p>
-							<p class="fs10" *ngIf="showCustomerPostal">Please Enter Customer Postal</p>
-							<p class="fs10" *ngIf="showCustomerCountry">Please Enter Customer Country</p>
-							<p class="fs10" *ngIf="showCustomerClassificationId">Please Enter Customer Classification</p>
-
-						</div>-->
 
 											<div class="clear"></div>
 											<div class="col-sm-4">
@@ -136,9 +74,7 @@
 															</p-autoComplete>
 															<div *ngIf="disableSaveCusName" class="clr-red">Entry Already Exists</div>
 														</div>
-														<!--<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showCustomerName">
-										<p class="fs10">Please Enter Required feilds </p>
-									</div>-->
+												
 													</div>
 												</div>
 												<div class="form-group col-sm-12 input-icon1">
@@ -154,9 +90,7 @@
 															</p-autoComplete>
 															<div *ngIf="disableSaveCustomerCode" class="clr-red">Entry Already Exists</div>
 														</div>
-														<!--<div class="form-group col-sm-12 cust-details-heading" *ngIf="showCustomerCode">
-										<p class="fs10">Please Enter Required feilds </p>
-									</div>-->
+											
 													</div>
 												</div>
 												<div class="form-group col-sm-12">
@@ -190,10 +124,6 @@
 													</div>
 												</div>
 
-												<!--<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4"></label>
-								<div class="col-sm-7"><span class="clr-red">(or)</span></div>
-							</div>-->
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">Email <strong class="clr-red">*</strong></label>
 													<div class="col-sm-7">
@@ -209,9 +139,6 @@
 													<div class="col-sm-7">
 														<input class="form-control" (keypress)="onBlurMethod('address1')" type="text" id="cmaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.address1">
 													</div>
-													<!--<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showCustomerAddress1">
-									<p class="fs10">Please Enter Required feilds </p>
-								</div>-->
 												</div>
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">Address Line 2</label>
@@ -257,17 +184,8 @@
 																	<div class="ui-helper-clearfix">{{nice_name}}</div>
 																</ng-template>
 															</p-autoComplete>
-															<!--<div *ngIf="disableSaveContries" class="clr-red">Entry Already Exists</div>-->
 														</div>
-														<!--<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showCustomerName">
-										<p class="fs10">Please Enter Required feilds </p>
-									</div>-->
 													</div>
-													<!--<input class="form-control" (keypress)="onBlurMethod('postal')" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.country">-->
-													<!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.countries_id">
-									<option *ngFor="let countryName of allCountryinfo" [ngValue]="countryName.countries_id">{{countryName.countries_name}}</option>
-								</select>-->
-													<!--<a href="#" data-toggle="modal" data-target="#addcustomerclass" class="add-icon" (click)="opencountry(modeledit)"><i class="fa fa-plus"></i></a>-->
 												</div>
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">&nbsp;</label>
@@ -306,19 +224,11 @@
 
 														</div>
 														<div class="form-group col-sm-12 cust-details-heading">
-															<!--<p class="fs10">
-											Please Enter Required feilds
-
-										</p>-->
+															
 														</div>
 													</div>
 												</div>
 												<div>
-													<!--<div class="form-group col-sm-12">
-
-
-									<a href="#" data-toggle="modal" data-target="#addintegrational" class="add-icon" ><i class="fa fa-plus"></i></a>
-								</div>-->
 												</div>
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">PBH Customer Memo</label>
@@ -348,14 +258,6 @@
 													</div>
 												</div>
 
-												<!--<div class="form-group col-sm-12 input-icon1">
-
-								<label class="control-label col-sm-4">Integration With <span class="clr-red"></span></label>
-								<div class="col-sm-7">
-									<p-multiSelect [options]="integrationvalues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-								</div>
-							</div>-->
-
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">URL to Cust site</label>
 													<div class="col-sm-7">
@@ -365,10 +267,6 @@
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">Aircraft Manufacturer</label>
 													<div class="col-sm-7">
-
-														<!--<select>
-										<option *ngFor="let CustomerType of allaircraftInfo">{{CustomerType.description}}</option>
-									</select>-->
 														<p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 
 
@@ -403,19 +301,6 @@
 														</div>
 													</div>
 												</div>
-												<!--<div class="form-group col-sm-12 input-icon1">
-
-													<label class="control-label col-sm-4">ATA Chapter </label>
-													<div class="col-sm-7">
-														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ataChapterId" (change)="onATASelectChange($event)">
-															<option *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">
-																{{ataChapterId==ataName.ataChapterId?ataName.ataMainId:ataName.ataChapterId +'-'+ataName.ataChapterName}}
-															</option>
-														</select>
-
-													</div>
-													<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openatachapter(modelEdits)"></a>
-												</div>-->
 
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">Annual Revenue Potential</label>
@@ -444,14 +329,6 @@
 														<input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isCustomerAlsoVendor">
 													</div>
 												</div>
-												<!--<div class="form-group col-sm-12 checkbox">
-								<label class="control-label col-sm-4">
-									Is this Customer also a Vendor
-								</label>
-
-								<input type="checkbox" class="form-control" value="" id="" style="margin-top: 1px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="isCustomerAlsoVendor">
-
-							</div>-->
 											</div>
 											<div class="clear"></div>
 											<hr>
@@ -492,19 +369,6 @@
 	</div>
 	<div class="modal-body">
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemCloseModel()">
-			<!--<div class="form-group">
-				<label for="name" class="control-label">Customer Classification Name<strong class="clr-red">*</strong></label>
-				<div class="control-data">
-					<input type="text" name="description" class="form-control" required minlength="5" #description="ngModel" [(ngModel)]="sourceAction.description">
-					<div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-						Name required.
-					</div>
-					<div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
-						Name must be at least 5 characters long.
-					</div>
-				</div>
-				<div class="clear"></div>
-			</div>-->
 			<div class="form-group">
 				<label for="name" class="control-label">Name<strong class="clr-red">*</strong></label>
 				<div class="inner-addon right-addon inline-block">
@@ -516,31 +380,6 @@
 					</p-autoComplete>
 				</div>
 				</div>
-				<!--<div class="form-group">
-					<label for="description" class="control-label">Memo</label>
-					<div class="control-data">
-						<input placeholder="Memo" #memo="ngModel" id="memo" minlength="2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
-						<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-							Memo is required.
-						</div>
-						<div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-							Memo must be at least 2 characters long.
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>-->
-				<!--<div class="form-group">
-		<label for="masterCompanyId" class="control-label">Company</label>
-		<div class="">
-			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-				<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-			</select>
-		</div>
-		<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-			Master company required.
-		</div>
-		<div class="clear"></div>
-	</div>-->
 			<div class="form-group">
 				<div class="col-sm-6">
 					<label class="form-check-label" for="isActive">
@@ -575,7 +414,6 @@
 			<div class="form-group">
 				<label for="url" class="control-label">WebSite url</label>
 				<div>
-					<!--<input type="text" name="Portalurl" class="form-control" required #Portalurl="ngModel" [(ngModel)]="sourceAction.Portalurl">-->
 					<p-autoComplete [(ngModel)]="integrationName" [ngModelOptions]="{standalone: true}" [suggestions]="integrationCollection" (completeMethod)="filterintegrations($event)" [size]="30"
 									[minLength]="1" [dropdown]="true">
 						<ng-template let-integrationName pTemplate="item">
@@ -611,18 +449,6 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-			<!--<div class="form-group">
-				<label for="masterCompanyId" class="control-label">Company</label>
-				<div class="">
-					<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-						<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-					</select>
-				</div>
-				<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-					Master company required.
-				</div>
-				<div class="clear"></div>
-			</div>-->
 			<div class="form-group">
 				<div class="col-sm-6">
 					<label class="form-check-label" for="isActive">
@@ -660,78 +486,6 @@
 
 </p-dialog>
 
-<!--<button type="button" (click)="showDialog()" pButton icon="pi pi-info-circle" label="Show"></button>-->
-<!--<ng-template #contentModel let-c="close" let-d="dismiss" style="width:auto">
-	<div>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="right_col" role="main">
-		<div class="x_panel ">
-
-			<div class="x_content modal-content">
-
-				<p-table #dt [value]="allAircraftinfo" [rows]="20" [paginator]="true" [metaKeySelection]="true" [pageLinks]="3" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
-					<ng-template pTemplate="caption">
-
-					</ng-template>
-					<div class="modal-header">
-						<ng-template pTemplate="header" let-columns>
-							<tr>
-								<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-									{{col.header}}
-									<p-sortIcon [field]="col.field"></p-sortIcon>
-								</th>
-								<th>Select Model</th>
-
-								<th>Priority</th>
-
-							</tr>
-						</ng-template>
-					</div>
-
-
-					<ng-template pTemplate="body" let-rowData let-columns="columns">
-						<tr [pSelectableRow]="rowData">
-
-
-							<td *ngFor="let col of columns" [ngSwitch]="col.field" class="ui-resizable-column" pReorderableRowHandle>
-								{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
-							</td>
-
-
-							<td>
-								<input type="checkbox" class="form-check-label form-check-input" (click)="saveSelectedModel(rowData)">
-							</td>
-							<td>
-								<select class="form-control w100" (change)="getSelectedItem(rowData,$event)">
-									<option>Select</option>
-									<option [ngValue]="10">10</option>
-									<option value="20">20</option>
-									<option value="30">30</option>
-									<option value="40">40</option>
-									<option value="50">50</option>
-									<option value="60">60</option>
-									<option value="70">70</option>
-									<option value="80">80</option>
-									<option value="90">90</option>
-									<option value="100">100</option>
-								</select>
-							</td>
-
-						</tr>
-
-					</ng-template>
-
-
-				</p-table>
-			</div>
-		</div>
-	</div>
-
-
-</ng-template>-->
 
 <ng-template #contentModel let-c="close" let-d="dismiss" style="width:auto">
 
@@ -763,19 +517,7 @@
 								</td>
 								<td>
 									<input class="form-control w100" [(ngModel)]="col.priority" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
-									<!--<select class="form-control w100" [(ngModel)]="col.priority" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
-										<option>Select</option>
-										<option value="10">10</option>
-										<option value="20">20</option>
-										<option value="30">30</option>
-										<option>40</option>
-										<option>50</option>
-										<option>60</option>
-										<option>70</option>
-										<option>80</option>
-										<option>90</option>
-										<option>100</option>
-									</select>-->
+									
 								</td>
 							</tr>
 						</tbody>

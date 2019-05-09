@@ -21,15 +21,6 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 export class CustomerWarningsComponent implements OnInit {
 	isDeleteMode: boolean;
 	isSaving: boolean;
-	//sourcRepairOrder: any;
-
-	//sourceWarranty: any;
-	//sourceDAR: any;
-	//sourcePMA: any;
-	//sourceAeroxchange: any;
-	//sourceEDI: any;
-	//sourceNetAPAR: any;
-	//sourceSalesOrder: any;
 	allwarningData: any;
 	localcollection: any[];
 	dataSource: MatTableDataSource<{}>;
@@ -129,8 +120,6 @@ export class CustomerWarningsComponent implements OnInit {
 		}
 	}
 	isEnable(value) {
-
-
 		if (value == "B") {
 			this.isReadOnly = false;
 		}
@@ -140,8 +129,6 @@ export class CustomerWarningsComponent implements OnInit {
 		}
 
 	}
-
-
 	isCheck(value) {
 
 
@@ -263,8 +250,6 @@ export class CustomerWarningsComponent implements OnInit {
 	}
 
 	isCkd(value) {
-
-
 		if (value == "B") {
 			this.isReClose = false;
 			this.sourceCreditMemo.warning = false;
@@ -279,9 +264,7 @@ export class CustomerWarningsComponent implements OnInit {
 	}
 
 	isOpen(value) {
-
-
-		if (value == "B") {
+        if (value == "B") {
 			this.isReas = false;
 		}
 		else if (value == "A") {
@@ -290,8 +273,6 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	isRepairorder(value) {
-
-
 		if (value == "B") {
 			this.isRepair = false;
 		}
@@ -301,9 +282,6 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	isRepairorder1(value) {
-
-
-
 		if (value == "B") {
 			this.isRepair1 = false;
 			this.soureRepairOrder.warning = false;
@@ -317,8 +295,6 @@ export class CustomerWarningsComponent implements OnInit {
 	}
 
 	isSalesOrder(value) {
-
-
 		if (value == "B") {
 			this.issales = false;
 		}
@@ -328,9 +304,6 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	salesOrder(value) {
-
-
-
 		if (value == "B") {
 			this.sales = false;
 			this.sourceSalesOrder.warning = false;
@@ -345,8 +318,6 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	isNetAp(value) {
-
-
 		if (value == "B") {
 			this.isNet = false;
 		}
@@ -356,9 +327,6 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	netAp(value) {
-
-
-
 		if (value == "B") {
 			this.isnetAp = false;
 			this.sourceNetAPAR.allow = false;
@@ -530,6 +498,7 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 
+    // Load Warnings data
 	private loadData() {
 
 		this.CustomerService.getCustomerWarnings(this.local.customerId).subscribe(
@@ -673,7 +642,7 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	private onDataLoadSuccessful(allWorkFlows: any) {
-		debugger;
+		
 		this.dataSource.data = allWorkFlows;
 		this.allwarningData = allWorkFlows;
 	}
@@ -1145,9 +1114,6 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	isAllrestrictEnable(value) {
-
-		
-			//this.sourcerestrictall.restrict = true;
 			if (value == "A") {
 
 				this.sourcewarningAll.warning = false;

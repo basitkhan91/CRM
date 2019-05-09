@@ -3,12 +3,6 @@ import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } fro
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { fadeInOut } from '../../../services/animations';
 import { MasterCompany } from '../../../models/mastercompany.model';
 import { AuditHistory } from '../../../models/audithistory.model';
@@ -16,23 +10,14 @@ import { AuthService } from '../../../services/auth.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { CustomerService } from '../../../services/customer.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
-import { Customer } from '../../../models/customer.model';
 import { Router, NavigationExtras } from '@angular/router';
 import { CustomerClassification } from '../../../models/customer-classification.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { GMapModule } from 'primeng/gmap';
 import { AddActionsDialogComponent } from '../../dialogs/add-actions-dialog/add-actions-dialog.component';
-import { unescapeHtml } from '@angular/platform-browser/src/browser/transfer_state';
-import { FileUploadModule } from 'primeng/fileupload';
 import { Message } from 'primeng/components/common/message';
 import { CustomerClassificationService } from '../../../services/CustomerClassification.service';
 import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
-import { DialogModule } from 'primeng/dialog';
-import { timeInterval } from 'rxjs/operator/timeInterval';
-import { BaseRowDef } from '@angular/cdk/table';
-import { ATAMain } from '../../../models/atamain.model';
 import { AtaMainService } from '../../../services/atamain.service';
 import { VendorService } from '../../../services/vendor.service';
 import { ATAChapter } from '../../../models/atachapter.model';
@@ -45,7 +30,7 @@ declare const google: any;
     animations: [fadeInOut]
 })
 
-export class CustomerGeneralInformationComponent implements OnInit, AfterViewInit {
+export class CustomerGeneralInformationComponent implements OnInit {
     disableSaveCusCode: boolean;
     disableSaveCusName: boolean;
     disableSaveContries: boolean = false;
@@ -54,7 +39,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     customerCodesColl: any[] = [];
     selectedActionName: any;
     address1: string;
-    //selectedAtaChapterName: any;
     disableSave: boolean;
     customerNamecoll: any[] = [];
     countrycollection: any[];
@@ -62,7 +46,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     allCountryinfo: any[];
     allATAMaininfo: ATAChapter[] = [];
     selectedAircraftTypes: any[] = [];
-    //onRepositorySelected: any[];
     activeIndex: number;
     ATAChapterId: number;
     ataChapterName: any;
@@ -91,12 +74,9 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     showcustomerCode: boolean;
     showcustomerName: boolean;
     isEnabeCapes: boolean = false;
-    //disablesaveclassificationName: boolean;
     showalert: boolean;
     showLable: boolean;
     cusname: any;
-
-    //selectedclassification: any;
     allCustomerClassInfo: CustomerClassification[];
     allcustomerclassificationInfo: CustomerClassification[] = [];
     allIntegrationInfo: Integration[] = [];
@@ -110,8 +90,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     customerName: any;
     customerCode: any;
     checkAddress: boolean = false;
-    // vendorCode: any;
-    //vendorname: any;
     allgeneralInfo: any[];
     closeCmpny: boolean = true;
     service: boolean = false;
@@ -138,59 +116,16 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     exchangeAircraftmodelsarray: any[] = [];
     showInput: boolean;
     capesCollection: any[] = [];
-    //vendorgeneralcollection: any[] = [];
     customergeneralCollection: any[] = [];
     data: any;
-    //allCountryinfo: any[];
     disablesave: boolean;
     selectedCountries: any;
     localCountrycollecton: any[];
     allAircraftManufacturer: any[] = [];
     integrationvalues: any[] = [];
     allintegrationdetails: any;
-    ngOnInit(): void {
-        // debugger;
-
-        this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        //steps Code  Start
-        this.workFlowtService.ShowPtab = true;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
-        this.activeIndex = 0;
-        //steps Code  End
-        this.getAircraftModelsData();
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        //if (this.workFlowtService.isEditMode == true) {
-        //    this.sourceCustomer.customerAffiliationId = "";
-        //}
-
-        if (this.workFlowtService.enableExternal == false) {
-            this.sourceCustomer.customerAffiliationId = 2;
-        }
-        this.loadData();
-        //this.aircrafttypeData();
-        this.loadDataCustomerData();
-        this.integrationalData();
-        this.customertypeData();
-        this.atamaindata();
-        this.aircraftmodelData();
-        this.countrylist();
-        this.Integration();
-        //this.sourceCustomer.customerAffiliationId = 2;
-        this.loadCustomerClassifiData();
-        this.options = {
-            center: { lat: 36.890257, lng: 30.707417 },
-            zoom: 12
-        };
-        if (this.workFlowtService.generalCollection) {
-            this.sourceCustomer = this.workFlowtService.generalCollection;
-        }
-        //this.sourceCustomer.annualRevenuePotential = "$";
-        //this.sourceCustomer.annualQuota = "$";
-    }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    //@ViewChild('vendorclassificationcomponent') patientContactPopupModal: ModalDirective
     filteredBrands: any[];
     displayedColumns = ['actionId', 'companyName', 'description', 'memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<any>;
@@ -212,7 +147,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     modal: NgbModalRef;
     actionName: string;
     Active: string = "Active";
-    //length: number;
     collection: any;
     options: any;
     public overlays: any[];
@@ -240,6 +174,39 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     enablePlus: boolean = false;
     ataChapterId: any;
     selectedIntegrationTypes: any[];
+    public allWorkFlows: any[] = [];
+    sourceCustomer: any = {};
+    ngOnInit(): void {
+        this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        //steps Code  Start
+        this.workFlowtService.ShowPtab = true;
+        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
+        this.activeIndex = 0;
+        //steps Code  End
+        this.getAircraftModelsData();
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        if (this.workFlowtService.enableExternal == false) {
+            this.sourceCustomer.customerAffiliationId = 2;
+        }
+        this.loadData();
+        this.loadDataCustomerData();
+        this.integrationalData();
+        this.customertypeData();
+        this.atamaindata();
+        this.aircraftmodelData();
+        this.countrylist();
+        this.Integration();
+        this.loadCustomerClassifiData();
+        this.options = {
+            center: { lat: 36.890257, lng: 30.707417 },
+            zoom: 12
+        };
+        if (this.workFlowtService.generalCollection) {
+            this.sourceCustomer = this.workFlowtService.generalCollection;
+        }
+    }
+
     constructor(public integration: IntegrationService, public customerClassificationService: CustomerClassificationService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, public vendorser: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
         this.dataSource = new MatTableDataSource();
@@ -280,29 +247,32 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     }
 
-
-    sourceCustomer: any = {};
     closethis() {
         this.closeCmpny = false;
     }
-    ngAfterViewInit() {
-        //this.dataSource.paginator = this.paginator;
-        //this.dataSource.sort = this.sort;
-    }
-    public allWorkFlows: any[] = [];
 
+   // loading Customer details//
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
     }
+    private onDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allActions = allWorkFlows;
+        if (this.allActions.length > 0) {
+            this.customerId = this.allActions[0].customerId;
+        }
 
+    }
+
+    //Tried for dialog component instead of ng-template//
     public addEntity() {
-
         let dialogRef = this.dialog.open(AddActionsDialogComponent,
             {
                 panelClass: 'mat-dialog-md',
@@ -311,124 +281,37 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         dialogRef.afterClosed().subscribe(role => {
             if (role) {
                 ``
-                //this.updateRoles(role);
             }
         });
     }
-    private onAddressDataLoadSuccessful(alladdress: any[]) {
 
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = alladdress;
-        this.allAddresses = alladdress;
-        this.addressId = this.allAddresses[0].addressId;
-        //this.isEditMode = true;
-        //console.log(this.vendorId, this.addressId);
-        //this.workFlowtService.updateAction(this.sourceCustomer, this.addressId, this.vendorId).subscribe(
-        //    response => this.saveCompleted(this.sourceCustomer),
-        //    error => this.saveFailedHelper(error));
-
-
-    }
+   //loading integrationData//
     private integrationalData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.integration.getWorkFlows().subscribe(
             results => this.onDataLoadintegratnSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 
     }
-
-    private customertypeData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.workFlowtService.getCustomerTypes().subscribe(
-            results => this.onDataLoadcustomertypeSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
-    public onATASelectChange(event: any) {
-        var val = event.target.value;
-        this.ataChapterId = val.substring(val.indexOf(':') + 1, val.length);
-    }
-
-    private countrylist() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.workFlowtService.getCountrylist().subscribe(
-            results => this.onDatacountrySuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    private onDatacountrySuccessful(allWorkFlows: any[]) {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allCountryinfo = allWorkFlows;
-
-
-        //console.log(this.allActions);
-
-
-    }
-
-    //private aircrafttypeData() {
-    //    this.alertService.startLoadingMessage();
-    //    this.loadingIndicator = true;
-
-    //    this.workFlowtService.getAircraftTypes().subscribe(
-    //        results => this.onDataLoadaircrafttypeSuccessful(results[0]),
-    //        error => this.onDataLoadFailed(error)
-    //    );
-
-    //    this.cols = [
-    //        //{ field: 'customerClassificationId', header: 'Customer Classification ID' },
-    //        { field: 'description', header: 'Aircraft Type' },
-    //        { field: 'modelName', header: 'Model' },
-
-
-    //    ];
-    //    this.selectedColumns = this.cols;
-
-
-
-    //} 
-
-    private atamaindata() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.ataservice.getAtaMainList().subscribe(
-            results => this.onSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    private onSuccessful(getAtaMainList: ATAChapter[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = getAtaMainList;
-        this.allATAMaininfo = getAtaMainList;
-    }
-    //public onChange(event) {
-    //	const newVal = event.target.value;
-    //	console.log(newVal);
-    //}
-
-    private onDataLoadintegratnSuccessful(allWorkFlows: Integration[]) {
+     private onDataLoadintegratnSuccessful(allWorkFlows: Integration[]) {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allIntegrationInfo = allWorkFlows;
+    }
+
+    //loading customer type data//
+    private customertypeData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getCustomerTypes().subscribe(
+            results => this.onDataLoadcustomertypeSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
     }
     private onDataLoadcustomertypeSuccessful(allWorkFlows: any[]) {
 
@@ -438,16 +321,86 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         this.customertypes = allWorkFlows;
     }
 
-    //private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[]) {
+    //bing the id to dropdown //
+    public onATASelectChange(event: any) {
+        var val = event.target.value;
+        this.ataChapterId = val.substring(val.indexOf(':') + 1, val.length);
+    }
 
-    //    this.alertService.stopLoadingMessage();
-    //    this.loadingIndicator = false;
-    //    this.dataSource.data = allWorkFlows;
-    //    this.allAircraftinfo = allWorkFlows;
+    //loading country list//
+    private countrylist() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getCountrylist().subscribe(
+            results => this.onDatacountrySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onDatacountrySuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allCountryinfo = allWorkFlows;
 
-    //}
+    }
+
+    // loading ATAMain data
+    private atamaindata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.ataservice.getAtaMainList().subscribe(
+            results => this.onSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onSuccessful(getAtaMainList: ATAChapter[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allATAMaininfo = getAtaMainList;
+    }
+
+    //To Open Model Popup based on Aircraft Type//
+    openModelPopup(content) {
+        if (this.workFlowtService.isEditMode == false) {
+            this.modal = this.modalService.open(content, { size: 'sm' });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+            var arr = this.selectedAircraftTypes;
+            var selectedvalues = arr.join(",");
+            this.workFlowtService.getAircraftTypes(selectedvalues).subscribe(
+                results => this.onDataLoadaircrafttypeSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+            this.cols = [
+                { field: 'description', header: 'Aircraft Type' },
+                { field: 'modelName', header: 'Model' },
+            ];
+            this.selectedColumns = this.cols;
+        }
+        if (this.workFlowtService.isEditMode == true) {
+
+            this.modal = this.modalService.open(content, { size: 'sm' });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+            if (this.allAircraftinfo) {
+                if (this.allAircraftinfo.length >= 0) {
+                    this.enablePopupData = true;
+                    var arr = this.selectedAircraftTypes;
+                    if (this.selectedAircraftTypes) {
+                        var selectedvalues = arr.join(",");
+                        this.workFlowtService.getAircraftTypes(selectedvalues).subscribe(
+                            results => this.onDataLoadaircrafttypeSuccessful(results[0]),
+                            error => this.onDataLoadFailed(error)
+                        )
+                    }
+                }
+            }
+        }
+
+    }
     private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[]) {
-
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -472,31 +425,23 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
                 });
             }
-            //if (!ischange1) {
-            //	this.selectedModels.push(selectedRow);
-            //}
 
         }
 
     }
 
-
-
-
+    // Load AircarftModel Data//
     private aircraftmodelData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getAircraft().subscribe(
             results => this.onDataLoadaircraftmodelSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 
     }
-
-
+    
     private onDataLoadaircraftmodelSuccessful(allWorkFlows: any) {
-        console.log(1);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -509,7 +454,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
                 );
         }
-
         let valAirCraft = [];
         this.workFlowtService.getAircraftManufacturer(this.sourceCustomer.customerId)
             .subscribe(results => {
@@ -529,21 +473,8 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     }
 
-
-
-    private loadAddressDara() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.workFlowtService.getAddressDtails().subscribe(
-            results => this.onAddressDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-        //this.navigate();
-
-    }
+    // Load customer classification data//
     private loadCustomerClassifiData() {
-        // debugger;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
@@ -554,7 +485,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     }
     private onDataLoadClassifiSuccessful(getCustomerClassificationList: CustomerClassification[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCustomerClassificationList;
@@ -562,49 +492,37 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         this.allcustomerclassificationInfo = getCustomerClassificationList;
     }
 
-
+    //For google Maps
     getlatlng(address) {
-
-        //debugger;
         this.checkAddress = true;
         return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-            //alert(data);
             this.options = {
                 center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
                 zoom: 1,
-                // new google.maps.Center({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Ataturk Park" }),
-            };
-            //console.log(this.options);
+             };
             this.overlays = [
                 new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
 
-                //new google.maps.Marker({ position: { lat: 36.885233, lng: 30.702323 }, title: "Oldtown" }),
-                //new google.maps.Polygon({
-                //    paths: [
-                //        { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
-                //    ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
-                //}),
-                //new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-                //new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
             ];
             return data;
-
-
+            
         });
     }
 
-
-
+    //Load Master companies
     private loadMasterCompanies() {
-
-
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
+
+    }
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
 
     }
 
@@ -612,7 +530,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     openClassification(content) {
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceClassification = new CustomerClassification();
@@ -620,130 +537,17 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         this.customerName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
 
-
-
     }
 
-
-    //openatachapter(content) {
-    //    this.isEditMode = false;
-    //    this.isDeleteMode = false;
-
-    //    this.isSaving = true;
-    //    this.loadMasterCompanies();
-    //   // this.sourceAction = new CustomerClassification();
-    //    this.sourceAction.isActive = true;
-    //    this.customerName = "";
-    //    this.modal = this.modalService.open(content, { size: 'sm' });
-    //    this.modal.result.then(() => {
-
-
-
-    //        console.log('When user closes');
-    //    }, () => { console.log('Backdrop click') })
-
-
-
-
-    //}
-    openModelPopup(content) {
-
-        //alert(this.itemser.isEditMode);
-        if (this.workFlowtService.isEditMode == false) {
-            this.modal = this.modalService.open(content, { size: 'sm' });
-            this.modal.result.then(() => {
-
-
-
-                console.log('When user closes');
-            }, () => { console.log('Backdrop click') })
-
-
-            var arr = this.selectedAircraftTypes;
-            var selectedvalues = arr.join(",");
-            this.workFlowtService.getAircraftTypes(selectedvalues).subscribe(
-                results => this.onDataLoadaircrafttypeSuccessful(results[0]),
-                error => this.onDataLoadFailed(error)
-            );
-            this.cols = [
-                //{ field: 'customerClassificationId', header: 'Customer Classification ID' },
-                { field: 'description', header: 'Aircraft Type' },
-                { field: 'modelName', header: 'Model' },
-
-
-            ];
-            this.selectedColumns = this.cols;
-        }
-        if (this.workFlowtService.isEditMode == true) {
-
-            this.modal = this.modalService.open(content, { size: 'sm' });
-            this.modal.result.then(() => {
-
-
-
-                console.log('When user closes');
-            }, () => { console.log('Backdrop click') })
-            if (this.allAircraftinfo) {
-                if (this.allAircraftinfo.length >= 0) {
-                    this.enablePopupData = true;
-                    var arr = this.selectedAircraftTypes;
-                    if (this.selectedAircraftTypes) {
-                        var selectedvalues = arr.join(",");
-                        this.workFlowtService.getAircraftTypes(selectedvalues).subscribe(
-                            results => this.onDataLoadaircrafttypeSuccessful(results[0]),
-                            error => this.onDataLoadFailed(error)
-                        )
-                    }
-                }
-            }
-        }
-
-    }
-    //   openModelPopup(content) {
-
-    //       this.modal = this.modalService.open(content, { size: 'sm' });
-    //       this.modal.result.then(() => {
-
-
-
-    //           console.log('When user closes');
-    //       }, () => { console.log('Backdrop click') })
-
-
-    //	var arr = this.selectedAircraftTypes;
-    //	var selectedvalues = arr.join(",");
-    //	this.workFlowtService.getAircraftTypes(selectedvalues).subscribe(
-    //		results => this.onDataLoadaircrafttypeSuccessful(results[0]),
-    //		error => this.onDataLoadFailed(error)
-    //	);
-    //	this.cols = [
-    //		//{ field: 'customerClassificationId', header: 'Customer Classification ID' },
-    //		{ field: 'description', header: 'Aircraft Type' },
-    //		{ field: 'modelName', header: 'Model' },
-
-
-    //	];
-    //	this.selectedColumns = this.cols;
-
-    //}
-
-
-
-
+    
     opencountry(content) {
-        //debugger
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
-        //this.sourceAction = new Integration();
         this.sourceAction.isActive = true;
         this.countryName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -751,9 +555,8 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
+    // Filetr Integration
     filterintegrations(event) {
-
         this.integrationCollection = [];
         if (this.allIntegrationInfo.length > 0) {
             for (let i = 0; i < this.allIntegrationInfo.length; i++) {
@@ -764,13 +567,9 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
-
-
-
+    //Integration Save
     editItemIntegrationalCloseModel() {
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -791,55 +590,19 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.modal.close();
     }
-    //editItemCloseModel() {
 
-    //	// debugger;
-
-    //	this.isSaving = true;
-
-    //	if (this.isEditMode == false) {
-    //		this.sourceAction.createdBy = this.userName;
-    //		this.sourceAction.updatedBy = this.userName;
-    //		this.sourceAction.description = this.classificationName;
-    //		this.sourceAction.masterCompanyId = 1;
-    //		this.customerClassificationService.newAddcustomerclass(this.sourceAction).subscribe(data => {
-    //			this.loadCustomerClassifiData();
-    //			this.saveCompleted(this.sourceAction);
-    //			this.sourceCustomer.customerClassificationId = data.customerClassificationId;
-    //		});
-    //	}
-    //	else {
-
-    //		this.sourceAction.updatedBy = this.userName;
-    //		this.sourceAction.description = this.classificationName;
-    //		this.sourceAction.masterCompanyId = 1;
-    //		this.customerClassificationService.updatecustomerclass(this.sourceAction).subscribe(
-    //			response => this.saveCompleted(this.sourceAction),
-    //			error => this.saveFailedHelper(error));
-    //	}
-
-    //	this.modal.close();
-    //}
-
+   // save Customer Info//
     editItemCloseModel() {
-
-        // debugger;
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceClassification.createdBy = this.userName;
             this.sourceClassification.updatedBy = this.userName;
             this.sourceClassification.description = this.classificationName;
             this.sourceClassification.masterCompanyId = 1;
             this.customerClassificationService.newAddcustomerclass(this.sourceClassification).subscribe(data => {
-                //debugger;
                 if (data) { this.sourceCustomer.customerClassificationId = data.customerClassificationId }
-
                 this.loadCustomerClassifiData();
             })
-            //role => this.saveSuccessHelper(role),
-            //error => this.saveFailedHelper(error));
         }
         else {
 
@@ -854,39 +617,10 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         this.modal.close();
     }
 
-    //saveVendorClassificationDetails() {
-
-    //    debugger;
-
-    //    this.isSaving = true;
-
-    //    if (this.isEditMode == false) {
-    //        this.sourceAction.createdBy = this.userName;
-    //        this.sourceAction.updatedBy = this.userName;
-    //        this.sourceAction.classificationName = this.customerClassName;
-    //        this.sourceAction.masterCompanyId = 1;
-    //        this.customerClassificationService.newAddcustomerclass(this.sourceAction).subscribe(data => {
-
-    //            this.loadDataCustomerData();
-    //        })
-
-    //    }
-    //    else {
-
-    //        this.sourceAction.updatedBy = this.userName;
-    //        this.sourceAction.classificationName = this.customerClassName;
-    //        this.sourceAction.masterCompanyId = 1;
-    //        this.customerClassificationService.updatecustomerclass(this.sourceAction).subscribe(
-    //            response => this.saveCompleted(this.sourceAction),
-    //            error => this.saveFailedHelper(error));
-    //    }
-
-    //    this.modal.close();
-    //}
+    // Load  Customer Clasfication data
     private loadDataCustomerData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.customerClassificationService.getCustomerClassificationList().subscribe(
             results => this.onVendorDataLoad(results[0]),
             error => this.onDataLoadFailed(error)
@@ -894,57 +628,25 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     private onVendorDataLoad(getCustomerClassificationList: CustomerClassification[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCustomerClassificationList;
         this.allCustomerClassInfo = getCustomerClassificationList;
-        //this.loadDataVendorData();
     }
-    //filterVendors(event) {
-
-    //    this.vendorCollection = [];
-    //    for (let i = 0; i < this.allVendorClassInfo.length; i++) {
-    //        let vendorName = this.allVendorClassInfo[i].classificationName;
-    //        if (vendorName != "" && vendorName != null && vendorName != "Null") {
-
-    //            if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //                this.vendorCollection.push(vendorName);
-    //            }
-    //        }
-    //    }
-    //}
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
 
 
     private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allActions = allWorkFlows;
-        if (this.allActions.length > 0) {
-            this.customerId = this.allActions[0].customerId;
-        }
-
-        //console.log(this.allActions);
-
-
-    }
-
-
+  
     eventHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedActionName) {
                 if (value == this.selectedActionName.toLowerCase()) {
-                    //alert("Action Name already Exists");
                     this.disableSaveCusCode = true;
                     this.disableSaveCusName = true;
                 }
@@ -956,24 +658,21 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
         }
     }
+
+    //on Selection of Customer Name//
     onCustomerNameselected(event) {
-        //debugger;
         for (let i = 0; i < this.customerNamecoll.length; i++) {
             if (event == this.customerNamecoll[i][0].name) {
-                //alert("Action Name already Exists");
                 this.disableSaveCusName = true;
                 this.disableSave = true;
                 this.selectedActionName = event;
             }
         }
-        //this.workFlowtService.getcustomerByNameList(event).subscribe(
-        //	results => this.oncustomerloadsuccessfull(results[0]),
-        //	error => this.onDataLoadFailed(error)
-        //);
     }
+
+    // On Country selected//
     onCountrieselected(event) {
         if (this.allCountryinfo) {
-
             for (let i = 0; i < this.allCountryinfo.length; i++) {
                 if (event == this.allCountryinfo[i].nice_name) {
                     this.sourceCustomer.nice_name = this.allCountryinfo[i].nice_name;
@@ -984,12 +683,12 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
+
     eventCountryHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedCountries) {
                 if (value == this.selectedCountries.toLowerCase()) {
-                    //alert("Action Name already Exists");
                     this.disablesave = true;
                 }
                 else {
@@ -999,6 +698,7 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
         }
     }
+    //Filetr countiries//
     filterCountries(event) {
 
         this.countrycollection = [];
@@ -1014,17 +714,9 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
-    private oncustomerloadsuccessfull(allWorkFlows: any[]) {
 
-
-        this.CustomerInfoByName = allWorkFlows[0]
-        this.sourceCustomer = this.CustomerInfoByName;
-
-
-
-    }
+    // Filter Name//
     filterNames(event) {
-
         this.customerNames = [];
         if (this.allActions.length > 0) {
             for (let i = 0; i < this.allActions.length; i++) {
@@ -1039,8 +731,8 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
+    // Filter Customer Parent name//
     filterCustomerParentNames(event) {
-
         this.customerNames = [];
         if (this.allActions.length > 0) {
             for (let i = 0; i < this.allActions.length; i++) {
@@ -1051,10 +743,11 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
+
     selectedValue(name) {
-        //alert(name);
         this.cusname = name;
     }
+    // Filter Classification data//
     filterclassifications(event) {
         this.classificollection = [];
         if (this.allcustomerclassificationInfo.length > 0) {
@@ -1066,12 +759,12 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
+
     eventCustCodeselection(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedCustomerCode) {
                 if (value == this.selectedCustomerCode.toLowerCase()) {
-                    //alert("Action Name already Exists");
                     this.disableSaveCusCode = true;
                     this.disableSaveCustomerCode = true;
                 }
@@ -1086,10 +779,8 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     }
     onCustomercodeSelected(event) {
-        //debugger;
         for (let i = 0; i < this.customerCodesColl.length; i++) {
             if (event == this.customerCodesColl[i][0].customerCode) {
-                //alert("Action Name already Exists");
                 this.disableSaveCusCode = true;
                 this.disableSaveCustomerCode = true;
                 this.selectedCustomerCode = event;
@@ -1099,12 +790,10 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
 
     filterCustomerCodes(event) {
-
         this.customerCodes = [];
         if (this.allActions.length > 0) {
             for (let i = 0; i < this.allActions.length; i++) {
                 let customerCode = this.allActions[i].customerCode;
-
                 if (customerCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                     this.customerCodesColl.push([{
                         "customerId": this.allActions[i].customerId,
@@ -1117,82 +806,26 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-
-
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-        this.auditHisory = auditHistory;
-
-
-        this.modal = this.modalService.open(content, { size: 'lg' });
-
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-
-
-    }
-
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-
-    }
-
+   
     private onDataLoadFailed(error: any) {
-        // alert(error);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
     }
-    private loadGeneralObject() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.workFlowtService.getGeneralObj().subscribe(
-            results => this.onGeneralObjUrl(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
+   
     private onGeneralObjUrl(allWorkFlows: any) {
-        debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.sourceCustomer = allWorkFlows;
-
-
     }
-    private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allgeneralInfo = allWorkFlows;
-        //this.vendorname = this.allgeneralInfo[0].vendorName;
-        //this.vendorCode = this.allgeneralInfo[0].vendorCode;
-        //console.log(this.allgeneralInfo);
-
-
-    }
-
-
+   
     open(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        //this.sourceCustomer.isActive = true;
         this.actionName = "";
-
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -1201,7 +834,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceCustomer = row;
@@ -1212,13 +844,10 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     openEdit(content, row) {
-
         this.isEditMode = true;
-
         this.isSaving = true;
         this.sourceCustomer = row;
         this.loadMasterCompanies();
-        // this.actionName = this.sourceCustomer.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -1249,17 +878,7 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-
         this.sourceCustomer = row;
-
-
-        //this.isSaving = true;
-        // debugger;
-        //this.workFlowtService.historyAcion(this.sourceCustomer.masterCompanyId).subscribe(
-        //    results => this.onHistoryLoadSuccessful(results[0], content),
-        //    error => this.saveFailedHelper(error));
-
 
     }
     onBlurMethod(data) {
@@ -1298,51 +917,9 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    sample() {
 
-
-        //if (!this.sourceCustomer.name) {
-        //	this.showCustomerName = true;
-        //}
-        //if (!this.sourceCustomer.customerCode) {
-        //	this.showCustomerCode = true;
-        //}
-        //if (!this.sourceCustomer.email) {
-        //	this.showCustomerEmail = true;
-        //}
-
-        //if (!this.sourceCustomer.customerPhone) {
-        //	this.showCustomerPhone = true;
-        //}
-        //if (!this.sourceCustomer.address1) {
-        //	this.showCustomerAddress1 = true;
-        //}
-        //if (!this.sourceCustomer.city) {
-        //	this.showCustomerCity = true;
-        //}
-
-        //if (!this.sourceCustomer.stateOrProvince) {
-        //	this.showCustomerState = true;
-        //}
-        //if (!this.sourceCustomer.postal) {
-        //	this.showCustomerPostal = true;
-        //}
-        //if (!this.sourceCustomer.country) {
-        //	this.showCustomerCountry = true;
-        //}
-        //if (!this.sourceCustomer.customerClassificationId) {
-        //	this.showCustomerClassificationId = true;
-        //}
-
-
-
-    }
-
-
+    // Save Customer Data//
     editItemAndCloseModel() {
-
-
-
         if (!(this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
         )) {
@@ -1353,7 +930,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
         ) {
             this.isSaving = true;
-
             if (!this.sourceCustomer.customerId) {
                 this.sourceCustomer.createdBy = this.userName;
                 this.sourceCustomer.updatedBy = this.userName;
@@ -1395,12 +971,8 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
                         this.workFlowtService.localCollectiontoVendor = data;
                     }
                     this.alertService.startLoadingMessage();
-                    //this.AddCustomerAircraftdata(this.localCollection);
                     this.activeIndex = 0;
                     this.workFlowtService.indexObj.next(this.activeIndex);
-
-                    //this.router.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
-
 
                 })
                 if (this.selectedIntegrationTypes != null) //separting Array which is having ","
@@ -1457,39 +1029,32 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
                         this.workFlowtService.localCollectiontoVendor = data;
                     }
                     this.alertService.startLoadingMessage();
-                    //this.AddCustomerAircraftdata(this.localCollection);
                     this.activeIndex = 0;
                     this.workFlowtService.indexObj.next(this.activeIndex);
 
-                    //this.router.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
-
 
                 })
-                // this.router.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
 
             }
         }
         else { }
 
     }
+    // For nexxt click
     nextClick() {
         this.workFlowtService.contactCollection = this.local;
         this.activeIndex = 1;
         this.workFlowtService.indexObj.next(this.activeIndex);
-        //this.saveCompleted(this.sourceCustomer);
         this.router.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
 
     }
 
+    // Save Aircraft Model Info
     saveAircraftmodelinfo(cusId, data) {
-
         for (let i = 0; i < data.length; i++) {
             data[i].customerId = cusId;
-            //data[i].partId = partid;
             data[i].createdBy = this.userName;
             data[i].updatedBy = this.userName;
-
-
             this.workFlowtService.saveAircraftinfo(data[i]).subscribe(aircraftdata => {
                 this.collectionofItemMaster = aircraftdata;
             })
@@ -1498,15 +1063,9 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     }
     private savesuccessCompleted(user?: any) {
         this.isSaving = false;
-
-
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-
-
         this.loadData();
     }
-
 
     public updateToaduithistory(auditServiceCollection) {
         this.workFlowtService.updTeAuditAddress(auditServiceCollection).subscribe(data => {
@@ -1516,7 +1075,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     }
     public commasepetrated() {
-        debugger;
         var arr = this.selectedAircraftTypes;
         var selectedvalues = arr.join(",");
         this.workFlowtService.getAircraftTypes(selectedvalues).subscribe(
@@ -1524,7 +1082,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             error => this.onDataLoadFailed(error)
         );
         this.cols = [
-            //{ field: 'customerClassificationId', header: 'Customer Classification ID' },
             { field: 'description', header: 'Aircraft Type' },
             { field: 'modelName', header: 'Model' },
 
@@ -1533,6 +1090,7 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         this.selectedColumns = this.cols;
     }
 
+    // Add customer Aircraft type data
     public AddCustomerAircraftdata(customerobject) {
         for (let i = 0; i < this.selectedAircraftTypes.length; i++) {
             customerobject.aircraftTypeId = this.selectedAircraftTypes[i];
@@ -1545,6 +1103,7 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     }
 
+    // Close Model Popup
 
     public dismissModel() {
         this.isDeleteMode = false;
@@ -1556,7 +1115,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     private saveCompleted(user?: any) {
         this.isSaving = false;
-
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
@@ -1565,7 +1123,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
         }
-
         this.loadData();
     }
 
@@ -1579,33 +1136,19 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     private saveFailedHelper(error: any) {
-        //this.isSaving = false;
-        //this.alertService.stopLoadingMessage();
-        //this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        //this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+     
     }
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
-        }
-    }
+    
     onUpload(event) {
-        debugger;
         for (let file of event.files) {
             this.uploadedFiles.push(file);
         }
-
         this.msgs = [];
         this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
     }
 
     filtercountry(event) {
-
         this.countrycollection = [];
         if (this.allCountryinfo.length > 0) {
             for (let i = 0; i < this.allCountryinfo.length; i++) {
@@ -1618,10 +1161,8 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     saveCountry() {
-
         this.sourceAction.createdBy = this.userName;
         this.sourceAction.updatedBy = this.userName;
-
         this.workFlowtService.newCountry(this.sourceAction).subscribe(data => { this.countrylist() })
 
 
@@ -1629,40 +1170,24 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
 
     dismissAircraftModel() {
         if (this.selectedModels.length > 0) {
-            //this.manfacturerAircraftmodelsarray = [];
-            //this.distributionAircraftmodelsarray = [];
-            //this.overhaulAircraftmodelsarray = [];
-            //this.certificationarrayAircraftmodelsarray = [];
-            //this.repairAircraftmodelsarray = [];
-            //this.exchangeAircraftmodelsarray = [];
             this.isDeleteMode = false;
             this.isEditMode = false;
             this.modal.close();
             if (this.workFlowtService.isEditMode == false || (this.workFlowtService.isEditMode == true && this.selectedModels.length > 0)) {
-
-                //this.manfacturerAircraftmodelsarray = this.manfacturerAircraftDataParsing(JSON.parse(JSON.stringify(this.selectedModels)));
-                //this.distributionAircraftmodelsarray = JSON.parse(JSON.stringify(this.selectedModels));
-                //this.overhaulAircraftmodelsarray = JSON.parse(JSON.stringify(this.selectedModels));
-                //this.certificationarrayAircraftmodelsarray = JSON.parse(JSON.stringify(this.selectedModels));
-                //this.repairAircraftmodelsarray = JSON.parse(JSON.stringify(this.selectedModels));
-                //this.exchangeAircraftmodelsarray = JSON.parse(JSON.stringify(this.selectedModels));
             }
         }
         this.showInput = true;
         this.modal.close();
     }
-
+    // Save Selected Model From Model Popup
     public saveSelectedModel(selectedRow, indeex) {
-
         selectedRow.isBoolean = indeex;
 
     }
 
     public getSelectedItem(selectedRow, event) {
-        //;
         let ischange = false;
         if (this.selectedModels.length > 0) {
-            //praveen's code//
             this.selectedModels.map((row) => {
                 if (selectedRow.aircraftModelId == row.aircraftModelId) {
                     row.priority = event.target.value;
@@ -1688,7 +1213,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         );
     }
     private onAircarftmodelloadsuccessfull(allWorkFlows: any[]) {
-        //
         for (let i = 0; i < allWorkFlows.length; i++) {
             allWorkFlows[i].checkbox = true;
         }
@@ -1706,7 +1230,6 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
         }
     }
     private onIntegrationData(getEmployeeCerficationList: any[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getEmployeeCerficationList;
@@ -1736,6 +1259,7 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             );
     }
 
+    // Add integarion//
     public Addintegration(imObj) {
         for (let i = 0; i < this.selectedIntegrationTypes.length; i++) {
             imObj.aircraftTypeId = this.selectedIntegrationTypes[i];
@@ -1753,9 +1277,10 @@ export class CustomerGeneralInformationComponent implements OnInit, AfterViewIni
             error => this.onDataLoadFailed(error)
         );
     }
+
+    // Tried For Keypress event 
     keyPress(event: any) {
         const pattern = /[0-9\+\-\ ]/;
-
         let inputChar = String.fromCharCode(event.charCode);
         if (event.keyCode != 8 && !pattern.test(inputChar)) {
             event.preventDefault();

@@ -77,6 +77,8 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     employeeName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+    sourceEmployee: any = {};
+    public allWorkFlows: any[] = [];
     /** Actions ctor */
 
     private isEditMode: boolean = false;
@@ -86,37 +88,31 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
         this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.generalCollection) {
-
 			this.local = this.employeeService.generalCollection;
 		}
 		if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
-			//debugger;
 			this.sourceEmployee = this.employeeService.listCollection;
 			this.local = this.employeeService.listCollection;
             this.loadData();
-           // this.loadTariningTypes();
 		}
 		this.translationService.closeCmpny = false;
-        //this.loadTariningTypes();
     }
-    sourceEmployee: any = {};
+    
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
-    public allWorkFlows: any[] = [];
+  
 
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.employeeService.getTrainingList(this.local.employeeId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 
         this.cols = [
-
             { field: 'aircraftModelId', header: 'AircraftModel' },
             { field: 'scheduleDate', header: 'Schedule Date' },
             { field: 'frequencyOfTraining', header: 'Frequency Of Training' },
@@ -138,7 +134,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 	private loadTariningTypes() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.employeeService.getTrainingTypes().subscribe(
 			results => this.onTariningTypesData(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -148,7 +143,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -165,8 +159,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
         this.applyFilter(this.dataSource.filter);
     }
     private onDataLoadSuccessful(getTrainingList: any[]) {
-        // alert('success');
-		//debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getTrainingList;
@@ -180,8 +172,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     }
 
 	private onTariningTypesData(getTrainingList: any[]) {
-		// alert('success');
-		//debugger;
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getTrainingList;
@@ -191,16 +181,10 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        // debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         this.auditHisory = auditHistory;
-
-
         this.modal = this.modalService.open(content, { size: 'lg' });
-
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -209,7 +193,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allComapnies = allComapnies;
@@ -217,7 +200,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     }
 
     private onDataLoadFailed(error: any) {
-        // alert(error);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -231,7 +213,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
             this.employeeService.updateEmployee(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
         else {
             this.sourceAction = rowData;
@@ -241,23 +222,19 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
             this.employeeService.updateEmployee(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
 
 	}
 
 	private onDataPurchaseunitSuccessful(getUnitOfMeasureList: any) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		// this.dataSource.data = getUnitOfMeasureList;
 		this.allPurchaseUnitOfMeasureinfo = getUnitOfMeasureList;
 
 	}
 	private Purchaseunitofmeasure() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.unitService.getUnitOfMeasureList().subscribe(
 			results => this.onDataPurchaseunitSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -266,7 +243,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 	}
 
 	filterPurchaseUnitOfMeasures(event) {
-
 		this.localunit = [];
 		if (this.allPurchaseUnitOfMeasureinfo) {
 			for (let i = 0; i < this.allPurchaseUnitOfMeasureinfo.length; i++) {
@@ -279,27 +255,20 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 	}
 
     open(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
-
         this.sourceAction.isActive = true;
         this.employeeName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
@@ -310,13 +279,8 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     }
 
 
-
-
-
     openEdit(content, row) {
-
         this.isEditMode = true;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
@@ -327,22 +291,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    //openView(content, row) {
-
-    //    this.sourceAction = row;
-    //    this.ataChapter_Name = row.ataChapterName;
-    //    this.ataChapterCategory = row.ataChapterCategory;
-    //    this.memo = row.memo;
-    //    this.createdBy = row.createdBy;
-    //    this.updatedBy = row.updatedBy;
-    //    this.createdDate = row.createdDate;
-    //    this.updatedDate = row.updatedDate;
-    //    this.loadMasterCompanies();
-    //    this.modal = this.modalService.open(content, { size: 'sm' });
-    //    this.modal.result.then(() => {
-    //        console.log('When user closes');
-    //    }, () => { console.log('Backdrop click') })
-    //}
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -350,19 +298,10 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
-
-
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-
         this.sourceAction = row;
-
-
-
-        //this.isSaving = true;
-        // debugger;
         this.employeeService.historyEmployee(this.sourceAction.employeeId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
@@ -372,11 +311,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 
 
     editTrainAndCloseModel() {
-
-        // debugger;
-
         this.isSaving = true;
-
         if (!this.sourceEmployee.employeeTrainingId) {
             this.sourceEmployee.createdBy = this.userName;
             this.sourceEmployee.updatedBy = this.userName;
@@ -396,7 +331,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
         }
 
-        //this.modal.close();
     }
 
     deleteItemAndCloseModel() {
@@ -426,7 +360,6 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 
     private saveCompleted(user?: any) {
         this.isSaving = false;
-
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
@@ -435,14 +368,12 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
         }
-
         this.loadData();
     }
 
     private saveSuccessHelper(role?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
         this.loadData();
 
     }

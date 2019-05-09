@@ -45,7 +45,7 @@ import { MarkUpPercentage } from '../../../models/markUpPercentage.model';
     animations: [fadeInOut]
 })
 /** anys component*/
-export class CustomerFinancialInformationComponent implements OnInit, AfterViewInit {
+export class CustomerFinancialInformationComponent implements OnInit {
 	disableSaveCreditTerms: boolean;
 	selectedCreditTerms: any;
 	SelectedCurrencyInfo: any;
@@ -98,25 +98,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     allMarkUpList: MarkUpPercentage[];
     markUpCollection: any[];
     markUppercentageCollection: any;
-	ngOnInit(): void {
-		this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-financial-information';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.workFlowtService.ShowPtab = true;
-		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
-		this.loadDiscountData();
-        this.loadCreditTermsData();
-        this.loadCurrencyData();
-        this.taxratedata();
-		this.loadData();
-        this.taxRate();
-        this.loadMarkUpData();
-        this.integrationData();
-        if (this.local) {
-            this.getCustomerList();
-
-        }
-
-    }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -150,10 +131,9 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 	/** Actions ctor */
 	discontValue: string;
 	namecolle: any[] = [];
-	
 	private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
-
+    public allWorkFlows: any[] = [];
 	constructor(public taxtypeser: TaxTypeService, private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, public customerClassificationService: CustomerClassificationService, private router: ActivatedRoute, public inteservice: IntegrationService, public taxRateService: TaxRateService, public itemser: ItemMasterService, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
@@ -163,6 +143,27 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
             this.local = this.workFlowtService.listCollection.t;
             this.sourceCustomer = this.workFlowtService.listCollection.t;
+        }
+
+    }
+
+
+    ngOnInit(): void {
+        this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-financial-information';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.workFlowtService.ShowPtab = true;
+        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
+        this.loadDiscountData();
+        this.loadCreditTermsData();
+        this.loadCurrencyData();
+        this.taxratedata();
+        this.loadData();
+        this.taxRate();
+        this.loadMarkUpData();
+        this.integrationData();
+        if (this.local) {
+            this.getCustomerList();
+
         }
 
     }
@@ -177,29 +178,26 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
     }
 
+    private onCustomersLoadSuccssfull(allCustomers: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allCustomers;
+        if (this.customersList) {
+            this.sourceCustomer = this.customersList;
+        }
 
-    ngAfterViewChecked() {
+    }
 
-        this.cdRef.detectChanges();
-    }
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
-    public allWorkFlows: any[] = [];
+    // Load Customer data//
 
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
-
         this.cols = [
-            //{ field: 'actionId', header: 'Action Id' },
             { field: 'description', header: 'Action Name' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
@@ -213,6 +211,18 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
     }
 
+    private onDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allActions = allWorkFlows;
+        for (let i = 0; i < this.allActions.length; i++) {
+            this.creditlimitData.push({ 'creditlimitData': this.allActions[i].t });
+        }
+
+
+    }
+    // Load Master compamies
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -224,6 +234,14 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
     }
 
+
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
+
+    }
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
@@ -234,6 +252,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         this.uploadFileToActivity();
     }
 
+    // tried for File upload
     uploadFileToActivity() {
         this.postFile(this.fileToUpload).subscribe(data => {
 
@@ -252,30 +271,10 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
             .catch((e) => this.handleError(e));
     }
 
-    private loadFinalObject() {
+    // Load Tax Rate data
+     private taxratedata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-        this.workFlowtService.getFinalObj().subscribe(
-            results => this.onFinalObjUrl(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    private onFinalObjUrl(allWorkFlows: any) {
-        //debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.sourceCustomer = allWorkFlows;
-
-
-    }
-
-    private taxratedata() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
         this.taxRateService.getTaxRateList().subscribe(
             results => this.onDataLoadtaxrateSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -283,7 +282,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
     }
     private onDataLoadtaxrateSuccessful(getTaxRateList: TaxRate[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getTaxRateList;
@@ -294,23 +292,11 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     handleChange(rowData, e) {
         if (e.checked == false) {
             this.sourceCustomer = rowData;
-            //this.sourceCustomer.updatedBy = this.userName;
             this.Active = "In Active";
-            //this.sourceCustomer.isActive == false;
-            //this.workFlowtService.updatefinanceinfo(this.sourceCustomer).subscribe(
-            //    response => this.saveCompleted(this.sourceCustomer),
-            //    error => this.saveFailedHelper(error));
-            //alert(e);
         }
         else {
             this.sourceCustomer = rowData;
-            //this.sourceCustomer.updatedBy = this.userName;
             this.Active = "Active";
-            //this.sourceCustomer.isActive == true;
-            //this.workFlowtService.updatefinanceinfo(this.sourceCustomer).subscribe(
-            //    response => this.saveCompleted(this.sourceCustomer),
-            //    error => this.saveFailedHelper(error));
-            //alert(e);
         }
 
     }
@@ -319,68 +305,19 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
 
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allActions = allWorkFlows;
-        for (let i = 0; i < this.allActions.length;i++) {
-            this.creditlimitData.push({ 'creditlimitData': this.allActions[i].t });
-        }
-
-        //this.creditlimitData=this.all
-
-    }
-
-    private onCustomersLoadSuccssfull(allCustomers: any) {
-        //debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allCustomers;
-        //this.customersList = allCustomers[0].t;
-        if (this.customersList) {
-            this.sourceCustomer = this.customersList;
-        }
-
-
-
-    }
-
+    // Filter Name
     filterActions(event) {
-
         this.localCollection = [];
         for (let i = 0; i < this.allActions.length; i++) {
             let actionName = this.allActions[i].description;
-
             if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.localCollection.push(actionName);
-
             }
         }
     }
 
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-
-
-    }
-
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-
-    }
+   
 
     private onDataLoadFailed(error: any) {
         // alert(error);
@@ -390,12 +327,10 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     }
 
     open(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        //this.sourceCustomer.isActive = true;
         this.actionName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -405,7 +340,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceCustomer = row;
@@ -416,9 +350,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     }
 
     openEdit(content, row) {
-
         this.isEditMode = true;
-
         this.isSaving = true;
         this.sourceCustomer = row;
         this.loadMasterCompanies();
@@ -429,7 +361,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         }, () => { console.log('Backdrop click') })
     }
     openView(content, row) {
-
         this.sourceCustomer = row;
         this.action_name = row.description;
         this.memo = row.memo;
@@ -453,35 +384,8 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-
         this.sourceCustomer = row;
-
-
-        //this.isSaving = true;
-        // debugger;
-        //this.workFlowtService.historyAcion(this.sourceCustomer.masterCompanyId).subscribe(
-        //    results => this.onHistoryLoadSuccessful(results[0], content),
-        //    error => this.saveFailedHelper(error));
-
-
     }
-    //onBlurMethod(data) {
-    //    if (data == 'creditLimit') {
-    //        this.showCreditLimit = false;
-    //    }
-    //    if (data == 'creditTearms') {
-    //        this.showCreditTearms = false;
-    //    }
-    //    if (data == 'currency') {
-    //        this.showCurrency = false;
-    //    }
-    //}
-
-    //test() {
-
-
-    //}
     onBlurMethod(data) {
         if (data == 'creditLimit') {
             this.showCreditLimit = false;
@@ -493,16 +397,11 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
             this.showCurrency = false;
         }
     }
-    sample() {
-        if (!(this.sourceCustomer.creditLimit)) {
-            this.display = true;
-            this.modelValue = true;
-        }
-    }
+
+
+    // Save Finance Info
     editItemAndCloseModel() {
-
         this.isSaving = true;
-
 		if (!(this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId && this.sourceCustomer.currencyId)) {
             this.display = true;
             this.modelValue = true;
@@ -516,10 +415,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
 					this.workFlowtService.financeCollection = this.local;
-					//this.activeIndex = 2;
-					//this.workFlowtService.indexObj.next(this.activeIndex);
-				//	this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
-					
 
                 })
 
@@ -528,19 +423,12 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
-                //debugger;
                 this.workFlowtService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
-                    //this.activeIndex = 2;
-                    //this.workFlowtService.indexObj.next(this.activeIndex);
 					this.workFlowtService.financeCollection = this.local;
-					
-                    //this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
                 })
-
-				
-				//this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
+                
             }
         }
         else { }
@@ -552,30 +440,9 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
-        //this.sourceCustomer.updatedBy = this.userName;
-        //this.workFlowtService.deleteAcion(this.sourceCustomer.masterCompanyId).subscribe(
-        //    response => this.saveCompleted(this.sourceCustomer),
-        //    error => this.saveFailedHelper(error));
-        //this.modal.close();
+        
 	}	
-
-	private savesuccessCompleted(user?: any) {
-		this.isSaving = false;
-
-
-		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-
-
-		this.loadData();
-	}
-	private saveSuccessHelper(role?: any) {
-		this.isSaving = false;
-		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-		this.loadData();
-
-	}
+	
 
     dismissModel() {
         this.isDeleteMode = false;
@@ -622,7 +489,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     }
 
     openCurrency(content) {
-
         this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disableSaveCurrency = false;
@@ -633,14 +499,10 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         this.currencyName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openCrediTerms(content) {
-
         this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disableSaveCreditTerms = false;
@@ -656,12 +518,12 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     }
 
 
+    // Loading Credit Terms
 	CreditTermsHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedCreditTerms) {
 				if (value == this.selectedCreditTerms.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveCreditTerms = true;
 
 				}
@@ -675,12 +537,12 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 	}
 
 
+    // Currency Filter
 	currencyHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.SelectedCurrencyInfo) {
 				if (value == this.SelectedCurrencyInfo.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveCurrency = true;
 
 				}
@@ -694,7 +556,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 	}
 
 	CreditTermsCode(event) {
-		//debugger;
 		if (this.allcreditTermInfo) {
 
 			for (let i = 0; i < this.allcreditTermInfo.length; i++) {
@@ -709,9 +570,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		}
 	}
 	CurrencyInfo(event) {
-		//debugger;
 		if (this.allCurrencyInfo) {
-
 			for (let i = 0; i < this.allCurrencyInfo.length; i++) {
 				if (event == this.allCurrencyInfo[i].code) {
 					this.sourceAction.code = this.allCurrencyInfo[i].code;
@@ -729,7 +588,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		this.workFlowtService.contactCollection = this.local;
 		this.activeIndex = 3;
 		this.workFlowtService.indexObj.next(this.activeIndex);
-		//this.saveCompleted(this.sourceCustomer);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
 
 	}
@@ -737,16 +595,14 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		this.workFlowtService.contactCollection = this.local;
 		this.activeIndex = 1;
 		this.workFlowtService.indexObj.next(this.activeIndex);
-		//this.saveCompleted(this.sourceCustomer);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
 
 	}
 
+    // Load Currency data
     private loadCurrencyData() {
-        // debugger;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.currencyService.getCurrencyList().subscribe(
             results => this.onCurrecyLoad(results[0]),
             error => this.onDataLoadFailed(error)
@@ -754,32 +610,26 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
     }
     private onCurrecyLoad(getCurrencyList: Currency[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCurrencyList;
 
         this.allCurrencyInfo = getCurrencyList;
     }
+
+    // Save Currency
     saveCurrecy() {
-
-        // debugger;
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.code = this.currencyName;
             this.sourceAction.masterCompanyId = 1;
             this.currencyService.newAddcurrency(this.sourceAction).subscribe(data => {
-               // this.sourceCustomer.curencyId = data.currencyId;
 				this.loadCurrencyData();
 				this.saveCompleted(this.sourceAction);
 				this.sourceCustomer.currencyId = data.currencyId;
             });
-            //role => this.saveSuccessHelper(role),
-            //error => this.saveFailedHelper(error));
         }
         else {
 
@@ -793,11 +643,11 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
         this.modal.close();
     }
-	filterCurrency(event) {
 
+    // Filetr Currency
+	filterCurrency(event) {
 		this.currencyCollection = [];
 		if (this.allCurrencyInfo) {
-
 			for (let i = 0; i < this.allCurrencyInfo.length; i++) {
 				let currencyName = this.allCurrencyInfo[i].code;
 				if (currencyName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
@@ -805,13 +655,11 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 				}
 			}
 		}
-	}
+    }
+
+
     //-------Credit Terms----
-
-
-
     private loadCreditTermsData() {
-        // debugger;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
@@ -822,16 +670,14 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
     }
     private onCreditTermsdata(getCreditTermsList: CreditTerms[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCreditTermsList;
         this.allcreditTermInfo = getCreditTermsList;
     }
 
+    // Save Credit Terms
     saveCreditTermsdata() {
-
-   
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
@@ -857,9 +703,8 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         this.modal.close();
 	}
 
+   
 	SaveCreditModel() {
-
-		debugger;
 		this.isSaving = true;
 		if (this.isEditMode == false) {
 			this.sourceAction.createdBy = this.userName;
@@ -883,6 +728,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		this.modal.close();
 	}
 
+    // Filetr Credit Terms
     filtercreditTerms(event) {
 		this.creditTermsCollection = [];
 		if (this.allcreditTermInfo) {
@@ -895,29 +741,23 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		}
     }
 
-    opentaxratemodel(content) {
 
+    opentaxratemodel(content) {
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = new TaxRate();
         this.sourceAction.isActive = true;
         this.taxRateName = "";
-
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
-
+    // Filter Taxrates///
     filterTaxRates(event) {
-
         this.taxratecollection = [];
         for (let i = 0; i < this.allTaxrateInfo.length; i++) {
             let taxRateName = this.allTaxrateInfo[i].taxTypeId;
@@ -927,13 +767,9 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         }
     }
 
-
+    // Save Taxrate
     taxratesavemethod() {
-
-         debugger;
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -943,7 +779,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
               
         }
         else {
-
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.taxTypeId = this.taxRateName;
             this.sourceAction.masterCompanyId = 1;
@@ -951,17 +786,14 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
-
-       // this.modal.close();
 	}
 
+    // Filetr Tax types
 	filterTaxTypes(event) {
-
 		this.localCollection = [];
 		for (let i = 0; i < this.allTaxTypes.length; i++) {
 			let taxTypeName = this.allTaxTypes[i].description;
 			if (taxTypeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-
 				this.actionamecolle.push([{
 					"taxTypeId": this.allTaxTypes[i].taxTypeId,
 					"taxTypeName": taxTypeName
@@ -981,9 +813,10 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 				this.disableSave = false;
 			}
 		}
-	}
+    }
+
+    //Filter Part//
 	partnmId(event) {
-		//debugger;
 		for (let i = 0; i < this.actionamecolle.length; i++) {
 			if (event == this.actionamecolle[i][0].taxTypeName) {
 				this.disableSave = true;
@@ -999,6 +832,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		this.allTaxTypes = allWorkFlows;
 	}
 
+    // Load TaType//
 	private loadTaxTypeData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -1013,29 +847,26 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
 	}
 
+    // Load Integration Data
     private integrationData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.inteservice.getWorkFlows().subscribe(
             results => this.onDatainteSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 
     }
-    private onDatainteSuccessful(allWorkFlows: any[]) {
 
+    private onDatainteSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
         this.allIntegrationInfo = allWorkFlows;
     }
 
     integratn(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = new Integration();
@@ -1047,8 +878,8 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         }, () => { console.log('Backdrop click') })
     }
 
+    // Filter Integration//
     filterintegrations(event) {
-
         this.localintegration = [];
         for (let i = 0; i < this.allIntegrationInfo.length; i++) {
             let integrationName = this.allIntegrationInfo[i].description;
@@ -1058,10 +889,9 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         }
     }
 
+    // Save Integration
     saveintegration() {
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -1070,21 +900,17 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
         }
         else {
-
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.integrationName;
             this.inteservice.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
-
-        //this.modal.close();
 	}
 
 	openDiscount(content) {
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-
 		this.isSaving = true;
 		this.loadMasterCompanies();
 		this.sourceAction = new DiscountValue();
@@ -1092,9 +918,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		this.discontValue = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 
@@ -1102,8 +925,8 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 
 	}
 
+    // Filter Discount
 	filterDiscountvalue(event) {
-		
 		this.discountcollection = [];
 		for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
 			let discontValue = this.alldiscountvalueInfo[i].discontValue;
@@ -1116,9 +939,9 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 			}
 			}
 		}
-	
+
+    // Load Discount data
 	private loadDiscountData() {
-		// debugger;
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
@@ -1137,15 +960,13 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		this.alldiscountvalueInfo = getDiscountList;
 	}
 
+    // Add Discount
 	editItemCloseModel() {
-
-		// debugger;
 		this.isSaving = true;
 		if (this.isEditMode == false) {
 			this.sourceAction.createdBy = this.userName;
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.discontValue = this.discontValue;
-			//this.sourceAction.masterCompanyId = 1;
 			this.workFlowtService.newAddDiscount(this.sourceAction).
 				subscribe(data => {
 				this.loadDiscountData()
@@ -1174,7 +995,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 			let value = event.target.value.toLowerCase();
 			if (this.selectedConsume) {
 				if (value == this.selectedConsume.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveConsume = true;
 
 				}
@@ -1188,9 +1008,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 	}
 
 	discountvaluedesc(event) {
-		//
 		if (this.alldiscountvalueInfo) {
-
 			for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
 				if (event == this.alldiscountvalueInfo[i].discontValue) {
 					this.sourceCustomer.itemClassificationCode = this.alldiscountvalueInfo[i].discontValue;
@@ -1203,7 +1021,6 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 		}
 	}
 	private onTaxrateDetails(getEmployeeCerficationList: any[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getEmployeeCerficationList;
@@ -1212,17 +1029,14 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
 			for (let i = 0; i < this.allTaxratedetails.length; i++)
 				this.taxRateValues.push(
 					{ value: this.allTaxratedetails[i].taxTypeId, label: this.allTaxratedetails[i].description },
-					//{ value: '2', label: 'Shift 1' },
-					//{ value: '3', label: 'Shift 1' },
-					//{ value: '4', label: 'Shift 1' },
 
 				);
 		}
-	}
+    }
+    // Load Taxrate
 	private taxRate() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.taxRateService.getTaxRateList().subscribe(
 			results => this.onTaxrateDetails(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -1259,9 +1073,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
     }
 
     onSelectmarkUp(event) {
-        //
         if (this.allMarkUpList) {
-
             for (let i = 0; i < this.allMarkUpList.length; i++) {
                 if (event == this.allMarkUpList[i].markUpvalue) {
                     this.sourceCustomer.itemClassificationCode = this.allMarkUpList[i].markUpvalue;
@@ -1273,12 +1085,7 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         }
     }
 
-    private markUpLoadData(getMarkUpValues: MarkUpPercentage[]) {
-        this.loadingIndicator = false;
-        this.dataSource.data = getMarkUpValues;
-        this.allMarkUpList = getMarkUpValues;
-    }
-
+    // Load markup data
     private loadMarkUpData() {
         this.loadingIndicator = true;
         this.workFlowtService.getMarkUpList().subscribe(
@@ -1286,10 +1093,16 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
             error => this.onDataLoadFailed(error)
         );
     }
+    private markUpLoadData(getMarkUpValues: MarkUpPercentage[]) {
+        this.loadingIndicator = false;
+        this.dataSource.data = getMarkUpValues;
+        this.allMarkUpList = getMarkUpValues;
+    }
 
+   
+    // Filter Markup
 
     filterForMarkUp(event) {
-
         this.markUpCollection = [];
         if (this.allMarkUpList) {
             for (let i = 0; i < this.allMarkUpList.length; i++) {
@@ -1305,8 +1118,9 @@ export class CustomerFinancialInformationComponent implements OnInit, AfterViewI
         }
     }
 
-    saveMarkUpPercentage() {
 
+    // Save Markup
+    saveMarkUpPercentage() {
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;

@@ -87,13 +87,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.loademployeesexperties();
 		this.multiLeavelist();
 		this.EmployeeTrainingType();
-		//this.shiftValues = [
-		//	{ value: '1', label: 'Shift 1' },
-		//	{ value: '2', label: 'Shift 1' },
-		//	{ value: '3', label: 'Shift 1' },
-		//	{ value: '4', label: 'Shift 1' },
-
-		//];
 		this.shift();
 		this.Countries();
 		this.EmployeeLeaveType();
@@ -135,33 +128,22 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	bulist: any[] = [];
 	divisionlist: any[] = [];
 	Active: string = "Active";
-	allAircraftManufacturer: any[]=[] ;
+    allAircraftManufacturer: any[] = [];
+    sourceEmployee: any = {};
 	constructor(private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
-			//debugger;
+		
 			this.sourceEmployee = this.employeeService.listCollection;
 			this.sourceEmployee.startDate = new Date();
 			this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
-			//var dt = new Date(this.sourceEmployee.dateOfBirth);
-			//var date = new Date(this.sourceEmployee.dateOfBirth).toDateString("yyyy-MM-dd");
-
-			//var d = new Date(this.sourceEmployee.dateOfBirth);
-			//var curr_date = d.getDate();
-			//var curr_month = d.getMonth() + 1; //Months are zero based
-			//var curr_year = d.getFullYear();
-			//this.sourceEmployee.dateOfBirth = curr_year + "-" + +"0" + curr_month + "-" + curr_date;
-
 			if (this.local) {
-
 				this.employeeService.employeeCollection = this.local;
 			}
 
 			if (this.sourceEmployee.inMultipleShifts == true) {
 				this.sourceEmployee.multiShift = "multiShift";
-
-
 				this.showsingle = false;
 				this.showMultiple = true;
 			}
@@ -179,8 +161,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.sourceEmployee.yearlypayType = "Yearly";
 				this.yearly = true
 			}
-			//document.write(curr_year + "-" + curr_month + "-" + curr_date);
-
 		}
 		this.translationService.closeCmpny = false;
 
@@ -191,14 +171,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		if (click == 'single') {
 			this.showsingle = true;
 			this.showMultiple = false;
-
 			this.sourceEmployee.inMultipleShifts = true;
 
 		}
 		if (click == 'multiple') {
 			this.showMultiple = true;
 			this.showsingle = false;
-
 			this.sourceEmployee.inMultipleShifts = false;
 		}
 
@@ -216,7 +194,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		}
 
 	}
-	sourceEmployee: any = {};
+	
 
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -232,9 +210,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-
-
-
 		this.selectedColumns = this.cols;
 
 	}
@@ -242,7 +217,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	private loadMasterCompanies() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.masterComapnyService.getMasterCompanies().subscribe(
 			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -253,7 +227,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	private shift() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.employeeService.getshift().subscribe(
 			results => this.onshiftData(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -263,7 +236,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	private Countries() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.employeeService.getCountries().subscribe(
 			results => this.onCountryloadsuccessfull(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -273,7 +245,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	private EmployeeTrainingType() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.employeeService.getEmployeeTrainingType().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -282,7 +253,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	private EmployeeLeaveType() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.employeeService.getEmployeeLeaveType().subscribe(
 			results => this.onLeavedata(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -299,28 +269,24 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.applyFilter(this.dataSource.filter);
 	}
 	private onDataLoadSuccessful(getEmployeeCerficationList: any[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getEmployeeCerficationList;
 		this.allEmployeeinfo = getEmployeeCerficationList;
 	}
 	private onLeavedata(getEmployeeCerficationList: any[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getEmployeeCerficationList;
 		this.allLeaves = getEmployeeCerficationList;
 	}
 	private onCountryloadsuccessfull(getEmployeeCerficationList: any[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getEmployeeCerficationList;
 		this.allCountries = getEmployeeCerficationList;
 	}
 	private onshiftData(getEmployeeCerficationList: any[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getEmployeeCerficationList;
@@ -330,9 +296,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			for (let i = 0; i < this.allShiftdetails.length; i++)
 				this.shiftValues.push(
 					{ value: this.allShiftdetails[i].shiftId, label: this.allShiftdetails[i].description },
-					//{ value: '2', label: 'Shift 1' },
-					//{ value: '3', label: 'Shift 1' },
-					//{ value: '4', label: 'Shift 1' },
+					
 
 				);
 		}
@@ -355,20 +319,15 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 	
 	private onmultiLeavedata(getMultiLeaveList: any[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getMultiLeaveList;
 		this.allLeaveDetails = getMultiLeaveList;
 		if (this.allLeaveDetails.length > 0) {
-			//this.leavemultiValues=[];
 			for (let i = 0; i < this.allLeaveDetails.length; i++)
 				this.leavemultiValues.push(
 					{ value: this.allLeaveDetails[i].employeeLeaveTypeId, label: this.allLeaveDetails[i].description },
-					//{ value: '2', label: 'Shift 1' },
-					//{ value: '3', label: 'Shift 1' },
-					//{ value: '4', label: 'Shift 1' },
-
+					
 				);
 		}
 		let valAirCraft = [];
@@ -465,16 +424,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-		// debugger;
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-
 		this.auditHisory = auditHistory;
-
-
 		this.modal = this.modalService.open(content, { size: 'lg' });
-
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -483,7 +436,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	}
 
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allComapnies = allComapnies;
@@ -491,7 +443,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	}
 
 	private onDataLoadFailed(error: any) {
-		// alert(error);
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 
@@ -505,7 +456,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			this.employeeService.updateEmployee(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
 		else {
 			this.sourceAction = rowData;
@@ -515,33 +465,25 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			this.employeeService.updateEmployee(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
 
 	}
 
 	open(content) {
-
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-
 		this.isSaving = true;
 		this.loadMasterCompanies();
-
 		this.sourceAction.isActive = true;
 		this.employeeName = "";
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 
 
 	openDelete(content, row) {
-
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceAction = row;
@@ -554,7 +496,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	openjobtitle(content) {
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-
 		this.isSaving = true;
 		this.loadMasterCompanies();
 		this.sourceAction = new JobTitle();
@@ -562,9 +503,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.jobName = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
@@ -587,7 +525,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	openemployeeExpertise(content) {
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-
 		this.isSaving = true;
 		this.loadMasterCompanies();
 		this.sourceAction = new EmployeeExpertise();
@@ -595,30 +532,15 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.employeeName = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
-			console.log('When user closes');
+            console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-
-
 
 
 	}
 
-	//nextClick() {
-	//	this.workFlowtService.generalCollection = this.local;
-	//	this.activeIndex = 1;
-	//	this.workFlowtService.indexObj.next(this.activeIndex);
-	//	//this.saveCompleted(this.sourceCustomer);
-	//	this.route.navigateByUrl('/customersmodule/customerpages/app-customer-financial-information');
-
-	//}
-
+	
 	openEdit(content, row) {
-
 		this.isEditMode = true;
-
 		this.isSaving = true;
 		this.loadMasterCompanies();
 		this.sourceAction = row;
@@ -629,22 +551,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
-	//openView(content, row) {
-
-	//    this.sourceAction = row;
-	//    this.ataChapter_Name = row.ataChapterName;
-	//    this.ataChapterCategory = row.ataChapterCategory;
-	//    this.memo = row.memo;
-	//    this.createdBy = row.createdBy;
-	//    this.updatedBy = row.updatedBy;
-	//    this.createdDate = row.createdDate;
-	//    this.updatedDate = row.updatedDate;
-	//    this.loadMasterCompanies();
-	//    this.modal = this.modalService.open(content, { size: 'sm' });
-	//    this.modal.result.then(() => {
-	//        console.log('When user closes');
-	//    }, () => { console.log('Backdrop click') })
-	//}
+	
 	openHelpText(content) {
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -657,14 +564,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	openHist(content, row) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
-
 		this.sourceAction = row;
-
-
-
-		//this.isSaving = true;
-		// debugger;
 		this.employeeService.historyEmployee(this.sourceAction.employeeId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
@@ -674,11 +574,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 	editItemAndCloseModel() {
-
-		// debugger;
-
 		this.isSaving = true;
-
 		if (!this.sourceEmployee.employeeId) {
 			this.sourceEmployee.createdBy = this.userName;
 			this.sourceEmployee.updatedBy = this.userName;

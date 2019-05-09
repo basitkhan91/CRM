@@ -23,7 +23,6 @@ declare const google: any;
 @Component({
     selector: 'app-customer-shipping-information',
     templateUrl: './customer-shipping-information.component.html',
-   // styleUrls: ['./customers-shipping-information.component.scss'],
     animations: [fadeInOut]
 })
 /** anys component*/
@@ -34,10 +33,8 @@ export class CustomerShippingInformationComponent {
 	activeIndex: number;
 	public overlays: any[];
 	options: any;
-	//options: { center: { lat: any; lng: any; }; zoom: number; };
 	showCustomerSiteName: boolean;
 	showCustomerShipToAddress1: boolean;
-	
 	showCustomerShipToCity: boolean;
 	showCustomerShipToStateProv: boolean;
 	showCustomerShipToPostalCode: boolean;
@@ -67,24 +64,8 @@ export class CustomerShippingInformationComponent {
 	selectedShipVia: any;
 	disablesave: boolean;
     shipviacollection: any[];
-	ngOnInit(): void {
-		this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-shipping-information';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.workFlowtService.ShowPtab = true;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
-        this.countrylist();
-		if (this.local) {
-			this.loadData();
-		}
-		this.options = {
-			center: { lat: 36.890257, lng: 30.707417 },
-			zoom: 12
-		};
-
-	}
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-	//@ViewChild('Customerclassificationcomponent') patientContactPopupModal: ModalDirective
 	filteredBrands: any[];
 	displayedColumns = ['actionId', 'companyName', 'description', 'memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
 	dataSource: MatTableDataSource<any>;
@@ -112,11 +93,9 @@ export class CustomerShippingInformationComponent {
 	localCollection: any[] = [];
 	display: boolean = false;
 	modelValue: boolean = false;
-	/** Actions ctor */
-
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
-
+    public sourceCustomer: any = {};
 	constructor(private http: HttpClient, private router: Router,  private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
 		this.dataSource = new MatTableDataSource();
@@ -151,33 +130,36 @@ export class CustomerShippingInformationComponent {
 		
 		
 	}
-	public sourceCustomer: any = {};
+	
+    ngOnInit(): void {
+        this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-shipping-information';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.workFlowtService.ShowPtab = true;
+        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
+        this.countrylist();
+        if (this.local) {
+            this.loadData();
+        }
+        this.options = {
+            center: { lat: 36.890257, lng: 30.707417 },
+            zoom: 12
+        };
 
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
-	}
+    }
+    // get Google Maps data
 	getlatlng(address) {
-
-		//debugger;
 		this.checkAddress = true;
-		return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-			//alert(data);
+		return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {			//alert(data);
 			this.options = {
 				center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
 				zoom: 12
 			};
 			this.overlays = [
 				new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
-				//new google.maps.Marker({ position: { lat: 36.883707, lng: 30.689216 }, title: "Ataturk Park" }),
-				//new google.maps.Marker({ position: { lat: 36.885233, lng: 30.702323 }, title: "Oldtown" }),
-				//new google.maps.Polygon({
-				//    paths: [
-				//        { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
-				//    ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
-				//}),
-				//new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-				//new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
+				
 			];
 			return data;
 
@@ -185,46 +167,13 @@ export class CustomerShippingInformationComponent {
 		});
 	}
 
-	private getgeneralInnfo() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.workFlowtService.getWorkFlows().subscribe(
-			results => this.ongeneralDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
-	private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
-
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allgeneralInfo = allWorkFlows;
-		if (this.workFlowtService.isCOntact == true) {
-			this.Customername = this.allgeneralInfo[0].CustomerName;
-			this.CustomerCode = this.allgeneralInfo[0].CustomerCode;
-		}
-		//this.isEditMode = true;
-		this.customerId = this.allgeneralInfo[0].customerId;
-		console.log(this.allgeneralInfo);
-	}
-	private loadAddressDara() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.workFlowtService.getAddressDetails().subscribe(
-			results => this.onAddressDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-		//this.navigate();
-
+    
     }
 
-
+    // Country List
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getCountrylist().subscribe(
             results => this.onDatacountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -244,26 +193,17 @@ export class CustomerShippingInformationComponent {
 
     }
 
-	private onAddressDataLoadSuccessful(alladdress: any[]) {
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = alladdress;
-		this.allAddresses = alladdress;
-		this.addressId = this.allAddresses[0].addressId;
-
-	}
+    // Load Customer Shipping details
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.workFlowtService.getCustomerShipAddressGet(this.local.customerId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
 
 		this.cols = [
-
 			{ field: 'siteName', header: 'Site Name' },
 			{ field: 'address1', header: 'Address1' },
 			{ field: 'address2', header: 'Address2' },
@@ -279,6 +219,7 @@ export class CustomerShippingInformationComponent {
 
 	}
 
+    // Load Ship Via Collection
 
 	private loadShipViaCollection(rowData) {
 		this.alertService.startLoadingMessage();
@@ -301,19 +242,17 @@ export class CustomerShippingInformationComponent {
 
 		this.selectedShipViaColumn = this.shipViacols;
 
-	}
+    }
+
 	openShipViaEdit(rowObject) {
 		this.isEditMode = true;
-
 		this.isSaving = true;
 		this.shipViaObj = rowObject;
 		this.loadMasterCompanies();
 	}
 
-
+    // Load Master Comapines
 	private loadMasterCompanies() {
-
-
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
@@ -323,10 +262,21 @@ export class CustomerShippingInformationComponent {
 		);
 
 	}
-	//openClassification(content) {
-	//	this.Customerclasscmpnt.open(content);
-	//}
+    private onDataLoadSuccessful(allWorkFlows: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allActions = allWorkFlows;
+    }
 
+
+    // On Ship Via Load
+    private onShipViadetails(allWorkFlows: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allShipViaDetails = allWorkFlows;
+    }
 	public applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue;
 	}
@@ -385,27 +335,12 @@ export class CustomerShippingInformationComponent {
 		// Causes the filter to refresh there by updating with recently added data.
 		this.applyFilter(this.dataSource.filter);
 	}
-	private onDataLoadSuccessful(allWorkFlows: any) {
-		//debugger;
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allActions = allWorkFlows;
-	}
-	private onShipViadetails(allWorkFlows: any) {
-		//debugger;
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allShipViaDetails = allWorkFlows;
-	}
 
+    // Filter Names
 	filterActions(event) {
-
 		this.localCollection = [];
 		for (let i = 0; i < this.allActions.length; i++) {
 			let actionName = this.allActions[i].description;
-
 			if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 				this.localCollection.push(actionName);
 
@@ -414,16 +349,10 @@ export class CustomerShippingInformationComponent {
 	}
 
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-		// debugger;
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-
 		this.auditHisory = auditHistory;
-
-
 		this.modal = this.modalService.open(content, { size: 'lg' });
-
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -447,12 +376,10 @@ export class CustomerShippingInformationComponent {
 	}
 
 	open(content) {
-
 		this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.isSaving = true;
 		this.loadMasterCompanies();
-		//this.sourceCustomer.isActive = true;
 		this.actionName = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -473,9 +400,7 @@ export class CustomerShippingInformationComponent {
 	}
 
 	openEdit(row) {
-
 		this.isEditMode = true;
-
 		this.isSaving = true;
 		this.sourceCustomer= row;
 		this.loadMasterCompanies();
@@ -492,22 +417,11 @@ export class CustomerShippingInformationComponent {
 		else {
 			this.sourceCustomer.expirationDate = new Date();
 		}
-		// this.actionName = this.sourceCustomer.description;
-		//this.modal = this.modalService.open(content, { size: 'sm' });
-		//this.modal.result.then(() => {
-		//    console.log('When user closes');
-		//}, () => { console.log('Backdrop click') })
 	}
 	openShippinggView(content, row) {
 
 		this.sourceViewforShipping = row;
 		this.sourceViewforShippingforshipVia = row;
-		//this.allViewforContact.firstName = row.firstName;
-		//this.contactTitle = row.contactTitle;
-		//this.workPhone = row.workPhone;
-		//this.email = row.email;
-		//this.mobilePhone = row.mobilePhone;
-		//this.fax = row.fax;
 		this.createdBy = row.createdBy;
 		this.updatedBy = row.updatedBy;
 		this.createddate = row.createdDate;
@@ -528,11 +442,7 @@ export class CustomerShippingInformationComponent {
 	openHist(content, row) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
-
 		this.shipViaObj = row;
-
-
 		this.isSaving = true;
 		//debugger;
 		this.workFlowtService.shipviaHistory(this.sourceCustomer.CustomerShippingId).subscribe(
@@ -544,13 +454,8 @@ export class CustomerShippingInformationComponent {
 	openShipaddressHistory(content, row) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
-
 		this.sourceCustomer= row;
-
-
 		this.isSaving = true;
-		//debugger;
 		this.workFlowtService.shipaddressHistory(this.sourceCustomer.CustomerShippingAddressId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
@@ -580,15 +485,8 @@ export class CustomerShippingInformationComponent {
 
 	}
 
-	sample() {
-		if (!(this.sourceCustomer.siteName && this.sourceCustomer.address1 && 
-			 this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
-		)) {
-			this.display = true;
-			this.modelValue = true;
-		}
-	}
 
+    // Save Customer Shipping info
     editItemAndCloseModel() {
         if (!(this.sourceCustomer.siteName && this.sourceCustomer.address1 &&
             this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
@@ -610,11 +508,8 @@ export class CustomerShippingInformationComponent {
                     this.localCollection = data;
 					this.loadData();
 					this.savesuccessCompleted(this.sourceCustomer);
-                    //this.updateCustomerShippingAddress(this.localCollection);
 					this.sourceCustomer = {};
 				})
-				
-				//this.router.navigateByUrl('/customersmodule/customerpages/app-customer-sales-person');
 
             }
             else {
@@ -630,24 +525,21 @@ export class CustomerShippingInformationComponent {
 
 
 				})
-				
-				//this.router.navigateByUrl('/customersmodule/customerpages/app-customer-sales-person');
             }
 		}
 		
         else { }
 
-	}
+    }
+
+    // Save Customer ship via
 	saveCustomerShipViaDetails() {
-		//debugger;
 		this.isSaving = true;
 		if (!this.shipViaObj.customerShippingId) {
 			this.shipViaObj.createdBy = this.userName;
 			this.shipViaObj.updatedBy = this.userName;
 			this.shipViaObj.masterCompanyId = 1;
 			this.shipViaObj.isActive = true;
-			//this.shipViaObj.customerId = updatedCollection.customerId;
-			//this.shipViaObj.CustomerShippingId = updatedCollection.CustomerShippingId;
 			this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
 				this.shipViaCollection = data;
 				this.loadShipViaCollection(this.shipViaCollection);
@@ -660,9 +552,6 @@ export class CustomerShippingInformationComponent {
 
 
 				}
-
-				//this.updateCustomerShippingAddress(this.localCollection);
-
 			})
 
 		}
@@ -703,20 +592,15 @@ export class CustomerShippingInformationComponent {
 		this.isSaving = true;
 		this.loadShipViaCollection(rowData);
 		this.loadMasterCompanies();
-		//this.sourceAction = new CustomerClassification();
 		this.sourceAction.isActive = true;
-		//this.CustomerName = "";
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 
+    // Update Customer shipping
 	updateCustomerShippingAddress(updateObj: any) {
-		debugger;
 		this.workFlowtService.updateCustomershippingAddressdetails(updateObj, this.local.customerId).subscribe(data => {
 			this.CustomershippingAddressdetails = data;
 			this.workFlowtService.newShippingAddWithAddress(this.sourceCustomer, this.CustomershippingAddressdetails.CustomerShippingAddressId).subscribe(data => {
@@ -738,8 +622,9 @@ export class CustomerShippingInformationComponent {
 			response => this.saveCompleted(this.sourceCustomer),
 			error => this.saveFailedHelper(error));
 		//this.modal.close();
-	}
+    }
 
+    // Delete  shipping
 	deleteItemShippingCloseModel(CustomerShippingId) {
 		this.isSaving = true;
 		this.shipViaObj.isActive = false;
@@ -765,7 +650,6 @@ export class CustomerShippingInformationComponent {
 
 	private saveCompleted(user?: any) {
 		this.isSaving = false;
-
 		if (this.isDeleteMode == true) {
 			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
 			this.isDeleteMode = false;
@@ -779,12 +663,7 @@ export class CustomerShippingInformationComponent {
 	}
 	private savesuccessCompleted(user?: any) {
 		this.isSaving = false;
-
-
 		this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
-
-
-
 		this.loadData();
 	}
 
@@ -834,61 +713,51 @@ export class CustomerShippingInformationComponent {
 			this.sourceCustomer.expirationDate = new Date();
 		}
 
-	}
+    }
+
+    // Next Click
 	nextClick() {
 		if (this.local) {
 			this.workFlowtService.shippingCollection = this.local;
 		}
-
 		this.activeIndex = 5;
 		this.workFlowtService.indexObj.next(this.activeIndex);
-		//this.saveCompleted(this.sourceCustomer);
 		this.router.navigateByUrl('/customersmodule/customerpages/app-customer-sales-person');
-	}
+    }
+
+    // back click
 	backClick() {
 		this.workFlowtService.contactCollection = this.local;
 		this.activeIndex = 3;
 		this.workFlowtService.indexObj.next(this.activeIndex);
-		//this.saveCompleted(this.sourceCustomer);
 		this.router.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
 
 	}
-    //filtercountry(event) {
 
-    //    this.countrycollection = [];
-    //    if (this.allCountryinfo.length > 0) {
-    //        for (let i = 0; i < this.allCountryinfo.length; i++) {
-    //            let countryName = this.allCountryinfo[i].nice_name;
-    //            if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //                this.countrycollection.push(countryName);
-    //            }
-    //        }
-    //    }
-    //}
+    // Save country
     saveCountry() {
-
         this.sourceAction.createdBy = this.userName;
         this.sourceAction.updatedBy = this.userName;
-
         this.workFlowtService.newCountry(this.sourceAction).subscribe(data => { this.countrylist() })
 
 
     }
-    opencountry(content) {
 
+
+    opencountry(content) {
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
-        //this.sourceAction = new Integration();
         this.sourceAction.isActive = true;
         this.countryName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-	}
+    }
+
+    // Filter Country
 	filtercountry(event) {
 
 		this.countrycollection = [];
@@ -906,7 +775,6 @@ export class CustomerShippingInformationComponent {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedCountries) {
 				if (value == this.selectedCountries.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disablesave = true;
 				}
 				else {
@@ -922,7 +790,6 @@ export class CustomerShippingInformationComponent {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedShipVia) {
 				if (value == this.selectedShipVia.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disablesave = true;
 				}
 				else {
@@ -933,9 +800,9 @@ export class CustomerShippingInformationComponent {
 		}
 	}
 
+    // On country selected
 	onCountrieselected(event) {
 		if (this.allCountryinfo) {
-
 			for (let i = 0; i < this.allCountryinfo.length; i++) {
 				if (event == this.allCountryinfo[i].nice_name) {
 					this.sourceCustomer.nice_name = this.allCountryinfo[i].nice_name;
@@ -945,23 +812,22 @@ export class CustomerShippingInformationComponent {
 				}
 			}
 		}
-	}
+    }
+    // On ship via load
 	onShipVia(event) {
 		if (this.allShipViaDetails) {
-
 			for (let i = 0; i < this.allShipViaDetails.length; i++) {
 				if (event == this.allShipViaDetails[i].shipVia) {
 					this.shipViaObj.shipVia = this.allShipViaDetails[i].shipVia;
-					
-
 					this.selectedShipVia = event;
 				}
 			}
 		}
-	}
-	filterShipVia(event) {
+    }
 
-		this.shipviacollection = [];
+    // Filter Ship via
+	filterShipVia(event) {
+        this.shipviacollection = [];
 		if (this.allShipViaDetails.length > 0) {
 			for (let i = 0; i < this.allShipViaDetails.length; i++) {
 				let shipName = this.allShipViaDetails[i].shipVia;

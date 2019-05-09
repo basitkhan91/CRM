@@ -2,35 +2,7 @@
 	<div class="right_col" role="main">
 		<div class="x_panel" style="">
 			<div class="x_content">
-				<!--<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-			<li class="breadcrumb-item active" aria-current="page">Customer Contacts</li>
-		</ol>
-	</nav>-->
-				<!--<div class="pheading">
-		<h4 class="page-heading">Customer Setup - Contacts</h4>
-	</div>-->
-				<!--<div class="cdetails-top">
-		<div class="col-sm-12">
-			<label>Company</label>
-			<span>Silverxis</span>
-		</div>
-		<div class="col-sm-12">
-			<label>BU</label>
-			<span>Adso</span>
-		</div>
-		<div class="col-sm-12">
-			<label>Division</label>
-			<span>Development</span>
-		</div>
-		<div class="col-sm-12">
-			<label>Dept</label>
-			<span>Java</span>
-		</div>
-
-	</div>-->
-					<div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
 						<p class="fs10">
 							<label class="control-label w100">Customer Name:</label>
 							{{local?.name}}
@@ -243,24 +215,7 @@
 	<p class="lead" style="font-size:medium">Add Contact Details</p>
 	<form #userForm="ngForm" class="form-horizontal add-custustomer">
 		<div class="form-group row form-bg" style="padding:8px 5px 5px 5px;border: 1px solid #ccc;">
-			<!--<div class="checkbox col-sm-3">
-				<label class="wauto">
-					<input type="checkbox" value="" id="" style="margin-top: 1px;">
-					Is This Vendor also a Customer?
-				</label>
-			</div>-->
-			<!--<div class="form-group col-sm-4 Customer-details-heading">
-				<p class="fs10">
-					<label class="control-label w100">Customer Name:</label>
-					{{local?.name}}
-				</p>
-			</div>
-			<div class="form-group col-sm-4 Customer-details-heading">
-				<p class="fs10">
-					<label class="control-label w100">Customer Code:</label>
-					{{local?.customerCode}}
-				</p>
-			</div>-->
+		
 		</div>
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="col-xs-12">
@@ -366,35 +321,7 @@
 									<input class="form-control" (keypress)="onBlurMethod('email')" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.email">
 								</div>
 							</div>
-							<!--<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Work Phone<strong class="clr-red">*</strong></label>
-								<div class="col-sm-7">
-									<input class="form-control w100" type="text" placeholder="Work Phone" (keypress)="onBlurMethod('workPhone')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhone">- <input class="form-control w50" type="text" placeholder="Ext.">
-								</div>
-								<div class="form-group col-sm-12 Customer-details-heading" *ngIf="showworkPhone">
-									<p class="fs10">
-										Please Enter Required feilds
-
-									</p>
-								</div>
-							</div>
-
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4"></label>
-								<div class="col-sm-7"><span class="clr-red">(or)</span></div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Email <strong class="clr-red">*</strong></label>
-								<div class="col-sm-7">
-									<input class="form-control" type="text" placeholder="Email" (keypress)="onBlurMethod('email')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.email">
-								</div>
-								<div class="form-group col-sm-12 Customer-details-heading" *ngIf="showemail">
-									<p class="fs10">
-										Please Enter Required feilds
-
-									</p>
-								</div>
-							</div>-->
+							
 						</div>
 						<div class="col-sm-6 w400">
 							<div class="form-group col-sm-12">
