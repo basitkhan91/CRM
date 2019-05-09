@@ -444,7 +444,7 @@ export class AccountingCalendarComponent implements OnInit {
                 }
             }
             else {
-                alert("Please select valid start date and end date");
+                this.alertService.showMessage("Please select valid start date and end date");
             }
         }
         else {
@@ -482,7 +482,7 @@ export class AccountingCalendarComponent implements OnInit {
                         var timeDiff = Math.abs(date2.getTime() - date1.getTime());
                         var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24));
                         if (dayDifference > 1) {
-                            alert("Please Enter valid dates");
+                            this.alertService.showMessage("Please Enter valid dates");
                             showDiff = false;
                             break;
                         }
@@ -496,7 +496,7 @@ export class AccountingCalendarComponent implements OnInit {
                 for (let i = 0; i < this.completeCalendarData.length; i++) {
                     if (year == this.completeCalendarData[i].fiscalYear) {
                         addDetails = true;
-                        alert("We already have data with this Calendar Year");
+                        this.alertService.showMessage("We already have data with this Calendar Year");
                         break;
 
                     }
