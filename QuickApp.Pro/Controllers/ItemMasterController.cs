@@ -1145,19 +1145,19 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("audits/{id}")]
-        public IActionResult AuditDetails(long id)
-        {
-            var audits = _unitOfWork.Repository<ItemMasterAudit>()
-                .Find(x => x.ItemMasterId == id)
-                .OrderByDescending(x => x.ItemMasterAuditId);
+        //[HttpGet("audits/{id}")]
+        //public IActionResult AuditDetails(long id)
+        //{
+        //    var audits = _unitOfWork.Repository<ItemMasterAudit>()
+        //        .Find(x => x.ItemMasterId == id)
+        //        .OrderByDescending(x => x.ItemMasterAuditId);
 
-            var auditResult = new List<AuditResult<ItemMasterAudit>>();
+        //    var auditResult = new List<AuditResult<ItemMasterAudit>>();
 
-            auditResult.Add(new AuditResult<ItemMasterAudit> { AreaName = "Item Master", Result = audits.ToList() });
+        //    auditResult.Add(new AuditResult<ItemMasterAudit> { AreaName = "Item Master", Result = audits.ToList() });
 
-            return Ok(auditResult);
-        }
+        //    return Ok(auditResult);
+        //}
     }
 
 
