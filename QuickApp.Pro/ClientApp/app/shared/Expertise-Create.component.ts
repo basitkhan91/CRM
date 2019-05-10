@@ -44,7 +44,7 @@ export class ExpertiseCreateComponent implements OnInit,OnChanges{
         //{
 			newRow.workflowExpertiseListId = "0";
             newRow.AllowEdit=true;
-			newRow.actionId = this.workFlow.ActionId;
+			newRow.taskId = this.workFlow.taskId;
 			newRow.estimatedHours = "";
 			newRow.expertiseTypeId = "";
 			newRow.directLaborRate = "";

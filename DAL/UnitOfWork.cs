@@ -67,7 +67,7 @@ namespace DAL
         IAddress _address;
         IContactRepository _contact;
         IFinance _finance;
-        IPayment _payment;
+        //IPayment _payment;
         IShipping _shipping;
         IVendorContactRepository _vendorContactRepository;
         IVendorPaymentRepository _vendorPaymentRepository;
@@ -780,16 +780,16 @@ namespace DAL
                 return _finance;
             }
         }
-        public IPayment Payment
+        //public IPayment Payment
 
-        {
-            get
-            {
-                if (_payment == null)
-                    _payment = new PaymentRepository(_context);
-                return _payment;
-            }
-        }
+        //{
+        //    get
+        //    {
+        //        if (_payment == null)
+        //            _payment = new PaymentRepository(_context);
+        //        return _payment;
+        //    }
+        //}
         public IShipping Shipping
 
         {

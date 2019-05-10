@@ -19,44 +19,46 @@ import { NodeSetupComponent } from "../components/accounting/general-ledger/node
 import { GlaccountListComponent } from '../components/general-ledger/glaccount-list/glaccount-list.component';
 import { GlaccountCreateComponent } from '../components/general-ledger/glaccount-create/glaccount-create.component';
 import { PoRoCategoryComponent } from '../components/general-ledger/po-ro-category/po-ro-category.component';
+import { InterCompanySetupComponent } from '../components/general-ledger/intercompany-setup/intercompany-setup.component';
 //import { GLAccountCategoryComponent } from '../components/gl-account-categories/gl-account-categories.component';
 
 
 
 const generalledgerpageRoutes: Routes = [
-	{
+    {
 
 
-		path: 'generalledgerpage',
-		component: GeneralledgerPageComponent,
-		children: [
-			{ path: "app-legalentity-structure", component: LegalEntityStructureComponent, data: { title: "EntityListComponent" } },
-			{ path: "app-managemententity-structure", component: ManagementStructureComponent, data: { title: "EntitySetupComponent" } },
-			{ path: "app-entity-edit", component: EntityEditComponent, data: { title: "EntityEditComponent" } },
+        path: 'generalledgerpage',
+        component: GeneralledgerPageComponent,
+        children: [
+            { path: "app-legalentity-structure", component: LegalEntityStructureComponent, data: { title: "EntityListComponent" } },
+            { path: "app-managemententity-structure", component: ManagementStructureComponent, data: { title: "EntitySetupComponent" } },
+            { path: "app-entity-edit", component: EntityEditComponent, data: { title: "EntityEditComponent" } },
 
             { path: "app-accounting-calendar", component: AccountingCalendarComponent, data: { title: "AccountingCalendarComponent" } },
-			{ path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
-			{ path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
-			{ path: "app-entity-edit-component", component: OpenClosePeriodComponent, data: { title: "OpenClosePeriodComponent" } },
-			{ path: "app-entity-edit-component", component: AccountReportsComponent, data: { title: "AccountReportsComponent" } },
+            { path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
+            { path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
+            { path: "app-entity-edit-component", component: OpenClosePeriodComponent, data: { title: "OpenClosePeriodComponent" } },
+            { path: "app-entity-edit-component", component: AccountReportsComponent, data: { title: "AccountReportsComponent" } },
             { path: "app-entity-edit-component", component: AccountSetupComponent, data: { title: "AccountSetupComponent" } },
             { path: "app-node-setup", component: NodeSetupComponent, data: { title: "NodeSetupComponent" } },
             { path: "app-glaccount-list", component: GlaccountListComponent, data: { title: "GlAccountList" } },
             { path: "app-glaccount-create", component: GlaccountCreateComponent, data: { title: "GlAccountCreate" } },
-            { path: "app-po-ro-category", component: PoRoCategoryComponent, data: {title:"POROCategory"}}
-		]
-	}
+            { path: "app-po-ro-category", component: PoRoCategoryComponent, data: { title: "POROCategory" } },
+            { path: "app-intercompany-setup", component: InterCompanySetupComponent, data: { title: "InterCompanySetup" } }
+        ]
+    }
 ];
 
 @NgModule({
-	imports: [
-		RouterModule.forChild(generalledgerpageRoutes)
-	],
-	exports: [
-		RouterModule
-	],
-	providers: [
-		AuthService, AuthGuard
-	]
+    imports: [
+        RouterModule.forChild(generalledgerpageRoutes)
+    ],
+    exports: [
+        RouterModule
+    ],
+    providers: [
+        AuthService, AuthGuard
+    ]
 })
 export class GeneralledgerPageRoutingModule { }

@@ -7,7 +7,7 @@ export interface IExclusion{
       extended :string;
       estimatedPercentOccurance:string;  
       memo :string;
-      actionId:string;
+      taskId:string;
       workflowId:string;
       AllowEdit:boolean;
       isDeleted:boolean;

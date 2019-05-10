@@ -29,7 +29,9 @@ namespace DAL.Models
         public Nullable<decimal> OverheadCost { get; set; }
         public Nullable<decimal> StandardRate { get; set; }
         public Nullable<decimal> LaborOverheadCost { get; set; }
-        public long ActionId { get; set; }
+
+        [ForeignKey("TaskId")]
+        public long TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

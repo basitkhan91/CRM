@@ -18,14 +18,12 @@ namespace QuickApp.Pro.Controllers
     public class TaxTypeController : Controller
     {
         private IUnitOfWork _unitOfWork;
-        readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetTaxTypeById";
 
-        public TaxTypeController (IUnitOfWork unitOfWork, ILogger<ActionController> logger, IEmailer emailer)
+        public TaxTypeController (IUnitOfWork unitOfWork, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
             _emailer = emailer;
         }
 

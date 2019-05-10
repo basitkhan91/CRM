@@ -32,40 +32,42 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TreeTableModule } from "primeng/treetable";
 import { TreeModule } from 'primeng/tree';
+import { UserRolesSetupComponent } from "../components/user-role/user-role-setup.component";
 
 @NgModule({
-	imports: [
-		FlexLayoutModule,
-		FormsModule, ReactiveFormsModule,
-		QuickAppProMaterialModule,
-		TranslateModule,
-		CommonModule,
-		TableModule,
-		ButtonModule,
-		SelectButtonModule,
-		InputTextModule,
-		MultiSelectModule,
-		RolesPagesRoutingModule,
-		InputSwitchModule,
-		CheckboxModule,
-		AutoCompleteModule,
-		GMapModule
-		, RadioButtonModule, FileUploadModule, TreeTableModule, TreeModule
-	],
-	declarations: [
-		RolespagesComponent,
-		RolesListComponent,
-		RolesListByModuleComponent,
-		RolesSetupComponent,
-		RolesManagementStructureComponent
-		//AddActionsDialogComponent
-	],
-	providers: [
-		
-	],
-	entryComponents: [
-		//AddActionsDialogComponent
-	],
+    imports: [
+        FlexLayoutModule,
+        FormsModule, ReactiveFormsModule,
+        QuickAppProMaterialModule,
+        TranslateModule,
+        CommonModule,
+        TableModule,
+        ButtonModule,
+        SelectButtonModule,
+        InputTextModule,
+        MultiSelectModule,
+        RolesPagesRoutingModule,
+        InputSwitchModule,
+        CheckboxModule,
+        AutoCompleteModule,
+        GMapModule
+        , RadioButtonModule, FileUploadModule, TreeTableModule, TreeModule
+    ],
+    declarations: [
+        RolespagesComponent,
+        RolesListComponent,
+        RolesListByModuleComponent,
+        RolesSetupComponent,
+        RolesManagementStructureComponent,
+        UserRolesSetupComponent,
+        //AddActionsDialogComponent
+    ],
+    providers: [
+
+    ],
+    entryComponents: [
+        //AddActionsDialogComponent
+    ],
 
 
 })

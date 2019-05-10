@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DAL.Models
@@ -14,7 +15,9 @@ namespace DAL.Models
         public Nullable<decimal> ExtendedCost { get; set; }
         public Nullable<byte> EstimtPercentOccurrance { get; set; }
         public string Memo { get; set; }
-        public Nullable<long> ActionId { get; set; }
+
+        [ForeignKey("TaskId")]
+        public Nullable<long> TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

@@ -113,7 +113,7 @@ namespace DAL
         IVendorContactRepository vendorContactRepository { get; }
         IFinance Finance { get; }
         //IContactRepository Contact { get; }
-        IPayment Payment { get; }
+        //IPayment Payment { get; }
 
         IShipping Shipping { get; }
 

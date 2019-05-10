@@ -109,7 +109,7 @@ export class ChargesCreateComponent implements OnInit,OnChanges{
         //{
 			newRow.workflowChargesListId = "0";
             newRow.AllowEdit=true;
-			newRow.actionId = this.workFlow.ActionId;
+            newRow.taskId = this.workFlow.taskId;
 			newRow.currencyId = "0";
 			newRow.description = "";
 			newRow.extendedCost = "";

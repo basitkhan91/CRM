@@ -54,7 +54,7 @@ export class ActionService {
     }
 
     updateAction(action: Action) {     
-            return this.actionEndpoint.getUpdateActionEndpoint(action, action.actionId);
+            return this.actionEndpoint.getUpdateActionEndpoint(action, action.taskId);
     }
 
     deleteAcion(actionId: number) {

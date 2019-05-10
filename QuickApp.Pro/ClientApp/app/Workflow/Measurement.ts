@@ -8,7 +8,7 @@ export interface IMeasurement {
     Expected: string;
     Diagram: string;
     Memo: string;
-    actionId:string;
+    taskId:string;
     workflowId:string;
     AllowEdit:boolean;
     IsDeleted:boolean;

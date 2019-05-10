@@ -50,7 +50,7 @@ export class ExclusionsCreateComponent implements OnInit,OnChanges{
         //{
 			newRow.workflowExclusionId = "0";
             newRow.AllowEdit=true;
-			newRow.actionId = this.workFlow.ActionId;
+            newRow.taskId = this.workFlow.taskId;
 			newRow.partDescription = "";
 			newRow.estimtPercentOccurrance = "";
 			newRow.extendedCost = "";

@@ -31,7 +31,10 @@ namespace DAL.Models
         public Nullable<decimal> ForexRate { get; set; }
         public Nullable<long> VendorId { get; set; }
         public decimal VendorUnitPrice { get; set; }
-        public long ActionId { get; set; }
+
+        [ForeignKey("TaskId")]
+        public long TaskId { get; set; }
+
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

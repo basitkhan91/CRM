@@ -29,7 +29,7 @@ namespace QuickApp.Pro.Authorization
             _claimsFactory = claimsFactory;
         }
 
-        public async Task GetProfileDataAsync(ProfileDataRequestContext context)
+        public async System.Threading.Tasks.Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);
@@ -51,7 +51,7 @@ namespace QuickApp.Pro.Authorization
         }
 
 
-        public async Task IsActiveAsync(IsActiveContext context)
+        public async System.Threading.Tasks.Task IsActiveAsync(IsActiveContext context)
         {
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);

@@ -5,13 +5,8 @@ using System.Text;
 namespace DAL.Repositories.Interfaces
 {
 
-    public interface IPayment : IRepository<DAL.Models.Action>
+    public interface IPayment : IRepository<DAL.Models.Task>
     {
-        IEnumerable<DAL.Models.Action> GetAllPayment();
-
-        
-
-        //  void CreateAction(DAL.Models.Action action);
-
+        //IEnumerable<DAL.Models.Task> GetAllPayment();
     }
 }

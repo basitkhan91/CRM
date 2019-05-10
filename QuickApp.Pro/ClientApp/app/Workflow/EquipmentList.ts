@@ -5,7 +5,7 @@ export interface IEquipmentList
     AssetType:string;
     AssetDescription:string;
     Quantity:string;
-    actionId:string;
+    taskId:string;
 	workflowId:string;
     AllowEdit:boolean;
     IsDeleted:boolean;

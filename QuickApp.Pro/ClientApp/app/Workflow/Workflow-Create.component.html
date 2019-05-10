@@ -466,7 +466,7 @@
 						<label>Actions</label><br />
 						<div class="inner-addon col-sm-7 inline-block display-flex">
 							<select class="form-control custom-select"
-									[(ngModel)]="currentActionId"
+									[(ngModel)]="currenttaskId"
 									(change)="onActionChange()">
 								<option value="0">Select</option>
 								<option *ngFor="let action of actions"
@@ -506,8 +506,8 @@
 						<div class="list-group">
 							<a href="javascript:void(0)"
 							   class="list-group-item actrmv"
-							   id='tab_{{workFlow.ActionId}}'
-							   (click)="SetCurrectTab(workFlow.ActionId)"
+							   id='tab_{{workFlow.taskId}}'
+							   (click)="SetCurrectTab(workFlow.taskId)"
 							   *ngFor="let workFlow of workFlowList">
 								{{workFlow.ActionName}}
 							</a>

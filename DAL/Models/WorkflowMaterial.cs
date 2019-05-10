@@ -24,7 +24,9 @@ namespace DAL.Models
         public long WorkflowId { get; set; }
         public long ItemMasterId { get; set; }
         public long? ItemClassificationId { get; set; }
-        public Nullable<long> ActionId { get; set; }
+
+        [ForeignKey("TaskId")]
+        public Nullable<long> TaskId { get; set; }
         public Nullable<short> Quantity { get; set; }
         public Nullable<long> UnitOfMeasureId { get; set; }
         public Nullable<short> ConditionCodeId { get; set; }

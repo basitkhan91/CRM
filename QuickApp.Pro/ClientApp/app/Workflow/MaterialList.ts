@@ -12,7 +12,7 @@ export interface IMaterialList {
     Price: string;
     Memo: string;
     Deferred: string;
-    actionId:string;
+    taskId:string;
     workflowId:string;
     AllowEdit:boolean;
     IsDeleted:boolean;

@@ -8,7 +8,7 @@ export interface IExpertise
     OHeadBurden : string;
     OHCost : string;
     LabourAndOHCost : string;
-    actionId:string;
+    taskId:string;
     workflowId:string;
     AllowEdit:boolean;
     IsDeleted:boolean;

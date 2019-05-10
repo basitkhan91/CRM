@@ -33,7 +33,7 @@ export class DirectionsCreateComponent implements OnInit,OnChanges{
         //{
 			newRow.workflowDirectionId = "0";
             newRow.AllowEdit=true;
-			newRow.actionId = this.workFlow.ActionId;
+			newRow.taskId = this.workFlow.taskId;
 			newRow.workflowDirectionId = "0";
 			newRow.action = "";
 			newRow.description = "";

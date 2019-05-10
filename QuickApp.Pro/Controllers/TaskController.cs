@@ -14,32 +14,30 @@ using QuickApp.Pro.ViewModels;
 namespace QuickApp.Pro.Controllers
 {
 
-    [Route("api/Action")]
-    public class ActionController : Controller
+    [Route("api/Task")]
+    public class TaskController : Controller
     {
         private IUnitOfWork _unitOfWork;
-        readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
-        
-        public ActionController(IUnitOfWork unitOfWork, ILogger<ActionController> logger, IEmailer emailer)
+
+        public TaskController(IUnitOfWork unitOfWork,IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
             _emailer = emailer;
         }
 
         // GET: api/values
         [HttpGet("Get")]
-        [Produces(typeof(List<ActionViewModel>))]
+        [Produces(typeof(List<DAL.Models.Task>))]
         public IActionResult Get()
         {
-            var allActions = _unitOfWork.Actions.GetAllActionData(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<ActionViewModel>>(allActions));
+            var allTasks = _unitOfWork.Actions.GetAllTask(); //.GetAllCustomersData();
+            return Ok(Mapper.Map<IEnumerable<DAL.Models.Task>>(allTasks));
 
         }
 
-        [HttpGet("auditHistoryById/{id}", Name = "GetAuditHostoryById")]
+        [HttpGet("auditHistoryById/{id}", Name = "GetAuditHistoryById")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
         {
@@ -62,16 +60,16 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("actions")]
+        [HttpPost("Tasks")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateAction([FromBody] ActionViewModel actionViewModel)
+        public IActionResult CreateAction([FromBody] DAL.Models.Task actionViewModel)
         {
             if (ModelState.IsValid)
             {
                 if (actionViewModel == null)
                     return BadRequest($"{nameof(actionViewModel)} cannot be null");
 
-                DAL.Models.Action actionobject = new DAL.Models.Action();
+                DAL.Models.Task actionobject = new DAL.Models.Task();
                 actionobject.Description = actionViewModel.Description;
                 actionobject.Memo = actionViewModel.Memo;
                 actionobject.MasterCompanyId = actionViewModel.MasterCompanyId;
@@ -88,8 +86,8 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpPut("actions/{id}")]
-        public IActionResult UpdateAction(long id,[FromBody] ActionViewModel actionViewModel)
+        [HttpPut("Tasks/{id}")]
+        public IActionResult UpdateAction(long id, [FromBody] ActionViewModel actionViewModel)
         {
 
             if (ModelState.IsValid)
@@ -97,7 +95,7 @@ namespace QuickApp.Pro.Controllers
                 if (actionViewModel == null)
                     return BadRequest($"{nameof(actionViewModel)} cannot be null");
 
-                var existingResult = _unitOfWork.Actions.GetSingleOrDefault(c => c.ActionId == id);
+                var existingResult = _unitOfWork.Actions.GetSingleOrDefault(c => c.TaskId == id);
                 // DAL.Models.Action updateObject = new DAL.Models.Action();
 
 
@@ -112,17 +110,17 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
 
             }
-             
+
 
             return Ok(ModelState);
         }
 
 
-        [HttpDelete("actions/{id}")]
+        [HttpDelete("Tasks/{id}")]
         [Produces(typeof(ActionViewModel))]
         public IActionResult DeleteAction(long id)
         {
-            var existingResult = _unitOfWork.Actions.GetSingleOrDefault(c => c.ActionId == id);
+            var existingResult = _unitOfWork.Actions.GetSingleOrDefault(c => c.TaskId == id);
             existingResult.IsDelete = true;
             _unitOfWork.Actions.Update(existingResult);
 
@@ -136,16 +134,16 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            var audits = _unitOfWork.Repository<ActionAudit>()
+            var tasks = _unitOfWork.Repository<TaskAudit>()
                 .Find(X => X.ActionId == id)
-                .OrderByDescending(X => X.ActionAuditId)
+                .OrderByDescending(X => X.TaskAuditId)
                 .ToList();
 
-            var auditResult = new List<AuditResult<ActionAudit>>();
-            auditResult
-                .Add(new AuditResult<ActionAudit> { AreaName = "Action", Memo = "Memo", Result = audits });
+            var auditResults = new List<AuditResult<TaskAudit>>();
+            auditResults
+                .Add(new AuditResult<TaskAudit> { AreaName = "Action", Memo = "Memo", Result = tasks });
 
-            return Ok(auditResult);
+            return Ok(auditResults);
 
         }
 

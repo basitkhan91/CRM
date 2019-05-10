@@ -40,6 +40,7 @@ import { PoRoCategoryComponent } from "../components/general-ledger/po-ro-catego
 import { POROCategoryEndpoint } from "../services/porocategory/po-ro-category-endpoint.service";
 import { POROCategoryService } from "../services/porocategory/po-ro-category.service";
 import { AuditModule } from "../audit/audit.module";
+import { InterCompanySetupComponent } from "../components/general-ledger/intercompany-setup/intercompany-setup.component";
 
 @NgModule({
     imports: [
@@ -74,15 +75,16 @@ import { AuditModule } from "../audit/audit.module";
         GlaccountListComponent,
         GlaccountCreateComponent,
         PoRoCategoryComponent,
+        InterCompanySetupComponent,
 
-       
+
     ],
     providers: [
         NodeSetupService,
         NodeSetupEndpointService,
         POROCategoryEndpoint,
         POROCategoryService
-       
+
 
     ],
     exports: [

@@ -33,7 +33,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<WorkflowActionViewModel>))]
         public IActionResult Get()
         {
-            var allWorlFlowActions = _context.Action.OrderByDescending(a => a.ActionId).ToList();
+            var allWorlFlowActions = _context.Task.OrderByDescending(a => a.TaskId).ToList();
             return Ok(allWorlFlowActions);
 
         }
@@ -306,7 +306,7 @@ namespace QuickApp.Pro.Controllers
 
                     workflowMaterialViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowMaterialViewModel.WorkflowId;
-                    actionobject.ActionId = workflowMaterialViewModel.ActionId;
+                    actionobject.TaskId = workflowMaterialViewModel.ActionId;
                     actionobject.ItemMasterId = workflowMaterialViewModel.ItemMasterId;
                     //actionobject.MaterialTypeId = workflowMaterialViewModel.MaterialTypeId;
                     actionobject.Quantity = workflowMaterialViewModel.Quantity;
@@ -333,7 +333,7 @@ namespace QuickApp.Pro.Controllers
                     DAL.Models.WorkflowMaterial actionobject = new DAL.Models.WorkflowMaterial();
                     workflowMaterialViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowMaterialViewModel.WorkflowId;
-                    actionobject.ActionId = workflowMaterialViewModel.ActionId;
+                    actionobject.TaskId = workflowMaterialViewModel.ActionId;
                     actionobject.ItemMasterId = workflowMaterialViewModel.ItemMasterId;
                     //actionobject.MaterialTypeId = workflowMaterialViewModel.MaterialTypeId;
                     actionobject.Quantity = workflowMaterialViewModel.Quantity;
@@ -376,7 +376,7 @@ namespace QuickApp.Pro.Controllers
 
                     workflowChargesListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowChargesListViewModel.WorkflowId;
-                    actionobject.ActionId = workflowChargesListViewModel.ActionId;
+                    actionobject.TaskId = workflowChargesListViewModel.ActionId;
                     actionobject.WorkflowChargeTypeId = workflowChargesListViewModel.WorkflowChargeTypeId;
                     actionobject.Quantity = workflowChargesListViewModel.Quantity;
                     actionobject.UnitCost = workflowChargesListViewModel.UnitCost;
@@ -398,7 +398,7 @@ namespace QuickApp.Pro.Controllers
                     DAL.Models.WorkflowChargesList actionobject = new DAL.Models.WorkflowChargesList();
                     workflowChargesListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowChargesListViewModel.WorkflowId;
-                    actionobject.ActionId = workflowChargesListViewModel.ActionId;
+                    actionobject.TaskId = workflowChargesListViewModel.ActionId;
                     actionobject.WorkflowChargeTypeId = workflowChargesListViewModel.WorkflowChargeTypeId;
                     actionobject.Quantity = workflowChargesListViewModel.Quantity;
                     actionobject.UnitCost = workflowChargesListViewModel.UnitCost;
@@ -432,7 +432,7 @@ namespace QuickApp.Pro.Controllers
 
                     workflowEquipmentListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowEquipmentListViewModel.WorkflowId;
-                    actionobject.ActionId = workflowEquipmentListViewModel.ActionId;
+                    actionobject.TaskId = workflowEquipmentListViewModel.ActionId;
                     actionobject.AssetId = workflowEquipmentListViewModel.AssetId;
                     actionobject.AssetDescription = workflowEquipmentListViewModel.AssetDescription;
                     actionobject.Quantity = workflowEquipmentListViewModel.Quantity;
@@ -454,7 +454,7 @@ namespace QuickApp.Pro.Controllers
                     DAL.Models.WorkflowEquipmentList actionobject = new DAL.Models.WorkflowEquipmentList();
                     workflowEquipmentListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowEquipmentListViewModel.WorkflowId;
-                    actionobject.ActionId = workflowEquipmentListViewModel.ActionId;
+                    actionobject.TaskId = workflowEquipmentListViewModel.ActionId;
                     actionobject.AssetId = workflowEquipmentListViewModel.AssetId;
                     actionobject.AssetDescription = workflowEquipmentListViewModel.AssetDescription;
                     actionobject.Quantity = workflowEquipmentListViewModel.Quantity;
@@ -489,7 +489,7 @@ namespace QuickApp.Pro.Controllers
 
                     workflowExpertiseListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowExpertiseListViewModel.WorkflowId;
-                    actionobject.ActionId = workflowExpertiseListViewModel.ActionId;
+                    actionobject.TaskId = workflowExpertiseListViewModel.ActionId;
                     actionobject.ExpertiseTypeId = workflowExpertiseListViewModel.ExpertiseTypeId;
                     actionobject.EstimatedHours = workflowExpertiseListViewModel.EstimatedHours;
                     actionobject.LaborDirectRate = workflowExpertiseListViewModel.LaborDirectRate;
@@ -514,7 +514,7 @@ namespace QuickApp.Pro.Controllers
                     DAL.Models.WorkflowExpertiseList actionobject = new DAL.Models.WorkflowExpertiseList();
                     workflowExpertiseListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowExpertiseListViewModel.WorkflowId;
-                    actionobject.ActionId = workflowExpertiseListViewModel.ActionId;
+                    actionobject.TaskId = workflowExpertiseListViewModel.ActionId;
                     actionobject.ExpertiseTypeId = workflowExpertiseListViewModel.ExpertiseTypeId;
                     actionobject.EstimatedHours = workflowExpertiseListViewModel.EstimatedHours;
                     actionobject.LaborDirectRate = workflowExpertiseListViewModel.LaborDirectRate;

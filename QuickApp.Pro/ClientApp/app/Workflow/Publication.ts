@@ -14,7 +14,7 @@ export interface IPublication{
           VerifiedDate :string;
           Status :string;
           Image :string;
-          actionId:string;
+          taskId:string;
           workflowId:string;
           AllowEdit:boolean;
           IsDeleted:boolean;

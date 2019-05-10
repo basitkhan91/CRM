@@ -19,7 +19,7 @@ namespace DAL
 {
     public interface IDatabaseInitializer
     {
-        Task SeedAsync();
+        System.Threading.Tasks.Task SeedAsync();
     }
 
 
@@ -38,7 +38,7 @@ namespace DAL
             _logger = logger;
         }
 
-        public async Task SeedAsync()
+        public async System.Threading.Tasks.Task SeedAsync()
         {
             await _context.Database.MigrateAsync().ConfigureAwait(false);
 
@@ -330,7 +330,7 @@ namespace DAL
 
 
 
-        private async Task EnsureRoleAsync(string roleName, string description, string[] claims)
+        private async System.Threading.Tasks.Task EnsureRoleAsync(string roleName, string description, string[] claims)
         {
             if ((await _accountManager.GetRoleByNameAsync(roleName)) == null)
             {

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IAction } from "./Action";
+import { ITask } from "./Action";
 import { IActionAttrbutes } from "./ActionAttributes";
 
 import { Observable } from "rxjs";
@@ -168,9 +168,9 @@ export class ActionService
 
 	}
 
-	addAction(action:IAction) {
+	addAction(action:ITask) {
 
-		return this.actionEndpoint.addAction<IAction>(action);
+        return this.actionEndpoint.addAction<ITask>(action);
 
 	}
 

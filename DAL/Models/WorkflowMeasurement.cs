@@ -32,7 +32,9 @@ namespace DAL.Models
         public Nullable<decimal> Expected { get; set; }
         public string DiagramURL { get; set; }
         public string Memo { get; set; }
-        public long ActionId { get; set; }
+
+        [ForeignKey("TaskId")]
+        public long TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

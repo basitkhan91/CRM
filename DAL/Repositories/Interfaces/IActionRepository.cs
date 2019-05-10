@@ -5,9 +5,9 @@ using System.Text;
 namespace DAL.Repositories.Interfaces
 {
 
-    public interface IActionRepository : IRepository<DAL.Models.Action>
+    public interface IActionRepository : IRepository<DAL.Models.Task>
     {
-        IEnumerable<DAL.Models.Action> GetAllActionData();
+        IEnumerable<DAL.Models.Task> GetAllTask();
 
 
       //  void CreateAction(DAL.Models.Action action);

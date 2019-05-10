@@ -11,7 +11,7 @@ export interface ICharges{
     Fixrate :string;
     VendorName:string;
     VendorPriceOrUnit :string;
-    actionId:string;
+    taskId:string;
     workflowId:string;
     AllowEdit:boolean;
     IsDeleted:boolean;

@@ -128,7 +128,7 @@ namespace QuickApp.Pro.Controllers
             var assignRolePolicy = _authorizationService.AuthorizeAsync(this.User, Tuple.Create(user.Roles, currentRoles), Authorization.Policies.AssignAllowedRolesPolicy);
 
 
-            if ((await Task.WhenAll(manageUsersPolicy, assignRolePolicy)).Any(r => !r.Succeeded))
+            if ((await System.Threading.Tasks.Task.WhenAll(manageUsersPolicy, assignRolePolicy)).Any(r => !r.Succeeded))
                 return new ChallengeResult();
 
 
@@ -524,7 +524,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(Mapper.Map<List<PermissionViewModel>>(ApplicationPermissions.AllPermissions));
         }
 
-        
+
 
         private async Task<UserViewModel> GetUserViewModelHelper(string userId)
         {

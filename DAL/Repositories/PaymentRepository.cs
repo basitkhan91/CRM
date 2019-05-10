@@ -12,20 +12,17 @@ using DAL.Core;
 
 namespace DAL.Repositories
 {
-    public class PaymentRepository : Repository<DAL.Models.Action>, IPayment
+    public class PaymentRepository : Repository<DAL.Models.Task>, IPayment
     {
         public PaymentRepository(ApplicationDbContext context) : base(context)
         { }
 
-        public IEnumerable<DAL.Models.Action> GetAllPayment()
-        {
-            return _appContext.Action.Include("MasterCompany").OrderByDescending(c => c.ActionId).ToList();
-        }
+        //public IEnumerable<DAL.Models.Task> GetAllPayment()
+        //{
+        //    return _appContext.Task.Include("MasterCompany").OrderByDescending(c => c.TaskId).ToList();
+        //}
 
-
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
-
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        //private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
 }

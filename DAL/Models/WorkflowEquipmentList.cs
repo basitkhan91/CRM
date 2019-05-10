@@ -23,7 +23,9 @@ namespace DAL.Models
         public Nullable<long> AssetTypeId { get; set; }
         public string AssetDescription { get; set; }
         public short Quantity { get; set; }
-        public long ActionId { get; set; }
+
+        [ForeignKey("TaskId")]
+        public long TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

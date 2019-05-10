@@ -42,7 +42,7 @@ export class MeasurementCreateComponent implements OnInit,OnChanges{
         //{
 			newRow.workflowMeasurementId = "0";
             newRow.AllowEdit=true;
-			newRow.actionId = this.workFlow.ActionId;
+        newRow.taskId = this.workFlow.taskId;
 			newRow.partNumber = "";
 			newRow.sequence = "";
 			newRow.stage = "";

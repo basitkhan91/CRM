@@ -52,7 +52,7 @@ export class EquipmentCreateComponent implements OnInit,OnChanges{
         //{
 			newRow.workflowEquipmentListid = "0";
             newRow.AllowEdit=true;
-			newRow.actionId = this.workFlow.ActionId;
+            newRow.taskId = this.workFlow.taskId;
 			newRow.assetDescription = "";
 			newRow.assetId = "";
 			newRow.assetTypeId = "";

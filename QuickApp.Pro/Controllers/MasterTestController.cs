@@ -33,7 +33,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("Actions")]
         public IActionResult GetActions()
         {
-            var actions = UnitOfWork.Repository<DAL.Models.Action>().GetAll().ToList();
+            var actions = UnitOfWork.Repository<DAL.Models.Task>().GetAll().ToList();
             return Ok(actions);
         }
 

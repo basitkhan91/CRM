@@ -29,8 +29,8 @@ namespace DAL
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<WorkflowAction> WorkflowAction { get; set; }
-        public DbSet<DAL.Models.Action> Action { get; set; }
-        public DbSet<ActionAudit> ActionAudit { get; set; }
+        public DbSet<DAL.Models.Task> Task { get; set; }
+        public DbSet<TaskAudit> TaskAudit { get; set; }
         // public DbSet<ATAMain> ATAMain { get; set; }
         public DbSet<ATASubChapter> ATASubChapter { get; set; }
         public DbSet<ATASubChapter2> ATASubChapter2 { get; set; }
@@ -297,7 +297,7 @@ namespace DAL
         public DbSet<ReasonAudit> ReasonAudit { get; set; }
         public DbSet<SiteAudit> SiteAudit { get; set; }
         public DbSet<TaxRatesAudit> TaxRateAudit { get; set; }
-        
+
         //public DbSet<UnitOfMeasureAudit> UnitOfMeasureAudit { get; set; }
         public DbSet<VendorClassificationAudit> VendorClassificationAudit { get; set; }
         public DbSet<WorkPerformedAudit> WorkPerformedAudit { get; set; }
@@ -322,7 +322,7 @@ namespace DAL
         public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
         public DbSet<AssetTypeSingleScreenAudit> AssetTypeSingleScreenAudit { get; set; }
 
-       
+
         public DbSet<GatecodeClassAudit> GatecodeAudit { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)

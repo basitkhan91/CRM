@@ -9,7 +9,7 @@ import { IMeasurement } from "./Measurement";
 
 export interface IWorkFlow {
     workflowId:string;
-    ActionId:string;
+    taskId:string;
     ActionName:string;
     charges:any[];
     directions:any[];

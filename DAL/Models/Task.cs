@@ -6,10 +6,10 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class Action : PasBase, IAudit
+    public class Task : PasBase, IAudit
     {
         [Key]
-        public long ActionId { get; set; }
+        public long TaskId { get; set; }
 
         public string Description { get; set; }
 
@@ -23,8 +23,5 @@ namespace DAL.Models
         public bool? IsDelete { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
-
-
-        // public bool? IsDelete { get; set; }
     }
 }

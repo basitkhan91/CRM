@@ -37,7 +37,8 @@ namespace DAL.Models
 
         //public virtual Action ActionObject { get; set; }
 
-        public long ActionId { get; set; }
+        [ForeignKey("TaskId")]
+        public long TaskId { get; set; }
         //[ForeignKey("WorkflowId")]
         //public virtual  Workflow WorkFlow { get; set; }
         public long WorkflowId { get; set; }

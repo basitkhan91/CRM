@@ -5,7 +5,7 @@ export interface  IDirections
       description :string;
       sequence :string;
       memo :string;
-      actionId:string;
+      taskId:string;
       workflowId:string;
       AllowEdit:boolean;
       isDeleted:boolean;

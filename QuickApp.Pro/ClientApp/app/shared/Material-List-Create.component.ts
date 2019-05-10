@@ -197,7 +197,7 @@ export class MaterialListCreateComponent implements OnInit,OnChanges{
         //{
 			newRow.workflowMaterialListId = "0";
             newRow.AllowEdit=true;
-			newRow.actionId = this.workFlow.ActionId;
+            newRow.taskId = this.workFlow.taskId;
 			newRow.conditionCodeId = "";
 			newRow.extendedCost = "";
 			newRow.extraCost = "";

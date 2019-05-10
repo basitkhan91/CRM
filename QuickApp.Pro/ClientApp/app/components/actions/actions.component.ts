@@ -202,7 +202,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
            
             if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.actionamecolle.push([{
-                    "actionId": this.allActions[i].actionId,
+                    "taskId": this.allActions[i].taskId,
                     "actionName": actionName
                 }]),
             
@@ -322,7 +322,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
 
         //this.isSaving = true;
        // debugger;
-		this.workFlowtService.historyAcion(this.sourceAction.actionId).subscribe(
+        this.workFlowtService.historyAcion(this.sourceAction.taskId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], contentHist),
             error => this.saveFailedHelper(error));
        
@@ -361,7 +361,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     deleteItemAndCloseModel() {
             this.isSaving = true;
             this.sourceAction.updatedBy = this.userName;
-            this.workFlowtService.deleteAcion(this.sourceAction.actionId).subscribe(
+        this.workFlowtService.deleteAcion(this.sourceAction.taskId).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
             this.modal.close();

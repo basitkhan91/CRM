@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Input } from "@angular/core";
 import { ActionService } from "./ActionService";
-import { IAction } from "./Action";
+import { ITask } from "./Action";
 import { IActionAttrbutes } from "./ActionAttributes";
 import { IWorkFlow } from "./WorkFlow";
 import { ICharges } from "./Charges";
@@ -43,12 +43,12 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	UpdateMode: boolean;
 	workFlow: any;
 	workFlowList: any[];
-	actions: IAction[];
+	actions: ITask[];
 	actionAttributes: IActionAttrbutes[];
 
-	actionList: IAction[];
-	currentActionId: string = "0";
-	selectedActionId: number;
+    actionList: ITask[];
+	currenttaskId: string = "0";
+	selectedtaskId: number;
 	selectedActionAttributeId: number;
 
 	errorMessage: string;
@@ -57,8 +57,8 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	actionAttributesList = [];
 	selectedItems = [];
 	dropdownSettings = {};
-	newAction: IAction;
-	workFlowActions: IAction[];
+    newAction: ITask;
+    workFlowActions: ITask[];
 	sourceWorkFlow: any = {}; employeeExplist: any[] = [];
 	materailTypeList: any[] = [];
 	allCustomers: any[] = [];
@@ -116,7 +116,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	selectedActionAttributes: any[] = [];//For DropDown
 	actionValue: any;//dropdown selected value
 
-	addedActionIds: number[] = [];
+	addedtaskIds: number[] = [];
 	selectedAction: any;//selected tab value
 
 	actionsDD: any[] = [];
@@ -205,60 +205,60 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							actionAttributes => {
 								this.workFlowList = [];
 								var ids = [];
-								var actionIds = [];
+								var taskIds = [];
 								if (workFlow[0].charges != undefined) {
 
-									 actionIds = workFlow[0].charges.map(item => item.actionId)
+									 taskIds = workFlow[0].charges.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								if (workFlow[0].directions!=undefined) {
-									ids = workFlow[0].directions.map(item => item.actionId)
+									ids = workFlow[0].directions.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								if (workFlow[0].equipments != undefined) {
-									actionIds = actionIds.concat(ids);
-									ids = workFlow[0].equipments.map(item => item.actionId)
+									taskIds = taskIds.concat(ids);
+									ids = workFlow[0].equipments.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								if (workFlow[0].exclusions != undefined) {
-									actionIds = actionIds.concat(ids);
-									ids = workFlow[0].exclusions.map(item => item.actionId)
+									taskIds = taskIds.concat(ids);
+									ids = workFlow[0].exclusions.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								if (workFlow[0].expertise != undefined) {
-									actionIds = actionIds.concat(ids);
-									ids = workFlow[0].expertise.map(item => item.actionId)
+									taskIds = taskIds.concat(ids);
+									ids = workFlow[0].expertise.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								if (workFlow[0].materialList != undefined) {
-									actionIds = actionIds.concat(ids);
-									ids = workFlow[0].materialList.map(item => item.actionId)
+									taskIds = taskIds.concat(ids);
+									ids = workFlow[0].materialList.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								if (workFlow[0].measurements != undefined) {
-									actionIds = actionIds.concat(ids);
-									ids = workFlow[0].measurements.map(item => item.actionId)
+									taskIds = taskIds.concat(ids);
+									ids = workFlow[0].measurements.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								if (workFlow[0].publication != undefined) {
-									actionIds = actionIds.concat(ids);
-									ids = workFlow[0].publication.map(item => item.actionId)
+									taskIds = taskIds.concat(ids);
+									ids = workFlow[0].publication.map(item => item.taskId)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								}
 								
-									actionIds = actionIds.concat(ids);
+									taskIds = taskIds.concat(ids);
 
-									actionIds = actionIds.map(item => item)
+									taskIds = taskIds.map(item => item)
 										.filter((value, index, self) => self.indexOf(value) === index);
 								
 
-								actionIds = actionIds.sort();
+								taskIds = taskIds.sort();
 								this.workFlowActions = [];
-								for (let actId of actionIds) {
-									var action = actions.filter(x => x.actionId == actId)[0];
+								for (let actId of taskIds) {
+									var action = actions.filter(x => x.taskId == actId)[0];
 									this.workFlowActions.push(action);
 									let wf = this.GetWorkFlow();
-									wf.ActionId = action.actionId;
+									wf.taskId = action.taskId;
 									wf.ActionName = action.description;
 									wf.selectedItems = [];
 									if (this.UpdateMode) {
@@ -269,35 +269,35 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 									}
 
 									if (workFlow[0].charges != undefined && workFlow[0].charges.length > 0) {
-										var charges = workFlow[0].charges.filter(charge => charge.actionId == action.actionId);
+										var charges = workFlow[0].charges.filter(charge => charge.taskId == action.taskId);
 										wf.charges = charges;
 									}
 									if (workFlow[0].directions != undefined && workFlow[0].directions.length > 0) {
-										var direction = workFlow[0].directions.filter(direction => direction.actionId == action.actionId);
+										var direction = workFlow[0].directions.filter(direction => direction.taskId == action.taskId);
 										wf.directions = direction;
 									}
 									if (workFlow[0].equipments != undefined && workFlow[0].equipments.length > 0) {
-										var equipment = workFlow[0].equipments.filter(equipment => equipment.actionId == action.actionId);
+										var equipment = workFlow[0].equipments.filter(equipment => equipment.taskId == action.taskId);
 										wf.equipments = equipment;
 									}
 									if (workFlow[0].exclusions != undefined && workFlow[0].exclusions.length > 0) {
-										var exclusion = workFlow[0].exclusions.filter(exclusion => exclusion.actionId == action.actionId);
+										var exclusion = workFlow[0].exclusions.filter(exclusion => exclusion.taskId == action.taskId);
 										wf.exclusions = exclusion;
 									}
 									if (workFlow[0].expertise != undefined && workFlow[0].expertise.length > 0) {
-										var expertise = workFlow[0].expertise.filter(expertise => expertise.actionId == action.actionId);
+										var expertise = workFlow[0].expertise.filter(expertise => expertise.taskId == action.taskId);
 										wf.expertise = expertise;
 									}
 									if (workFlow[0].materialList != undefined && workFlow[0].materialList.length > 0) {
-										var material = workFlow[0].materialList.filter(material => material.actionId == action.actionId);
+										var material = workFlow[0].materialList.filter(material => material.taskId == action.taskId);
 										wf.materialList = material;
 									}
 									if (workFlow[0].measurements != undefined && workFlow[0].measurements.length > 0) {
-										var measurement = workFlow[0].measurements.filter(measurement => measurement.actionId == action.actionId);
+										var measurement = workFlow[0].measurements.filter(measurement => measurement.taskId == action.taskId);
 										wf.measurements = measurement;
 									}
 									if (workFlow[0].publication != undefined && workFlow[0].publication.length > 0) {
-										var publication = workFlow[0].publication.filter(publication => publication.actionId == action.actionId);
+										var publication = workFlow[0].publication.filter(publication => publication.taskId == action.taskId);
 										wf.publication = publication;
 									}
 
@@ -397,7 +397,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	getActionsDD() {
 		this._workflowService.getWorkFlowActions().subscribe((data: any) => {
 			if (data && data[0].length > 0) {
-				this.actionsDD = [{ actionId: "", description: "" }].concat(data[0]);
+				this.actionsDD = [{ taskId: "", description: "" }].concat(data[0]);
 			}
 			this.loadedDDs["actions"] = true;
 			if (this.loadedDDs["actionAttributes"])
@@ -641,16 +641,16 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			this._workflowService.getWorkflowActionAttributes(this.selectedWorkflow["workflowId"]).subscribe(data => {
 				if (data && data[0].length > 0) {
 					this.workflowActions = data[0];
-					this.addedActionIds = this.workflowActions.map(action => action["actionId"]);
+					this.addedtaskIds = this.workflowActions.map(action => action["taskId"]);
 				}
 			});
 		}
 		this.workflowActions = [
-			{ workflowId: "", actionId: 2, workflowActionAttributeIds: "11,12,13" },
-			{ workflowId: "", actionId: 3, workflowActionAttributeIds: "14,15,16" },
-			{ workflowId: "", actionId: 4, workflowActionAttributeIds: "16,17,36" }
+			{ workflowId: "", taskId: 2, workflowActionAttributeIds: "11,12,13" },
+			{ workflowId: "", taskId: 3, workflowActionAttributeIds: "14,15,16" },
+			{ workflowId: "", taskId: 4, workflowActionAttributeIds: "16,17,36" }
 		];
-		this.addedActionIds = [2, 3, 4];
+		this.addedtaskIds = [2, 3, 4];
 		// select First Action
 		this.displaySelectedAction(this.workflowActions[0]);
 	}
@@ -658,7 +658,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	onActionValueChange(selectedvalue) {
 		if (Number(selectedvalue.target.value) > 0) {
 			this.selectedActionAttributes = [];
-			let indx = this.addedActionIds.indexOf(Number(selectedvalue.target.value));
+			let indx = this.addedtaskIds.indexOf(Number(selectedvalue.target.value));
 			if (indx >= 0)
 				this.selectedActionAttributes = this.workflowActions[indx].workflowActionAttributeIds.split(",");
 		} else {
@@ -667,7 +667,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	}
 	//one of the Actions Tab Click
 	onActionSelect(action) {
-		let selAction = this.workflowActions.find(obj => obj.actionId == action.actionId);
+		let selAction = this.workflowActions.find(obj => obj.taskId == action.taskId);
 		if (selAction)
 			this.displaySelectedAction(selAction);
 	}
@@ -675,7 +675,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	//ex: accepted format -> selAction = { workflowId: "1", actionId: 2, workflowActionAttributeIds: "11,12,13" }
 	displaySelectedAction(selAction, loadAttrData = false) {
 		//Display Action Label
-		let action = this.actionsDD.find(action => action["actionId"] == selAction["actionId"]);
+		let action = this.actionsDD.find(action => action["taskId"] == selAction["taskId"]);
 		if (this.selectedAction != action) {
 			this.selectedAction = action;
 		}
@@ -703,14 +703,14 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	// On Add Button Click
 	addActionAttributes() {
 		if (this.actionValue && this.actionValue != "" && this.selectedActionAttributes && this.selectedActionAttributes.length > 0) {
-			let currAction = { workflowId: "", actionId: Number(this.actionValue), workflowActionAttributeIds: this.selectedActionAttributes.join(",") }
-			let selAction = this.workflowActions.find(obj => obj.actionId == this.actionValue)
+			let currAction = { workflowId: "", taskId: Number(this.actionValue), workflowActionAttributeIds: this.selectedActionAttributes.join(",") }
+			let selAction = this.workflowActions.find(obj => obj.taskId == this.actionValue)
 			if (selAction) {
 				
 				selAction["workflowActionAttributeIds"] = currAction["workflowActionAttributeIds"]
 			} else {
 				this.workflowActions.push(currAction);
-				this.addedActionIds.push(Number(this.actionValue));
+				this.addedtaskIds.push(Number(this.actionValue));
 				selAction = currAction;
 			}
 			this.displaySelectedAction(selAction);
@@ -736,7 +736,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	private defualtChargesListobj() {
 		let partListObj = {
 			//ifSplitShip: false, //partListObj: this.allPartDetails, //itemTypeId: ''
-			type: '', qty: '', unitcost: '', extcost: '', actionId: ''
+			type: '', qty: '', unitcost: '', extcost: '', taskId: ''
 		}
 		return partListObj;
 	}
@@ -774,7 +774,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 		let partListObj = {
 			//ifSplitShip: false, //partListObj: this.allPartDetails, //itemTypeId: ''
 			partNumber: '', partDescription: '', itemClassification: '', qty: '', uom: '', condition: '',
-			unitcost: '', extcost: '', provision: '', deffered: '', figureId: '', actionId: ''
+			unitcost: '', extcost: '', provision: '', deffered: '', figureId: '', taskId: ''
 		}
 		return partListObj;
 	}
@@ -901,7 +901,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 				//this.actions = actions;
 				this.actions = [];
 				for (let attr of actions) {
-					this.actions.push({ Id: attr.actionId, Name: attr.description })
+					this.actions.push({ Id: attr.taskId, Name: attr.description })
 				}
 			},
 			error => this.errorMessage = <any>error
@@ -930,20 +930,20 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 		document.getElementById('tab_' + workFlowId).classList.add('active');
 		this.workFlowList.forEach(function (value, index) {
 			//debugger;
-			if (value.ActionId == workFlowId) {
+			if (value.taskId == workFlowId) {
 				workflow = value;
 			}
 		});
 
 		for (var i = 0; i < this.workFlowList.length; i++) {
 			//debugger;
-			if (workflow.ActionId == this.workFlowList[i].ActionId) {
+			if (workflow.taskId == this.workFlowList[i].taskId) {
 				this.workFlowList[i] = workflow;
 			}
 		}
 		this.onActionChange();
 		this.selectedItems = workflow.selectedItems;
-		this.currentActionId = workflow.ActionId;
+		this.currenttaskId = workflow.taskId;
 		this.workFlow = workflow;
 		this.setSelectedItems(this.workFlow);
 	}
@@ -988,14 +988,14 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 
 				for (var i = 0; i < this.workFlowList.length; i++) {
 					//debugger;
-					if (this.workFlowList[i].ActionId == currentWorkFlow.ActionId) {
+					if (this.workFlowList[i].taskId == currentWorkFlow.taskId) {
 						isWorkFlowExist = true;
 						for (var j = 0; j < this.selectedItems.length; j++) {
 							if (this.selectedItems[j].Name == 'Charges' && (this.workFlowList[i].charges == undefined || (this.workFlowList[i].charges != undefined && this.workFlowList[i].charges.length == 0))) {
 								var charge: any[];
 								charge = this.GetCharges();
 								if (this.UpdateMode) {
-									charge[0].actionId = this.currentActionId;
+									charge[0].taskId = this.currenttaskId;
 									charge[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].charges = charge;
@@ -1004,7 +1004,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 								var direction: any[];
 								direction = this.GetDirections();
 								if (this.UpdateMode) {
-									direction[0].actionId = this.currentActionId;
+									direction[0].taskId = this.currenttaskId;
 									direction[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].directions = direction;
@@ -1013,7 +1013,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 								var equipment: any[];
 								equipment = this.GetEquipmentList();
 								if (this.UpdateMode) {
-									equipment[0].actionId = this.currentActionId;
+									equipment[0].taskId = this.currenttaskId;
 									equipment[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].equipments = equipment;
@@ -1024,7 +1024,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 								var expertise: any[];
 								expertise = this.GetExpertise();
 								if (this.UpdateMode) {
-									expertise[0].actionId = this.currentActionId;
+									expertise[0].taskId = this.currenttaskId;
 									expertise[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].expertise = expertise;
@@ -1033,7 +1033,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 								var material: any[];
 								material = this.GetMaterialList();
 								if (this.UpdateMode) {
-									material[0].actionId = this.currentActionId;
+									material[0].taskId = this.currenttaskId;
 									material[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].materialList = material;
@@ -1044,7 +1044,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 								var publication: any[];
 								publication = this.GetPublication();
 								if (this.UpdateMode) {
-									publication[0].actionId = this.currentActionId;
+									publication[0].taskId = this.currenttaskId;
 									publication[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].publication = publication;
@@ -1055,7 +1055,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 								var exclusion: any[];
 								exclusion = this.GetExclusions();
 								if (this.UpdateMode) {
-									exclusion[0].actionId = this.currentActionId;
+									exclusion[0].taskId = this.currenttaskId;
 									exclusion[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].exclusions = exclusion;
@@ -1065,7 +1065,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 								var measurement: any[];
 								measurement = this.GetMeasurements();
 								if (this.UpdateMode) {
-									measurement[0].actionId = this.currentActionId;
+									measurement[0].taskId = this.currenttaskId;
 									measurement[0].workflowId = this.updateWorkFlowId;
 								}
 								this.workFlowList[i].measurements = measurement;
@@ -1088,7 +1088,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var charge: any[];
 							charge = this.GetCharges();
 							if (this.UpdateMode) {
-								charge[0].actionId = this.currentActionId;
+								charge[0].taskId = this.currenttaskId;
 								charge[0].workflowId = this.updateWorkFlowId;
 							}
 							currentWorkFlow.charges = charge;
@@ -1097,7 +1097,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var direction: any[];
 							direction = this.GetDirections();
 							if (this.UpdateMode) {
-								direction[0].actionId = this.currentActionId;
+								direction[0].taskId = this.currenttaskId;
 								direction[0].workflowId = this.updateWorkFlowId;
 							}
 							currentWorkFlow.directions = direction
@@ -1106,7 +1106,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var equipment: any[];
 							equipment = this.GetEquipmentList();
 							if (this.UpdateMode) {
-								equipment[0].actionId = this.currentActionId;
+								equipment[0].taskId = this.currenttaskId;
 								equipment[0].workflowId = this.updateWorkFlowId;
 							}
 							currentWorkFlow.equipments = equipment;
@@ -1115,7 +1115,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var expertise: any[];
 							expertise = this.GetExpertise();
 							if (this.UpdateMode) {
-								expertise[0].actionId = this.currentActionId;
+								expertise[0].taskId = this.currenttaskId;
 								expertise[0].workflowId = this.updateWorkFlowId;
 							}
 							currentWorkFlow.expertise = expertise;
@@ -1124,7 +1124,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var material: any[];
 							material = this.GetMaterialList();
 							if (this.UpdateMode) {
-								material[0].actionId = this.currentActionId;
+								material[0].taskId = this.currenttaskId;
 								material[0].workflowId = this.updateWorkFlowId;
 							}
 							currentWorkFlow.materialList = material;
@@ -1133,7 +1133,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var publication: any[];
 							publication = this.GetPublication();
 							if (this.UpdateMode) {
-								publication[0].actionId = this.currentActionId;
+								publication[0].taskId = this.currenttaskId;
 								publication[0].workflowId = this.updateWorkFlowId;
 							}
 
@@ -1143,7 +1143,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var exclusion: any[];
 							exclusion = this.GetExclusions();
 							if (this.UpdateMode) {
-								exclusion[0].actionId = this.currentActionId;
+								exclusion[0].taskId = this.currenttaskId;
 								exclusion[0].workflowId = this.updateWorkFlowId;
 							}
 							currentWorkFlow.exclusions = exclusion;
@@ -1152,7 +1152,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 							var measurement: any[];
 							measurement = this.GetMeasurements();
 							if (this.UpdateMode) {
-								measurement[0].actionId = this.currentActionId;
+								measurement[0].taskId = this.currenttaskId;
 								measurement[0].workflowId = this.updateWorkFlowId;
 							}
 							currentWorkFlow.measurements = measurement;
@@ -1174,7 +1174,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var charge: any[];
 						charge = this.GetCharges();
 						if (this.UpdateMode) {
-							charge[0].actionId = this.currentActionId;
+							charge[0].taskId = this.currenttaskId;
 							charge[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].charges = charge;
@@ -1184,7 +1184,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var direction: any[];
 						direction = this.GetDirections();
 						if (this.UpdateMode) {
-							direction[0].actionId = this.currentActionId;
+							direction[0].taskId = this.currenttaskId;
 							direction[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].directions = direction;
@@ -1194,7 +1194,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var equipment: any[];
 						equipment = this.GetEquipmentList();
 						if (this.UpdateMode) {
-							equipment[0].actionId = this.currentActionId;
+							equipment[0].taskId = this.currenttaskId;
 							equipment[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].equipments = equipment;
@@ -1205,7 +1205,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var expertise: any[];
 						expertise = this.GetExpertise();
 						if (this.UpdateMode) {
-							expertise[0].actionId = this.currentActionId;
+							expertise[0].taskId = this.currenttaskId;
 							expertise[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].expertise = expertise;
@@ -1215,7 +1215,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var material: any[];
 						material = this.GetMaterialList();
 						if (this.UpdateMode) {
-							material[0].actionId = this.currentActionId;
+							material[0].taskId = this.currenttaskId;
 							material[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].materialList = material;
@@ -1225,7 +1225,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var publication: any[];
 						publication = this.GetPublication();
 						if (this.UpdateMode) {
-							publication[0].actionId = this.currentActionId;
+							publication[0].taskId = this.currenttaskId;
 							publication[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].publication = publication;
@@ -1236,7 +1236,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var exclusion: any[];
 						exclusion = this.GetExclusions();
 						if (this.UpdateMode) {
-							exclusion[0].actionId = this.currentActionId;
+							exclusion[0].taskId = this.currenttaskId;
 							exclusion[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].exclusions = exclusion;
@@ -1247,7 +1247,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 						var measurement: any[];
 						measurement = this.GetMeasurements();
 						if (this.UpdateMode) {
-							measurement[0].actionId = this.currentActionId;
+							measurement[0].taskId = this.currenttaskId;
 							measurement[0].workflowId = this.updateWorkFlowId;
 						}
 						this.workFlowList[0].measurements = measurement;
@@ -1260,7 +1260,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 		}
 		else {
 			//debugger;
-			var wf = this.workFlowList.filter(x => x.ActionId == this.currentActionId);
+			var wf = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
 			if (wf != undefined && wf.length > 0) {
 				var position = 0;
 				this.workFlowList.forEach(function (value, index) {
@@ -1278,17 +1278,17 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 
 	GetWorkFlow(): any {
 
-		var actionId = this.currentActionId != undefined ? this.currentActionId : "0";
+		var taskId = this.currenttaskId != undefined ? this.currenttaskId : "0";
 		var actionName = "";
 		this.actions.forEach(function (value, index) {
-			if (value.Id == actionId) {
+			if (value.Id == taskId) {
 				actionName = value.Name;
 			}
 		});
 
 		return {
 			workflowId: "0",
-			ActionId: actionId,
+			taskId: taskId,
 			ActionName: actionName,
 			charges: undefined,
 			directions: undefined,
@@ -1328,7 +1328,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			expected: "",
 			diagramURL: "",
 			memo: "",
-			actionId: "",
+			taskId: "",
 			masterCompanyId:'',
 			workflowId: "",
 			AllowEdit: true,
@@ -1347,7 +1347,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			estimtPercentOccurrance: "",
 			memo: "",
 			masterCompanyId:'',
-			actionId: "",
+			taskId: "",
 			workflowId: "",
 			AllowEdit: true,
 			isDelete: false,
@@ -1372,7 +1372,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			verifiedDate: "",
 			status: "",
 			image: "",
-			actionId: "",
+			taskId: "",
 			workflowId: "",
 			AllowEdit: true,
 			IsDeleted: false,
@@ -1395,7 +1395,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			vendorId: "",
 			vendorUnitPrice: "",
 			masterCompanyId:'',
-			actionId: "",
+			taskId: "",
 			workflowId: "",
 			AllowEdit: true,
 			IsDelete: false,
@@ -1411,7 +1411,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			assetTypeId: "",
 			assetDescription: "",
 			quantity: "",
-			actionId: "",
+			taskId: "",
 			workflowId: "",
 			masterCompanyId: '',
 			AllowEdit: true,
@@ -1431,7 +1431,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			overheadCost: "",
 			standardRate:'',
 			laborOverheadCost: "",
-			actionId: "",
+			taskId: "",
 			workflowId: "",
 			masterCompanyId: '',
 			AllowEdit: true,
@@ -1456,7 +1456,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			isDeferred:'',
 			memo: "",
 			
-			actionId: "",
+			taskId: "",
 			workflowId: "",
 			masterCompanyId: '',
 			AllowEdit: true,
@@ -1474,7 +1474,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 			description: "",
 			sequence: "",
 			memo: "",
-			actionId: "",
+			taskId: "",
 			workflowId: "",
 			masterCompanyId: '',
 			AllowEdit: true,
@@ -1486,7 +1486,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 
 	onActionChange(): void {
 		this.selectedItems = [];
-		this.showActionAttribute = this.currentActionId != "0";
+		this.showActionAttribute = this.currenttaskId != "0";
 	}
 
 	addAction(): void {
@@ -1639,7 +1639,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 				if (workflow.charges != undefined) {
 					for (let charge of workflow.charges) {
 						charge.workflowId = newWorkFlow.workflowId;
-						charge.actionId = workflow.ActionId;
+						charge.taskId = workflow.taskId;
 						this.actionService.addCharges(charge).subscribe(data => {
 						}, error => { console.log(error); alert('Error while adding data'); });
 					}
@@ -1647,7 +1647,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 				if (workflow.directions != undefined) {
 					for (let direction of workflow.directions) {
 						direction.workflowId = newWorkFlow.workflowId;
-						direction.actionId = workflow.ActionId;
+						direction.taskId = workflow.taskId;
 						direction.workflowDirectionId = undefined;
 						direction.AllowEdit = undefined;
 						this.actionService.addDirection(direction).subscribe(data => { }, error => { console.log(error); alert('Error while adding data'); });
@@ -1656,42 +1656,42 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 				if (workflow.equipments != undefined) {
 					for (let equipment of workflow.equipments) {
 						equipment.workflowId = newWorkFlow.workflowId;
-						equipment.actionId = workflow.ActionId;
+						equipment.taskId = workflow.taskId;
 						this.actionService.addEquipment(equipment).subscribe(data => { }, error => { console.log(error); alert('Error while adding data'); });
 					}
 				}
 				if (workflow.exclusions != undefined) {
 					for (let exclusion of workflow.exclusions) {
 						exclusion.workflowId = newWorkFlow.workflowId;
-						exclusion.actionId = workflow.ActionId;
+						exclusion.taskId = workflow.taskId;
 						this.actionService.addExclusion(exclusion).subscribe(data => { }, error => { console.log(error); alert('Error while adding data'); });
 					}
 				}
 				if (workflow.expertise != undefined) {
 					for (let expertise of workflow.expertise) {
 						expertise.workflowId = newWorkFlow.workflowId;
-						expertise.actionId = workflow.ActionId;
+						expertise.taskId = workflow.taskId;
 						this.actionService.addExpertise(expertise).subscribe(data => { }, error => { console.log(error); alert('Error while adding data'); });
 					}
 				}
 				if (workflow.materialList != undefined) {
 					for (let materialList of workflow.materialList) {
 						materialList.workflowId = newWorkFlow.workflowId;
-						materialList.actionId = workflow.ActionId;
+						materialList.taskId = workflow.taskId;
 						this.actionService.addMaterial(materialList).subscribe(data => { }, error => { console.log(error); alert('Error while adding data'); });
 					}
 				}
 				if (workflow.measurements != undefined) {
 					for (let measurement of workflow.measurements) {
 						measurement.workflowId = newWorkFlow.workflowId;
-						measurement.actionId = workflow.ActionId;
+						measurement.taskId = workflow.taskId;
 						this.actionService.addMeasurement(measurement).subscribe(data => { }, error => { console.log(error); alert('Error while adding data'); });
 					}
 				}
 				if (workflow.publication != undefined) {
 					for (let publication of workflow.publication) {
 						publication.workflowId = newWorkFlow.workflowId;
-						publication.actionId = workflow.ActionId;
+						publication.taskId = workflow.taskId;
 						this.actionService.addPublication(publication).subscribe(data => { }, error => { console.log(error); alert('Error while adding data'); });
 					}
 				}
@@ -1706,13 +1706,13 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 	resetPage(): void {
 		this.selectedItems = [];
 		this.workFlowList = [];
-		this.currentActionId = "0";
+		this.currenttaskId = "0";
 		this.showMainPage = false;
 		this.showActionAttribute = false;
 	}
 
 	onDeSelect(item: any) {
-		//    if(this.workFlow.ActionId == this.currentActionId)
+		//    if(this.workFlow.taskId == this.currentActionId)
 		//    {
 		//     var position = 0;
 		//     this.workFlow.selectedItems.forEach(function(value,index){

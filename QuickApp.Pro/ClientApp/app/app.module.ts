@@ -32,7 +32,7 @@ import { AccountService } from './services/account.service';
 import { AccountEndpoint } from './services/account-endpoint.service';
 import { WorkFlowtService } from './services/workflow.service';
 import { WorkFlowEndpoint } from './services/workflow-endpoint.service';
-import { ActionService} from './services/action.service';
+import { ActionService } from './services/action.service';
 import { ActionEndpoint } from './services/action-endpoint.service';
 import { AtaMainService } from './services/atamain.service';
 import { ATAMainEndpoint } from './services/atamain-endpoint.service';
@@ -79,7 +79,7 @@ import { TodoDemoComponent } from "./components/controls/todo-demo.component";
 import { StatisticsDemoComponent } from "./components/controls/statistics-demo.component";
 import { NotificationsViewerComponent } from "./components/controls/notifications-viewer.component";
 import { AddTaskDialogComponent } from './components/controls/add-task-dialog.component';
-import { NgbModule,NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreditTermsService } from "./services/Credit Terms.service";
 import { CreditTermsEndpoint } from "./services/Credit Terms-endpoint.service";
 import { CustomerClassificationEndpoint } from "./services/Customer Classification -endpoint.service";
@@ -182,19 +182,20 @@ import { GlAccountService } from "./services/glAccount/glAccount.service";
 import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoint.service";
 import { AccountCalenderService } from "./services/account-calender/accountcalender.service";
 import { AccountCalenderEndpointService } from "./services/account-calender/accountcalender-endpoint.service";
+import { ActionsButtonsComponent } from "./components/ActionButtons/actions-buttons.component";
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 
 
 @NgModule({
-	imports: [
-		SharedModule,
-		FooterModule,
+    imports: [
+        SharedModule,
+        FooterModule,
         ThemePickerModule,
-		HttpClientModule,		
-        AdminModule,       
+        HttpClientModule,
+        AdminModule,
         SettingsModule,
-		AppRoutingModule,
+        AppRoutingModule,
 
         TranslateModule.forRoot({
             loader: {
@@ -202,10 +203,10 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
                 useClass: TranslateLanguageLoader
             }
         }),
-		ToastyModule.forRoot(),
-	    ChartsModule,       
-		NgbModule.forRoot(),
-		
+        ToastyModule.forRoot(),
+        ChartsModule,
+        NgbModule.forRoot(),
+
     ],
     declarations: [
         AppComponent,
@@ -225,12 +226,14 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
         NotificationsViewerComponent,
         AddTaskDialogComponent,
         StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
+        ActionsButtonsComponent
+
         //AuditComponent
-		
+
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
-		{ provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,
         ConfigurationService,
         AppTitleService,
@@ -246,19 +249,19 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
         ActionService,
         ActionEndpoint,
         AtaMainService,
-		ATAMainEndpoint,
-		AtaSubChapter1Service,
-		ATASubChapter1Endpoint,
-		AtaSubChapter2Service,
-		ATASubChapter2Endpoint,
-		SiteService,
-		SiteEndpoint,
-		WarehouseService,
-		WarehouseEndpoint,
-		BinService,
-		BinEndpoint,
-		GLAccountCategoryService,
-		GLAccountCategoryEndpointservice,
+        ATAMainEndpoint,
+        AtaSubChapter1Service,
+        ATASubChapter1Endpoint,
+        AtaSubChapter2Service,
+        ATASubChapter2Endpoint,
+        SiteService,
+        SiteEndpoint,
+        WarehouseService,
+        WarehouseEndpoint,
+        BinService,
+        BinEndpoint,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointservice,
         NgbActiveModal,
         MasterCompanyEndpoint,
         MasterComapnyService,
@@ -288,9 +291,9 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
         ItemClassificationEndpointService,
         ItemGroupService,
         ItemgroupEndpointService,
-		TaxRateService,
-		ManufacturerService,
-		ManufacturerEndpoint,
+        TaxRateService,
+        ManufacturerService,
+        ManufacturerEndpoint,
         TaxRateEndpointService,
         VendorClassificationService,
         VendorClassificationEndpoint,
@@ -319,39 +322,39 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
         ChargeService,
         ChargeEndpoint,
         ModalService,
-		Globals,
-		GLAccountClassEndpoint,
-		GLAccountClassService,
+        Globals,
+        GLAccountClassEndpoint,
+        GLAccountClassService,
         VendorService,
         VendorEndpointService,
         EmployeeService,
         EmployeeEndpoint,
         ItemMasterEndpoint,
-		ItemMasterService,
-		StocklineService,
-		StocklineEndpoint,
-		ReceivingCustomerWorkService,
-		ReceivingCustomerWorkEndpoint,
-		LegalEntityService,
-		LegalEntityEndpontService,
-		AuthService,
-		SingleScreenBreadcrumbService,
-		GlCashFlowClassificationService,
-		GlCashFlowClassificationEndpoint,
-		VendorCapabilitiesService,
-		VendorCapabilitiesEndpoint,
-		LocationService,
-		LocationEndpoint,
-		laborAndOverheadCostEndpointservice,
-		LaborAndOverheadCostService,
-		ShelfService,
-		ShelfEndpoint,
-		MessageService,
-		RolesManagementStructureService,
-		RolesManagementStructureEndpoint,
-		CertificationTypeEndpoint,
+        ItemMasterService,
+        StocklineService,
+        StocklineEndpoint,
+        ReceivingCustomerWorkService,
+        ReceivingCustomerWorkEndpoint,
+        LegalEntityService,
+        LegalEntityEndpontService,
+        AuthService,
+        SingleScreenBreadcrumbService,
+        GlCashFlowClassificationService,
+        GlCashFlowClassificationEndpoint,
+        VendorCapabilitiesService,
+        VendorCapabilitiesEndpoint,
+        LocationService,
+        LocationEndpoint,
+        laborAndOverheadCostEndpointservice,
+        LaborAndOverheadCostService,
+        ShelfService,
+        ShelfEndpoint,
+        MessageService,
+        RolesManagementStructureService,
+        RolesManagementStructureEndpoint,
+        CertificationTypeEndpoint,
         CertificationtypeService,
-        AssetStatusService,       
+        AssetStatusService,
         AssetStatusEndpointService,
         AssetTypeService,
         AssetTypeEndpointService,
@@ -373,7 +376,7 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
         GlAccountEndpointService,
         AccountCalenderService,
         AccountCalenderEndpointService
-		
+
     ],
     entryComponents: [
         LoginDialogComponent,
