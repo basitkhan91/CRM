@@ -17,7 +17,6 @@ import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { VendorService } from '../../../services/vendor.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { Vendor } from '../../../models/vendor.model';
-//import { VendorClassificationComponent } from '../../vendor-classification/vendor-classification.component';
 import { debounce } from 'rxjs/operators/debounce';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 
@@ -48,7 +47,6 @@ export class VendorWarningsComponent implements OnInit {
     isReadOnly: boolean = true;
     isOnly: boolean = true;
 	viewName: string = "Create";
-    /** VendorWarnings ctor */
 	sourceWarning: any = {};
 	sourePo: any = {};
 	soureRMA: any = {};
@@ -64,7 +62,6 @@ export class VendorWarningsComponent implements OnInit {
     isSaving: boolean;
     isDeleteMode: boolean;
 	
-	
 	constructor(private authService: AuthService, private router: Router, private vendorService: VendorService, private alertService: AlertService) {
 		if (this.vendorService.shippingCollection) {
 			this.local = this.vendorService.shippingCollection;
@@ -73,9 +70,7 @@ export class VendorWarningsComponent implements OnInit {
 		this.dataSource = new MatTableDataSource();
 		if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
 			this.viewName = "Edit";
-			//debugger;
 			this.local = this.vendorService.listCollection;
-			
 		}
 	}
 	
@@ -89,7 +84,6 @@ export class VendorWarningsComponent implements OnInit {
 		this.sourceAero.allow = true;
 		this.sourceNet.allow = true;
 		this.sourceAllAllows.allow = true;
-		//this.sourceAllAllows.allow = true;
 		if (this.sourePo.allow = true && this.soureRMA.allow == true && this.sourceRo.allow == true && this.sourceEdi.allow == true && this.sourceAero.allow == true && this.sourceNet.allow == true) {
 			this.isOnly = true;
 			this.isOnlyRead = true;
@@ -97,57 +91,44 @@ export class VendorWarningsComponent implements OnInit {
 			this.isOnlyClose = true;
 			this.isReClose = true;
 			this.isOnlyReas = true;
-		
         }
 		if (this.local) {
 			this.loadData();
 		}
 	}
     isEnable(value) {
-       
-
         if (value == "B") {
             this.isReadOnly = false;
         }
         else if (value == "A") {
             this.isReadOnly=true;
         }
-
     }
 
     isCheck(value) {
-
-
         if (value == "B") {
 			this.isOnly = false;
 			this.sourePo.restrictMessage = "";
 			this.sourePo.warning = false;
 			this.sourePo.allow = false;
 			this.isReadOnly = true;
-		
         }
         else if (value == "A") {
 			this.isOnly = true;
 			this.sourePo.allow = true;
 		}
-		
     }
 
     isEnabled(value) {
-
-
         if (value == "B") {
             this.isRead = false;
         }
         else if (value == "A") {
             this.isRead = true;
         }
-
     }
 
     isCheckd(value) {
-
-
         if (value == "B") {
 			this.isOnlyRead = false;
 			this.soureRMA.allow = false;
@@ -158,24 +139,18 @@ export class VendorWarningsComponent implements OnInit {
 			this.isOnlyRead = true;
 			this.soureRMA.allow = true;
         }
-
     }
 
     isEnabd(value) {
-
-
         if (value == "B") {
             this.isReads = false;
         }
         else if (value == "A") {
             this.isReads = true;
         }
-
     }
 
     isChekd(value) {
-
-
         if (value == "B") {
 			this.isOnlyReads = false;
 			this.sourceRo.warning = false;
@@ -186,26 +161,18 @@ export class VendorWarningsComponent implements OnInit {
 			this.isOnlyReads = true;
 			this.sourceRo.allow = true;
         }
-
     }
 
-
-
     isEnabld(value) {
-
-
         if (value == "B") {
             this.isopen = false;
         }
         else if (value == "A") {
             this.isopen = true;
         }
-
     }
 
     isCheks(value) {
-
-
         if (value == "B") {
 			this.isOnlyClose = false;
 			this.sourceEdi.allow = false;
@@ -220,20 +187,15 @@ export class VendorWarningsComponent implements OnInit {
     }
 
     isEnad(value) {
-
-
         if (value == "B") {
             this.isReadOpens = false;
         }
         else if (value == "A") {
             this.isReadOpens = true;
         }
-
     }
 
     isCkd(value) {
-
-
         if (value == "B") {
 			this.isReClose = false;
 			this.sourceAero.warning = false;
@@ -244,24 +206,18 @@ export class VendorWarningsComponent implements OnInit {
 			this.isReClose = true;
 			this.sourceAero.allow = true;
         }
-
     }
 
     isOpen(value) {
-
-
         if (value == "B") {
             this.isReas = false;
         }
         else if (value == "A") {
             this.isReas = true;
         }
-
     }
 
     isClose(value) {
-
-
         if (value == "B") {
 			this.isOnlyReas = false;
 			this.sourceNet.allow = false;
@@ -272,13 +228,9 @@ export class VendorWarningsComponent implements OnInit {
 			this.isOnlyReas = true;
 			this.sourceNet.allow = true;
         }
-
     }
 
-    
-
 	private loadData() {
-		
 		this.vendorService.getVendorWarnings(this.local.vendorId).subscribe(
 			data => {
 				this.localcollection = data[0];
@@ -291,7 +243,6 @@ export class VendorWarningsComponent implements OnInit {
 							if (this.sourePo.restrict == false) {
 								this.sourePo.restrictMessage = false;
 							}
-							
 						}
 						 if (this.sourePo.warning == true) {
 							this.isReadOnly = false;
@@ -305,7 +256,6 @@ export class VendorWarningsComponent implements OnInit {
 						if (this.soureRMA.warning == true) {
 							this.isRead = false;
 						}
-
 					}
 					if (this.localcollection[i].t.sourceModule == 'RO') {
 						this.sourceRo = this.localcollection[i].t;
@@ -343,35 +293,6 @@ export class VendorWarningsComponent implements OnInit {
 							this.isReas = false;
 						}
 					}
-					//for (let j = 0; this.localcollection[i].length; j++) {
-
-					//	if (this.localcollection[j][i].t.sourceModule == 'PO') {
-					//		this.sourePo = this.localcollection[j][i].t;
-					//		break;
-					//	}
-					//	else if (this.localcollection[j][i].t.sourceModule == 'RMA') {
-					//		this.soureRMA = this.localcollection[j][i].t;
-					//		//break;
-					//	}
-					//	else if (this.localcollection[j][i].t.sourceModule == 'RO') {
-					//		this.sourceRo = this.localcollection[j][i].t;
-					//		break;
-					//	}
-					//	else if (this.localcollection[j][i].t.sourceModule == 'EDI') {
-					//		this.sourceEdi = this.localcollection[j][i].t;
-					//		break;
-					//	}
-					//	else if (this.localcollection[j][i].t.sourceModule == 'Aeroexchange') {
-					//		this.sourceAero = this.localcollection[j][i].t;
-					//		break;
-					//	}
-					//	else if (this.localcollection[j][i].t.sourceModule == 'Net') {
-					//		this.sourceNet = this.localcollection[j][i].t;
-					//		break;
-					//	}
-
-					//}
-					//break;
 				}
 				
 			})
@@ -396,12 +317,10 @@ export class VendorWarningsComponent implements OnInit {
 			this.sourePo.vendorId = this.local.vendorId;
 			this.vendorService.saveVendorwarnings(this.sourePo).subscribe(
 				data => {
-					
 					this.saveRMA();
 				})
 		}
 		else {
-
 			this.sourePo.updatedBy = this.userName;
 			
 			this.sourePo.masterCompanyId = 1;
@@ -414,15 +333,11 @@ export class VendorWarningsComponent implements OnInit {
 		this.activeIndex = 4;
 		this.vendorService.indexObj.next(this.activeIndex);
 		this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
-		//this.saveCompleted(this.sourceVendor);
 	}
 		nextClick() {
 			this.activeIndex = 6;
 			this.vendorService.indexObj.next(this.activeIndex);
 			this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
-			//this.saveCompleted(this.sourceVendor);
-
-
 		}
 	
 		saveRMA(){
@@ -434,14 +349,11 @@ export class VendorWarningsComponent implements OnInit {
 				this.soureRMA.vendorId = this.local.vendorId;
 				this.vendorService.saveVendorwarnings(this.soureRMA).subscribe(
 					data => {
-						
 						this.SaveRO();
 					})
 			}
 			else {
-
 				this.soureRMA.updatedBy = this.userName;
-
 				this.sourePo.masterCompanyId = 1;
 				this.vendorService.updateVendorWarnings(this.soureRMA).subscribe(
 					data => { this.SaveRO(); console.log(data) })
@@ -456,7 +368,6 @@ export class VendorWarningsComponent implements OnInit {
 				this.sourceRo.vendorId = this.local.vendorId;
 				this.vendorService.saveVendorwarnings(this.sourceRo).subscribe(
 					data => {
-						
 						this.SaveEDI();
 					})
 			}
@@ -485,9 +396,7 @@ export class VendorWarningsComponent implements OnInit {
 					})
 			}
 			else {
-
 				this.sourceEdi.updatedBy = this.userName;
-
 				this.sourceEdi.masterCompanyId = 1;
 				this.sourePo.masterCompanyId = 1;
 				this.vendorService.updateVendorWarnings(this.sourceEdi).subscribe(
@@ -527,7 +436,6 @@ export class VendorWarningsComponent implements OnInit {
 			this.vendorService.saveVendorwarnings(this.sourceNet).subscribe(
 				data => {
 					this.saveCompleted(this.sourceWarning);
-					
 				})
 		}
 		else {
@@ -540,14 +448,10 @@ export class VendorWarningsComponent implements OnInit {
 					this.saveCompleted(this.sourceWarning);
 				})
 		}
-
-
 	}
 
 	private saveCompleted(user?: any) {
 		this.isSaving = false;
-
-
 		if (this.isDeleteMode == true) {
 			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
 			this.isDeleteMode = false;
@@ -555,9 +459,7 @@ export class VendorWarningsComponent implements OnInit {
 		else {
 			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 			this.saveCompleted
-
 		}
-
 		this.loadData();
 	}
 	private saveFailedHelper(error: any) {
@@ -569,8 +471,6 @@ export class VendorWarningsComponent implements OnInit {
 
 
 	isAllowallEnable(value) {
-
-
 		if (value == "A") {
 			this.sourePo.allow = true;
 			this.soureRMA.allow = true;
@@ -588,12 +488,9 @@ export class VendorWarningsComponent implements OnInit {
 			this.sourceAero.allow = false;
 			this.sourceNet.allow = false;
 		}
-
 	}
 
 	isAllwarning(value) {
-
-
 		if (value == "C") {
 			this.sourePo.warning = true;
 			this.soureRMA.warning = true;
@@ -625,8 +522,6 @@ export class VendorWarningsComponent implements OnInit {
 
 	}
 	IsAllRestrict(value) {
-
-
 		if (value == "E") {
 			this.sourceAllAllows.allow = false;
 			this.sourceallWarning.warning = false;
@@ -690,6 +585,4 @@ export class VendorWarningsComponent implements OnInit {
 		}
 
 	}
-
-
 }

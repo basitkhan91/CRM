@@ -38,13 +38,9 @@ export class VendorMemoComponent implements OnInit{
 	ngOnInit(): void {
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-
-		// debugger;
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
 		this.workFlowtService.ShowPtab = true;
 		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
 	}
-	
-	
-}
+}   

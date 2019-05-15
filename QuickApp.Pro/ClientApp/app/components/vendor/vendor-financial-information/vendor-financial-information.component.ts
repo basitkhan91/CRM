@@ -72,7 +72,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     disableSaveCurrency: boolean;
     SelectedCurrencyInfo: any;
 	ngOnInit(): void {
-		//alert("hi onimi");
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
 		this.loadCreditTermsData();
@@ -81,9 +80,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		this.loadCurrencyData();
 		if (this.local) {
 			this.getVendorsList();
-		
 		}
-
 	}
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -110,114 +107,38 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	Active: string = "Active";
 	length: number;
 	localCollection: any;
-	discontValue: string;
-	/** Actions ctor */
-
+    discontValue: string;
+    public allWorkFlows: any[] = [];
 	private isEditMode: boolean = false;
-	private isDeleteMode: boolean = false;
+    private isDeleteMode: boolean = false;
 
 	constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		if (this.workFlowtService.contactCollection) {
 			this.local = this.workFlowtService.contactCollection;
 			this.sourceVendor = this.local;
 		}
-		//alert("hi cons");
 		this.dataSource = new MatTableDataSource();
 		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
 			this.viewName = "Edit";
 			this.local = this.workFlowtService.listCollection.t;
 			this.sourceVendor = this.workFlowtService.listCollection.t;
-			//if (this.sourceVendor.v1099RentDefault == true) {
-   //             this.sourceVendor.v1099RentDefault = 1;
-			//	this.sourceVendor.v1099RoyaltiesDefault = null;
-			//	this.sourceVendor.v1099OtherIncomeDefault = null;
-			//	this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-			//	this.sourceVendor.v1099NonEmployeeCompDefault = null;
-			//	this.sourceVendor.v1099GoldenParachuteDefault = null;
-			//	this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-			//}
-			//if (this.sourceVendor.v1099RoyaltiesDefault == true) {
-   //             this.sourceVendor.v1099RoyaltiesDefault = 2;
-			//	this.sourceVendor.v1099RentDefault = null;
-			//	this.sourceVendor.v1099OtherIncomeDefault = null;
-			//	this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-			//	this.sourceVendor.v1099NonEmployeeCompDefault = null;
-			//	this.sourceVendor.v1099GoldenParachuteDefault = null;
-			//	this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-			//}
-			//if (this.sourceVendor.v1099OtherIncomeDefault == true) {
-   //             this.sourceVendor.v1099OtherIncomeDefault = 3;
-			//	this.sourceVendor.v1099RentDefault = null;
-			//	this.sourceVendor.v1099RoyaltiesDefault = null;
-			//	this.sourceVendor.v1099OtherIncomeDefault = null;
-			//	this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-			//	this.sourceVendor.v1099NonEmployeeCompDefault = null;
-			//	this.sourceVendor.v1099GoldenParachuteDefault = null;
-			//	this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-			//}
-			//if (this.sourceVendor.v1099MedicalHealthPaymentsDefault == true) {
-			//	this.sourceVendor.v1099MedicalHealthPaymentsDefault = 4;
-			//	this.sourceVendor.v1099RentDefault = null;
-			//	this.sourceVendor.v1099RoyaltiesDefault = null;
-			//	this.sourceVendor.v1099OtherIncomeDefault = null;
-			//	this.sourceVendor.v1099NonEmployeeCompDefault = null;
-			//	this.sourceVendor.v1099GoldenParachuteDefault = null;
-			//	this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-			//}
-			//if (this.sourceVendor.v1099NonEmployeeCompDefault == true) {
-   //             this.sourceVendor.v1099NonEmployeeCompDefault = 5;
-			//	this.sourceVendor.v1099RoyaltiesDefault = null;
-			//	this.sourceVendor.v1099RentDefault = null;
-			//	this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-			//	this.sourceVendor.v1099OtherIncomeDefault = null;
-			//	this.sourceVendor.v1099GoldenParachuteDefault = null;
-			//	this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-			//}
-			//if (this.sourceVendor.v1099GoldenParachuteDefault == true) {
-   //             this.sourceVendor.v1099GoldenParachuteDefault = 6;
-			//	this.sourceVendor.v1099NonEmployeeCompDefault = null;
-			//	this.sourceVendor.v1099RoyaltiesDefault = null;
-			//	this.sourceVendor.v1099RentDefault = null;
-			//	this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-			//	this.sourceVendor.v1099OtherIncomeDefault = null;
-			//	this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-			//}
-			//if (this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault == true) {
-			//	this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = 7;
-			//	this.sourceVendor.v1099GoldenParachuteDefault = null;
-			//	this.sourceVendor.v1099NonEmployeeCompDefault = null;
-			//	this.sourceVendor.v1099RoyaltiesDefault = null;
-			//	this.sourceVendor.v1099RentDefault = null;
-			//	this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-			//	this.sourceVendor.v1099OtherIncomeDefault = null;
-			//}
-
 		}
-
 	}
 	private getVendorsList() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.workFlowtService.getVendordata(this.local.vendorId).subscribe(
 			results => this.onVendorsLoadSuccssfull(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-
 	}
 
 	ngAfterViewChecked() {
-
-		//this.cdRef.detectChanges();
 	}
 	ngAfterViewInit() {
-		//alert("hi after");
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
-		//this.sourceVendor.v1099RentDefault = 1;
 	}
-	public allWorkFlows: any[] = [];
-
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -226,32 +147,24 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-
-
 		this.cols = [
-			//{ field: 'actionId', header: 'Action Id' },
 			{ field: 'description', header: 'Action Name' },
 			{ field: 'memo', header: 'Memo' },
 			{ field: 'createdBy', header: 'Created By' },
 			{ field: 'updatedBy', header: 'Updated By' },
 			{ field: 'updatedDate', header: 'Updated Date' },
 			{ field: 'createdDate', header: 'Created Date' }
-
 		];
-
 		this.selectedColumns = this.cols;
-
 	}
 
 	private loadMasterCompanies() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.masterComapnyService.getMasterCompanies().subscribe(
 			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-
 	}
 
 	public applyFilter(filterValue: string) {
@@ -267,7 +180,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		);
 	}
 	private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
-
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
@@ -279,15 +191,10 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		this.isEditMode = true;
 		this.vendorId = this.allgeneralInfo[0].vendorId;
 		console.log(this.allgeneralInfo);
-
-
 	}
-
-
 	private loadFinalObject() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.workFlowtService.getFinalObj().subscribe(
 			results => this.onFinalObjUrl(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -295,88 +202,52 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	}
 
 	private onFinalObjUrl(allWorkFlows: any) {
-		//debugger;
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.sourceVendor = allWorkFlows;
-
-
 	}
 
 
 	handleChange(rowData, e) {
 		if (e.checked == false) {
 			this.sourceVendor = rowData;
-			//this.sourceVendor.updatedBy = this.userName;
 			this.Active = "In Active";
-			//this.sourceVendor.isActive == false;
-			//this.workFlowtService.updatefinanceinfo(this.sourceVendor).subscribe(
-			//    response => this.saveCompleted(this.sourceVendor),
-			//    error => this.saveFailedHelper(error));
-			//alert(e);
 		}
 		else {
 			this.sourceVendor = rowData;
-			//this.sourceVendor.updatedBy = this.userName;
 			this.Active = "Active";
-			//this.sourceVendor.isActive == true;
-			//this.workFlowtService.updatefinanceinfo(this.sourceVendor).subscribe(
-			//    response => this.saveCompleted(this.sourceVendor),
-			//    error => this.saveFailedHelper(error));
-			//alert(e);
 		}
-
 	}
 
 	private refresh() {
-		// Causes the filter to refresh there by updating with recently added data.
 		this.applyFilter(this.dataSource.filter);
 	}
 	private onDataLoadSuccessful(allWorkFlows: any[]) {
-
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allActions = allWorkFlows;
-
-
 	}
 
-	private onVendorsLoadSuccssfull(allVendors: any) {
-		//debugger;
+    private onVendorsLoadSuccssfull(allVendors: any)
+    {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = allVendors;
-		//if (allVendors) {
-		//	this.vendorsList = allVendors[0].t;
-		//	if (this.vendorsList) {
-		//		this.sourceVendor = this.vendorsList;
-		//	}
-		//	if (this.sourceVendor.v1099RentDefault == true) {
-		//		this.sourceVendor.v1099RentDefault = 1;
-		//	}
-
-		//}
-
 	}
 
 	filterActions(event) {
-
 		this.localCollection = [];
 		for (let i = 0; i < this.allActions.length; i++) {
 			let actionName = this.allActions[i].description;
-
 			if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 				this.localCollection.push(actionName);
-
 			}
 		}
 	}
 
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-		// debugger;
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.auditHisory = auditHistory;
@@ -384,23 +255,18 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-
-
 	}
 
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allComapnies = allComapnies;
-
 	}
 
 	private onDataLoadFailed(error: any) {
 		// alert(error);
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-
 	}
 
 	open(content) {
@@ -408,10 +274,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disableSaveCurrency = false;
-	
 		this.isSaving = true;
 		this.loadMasterCompanies();
-		//this.sourceVendor.isActive = true;
 		this.actionName = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -421,7 +285,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
 
 	openDelete(content, row) {
-
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceVendor = row;
@@ -432,20 +295,17 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	}
 
 	openEdit(content, row) {
-
 		this.isEditMode = true;
 		this.disableSave = false;
 		this.isSaving = true;
 		this.sourceVendor = row;
 		this.loadMasterCompanies();
-		// this.actionName = this.sourceVendor.description;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 	openView(content, row) {
-
 		this.sourceVendor = row;
 		this.action_name = row.description;
 		this.memo = row.memo;
@@ -469,18 +329,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	openHist(content, row) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
-
 		this.sourceVendor = row;
-
-
-		//this.isSaving = true;
-		// debugger;
-		//this.workFlowtService.historyAcion(this.sourceVendor.masterCompanyId).subscribe(
-		//    results => this.onHistoryLoadSuccessful(results[0], content),
-		//    error => this.saveFailedHelper(error));
-
-
 	}
 	onBlurMethod(data) {
 		if (data == 'creditLimit') {
@@ -559,21 +408,17 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 			this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
 			this.sourceVendor.v1099OtherIncomeDefault = null;
 		}
-
 	}
 
 	editItemAndCloseModel() {
-
 		this.isSaving = true;
 		if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
 			this.display = true;
 			this.modelValue = true;
 		}
-		
 		if (!this.creditTermName) {
 			this.showCreditTearms = true;
 		}
-
 		if (this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId ) {
 			if (this.sourceVendor.vendorId) {
 				this.sourceVendor.createdBy = this.userName;
@@ -640,7 +485,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 					this.sourceVendor.v1099RoyaltiesDefault = null;
 					this.sourceVendor.v1099OtherIncomeDefault = null;
 				}
-
 				if (this.sourceVendor.v1099RentDefault == 1) {
 					this.sourceVendor.v1099RentDefault = true;
 				}
@@ -662,7 +506,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 				if (this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault == 7) {
 					this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;
 				}
-
 				this.sourceVendor.masterCompanyId = 1;
 				this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
 					this.localCollection = data;
@@ -670,17 +513,11 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 					this.activeIndex = 2;
 					this.workFlowtService.indexObj.next(this.activeIndex);
 					this.savesuccessCompleted(this.sourceVendor);
-					//this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
-					//this.loadData();
-
 				})
-
 			}
 			else {
-
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
-				//debugger;
 				this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.local.vendorId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceVendor);
@@ -689,55 +526,33 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 					this.workFlowtService.indexObj.next(this.activeIndex);
 					this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
 				})
-
-
 			}
 		}
 		else {
 		}
-
-
-
-		//this.modal.close();
 	}
 
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
-		//this.sourceVendor.updatedBy = this.userName;
-		//this.workFlowtService.deleteAcion(this.sourceVendor.masterCompanyId).subscribe(
-		//    response => this.saveCompleted(this.sourceVendor),
-		//    error => this.saveFailedHelper(error));
-		//this.modal.close();
 	}
 	NextClick() {
-
-
 		this.workFlowtService.contactCollection = this.local;
 		this.activeIndex = 3;
 		this.workFlowtService.indexObj.next(this.activeIndex);
-		//this.saveCompleted(this.sourceCustomer);
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
-
-
 	}
 	previousClick() {
 		this.activeIndex = 1;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
-		//this.saveCompleted(this.sourceVendor);
-
-
 	}
 	dismissModel() {
 		this.isDeleteMode = false;
 		this.isEditMode = false;
 		this.modal.close();
 	}
-
-
 	private saveCompleted(user?: any) {
 		this.isSaving = false;
-
 		if (this.isDeleteMode == true) {
 			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
 			this.isDeleteMode = false;
@@ -746,33 +561,22 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
 		}
-
-
 		this.loadData();
 	}
 	private savesuccessCompleted(user?: any) {
 		this.isSaving = false;
-
-
 		this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
-
-
-
 		this.loadData();
 	}
 
 	private saveSuccessHelper(role?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
 		this.loadData();
-
 	}
-
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
-
 	private saveFailedHelper(error: any) {
 		this.isSaving = false;
 		this.alertService.stopLoadingMessage();
@@ -789,9 +593,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 			return `with: ${reason}`;
 		}
 	}
-
 	openCurrency(content) {
-
 		this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disableSaveCurrency = false;
@@ -802,9 +604,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		this.currencyName = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
@@ -820,39 +619,27 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		this.creditTermName = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 
 
 	private loadCurrencyData() {
-		// debugger;
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.currencyService.getCurrencyList().subscribe(
 			results => this.onCurrecyLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-
 	}
 	private onCurrecyLoad(getCurrencyList: Currency[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getCurrencyList;
-
 		this.allCurrencyInfo = getCurrencyList;
 	}
 	saveCurrecy() {
-
-		// debugger;
-
 		this.isSaving = true;
-
 		if (this.isEditMode == false) {
 			this.sourceAction.createdBy = this.userName;
 			this.sourceAction.updatedBy = this.userName;
@@ -862,8 +649,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 				this.loadCurrencyData();
 				this.sourceVendor.currencyId = data.currencyId;
 			});
-			//role => this.saveSuccessHelper(role),
-			//error => this.saveFailedHelper(error));
 		}
 		else {
 
@@ -874,11 +659,9 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 		}
-
 		this.modal.close();
 	}
 	filterCurrency(event) {
-
 		this.currencyCollection = [];
 		for (let i = 0; i < this.allCurrencyInfo.length; i++) {
 			let currencyName = this.allCurrencyInfo[i].code;
@@ -896,9 +679,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 			let value = event.target.value.toLowerCase();
 			if (this.SelectedCurrencyInfo) {
 				if (value == this.SelectedCurrencyInfo.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveCurrency = true;
-
 				}
 				else {
 					this.disableSaveCurrency = false;
@@ -910,43 +691,32 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	}
 
 	CurrencyInfo(event) {
-		//debugger;
 		if (this.allCurrencyInfo) {
-
 			for (let i = 0; i < this.allCurrencyInfo.length; i++) {
 				if (event == this.allCurrencyInfo[i].code) {
 					this.sourceVendor.code = this.allCurrencyInfo[i].code;
 					this.disableSaveCurrency = true;
-
 					this.SelectedCurrencyInfo = event;
 				}
-
 			}
 		}
 	}
 
-
 	private loadCreditTermsData() {
-		// debugger;
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.CreditTermsService.getCreditTermsList().subscribe(
 			results => this.onCreditTermsdata(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-
 	}
 	private onCreditTermsdata(getCreditTermsList: CreditTerms[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getCreditTermsList;
 		this.allcreditTermInfo = getCreditTermsList;
 	}
 	saveCreditTermsdata() {
-
-		// debugger;
 		this.isSaving = true;
 		if (this.isEditMode == false) {
 			this.sourceAction.createdBy = this.userName;
@@ -957,7 +727,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 				this.loadCreditTermsData();
 				this.sourceVendor.creditTermsId = data.creditTermsId;
 			})
-			
 		}
 		else {
 			this.sourceAction.updatedBy = this.userName;
@@ -968,7 +737,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 				error => this.saveFailedHelper(error));
 			this.loadCreditTermsData();
 		}
-
 		this.modal.close();
 	}
 	filtercreditTerms(event) {
@@ -986,11 +754,9 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	}
 	partnmId(event) {
 		if (this.allcreditTermInfo) {
-		//debugger;
 			for (let i = 0; i < this.allcreditTermInfo.length; i++) {
 				if (event == this.allcreditTermInfo[i].name) {
 					this.sourceVendor.creditTermName = this.allcreditTermInfo[i].creditTermName;
-					//alert("Action Name already Exists");
 					this.disableSave = true;
 					this.selectedActionName = event;
 				}
@@ -1001,7 +767,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		let value = event.target.value.toLowerCase();
 		if (this.selectedActionName) {
 			if (value == this.selectedActionName.toLowerCase()) {
-				//alert("Action Name already Exists");
 				this.disableSave = true;
 			}
 			else {
@@ -1010,7 +775,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		}
 	}
 	filterDiscountvalue(event) {
-
 		this.discountcollection = [];
 		for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
 			let discontValue = this.alldiscountvalueInfo[i].discontValue;
@@ -1025,10 +789,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	}
 
 	private loadDiscountData() {
-		// debugger;
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.workFlowtService.getDiscountList().subscribe(
 			results => this.onDataLoadClassifiSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
@@ -1036,29 +798,21 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
 	}
 	private onDataLoadClassifiSuccessful(getDiscountList: DiscountValue[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getDiscountList;
-
 		this.alldiscountvalueInfo = getDiscountList;
 	}
-
 	editItemCloseModel() {
-
-		// debugger;
 		this.isSaving = true;
 		if (this.isEditMode == false) {
 			this.sourceAction.createdBy = this.userName;
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.discontValue = this.discontValue;
-			//this.sourceAction.masterCompanyId = 1;
 			this.workFlowtService.newAddDiscount(this.sourceAction).
 				subscribe(data => {
 					this.loadDiscountData()
-
 				})
-
 			this.activeIndex = 2;
 		}
 		else {
@@ -1070,8 +824,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 				error => this.saveFailedHelper(error));
 
 			this.activeIndex = 2;
-
-
 		}
 		this.modal.close();
 	}
@@ -1081,9 +833,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 			let value = event.target.value.toLowerCase();
 			if (this.selectedConsume) {
 				if (value == this.selectedConsume.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveConsume = true;
-
 				}
 				else {
 					this.disableSaveConsume = false;
@@ -1096,7 +846,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	openDiscount(content) {
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-
 		this.isSaving = true;
 		this.loadMasterCompanies();
 		this.sourceAction = new DiscountValue();
@@ -1104,27 +853,17 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 		this.discontValue = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-
-
-
 	}
 	discountvaluedesc(event) {
-		//
 		if (this.alldiscountvalueInfo) {
-
 			for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
 				if (event == this.alldiscountvalueInfo[i].discontValue) {
 					this.sourceVendor.itemClassificationCode = this.alldiscountvalueInfo[i].discontValue;
 					this.disableSaveConsume = true;
-
 					this.selectedConsume = event;
 				}
-
 			}
 		}
 	}

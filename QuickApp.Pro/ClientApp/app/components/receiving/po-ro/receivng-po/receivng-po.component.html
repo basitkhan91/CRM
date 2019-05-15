@@ -349,7 +349,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Company</label>
                                                         <div class="col-sm-7">
-                                                            <select>
+                                                            <select [(ngModel)]="stockCompanyId" [ngModelOptions]="{standalone: true}" (change)="getStockBUList(stockCompanyId)">
                                                                 <option *ngFor="let company of maincompanylist" [ngValue]="company.managementStructureId">{{company.code}}</option>
                                                             </select>
                                                         </div>
@@ -761,41 +761,41 @@
                                                                                         <tbody> 
                                                                                             <tr> 
                                                                                                 <td>Remaining</td> 
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="cycleRemaining" [ngModelOptions]="{standalone: true}" ></td> 
                                                                                                 <td>Remaining</td> 
-                                                                                                <td><input type="text" class="w50" ></td>
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="timeRemaining" [ngModelOptions]="{standalone: true}"></td>
                                                                                                 <td>Since New</td> 
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="lastSinceNew" [ngModelOptions]="{standalone: true}"></td> 
                                                                                              </tr>
                                                                                              <tr> 
                                                                                                 <td>Since New</td> 
-                                                                                                <td><input type="text" class="w50" ></td>
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="cycleSinceNew" [ngModelOptions]="{standalone: true}"></td>
                                                                                                 <td>Since New</td>
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td> 
                                                                                                 <td>Since Ovh</td> 
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="lastSinceOVH" [ngModelOptions]="{standalone: true}"></td> 
                                                                                              </tr> 
                                                                                             <tr> 
                                                                                                 <td>Since Ovh</td> 
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="cycleSinceOvh" [ngModelOptions]="{standalone: true}"></td> 
                                                                                                 <td>Since Ovh</td> 
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="timeSinceOvh" [ngModelOptions]="{standalone: true}"></td> 
                                                                                                 <td>Since Insp</td> 
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td> 
                                                                                              </tr> 
                                                                                             <tr> 
                                                                                                 <td>Since Insp</td>
-                                                                                                <td><input type="text" class="w50" ></td>
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="cycleSinceInsp" [ngModelOptions]="{standalone: true}"></td>
                                                                                                 <td>Since Insp</td>
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td> 
                                                                                                 <td></td>
                                                                                                 <td></td>
                                                                                              </tr> 
                                                                                             <tr>
                                                                                                 <td>Since Repair</td> 
-                                                                                                <td><input type="text" class="w50" ></td>
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="cycleSinceRepair" [ngModelOptions]="{standalone: true}"></td>
                                                                                                 <td>Since Repair</td> 
-                                                                                                <td><input type="text" class="w50" ></td> 
+                                                                                                <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td> 
                                                                                                 <td></td> 
                                                                                                 <td></td>
                                                                                             </tr>

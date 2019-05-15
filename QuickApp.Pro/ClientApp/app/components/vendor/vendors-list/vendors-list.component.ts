@@ -26,7 +26,7 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
     animations: [fadeInOut]
 })
 /** Actions component*/
-export class VendorsListComponent implements OnInit, AfterViewInit {
+export class VendorsListComponent implements OnInit{
 	activeIndex: number;
     vendorCode: any = "";
     vendorname: any = "";
@@ -34,7 +34,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
     VendorTypeId: any = "";
     allgeneralInfo: any[];
 	collection: any;
-	//vendorCode: any = "";
     memo: any = "";
     createdBy: any = "";
     updatedBy: any = "";
@@ -82,18 +81,12 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
     shippingCol: any[];
     selectedShippingColumns: any[];
     ngOnInit(){
-
-        // debugger;
 		this.loadData();
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-
 		this.workFlowtService.ShowPtab = false;
-		
 		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
-		
 	}
-
 	
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -105,10 +98,8 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
     private isSaving: boolean;
 	public sourceVendor: any = {};
     public domesticSaveObj: Object = {
-
     }
     public internationalSaveObj: Object = {
-
     }
     public sourceAction: any = [];
     public auditHisory: AuditHistory[] = [];
@@ -129,46 +120,36 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
     Active: string = "Active";
     length: number;
     localCollection: any;
-
-    /** Actions ctor */
-
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    public allWorkFlows: any[] = [];
 
     constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.local = this.workFlowtService.financeCollection;
 		this.dataSource = new MatTableDataSource();
 		this.workFlowtService.listCollection = null;
     }
-
-    ngAfterViewInit() {
-        //this.dataSource.paginator = this.paginator;
-        //this.dataSource.sort = this.sort;
-    }
-    public allWorkFlows: any[] = [];
-
-
+    
 	public navigateTogeneralInfo() {
-		//this.workFlowtService.listCollection = [];
 		this.activeIndex = 0;
 		this.workFlowtService.indexObj.next(this.activeIndex);
         this.workFlowtService.isEditMode = false;
         this.workFlowtService.enableExternal = false;
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information')
 
-	}
+    }
+
+    //Load Data for Vendor List
 
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getVendorList().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 
         this.cols = [
-            //{ field: 'actionId', header: 'Action Id' },
             { field: 'vendorCode', header: 'Vendor Code' },
 			{ field: 'vendorName', header: 'Vendor Name' },
             { field: 'description', header: 'Vendor Type' },
@@ -177,25 +158,33 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			{ field: 'stateOrProvince', header: 'StateOrProvince' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
-           
 			{ field: 'updatedDate', header: 'Updated Date' },
-           { field: 'createdDate', header: 'Created Date' }
-
+            { field: 'createdDate', header: 'Created Date' }
         ];
-
         this.selectedColumns = this.cols;
-
     }
+
+    private onDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allVendorList = allWorkFlows;
+    }
+
+    //load master Companies
 
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
+    }
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
     }
 
     public applyFilter(filterValue: string) {
@@ -204,23 +193,17 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
     handleChange(rowData, e) {
         if (e.checked == false) {
             this.sourceVendor = rowData;
-            //this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
-           // this.sourceVendor.isActive == false;
             this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
         else {
             this.sourceVendor = rowData;
-            //this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
-           // this.sourceVendor.isActive == true;
             this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
 
 	}
@@ -234,7 +217,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateActionforActive(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
 		else {
 			this.sourceVendor = rowData;
@@ -244,26 +226,14 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateActionforActive(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
-
 	}
 
     private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        //debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allVendorList = allWorkFlows;
-
-
-    }
+    
     private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
-
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -271,63 +241,38 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
         this.vendorname = this.allgeneralInfo[0].vendorName;
         this.vendorCode = this.allgeneralInfo[0].vendorCode;
         console.log(this.allgeneralInfo);
-
-
     }
 
     filterActions(event) {
-
         this.localCollection = [];
         for (let i = 0; i < this.allVendorList.length; i++) {
             let actionName = this.allVendorList[i].description;
-
             if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.localCollection.push(actionName);
-
             }
         }
     }
 
     private onHistoryLoadSuccessful(auditHistory: any, content) {
-
-        // debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         this.auditHisory = auditHistory;
-
-
         this.modal = this.modalService.open(content, { size: 'lg' });
-
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-
-
-    }
-
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-
     }
 
     private onDataLoadFailed(error: any) {
-        // alert(error);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
     }
 
     open(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        //this.sourceVendor.isActive = true;
         this.actionName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -346,7 +291,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 	}
 
 	openDelete(content1, rowData) {
-
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceVendor = rowData;
@@ -356,9 +300,8 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-
+    //View Edit
     openEdit(row) {
-
         this.isEditMode = true;
 		this.workFlowtService.isEditMode = true;
         this.isSaving = true;
@@ -369,20 +312,16 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
         this.workFlowtService.enableExternal = true;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-        // this.actionName = this.sourceVendor.description;
-
 	}
 	private loadContactDataData(vendorId) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.workFlowtService.getContacts(vendorId).subscribe(
 			results => this.onContactDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
 
 		this.contactcols = [
-			//{ field: 'actionId', header: 'Action Id' },
 			{ field: 'firstName', header: 'First Name' },
 			{ field: 'lastName', header: 'Last  Name' },
 			{ field: 'contactTitle', header: 'Contact Title' },
@@ -393,23 +332,19 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			{ field: 'updatedBy', header: 'Updated By' },
 			{ field: 'updatedDate', header: 'Updated Date' },
 			{ field: 'createdDate', header: 'Created Date' }
-
 		];
-
 		this.selectedContactColumns = this.contactcols;
-
-	}
+    }
+    //load Shipping Data
 	private loadShippingData(vendorId) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.workFlowtService.getVendorShipAddressGet(vendorId).subscribe(
 			results => this.onShippingDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
 
 		this.shippingCol = [
-
 			{ field: 'siteName', header: 'Site Name' },
 			{ field: 'address1', header: 'Address1' },
 			{ field: 'address2', header: 'Address2' },
@@ -418,71 +353,50 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			{ field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
 			{ field: 'country', header: 'Country' }
-
 		];
 
 		this.selectedShippingColumns = this.shippingCol;
-
 	}
 
+    private onShippingDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allShippings = allWorkFlows;
+    }
 
 	private onContactDataLoadSuccessful(allWorkFlows: any[]) {
-
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allContacts = allWorkFlows;
-
-
 	}
-	private onPaymentDataLoadSuccessful(allWorkFlows: any[]) {
-
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allpayments = allWorkFlows;
-
-
-	}
-	private onShippingDataLoadSuccessful(allWorkFlows: any[]) {
-
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allShippings = allWorkFlows;
-
-
-	}
-
+    //Load Payment Data
 	private loadPayamentData(vendorId) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
 		this.workFlowtService.getCheckPaymentobj(vendorId).subscribe(
 			results => this.onPaymentDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-
-
-
 		this.paymentcols = [
-			//{ field: 'actionId', header: 'Action Id' },
 			{ field: 'siteName', header: 'Site Name' },
 			{ field: 'address1', header: 'Address' },
 			{ field: 'city', header: 'City' },
 			{ field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
 			{ field: 'country', header: 'Country' }
-
 		];
-
 		this.selectedPaymentColumns = this.paymentcols;
-
-	}
+    }
+    private onPaymentDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allpayments = allWorkFlows;
+    }
 
 	openView(content, row) {
-		
-			//this.sourceVendor = row;
 			this.vendorCode = row.vendorCode;
 			this.vendorName = row.vendorName;
 			this.vendorTypeId = row.t.vendorTypeId;
@@ -515,7 +429,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.licenseNumber = row.t.licenseNumber;
 			this.capabilityId = row.capabilityId;
 			this.vendorURL = row.t.vendorURL;
-			//this.sourceVendor = row;
 			this.creditlimit = row.t.creditlimit;
 			this.discountLevel = row.t.discountLevel;
 			this.is1099Required = row.t.is1099Required;
@@ -537,123 +450,15 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-
         this.sourceVendor = row;
-
-
         this.isSaving = true;
-         //debugger;
 		this.workFlowtService.vendorHistory(this.sourceVendor.vendorId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
-
-
     }
-
-
     AddPage() {
-
-		
-
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-
     }
-
-
-    //saveCheckPaymentInfo(method: any) {
-
-    //    debugger;
-
-    //    this.isSaving = true;
-
-    //    if (this.isEditMode == false) {
-    //        //this.sourceVendor.createdBy = this.userName;
-    //        //this.sourceVendor.updatedBy = this.userName;
-    //        //this.sourceVendor.masterCompanyId = 1;
-
-    //        this.workFlowtService.addCheckinfo(this.sourceVendor).subscribe(data => {
-    //            debugger;
-    //            this.localCollection = data;
-    //            this.updateVendorCheckPayment(this.localCollection);
-    //        })
-
-
-    //    }
-    //    else {
-
-    //        //this.sourceVendor.updatedBy = this.userName;
-    //        //this.sourceVendor.masterCompanyId = 1;
-    //        this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(
-    //            response => this.saveCompleted(this.sourceVendor),
-    //            error => this.saveFailedHelper(error));
-    //    }
-
-    //    //this.modal.close();
-    //}
-
-    //saveDomesticPaymentInfo(method: any) {
-
-    //    debugger;
-
-    //    this.isSaving = true;
-
-    //    if (this.isEditMode == false) {
-    //        //this.sourceVendor.createdBy = this.userName;
-    //        //this.sourceVendor.updatedBy = this.userName;
-    //        //this.sourceVendor.masterCompanyId = 1;
-
-    //        this.workFlowtService.addDomesticinfo(this.domesticSaveObj).subscribe(data => {
-    //            debugger;
-    //            this.localCollection = data;
-    //            this.updateVendorDomesticWirePayment(this.localCollection);
-    //        })
-
-
-    //    }
-    //    else {
-
-    //        //this.sourceVendor.updatedBy = this.userName;
-    //        //this.sourceVendor.masterCompanyId = 1;
-    //        this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(
-    //            response => this.saveCompleted(this.sourceVendor),
-    //            error => this.saveFailedHelper(error));
-    //    }
-
-    //    //this.modal.close();
-    //}
-
-    //saveInternationalPaymentInfo(method: any) {
-
-    //    debugger;
-
-    //    this.isSaving = true;
-
-    //    if (this.isEditMode == false) {
-    //        //this.sourceVendor.createdBy = this.userName;
-    //        //this.sourceVendor.updatedBy = this.userName;
-    //        //this.sourceVendor.masterCompanyId = 1;
-
-    //        this.workFlowtService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
-    //            debugger;
-    //            this.localCollection = data;
-    //            this.updateVendorInternationalWirePayment(this.localCollection);
-    //        })
-
-
-    //    }
-    //    else {
-
-    //        //this.sourceVendor.updatedBy = this.userName;
-    //        //this.sourceVendor.masterCompanyId = 1;
-    //        this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(
-    //            response => this.saveCompleted(this.sourceVendor),
-    //            error => this.saveFailedHelper(error));
-    //    }
-
-    //    //this.modal.close();
-    //}
-
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.isDeleteMode = true;
@@ -670,29 +475,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 		this.isEditMode = false;
 		this.modal.close();
 	}
-
-    //updateVendorCheckPayment(updateObj: any) {
-    //    // debugger;
-    //    this.workFlowtService.updateVendorCheckpayment(updateObj, this.local.vendorId).subscribe(data => {
-    //        this.loadData();
-    //    })
-    //}
-
-    //updateVendorDomesticWirePayment(updateObj: any) {
-    //    // debugger;
-    //    this.workFlowtService.updateVendorDomesticWirePayment(updateObj, this.local.vendorId).subscribe(data => {
-    //        this.loadData();
-    //    })
-    //}
-
-
-    //updateVendorInternationalWirePayment(updateObj: any) {
-    //    // debugger;
-    //    this.workFlowtService.updateVendorInternationalWirePayment(updateObj, this.local.vendorId).subscribe(data => {
-    //        this.loadData();
-    //    })
-    //}
-
     private saveCompleted(user?: any) {
         this.isSaving = false;
 
@@ -702,18 +484,14 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
         }
-
         this.loadData();
     }
 
     private saveSuccessHelper(role?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
         this.loadData();
-
     }
 
     get userName(): string {
@@ -726,7 +504,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
-
     private getDismissReason(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
@@ -745,7 +522,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
 		else {
 			this.sourceVendor = rowData;
@@ -755,12 +531,9 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
-
 	}
 	opencontactView(content, row) {
-		
 		this.sourceVendor = row;
 		this.firstName = row.firstName;
 		this.lastName = row.lastName;
@@ -780,29 +553,18 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 	}
 
 	deleteItemAndCloseModelforContact(contactId) {
-		// debugger;
-
 		this.isSaving = true;
-
 		this.workFlowtService.deleteContact(contactId).subscribe(
 			response => this.saveCompleted(this.sourceVendor),
 			error => this.saveFailedHelper(error));
-		//this.modal.close();
 	}
-
-
 	openEditforcontact(content, row) {
-
 		this.isEditMode = true;
-
 		this.isSaving = true;
 		this.sourceVendor = row;
 		this.loadMasterCompanies();
-		// this.actionName = this.sourceVendor.description;
-
 	}
 	openViewforfinance(content, row) {
-		
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
@@ -818,7 +580,6 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
 		else {
 			this.sourceVendor = rowData;
@@ -828,26 +589,17 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
-			//alert(e);
 		}
-
 	}
 
 	openHistforcontact(content, row) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
-
 		this.sourceVendor = row;
-
-
 		this.isSaving = true;
-		//debugger;
 		this.workFlowtService.historyAcion(this.sourceVendor.contactId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
-
-
 	}
 	openContactList(content,row) {
 		this.modal = this.modalService.open(content, { size: 'lg' });
@@ -855,7 +607,5 @@ export class VendorsListComponent implements OnInit, AfterViewInit {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 		this.loadContactDataData(row.vendorId);
-		
-
 	}
 }

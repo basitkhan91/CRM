@@ -44,19 +44,14 @@ export class VendorEmailsComponent implements OnInit, AfterViewInit{
 		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
 	}
 	ngAfterViewInit() {
-		
 	}
 	constructor(private modalService: NgbModal, public workFlowtService: VendorService) {
-
 	}
 
 	openClassification(content)
 	{
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
