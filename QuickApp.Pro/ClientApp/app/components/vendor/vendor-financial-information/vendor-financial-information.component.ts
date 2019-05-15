@@ -71,17 +71,20 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     creditTermsId: any;
     disableSaveCurrency: boolean;
     SelectedCurrencyInfo: any;
-	ngOnInit(): void {
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.loadCreditTermsData();
-		this.sourceVendor.is1099Required = true;
-		this.loadDiscountData();
-		this.loadCurrencyData();
-		if (this.local) {
-			this.getVendorsList();
-		}
-	}
+    ngOnInit(): void {
+        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.loadCreditTermsData();
+        this.sourceVendor.is1099Required = true;
+        this.loadDiscountData();
+        this.loadCurrencyData();
+        if (this.local) {
+            this.getVendorsList();
+        }
+        this.sourceVendor.aeroExchange = true;
+        this.sourceVendor.edi = true;
+
+    }
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	filteredBrands: any[];
