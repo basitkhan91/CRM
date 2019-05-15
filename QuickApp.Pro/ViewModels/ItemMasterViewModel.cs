@@ -351,7 +351,7 @@ namespace QuickApp.Pro.ViewModels
         public  string Partdescription { get; set; }
         public string ParentPartId { get; set; }
         
-        //public string PartDescription { get; internal set; }
+        public long? ItemNonStockClassificationId { get; set; }
         public string Name { get; set; }
 
         public string Itemclassdescription { get; set; }
