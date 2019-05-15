@@ -89,6 +89,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 	private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
+    isDefaultContact: any;
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
 			//this.comName = companyDirective.companyName;
@@ -120,7 +121,6 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
         this.loadCompleteddata();
         this.router.queryParams.subscribe((params: Params) => {
         });
-
     }
     //Filter Customer First Name//
 	filterFirstNames(event) {
@@ -427,7 +427,13 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 				
 				this.activeIndex = 1;
 				this.sourceCustomer.updatedBy = this.userName;
-				this.sourceCustomer.masterCompanyId = 1;
+                this.sourceCustomer.masterCompanyId = 1;
+                if (this.sourceCustomer.isDefaultContact == true) {
+                    this.sourceCustomer.isDefaultContact = this.isDefaultContact;
+                }
+                else {
+                    this.sourceCustomer.isDefaultContact = null;
+                }
 				this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(data => {
 					this.loadData();
 					if (data) { this.sourceCustomer = new Object(); }
@@ -508,7 +514,16 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 		this.alertService.stopLoadingMessage();
 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-	}
+    }
+
+    // Tried For Keypress event 
+    keyPress(event: any) {
+        const pattern = /[0-9\+\-\ ]/;
+        let inputChar = String.fromCharCode(event.charCode);
+        if (event.keyCode != 8 && !pattern.test(inputChar)) {
+            event.preventDefault();
+        }
+    }
 
 }
 

@@ -74,6 +74,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     employeeLeaveTypeId: any;
     allmultiLeaves: any[];
     allMultipleLeaves: any[]=[];
+    managementStructureData: any[];
 	ngOnInit(): void {
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
 		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
@@ -130,12 +131,15 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	Active: string = "Active";
     allAircraftManufacturer: any[] = [];
     sourceEmployee: any = {};
+    updateMode: boolean = false;
+
 	constructor(private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
 		
-			this.sourceEmployee = this.employeeService.listCollection;
+            this.sourceEmployee = this.employeeService.listCollection;
+            this.updateMode = true;
 			this.sourceEmployee.startDate = new Date();
 			this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
 			if (this.local) {
@@ -850,47 +854,90 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.maincompanylist.push(this.allManagemtninfo[i]);
 
 			}
-
-			//console.log(this.maincompanylist);
 		}
 
+        this.setManagementStrucureData(this.sourceEmployee);
 	}
-	getBUList(companyId) {
-		this.bulist = [];
-		this.departmentList = [];
-		this.divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == companyId) {
-				this.bulist.push(this.allManagemtninfo[i]);
-			}
-		}
+	
 
-		console.log(this.bulist);
+    getBUList(companyId) {
+        if (this.updateMode == false) {
+            this.sourceEmployee.buisinessUnitId = "";
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = companyId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.bulist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+            }
 
-	}
+        }
+        else {
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.bulist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+            }
+        }
+    }
 
-	getDepartmentlist(businessUnitId) {
-		this.departmentList = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == businessUnitId) {
-				this.departmentList.push(this.allManagemtninfo[i]);
-			}
-		}
+    getDepartmentlist(businessUnitId) {
+        if (this.updateMode == false) {
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = businessUnitId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
 
-		console.log(this.departmentList);
-	}
+        }
+        else {
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+    }
 
+    getDivisionlist(departmentId) {
+        if (this.updateMode == false) {
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = departmentId;
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+        else {
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+    }
 
-	getDivisionlist(departmentId) {
-		this.divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == departmentId) {
-				this.divisionlist.push(this.allManagemtninfo[i]);
-			}
-		}
+    divisionChange(divisionId) {
+        this.sourceEmployee.managementStructureId = divisionId;
+    }
 
-		console.log(this.divisionlist);
-	}
 
 
 	private multiLeavelist() {
@@ -906,7 +953,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.employeeService.listCollection = this.local;
 		this.activeIndex = 1;
 		this.employeeService.indexObj.next(this.activeIndex);
-		//this.saveCompleted(this.sourceCustomer);
 		this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
 
 	}
@@ -925,5 +971,48 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.localCollection = data;
 			})
 		}
-	}
+    }
+
+    setManagementStrucureData(obj) {
+        this.managementStructureData = [];
+        this.checkMSParents(obj.managementStructureId);
+        if (this.managementStructureData.length == 4) {
+            this.sourceEmployee.companyId = this.managementStructureData[3];
+            this.sourceEmployee.buisinessUnitId = this.managementStructureData[2];
+            this.sourceEmployee.departmentId = this.managementStructureData[1];
+            this.sourceEmployee.divisionId = this.managementStructureData[0];
+            this.getBUList(this.sourceEmployee.companyId);
+            this.getDepartmentlist(this.sourceEmployee.buisinessUnitId);
+            this.getDivisionlist(this.sourceEmployee.departmentId);
+        }
+        if (this.managementStructureData.length == 3) {
+            this.sourceEmployee.companyId = this.managementStructureData[2];
+            this.sourceEmployee.buisinessUnitId = this.managementStructureData[1];
+            this.sourceEmployee.departmentId = this.managementStructureData[0];
+            this.getBUList(this.sourceEmployee.companyId);
+            this.getDepartmentlist(this.sourceEmployee.buisinessUnitId);
+        }
+        if (this.managementStructureData.length == 2) {
+            this.sourceEmployee.companyId = this.managementStructureData[1];
+            this.sourceEmployee.buisinessUnitId = this.managementStructureData[0];
+            this.getBUList(this.sourceEmployee.companyId);
+        }
+        if (this.managementStructureData.length == 1) {
+            this.sourceEmployee.companyId = this.managementStructureData[0];
+        }
+
+    }
+
+    checkMSParents(msId) {
+        this.managementStructureData.push(msId);
+        for (let a = 0; a < this.allManagemtninfo.length; a++) {
+            if (this.allManagemtninfo[a].managementStructureId == msId) {
+                if (this.allManagemtninfo[a].parentId) {
+                    this.checkMSParents(this.allManagemtninfo[a].parentId);
+                    break;
+                }
+            }
+        }
+
+    }
 }

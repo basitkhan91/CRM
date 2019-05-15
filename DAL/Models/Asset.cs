@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-   public class Asset 
+   public class Asset : IAudit
     {
         [Key]
 
-        public long AssetRecordId { get; set; }
+        public long? AssetRecordId { get; set; }
 
         [Required(ErrorMessage = "Id Is Required.")]
         public string AssetId { get; set; }
@@ -20,7 +20,7 @@ namespace DAL.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
-        public long ManagementStructureId { get; set; }
+        public long? ManagementStructureId { get; set; }
         public Nullable<bool> CalibrationRequired { get; set; }
         public Nullable<bool> CertificationRequired { get; set; }
         public Nullable<bool> InspectionRequired { get; set; }

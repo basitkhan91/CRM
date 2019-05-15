@@ -40,7 +40,10 @@ namespace DAL.Repositories.Interfaces
                             v.CustomerBillingAddressId,
                             v.CreatedDate,
                             v.UpdatedDate,
-                            v.CustomerId
+                            v.CustomerId,
+                            v.IsActive,
+                            v.IsDelete,
+                            v.IsPrimary
 
 
                         }).ToList();

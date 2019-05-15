@@ -31,7 +31,7 @@ namespace QuickApp.Pro.Controllers
             _context = context;
         }
 
-        
+
         [HttpGet("Get")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult Get()
@@ -69,9 +69,8 @@ namespace QuickApp.Pro.Controllers
                 throw;
             }
 
-
-
         }
+
 
         [HttpGet("GetCountries")]
         [Produces(typeof(List<ItemMasterViewModel>))]
@@ -81,11 +80,11 @@ namespace QuickApp.Pro.Controllers
             return Ok(allcustomertype);
 
         }
-        
+
 
         [HttpGet("GetitemList/{value}")]
         [Produces(typeof(List<ItemMasterViewModel>))]
-        public IActionResult itemlist(string  value,ItemMasterViewModel itemMasterViewModel)
+        public IActionResult itemlist(string value, ItemMasterViewModel itemMasterViewModel)
         {
             if (value == "Stock")
             {
@@ -104,18 +103,18 @@ namespace QuickApp.Pro.Controllers
             }
             //var allitemslist = _unitOfWork.itemMaster.getAllItemMasterdata(); //.GetAllCustomersData();
             return Ok(ModelState);
-            
+
         }
 
 
         [HttpGet("GetRolesDatayRoleId/{value}")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetRolesByRoleId(long value)
-        {           
-                var stocklist = _unitOfWork.itemMaster.getRolesDatayRoleId(value); //.GetAllCustomersData();
-                return Ok(stocklist);
-           
-            
+        {
+            var stocklist = _unitOfWork.itemMaster.getRolesDatayRoleId(value); //.GetAllCustomersData();
+            return Ok(stocklist);
+
+
         }
         [HttpGet("GetItemStocklist")]
         [Produces(typeof(List<ItemMasterViewModel>))]
@@ -169,19 +168,19 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetParntnumberlist()
         {
 
-            var obj = _context.ItemMaster.Where(a=>a.IsDelete == true || a.IsDelete == null).OrderByDescending(c => c.ItemMasterId).ToList();
+            var obj = _context.ItemMaster.Where(a => a.IsDelete == true || a.IsDelete == null).OrderByDescending(c => c.ItemMasterId).ToList();
             return Ok(obj);
-          
+
         }
 
-       // [HttpGet("getEquipmentlist")]
-       //[Produces(typeof(List<Equipment>))]
-       // public IActionResult getEquipmentlist()
-       // {
+        // [HttpGet("getEquipmentlist")]
+        //[Produces(typeof(List<Equipment>))]
+        // public IActionResult getEquipmentlist()
+        // {
 
-       //     //var obj = _context.Equipment.OrderByDescending(c => c.EquipmentId).ToList();
-       //     //return Ok(obj);
-       // }
+        //     //var obj = _context.Equipment.OrderByDescending(c => c.EquipmentId).ToList();
+        //     //return Ok(obj);
+        // }
 
 
         [HttpDelete("itemmaster/{id}")]
@@ -242,7 +241,7 @@ namespace QuickApp.Pro.Controllers
 
         //}
 
-        
+
 
 
         [HttpGet("GetCapesDatawithMasterId/{id}")]
@@ -287,7 +286,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-       
+
         [HttpPost("manufacturerpost")]
         public IActionResult manufacturer([FromBody] Manufacturer itemMasterViewModel)
         {
@@ -323,7 +322,7 @@ namespace QuickApp.Pro.Controllers
                     // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
                     var existingresule = _context.ItemMasterAircraftModel.Where(c => c.AircraftModelId == itemMasterAircraftModel.AircraftModelId).FirstOrDefault();
                     existingresule.AircraftModelId = itemMasterAircraftModel.AircraftModelId;
-                   
+
                     existingresule.ItemMasterId = itemMasterAircraftModel.ItemMasterId;
                     existingresule.DashNumber = itemMasterAircraftModel.DashNumber;
                     existingresule.CreatedBy = itemMasterAircraftModel.CreatedBy;
@@ -352,10 +351,10 @@ namespace QuickApp.Pro.Controllers
                     //saveItemcapes(returnid, itemMasterAircraftModel.itemId);
 
                 }
-                }
-                return Ok(itemMasterAircraftModel);
-                // return Ok(ModelState);
             }
+            return Ok(itemMasterAircraftModel);
+            // return Ok(ModelState);
+        }
 
 
         //[HttpPost("Mancapespost")]
@@ -436,13 +435,13 @@ namespace QuickApp.Pro.Controllers
         //    // return Ok(ModelState);
         //}
         [HttpPost("Mancapespost")]
-        public IActionResult addCharges([FromBody] List<Capability>  capability)
+        public IActionResult addCharges([FromBody] List<Capability> capability)
         {
             if (ModelState.IsValid)
             {
-                for(var i=0;i< capability.Count(); i++)
+                for (var i = 0; i < capability.Count(); i++)
                 {
-                   // capability[i].CapabilityId = 0;
+                    // capability[i].CapabilityId = 0;
                     capability[i].MasterCompanyId = 1;
                     capability[i].CreatedDate = DateTime.Now;
                     if (capability[i].CapabilityId > 0)
@@ -458,7 +457,8 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok();
         }
-        public void saveItemcapes(long returnid,long itemid) {
+        public void saveItemcapes(long returnid, long itemid)
+        {
 
             ItemMasterCapes imc = new ItemMasterCapes();
 
@@ -473,11 +473,11 @@ namespace QuickApp.Pro.Controllers
 
 
 
-          
+
         }
 
         [HttpPost("itemMasterpost")]
-        public IActionResult CreateContact([FromBody] ItemMasterViewModel itemMasterViewModel,Part part, Manufacturer manufacturer,Equipment equipment)
+        public IActionResult CreateContact([FromBody] ItemMasterViewModel itemMasterViewModel, Part part, Manufacturer manufacturer, Equipment equipment)
         {
             if (ModelState.IsValid)
             {
@@ -508,10 +508,11 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemMasterViewModel.IsSerialized = false;
                 }
-                else {
+                else
+                {
                     itemmaserObj.IsSerialized = itemMasterViewModel.IsSerialized;
                 }
-               
+
                 itemmaserObj.ItemGroupId = itemMasterViewModel.ItemGroupId;
                 itemmaserObj.ItemClassificationId = itemMasterViewModel.ItemClassificationId;
                 itemmaserObj.IsAcquiredMethodBuy = itemMasterViewModel.IsAcquiredMethodBuy;
@@ -608,7 +609,6 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.SalesIsFixedPrice = itemMasterViewModel.SalesIsFixedPrice;
                 itemmaserObj.IsTimeLife = itemMasterViewModel.IsTimeLife;
                 itemmaserObj.MasterCompanyId = itemMasterViewModel.MasterCompanyId;
-
                 itemmaserObj.ListPrice = itemMasterViewModel.ListPrice;
                 itemmaserObj.PriceDate = itemMasterViewModel.PriceDate;
                 itemmaserObj.UnitCost = itemMasterViewModel.UnitCost;
@@ -616,13 +616,15 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.CreatedDate = DateTime.Now;
                 itemmaserObj.UpdatedDate = DateTime.Now;
                 itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
+                itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
                 itemmaserObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
-               if (manufacturer.Comments != null) {
+                if (manufacturer.Comments != null)
+                {
                     _context.Manufacturer.Add(manufacturer);
                     _unitOfWork.SaveChanges();
                     itemmaserObj.ManufacturerId = manufacturer.ManufacturerId;
                 }
-               
+
                 if (itemMasterViewModel.ATAChapterId == null)
                 {
                     itemmaserObj.ATAChapterId = null;
@@ -631,7 +633,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemmaserObj.ATASubChapterId = null;
                 }
-               
+
                 if (itemMasterViewModel.StockUnitOfMeasureId == null)
                 {
                     itemmaserObj.StockUnitOfMeasureId = null;
@@ -681,7 +683,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemmaserObj.SalesCurrencyId = null;
                 }
-                
+
                 if (itemMasterViewModel.MasterCompanyId == null)
                 {
                     itemmaserObj.MasterCompanyId = null;
@@ -690,7 +692,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemmaserObj.CurrencyId = null;
                 }
-                
+
                 if (itemMasterViewModel.ProvisionId == null)
                 {
                     itemmaserObj.ProvisionId = null;
@@ -705,7 +707,7 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPut("itemMasterpost/{id}")]
-        public IActionResult updateItems(long id,[FromBody] ItemMasterViewModel itemMasterViewModel)
+        public IActionResult updateItems(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -816,12 +818,13 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.PriceDate = itemMasterViewModel.PriceDate;
                 itemmaserObj.UnitCost = itemMasterViewModel.UnitCost;
                 itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
+                itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
 
                 if (itemMasterViewModel.AircraftTypeId != null)
-                    {
-                        var aircraftTypeList = _unitOfWork.ItemMasterAircraftManafacturerRepository.GetAllData().ToList();
-                        aircraftTypeList.Where(a => a.ItemMasterId == id).ToList().ForEach(a => _unitOfWork.ItemMasterAircraftManafacturerRepository.Remove(a));
-                        _unitOfWork.SaveChanges();
+                {
+                    var aircraftTypeList = _unitOfWork.ItemMasterAircraftManafacturerRepository.GetAllData().ToList();
+                    aircraftTypeList.Where(a => a.ItemMasterId == id).ToList().ForEach(a => _unitOfWork.ItemMasterAircraftManafacturerRepository.Remove(a));
+                    _unitOfWork.SaveChanges();
 
                     foreach (string s in itemMasterViewModel.AircraftTypeId)
                     {
@@ -840,7 +843,7 @@ namespace QuickApp.Pro.Controllers
                             _unitOfWork.SaveChanges();
                         }
                     }
-                    }
+                }
                 if (itemMasterViewModel.IntegrationPortalId != null)
                 {
                     var integrationList = _unitOfWork.ItemMasterIntegrationPortalRepository.GetAllData().ToList();
@@ -864,10 +867,6 @@ namespace QuickApp.Pro.Controllers
                         }
                     }
                 }
-
-
-
-                //itemmaserObj.IsActive = itemMasterViewModel.IsActive;
                 itemmaserObj.CreatedDate = DateTime.Now;
                 itemmaserObj.UpdatedDate = DateTime.Now;
                 itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
@@ -880,7 +879,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemmaserObj.ATASubChapterId = null;
                 }
-                
+
                 if (itemMasterViewModel.StockUnitOfMeasureId == null)
                 {
                     itemmaserObj.StockUnitOfMeasureId = null;
@@ -929,7 +928,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemmaserObj.SalesCurrencyId = null;
                 }
-                
+
                 if (itemMasterViewModel.MasterCompanyId == null)
                 {
                     itemmaserObj.MasterCompanyId = null;
@@ -938,13 +937,11 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemmaserObj.CurrencyId = null;
                 }
-                
+
                 if (itemMasterViewModel.ProvisionId == null)
                 {
                     itemmaserObj.ProvisionId = null;
                 }
-                //_context.Part.Update(partExistingresult);
-                //_unitOfWork.SaveChanges();
 
                 _unitOfWork.itemMaster.Update(itemmaserObj);
                 _unitOfWork.SaveChanges();
@@ -982,7 +979,6 @@ namespace QuickApp.Pro.Controllers
             {
                 if (_context.ItemMasterIntegrationPortal.Any(o => o.IntegrationPortalId == itemMasterIntegrationPortalViewModel.IntegrationPortalId))
                 {
-                    // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
                     var existingresule = _context.ItemMasterIntegrationPortal.Where(c => c.IntegrationPortalId == itemMasterIntegrationPortalViewModel.IntegrationPortalId).FirstOrDefault();
                     existingresule.IntegrationPortalId = itemMasterIntegrationPortalViewModel.IntegrationPortalId;
 
@@ -1010,7 +1006,6 @@ namespace QuickApp.Pro.Controllers
                 }
             }
             return Ok(itemMasterIntegrationPortalViewModel);
-            // return Ok(ModelState);
         }
 
         [HttpGet("IntegrationGet/{id}")]
@@ -1040,67 +1035,25 @@ namespace QuickApp.Pro.Controllers
             return Ok(descriptionbypart);
 
         }
-        //[HttpPost("itemMasterpost")]
-        //public IActionResult equipmentlist([FromBody] ItemMasterViewModel itemMasterViewModel,  Manufacturer manufacturer, Equipment equipment)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (itemMasterViewModel == null)
-        //            return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
-        //        ItemmasterEquipment itemmaserObj = new ItemmasterEquipment();
 
-
-
-        //        itemmaserObj.CreatedDate = DateTime.Now;
-        //        itemmaserObj.UpdatedDate = DateTime.Now;
-        //        itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
-        //        itemmaserObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
-
-        //        _context.Equipment.Add(equipment);
-        //        _unitOfWork.SaveChanges();
-        //        itemmaserObj.EquipmentId = equipment.EquipmentId;
-
-
-        //        _unitOfWork.itemMaster.Add(itemmaserObj);
-        //        _unitOfWork.SaveChanges();
-        //        return Ok(itemmaserObj);
-        //    }
-
-        //    return Ok(ModelState);
-        //}
         [HttpPut("itemstockUpdateforActive/{id}")]
         public IActionResult customersUpdateforActive(long id, [FromBody]ItemMasterViewModel itemMasterViewModel)
         {
-           
-                var CustomerObj = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == id);
-            // itemMasterViewModel.MasterCompanyId = 1;
-            //  CustomerObj.IsActive = true;
+
+            var CustomerObj = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == id);
+
             CustomerObj.IsActive = itemMasterViewModel.IsActive;
-                CustomerObj.UpdatedDate = DateTime.Now;
-                //CustomerObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
-               // CustomerObj.ItemMasterId = itemMasterViewModel.ItemMasterId;
-                _unitOfWork.itemMaster.Update(CustomerObj);
-                _unitOfWork.SaveChanges();
-                return Ok(CustomerObj);
-           
-           
+            CustomerObj.UpdatedDate = DateTime.Now; ;
+            _unitOfWork.itemMaster.Update(CustomerObj);
+            _unitOfWork.SaveChanges();
+            return Ok(CustomerObj);
+
+
         }
 
         [HttpPost("saveItemmasteraircraftdata")]
         public IActionResult SaveItemMasteraircraft([FromBody]  ItemMasterAircraftManufacturerViewModel itemMasterAircraftManufacturerViewModel)
         {
-            //var existsobj = _context.ItemMasterAircraftManufacturer.Where(a=>a.ItemMasterId==itemMasterAircraftManufacturerViewModel.ItemMasterId).ToList();
-            //if (existsobj.Count > 0) {
-
-            //    long[] terms = new long[existsobj.Count];
-            //    for (int runs = 0; runs < 400; runs++)
-            //    {
-            //        terms[runs] = existsobj[runs].ItemMasterAircraftManufacturerId;
-            //    }
-            //    var result = string.Join(",", terms);
-            //}
-
-            
 
             if (ModelState.IsValid)
             {
@@ -1112,7 +1065,6 @@ namespace QuickApp.Pro.Controllers
                 CustomerObject.ItemMasterId = itemMasterAircraftManufacturerViewModel.ItemMasterId;
                 CustomerObject.AircraftTypeId = itemMasterAircraftManufacturerViewModel.AircraftTypeId;
                 CustomerObject.MasterCompanyId = itemMasterAircraftManufacturerViewModel.MasterCompanyId;
-                //CustomerObject.IsActive = true;
                 CustomerObject.IsActive = itemMasterAircraftManufacturerViewModel.IsActive;
                 CustomerObject.CreatedDate = DateTime.Now;
                 CustomerObject.UpdatedDate = DateTime.Now;
@@ -1126,11 +1078,11 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+
         [HttpGet("GetListforCapes")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetListforCapes()
         {
-            //  var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a=>a.ItemTypeId==1 && a.IsActive == true || a.ItemTypeId==3  && a.IsActive == true).ToList(); //.GetAllCustomersData();
             var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDelete == true || a.IsDelete == null) || a.ItemTypeId == 3 && (a.IsDelete == true || a.IsDelete == null)).ToList(); //.GetAllCustomersData();
             return Ok(allTaxrateInfo);
 
@@ -1144,24 +1096,64 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("GetNonStockClsiifications")]
+        public IActionResult getAll()
+        {
+            var nonStockClsiifications = _unitOfWork.Repository<ItemNonStockClassification>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.ItemNonStockClassificationId);
+            return Ok(nonStockClsiifications);
+        }
 
-        //[HttpGet("audits/{id}")]
-        //public IActionResult AuditDetails(long id)
-        //{
-        //    var audits = _unitOfWork.Repository<ItemMasterAudit>()
-        //        .Find(x => x.ItemMasterId == id)
-        //        .OrderByDescending(x => x.ItemMasterAuditId);
 
-        //    var auditResult = new List<AuditResult<ItemMasterAudit>>();
+        [HttpPost("itemNonStockclasspost")]
+        public IActionResult addAsset([FromBody]ItemNonStockClassification itemNonStockClassification)
+        {
+            if (itemNonStockClassification != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    itemNonStockClassification.IsActive = true;
+                    itemNonStockClassification.CreatedDate = DateTime.Now;
+                    itemNonStockClassification.MasterCompanyId = 1;
+                    _unitOfWork.Repository<ItemNonStockClassification>().Add(itemNonStockClassification);
+                    _unitOfWork.SaveChanges();
+                    return Ok(itemNonStockClassification);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
 
-        //    auditResult.Add(new AuditResult<ItemMasterAudit> { AreaName = "Item Master", Result = audits.ToList() });
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    return Ok(auditResult);
-        //}
+        }
+        [HttpPut("itemNonStockclasspost/{id}")]
+        public IActionResult updateAsset([FromBody]ItemNonStockClassification itemNonStockClassification)
+        {
+            if (itemNonStockClassification != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    itemNonStockClassification.UpdatedDate = DateTime.Now;
+                    _unitOfWork.Repository<ItemNonStockClassification>().Update(itemNonStockClassification);
+                    _unitOfWork.SaveChanges();
+                    return Ok(itemNonStockClassification);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
+        }
     }
-
-
-
-
 
 }

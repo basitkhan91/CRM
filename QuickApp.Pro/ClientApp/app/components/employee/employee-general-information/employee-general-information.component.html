@@ -18,7 +18,7 @@
 								<div class="tab-content form-bg" id="employee-block">
 									<div class="tab-pane step-data active" id="step1">
 										<div class="tab-pane active">
-											<div class="col-sm-12">
+                                            <div class="col-sm-12">
                                                 <div class="col-sm-6 w400">
                                                     <div class="form-group col-sm-12 input-icon1">
                                                         <label class="control-label col-sm-4">Employee First Name: </label>
@@ -64,11 +64,11 @@
                                                         <label class="control-label col-sm-4">Emp ID</label>
                                                         <div class="col-sm-7">
                                                             <!--<p-autoComplete [(ngModel)]="sourceEmployee.employeeId" [ngModelOptions]="{standalone: true}" [suggestions]="empIdCollection" (completeMethod)="filterempIdName($event)" [size]="30"
-                            [minLength]="1" [dropdown]="true">
-                <ng-template let-employeeId pTemplate="item">
-                    <div class="ui-helper-clearfix">{{employeeId}}</div>
-                </ng-template>
-            </p-autoComplete>-->
+                                [minLength]="1" [dropdown]="true">
+                    <ng-template let-employeeId pTemplate="item">
+                        <div class="ui-helper-clearfix">{{employeeId}}</div>
+                    </ng-template>
+                </p-autoComplete>-->
                                                             <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly>
 
                                                         </div>
@@ -108,218 +108,257 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-6 w400">
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Company</label>
+                                                        <div class="col-sm-7">
+                                                            <select [(ngModel)]="sourceEmployee.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceEmployee.companyId)">
+                                                                <option>--Select--</option>
+                                                                <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">BU</label>
+                                                        <div class="col-sm-7">
+                                                            <select [(ngModel)]="sourceEmployee.buisinessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceEmployee.buisinessUnitId)">
+                                                                <option>--Select--</option>
+                                                                <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Div</label>
+                                                        <div class="col-sm-7">
+                                                            <select [(ngModel)]="sourceEmployee.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceEmployee.departmentId)">
+                                                                <option>--Select--</option>
+                                                                <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Dept</label>
+                                                        <div class="col-sm-7">
+                                                            <select [(ngModel)]="sourceEmployee.divisionId" [ngModelOptions]="{standalone: true}" (change)="divisionChange(sourceEmployee.divisionId)">
+                                                                <option>--Select--</option>
+                                                                <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    </div>
 
-												<div class="col-sm-6 w400">
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">Company</label>
-														<div class="col-sm-7">
-															<select [(ngModel)]="sourceEmployee.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceEmployee.companyId)">
-																<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-															</select>
-														</div>
-													</div>
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">BU</label>
-														<div class="col-sm-7">
-															<select [(ngModel)]="sourceEmployee.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceEmployee.businessUnitId)">
-																<option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-															</select>
-														</div>
-													</div>
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">Dept</label>
-														<div class="col-sm-7">
-															<select [(ngModel)]="sourceEmployee.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceEmployee.departmentId)">
-																<option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-															</select>
-														</div>
-													</div>
-													<div class="form-group col-sm-12">
-														<label class="control-label col-sm-4">Division</label>
-														<div class="col-sm-7">
-																<select [(ngModel)]="sourceEmployee.divisionId" [ngModelOptions]="{standalone: true}">
-																	<option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-																</select>
-														</div>
-													</div>
+                                                    <!--<div class="col-sm-6 w400">
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Company</label>
+                <div class="col-sm-7">
+                    <select [(ngModel)]="sourceEmployee.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceEmployee.companyId)">
+                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">BU</label>
+                <div class="col-sm-7">
+                    <select [(ngModel)]="sourceEmployee.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceEmployee.businessUnitId)">
+                        <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Dept</label>
+                <div class="col-sm-7">
+                    <select [(ngModel)]="sourceEmployee.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceEmployee.departmentId)">
+                        <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <label class="control-label col-sm-4">Division</label>
+                <div class="col-sm-7">
+                        <select [(ngModel)]="sourceEmployee.divisionId" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                        </select>
+                </div>
+            </div>
 
-												</div>
-											</div>
-											<div class="clear"></div>
-											<hr class="hr-dark" />
+        </div>-->
+                                                </div>
+                                                <div class="clear"></div>
+                                                <hr class="hr-dark" />
 
-											<div class="col-sm-6 w400">
+                                                <div class="col-sm-6 w400">
 
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Date Of Birth</label>
-													<div class="col-sm-7">
-														<!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
-														<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateOfBirth"></p-calendar>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Date Of Birth</label>
+                                                        <div class="col-sm-7">
+                                                            <!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
+                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateOfBirth"></p-calendar>
 
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Country of Origin</label>
-													<div class="col-sm-7">
-														<!--<input class="form-control datepicker" type="text"  id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.countryOfOrigin">-->
-														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.originatingCountryId">
-															<option *ngFor="let shift of allCountries" [ngValue]="shift.countries_id">{{shift.countries_name}}</option>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Country of Origin</label>
+                                                        <div class="col-sm-7">
+                                                            <!--<input class="form-control datepicker" type="text"  id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.countryOfOrigin">-->
+                                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.originatingCountryId">
+                                                                <option *ngFor="let shift of allCountries" [ngValue]="shift.countries_id">{{shift.countries_name}}</option>
 
-														</select>
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Start Date</label>
-													<div class="col-sm-7">
-														<!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
-														<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Start Date</label>
+                                                        <div class="col-sm-7">
+                                                            <!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
+                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
 
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Nationality</label>
-													<div class="col-sm-7">
-														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.nationalityCountryId">
-															<option *ngFor="let shift of allCountries" [ngValue]="shift.countries_id">{{shift.countries_name}}</option>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Nationality</label>
+                                                        <div class="col-sm-7">
+                                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.nationalityCountryId">
+                                                                <option *ngFor="let shift of allCountries" [ngValue]="shift.countries_id">{{shift.countries_name}}</option>
 
-														</select>
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Cell</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.mobilePhone">
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Business Phone</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.workPhone">
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Fax</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.fax">
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Email</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.email">
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">SS#</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.ssn">
-													</div>
-												</div>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Cell</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.mobilePhone">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Business Phone</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.workPhone">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Fax</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.fax">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Email</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.email">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">SS#</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.ssn">
+                                                        </div>
+                                                    </div>
 
-											</div>
-											<div class="col-sm-6 w400">
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Shift</label>
-													<div class="col-sm-7">
-														<!--<label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift">Single Shift</label>
-													<label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift">Multiple shifts</label>-->
-														<label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" value="singleShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift" (click)="singleClick('single')">Single Shift</label>
-														<label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" value="multiShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift" (click)="singleClick('multiple')">Multiple shifts</label>
-													</div>
-												</div>
-												<div class="form-group col-sm-12 shiftmultiple-block" *ngIf="showMultiple">
-													<label class="control-label col-sm-4">Shift Type</label>
-													<div class="col-sm-7">
-														<div class="input-group">
-															<p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedshiftValues" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                                                </div>
+                                                <div class="col-sm-6 w400">
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Shift</label>
+                                                        <div class="col-sm-7">
+                                                            <!--<label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift">Single Shift</label>
+                <label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift">Multiple shifts</label>-->
+                                                            <label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" value="singleShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift" (click)="singleClick('single')">Single Shift</label>
+                                                            <label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" value="multiShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift" (click)="singleClick('multiple')">Multiple shifts</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12 shiftmultiple-block" *ngIf="showMultiple">
+                                                        <label class="control-label col-sm-4">Shift Type</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="input-group">
+                                                                <p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedshiftValues" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 
-														</div>
-													</div>
-												</div>
-												<div class="form-group col-sm-12 shiftsingle-block" *ngIf="showsingle">
-													<label class="control-label col-sm-4">Shift Type</label>
-													<div class="col-sm-7">
-														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.shifId">
-															<option *ngFor="let shift of allShiftdetails" [ngValue]="shift.shiftId">{{shift.description}}</option>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12 shiftsingle-block" *ngIf="showsingle">
+                                                        <label class="control-label col-sm-4">Shift Type</label>
+                                                        <div class="col-sm-7">
+                                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.shifId">
+                                                                <option *ngFor="let shift of allShiftdetails" [ngValue]="shift.shiftId">{{shift.description}}</option>
 
-														</select>
-													</div>
-												</div>
+                                                            </select>
+                                                        </div>
+                                                    </div>
 
-												<div class="form-horizontal col-sm-12">
-													<label class="control-label col-sm-4">Extra Hours</label>
-													<div class="col-sm-7">
+                                                    <div class="form-horizontal col-sm-12">
+                                                        <label class="control-label col-sm-4">Extra Hours</label>
+                                                        <div class="col-sm-7">
 
-														<div>
-															<label class="checkbox-inline"> <input class="form-control " type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.allowOvertime">Allow Overtime</label>
-														</div>
-														<div>
-															<label class="checkbox-inline"> <input class="form-control " type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.allowDoubleTime">Allow Double-Time</label>
-														</div>
+                                                            <div>
+                                                                <label class="checkbox-inline"> <input class="form-control " type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.allowOvertime">Allow Overtime</label>
+                                                            </div>
+                                                            <div>
+                                                                <label class="checkbox-inline"> <input class="form-control " type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.allowDoubleTime">Allow Double-Time</label>
+                                                            </div>
 
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Pay Type</label>
-													<div class="col-sm-7">
-														<label class="radio-inline"><input type="radio" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType" (click)="paytypeclick('hourly')">Hourly</label>
-														<label class="radio-inline"><input type="radio" name="paytype" id="salarypay" value="Yearly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType" (click)="paytypeclick('yearly')">Yearly</label>
-													</div>
-												</div>
-												<div class="form-group col-sm-12 hourpay-block" *ngIf="hourly">
-													<label class="control-label col-sm-4">Hourly Pay</label>
-													<div class="col-sm-7">
-														<input class="form-control amount" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
-													</div>
-												</div>
-												<div class="form-group col-sm-12 salarypay-block" *ngIf="yearly">
-													<label class="control-label col-sm-4">Yearly Salary</label>
-													<div class="col-sm-7">
-														<input class="form-control amount" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
-													</div>
-												</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Pay Type</label>
+                                                        <div class="col-sm-7">
+                                                            <label class="radio-inline"><input type="radio" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType" (click)="paytypeclick('hourly')">Hourly</label>
+                                                            <label class="radio-inline"><input type="radio" name="paytype" id="salarypay" value="Yearly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType" (click)="paytypeclick('yearly')">Yearly</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12 hourpay-block" *ngIf="hourly">
+                                                        <label class="control-label col-sm-4">Hourly Pay</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control amount" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12 salarypay-block" *ngIf="yearly">
+                                                        <label class="control-label col-sm-4">Yearly Salary</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control amount" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
+                                                        </div>
+                                                    </div>
 
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Leave</label>
-													<div class="col-sm-6">
-														<p-multiSelect [options]="leavemultiValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedLeaveValues" [panelStyle]="{minWidth:'12em'}"></p-multiSelect></div>
-													<div class="col-sm-2">
-														<!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLeaveTypeId">
-		<option *ngFor="let employeeName of allLeaves" [ngValue]="employeeName.employeeLeaveTypeId">{{employeeName.description}}</option>
-	</select>-->
-														<a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openLeaveType(contentleave)"><i class="fa fa-plus"></i></a>
-													</div>
-													
-												</div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Leave</label>
+                                                        <div class="col-sm-6">
+                                                            <p-multiSelect [options]="leavemultiValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedLeaveValues" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLeaveTypeId">
+                    <option *ngFor="let employeeName of allLeaves" [ngValue]="employeeName.employeeLeaveTypeId">{{employeeName.description}}</option>
+                </select>-->
+                                                            <a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openLeaveType(contentleave)"><i class="fa fa-plus"></i></a>
+                                                        </div>
 
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Emp Certifying Staff?</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="checkbox" id="certification-radio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeCertifyingStaff">
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Supervisor Name</label>
-													<div class="inner-addon col-sm-7 inline-block display-flex">
-														<p-autoComplete [(ngModel)]="sourceEmployee.supervisorName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
-																		[minLength]="1" [dropdown]="true">
-															<ng-template let-firstName pTemplate="item">
-																<div class="ui-helper-clearfix">{{firstName}}</div>
-															</ng-template>
-														</p-autoComplete>
-														<a class="add-icon"><i class="fa fa-plus"></i></a>
+                                                    </div>
 
-													</div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Emp Certifying Staff?</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control" type="checkbox" id="certification-radio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeCertifyingStaff">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Supervisor Name</label>
+                                                        <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                            <p-autoComplete [(ngModel)]="sourceEmployee.supervisorName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                                                            [minLength]="1" [dropdown]="true">
+                                                                <ng-template let-firstName pTemplate="item">
+                                                                    <div class="ui-helper-clearfix">{{firstName}}</div>
+                                                                </ng-template>
+                                                            </p-autoComplete>
+                                                            <a class="add-icon"><i class="fa fa-plus"></i></a>
 
-												</div>
+                                                        </div>
 
-											</div>
-											<div class="clear"></div>
-											<hr class="hr-light-grey" />
-											<button type="button" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+                                                    </div>
+
+                                                </div>
+                                                <div class="clear"></div>
+                                                <hr class="hr-light-grey" />
+                                                <button type="button" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
 
 
-										</div>
+                                            </div>
 									</div>
 									<div class="tab-pane step-data" id="step2">
 										<div class="tab-pane">

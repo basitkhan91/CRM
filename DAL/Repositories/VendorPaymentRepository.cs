@@ -89,7 +89,7 @@ namespace DAL.Repositories
                                 add.PostalCode,
                                 ad.VendorDomesticWirePaymentId,
                                 t.DomesticWirePaymentId,
-                                //   t
+                                t.IsActive
                             }).ToList();
                 return data;
 

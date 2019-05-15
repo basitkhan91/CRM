@@ -123,7 +123,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			{ field: 'name', header: 'Name' },
 			{ field: 'description', header: 'Description' },
 			{ field: 'cageCode', header: 'Cage Code' },
-			{ field: 'doingLegalAs', header: 'Doing Legal As' },
+			{ field: 'doingLegalAs', header: 'Doing Business As' },
 			{ field: 'createdBy', header: 'Created By' },
 			{ field: 'updatedBy', header: 'Updated By' },
 			{ field: 'updatedDate', header: 'Updated Date' },
@@ -322,6 +322,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(
 				role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
+
+            this.loadData();
             this.workFlowtService.getEntityforEdit().subscribe(
                 results => this.onDataLoadSuccessful(results[0]),
                 error => this.onDataLoadFailed(error)
@@ -336,10 +338,13 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(
 				response => this.saveCompleted(this.sourceLegalEntity),
                 error => this.saveFailedHelper(error));
+
+            this.loadData();
             this.workFlowtService.getEntityforEdit().subscribe(
                 results => this.onDataLoadSuccessful(results[0]),
                 error => this.onDataLoadFailed(error)
             );
+
 
 		}
 		if (this.modal) { this.modal.close();}

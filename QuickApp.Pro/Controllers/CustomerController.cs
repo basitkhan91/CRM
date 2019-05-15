@@ -313,7 +313,8 @@ namespace QuickApp.Pro.Controllers
                 actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
                 actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
                 actionobject.ATAChapterId = customerViewModel.ATAChapterId;
-                //actionobject.IsActive = customerViewModel.IsActive;
+                actionobject.Currency = customerViewModel.Currency;
+                actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = customerViewModel.CreatedBy;
@@ -374,7 +375,6 @@ namespace QuickApp.Pro.Controllers
                 actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
                 actionobject.IsActive = customerViewModel.IsActive;
                 actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
-
                 actionobject.ATAChapterId = customerViewModel.ATAChapterId;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
@@ -393,6 +393,8 @@ namespace QuickApp.Pro.Controllers
                 address.UpdatedBy = customerViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
+            actionobject.Currency = customerViewModel.Currency;
+            actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
             if (customerViewModel.AircraftTypeId != null)
             {
                 var aircraftTypeList = _unitOfWork.customerAircraftType.GetAllData().ToList();
@@ -533,7 +535,7 @@ namespace QuickApp.Pro.Controllers
 
         }
         [HttpPost("CustomerContactPost")]
-        public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel)
+        public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel, CustomercontactViewModel customercontactViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -563,6 +565,8 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
+                customercontactViewModel.IsDefaultContact = customercontactViewModel.IsDefaultContact;
+                contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Add(contactObj);
                 _unitOfWork.SaveChanges();
                 return Ok(contactObj);
@@ -596,7 +600,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("CustomerContactPost/{id}")]
-        public IActionResult updateContact(long id, [FromBody] ContactViewModel contactViewModel)
+        public IActionResult updateContact(long id, [FromBody] ContactViewModel contactViewModel , CustomercontactViewModel customercontactView)
         {
 
             if (ModelState.IsValid)
@@ -611,8 +615,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.Email = contactViewModel.Email;
                 contactObj.Fax = contactViewModel.Fax;
                 contactObj.Prefix = contactViewModel.Prefix;
-                contactObj.Suffix = contactViewModel.Suffix;
-                //contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
+                contactObj.Suffix = contactViewModel.Suffix;               
                 contactObj.FirstName = contactViewModel.FirstName;
                 contactObj.LastName = contactViewModel.LastName;
                 contactObj.MiddleName = contactViewModel.MiddleName;
@@ -625,6 +628,8 @@ namespace QuickApp.Pro.Controllers
                 contactObj.IsActive = contactViewModel.IsActive;
                 contactObj.CreatedDate = DateTime.Now;
                 contactObj.UpdatedDate = DateTime.Now;
+                contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
+                customercontactView.IsDefaultContact = customercontactView.IsDefaultContact;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
                 _unitOfWork.ContactRepository.Update(contactObj);
@@ -774,24 +779,35 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpPut("billingUpdateforActive/{id}")]
-        public IActionResult billingUpdateforActive(long id, [FromBody]CustomerBillingAddressViewModel cuBillingViewmodel)
-        {
-            if (ModelState.IsValid)
-            {
-                var CustomerBillingObj = _unitOfWork.CustomerBillingInformation.GetSingleOrDefault(a => a.CustomerBillingAddressId == id);
-                cuBillingViewmodel.MasterCompanyId = 1;
-              // CustomerBillingObj.IsActive = true;
-               CustomerBillingObj.IsActive = cuBillingViewmodel.IsActive;
-                CustomerBillingObj.UpdatedDate = DateTime.Now;
-                CustomerBillingObj.UpdatedBy = cuBillingViewmodel.UpdatedBy;
-                CustomerBillingObj.CustomerBillingAddressId = cuBillingViewmodel.CustomerBillingAddressId;
-                _unitOfWork.CustomerBillingInformation.Update(CustomerBillingObj);
-                _unitOfWork.SaveChanges();
-                return Ok(CustomerBillingObj);
-            }
+        //[HttpPut("billingUpdateforActive/{id}")]
+        //public IActionResult billingUpdateforActive(long id, [FromBody]CustomerBillingAddressViewModel cuBillingViewmodel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var CustomerBillingObj = _unitOfWork.CustomerBillingInformation.GetSingleOrDefault(a => a.CustomerBillingAddressId == id);
+        //        cuBillingViewmodel.MasterCompanyId = 1;
+        //      // CustomerBillingObj.IsActive = true;
+        //       CustomerBillingObj.IsActive = cuBillingViewmodel.IsActive;
+        //        CustomerBillingObj.UpdatedDate = DateTime.Now;
+        //        CustomerBillingObj.UpdatedBy = cuBillingViewmodel.UpdatedBy;
+        //        CustomerBillingObj.CustomerBillingAddressId = cuBillingViewmodel.CustomerBillingAddressId;
+        //        _unitOfWork.CustomerBillingInformation.Update(CustomerBillingObj);
+        //        _unitOfWork.SaveChanges();
+        //        return Ok(CustomerBillingObj);
+        //    }
 
-            return Ok(ModelState);
+        //    return Ok(ModelState);
+        //}
+
+        [HttpPut("billingUpdateforActive/{id}")]
+        public IActionResult updateAsset([FromBody] CustomerBillingAddress customerBillingAddress)
+        {
+            customerBillingAddress.MasterCompanyId = 1;
+            customerBillingAddress.UpdatedDate = DateTime.Now;
+            customerBillingAddress.IsDelete = true;
+            _unitOfWork.Repository<CustomerBillingAddress>().Update(customerBillingAddress);
+            _unitOfWork.SaveChanges();
+            return Ok(customerBillingAddress);
         }
 
         [HttpPost("updateShipping")]
@@ -1027,7 +1043,7 @@ namespace QuickApp.Pro.Controllers
                 // addressObj.IsActive = CustomerShippingViewModel.AddressStatus;
                 checkPaymentObj.IsActive = CustomerShippingViewModel.IsActive;
                 checkPaymentObj.MasterCompanyId = 1;
-               //checkPaymentObj.IsActive = true;
+                //checkPaymentObj.IsActive = true;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
@@ -1044,8 +1060,23 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+        //[HttpDelete("updateStatusCustomerBilling/{id}")]
+        //[Produces(typeof(CustomerBillingAddressViewModel))]
+        //public IActionResult updateStatusCustomerBilling(long id)
+        //{
+        //    var existingResult = _unitOfWork.CustomerBillingInformation.GetSingleOrDefault(c => c.CustomerBillingAddressId == id);
+        //    var existingResultofcustomerBilling = _unitOfWork.CustomerContact.GetSingleOrDefault(c => c.ContactId == id);
+        //    _unitOfWork.CustomerContact.Remove(existingResultofcustomerBilling);
+        //    _unitOfWork.SaveChanges();
+        //    _unitOfWork.CustomerBillingInformation.Remove(existingResult);
+        //    _unitOfWork.SaveChanges();
 
-        
+        //    return Ok(id);
+        //}
+
+
+
+
         [HttpPut("updateStatusCustomerShipping/{id}")]
         public IActionResult updateStatusCustomerShipping(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
         {
@@ -1093,6 +1124,7 @@ namespace QuickApp.Pro.Controllers
                 CustomerObject.UpdatedDate = DateTime.Now;
                 CustomerObject.CreatedBy = CustomerWarningViewModel.CreatedBy;
                 CustomerObject.UpdatedBy = CustomerWarningViewModel.UpdatedBy;
+                CustomerObject.IsAllow = CustomerWarningViewModel.IsAllow;
                 _unitOfWork.CustomerWarning.Add(CustomerObject);
                 _unitOfWork.SaveChanges();
                 return Ok(CustomerObject);
@@ -1124,6 +1156,9 @@ namespace QuickApp.Pro.Controllers
                 CustomerObject.UpdatedDate = DateTime.Now;
                 CustomerObject.CreatedBy = CustomerWarningViewModel.CreatedBy;
                 CustomerObject.UpdatedBy = CustomerWarningViewModel.UpdatedBy;
+                CustomerObject.IsAllow = CustomerWarningViewModel.IsAllow;
+                CustomerObject.IsWarning = CustomerWarningViewModel.IsWarning;
+                CustomerObject.IsRestrict = CustomerWarningViewModel.IsRestrict;
                 _unitOfWork.CustomerWarning.Update(CustomerObject);
                 _unitOfWork.SaveChanges();
                 return Ok(CustomerObject);
@@ -1145,7 +1180,7 @@ namespace QuickApp.Pro.Controllers
                 cbs.CreatedBy = customerBillingAddressViewModel.CreatedBy;
                 cbs.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
                 cbs.CreatedDate = DateTime.Now;
-               //cbs.IsActive = customerBillingAddressViewModel.IsActive;
+                cbs.IsPrimary = customerBillingAddressViewModel.IsPrimary;
                 customerBillingAddressViewModel.UpdatedDate = DateTime.Now;
                 customerBillingAddressViewModel.IsActive = true;
                 address.Line1 = customerBillingAddressViewModel.Address1;
@@ -1180,7 +1215,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(customerBillingAddressViewModel)} cannot be null");
                 var checkBillingObj = _unitOfWork.CustomerBillingInformation.GetSingleOrDefault(c => c.CustomerBillingAddressId == id);
                 var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == customerBillingAddressViewModel.AddressId);
-                //checkBillingObj.IsActive = true;
+                checkBillingObj.IsPrimary = customerBillingAddressViewModel.IsPrimary;
                 checkBillingObj.MasterCompanyId = 1;
                 checkBillingObj.IsActive = customerBillingAddressViewModel.IsActive;
                 checkBillingObj.SiteName = customerBillingAddressViewModel.SiteName;
@@ -1271,7 +1306,7 @@ namespace QuickApp.Pro.Controllers
                 vendorShippingAddressObj.CustomerId = customerBillingAddressViewModel.CustomerId;
                 vendorShippingAddressObj.SiteName = customerBillingAddressViewModel.SiteName;
                 vendorShippingAddressObj.MasterCompanyId = 1;
-                //vendorShippingAddressObj.IsActive = customerBillingAddressViewModel.IsActive;
+                vendorShippingAddressObj.IsPrimary = customerBillingAddressViewModel.IsPrimary;
                 vendorShippingAddressObj.AddressId = id;
                 vendorShippingAddressObj.CreatedDate = DateTime.Now;
                 vendorShippingAddressObj.UpdatedDate = DateTime.Now;
@@ -1301,9 +1336,7 @@ namespace QuickApp.Pro.Controllers
                 customerObj.EDI = customerViewModel.EDI;
                 customerObj.MarkUpPercent = customerViewModel.MarkUpPercent;
                 customerObj.CreditLimit = customerViewModel.CreditLimit;
-                //customerObj.CreditTerms = customerViewModel.CreditTerms;
                 customerObj.CreditTermsId = customerViewModel.CreditTermsId;
-                //customerObj.CustomerId = customerViewModel.CustomerId;
                 customerObj.TaxRateOther = customerViewModel.TaxRateOther;
                 customerObj.TaxTypeId = customerViewModel.TaxTypeId;
                 customerObj.TaxRateStateOrProvince = customerViewModel.TaxRateStateOrProvince;
@@ -1311,13 +1344,13 @@ namespace QuickApp.Pro.Controllers
                 customerObj.AllowProformaBilling = customerViewModel.AllowProformaBilling;
                 customerObj.CurrencyId = customerViewModel.CurrencyId;
                 customerObj.Discount = customerViewModel.Discount;
-                // customerObj.DiscontValue = customerViewModel.DiscontValue;
                  customerObj.DiscountId = customerViewModel.DiscountId;
                 customerObj.EDIDescription = customerViewModel.EDIDescription;
                 customerObj.IsAeroExchange = customerViewModel.IsAeroExchange;
                 customerObj.IsTaxExempt = customerViewModel.IsTaxExempt;
                 customerObj.AeroExchangeDescription = customerViewModel.AeroExchangeDescription;
                 customerObj.AllowNettingOfAPAR = customerViewModel.AllowNettingOfAPAR;
+                customerObj.MarkUpPercentageId = customerViewModel.MarkUpPercentageId;
                 customerObj.MasterCompanyId = 1;
                 customerObj.IsActive = true;
                 customerObj.CreatedDate = DateTime.Now;
@@ -1560,6 +1593,26 @@ namespace QuickApp.Pro.Controllers
         {
             var markUpPercentages = _unitOfWork.Repository<MarkUpPercentage>().GetAll().OrderByDescending(x => x.MarkUpPercentageId);
             return Ok(markUpPercentages);
+        }
+
+        [HttpPost("addMarkUp")]
+        public IActionResult addasset([FromBody] MarkUpPercentage markUpPercentage)
+        {
+            if (markUpPercentage != null)
+            {
+                markUpPercentage.MarkUpPercentageId = 0;               
+                _context.MarkUpPercentage.Add(markUpPercentage);
+                _context.SaveChanges();
+            }
+            return Ok(markUpPercentage);
+        }
+
+        [HttpPut("addMarkUp/{id}")]
+        public IActionResult updateAsset([FromBody] MarkUpPercentage markUpPercentage)
+        {
+            _unitOfWork.Repository<MarkUpPercentage>().Update(markUpPercentage);
+            _unitOfWork.SaveChanges();
+            return Ok(markUpPercentage);
         }
 
     }

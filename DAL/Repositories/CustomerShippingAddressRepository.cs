@@ -48,7 +48,8 @@ namespace DAL.Repositories
                             c.CustomerShippingAddressId,
                             c.CreatedDate,
                             c.UpdatedDate,
-                            c.CustomerId
+                            c.CustomerId,
+                            c.IsActive
 
 
                         }).ToList();

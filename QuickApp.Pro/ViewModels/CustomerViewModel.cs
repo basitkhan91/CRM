@@ -108,7 +108,7 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? AllowPartialBilling { get; set; }
 
-        public short? CurrencyId { get; set; }
+        public int? CurrencyId { get; set; }
 
         public bool? IsAeroExchange { get; set; }
 
@@ -155,6 +155,11 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
+
+        public Int32? MarkUpPercentageId { get; set; }
+
+        public int? Currency { get; set; }
+        public bool? IsAddressForBillingAndShipping { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
 
         public virtual CustomerClassification CustomerClassification { get; set; }

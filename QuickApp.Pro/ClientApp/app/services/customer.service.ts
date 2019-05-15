@@ -281,6 +281,8 @@ export class CustomerService {
     updateDeleteBillinginfo(customerBilling: any) {
         return this.customerEndpoint.deleteBillingAddress(customerBilling, customerBilling.customerBillingAddressId);
     }
+  
+    
     newShippingViaAdd(action: any) {
 
         return this.customerEndpoint.saveBillViaDetails<any>(action);
@@ -373,7 +375,7 @@ export class CustomerService {
 	updateActionforActiveforBilling(customerBilling: any) {
 		return this.customerEndpoint.getUpdateBillingEndpointforActive(customerBilling, customerBilling.customerBillingAddressId);
 	}
-
+ 
 	updateActionforActiveforShiping(Customershipping: any) {
 		return this.customerEndpoint.getUpdateshippingEndpointforActive(Customershipping, Customershipping.customerShippingAddressId);
 	}
@@ -395,4 +397,12 @@ export class CustomerService {
         return Observable.forkJoin(
             this.customerEndpoint.getMarkUpEndpoint<MarkUpPercentage[]>());
     }
+
+    newMarkUp(markUp: any) {
+        return this.customerEndpoint.newMarkUp<any>(markUp);
+    }
+    updateMarkUp(markUp: any) {
+        return this.customerEndpoint.updateMarkUp(markUp, markUp.markUpPercentageId);
+    }
+
 }

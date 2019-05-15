@@ -80,6 +80,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _getIntegrationUrl: string = "/api/Customer/IntegrationGet";
     private readonly _listsUrl: string = "/api/Customer/GetDescriptionbypart";
     private readonly getMarkup: string = "api/customer/getMarkUpValues";
+    private readonly addMarkUp: string = "/api/customer/addMarkUp";
 
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
 	get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
@@ -115,6 +116,9 @@ export class CustomerEndpoint extends EndpointFactory {
 	get getAircraftManufacturerUrl() { return this.configurations.baseUrl + this._getAircraftManufacturerUrl; }
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get listsUrl() { return this.configurations.baseUrl + this._listsUrl; }
+    
+
+
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -503,7 +507,7 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getDeleteCustomerEndpoint(contactId));
             });
     }
-
+    
     updateBillingViainfo<T>(roleObject: any, customerId: any): Observable<T> {
         let endpointUrl = `${this._updateBillingViaDetails}/${customerId}`;
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
@@ -519,7 +523,7 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.updateShippinginfo(roleObject, customerId));
             });
     }
-    
+
 
     getNewBillinginfoWithAddressId<T>(param: any, addressId: any): Observable<T> {
         param.vendorShippingAddressId = addressId;
@@ -756,15 +760,16 @@ export class CustomerEndpoint extends EndpointFactory {
 				return this.handleError(error, () => this.getcustomerEndpoint());
 			});
 	}
-	getUpdateBillingEndpointforActive<T>(roleObject: any, customerBillingAddressId: number): Observable<T> {
-		let endpointUrl = `${this._updateActiveInactiveforBilling}/${roleObject.customerBillingAddressId}`;
+    getUpdateBillingEndpointforActive<T>(roleObject: any, customerBillingAddressId: number): Observable<T> {
+        let endpointUrl = `${this._updateActiveInactiveforBilling}/${roleObject.customerBillingAddressId}`;
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getUpdateBillingEndpoint(roleObject, customerBillingAddressId));
-			});
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateBillingEndpoint(roleObject, customerBillingAddressId));
+            });
 
-	}
+    }
+
 	getUpdateBillingEndpoint<T>(roleObject: any, customerBillingAddressId: number): Observable<T> {
 		let endpointUrl = `${this._customerBillAddressdetails}/${roleObject.customerBillingAddressId}`;
 
@@ -829,6 +834,22 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.get<T>(this.getMarkup, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getMarkUpEndpoint());
+            });
+    }
+
+    newMarkUp<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this.addMarkUp, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.newMarkUp(userObject));
+            });
+    }
+    updateMarkUp<T>(roleObject: any, markUpPercentageId: number): Observable<T> {
+        let endpointUrl = `${this.addMarkUp}/${markUpPercentageId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateMarkUp(roleObject, markUpPercentageId));
             });
     }
 }

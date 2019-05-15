@@ -30,6 +30,5 @@ namespace QuickApp.Pro.ViewModels
         public string StateOrProvince { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }
-       // public long? AddressId { get; set; }
     }
 }

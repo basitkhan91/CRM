@@ -111,18 +111,20 @@ export class CustomerBillingInformationComponent
 		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
 			this.local = this.workFlowtService.listCollection.t;
 		}
-		this.dataSource = new MatTableDataSource();
-		if (this.workFlowtService.generalCollection) {
-			this.local = this.workFlowtService.generalCollection;
-			this.sourceCustomer.siteName = this.local.name;
-			this.sourceCustomer.address1 = this.local.address.line1;
-			this.sourceCustomer.address2 = this.local.address.line2;
-			this.sourceCustomer.address3 = this.local.address.line3;
-			this.sourceCustomer.city = this.local.address.city;
-			this.sourceCustomer.country = this.local.address.country;
-			this.sourceCustomer.stateOrProvince = this.local.address.stateOrProvince;
-			this.sourceCustomer.postalCode = this.local.address.postalCode;
-		}
+        this.dataSource = new MatTableDataSource();
+        if (this.workFlowtService.generalCollection){
+            if (this.workFlowtService.generalCollection.isAddressForBillingAndShipping == true) {
+                this.local = this.workFlowtService.generalCollection;
+                this.sourceCustomer.siteName = this.local.name;
+                this.sourceCustomer.address1 = this.local.address.line1;
+                this.sourceCustomer.address2 = this.local.address.line2;
+                this.sourceCustomer.address3 = this.local.address.line3;
+                this.sourceCustomer.city = this.local.address.city;
+                this.sourceCustomer.country = this.local.address.country;
+                this.sourceCustomer.stateOrProvince = this.local.address.stateOrProvince;
+                this.sourceCustomer.postalCode = this.local.address.postalCode;
+            }
+        }
 	}
 
 
@@ -502,17 +504,24 @@ export class CustomerBillingInformationComponent
 
     // Delete Billing data
 	deleteItemAndCloseModel(rowData) {
-		this.isSaving = true;
-		this.sourceCustomer.isActive = false;
+        this.isSaving = true;
+        this.sourceCustomer.isDelete = true;
 		this.sourceCustomer.addressStatus = false;
 		this.sourceCustomer.updatedBy = this.userName;
         this.sourceCustomer.customerBillingAddressId = rowData.customerBillingAddressId;
         this.workFlowtService.updateDeleteBillinginfo(this.sourceCustomer).subscribe(
 			response => this.saveCompleted(this.sourceCustomer),
 			error => this.saveFailedHelper(error));
-		//this.modal.close();
 	}
 
+    //deleteItemAndCloseModel(customerBillingAddressId) {
+    //    this.isSaving = true;
+    //    this.sourceCustomer.isDelete = true;
+    //    this.workFlowtService.updateDeleteBillinginfo(customerBillingAddressId).subscribe(
+    //        response => this.saveCompleted(this.sourceCustomer),
+    //        error => this.saveFailedHelper(error));
+    //}
+  
 	private saveCompleted(user?: any) {
 		this.isSaving = false;
 

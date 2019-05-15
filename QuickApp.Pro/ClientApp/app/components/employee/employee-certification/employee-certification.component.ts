@@ -316,8 +316,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
    
     editItemAndCloseModel() {
         this.isSaving = true;
-		if (!this.sourceEmployee.employeeLicensureId) {
-			if (this.sourceEmployee.employeeId) {
+		if (!this.sourceEmployee.employeeLicensureId) {			
 				this.sourceEmployee.createdBy = this.userName;
 				this.sourceEmployee.updatedBy = this.userName;
 				this.sourceEmployee.isActive = true;
@@ -330,8 +329,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 					})
 				this.activeIndex = 1;
 				this.employeeService.indexObj.next(this.activeIndex);
-
-			}
+			
 		}
         else {
 

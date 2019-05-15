@@ -178,15 +178,12 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.StationId = employeeViewModel.StationId;
                 employeeobject.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
                 employeeobject.DateOfBirth = employeeViewModel.DateOfBirth;
-                employeeobject.CompanyId = 1;
-                employeeobject.BusinessUnitId = 1;
-                employeeobject.DepartmentId = 1;
                 employeeobject.OriginatingCountryId = employeeViewModel.OriginatingCountryId;
                 employeeobject.NationalityCountryId = employeeViewModel.NationalityCountryId;
                 employeeobject.StartDate = employeeViewModel.StartDate;
                 employeeobject.WorkPhone = employeeViewModel.WorkPhone;
                 employeeobject.Fax = employeeViewModel.Fax;
-                employeeobject.DivisionId = 1;
+                employeeobject.ManagementStructureId = employeeViewModel.ManagementStructureId;
                 employeeobject.SSN = employeeViewModel.SSN;
                 employeeobject.Email = employeeViewModel.Email;
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
@@ -283,15 +280,11 @@ namespace QuickApp.Pro.Controllers
                 existingResult.JobTitleId = employeeViewModel.JobTitleId;
                 existingResult.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
                 existingResult.DateOfBirth = employeeViewModel.DateOfBirth;
-                existingResult.CompanyId = 1;
-                existingResult.BusinessUnitId = 1;
-                existingResult.DepartmentId = 1;
                 existingResult.OriginatingCountryId = employeeViewModel.OriginatingCountryId;
                 existingResult.NationalityCountryId = employeeViewModel.NationalityCountryId;
                 existingResult.StartDate = employeeViewModel.StartDate;
                 existingResult.WorkPhone = employeeViewModel.WorkPhone;
                 existingResult.Fax = employeeViewModel.Fax;
-                existingResult.DivisionId = 1;
                 existingResult.SSN = employeeViewModel.SSN;
                 existingResult.Email = employeeViewModel.Email;
                 existingResult.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
@@ -299,7 +292,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.InMultipleShifts = employeeViewModel.InMultipleShifts;
                 existingResult.IsHourly = employeeViewModel.IsHourly;
                 existingResult.HourlyPay = employeeViewModel.HourlyPay;
-
+                existingResult.ManagementStructureId = employeeViewModel.ManagementStructureId;
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;

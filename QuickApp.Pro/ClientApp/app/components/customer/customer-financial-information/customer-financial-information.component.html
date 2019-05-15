@@ -36,22 +36,19 @@
 								<div class="tab-pane active" id="menu2">
 									<p class="lead" style="font-size:medium">Financial Information</p>
 									<div class="col-sm-6 w400">
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">MarkUp %</label>
-                                            <div class="col-sm-7">
-                                                <select>
-                                                    <option *ngFor="let markUpPercentageId of allMarkUpList" [ngValue]="creditTermsId.markUpPercentageId">{{markUpPercentageId.markUpvalue}}</option>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">MarkUp %</label>
+                                            <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                <select  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.markUpPercentageId">
+                                                    <option *ngFor="let markUpPercentageId of allMarkUpList" [ngValue]="markUpPercentageId.markUpPercentageId">{{markUpPercentageId.markUpValue}}</option>
                                                 </select>
                                                 <a href="#" data-toggle="modal" data-target="#addMarkUp" class="add-icon" (click)="openMarkUpPercentage(openPopUpMarkUp)"><i class="fa fa-plus"></i></a>
                                             </div>
-										</div>
+                                        </div>
 										<div class="form-group col-sm-12">
 											<label class="control-label col-sm-4">Credit Limit <strong class="clr-red">*</strong></label>
 											<div class="col-sm-7">
-												<input class="form-control" type="number" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.creditLimit">
-												<!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.creditLimit">
-									<option *ngFor="let Crditlimit of creditlimitData" [ngValue]="Crditlimit.creditLimit">{{Crditlimit.creditLimit}}</option>
-								</select>-->
+												<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.creditLimit">												
 											</div>
 										</div>
 										<div class="form-group col-sm-12">
@@ -77,24 +74,11 @@
 										</div>
 										<!--<div class="form-group col-sm-12">
 							<label class="control-label col-sm-4">Discount</label>
-							<div class="inner-addon right-addon autosuggesions-add inline-block">
-								<i class="fa fa-caret-down"></i>
-								<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.discount">
-									<option>10%</option>
-									<option>20%</option>
-									<option>30%</option>
-									<option>40%</option>
-									<option>50%</option>
-									<option>60%</option>
-									<option>70%</option>
-									<option>80%</option>
-									<option>90%</option>
-									<option>100%</option>
-								</select>
-							</div>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" id=""[ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.discount">                               
+                            </div>
 
-
-						</div>-->
+					        	</div>-->
 										<div class="form-group col-sm-12">
 											<label class="control-label col-sm-4">Allow Netting of AP/AR</label>
 											<div class="col-sm-7">
@@ -249,24 +233,19 @@
 										<div class="form-group col-sm-12">
 											<label class="control-label col-sm-4">EDI</label>
 											<div class="col-sm-7">
-												<input class="edi-checkbox" type="checkbox" id="tax" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.edi">
+												<input class="edi-checkbox" type="checkbox" [checked]="true" id="tax" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.edi">
 												<div class="edi-input" *ngIf="sourceCustomer.edi">
-													<input class="form-control" type="text" placeholder="EDI" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ediDescription">
+													<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ediDescription">
 												</div>
 											</div>
 										</div>
 										<div class="form-group col-sm-12">
 											<label class="control-label col-sm-4">Aeroxchange</label>
 											<div class="col-sm-7">
-												<input class="aeroxchange-checkbox" type="checkbox" id="Aeroxchange" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isAeroExchange">
-												<div class="aeroxchange-input" *ngIf="sourceCustomer.isAeroExchange">
-
-													<!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.integrationPortalId">
-										<option *ngFor="let integrationName of allIntegrationInfo" [ngValue]="integrationName.integrationPortalId">{{integrationName.description}}</option>
-									</select>-->
+												<input class="aeroxchange-checkbox" type="checkbox" [checked]="true" id="Aeroxchange" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isAeroExchange">
+												<div class="aeroxchange-input" *ngIf="sourceCustomer.isAeroExchange">													
 													<input type="text" id="tax" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.aeroExchangeDescription">
-												</div>
-												<!--<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="integratn(modelEdit)"><i class="fa fa-plus"></i></a>-->
+												</div>												
 											</div>
 										</div>
 										<div class="form-group col-sm-12">
@@ -334,22 +313,19 @@
 		</div>
 		<div class="modal-body">
 			<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveCreditModel()">
-				<div class="form-group">
-					<label for="name" class="control-label">Credit Term<span class="clr-red">*</span></label>
-
-
-					<div class="control-data">
-
-						<p-autoComplete [(ngModel)]="creditTermsId" [ngModelOptions]="{standalone: true}" (onKeyUp)=CreditTermsHandler($event) (onSelect)="CreditTermsCode($event)" [suggestions]="creditTermsCollection" (completeMethod)="filtercreditTerms($event)" [size]="30"
-										[minLength]="1" [dropdown]="true">
-							<ng-template let-creditTermsId pTemplate="item">
-								<div class="ui-helper-clearfix">{{creditTermsId}}</div>
-							</ng-template>
-						</p-autoComplete>
-						<div *ngIf="disableSaveCreditTerms" class="clr-red">Entry Already Exists</div>
-					</div>
-					<div class="clear"></div>
-				</div>
+                <div class="form-group">
+                    <label for="name" class="control-label">Credit Term<span class="clr-red">*</span></label>
+                    <div class="inner-addon right-addon inline-block">
+                        <p-autoComplete [(ngModel)]="creditTermsId" [ngModelOptions]="{standalone: true}" (onKeyUp)=CreditTermsHandler($event) (onSelect)="CreditTermsCode($event)" [suggestions]="creditTermsCollection" (completeMethod)="filtercreditTerms($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-creditTermsId pTemplate="item">
+                                <div class="ui-helper-clearfix">{{creditTermsId}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSaveCreditTerms" class="clr-red">Entry Already Exists</div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
 				<div class="form-group">
 					<label for="percentage" class="control-label">Percentage</label>
 					<div class="control-data">
@@ -915,78 +891,80 @@
 		</div>
 		<div class="modal-body">
 			<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCurrecy()">
-				<div class="form-group input-icon1">
-					<label for="name" class="control-label">Currency Code<span class="clr-red">*</span></label>
-					<p-autoComplete [(ngModel)]="currencyName" [ngModelOptions]="{standalone: true}" (onKeyUp)=currencyHandler($event) (onSelect)="CurrencyInfo($event)" [suggestions]="currencyCollection" (completeMethod)="filterCurrency($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-currencyName pTemplate="item">
-							<div class="ui-helper-clearfix">{{currencyName}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disableSaveCurrency" style="color:red">Already Exist</div>
-				</div>
-				<div class="form-group">
-					<label for="netDays" class="control-label">Currency Symbol<span class="clr-red">*</span></label>
-					<div>
-						<input type="text" name="symbol" class="form-control" required #symbol="ngModel" [(ngModel)]="sourceAction.symbol" minlength="2">
-						<!--<div *ngIf="symbol.dirty && symbol.errors?.required && symbol.errors" class="invalid-form-error-message">
-							Currency Symbol is required.
-						</div>-->
-						<!--<div *ngIf="symbol.dirty && symbol.errors?.minlength && symbol.errors" class="invalid-form-error-message">
-							Currency Symbol must be at least 2 characters long.
-						</div>-->
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<label for="netDays" class="control-label">Currency Name<span class="clr-red">*</span></label>
-					<div>
-						<input type="text" name="displayName" class="form-control" required #displayName="ngModel" [(ngModel)]="sourceAction.displayName" minlength="2">
-						<!--<div *ngIf="displayName.dirty && displayName.errors?.required && displayName.errors" class="invalid-form-error-message">
-							Currency Name required.
-						</div>
-						<div *ngIf="displayName.dirty && displayName.errors?.minlength && displayName.errors" class="invalid-form-error-message">
-							Currency Name must be at least 2 characters long.
-						</div>-->
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<label for="netDays" class="control-label">Country<span class="clr-red">*</span></label>
-					<div>
-						<input type="text" name="" class="form-control">
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<label for="description" class="control-label">Memo</label>
-					<div class="control-data">
-						<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
-						<!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-							Memo is required.
-						</div>
-						<div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-							Memo must be at least 2 characters long.
-						</div>-->
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-6">
-						<label class="form-check-label" for="isActive">
-							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-						</label>
-					</div>
-					<div class="clear"></div>
-				</div>
+                <div class="form-group input-icon1">
+                    <label for="name" class="control-label">Currency Code<span class="clr-red">*</span></label>
+                    <div class="inner-addon right-addon inline-block">
+                        <p-autoComplete [(ngModel)]="currencyName" [ngModelOptions]="{standalone: true}" (onKeyUp)=currencyHandler($event) (onSelect)="CurrencyInfo($event)" [suggestions]="currencyCollection" (completeMethod)="filterCurrency($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-currencyName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{currencyName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        </div>
+                        <div *ngIf="disableSaveCurrency" style="color:red">Already Exist</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="netDays" class="control-label">Currency Symbol<span class="clr-red">*</span></label>
+                        <div>
+                            <input type="text" name="symbol" class="form-control" required #symbol="ngModel" [(ngModel)]="sourceAction.symbol" minlength="2">
+                            <!--<div *ngIf="symbol.dirty && symbol.errors?.required && symbol.errors" class="invalid-form-error-message">
+                Currency Symbol is required.
+            </div>-->
+                            <!--<div *ngIf="symbol.dirty && symbol.errors?.minlength && symbol.errors" class="invalid-form-error-message">
+                Currency Symbol must be at least 2 characters long.
+            </div>-->
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="netDays" class="control-label">Currency Name<span class="clr-red">*</span></label>
+                        <div>
+                            <input type="text" name="displayName" class="form-control" required #displayName="ngModel" [(ngModel)]="sourceAction.displayName" minlength="2">
+                            <!--<div *ngIf="displayName.dirty && displayName.errors?.required && displayName.errors" class="invalid-form-error-message">
+                Currency Name required.
+            </div>
+            <div *ngIf="displayName.dirty && displayName.errors?.minlength && displayName.errors" class="invalid-form-error-message">
+                Currency Name must be at least 2 characters long.
+            </div>-->
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="netDays" class="control-label">Country<span class="clr-red">*</span></label>
+                        <div>
+                            <input type="text" name="" class="form-control">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="control-label">Memo</label>
+                        <div class="control-data">
+                            <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                            <!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                Memo is required.
+            </div>
+            <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                Memo must be at least 2 characters long.
+            </div>-->
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="isActive">
+                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                            </label>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
 
 
-				<div class="modal-footer">
+                    <div class="modal-footer">
 
-					<button class="btn btn-success" [disabled]="disableSaveCurrency" >Submit</button>
-					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-				</div>
-			</form>
+                        <button class="btn btn-success" [disabled]="disableSaveCurrency">Submit</button>
+                        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                    </div>
+</form>
 		</div>
 
 	</ng-template>	
@@ -1070,20 +1048,23 @@
 	</div>
 	<div class="modal-body">
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemCloseModel()">
-			<div class="form-group">
-				<label for="name" class="control-label">Discount Percent<span class="clr-red">*</span></label>
-				<p-autoComplete [(ngModel)]="discontValue" [ngModelOptions]="{standalone: true}" (onKeyUp)=discountvalueHandler($event) (onSelect)="discountvaluedesc($event)" [suggestions]="discountcollection" (completeMethod)="filterDiscountvalue($event)" [size]="30"
-								[minLength]="1" [dropdown]="true">
-					<ng-template let-discountValue pTemplate="item">
-						<div class="ui-helper-clearfix">{{discountValue}}</div>
-					</ng-template>
-				</p-autoComplete>
-			</div>			
-			<div class="modal-footer">
-				<button class="btn btn-success">Submit</button>
-				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-			</div>
-		</form>
+            <div class="form-group">
+                <label for="name" class="control-label">Discount Percent<span class="clr-red">*</span></label>
+                <div class="inner-addon right-addon inline-block">
+                    <p-autoComplete [(ngModel)]="discontValue" [ngModelOptions]="{standalone: true}" (onKeyUp)=discountvalueHandler($event) (onSelect)="discountvaluedesc($event)" [suggestions]="discountcollection" (completeMethod)="filterDiscountvalue($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                        <ng-template let-discountValue pTemplate="item">
+                            <div class="ui-helper-clearfix">{{discountValue}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div *ngIf="disableSaveConsume" class="clr-red">Entry Already Exists</div>
+            </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" [disabled]="disableSaveConsume">Submit</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                </div>
+</form>
 	</div>
 </ng-template>
 
@@ -1172,12 +1153,13 @@
             <div class="form-group">
                 <label for="name" class="control-label">MarkUp Percentage<span class="clr-red">*</span></label>
                 <div class="inner-addon right-addon inline-block">
-                    <p-autoComplete [(ngModel)]="markUpValue" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeymarkUp($event) (onSelect)="onSelectmarkUp($event)" [suggestions]="markUpCollection" (completeMethod)="filterForMarkUp($event)" [size]="30"
+                    <input type="text" [(ngModel)]="markUpValue" [ngModelOptions]="{standalone: true}" />
+                    <!--<p-autoComplete [(ngModel)]="markUpValue" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeymarkUp($event) (onSelect)="onSelectmarkUp($event)" [suggestions]="markUpCollection" (completeMethod)="filterForMarkUp($event)" [size]="30"
                                     [minLength]="1" [dropdown]="true">
                         <ng-template let-markUpValue pTemplate="item">
                             <div class="ui-helper-clearfix">{{markUpValue}}</div>
                         </ng-template>
-                    </p-autoComplete>
+                    </p-autoComplete>-->
                 </div>
             </div>
             <div class="modal-footer">

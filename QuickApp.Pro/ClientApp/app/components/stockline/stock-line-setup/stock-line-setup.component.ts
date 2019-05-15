@@ -454,7 +454,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.descriptionbyPart = allWorkFlows[0]
 		this.sourcePartAction = this.descriptionbyPart;
         this.sourceStockLineSetup.partDescription = allWorkFlows[0].partDescription; //Passing Part Description based on Change Part
-        this.sourceStockLineSetup.shelfLife = allWorkFlows[0].shelfLife;
+        this.sourceStockLineSetup.shelfLife = allWorkFlows[0].t.shelfLife;
 		this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
 
 		if (this.sourceStockLineSetup.isSerialized == true) {

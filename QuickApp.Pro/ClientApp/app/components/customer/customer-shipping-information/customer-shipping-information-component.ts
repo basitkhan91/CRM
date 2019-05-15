@@ -121,27 +121,29 @@ export class CustomerShippingInformationComponent {
 
         this.dataSource = new MatTableDataSource();
         if (this.workFlowtService.generalCollection) {
-            this.local = this.workFlowtService.generalCollection;
-            this.sourceCustomer.siteName = this.local.name;
-            this.sourceCustomer.address1 = this.local.address.line1;
-            this.sourceCustomer.address2 = this.local.address.line2;
-            this.sourceCustomer.address3 = this.local.address.line3;
-            this.sourceCustomer.city = this.local.address.city;
-            this.sourceCustomer.country = this.local.address.country;
-            this.sourceCustomer.stateOrProvince = this.local.address.stateOrProvince;
-            this.sourceCustomer.postalCode = this.local.address.postalCode;
-            if (this.sourceCustomer.startDate) {
-                this.sourceCustomer.startDate = new Date(this.sourceCustomer.startDate);
-            }
-            else {
-                this.sourceCustomer.startDate = new Date();
-            }
+            if (this.workFlowtService.generalCollection.isAddressForBillingAndShipping == true) {
+                this.local = this.workFlowtService.generalCollection;
+                this.sourceCustomer.siteName = this.local.name;
+                this.sourceCustomer.address1 = this.local.address.line1;
+                this.sourceCustomer.address2 = this.local.address.line2;
+                this.sourceCustomer.address3 = this.local.address.line3;
+                this.sourceCustomer.city = this.local.address.city;
+                this.sourceCustomer.country = this.local.address.country;
+                this.sourceCustomer.stateOrProvince = this.local.address.stateOrProvince;
+                this.sourceCustomer.postalCode = this.local.address.postalCode;
+                if (this.sourceCustomer.startDate) {
+                    this.sourceCustomer.startDate = new Date(this.sourceCustomer.startDate);
+                }
+                else {
+                    this.sourceCustomer.startDate = new Date();
+                }
 
-            if (this.sourceCustomer.expirationDate) {
-                this.sourceCustomer.expirationDate = new Date(this.sourceCustomer.expirationDate);
-            }
-            else {
-                this.sourceCustomer.expirationDate = new Date();
+                if (this.sourceCustomer.expirationDate) {
+                    this.sourceCustomer.expirationDate = new Date(this.sourceCustomer.expirationDate);
+                }
+                else {
+                    this.sourceCustomer.expirationDate = new Date();
+                }
             }
         }
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
@@ -947,11 +949,11 @@ export class CustomerShippingInformationComponent {
         }
     }
     onShipVia(event) {
-        if (this.allShipViaDetails) {
+        if (this.allActions) {
 
-            for (let i = 0; i < this.allShipViaDetails.length; i++) {
-                if (event == this.allShipViaDetails[i].shipVia) {
-                    this.shipViaObj.shipVia = this.allShipViaDetails[i].shipVia;
+            for (let i = 0; i < this.allActions.length; i++) {
+                if (event == this.allActions[i].siteName) {
+                    this.shipViaObj.siteName = this.allActions[i].siteName;
 
 
                     this.selectedShipVia = event;
@@ -962,11 +964,11 @@ export class CustomerShippingInformationComponent {
     filterShipVia(event) {
 
         this.shipviacollection = [];
-        if (this.allShipViaDetails.length > 0) {
-            for (let i = 0; i < this.allShipViaDetails.length; i++) {
-                let shipName = this.allShipViaDetails[i].shipVia;
-                if (shipName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.shipviacollection.push(shipName);
+        if (this.allActions.length > 0) {
+            for (let i = 0; i < this.allActions.length; i++) {
+                let siteName = this.allActions[i].siteName;
+                if (siteName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.shipviacollection.push(siteName);
                 }
             }
         }

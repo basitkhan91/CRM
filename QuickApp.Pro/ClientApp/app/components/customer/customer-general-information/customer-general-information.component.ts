@@ -21,6 +21,8 @@ import { IntegrationService } from '../../../services/integration-service';
 import { AtaMainService } from '../../../services/atamain.service';
 import { VendorService } from '../../../services/vendor.service';
 import { ATAChapter } from '../../../models/atachapter.model';
+import { Currency } from '../../../models/currency.model';
+import { CurrencyService } from '../../../services/currency.service';
 declare const google: any;
 
 @Component({
@@ -45,7 +47,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     countryName: string;
     allCountryinfo: any[];
     allATAMaininfo: ATAChapter[] = [];
-    selectedAircraftTypes: any[] = [];
+    selectedAircraftTypes: any;
     activeIndex: number;
     ATAChapterId: number;
     ataChapterName: any;
@@ -176,6 +178,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     selectedIntegrationTypes: any[];
     public allWorkFlows: any[] = [];
     sourceCustomer: any = {};
+    allCurrencyInfo: any[];
+    selectedCustomerClassification: any;
+    disableSaveCustomerClassification: boolean;
+
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -205,9 +211,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.workFlowtService.generalCollection) {
             this.sourceCustomer = this.workFlowtService.generalCollection;
         }
+
+        this.loadCurrencyData();
+       
     }
 
-    constructor(public integration: IntegrationService, public customerClassificationService: CustomerClassificationService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, public vendorser: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public integration: IntegrationService, public customerClassificationService: CustomerClassificationService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
+        public workFlowtService: CustomerService, public vendorser: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private currencyService: CurrencyService) {
 
         this.dataSource = new MatTableDataSource();
 
@@ -301,6 +311,23 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allIntegrationInfo = allWorkFlows;
+    }
+
+    //To load Currency Information//
+    private onCurrecyLoad(getCurrencyList: Currency[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allCurrencyInfo = getCurrencyList;
+    }
+    // Load Currency data
+    private loadCurrencyData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.currencyService.getCurrencyList().subscribe(
+            results => this.onCurrecyLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
     }
 
     //loading customer type data//
@@ -921,13 +948,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // Save Customer Data//
     editItemAndCloseModel() {
         if (!(this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
-            && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
+            && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.currency && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
         )) {
             this.display = true;
             this.modelValue = true;
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
-            && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
+            && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.currency && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
         ) {
             this.isSaving = true;
             if (!this.sourceCustomer.customerId) {
@@ -1221,7 +1248,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.dataSource.data = allWorkFlows;
         this.allAircraftsGet = allWorkFlows;
         if (this.allAircraftsGet) {
-            this.enablePlus = true;
             this.allAircraftinfo = JSON.parse(JSON.stringify(this.allAircraftsGet));
             this.isDeleteMode = false;
             this.isEditMode = false;
@@ -1286,4 +1312,31 @@ export class CustomerGeneralInformationComponent implements OnInit {
             event.preventDefault();
         }
     }
+
+    onKeyClassification(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCustomerClassification) {
+                if (value == this.selectedCustomerClassification.toLowerCase()) {
+                    this.disableSaveCusCode = true;
+                    this.disableSaveCustomerClassification= true;
+                }
+                else {
+                    this.disableSaveCusCode = false;
+                    this.disableSaveCustomerClassification = false;
+                }
+            }
+        }
+    }
+
+    onCustomerclassifiactionSelected(event) {
+        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
+            if (event == this.allcustomerclassificationInfo[i].description) {
+                this.disableSaveCusCode = true;
+                this.disableSaveCustomerClassification = true;
+                this.selectedCustomerClassification = event;
+            }
+        }
+    }
+
 }

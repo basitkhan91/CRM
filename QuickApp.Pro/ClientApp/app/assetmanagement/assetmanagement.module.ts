@@ -34,6 +34,7 @@ import { MenuItem } from 'primeng/api';
 import { AssetStepsComponent } from "../components/Asset-Management/Asset-Steps-primeng/asset-steps/asset-steps.component";
 import { AssetService } from "../services/asset/Assetservice";
 import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
+import { AuditModule } from "../audit/audit.module";
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -52,7 +53,8 @@ import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
         AutoCompleteModule,
         GMapModule
         , RadioButtonModule,
-        CalendarModule, StepsModule, BreadcrumbModule, DialogModule
+        CalendarModule, StepsModule, BreadcrumbModule, DialogModule,
+        AuditModule
     ],
     declarations: [
        AssetmanagementComponent,

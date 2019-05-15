@@ -122,9 +122,6 @@ namespace DAL.Models
 
         public bool? AllowPartialBilling { get; set; }
 
-        //public int CurrencyId { get; set; }
-
-
         public string PrimarySalesPersonFirstName { get; set; }
 
 
@@ -159,6 +156,11 @@ namespace DAL.Models
 
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
+        public Int32? MarkUpPercentageId { get; set; }
+        public int? Currency { get; set; }
+
+        public bool? IsAddressForBillingAndShipping { get; set; }
+
         public virtual MasterCompany MasterCompany { get; set; }
 
 

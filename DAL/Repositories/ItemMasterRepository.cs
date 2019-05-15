@@ -20,8 +20,7 @@ namespace DAL.Repositories
         public IEnumerable<DAL.Models.ItemMaster> getAlldata()
         {
             return null;
-            //return _appContext.ItemMaster.Include("MasterCompany").OrderByDescending(c => c.ItemMasterId).ToList();
-            //return _appContext.ItemMaster.OrderByDescending(c => c.ItemMasterId).ToList();
+           
         }
         public IEnumerable<object> Getdescriptionbypart(string partNumber)
         {
@@ -44,16 +43,7 @@ namespace DAL.Repositories
                                 t.ItemMasterId,
                                 t.GLAccountId,
                                 t.ManufacturerId,
-                                t.Manufacturer
-                            
-                                
-
-                                
-
-                                
-                                
-
-
+                                t.Manufacturer                          
                             }).ToList();
                 return data;
             }
@@ -86,6 +76,7 @@ namespace DAL.Repositories
             }
         }
 
+
         public IEnumerable<object> GetSelectedAircraftModeldata(long id)
         {
 
@@ -106,6 +97,8 @@ namespace DAL.Repositories
                 return data;
             }
         }
+
+
         public IEnumerable<object> aircraftManufacturerData(long id)
         {
 
@@ -126,13 +119,11 @@ namespace DAL.Repositories
             }
         }
 
+
         public IEnumerable<object> getAllItemMasterdata()
         {
             var data = (from IM in _appContext.ItemMaster
-
-                        //join PT in _appContext.Part on IM.PartId equals PT.PartId into pt
-
-                        //from PT in pt.DefaultIfEmpty()
+                        
                         join MF in _appContext.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId into mfg
 
                         from MF in mfg.DefaultIfEmpty()
@@ -147,26 +138,14 @@ namespace DAL.Repositories
 
                         where
 
-                        (
-                        //(PR == null ? 0 : PR.PriorityId) == 0 && (MF == null ? 0 : MF.ManufacturerId) == 0 &&
-
-                        // (PT == null ? 0 : PT.PartId) == 0 &&
-                        // (PS == null ? 0 : PS.ProvisionId) == 0
-
-                        //&& 
-
-                        IM.ItemTypeId == 1 && IM.IsActive == true)
-                        // select new { t, ad, vt }).ToList();
+                        (IM.ItemTypeId == 1 && IM.IsActive == true)
                         select new
                         {
                             IM,
-                           // PT,
                             MF,
                             PS,
                             PR,
-                           // IM.PartNumber,
                             IM.PartNumber,
-                            //PartDescription = IM.PartDescription,
                             Manufacturerdesc = MF.Name,
                             MF.Comments,
                             MF.ManufacturerId,
@@ -174,14 +153,10 @@ namespace DAL.Repositories
                             PS.ProvisionId,
                             Provisiondesc = PS.Description,
                             PR.PriorityId,
-
                             Prioritydesc = PR.Description,
                             IM.NationalStockNumber,
                             IM.IsHazardousMaterial,
                             IM.ItemMasterId,
-
-
-
                         }).ToList();
             return data;
 
@@ -204,12 +179,6 @@ namespace DAL.Repositories
 
                         from MF in mfg.DefaultIfEmpty()
 
-                        
-
-                       
-
-                       
-                        // select new { t, ad, vt }).ToList();
                         select new
                         {
                             IM.UserRoleLevelEntityId,
@@ -222,14 +191,11 @@ namespace DAL.Repositories
                             PS.FieldName,
                             MF.PermittedEditActionId,
                             PermittedEditActionDescription=MF.Description
-
-
-
-
                         }).ToList();
             return data;
 
         }
+
         public IEnumerable<object> getRolesDatayRoleId(long value)
         {
             var data = (from IM in _appContext.UserRoleLevelEntity
@@ -243,15 +209,9 @@ namespace DAL.Repositories
 
                         from PS in pro.DefaultIfEmpty()
                         join MF in _appContext.PermittedEditAction on IM.PermittedEditActionId equals MF.PermittedEditActionId into mfg
-
                         from MF in mfg.DefaultIfEmpty()
-
-
                         where PT.UserRoleLevelId==value
 
-
-
-                            // select new { t, ad, vt }).ToList();
                         select new
                         {
                             IM.UserRoleLevelEntityId,
@@ -266,12 +226,11 @@ namespace DAL.Repositories
                             PermittedEditActionDescription = MF.Description,
                             PS.UIRoleEntityId
 
-
-
                         }).ToList();
             return data;
 
         }
+
 
         public IEnumerable<object> getAllItemMasterStockdata()
         {
@@ -283,11 +242,6 @@ namespace DAL.Repositories
 
             return data;
         }
-
-
-
-
-
 
 
         public IEnumerable<object> getLegalEntityData()
@@ -324,12 +278,7 @@ namespace DAL.Repositories
                                     CageCode = e.CageCode,
                                     e.LegalEntityId,
                                     LockboxAddressid = lockboxaddressdetails.AddressId,
-                                    //domeswire.DomesticWirePaymentId,
                                     DomesticIntermediateBank=domeswire.IntermediaryBankName,
-                                    //DomesticBenficiaryBankName=domeswire.BenificiaryBankName,
-                                    //InternationalBankName=internalwire.BankName,
-                                    //InternationalBenficiaryBankName=internalwire.IntermediaryBank,
-                                    //internalwire.InternationalWirePaymentId,
                                     department.AddressId,
                                     BankStreetaddress1 = lockboxaddressdetails.Line1,
                                     BankStreetaddress2 = lockboxaddressdetails.Line2,
@@ -383,36 +332,7 @@ namespace DAL.Repositories
         }
 
         public IEnumerable<object> getAllItemMasterequipmentdata()
-        {
-             //from IM in _appContext.ItemMaster
-
-
-             //        join PT in _appContext.Part on IM.PartId equals PT.PartId
-             //        // join Eq in _appContext.Equipment on IM.EquipmentId equals Eq.EquipmentId
-             //        join Eqt in _appContext.EquipmentValidationType on IM.EquipmentValidationTypeId equals Eqt.EquipmentValidationTypeId
-             //        join MF in _appContext.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId
-             //        where IM.ItemTypeId == 3 && IM.IsActive == true
-
-             //        // select new { t, ad, vt }).ToList();
-             //        select new
-             //        {
-             //            IM,
-             //            PT,
-             //            MF,
-             //            MF.ManufacturerId,
-             //            Manufacturerdesc = MF.Name,
-             //            PT.PartNumber,
-             //            //PartDescription = PT.Description,
-             //            Partdescription = PT.Description,
-             //            IM.CertificationRequired,
-             //            IM.UnitCost,
-             //            IM.ListPrice,
-             //            Eqt.EquipmentValidationTypeId,
-             //            EquipmentValidationDescription = Eqt.Description,
-             //            IM.ItemMasterId
-
-             //        }).ToList();
-
+        {            
              var data = _appContext.ItemMaster.Include("Equipment").Include("EquipmentValidationType").Include("Manufacturer")
 
                   .Where(a => a.ItemTypeId == 3 && (a.IsDelete == true || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
@@ -420,11 +340,11 @@ namespace DAL.Repositories
 
         }
 
+
         public IEnumerable<object> Getdescriptionbypart(long partNumber)
         {
             var data = (from IM in _appContext.ItemMaster
-
-                        //join PT in _appContext.Part on IM.PartId equals PT.PartId 
+                        
                         where(
                         IM.ItemTypeId == 1 && IM.IsActive == true)
                         
@@ -432,13 +352,11 @@ namespace DAL.Repositories
                         {
                         IM,
                         IM.PartDescription,
-
-
-
                         }).ToList();
             return data;
 
         }
+
 
         public IEnumerable<object> getIntegrationData(long id)
         {
@@ -489,9 +407,7 @@ namespace DAL.Repositories
                 return data;
             }
         }
-
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
-
+      
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

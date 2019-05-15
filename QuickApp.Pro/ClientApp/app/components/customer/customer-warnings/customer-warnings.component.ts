@@ -99,8 +99,8 @@ export class CustomerWarningsComponent implements OnInit {
 		this.sourceNetAPAR.allow = true;
 		this.sourceEDI.allow = true;
 		this.sourceAeroxchange.allow = true;
-		this.sourcePMA.allow = true;
-		//this.sourePerformallReceiving.allow = true;
+        this.sourcePMA.allow = true;
+        this.sourePerformReceiving.isAllow = true;
 		this.sourceDAR.allow = true;
 		this.sourceWarranty.allow = true;
 		if (this.sourePerformReceiving.allow = true && this.sourceQuoting.allow == true && this.sourceWOCreation.allow == true && this.sourceCreatingInvoicing.allow == true && this.sourceCreditMemo.allow == true && this.sourceShipping.allow == true && this.soureRepairOrder.allow == true
@@ -135,14 +135,16 @@ export class CustomerWarningsComponent implements OnInit {
 		if (value == "B") {
 			this.isOnly = false;
 			this.sourePerformReceiving.warning = false;
-			this.sourePerformReceiving.allow = false;
+            this.sourePerformReceiving.allow = false;
+            this.sourePerformReceiving.isAllow = false;
 			this.isReadOnly = true;
 
 		}
 
 		else if (value == "A") {
 			this.isOnly = true;
-			this.sourePerformReceiving.allow = true;
+            this.sourePerformReceiving.allow = true;
+            this.sourePerformReceiving.isRestrict = false;
 
 		}
 
@@ -655,8 +657,13 @@ export class CustomerWarningsComponent implements OnInit {
 			this.sourePerformReceiving.sourceModule = 'PerformReceiving';
 			this.sourePerformReceiving.createdBy = this.userName;
 			this.sourePerformReceiving.updatedBy = this.userName;
-			this.sourePerformReceiving.masterCompanyId = 1;
-
+            this.sourePerformReceiving.masterCompanyId = 1;
+            if (this.sourePerformReceiving.isAllow == true) {
+                this.sourePerformReceiving.isAllow = 1;
+            }
+            else {
+                this.sourePerformReceiving.isAllow = null;
+            }
 			this.sourePerformReceiving.customerId = this.local.customerId;
 			this.CustomerService.saveCustomerwarnings(this.sourePerformReceiving).subscribe(
 				data => {
@@ -667,7 +674,12 @@ export class CustomerWarningsComponent implements OnInit {
 		else {
 
 			this.sourePerformReceiving.updatedBy = this.userName;
-
+            if (this.sourePerformReceiving.isAllow == true) {
+                this.sourePerformReceiving.isAllow = 1;
+            }
+            else {
+                this.sourePerformReceiving.isAllow = null;
+            }
 			this.sourePerformReceiving.masterCompanyId = 1;
 			this.CustomerService.updateCustomerWarnings(this.sourePerformReceiving).subscribe(
 				data => { this.saveQuoting(); console.log(data) })
@@ -1008,10 +1020,10 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 
-	isAllEnable(value) {
+	isAllEnable() {
 
 
-		if (value == "A") {
+        if (this.sourePerformReceiving.isAllow == true) {
 			this.sourePerformReceiving.allow = true;
 			this.sourceQuoting.allow = true;
 			this.sourceWOCreation.allow = true;
@@ -1028,7 +1040,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.sourceWarranty.allow = true;
 
 		}
-		else if (value == "B") {
+		else {
 			this.sourePerformReceiving.allow = false;
 			this.sourceQuoting.allow = false;
 			this.sourceWOCreation.allow = false;
@@ -1050,7 +1062,7 @@ export class CustomerWarningsComponent implements OnInit {
 	isAllwarningEnable(value) {
 
 
-		if (value == "A") {
+        if (this.sourePerformReceiving.isWarning == true) {
 
 			this.sourePerformReceiving.warning = true;
 			this.sourceQuoting.warning = true;
@@ -1081,7 +1093,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isDerEnable = false;
 			this.isWarrenable = false;
 		}
-		else if (value == "B") {
+		else{
 			this.sourePerformReceiving.warning = false;
 			this.sourceQuoting.warning = false;
 			this.sourceWOCreation.warning = false;
@@ -1114,9 +1126,9 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	isAllrestrictEnable(value) {
-			if (value == "A") {
+        if (this.sourePerformReceiving.isRestrict == true)  {
 
-				this.sourcewarningAll.warning = false;
+                this.sourePerformReceiving.isWarning = false;
 				this.sourePerformallReceiving.allow = false;
 				this.sourePerformReceiving.allow = false;
 				this.sourceQuoting.allow = false;
@@ -1160,7 +1172,8 @@ export class CustomerWarningsComponent implements OnInit {
 				this.sourceAeroxchange.restrict = true;
 				this.sourcePMA.restrict = true;
 				this.sourceDAR.restrict = true;
-				this.sourceWarranty.restrict = true;
+            this.sourceWarranty.restrict = true;
+            this.sourePerformReceiving.isAllow = false;
 				this.isOnly = false;
 				this.isOnlyRead = false;
 				this.isOnlyReads = false;
@@ -1191,7 +1204,7 @@ export class CustomerWarningsComponent implements OnInit {
 				this.isWarrenable = true;
 
 			}
-			else if (value == "B") {
+			else  {
 				this.sourcerestrictall.restrict = false;
 				this.sourePerformReceiving.restrict = false;
 				this.sourceQuoting.restrict = false;
@@ -1206,7 +1219,8 @@ export class CustomerWarningsComponent implements OnInit {
 				this.sourceAeroxchange.restrict = false;
 				this.sourcePMA.restrict = false;
 				this.sourceDAR.restrict = false;
-				this.sourceWarranty.restrict = false;
+                this.sourceWarranty.restrict = false;
+                this.sourePerformReceiving.isAllow = true;
 				this.isOnly = true;
 				this.isOnlyRead = true;
 				this.isOnlyReads = true;

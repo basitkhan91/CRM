@@ -73,7 +73,7 @@
 										<mat-icon color="warn">delete</mat-icon>
 									</button>
 
-									<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add ShipVia " data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>
+									<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via " data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>
 									<button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentHist,rowData)">
 										<mat-icon color="green">history</mat-icon>
 									</button>
@@ -355,8 +355,8 @@
 						<!--<input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shipVia">-->
 						<p-autoComplete (onSelect)="onShipVia($event)" (onKeyUp)=eventShipviaHandler($event)  [(ngModel)]="shipViaObj.shipVia" [ngModelOptions]="{standalone: true}" [suggestions]="shipviacollection" (completeMethod)="filterShipVia($event)" [size]="30"
 										[minLength]="1" [dropdown]="true">
-							<ng-template let-shipName pTemplate="item">
-								<div class="ui-helper-clearfix">{{shipName}}</div>
+							<ng-template let-siteName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{siteName}}</div>
 							</ng-template>
 						</p-autoComplete>
 					</div>

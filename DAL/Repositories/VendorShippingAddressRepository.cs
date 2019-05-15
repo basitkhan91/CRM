@@ -43,7 +43,8 @@ namespace DAL.Repositories
                             v.VendorShippingAddressId,
                             v.CreatedDate,
                             v.UpdatedDate,
-                            v.VendorId
+                            v.VendorId,
+                            v.IsActive
                           
 
 

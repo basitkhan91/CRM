@@ -362,7 +362,8 @@ export class LegalEntityStructureComponent implements OnInit, AfterViewInit {
 			this.sourceLegalEntity.masterCompanyId = 1;
 			this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(
 				role => this.saveSuccessHelper(role),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.loadData();
 		}
 		else {
 			this.sourceLegalEntity.createdBy = this.userName;
@@ -370,7 +371,8 @@ export class LegalEntityStructureComponent implements OnInit, AfterViewInit {
 			this.sourceLegalEntity.masterCompanyId = 1;
 			this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(
 				response => this.saveCompleted(this.sourceLegalEntity),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.loadData();
 		}
 
 		//this.modal.close();

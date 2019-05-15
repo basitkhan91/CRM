@@ -32,6 +32,7 @@ import { ItemMasterExchangeComponent } from "../components/item-masters/item-mas
 import { ItemMasterLoanComponent } from "../components/item-masters/item-master-loan/item-master-loan.component";
 import { ItemMasterCreateCapabilitiesComponent } from "../components/item-masters/Capabilities/item-master-create-capabilities/item-master-create-capabilities.component";
 import { ItemMasterCapabilitiesListComponent } from "../components/item-masters/Capabilities/item-master-capabilities-list/item-master-capabilities-list.component";
+import { AuditModule } from "../audit/audit.module";
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { ItemMasterCapabilitiesListComponent } from "../components/item-masters/
 		GMapModule
 		, RadioButtonModule,
 		CalendarModule, StepsModule, BreadcrumbModule,
-		DialogModule
+        DialogModule,
+        AuditModule
 	],
 	declarations: [
 		ItemmasterPagesComponent,

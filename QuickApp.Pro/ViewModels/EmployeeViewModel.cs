@@ -10,12 +10,7 @@ namespace QuickApp.Pro.ViewModels
 {
     public class EmployeeViewModel
     {
-        public long? EmployeeId { get; set; }
-        public int? CompanyId { get; set; }
-
-        public int? DivisionId { get; set; }
-        public int? DepartmentId { get; set; }
-        public int? BusinessUnitId { get; set; }
+        public long? EmployeeId { get; set; }      
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
@@ -51,7 +46,7 @@ namespace QuickApp.Pro.ViewModels
         public DateTime CreatedDate { get; set; }
 
         public DateTime UpdatedDate { get; set; }
-
+        public long? ManagementStructureId { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
 
         public string[] EmployeeLeaveTypeId { get; set; }

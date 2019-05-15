@@ -119,7 +119,7 @@
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">Phone <strong class="clr-red">*</strong></label>
 													<div class="col-sm-7">
-														<input class="form-control" minlength=10 maxlength=10 (keypress)="keyPress($event)" ng-pattern="phoneNumbr" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerPhone">
+														<input class="form-control"  ng-pattern="phoneNumbr" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerPhone">
 
 													</div>
 												</div>
@@ -204,132 +204,147 @@
 													</div>
 												</div>
 											</div><!--Block3 End-->
-											<div class="col-sm-4">
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Customer Classification <strong class="clr-red">*</strong> </label>
+                                            <div class="col-sm-4">
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Customer Classification <strong class="clr-red">*</strong> </label>
 
-													<div class="inner-addon col-sm-7 inline-block display-flex">
-														<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerClassificationId">
-															<option *ngFor="let classificationName of allcustomerclassificationInfo" [ngValue]="classificationName.customerClassificationId">{{classificationName.description}}</option>
-														</select>
-														<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openClassification(contentEdit)"><i class="fa fa-plus"></i></a>
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label for="Contract Ref" class="control-label col-sm-4">Contract Ref</label>
-													<div class="col-sm-7">
+                                                    <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerClassificationId">
+                                                            <option *ngFor="let classificationName of allcustomerclassificationInfo" [ngValue]="classificationName.customerClassificationId">{{classificationName.description}}</option>
+                                                        </select>
+                                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openClassification(contentEdit)"><i class="fa fa-plus"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label for="Contract Ref" class="control-label col-sm-4">Contract Ref</label>
+                                                    <div class="col-sm-7">
 
-														<div class="contract-ref-input">
-															<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.contractReference" (keypress)="onBlurMethod('contractReference')" required>
+                                                        <div class="contract-ref-input">
+                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.contractReference" (keypress)="onBlurMethod('contractReference')" required>
 
-														</div>
-														<div class="form-group col-sm-12 cust-details-heading">
-															
-														</div>
-													</div>
-												</div>
-												<div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">PBH Customer Memo</label>
-													<div class="col-sm-7">
-														<input class="" type="checkbox" id="rpma" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isPBHCustomer">
-														<div class="rpma-input" *ngIf="sourceCustomer.isPBHCustomer">
-															<textarea class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.pbhCustomerMemo" placeholder="Memo" rows="3"></textarea>
-														</div>
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Restrict PMA</label>
-													<div class="col-sm-7">
-														<input class="" type="checkbox" id="rpma" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictPMA">
-														<div class="rpma-input" *ngIf="sourceCustomer.restrictPMA">
-															<textarea class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictPMAMemo" placeholder="Memo" rows="3"></textarea>
-														</div>
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Restrict DER</label>
-													<div class="col-sm-7">
-														<input class="" type="checkbox" id="rpma" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictBER">
-														<div class="rpma-input" *ngIf="sourceCustomer.restrictBER">
-															<textarea class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictBERMemo" placeholder="Memo" rows="3"></textarea>
-														</div>
-													</div>
-												</div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12 cust-details-heading">
 
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">URL to Cust site</label>
-													<div class="col-sm-7">
-														<input class="form-control " type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerURL">
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Aircraft Manufacturer</label>
-													<div class="col-sm-7">
-														<p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">PBH Customer Memo</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="" type="checkbox" id="rpma" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isPBHCustomer">
+                                                        <div class="rpma-input" *ngIf="sourceCustomer.isPBHCustomer">
+                                                            <textarea class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.pbhCustomerMemo"  rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Restrict PMA</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="" type="checkbox" id="rpma" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictPMA">
+                                                        <div class="rpma-input" *ngIf="sourceCustomer.restrictPMA">
+                                                            <textarea class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictPMAMemo"  rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Restrict DER</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="" type="checkbox" id="rpma" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictBER">
+                                                        <div class="rpma-input" *ngIf="sourceCustomer.restrictBER">
+                                                            <textarea class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.restrictBERMemo"  rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">URL to Cust site</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control " type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerURL">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Aircraft Manufacturer</label>
+                                                    <div class="col-sm-7">
+                                                        <p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+
+                                                    </div>
+                                                </div>
+
+                                                <div ng-disabled="selectedAircraftTypes" class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Models</label>
+                                                    <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
+                                                        <i class="fa fa-plus clr-blue cpointer" data-toggle="modal" data-target="#platform-block" (click)="openModelPopups(contentModel)"></i>
+                                                        <table *ngIf="showInput" [style.border]="showInput ? '1px solid gray' : 'none'">
+                                                            <tr *ngFor="let word of selectedModels; let in=index">
+                                                                <td>
+                                                                    {{selectedModels[in].modelName}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12 input-icon1">
+
+                                                    <label class="control-label col-sm-4">ATA Chapter </label>
+                                                    <div class="col-sm-7">
+                                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ataChapterId">
+                                                                <option class="form-control" *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterId}}-{{ataName.ataChapterName}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
+                                                    <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.currency">
+                                                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                                                    [ngValue]="currencyName.currencyId">
+                                                                {{currencyName.symbol}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Annual Revenue Potential</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.annualRevenuePotential">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Annual Quota</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.annualQuota">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Is this Address For Billing & Shipping</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isAddressForBillingAndShipping">
+                                                    </div>
+                                                </div>
 
 
-													</div>
-												</div>
 
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Models</label>
-													<div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
-														<i class="fa fa-plus clr-blue cpointer" data-toggle="modal" data-target="#platform-block" (click)="openModelPopup(contentModel)"></i>
-
-														<table *ngIf="showInput" [style.border]="showInput ? '1px solid gray' : 'none'">
-															<tr *ngFor="let word of selectedModels; let in=index">
-																<td>
-																	{{selectedModels[in].modelName}}
-
-																</td>
-															</tr>
-														</table>
-
-
-													</div>
-												</div>
-												<div class="form-group col-sm-12 input-icon1">
-
-													<label class="control-label col-sm-4">ATA Chapter </label>
-													<div class="col-sm-7">
-														<div class="inner-addon right-addon autosuggesions-add inline-block">
-															<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ataChapterId">
-																<option class="form-control" *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterId}}-{{ataName.ataChapterName}}</option>
-															</select>
-														</div>
-													</div>
-												</div>
-
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Annual Revenue Potential</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.annualRevenuePotential">
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Annual Quota</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.annualQuota">
-													</div>
-												</div>
-
-
-
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Scan Documents</label>
-													<div class="col-sm-7">
-														<input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.scanDocuments" />
-													</div>
-												</div>
-												<div class="form-group col-sm-12">
-													<label class="control-label col-sm-4">Is this Customer also a Vendor</label>
-													<div class="col-sm-7">
-														<input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isCustomerAlsoVendor">
-													</div>
-												</div>
-											</div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Scan Documents</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.scanDocuments" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Is this Customer also a Vendor</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isCustomerAlsoVendor">
+                                                    </div>
+                                                </div>
+                                            </div>
 											<div class="clear"></div>
 											<hr>
 											<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode" (click)="editItemAndCloseModel()">Save</button>
@@ -369,24 +384,25 @@
 	</div>
 	<div class="modal-body">
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemCloseModel()">
-			<div class="form-group">
-				<label for="name" class="control-label">Name<strong class="clr-red">*</strong></label>
-				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete [(ngModel)]="classificationName" [ngModelOptions]="{standalone: true}" [suggestions]="classificollection" (completeMethod)="filterclassifications($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-classificationName pTemplate="item">
-							<div class="ui-helper-clearfix">{{classificationName}}</div>
-						</ng-template>
-					</p-autoComplete>
-				</div>
-				</div>
+            <div class="form-group">
+                <label for="name" class="control-label">Name<strong class="clr-red">*</strong></label>
+                <div class="inner-addon right-addon inline-block">
+                    <p-autoComplete [(ngModel)]="classificationName"  (onSelect)="onCustomerclassifiactionSelected($event)" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeyClassification($event) [suggestions]="classificollection" (completeMethod)="filterclassifications($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                        <ng-template let-classificationName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{classificationName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div *ngIf="disableSaveCustomerClassification" class="clr-red">Entry Already Exists</div>
+            </div>
 			<div class="form-group">
 				<div class="col-sm-6">
 					<label class="form-check-label" for="isActive">
 						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceClassification.isActive"> Active
 					</label>
 				</div>
-				<button class="btn btn-success pull-right submit-btn">Submit</button>
+				<button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCustomerClassification">Submit</button>
 				<div class="clear"></div>
 			</div>
 
@@ -439,7 +455,7 @@
 			<div class="form-group">
 				<label for="description" class="control-label">Memo</label>
 				<div class="control-data">
-					<input placeholder="Memo" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+					<input  #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
 					<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
 						Memo required.
 					</div>
@@ -513,7 +529,7 @@
 								<td>{{col.modelName}}</td>
 
 								<td>
-									<input type="checkbox" class=" wauto" (keypress)="keyPress($event)" [(ngModel)]="col.checkbox" [ngModelOptions]="{standalone: true}" (click)="saveSelectedModel(col,i)">
+									<input type="checkbox" class=" wauto"  [(ngModel)]="col.checkbox" [ngModelOptions]="{standalone: true}" (click)="saveSelectedModel(col,i)">
 								</td>
 								<td>
 									<input class="form-control w100" [(ngModel)]="col.priority" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
@@ -557,7 +573,7 @@
 			<div class="form-group">
 				<label for="description" class="control-label">countries_iso_code</label>
 				<div class="control-data">
-					<input placeholder="Memo" #countries_iso_code="ngModel" id="countries_iso_code" minlength="2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.countries_iso_code">
+					<input  #countries_iso_code="ngModel" id="countries_iso_code" minlength="2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.countries_iso_code">
 
 				</div>
 				<div class="clear"></div>

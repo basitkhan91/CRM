@@ -20,7 +20,7 @@ namespace QuickApp.Pro.ViewModels
         public string Fax { get; set; }
         public string Email { get; set; }
         public string WebsiteURL { get; set; }
-       // public bool IsDefaultContact { get; set; }
+        public string WorkPhoneExtn { get; set; }
         public string Notes { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -28,6 +28,5 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
-     // public bool IsDefaultContact { get; set; }
     }
 }

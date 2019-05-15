@@ -56,6 +56,7 @@ import { GlAccountService } from '../../../services/glAccount/glAccount.service'
     templateUrl: './item-master-non-stock.component.html',
     styleUrls: ['./item-master-non-stock.component.scss']
 })
+
 /** item-master-non-stock component*/
 export class ItemMasterNonStockComponent {
 	modelValue: boolean = false;
@@ -95,7 +96,7 @@ export class ItemMasterNonStockComponent {
 	allUnitOfMeasureinfo: any[];
 	allitemclassificationInfo: ItemClassificationModel[];
     localCollection: any[];
-	itemClassificationCode: any; 
+	itemNonStockClassificationCode: any; 
     purchaseUnitOfMeasureId: any;
     disabletypeSave: boolean;
     localNameCollection: any[];
@@ -107,6 +108,7 @@ export class ItemMasterNonStockComponent {
     itemTypeName: string;
     disableSavepartDescription: boolean;
     allGlInfo: GlAccount[];
+    allitemNonStockclassificationInfo: any[];
 
 
     /** item-master-non-stock ctor */
@@ -120,30 +122,22 @@ export class ItemMasterNonStockComponent {
         let selectedLink = 2;
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-non-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
-        //this.itemser.radioObj.next(selectedLink)
         if (this.itemser.listNonStockCollection && this.itemser.isEditMode == true) {
-
 
             this.showLable = true;
 			this.sourceItemMaster = this.itemser.listNonStockCollection;
 			if (this.itemser.listNonStockCollection.itemClassification) {
-				this.itemClassificationCode = this.itemser.listNonStockCollection.itemClassification.description;
-			}
-			this.sourceItemMaster.priceDate = new Date(this.itemser.listNonStockCollection.priceDate);
-			//if (this.itemser.listNonStockCollection.part) {
-			//	this.sourceItemMaster.partNumber = this.itemser.listNonStockCollection.part.partNumber;
-			//}
-			//if (this.itemser.listNonStockCollection.part) {
-			//	this.sourceItemMaster.partdescription = this.itemser.listNonStockCollection.part.description;
-			//}
-			this.sourceItemMaster.partdescription = this.itemser.listNonStockCollection.partDescription;
+				this.itemNonStockClassificationCode = this.itemser.listNonStockCollection.itemClassification.description;
+            }
 
+			this.sourceItemMaster.priceDate = new Date(this.itemser.listNonStockCollection.priceDate);
+			this.sourceItemMaster.partdescription = this.itemser.listNonStockCollection.partDescription;
             this.sourceItemMaster.itemGroupId = this.itemser.listNonStockCollection.itemGroupId;
-		 
-			
 			
         }
     }
+
+
 	allglAccountInfo: any[];
     allCountryInfo: any[];
     allCurrencyInfo: any[];
@@ -174,15 +168,12 @@ export class ItemMasterNonStockComponent {
     @ViewChild(MatSort) sort: MatSort;
     cols: any[];
     selectedColumns: any[];
-    displayedColumns = ['itemclassificationId', 'itemclassificationCode', 'description', 'memo'];
-    //, 'Sequence', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'
+    displayedColumns = ['itemclassificationId', 'itemNonStockClassificationCode', 'description', 'memo'];
     dataSource: MatTableDataSource<ItemClassificationModel>;
-
-
     allComapnies: MasterCompany[] = [];
     allitemgroupobjInfo: Itemgroup[] = [];
     private isSaving: boolean;
-	public sourceAction: ItemClassificationModel;
+    public sourceAction: any;
 	descriptionbyPart: any[] = [];
     public sourceItem: Itemgroup;
 	public sourceprovision: Provision;
@@ -201,13 +192,9 @@ export class ItemMasterNonStockComponent {
     modal: NgbModalRef;
     itemName: string;
     filteredBrands: any[];
-
     sourceItemMaster: any = {};
-
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
-
-
 
 
     ngOnInit(): void {
@@ -224,25 +211,22 @@ export class ItemMasterNonStockComponent {
 		this.ptnumberlistdata();
         this.glAccountlistdata();
         this.glList();
+        this.itemNonStockclassification();
         this.cols = [
-            //{ field: 'itemClassificationId', header: 'Item Classification ID' },
-
         ];
         this.selectedColumns = this.cols;
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-non-stock';
-        this.itemser.bredcrumbObj.next(this.itemser.currentUrl);
-        //this.sourceItemMaster.unitCost = "$";
-        //this.sourceItemMaster.listPrice = "$";
-        
+        this.itemser.bredcrumbObj.next(this.itemser.currentUrl);       
     }
-
-
+    
 
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
+
+
     public allWorkFlows: ItemClassificationModel[] = [];
 
     private itemclass() {
@@ -256,6 +240,7 @@ export class ItemMasterNonStockComponent {
 
     }
 
+
     private countryData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -264,8 +249,8 @@ export class ItemMasterNonStockComponent {
             results => this.onDataLoadcountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
     }
+
 
     private glList() {
         this.alertService.startLoadingMessage();
@@ -275,6 +260,8 @@ export class ItemMasterNonStockComponent {
             error => this.onDataLoadFailed(error)
         );
     }
+
+
     private onGlAccountLoad(getGlList: GlAccount[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -297,15 +284,10 @@ export class ItemMasterNonStockComponent {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
         this.allManufacturerInfo = allWorkFlows;
-
-
-        //console.log(this.allActions);
-
-
 	}
-	
+
+
 	private glAccountlistdata() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -314,24 +296,17 @@ export class ItemMasterNonStockComponent {
 			results => this.onglAccountSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
+    }
 
-	//private purchaseDiscountOffListPrice() {
-	//	this.loadingIndicator = true;
-	//}
 
 	private onglAccountSuccessful(allWorkFlows: any[]) {
 
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
 		this.allglAccountInfo = allWorkFlows;
+    }
 
 
-		//console.log(this.allActions);
-
-
-	}
     private ptnumberlistdata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -342,28 +317,23 @@ export class ItemMasterNonStockComponent {
         );
     }
 
+
     private onptnmbersSuccessful(allWorkFlows: any[]) {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
         this.allPartnumbersInfo = allWorkFlows;
-
-
-        //console.log(this.allActions);
-
-
     }
-
 
 
     private onDataLoadcountrySuccessful(allWorkFlows: any[]) {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
         this.allCountryInfo = allWorkFlows;
     }
+
+
     filterUnitOfMeasures(event) {
 
 		this.localunit = [];
@@ -377,8 +347,8 @@ export class ItemMasterNonStockComponent {
 		}
     }
 
+
     private CurrencyData() {
-        // debugger;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
@@ -386,14 +356,12 @@ export class ItemMasterNonStockComponent {
             results => this.oncurrencySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
     }
+
+
     private oncurrencySuccessful(getCreditTermsList: Currency[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = getCreditTermsList;
-
         this.allCurrencyInfo = getCreditTermsList;
     }
 
@@ -407,6 +375,8 @@ export class ItemMasterNonStockComponent {
             error => this.onDataLoadFailed(error)
         );
     }
+
+
     private itemgroup() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -417,13 +387,15 @@ export class ItemMasterNonStockComponent {
         );
 
     }
+
+
     private onprioritySuccessful(getPriorityList: Priority[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        // this.dataSource.data = getPriorityList;
         this.allPriorityInfo = getPriorityList;
     }
+
+
     private atamaindata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -434,13 +406,13 @@ export class ItemMasterNonStockComponent {
         );
     }
 
+
 	private onSuccessful(getAtaMainList: ATAChapter[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = getAtaMainList;
         this.allATAMaininfo = getAtaMainList;
     }
+
 
     private integrationData() {
         this.alertService.startLoadingMessage();
@@ -451,14 +423,14 @@ export class ItemMasterNonStockComponent {
             error => this.onDataLoadFailed(error)
         );
 
-	}
+    }
+
 
 	eventHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
 				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveCusCode = true;
 					this.disableSaveCusName = true;
 				}
@@ -471,15 +443,16 @@ export class ItemMasterNonStockComponent {
 			}
 
 		}
-	}
+    }
+
 
     private onDatainteSuccessful(allWorkFlows: Integration[]) {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
         this.allIntegrationInfo = allWorkFlows;
     }
+
 
     private provisiondata() {
         this.alertService.startLoadingMessage();
@@ -491,50 +464,48 @@ export class ItemMasterNonStockComponent {
         );
     }
 
+
+
     private onprodataSuccessful(getProvisionList: Provision[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = getProvisionList;
         this.allProvisonInfo = getProvisionList;
     }
 
 
 
-	saveItemclass() {
+    saveItemNonStockclass() {
 
 		this.isSaving = true;
 
 		if (this.isEditMode == false) {
 			this.sourceAction.createdBy = this.userName;
 			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.itemClassificationCode = this.itemName;
+			this.sourceAction.itemNonStockClassificationCode = this.itemName;
 			this.sourceAction.description = this.className;
 			this.sourceAction.itemType = this.itemTypeName;
 			this.sourceAction.masterCompanyId = 1;
-			this.workFlowtService.newAction(this.sourceAction).subscribe(data => {
-				this.itemclass();
-				this.sourceAction.itemClassificationId = data.itemClassificationId;
-				//this.itemName=this.itemName;
+            this.itemser.newNonstockClass(this.sourceAction).subscribe(data => {
+                this.itemNonStockclassification();
+                this.sourceItemMaster.itemNonStockClassificationId = data.itemNonStockClassificationId;
 			})
-                //role => this.saveSuccessHelper(role),
-                //error => this.saveFailedHelper(error));
         }
 	
         else {
 
             this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.itemClassificationCode = this.itemName;
+            this.sourceAction.itemNonStockClassificationCode = this.itemName;
 			this.sourceAction.description = this.className;
 			this.sourceAction.itemType = this.itemTypeName;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.itemser.updateNonstockClass(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
 
         this.modal.close();
 	}
+
 
 	saveitemgroup() {
 
@@ -559,13 +530,14 @@ export class ItemMasterNonStockComponent {
 
         this.modal.close();
     }
+
+
     private onDataitemSuccessful(allWorkFlows: Itemgroup[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        // this.dataSource.data = allWorkFlows;
         this.allitemgroupobjInfo = allWorkFlows;
     }
+
 
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -578,24 +550,23 @@ export class ItemMasterNonStockComponent {
 
     }
 
+
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
 
     private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
+
     private onDataLoadSuccessful(allWorkFlows: ItemClassificationModel[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
         this.allitemclassificationInfo = allWorkFlows;
     }
 
+
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allComapnies = allComapnies;
@@ -603,11 +574,10 @@ export class ItemMasterNonStockComponent {
     }
 
     private onDataLoadFailed(error: any) {
-        // alert(error);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
     }
+
 
     itemclassification(content) {
 
@@ -625,12 +595,10 @@ export class ItemMasterNonStockComponent {
 		this.itemTypeName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
 
 
     priorty(content) {
@@ -645,18 +613,15 @@ export class ItemMasterNonStockComponent {
         this.priorityName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
 
     atamai(content) {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceatamain = new ATAMain();
@@ -664,9 +629,6 @@ export class ItemMasterNonStockComponent {
         this.ataChapterName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -684,9 +646,6 @@ export class ItemMasterNonStockComponent {
         this.itemGroupName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -696,20 +655,16 @@ export class ItemMasterNonStockComponent {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceprovision = new Provision();
         this.sourceAction.isActive = true;
-
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
 
     integratn(content) {
 
@@ -726,9 +681,7 @@ export class ItemMasterNonStockComponent {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
-
-
+       
 
     openDelete(content, row) {
 
@@ -741,6 +694,8 @@ export class ItemMasterNonStockComponent {
         }, () => { console.log('Backdrop click') })
     }
 
+
+
     openEdit(content, row) {
 		this.disabletypeSave = false;
 		this.disableClassdesc = false;
@@ -749,7 +704,7 @@ export class ItemMasterNonStockComponent {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
-		this.itemName = this.sourceAction.itemClassificationCode;
+		this.itemName = this.sourceAction.itemNonStockClassificationCode;
 		this.className = this.sourceAction.description;
 		this.itemTypeName = this.sourceAction.itemType;
         this.loadMasterCompanies();
@@ -759,30 +714,23 @@ export class ItemMasterNonStockComponent {
         }, () => { console.log('Backdrop click') })
     }
 
+
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-
         this.sourceAction = row;
-
-
-
         this.isSaving = true;
-
         this.workFlowtService.historyAcion(this.sourceAction.itemClassificationId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
+    }
 
-
-	}
 
 	ItemHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedItemCode) {
 				if (value == this.selectedItemCode.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveItemClassficationCode = true;
 
 				}
@@ -793,15 +741,15 @@ export class ItemMasterNonStockComponent {
 			}
 
 		}
-	}
+    }
+
 
 	ItemClassficationCode(event) {
-		//debugger;
-		if (this.allitemclassificationInfo) {
+        if (this.allitemNonStockclassificationInfo) {
 
-			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-				if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
-					this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
+            for (let i = 0; i < this.allitemNonStockclassificationInfo.length; i++) {
+                if (event == this.allitemNonStockclassificationInfo[i].itemNonStockClassificationCode) {
+                    this.sourceItemMaster.itemNonStockClassificationCode = this.allitemNonStockclassificationInfo[i].itemNonStockClassificationCode;
 					this.disableSaveItemClassficationCode = true;
 
 					this.selectedItemCode = event;
@@ -809,38 +757,29 @@ export class ItemMasterNonStockComponent {
 
 			}
 		}
-	}
-	partdescriptionId(event) {
+    }
 
-		//debugger;
+
+    partdescriptionId(event) {
 
 		if (this.itemclaColl) {
-
-			for (let i = 0; i < this.itemclaColl.length; i++) {
+            for (let i = 0; i < this.itemclaColl.length; i++) {
 
 				if (event == this.itemclaColl[i][0].description) {
-
 					this.sourceItemMaster.description = this.itemclaColl[i][0].description;
-
 					this.disableSavepartDescription = true;
-
-
-
-					this.selectdescription = event;
-
-				}
-
+                    this.selectdescription = event;
+                }
 			}
-
 		}
+    }
 
-	}
+
 	descriptionHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
 				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSavepartDescription = true;
 				}
 				else {
@@ -848,7 +787,9 @@ export class ItemMasterNonStockComponent {
 				}
 			}
 		}
-	}
+    }
+
+
 	filterdescription(event) {
 
 		this.descriptionCollection = [];
@@ -859,24 +800,19 @@ export class ItemMasterNonStockComponent {
 				for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
 					let partDescription = this.allPartnumbersInfo[i].partDescription;
 					if (partDescription) {
-						//////if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-						//////	this.itemclaColl.push([{
-						//////	"partId": this.alldescriptionInfo[i].partId,
-						//////	"description": description
-						//////	}]),
-
 						this.descriptionCollection.push(partDescription);
 					}
 				}
 			}
 		}
-	}
+    }
+
+
 	ItemGroupHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedItemGroup) {
 				if (value == this.selectedItemGroup.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveItemGroup = true;
 
 				}
@@ -887,10 +823,11 @@ export class ItemMasterNonStockComponent {
 			}
 
 		}
-	}
+    }
+
+
 
 	itemGroupCode(event) {
-		//debugger;
 		if (this.allitemgroupobjInfo) {
 
 			for (let i = 0; i < this.allitemgroupobjInfo.length; i++) {
@@ -911,7 +848,6 @@ export class ItemMasterNonStockComponent {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedManufacturer) {
 				if (value == this.selectedManufacturer.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveManufacturer = true;
 
 				}
@@ -922,10 +858,10 @@ export class ItemMasterNonStockComponent {
 			}
 
 		}
-	}
+    }
+
 
 	Manufacturerdescription(event) {
-		//debugger;
 		if (this.allManufacturerInfo) {
 
 			for (let i = 0; i < this.allManufacturerInfo.length; i++) {
@@ -939,60 +875,13 @@ export class ItemMasterNonStockComponent {
 			}
 		}
 	}
-
-	
-
-	glAccountHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedActionName) {
-				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disableSaveglAccount = true;
-
-				}
-				else {
-					this.disableSaveglAccount = false;
-
-				}
-			}
-
-		}
-	}
-	glAccountId(event) {
-		//
-		if (this.glAccountcla) {
-			for (let i = 0; i < this.glAccountcla.length; i++) {
-				if (event == this.glAccountcla[i][0].glAccountId) {
-					this.sourceItemMaster.ItemMasterId = this.itemclaColl[i][0].ItemMasterId;
-				}
-			}
-		}
-	}
-
-	filterglAccount(event) {
-
-		this.glAccountCollection = [];
-		this.glAccountcla = [];
-		if (this.allglAccountInfo) {
-			for (let i = 0; i < this.allglAccountInfo.length; i++) {
-				let glAccountId = this.allglAccountInfo[i].glAccountId;
-
-				if (glAccountId) {
-					this.glAccountCollection.push(glAccountId);
-				}
-			}
-		}
-	}
-
+    
 	PurchaseUOMHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedPurchaseUOM) {
 				if (value == this.selectedPurchaseUOM.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSavePurchaseUOM = true;
-
 				}
 				else {
 					this.disableSavePurchaseUOM = false;
@@ -1001,12 +890,12 @@ export class ItemMasterNonStockComponent {
 			}
 
 		}
-	}
+    }
+
+
 
 	PurchaseUOMdescription(event) {
-		//debugger;
 		if (this.allUnitOfMeasureinfo) {
-
 			for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
 				if (event == this.allUnitOfMeasureinfo[i].description) {
 					this.sourcemanufacturer.description = this.allUnitOfMeasureinfo[i].description;
@@ -1017,17 +906,19 @@ export class ItemMasterNonStockComponent {
 
 			}
 		}
-	}
+    }
+
+
     filterItems(event) {
        
         this.localCollection = [];
-		this.itemclaColl = [];
-		if (this.allitemclassificationInfo) {
-			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-				let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
+        this.itemclaColl = [];
+        if (this.allitemNonStockclassificationInfo) {
+            for (let i = 0; i < this.allitemNonStockclassificationInfo.length; i++) {
+                let itemName = this.allitemNonStockclassificationInfo[i].itemNonStockClassificationCode;
 				if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 					this.itemclaColl.push([{
-						"itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
+                        "itemNonStockClassificationId": this.allitemNonStockclassificationInfo[i].itemNonStockClassificationId,
 						"itemName": itemName
 					}]),
 
@@ -1052,6 +943,7 @@ export class ItemMasterNonStockComponent {
         }
     }
 
+
     filterprovisions(event) {
 
 		this.localprovision = [];
@@ -1064,6 +956,7 @@ export class ItemMasterNonStockComponent {
 			}
         }
     }
+
 
     filterpriorities(event) {
 
@@ -1078,6 +971,7 @@ export class ItemMasterNonStockComponent {
         }
     }
 
+
     filterAtamains(event) {
 
 		this.localatamain = [];
@@ -1090,6 +984,7 @@ export class ItemMasterNonStockComponent {
 			}
         }
     }
+
 
     filterintegrations(event) {
 
@@ -1115,7 +1010,6 @@ export class ItemMasterNonStockComponent {
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
         else {
             this.sourceAction = rowData;
@@ -1125,27 +1019,22 @@ export class ItemMasterNonStockComponent {
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
-
     }
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
+
+    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         this.auditHisory = auditHistory;
-
-
         this.modal = this.modalService.open(content, { size: 'lg' });
-
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-
-
     }
+
+
     private unitofmeasure() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -1154,21 +1043,19 @@ export class ItemMasterNonStockComponent {
             results => this.onDataunitSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
     }
+
 
     private onDataunitSuccessful(getUnitOfMeasureList: any) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        // this.dataSource.data = getUnitOfMeasureList;
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
     }
-    unitmeasure(content) {
 
+
+    unitmeasure(content) {
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceUOM = new UnitOfMeasure();
@@ -1176,18 +1063,13 @@ export class ItemMasterNonStockComponent {
         this.unitName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
+
     saveunitofmeasure() {
-
-        // debugger;
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
 			this.sourceUOM.createdBy = this.userName;
 			this.sourceUOM.updatedBy = this.userName;
@@ -1208,8 +1090,9 @@ export class ItemMasterNonStockComponent {
 
          this.modal.close();
     }
+
+
     captureId(event) {
-		//debugger;
 		if (this.itemclaColl) {
 			for (let i = 0; i < this.itemclaColl.length; i++) {
 				if (event == this.itemclaColl[i][0].itemName) {
@@ -1218,13 +1101,15 @@ export class ItemMasterNonStockComponent {
 			}
         }
     }
+
+
     editItemAndCloseModel() {
 
-		if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partdescription && this.sourceItemMaster.itemClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId)) {
+		if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partdescription && this.sourceItemMaster.itemNonStockClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId)) {
 			this.display = true;
 			this.modelValue = true;
 		}
-		if ((this.sourceItemMaster.partNumber && this.sourceItemMaster.partdescription && this.sourceItemMaster.itemClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId)) {
+        if ((this.sourceItemMaster.partNumber && this.sourceItemMaster.partdescription && this.sourceItemMaster.itemNonStockClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId)) {
 
 			this.isSaving = true;
 
@@ -1234,13 +1119,11 @@ export class ItemMasterNonStockComponent {
 				this.sourceItemMaster.isActive = true;
 				this.sourceItemMaster.createdBy = this.userName;
 				this.sourceItemMaster.updatedBy = this.userName;
-				this.sourceItemMaster.itemClassificationCode = this.itemName;
+				this.sourceItemMaster.itemNonStockClassificationCode = this.itemName;
 				this.sourceItemMaster.masterCompanyId = 1;
 				this.sourceItemMaster.itemTypeId = 2;
 				this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
 					this.collectionofItemMaster = data;
-					//this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
-
 					this.itemser.listStock = false;
 					this.itemser.listNonstock = true;
 					this.itemser.listEquipment = false;
@@ -1252,16 +1135,15 @@ export class ItemMasterNonStockComponent {
 
                 this.sourceItemMaster.updatedBy = this.userName;
                 this.sourceItemMaster.itemTypeId = 2;
-				this.sourceItemMaster.itemClassificationCode = this.itemName;
+				this.sourceItemMaster.itemNonStockClassificationCode = this.itemName;
                 this.sourceItemMaster.masterCompanyId = 1;               
 				this.itemser.updateNonStockItemMaster(this.sourceItemMaster).subscribe(
 					response => this.saveCompleted(this.sourceItemMaster),
 					error => this.saveFailedHelper(error));
 			}
-		}
-        //this.modal.close();
-		//this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+		}      
     }
+
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
@@ -1297,7 +1179,7 @@ export class ItemMasterNonStockComponent {
     openView(content, row) {
 
         this.sourceAction = row;
-        this.item_Name = row.itemClassificationCode;
+        this.item_Name = row.itemNonStockClassificationCode;
         this.description = row.description;
         this.itemType = row.itemType;
         this.memo = row.memo;
@@ -1311,35 +1193,27 @@ export class ItemMasterNonStockComponent {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
+
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
-    private saveSuccessHelper(role?: ItemClassificationModel) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-        this.itemclass();
-
-	}
+    
 
 	private savesuccessCompleted(user?: any) {
 		this.isSaving = false;
-
-
 		this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
-
-
-
 		this.itemclass();
-	}
+    }
+
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+
 
     private saveFailedHelper(error: any) {
         this.isSaving = false;
@@ -1348,6 +1222,7 @@ export class ItemMasterNonStockComponent {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
+
     private getDismissReason(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
@@ -1355,11 +1230,9 @@ export class ItemMasterNonStockComponent {
             return 'by clicking on a backdrop';
         } else {
             return `with: ${reason}`;
-        }
-
-
-       
+        }       
     }
+
     // Temporery Item Master Radiuo Route
    public stock() {
         this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
@@ -1367,7 +1240,6 @@ export class ItemMasterNonStockComponent {
 
     public nonStock() {
 		this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-non-stock');
-		//this.savesuccessCompleted(this.sourceItemMaster);
 
     }
     public equipment() {
@@ -1380,9 +1252,8 @@ export class ItemMasterNonStockComponent {
         this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-loan');
     }
 
-    saveManufacturer() {
 
-        //debugger;
+    saveManufacturer() {
 		this.isSaving = true;
 		if (this.isEditMode == false) {
 			this.sourcemanufacturer.masterCompanyId = 1;
@@ -1403,13 +1274,7 @@ export class ItemMasterNonStockComponent {
 
 		this.modal.close();
 	}
-
-        //this.isSaving = true;
-        //this.sourcemanufacturer.masterCompanyId = 1;
-        //this.itemser.savemanufacutrer(this.sourcemanufacturer).subscribe(
-        //    role => this.saveSuccessHelper(role),
-        //    error => this.saveFailedHelper(error));
-
+    
 
 	
     filtermanufacturer(event) {
@@ -1422,34 +1287,32 @@ export class ItemMasterNonStockComponent {
             }
         }
     }
+
+
     Mfacturer(content) {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
-        //this.sourceAction = new UnitOfMeasure();
         this.sourceAction.isActive = true;
         this.name = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-	}
+    }
+
+
 
 	getSelectedValue(selectedvalue) {
 		var test = selectedvalue;
 		var test1 = +test;
 		this.sourceItemMaster.discountPurchasePercent = test1;
-		//alert(this.sourceItemMaster.discountPurchasePercent);
 	}
 
+
     partnmId(event) {
-        //debugger;
         for (let i = 0; i < this.itemclaColl.length; i++) {
             if (event == this.itemclaColl[i][0].partName) {
 				this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
@@ -1463,16 +1326,18 @@ export class ItemMasterNonStockComponent {
 			error => this.onDataLoadFailed(error)
 		);
 		this.disableSavepartDescription = true;
-	}
+    }
+
+
 	private onpartnumberloadsuccessfull(allWorkFlows: any[]) {
 
 
 		this.descriptionbyPart = allWorkFlows[0]
 		this.sourceActions = this.descriptionbyPart;
 		this.sourceItemMaster.partdescription = allWorkFlows[0].partDescription;
+    }
 
 
-	}
 
     filterpartItems(event) {
 
@@ -1493,91 +1358,111 @@ export class ItemMasterNonStockComponent {
 				}
 			}
         }
-	}
+    }
+
+
 	classificationId(event) {
-		//debugger;
-		if (this.allitemclassificationInfo) {
-			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-				if (event == this.allitemclassificationInfo[i].description) {
-					//alert("Action Name already Exists");
+        if (this.allitemNonStockclassificationInfo) {
+            for (let i = 0; i < this.allitemNonStockclassificationInfo.length; i++) {
+                if (event == this.allitemNonStockclassificationInfo[i].description) {
 					this.disableClassdesc = true;
 					this.selectedActionName = event;
 				}
 			}
 		}
-	}
+    }
+
+
 	classificationtypeId(event) {
-		//debugger;
-		if (this.allitemclassificationInfo) {
-			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-				if (event == this.allitemclassificationInfo[i].itemType) {
+        if (this.allitemNonStockclassificationInfo) {
+            for (let i = 0; i < this.allitemNonStockclassificationInfo.length; i++) {
+                if (event == this.allitemNonStockclassificationInfo[i].itemType) {
 					this.disabletypeSave = true;
 					this.selectedActionName = event;
 				}
 			}
 		}
-	}
+    }
+
 
 	filterItemNames(event) {
 
 		this.localNameCollection = [];
-		if (this.allitemclassificationInfo) {
-			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-				let className = this.allitemclassificationInfo[i].description;
+        if (this.allitemNonStockclassificationInfo) {
+            for (let i = 0; i < this.allitemNonStockclassificationInfo.length; i++) {
+                let className = this.allitemNonStockclassificationInfo[i].description;
 				if (className.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.classnamecolle.push([{
-						"itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
+                    this.classnamecolle.push([{
+                        "itemNonStockClassificationId": this.allitemNonStockclassificationInfo[i].itemNonStockClassificationId,
 						"className": className
 					}]),
 						this.localNameCollection.push(className);
 				}
 			}
 		}
-	}
+    }
+
+
 	filterItemtypes(event) {
 
 		this.localtypeCollection = [];
-		if (this.allitemclassificationInfo) {
-			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-				let itemTypeName = this.allitemclassificationInfo[i].itemType;
+        if (this.allitemNonStockclassificationInfo) {
+            for (let i = 0; i < this.allitemNonStockclassificationInfo.length; i++) {
+                let itemTypeName = this.allitemNonStockclassificationInfo[i].itemType;
 				if (itemTypeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 					this.classificationtypecolle.push([{
-						"itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
+                        "itemNonStockClassificationId": this.allitemNonStockclassificationInfo[i].itemNonStockClassificationId,
 						"itemTypeName": itemTypeName
 					}]),
 						this.localtypeCollection.push(itemTypeName);
 				}
 			}
 		}
-	}
+    }
+
+
 	classeventHandler(event) {
 		let value = event.target.value.toLowerCase();
 		if (this.selectedActionName) {
 			if (value == this.selectedActionName.toLowerCase()) {
-				//alert("Action Name already Exists");
 				this.disableClassdesc = true;
 			}
 			else {
 				this.disableClassdesc = false;
 			}
-		}
+        }
+    }
 
-	}
+
 	classeventtypeHandler(event) {
 		let value = event.target.value.toLowerCase();
 		if (this.selectedActionName) {
 			if (value == this.selectedActionName.toLowerCase()) {
-				//alert("Action Name already Exists");
 				this.disabletypeSave = true;
 			}
 			else {
 				this.disabletypeSave = false;
 			}
 		}
+    }
 
-	}
 
+    private onItemNonstockLoad(allNonstockItems: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allitemNonStockclassificationInfo = allNonstockItems;
+    }
 
+    private itemNonStockclassification() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.itemser.getAllNonStockitems().subscribe(
+            results => this.onItemNonstockLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
 }
 
 

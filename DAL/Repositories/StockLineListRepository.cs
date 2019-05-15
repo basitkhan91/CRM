@@ -105,7 +105,7 @@ namespace DAL.Repositories
 
                                   stl.Quantity,
                                   condition = co.Description,
-                                 // shelfLife = im.IsShelfLifeAvailable,
+                                  // shelfLife = im.IsShelfLifeAvailable,
                                   stl.ShelfLifeExpirationDate,
                                   //stl.Shelf,
                                   //stl.Bin,
@@ -161,7 +161,7 @@ namespace DAL.Repositories
                                   stl.OwnerType,
                                   stl.TraceableToType,
                                   stl.ManufacturerId,
-
+                                  stl.ShelfLife,
 
                                   stl.UnitCostAdjustmentReasonTypeId,
                                   stl.UnitSalePriceAdjustmentReasonTypeId,

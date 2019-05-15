@@ -12,11 +12,8 @@ namespace DAL.Models
 
         public long? CustomerId { get; set; }
 
-        public long? AddressId { get; set; }
-
-        public bool IsPrimary { get; set; }
-
-      
+        public long? AddressId { get; set; }        
+        
         public string SiteName { get; set; }
 
         public int? MasterCompanyId { get; set; }
@@ -34,7 +31,8 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
 
         public bool? IsActive { get; set; }
+        public bool? IsDelete { get; set; }
 
-        //public virtual Customer Customer { get; set; }
+        public  bool? IsPrimary { get; set; }
     }
 }

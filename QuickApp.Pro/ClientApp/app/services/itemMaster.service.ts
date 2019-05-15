@@ -233,5 +233,18 @@ export class ItemMasterService {
         return this.itemMasterEndpoint.getAudit<any[]>(itemMasterId);
     }
 
+    getAllNonStockitems() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemclassificationnonStockEndpoint<any[]>());
+    }
+
+    newNonstockClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemclassificationEndpoint<any>(action);
+    }
+    
+
+    updateNonstockClass(action: any) {
+        return this.itemMasterEndpoint.getUpdateActionEndpoint(action, action.itemNonClassificationId);
+    }
 }
 

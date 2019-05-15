@@ -47,7 +47,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _multiintegrationurl: string = "/api/ItemMaster/savemultiintegrationTypes";
     private readonly _getCapabilityUrl: string = "/api/ItemMaster/capabilityGet";
     private readonly getAuditById: string = "/api/ItemMaster/audits";
-
+    private readonly _itemclassificationUrlNew: string = "/api/ItemMaster/itemNonStockclasspost";
+    private readonly _itemNonstockclassificationGetUrl: string = "/api/ItemMaster/GetNonStockClsiifications";
 
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -70,6 +71,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
 	get listsUrl() { return this.configurations.baseUrl + this._lisUrl; }
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
+    get getNonstockList() { return this.configurations.baseUrl + this._itemNonstockclassificationGetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -502,7 +504,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'partdescription': roleObject.partdescription,
             'partNumber': roleObject.partNumber,
 			'itemGroupId': roleObject.itemGroupId,
-			'glAccountId': roleObject.glAccountId,
+            'glAccountId': roleObject.glAccountId,
+            'itemNonStockClassificationId': roleObject.itemNonStockClassificationId
         }
         return this.http.put<T>(endpointUrl, JSON.stringify(finalobj), this.getRequestHeaders())
             .catch(error => {
@@ -675,6 +678,32 @@ export class ItemMasterEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAudit(ItemMasterId));
+            });
+    }
+
+    getitemclassificationnonStockEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.getNonstockList, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getitemclassificationnonStockEndpoint());
+            });
+    }
+
+    getNewitemclassificationEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._itemclassificationUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemclassificationEndpoint(userObject));
+            });
+    }
+
+
+    getUpdateActionEndpoint<T>(roleObject: any, actionId: number): Observable<T> {
+        let endpointUrl = `${this._itemclassificationUrlNew}/${actionId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateActionEndpoint(roleObject, actionId));
             });
     }
 }

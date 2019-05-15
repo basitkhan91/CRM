@@ -134,6 +134,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
 	private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
+    markUpValue: any;
+    markUpPercentageId: any;
+
 	constructor(public taxtypeser: TaxTypeService, private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, public customerClassificationService: CustomerClassificationService, private router: ActivatedRoute, public inteservice: IntegrationService, public taxRateService: TaxRateService, public itemser: ItemMasterService, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
@@ -163,9 +166,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.integrationData();
         if (this.local) {
             this.getCustomerList();
-
         }
-
+        this.sourceCustomer.isAeroExchange = true;
+        this.sourceCustomer.edi = true;
     }
     private getCustomerList() {
         this.alertService.startLoadingMessage();
@@ -1042,7 +1045,6 @@ export class CustomerFinancialInformationComponent implements OnInit {
 			error => this.onDataLoadFailed(error)
 		);
     }
-
     openMarkUpPercentage(content) {
 
         this.isEditMode = false;
@@ -1056,6 +1058,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
 
     onKeymarkUp(event) {
         if (event.target.value != "") {
@@ -1118,33 +1121,31 @@ export class CustomerFinancialInformationComponent implements OnInit {
         }
     }
 
-
-    // Save Markup
+    //save MarkUp//
     saveMarkUpPercentage() {
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.discontValue = this.discontValue;
-            this.workFlowtService.newAddDiscount(this.sourceAction).
+            this.sourceAction.markUpValue = this.markUpValue;
+            this.workFlowtService.newMarkUp(this.sourceAction).
                 subscribe(data => {
-                    this.loadDiscountData()
-
+                    this.loadMarkUpData()
+                    this.sourceAction.markUpPercentageId = data.markUpPercentageId;
                 })
 
             this.activeIndex = 2;
         }
         else {
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.discontValue = this.discontValue;
+            this.sourceAction.markUpValue = this.markUpValue;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updatediscount(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+            this.workFlowtService.updateMarkUp(this.sourceAction).
+                subscribe(data => {
+                    this.loadMarkUpData()
+                })
 
             this.activeIndex = 2;
-
-
         }
         this.modal.close();
     }

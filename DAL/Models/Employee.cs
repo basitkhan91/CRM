@@ -7,11 +7,6 @@ namespace DAL.Models
  public  class Employee:PasBase
     {
         public long? EmployeeId { get; set; }
-        public int? CompanyId { get; set; }
-
-        public Int32? DivisionId { get; set; }
-        public Int32? DepartmentId { get; set; }
-        public Int32? BusinessUnitId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
          public string MiddleName { get; set; }
@@ -44,6 +39,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
+        public long? ManagementStructureId { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
 

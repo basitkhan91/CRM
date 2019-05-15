@@ -92,6 +92,7 @@ namespace DAL.Models
         public Byte? DiscountPurchasePercent { get; set; }
         public bool? SalesIsFixedPrice { get; set; }
         public DateTime? PurchaseLastListPriceAfterDiscountDate { get; set; }
+        public long? ItemNonStockClassificationId { get; set; }
 
         [ForeignKey("ManufacturerId")]
         public long? ManufacturerId { get; set; }
@@ -162,6 +163,7 @@ namespace DAL.Models
         public virtual Currency Currency { get; set; }
          public virtual ExportClassification ExportClassification { get; set; }
         public virtual GLAccount GLAccount { get; set; }
+        public virtual ItemNonStockClassification ItemNonStockClassification { get; set; }
     }
 
 

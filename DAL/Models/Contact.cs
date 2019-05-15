@@ -16,7 +16,7 @@ namespace DAL.Models
         public string Prefix { get; set; }
         public string Suffix { get; set; }
         public string AlternatePhone { get; set; }
-        //public bool IsDefaultContact { get; set; }
+        public string WorkPhoneExtn { get; set; }
         public string Fax { get; set; }
         public string Email { get; set; }
         public string WebsiteURL { get; set; }
