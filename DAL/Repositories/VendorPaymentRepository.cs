@@ -27,7 +27,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.CheckPayment.Include("MasterCompany")./*Where(c=> c.IsDelete == true || c.IsDelete == null).*/OrderBy(c => c.CheckPaymentId).ToList();
+                return _appContext.CheckPayment.Include("MasterCompany").Where(c=> c.IsDelete == false || c.IsDelete == null).OrderBy(c => c.CheckPaymentId).ToList();
                  
             }
             catch (Exception ex)

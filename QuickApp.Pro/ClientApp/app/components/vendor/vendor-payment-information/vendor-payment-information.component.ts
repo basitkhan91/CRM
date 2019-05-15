@@ -729,6 +729,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			
 	deleteItemAndCloseModel(checkPaymentId) {
         this.isSaving = true;
+        this.sourceVendor.isActive = false;
         this.sourceVendor.updatedBy = this.userName;
 		this.workFlowtService.deleteCheckPayment(checkPaymentId).subscribe(
             response => this.saveCompleted(this.sourceVendor),

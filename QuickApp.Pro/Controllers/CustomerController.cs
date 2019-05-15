@@ -678,7 +678,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("CustomerShippingPost")]
-        public IActionResult CreateShipping([FromBody] CustomerShippingViewModel Customershipping, Address address, long? CustomerAddressid, CustomerShippingAdressViewModel customerShippingAdressViewModel)
+        public IActionResult CreateShipping([FromBody] CustomerShippingViewModel Customershipping, Address address, long? CustomerAddressid, CustomerShippingAdressViewModel customerShippingAdressViewModel )
         {
             if (ModelState.IsValid)
             {
@@ -687,6 +687,7 @@ namespace QuickApp.Pro.Controllers
 
                 Customershipping.MasterCompanyId = 1;
                 Customershipping.IsActive =true;
+                customerShippingAdressViewModel.IsActive = true;
                 Customershipping.CreatedBy = Customershipping.CreatedBy;
                 Customershipping.UpdatedBy = Customershipping.UpdatedBy;
                 Customershipping.CreatedDate = DateTime.Now;
@@ -696,11 +697,6 @@ namespace QuickApp.Pro.Controllers
                 address.Line3 = Customershipping.Address3;
                 address.City = Customershipping.City;
                 address.Country = Customershipping.Country;
-                //customerShippingAdressViewModel.Description = customerShippingAdressViewModel.Description;
-                //customerShippingAdressViewModel.ExpirationDate = customerShippingAdressViewModel.ExpirationDate;
-                //customerShippingAdressViewModel.ExportLicenseNumber = customerShippingAdressViewModel.ExportLicenseNumber;
-                //customerShippingAdressViewModel.StartDate = customerShippingAdressViewModel.StartDate;
-                //customerShippingAdressViewModel.Amount = customerShippingAdressViewModel.Amount;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = Customershipping.CreatedBy;
@@ -708,10 +704,8 @@ namespace QuickApp.Pro.Controllers
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Add(address);
-               // _unitOfWork.CustomerShippingAddress.Add(customerShippingAdressViewModel);
                 _unitOfWork.SaveChanges();
                 long? id = address.AddressId;
-                //long? customershipid = customerShippingAdressViewModel.CustomerShippingAddressId;
                 updateCusShipdetails(customerShippingAdressViewModel, id, Customershipping, address);
                 return Ok(Customershipping);
                
@@ -804,7 +798,7 @@ namespace QuickApp.Pro.Controllers
         {
             customerBillingAddress.MasterCompanyId = 1;
             customerBillingAddress.UpdatedDate = DateTime.Now;
-            customerBillingAddress.IsDelete = true;
+            customerBillingAddress.IsActive = customerBillingAddress.IsActive;
             _unitOfWork.Repository<CustomerBillingAddress>().Update(customerBillingAddress);
             _unitOfWork.SaveChanges();
             return Ok(customerBillingAddress);
@@ -1043,7 +1037,7 @@ namespace QuickApp.Pro.Controllers
                 // addressObj.IsActive = CustomerShippingViewModel.AddressStatus;
                 checkPaymentObj.IsActive = CustomerShippingViewModel.IsActive;
                 checkPaymentObj.MasterCompanyId = 1;
-                //checkPaymentObj.IsActive = true;
+                checkPaymentObj.IsDelete = true;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
@@ -1087,7 +1081,7 @@ namespace QuickApp.Pro.Controllers
                 var checkPaymentObj = _unitOfWork.CustomerShippingAddress.GetSingleOrDefault(c => c.CustomerShippingAddressId == id);
                checkPaymentObj.IsActive = CustomerShippingViewModel.IsActive;
                 checkPaymentObj.MasterCompanyId = 1;
-               //checkPaymentObj.IsActive = true;
+                checkPaymentObj.IsDelete = true;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;

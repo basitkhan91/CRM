@@ -1501,8 +1501,8 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(vendorshipping)} cannot be null");
 
                 vendorshipping.MasterCompanyId = 1;
-                //vendorshipping.IsActive = true;
-                vendorshipping.IsActive = vendorshipping.IsActive;
+                vendorshipping.IsActive = true;
+                vendorShippingAdressViewModel.IsActive = true;
                 vendorshipping.CreatedBy = vendorshipping.CreatedBy;
                 vendorshipping.UpdatedBy = vendorshipping.UpdatedBy;
                 vendorshipping.CreatedDate = DateTime.Now;
@@ -1515,6 +1515,7 @@ namespace QuickApp.Pro.Controllers
                 address.City = vendorshipping.City;
                 address.Country = vendorshipping.Country;
                 address.MasterCompanyId = 1;
+                address.IsActive = true;
                 address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = vendorshipping.CreatedBy;
                 address.UpdatedBy = vendorshipping.UpdatedBy;
@@ -2164,6 +2165,7 @@ namespace QuickApp.Pro.Controllers
                 var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == checkPaymentObj.AddressId);
                 addressObj.IsActive = vendorShippingViewModel.AddressStatus;
                 checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
+                checkPaymentObj.IsDelete = true;
                 checkPaymentObj.MasterCompanyId = 1;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;

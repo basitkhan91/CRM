@@ -70,7 +70,7 @@ export class VendorpagesComponent {
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-general-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
-					{ label: 'Vendor'+" ' "+' General Information' }
+					{ label: 'Vendor'+"'"+' General Information' }
 				];
 			}
 
@@ -173,7 +173,7 @@ export class VendorpagesComponent {
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-general-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list'},
-					{ label: 'Vendor' + " 's " + ' General Information' }
+					{ label: 'Vendor' + "'s" + ' General Information' }
 				];
 			}
 

@@ -514,12 +514,12 @@ export class VendorShippingInformationComponent {
     }
     
 	deleteItemAndCloseModel(vendorShippingAddressId) {
-		this.isSaving = true;
-		this.sourceVendor.isActive = false;
+        this.isSaving = true;
+        this.sourceVendor.isActive = false;
 		this.sourceVendor.addressStatus = false;
 		this.sourceVendor.updatedBy = this.userName;
-		this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
-		this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
+        this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
+        this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
     }
@@ -605,7 +605,7 @@ export class VendorShippingInformationComponent {
 			this.sourceVendor.updatedBy = this.userName;
 			this.Active = "In Active";
 			this.sourceVendor.isActive == false;
-			this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
+            this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
 		}
@@ -614,7 +614,7 @@ export class VendorShippingInformationComponent {
 			this.sourceVendor.updatedBy = this.userName;
 			this.Active = "Active";
 			this.sourceVendor.isActive == true;
-			this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
+            this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
 		}

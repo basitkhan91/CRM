@@ -7333,7 +7333,7 @@ hr {
 	font-weight: normal;
 }
 
-.add-custustomer .lead {
+.add-custustomer .lead, .sub-heading {
 	margin: 0px 0px 10px 10px;
 	border-bottom: 1px solid #ccc;
 }
@@ -12364,4 +12364,13 @@ button:focus {
 }
 span.dropdown-down, span.dropdown-up {
 	border: none !important;
+}
+.mleft10 {margin-left:10px !important;}
+body .ui-steps:before {
+    border-top:none;
+}
+.bg-block2 {
+    background: #dcdcdc;
+    padding: 5px 15px;
+    margin-bottom: 15px;
 }

@@ -26,7 +26,7 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.CustomerShippingAddress
                         join ad in _appContext.Address on c.AddressId equals ad.AddressId
-                        where ((c.IsActive != null && c.IsActive == true) && (c.CustomerId == id))
+                        where ((c.IsDelete == null || c.IsDelete == false) && (c.CustomerId == id))
 
                         // select new { t, ad, vt }).ToList();
                         select new
