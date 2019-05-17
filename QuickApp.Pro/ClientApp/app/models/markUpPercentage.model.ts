@@ -1,6 +1,6 @@
 ﻿export class MarkUpPercentage {
     markUpPercentageId: number;
-    markUpvalue: string;  
+    markUpValue: string;  
     markUpList: MarkUpPercentage[];
 
 }

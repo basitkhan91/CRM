@@ -607,7 +607,8 @@ export class VendorShippingInformationComponent {
 			this.sourceVendor.isActive == false;
             this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.sourceVendor = "";
 		}
 		else {
 			this.sourceVendor = rowData;
@@ -616,7 +617,8 @@ export class VendorShippingInformationComponent {
 			this.sourceVendor.isActive == true;
             this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.sourceVendor = "";
 		}
 
 	}

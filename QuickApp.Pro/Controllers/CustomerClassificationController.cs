@@ -88,6 +88,7 @@ namespace QuickApp.Pro.Controllers
                 Customerclassbjobject.UpdatedBy = customerClassificationViewModel.UpdatedBy;
                 _unitOfWork.CustomerClassifications.Add(Customerclassbjobject);
                 _unitOfWork.SaveChanges();
+                return Ok(Customerclassbjobject);
 
             }
 

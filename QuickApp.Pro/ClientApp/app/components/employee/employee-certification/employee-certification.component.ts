@@ -326,7 +326,9 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 					data => {
 						this.localCollection = data;
 						this.employeeService.generalCollection = this.local;
-					})
+                })
+
+            response => this.saveCompleted(this.sourceEmployee)
 				this.activeIndex = 1;
 				this.employeeService.indexObj.next(this.activeIndex);
 			
@@ -337,7 +339,9 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 			this.sourceEmployee.masterCompanyId = 1;
 			this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
 				this.employeeService.generalCollection = this.local;
-			})
+            })
+
+            response => this.saveCompleted(this.sourceEmployee)
 			this.activeIndex = 1;
 			this.employeeService.indexObj.next(this.activeIndex);
 			

@@ -35,9 +35,9 @@
 											<tr align="center">
 
 												<th></th>
-												<th>Allow<input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourceAllRestrict.restrict" [(ngModel)]="sourceAllAllows.allow" (change)="isAllowallEnable(sourceAllAllows.allow?'A':'B')" class="form-control" /></th>
-												<th>Warning<input type="checkbox" [disabled]="sourceAllRestrict.restrict" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceallWarning.warning" (change)="isAllwarning(sourceallWarning.warning?'C':'D')" class="form-control" /></th>
-												<th>Restrict<input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAllRestrict.restrict" (change)="IsAllRestrict(sourceAllRestrict.restrict?'E':'F')" class="form-control" /></th>
+												<th>Allow<input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourePo.isRestrict &&(sourePo.restrict || soureRMA.restrict || soureRMA.restrict )" [(ngModel)]="sourePo.isAllow" (change)="isAllowallEnable(sourePo.isAllow?'A':'B')" class="form-control" /></th>
+												<th>Warning<input type="checkbox" [disabled]="sourePo.isRestrict" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourePo.isWarning" (change)="isAllwarning(sourePo.isWarning?'C':'D')" class="form-control" /></th>
+												<th>Restrict<input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourePo.isRestrict" (change)="IsAllRestrict(sourePo.isRestrict?'E':'F')" class="form-control" /></th>
 												<th>Warning Msg</th>
 												<th>Restrict Msg</th>
 											</tr>

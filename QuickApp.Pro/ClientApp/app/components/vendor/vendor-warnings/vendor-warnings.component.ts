@@ -55,10 +55,7 @@ export class VendorWarningsComponent implements OnInit {
 	sourceAero: any = {};
 	sourceNet: any = {};
     activeIndex: number;
-	workFlowtService: any;
-	sourceAllAllows: any = {};
-	sourceallWarning: any = {};
-	sourceAllRestrict : any = {};
+    workFlowtService: any;    
     isSaving: boolean;
     isDeleteMode: boolean;
 	
@@ -82,8 +79,8 @@ export class VendorWarningsComponent implements OnInit {
 		this.sourceRo.allow = true;
 		this.sourceEdi.allow = true;
 		this.sourceAero.allow = true;
-		this.sourceNet.allow = true;
-		this.sourceAllAllows.allow = true;
+        this.sourceNet.allow = true;
+        this.sourePo.isAllow = true;
 		if (this.sourePo.allow = true && this.soureRMA.allow == true && this.sourceRo.allow == true && this.sourceEdi.allow == true && this.sourceAero.allow == true && this.sourceNet.allow == true) {
 			this.isOnly = true;
 			this.isOnlyRead = true;
@@ -110,13 +107,17 @@ export class VendorWarningsComponent implements OnInit {
 			this.isOnly = false;
 			this.sourePo.restrictMessage = "";
 			this.sourePo.warning = false;
-			this.sourePo.allow = false;
+            this.sourePo.allow = false;       
+            this.sourePo.isAllow = false;   
 			this.isReadOnly = true;
         }
         else if (value == "A") {
 			this.isOnly = true;
-			this.sourePo.allow = true;
-		}
+            this.sourePo.allow = true;
+            this.sourePo.isWarning = false;
+            this.sourePo.isRestrict = false;
+        }
+
     }
 
     isEnabled(value) {
@@ -130,14 +131,16 @@ export class VendorWarningsComponent implements OnInit {
 
     isCheckd(value) {
         if (value == "B") {
-			this.isOnlyRead = false;
-			this.soureRMA.allow = false;
-			this.soureRMA.warning = false;
-			this.isRead = true;
+            this.isOnlyRead = false;
+            this.soureRMA.allow = false;
+            this.soureRMA.warning = false;
+            this.sourePo.isAllow = false;
+            this.isRead = true;
         }
         else if (value == "A") {
-			this.isOnlyRead = true;
-			this.soureRMA.allow = true;
+            this.isOnlyRead = true;
+            this.soureRMA.allow = true;
+            this.sourePo.isRestrict = false;
         }
     }
 
@@ -154,13 +157,16 @@ export class VendorWarningsComponent implements OnInit {
         if (value == "B") {
 			this.isOnlyReads = false;
 			this.sourceRo.warning = false;
-			this.sourceRo.allow = false;
+            this.sourceRo.allow = false;
+            this.sourePo.isAllow = false;   
 			this.isReads = true;
         }
         else if (value == "A") {
 			this.isOnlyReads = true;
+            this.sourePo.isRestrict = false;
 			this.sourceRo.allow = true;
         }
+       
     }
 
     isEnabld(value) {
@@ -176,13 +182,16 @@ export class VendorWarningsComponent implements OnInit {
         if (value == "B") {
 			this.isOnlyClose = false;
 			this.sourceEdi.allow = false;
-			this.sourceEdi.warning = false;
+            this.sourceEdi.warning = false;
+            this.sourePo.isAllow = false;   
 			this.isopen = true;
         }
         else if (value == "A") {
 			this.isOnlyClose = true;
-			this.sourceEdi.allow = true;
+            this.sourceEdi.allow = true;
+            this.sourePo.isRestrict = false;
         }
+     
 
     }
 
@@ -193,19 +202,23 @@ export class VendorWarningsComponent implements OnInit {
         else if (value == "A") {
             this.isReadOpens = true;
         }
+        
     }
 
     isCkd(value) {
         if (value == "B") {
 			this.isReClose = false;
 			this.sourceAero.warning = false;
-			this.sourceAero.allow = false;
+            this.sourceAero.allow = false;
+            this.sourePo.isAllow = false;   
 			this.isReadOpens = true;
         }
         else if (value == "A") {
-			this.isReClose = true;
+            this.isReClose = true;
+            this.sourePo.isRestrict = false;
 			this.sourceAero.allow = true;
         }
+        
     }
 
     isOpen(value) {
@@ -221,13 +234,16 @@ export class VendorWarningsComponent implements OnInit {
         if (value == "B") {
 			this.isOnlyReas = false;
 			this.sourceNet.allow = false;
-			this.sourceNet.warning = false;
+            this.sourceNet.warning = false;
+            this.sourePo.isAllow = false;   
 			this.isReas = true;
         }
         else if (value == "A") {
-			this.isOnlyReas = true;
+            this.isOnlyReas = true;
+            this.sourePo.isRestrict = false;
 			this.sourceNet.allow = true;
         }
+        
     }
 
 	private loadData() {
@@ -522,9 +538,9 @@ export class VendorWarningsComponent implements OnInit {
 
 	}
 	IsAllRestrict(value) {
-		if (value == "E") {
-			this.sourceAllAllows.allow = false;
-			this.sourceallWarning.warning = false;
+        if (value == "E") {
+            this.sourePo.isAllow = false;
+            this.sourePo.isWarning = false;
 			this.sourePo.warning = false;
 			this.soureRMA.warning = false;
 			this.sourceRo.warning = false;
@@ -580,9 +596,9 @@ export class VendorWarningsComponent implements OnInit {
 			this.sourceRo.allow = true;
 			this.sourceEdi.allow = true;
 			this.sourceAero.allow = true;
-			this.sourceNet.allow = true;
-			this.sourceAllAllows.allow = true;
+            this.sourceNet.allow = true;
+            this.sourePo.isAllow = true;
 		}
 
-	}
+    }
 }

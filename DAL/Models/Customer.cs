@@ -157,7 +157,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
         public Int32? MarkUpPercentageId { get; set; }
-        public int? Currency { get; set; }
+        public int? GeneralCurrencyId { get; set; }
 
         public bool? IsAddressForBillingAndShipping { get; set; }
 

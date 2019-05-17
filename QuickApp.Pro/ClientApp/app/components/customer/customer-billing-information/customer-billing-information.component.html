@@ -178,11 +178,7 @@
 																<div class="ui-helper-clearfix">{{countryName}}</div>
 															</ng-template>
 														</p-autoComplete>
-														<!--<input class="form-control" type="text" id="cspostal" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.country">-->
-														<!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.countries_id">
-												<option *ngFor="let countryName of allCountryinfo" [ngValue]="countryName.countries_id">{{countryName.countries_name}}</option>
-											</select>-->
-														<!--<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="opencountry(modelEdits)"><i class="fa fa-plus"></i></a>-->
+                                                        <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
 													</div>
 												</div>
 											</div>
@@ -205,7 +201,7 @@
 										</div>
 										<div class="clear"></div>
 										<hr>
-										<button type="button" class="btn btn-success pull-right" (click)="editItemAndCloseModel()">Save</button>
+										<button type="button" class="btn btn-success pull-right" [disabled]="disablesave" (click)="editItemAndCloseModel()">Save</button>
 
 										<div class="clear"></div>
 

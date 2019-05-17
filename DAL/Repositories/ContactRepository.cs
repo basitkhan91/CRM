@@ -89,7 +89,7 @@ namespace DAL.Repositories
                             vc.CustomerId,
                             c.CreatedDate,
                             c.UpdatedDate,
-                            vc.IsDefaultContact
+                            //vc.IsDefaultContact
 
                         }).ToList();
             return data;

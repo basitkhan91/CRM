@@ -47,7 +47,7 @@ import { DialogModule } from 'primeng/dialog'; //Prime Ng Dailog
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { InputSwitchModule } from "primeng/inputswitch";
 import { CalendarModule } from "primeng/calendar";
-
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -66,7 +66,8 @@ import { CalendarModule } from "primeng/calendar";
         CustomerPagesRoutingModule,
 		AutoCompleteModule,
 		CalendarModule,
-		GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule
+        GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule,
+        DropdownModule
     ],
     declarations: [
         CustomerPagesComponent,

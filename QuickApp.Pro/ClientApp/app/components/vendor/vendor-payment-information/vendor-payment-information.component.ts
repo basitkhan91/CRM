@@ -335,6 +335,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
+            this.sourceVendor = "";
         }
         else {
             this.sourceVendor = rowData;
@@ -344,6 +345,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
+            this.sourceVendor = "";
         }
     }
 

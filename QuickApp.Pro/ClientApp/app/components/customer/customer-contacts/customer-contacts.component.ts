@@ -90,6 +90,13 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
     isDefaultContact: any;
+    selectedFirstName: any;
+    disableSaveFirstName: boolean;
+    disableSaveMiddleName: boolean;
+    selectedMiddleName: any;
+    disableSaveName: any;
+    disableSavelastName: any;
+    disableSaveLastName: boolean;
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
 			//this.comName = companyDirective.companyName;
@@ -243,7 +250,9 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 			this.sourceCustomer.isActive == false;
 			this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.sourceCustomer = "";
+        
 		}
 		else {
 			this.sourceCustomer = rowData;
@@ -252,7 +261,8 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 			this.sourceCustomer.isActive == true;
 			this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
-				error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));
+            this.sourceCustomer = "";
 		}
 
 	}
@@ -396,20 +406,20 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 			if (!this.sourceCustomer.customerContactId) {
 				this.sourceCustomer.createdBy = this.userName;
 				this.sourceCustomer.updatedBy = this.userName;
-				this.sourceCustomer.masterCompanyId = 1;
-				this.isDefault = this.sourceCustomer.isDefaultContact;
+                this.sourceCustomer.masterCompanyId = 1;
+                this.isDefault = this.sourceCustomer.isDefaultContact;
 				this.workFlowtService.newAddContactInfo(this.sourceCustomer).subscribe(data => {
 
 					this.localCollection = data;
 					this.sourceCustomer= new Object();
 					this.localCollection.CustomerId = this.local.customerId;
 					this.localCollection.ContactId = this.local.contactId;
-					this.loadData();
-					if (data) {
-						this.localCollection.isDefaultContact = this.isDefault;
-						this.updateCustomerContact(this.localCollection);
-						this.loadData();
-					}
+                    this.loadData();
+                    if (data) {
+                        this.localCollection.isDefaultContact = this.isDefault;
+                        this.updateCustomerContact(this.localCollection);
+                        this.loadData();
+                    }
 					if (this.sourceCustomer.isCustomerAlsoVendor == true) {
 						this.workFlowtService.isCustomerAlsoVendor = this.isCustomerAlsoVendor;
 						this.workFlowtService.localCollectiontoVendor = data;
@@ -522,6 +532,99 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
         let inputChar = String.fromCharCode(event.charCode);
         if (event.keyCode != 8 && !pattern.test(inputChar)) {
             event.preventDefault();
+        }
+    }
+
+    onKeyUpFirstNames(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedFirstName) {
+                if (value == this.selectedFirstName.toLowerCase()) {
+                    this.disableSaveFirstName = true;
+
+                }
+                else {
+                    this.disableSaveFirstName = false;
+
+                }
+            }
+
+        }
+    }
+
+    onSelectFirstName(event) {
+        if (this.alldata) {
+            for (let i = 0; i < this.alldata.length; i++) {
+                if (event == this.alldata[i].firstName) {
+                    this.sourceCustomer.firstName = this.alldata[i].firstName;
+                    this.disableSaveFirstName = true;
+
+                    this.selectedFirstName = event;
+                }
+
+            }
+        }
+    }
+
+    onKeyUpMiddleNames(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.disableSaveName) {
+                if (value == this.disableSaveName.toLowerCase()) {
+                    this.disableSaveMiddleName = true;
+
+                }
+                else {
+                    this.disableSaveMiddleName = false;
+
+                }
+            }
+
+        }
+    }
+
+    onSelectMiddleName(event) {
+        if (this.alldata) {
+            for (let i = 0; i < this.alldata.length; i++) {
+                if (event == this.alldata[i].middleName) {
+                    this.sourceCustomer.middleName = this.alldata[i].middleName;
+                    this.disableSaveMiddleName = true;
+
+                    this.disableSaveName = event;
+                }
+
+            }
+        }
+    }
+
+    onKeyUpLastNames(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.disableSavelastName) {
+                if (value == this.disableSavelastName.toLowerCase()) {
+                    this.disableSaveLastName = true;
+
+                }
+                else {
+                    this.disableSaveLastName = false;
+
+                }
+            }
+
+        }
+    }
+
+    onSelectLastName(event) {
+        if (this.alldata) {
+            for (let i = 0; i < this.alldata.length; i++) {
+                if (event == this.alldata[i].lastName) {
+                    this.sourceCustomer.lastName = this.alldata[i].lastName;
+                    this.disableSaveLastName = true;
+
+                    this.disableSavelastName = event;
+                }
+
+            }
         }
     }
 

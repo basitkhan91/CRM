@@ -2365,7 +2365,9 @@ namespace QuickApp.Pro.Controllers
                 vendorObject.WarningMessage = vendorWarningViewModel.WarningMessage;
                 vendorObject.RestrictMessage = vendorWarningViewModel.RestrictMessage;
                 vendorObject.MasterCompanyId = vendorWarningViewModel.MasterCompanyId;
-                // vendorObject.IsActive = true;
+                vendorObject.IsAllow = vendorWarningViewModel.IsAllow;
+                vendorObject.IsRestrict = vendorWarningViewModel.IsRestrict;
+                vendorObject.IsWarning = vendorWarningViewModel.IsWarning;
                 vendorObject.IsActive = vendorWarningViewModel.IsActive;
                 vendorObject.CreatedDate = DateTime.Now;
                 vendorObject.UpdatedDate = DateTime.Now;
@@ -2401,6 +2403,9 @@ namespace QuickApp.Pro.Controllers
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.CreatedBy = vendorWarningViewModel.CreatedBy;
                 vendorObject.UpdatedBy = vendorWarningViewModel.UpdatedBy;
+                vendorObject.IsAllow = vendorWarningViewModel.IsAllow;
+                vendorObject.IsRestrict = vendorWarningViewModel.IsRestrict;
+                vendorObject.IsWarning = vendorWarningViewModel.IsWarning;
                 _unitOfWork.VendorWarning.Update(vendorObject);
                 _unitOfWork.SaveChanges();
                 return Ok(vendorObject);

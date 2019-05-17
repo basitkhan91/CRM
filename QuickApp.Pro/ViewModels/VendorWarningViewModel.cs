@@ -21,5 +21,9 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public bool? IsActive { get; set; }
+        public bool? IsAllow { get; set; }
+        public bool? IsRestrict { get; set; }
+        public bool? IsWarning { get; set; }
+
     }
 }

@@ -272,7 +272,7 @@ export class CustomerBillingInformationComponent
 			this.workFlowtService.updateActionforActiveforBilling(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
 				error => this.saveFailedHelper(error));
-			//alert(e);
+            this.sourceCustomer = "";
 		}
 		else {
 			this.sourceCustomer = rowData;
@@ -282,7 +282,7 @@ export class CustomerBillingInformationComponent
 			this.workFlowtService.updateActionforActiveforBilling(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
 				error => this.saveFailedHelper(error));
-			//alert(e);
+            this.sourceCustomer = "";
 		}
 
 	}
@@ -622,35 +622,33 @@ export class CustomerBillingInformationComponent
 	}
 
     // on country selected
-	onCountrieselected(event) {
-		if (this.allCountryinfo) {
+    onCountrieselected(event) {
+        if (this.allCountryinfo) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                if (event == this.allCountryinfo[i].nice_name) {
+                    this.sourceCustomer.nice_name = event;
+                    this.disablesave = false;
 
-			for (let i = 0; i < this.allCountryinfo.length; i++) {
-				if (event == this.allCountryinfo[i].nice_name) {
-					this.sourceCustomer.nice_name = this.allCountryinfo[i].nice_name;
-					this.disablesave = true;
-
-					this.selectedCountries = event;
-				}
-			}
-		}
+                    this.selectedCountries = event;
+                }
+            }
+        }
     }
 
-	eventCountryHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedCountries) {
-				if (value == this.selectedCountries.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disablesave = true;
-				}
-				else {
-					this.disablesave = false;
-				}
-			}
+    eventCountryHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesave = false;
+                }
+                else {
+                    this.disablesave = true;
+                }
+            }
 
-		}
-	}
+        }
+    }
 
     // Open Billing
 	openBillingView(content, row) {

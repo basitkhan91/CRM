@@ -1052,7 +1052,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.currentMarkUp = new MarkUpPercentage();
-        this.currentMarkUp.markUpvalue = "";
+        this.sourceCustomer.markUpValue = this.sourceCustomer.markUpValue;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -1078,8 +1078,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     onSelectmarkUp(event) {
         if (this.allMarkUpList) {
             for (let i = 0; i < this.allMarkUpList.length; i++) {
-                if (event == this.allMarkUpList[i].markUpvalue) {
-                    this.sourceCustomer.itemClassificationCode = this.allMarkUpList[i].markUpvalue;
+                if (event == this.allMarkUpList[i].markUpValue) {
+                    this.sourceCustomer.itemClassificationCode = this.allMarkUpList[i].markUpValue; 
                     this.disableSaveConsume = true;
 
                     this.selectedConsume = event;
@@ -1109,13 +1109,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.markUpCollection = [];
         if (this.allMarkUpList) {
             for (let i = 0; i < this.allMarkUpList.length; i++) {
-                let markUpvalue = this.allMarkUpList[i].markUpvalue;
-                if (markUpvalue.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.markUppercentageCollection.push([{
-                        "markUpPercentageId": this.allMarkUpList[i].markUpPercentageId,
-                        "markUpvalue": markUpvalue
-                    }]),
-                        this.markUpCollection.push(markUpvalue)
+                
+                let markUpValue = this.allMarkUpList[i].markUpValue;
+                if (markUpValue.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                        this.markUppercentageCollection.push([{
+                            "markUpPercentageId": this.allMarkUpList[i].markUpPercentageId,
+                            "markUpValue": markUpValue
+                        }]),
+                            this.markUpCollection.push(markUpValue)                    
                 }
             }
         }
@@ -1125,22 +1126,22 @@ export class CustomerFinancialInformationComponent implements OnInit {
     saveMarkUpPercentage() {
         this.isSaving = true;
         if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.markUpValue = this.markUpValue;
-            this.workFlowtService.newMarkUp(this.sourceAction).
-                subscribe(data => {
+            this.sourceCustomer.createdBy = this.userName;
+            this.sourceCustomer.updatedBy = this.userName;
+            this.sourceCustomer.markUpValue = this.markUpValue;
+            this.workFlowtService.newMarkUp(this.sourceCustomer).subscribe(data => {
+                this.sourceCustomer.markUpPercentageId = data.markUpPercentageId;
                     this.loadMarkUpData()
-                    this.sourceAction.markUpPercentageId = data.markUpPercentageId;
+                    
                 })
 
             this.activeIndex = 2;
         }
         else {
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.markUpValue = this.markUpValue;
-            this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateMarkUp(this.sourceAction).
+            this.sourceCustomer.updatedBy = this.userName;
+            this.sourceCustomer.markUpValue = this.markUpValue;
+            this.sourceCustomer.masterCompanyId = 1;
+            this.workFlowtService.updateMarkUp(this.sourceCustomer).
                 subscribe(data => {
                     this.loadMarkUpData()
                 })

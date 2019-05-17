@@ -37,7 +37,7 @@
 														<label class="control-label col-sm-4"></label>
 														<div class="col-sm-7">
 															<label class="radio-inline">
-																<input type="radio" [value]="2" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerAffiliationId">
+																<input type="radio" [value]="2" name="optradio" [ngModelOptions]="{standalone: true}" checked="checked" [(ngModel)]="sourceCustomer.customerAffiliationId">
 																External
 															</label>
 															<label class="radio-inline">
@@ -103,17 +103,18 @@
 													<label class="control-label col-sm-4">Parent</label>
 													<div class="col-sm-7">
 														<input class="" type="checkbox" id="cparent" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.parent">
-														<div class="cparent-input cust-name input-icon1" *ngIf="sourceCustomer.parent">
-															<div class="inner-addon right-addon inline-block">
-																<i class="fa fa-search"></i>
-																<p-autoComplete [(ngModel)]="sourceCustomer.customerParentName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterCustomerParentNames($event)" [size]="30"
-																				[minLength]="1" [dropdown]="true">
-																	<ng-template let-customerParentName pTemplate="item">
-																		<div class="ui-helper-clearfix">{{customerParentName}}</div>
-																	</ng-template>
-																</p-autoComplete>
-															</div>
-														</div>
+                                                        <div class="cparent-input cust-name input-icon1" *ngIf="sourceCustomer.parent">
+                                                            <div class="inner-addon right-addon inline-block">
+                                                                <i class="fa fa-search"></i>
+                                                                <p-autoComplete (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event) [(ngModel)]="sourceCustomer.customerParentName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterCustomerParentNames($event)" [size]="30"
+                                                                                [minLength]="1" [dropdown]="true">
+                                                                    <ng-template let-customerParentName pTemplate="item">
+                                                                        <div class="ui-helper-clearfix">{{customerParentName}}</div>
+                                                                    </ng-template>
+                                                                </p-autoComplete>
+                                                            </div>
+                                                            <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
+                                                        </div>
 													</div>
 												</div>
 												<div class="form-group col-sm-12">
@@ -175,24 +176,24 @@
 												</div>
 												<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">Country <strong class="clr-red">*</strong></label>
-													<div class="col-sm-7">
-														<div class="inner-addon right-addon inline-block">
-
-															<p-autoComplete (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-																			[minLength]="1" [dropdown]="true">
-																<ng-template let-nice_name pTemplate="item">
-																	<div class="ui-helper-clearfix">{{nice_name}}</div>
-																</ng-template>
-															</p-autoComplete>
-														</div>
-													</div>
+                                                    <div class="col-sm-7">
+                                                        <div class="inner-addon right-addon inline-block">
+                                                            <p-autoComplete (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                                            [minLength]="1" [dropdown]="true">
+                                                                <ng-template let-nice_name pTemplate="item">
+                                                                    <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                                                </ng-template>
+                                                            </p-autoComplete>
+                                                        </div>
+                                                        <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
+                                                    </div>
 												</div>
-												<div class="form-group col-sm-12">
+												<!--<div class="form-group col-sm-12">
 													<label class="control-label col-sm-4">&nbsp;</label>
 													<div class="checkbox col-sm-7">
 														<button type="button" class="btn btn-warning map-check" (click)="getlatlng(sourceCustomer.address1+sourceCustomer.address2)">Check Address</button>
 													</div>
-												</div>
+												</div>-->
 												<div class="form-control col-sm-12" *ngIf="checkAddress">
 													<p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
 
@@ -275,7 +276,7 @@
                                                 <div ng-disabled="selectedAircraftTypes" class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Models</label>
                                                     <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
-                                                        <i class="fa fa-plus clr-blue cpointer" data-toggle="modal" data-target="#platform-block" (click)="openModelPopups(contentModel)"></i>
+                                                        <i class="fa fa-plus clr-blue cpointer" data-toggle="modal" data-target="#platform-block" (click)="openModelPopup(contentModel)"></i>
                                                         <table *ngIf="showInput" [style.border]="showInput ? '1px solid gray' : 'none'">
                                                             <tr *ngFor="let word of selectedModels; let in=index">
                                                                 <td>
@@ -300,7 +301,7 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
                                                     <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.currency">
+                                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.generalCurrencyId">
                                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                     [ngValue]="currencyName.currencyId">
                                                                 {{currencyName.symbol}}
@@ -313,7 +314,7 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Annual Revenue Potential</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.annualRevenuePotential">
+                                                        <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.annualRevenuePotential">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
@@ -347,7 +348,7 @@
                                             </div>
 											<div class="clear"></div>
 											<hr>
-											<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode" (click)="editItemAndCloseModel()">Save</button>
+											<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode || disableSaveParentName || disablesave" (click)="editItemAndCloseModel()">Save</button>
 
 											<div class="clear"></div>
 										</div>

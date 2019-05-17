@@ -313,7 +313,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
                 actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
                 actionobject.ATAChapterId = customerViewModel.ATAChapterId;
-                actionobject.Currency = customerViewModel.Currency;
+                actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
                 actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
@@ -393,7 +393,7 @@ namespace QuickApp.Pro.Controllers
                 address.UpdatedBy = customerViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
-            actionobject.Currency = customerViewModel.Currency;
+            actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
             actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
             if (customerViewModel.AircraftTypeId != null)
             {
@@ -696,6 +696,8 @@ namespace QuickApp.Pro.Controllers
                 address.Line2 = Customershipping.Address2;
                 address.Line3 = Customershipping.Address3;
                 address.City = Customershipping.City;
+                address.StateOrProvince = Customershipping.StateOrProvince;
+                address.PostalCode = Customershipping.PostalCode;
                 address.Country = Customershipping.Country;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;

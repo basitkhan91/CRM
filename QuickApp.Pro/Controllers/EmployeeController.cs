@@ -195,6 +195,7 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
                 employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
+                _unitOfWork.employee.Add(employeeobject);
 
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
@@ -241,17 +242,6 @@ namespace QuickApp.Pro.Controllers
                     }
                 }
 
-                if (employeeViewModel.EmployeeLeaveTypeId == null)
-                {
-                    employeeViewModel.EmployeeLeaveTypeId = null;
-                }
-                if (employeeViewModel.ShiftId == null)
-                {
-                    employeeViewModel.ShiftId = null;
-                }
-
-              
-                _unitOfWork.employee.Add(employeeobject);
                 _unitOfWork.SaveChanges();
 
                 return Ok(employeeobject);
@@ -338,8 +328,9 @@ namespace QuickApp.Pro.Controllers
                             integrationTypes.CreatedDate = DateTime.Now;
                             integrationTypes.UpdatedDate = DateTime.Now;
                             integrationTypes.IsActive = true;
-                            _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
+                            _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);                          
                             _unitOfWork.SaveChanges();
+                            return Ok(integrationTypes);
                         }
                         
                     }

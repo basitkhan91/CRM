@@ -158,7 +158,7 @@ namespace QuickApp.Pro.ViewModels
 
         public Int32? MarkUpPercentageId { get; set; }
 
-        public int? Currency { get; set; }
+        public int? GeneralCurrencyId { get; set; }
         public bool? IsAddressForBillingAndShipping { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
 
