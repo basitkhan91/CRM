@@ -24,6 +24,7 @@ namespace DAL
         public DbSet<AssetStatus> AssetStatus { get; set; }
         public DbSet<AssetStatusAudit> AssetStatusAudit { get; set; }
         public DbSet<Customer> Customer { get; set; }
+        public DbSet<CustomerAudit> CustomerAudit { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -105,6 +106,7 @@ namespace DAL
         public DbSet<VendorType> VendorType { get; set; }
         public DbSet<Address> Address { get; set; }
         public DbSet<Contact> Contact { get; set; }
+        public DbSet<ContactAudit> ContactAudit { get; set; }
         public DbSet<VendorCheckPayment> VendorCheckPayment { get; set; }
         public DbSet<CheckPayment> CheckPayment { get; set; }
 
@@ -324,6 +326,7 @@ namespace DAL
 
 
         public DbSet<GatecodeClassAudit> GatecodeAudit { get; set; }
+        public DbSet<InterCompanySetup> InterCompanySetup { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

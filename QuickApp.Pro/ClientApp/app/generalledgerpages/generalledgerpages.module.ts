@@ -41,6 +41,7 @@ import { POROCategoryEndpoint } from "../services/porocategory/po-ro-category-en
 import { POROCategoryService } from "../services/porocategory/po-ro-category.service";
 import { AuditModule } from "../audit/audit.module";
 import { InterCompanySetupComponent } from "../components/general-ledger/intercompany-setup/intercompany-setup.component";
+import { AutoCompleteModule } from "primeng/autocomplete";
 
 @NgModule({
     imports: [
@@ -57,7 +58,8 @@ import { InterCompanySetupComponent } from "../components/general-ledger/interco
         MultiSelectModule,
         TreeTableModule,
         TreeModule, DialogModule, CalendarModule, InputSwitchModule,
-        AuditModule
+        AuditModule,
+        AutoCompleteModule
 
     ],
     declarations: [

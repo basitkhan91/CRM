@@ -14,22 +14,19 @@ using System.Threading.Tasks;
 
 namespace DAL.Models
 {
-    public class Customer : PasBase//, IAudit
+    public class CustomerAudit : PasBase
     {
-        [Key]
+        public long CustomerAuditId { get; set; }
+
         public long CustomerId { get; set; }
 
         public string Name { get; set; }
 
-
         public string CustomerCode { get; set; }
 
-        [ForeignKey("CustomerTypeId")]
         public Int32? CustomerTypeId { get; set; }
 
-
         public string DoingBuinessAsName { get; set; }
-
 
         public long? Parent { get; set; }
 
@@ -39,13 +36,9 @@ namespace DAL.Models
 
         public string CustomerPhone { get; set; }
 
-        [ForeignKey("CustomerClassificationId")]
         public long? CustomerClassificationId { get; set; }
 
-
         public string ContractReference { get; set; }
-
-
 
         public bool IsPBHCustomer { get; set; }
 
@@ -55,38 +48,28 @@ namespace DAL.Models
 
         public bool RestrictPMA { get; set; }
 
-
         public string RestrictPMAMemo { get; set; }
 
         public bool? RestrictBER { get; set; }
 
-
         public string RestrictBERMemo { get; set; }
-
 
         public string CustomerURL { get; set; }
 
-        [ForeignKey("AddressId")]
         public long? AddressId { get; set; }
 
         public bool IsCustomerAlsoVendor { get; set; }
 
-
-
-
         public string Discount { get; set; }
-
 
         public long? DiscountId { get; set; }
 
         public int? CurrencyId { get; set; }
-        public string MarkUpPercent { get; set; }
 
+        public string MarkUpPercent { get; set; }
 
         public decimal? CreditLimit { get; set; }
 
-
-        [ForeignKey("CreditTermsId")]
         public short? CreditTermsId { get; set; }
 
         public bool? AllowNettingOfAPAR { get; set; }
@@ -95,28 +78,21 @@ namespace DAL.Models
 
         public string TaxCertificate { get; set; }
 
-
         public decimal? TaxRateStateOrProvince { get; set; }
 
-
         public bool? TaxRateOther { get; set; }
+
         public string TaxTypeId { get; set; }
 
-        [ForeignKey("TaxOtherType")]
         public byte? TaxOtherType { get; set; }
 
         public bool? EDI { get; set; }
 
         public bool? IsAeroExchange { get; set; }
 
-
         public string EDIDescription { get; set; }
+
         public string AeroExchangeDescription { get; set; }
-
-
-        //public string DiscontValue { get; set; }
-
-        //public long? DiscountId { get; set; }
 
         public bool? AllowProformaBilling { get; set; }
 
@@ -124,9 +100,7 @@ namespace DAL.Models
 
         public string PrimarySalesPersonFirstName { get; set; }
 
-
         public string PrimarySalesPersonId { get; set; }
-
 
         public string AnnualRevenuePotential { get; set; }
 
@@ -140,47 +114,41 @@ namespace DAL.Models
 
         public string SecondarySalesPersonId { get; set; }
 
-
         public string CSRName { get; set; }
-
 
         public string AgentName { get; set; }
 
-
         public long? ATAChapterId { get; set; }
 
-
-        [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
 
-
         public bool? IsActive { get; set; }
+
         public bool? IsDelete { get; set; }
+
         public Int32? MarkUpPercentageId { get; set; }
-        public int? GeneralCurrencyId { get; set; }
+
+        public int? Currency { get; set; }
 
         public bool? IsAddressForBillingAndShipping { get; set; }
 
-        public virtual MasterCompany MasterCompany { get; set; }
+        //public virtual MasterCompany MasterCompany { get; set; }
 
+        //public virtual CustomerClassification CustomerClassification { get; set; }
 
-        public virtual CustomerClassification CustomerClassification { get; set; }
+        //public virtual CreditTerms CreditTerms { get; set; }
 
-        public virtual CreditTerms CreditTerms { get; set; }
-        public virtual CustomerAddress CustomerAddress { get; set; }
+        //public virtual CustomerAddress CustomerAddress { get; set; }
 
+        //public virtual CustomerBillingAddress CustomerBillingAddress { get; set; }
 
-        public virtual CustomerBillingAddress CustomerBillingAddress { get; set; }
+        //public virtual CustomerContact CustomerContact { get; set; }
 
-        public virtual CustomerContact CustomerContact { get; set; }
+        //public virtual CustomerIntegrationPortal CustomerIntegrationPortal { get; set; }
 
-        public virtual Address Address { get; set; }
-        public virtual CustomerIntegrationPortal CustomerIntegrationPortal { get; set; }
+        //public virtual CustomerShipping CustomerShipping { get; set; }
 
-
-        public virtual CustomerShipping CustomerShipping { get; set; }
-
-        public virtual CustomerType CustomerType { get; set; }
+        //public virtual CustomerType CustomerType { get; set; }
 
         //public virtual Order Orders { get; set; }
     }

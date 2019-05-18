@@ -183,6 +183,9 @@ import { GlAccountEndpointService } from "./services/glAccount/glAccount-endpoin
 import { AccountCalenderService } from "./services/account-calender/accountcalender.service";
 import { AccountCalenderEndpointService } from "./services/account-calender/accountcalender-endpoint.service";
 import { ActionsButtonsComponent } from "./components/ActionButtons/actions-buttons.component";
+import { InterCompanySetupService } from "./services/intercompany-setup-service";
+import { InterCompanySetupEndPointService } from "./services/intercompany-setup-endpoint.service";
+
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 
@@ -375,7 +378,9 @@ import { ActionsButtonsComponent } from "./components/ActionButtons/actions-butt
         GlAccountService,
         GlAccountEndpointService,
         AccountCalenderService,
-        AccountCalenderEndpointService
+        AccountCalenderEndpointService,
+        InterCompanySetupService,
+        InterCompanySetupEndPointService
 
     ],
     entryComponents: [

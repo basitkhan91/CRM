@@ -48,7 +48,7 @@
 											<thead>
 												<tr align="center">
 													<th></th>
-													<th>Allow <input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourePerformReceiving.isRestrict" [(ngModel)]="sourePerformReceiving.isAllow" (change)="isAllEnable(sourePerformallReceiving.allow?'A':'B')" class="form-control" /></th>
+													<th>Allow <input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourePerformReceiving.isRestrict" [(ngModel)]="sourePerformReceiving.isAllow" (change)="isAllEnable()" class="form-control" /></th>
 													<th>Warning <input type="checkbox" [disabled]="sourePerformReceiving.isRestrict" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourePerformReceiving.isWarning" (change)="isAllwarningEnable(sourcewarningAll.warning?'A':'B')" class="form-control" /></th>
 													<th>Restrict <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourePerformReceiving.isRestrict" (change)="isAllrestrictEnable(sourcerestrictall.restrict?'A':'B')" class="form-control" /> </th>
 													<th>Warning Msg</th>

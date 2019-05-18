@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
-
+using Model = DAL.Models;
 namespace QuickApp.Pro.Controllers
 {
 
@@ -21,7 +21,7 @@ namespace QuickApp.Pro.Controllers
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
 
-        public TaskController(IUnitOfWork unitOfWork,IEmailer emailer)
+        public TaskController(IUnitOfWork unitOfWork, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
             _emailer = emailer;
@@ -60,14 +60,21 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("Tasks")]
+        [HttpPost("add")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateAction([FromBody] DAL.Models.Task actionViewModel)
+        public IActionResult AddTask([FromBody] DAL.Models.Task actionViewModel)
         {
             if (ModelState.IsValid)
             {
                 if (actionViewModel == null)
                     return BadRequest($"{nameof(actionViewModel)} cannot be null");
+
+                var exist = _unitOfWork.Repository<Model.Task>()
+                    .Find(x => x.Description.Equals(actionViewModel.Description, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                if (exist != null)
+                {
+                    return BadRequest(new Exception(string.Format("Action with name {0} already exists.", exist.Description)));
+                }
 
                 DAL.Models.Task actionobject = new DAL.Models.Task();
                 actionobject.Description = actionViewModel.Description;
@@ -135,7 +142,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult AuditDetails(long id)
         {
             var tasks = _unitOfWork.Repository<TaskAudit>()
-                .Find(X => X.ActionId == id)
+                .Find(X => X.TaskId == id)
                 .OrderByDescending(X => X.TaskAuditId)
                 .ToList();
 

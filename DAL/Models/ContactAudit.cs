@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-    public class Contact //: IAudit
+    public class ContactAudit
     {
-        [Key]
+        public long ContactAuditId { get; set; }
         public long? ContactId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -29,7 +28,5 @@ namespace DAL.Models
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
-
-        public virtual MasterCompany MasterCompany { get; set; }
     }
 }
