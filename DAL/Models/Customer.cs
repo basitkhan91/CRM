@@ -148,7 +148,7 @@ namespace DAL.Models
 
 
         public long? ATAChapterId { get; set; }
-
+        public long? ataSubChapterId { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }

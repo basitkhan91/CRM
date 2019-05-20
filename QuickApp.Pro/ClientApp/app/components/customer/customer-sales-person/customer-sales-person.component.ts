@@ -83,7 +83,7 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
         }
 		this.employeedata();
 		this.loadItemmasterData();
-		this.ptnumberlistdata();
+		//this.ptnumberlistdata();
 		this.loadDataForCondition();
 		this.customerList();
 		this.vendorList();
@@ -514,47 +514,47 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
 			}
 		}
 	}
-	private onptnmbersSuccessful(allWorkFlows: any[]) {
+	//private onptnmbersSuccessful(allWorkFlows: any[]) {
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allPartnumbersInfo = allWorkFlows;
-	}
+	//	this.alertService.stopLoadingMessage();
+	//	this.loadingIndicator = false;
+	//	this.dataSource.data = allWorkFlows;
+	//	this.allPartnumbersInfo = allWorkFlows;
+	//}
 
 
-	private ptnumberlistdata() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+	//private ptnumberlistdata() {
+	//	this.alertService.startLoadingMessage();
+	//	this.loadingIndicator = true;
 
-		this.itemser.getPrtnumberslistList().subscribe(
-			results => this.onptnmbersSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
-	filterpartItems(event) {
+	//	this.itemser.getPrtnumberslistList().subscribe(
+	//		results => this.onptnmbersSuccessful(results[0]),
+	//		error => this.onDataLoadFailed(error)
+	//	);
+	//}
+	//filterpartItems(event) {
 
-		this.partCollection = [];
-		this.itemclaColl = [];
-		if (this.allPartnumbersInfo) {
-			if (this.allPartnumbersInfo.length > 0) {
+	//	this.partCollection = [];
+	//	this.itemclaColl = [];
+	//	if (this.allPartnumbersInfo) {
+	//		if (this.allPartnumbersInfo.length > 0) {
 
-				for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-					let partName = this.allPartnumbersInfo[i].partNumber;
-					if (partName) {
-						if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-							this.itemclaColl.push([{
-								"partId": this.allPartnumbersInfo[i].itemMasterId,
-								"partName": partName
-							}]),
+	//			for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+	//				let partName = this.allPartnumbersInfo[i].partNumber;
+	//				if (partName) {
+	//					if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+	//						this.itemclaColl.push([{
+	//							"partId": this.allPartnumbersInfo[i].itemMasterId,
+	//							"partName": partName
+	//						}]),
 
-								this.partCollection.push(partName);
-						}
-					}
-				}
-			}
-		}
-	}
+	//							this.partCollection.push(partName);
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 	private onitemmasterSuccessful(allWorkFlows: any[]) {
 
 		this.alertService.stopLoadingMessage();

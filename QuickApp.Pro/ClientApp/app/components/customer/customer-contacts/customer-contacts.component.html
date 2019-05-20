@@ -102,20 +102,21 @@
                                     <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
                                     <h4 class="modal-title">Details of Customer Contact</h4>
                                 </div>
-                                <div class="table-responsive default-bg clear">
-
-
-                                    <div class="col-sm-4">
-                                        <p><span class="label"><b>Contact Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
-                                        <p><span class="label"><b>Contact Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
+                                <div class="modal-body viewform">
+                                    <div class="col-sm-6">
+                                        <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
+                                        <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                                        <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
+                                        <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                                        <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
+                                        <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
                                         <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+
                                         <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
-                                        <!--<p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>-->
-                                        <p><span class="label"><b>Alternate Phone: e"</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
-                                        <p><span class="label"><b>Default Contact: </b></span><span class="value">{{sourceViewforContact.isDefaultcontact}}</span></p>
-                                        <p>
-                                            <span class="value">{{sourceViewforContact.WebsiteURL}}</span>
-                                        </p>
+                                        <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
+                                        <p><span class="label"><b>work Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
+                                        <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
+
                                         <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
                                         <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
                                         <div class="clear"></div>

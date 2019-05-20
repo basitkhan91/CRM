@@ -23,6 +23,7 @@ import { VendorService } from '../../../services/vendor.service';
 import { ATAChapter } from '../../../models/atachapter.model';
 import { Currency } from '../../../models/currency.model';
 import { CurrencyService } from '../../../services/currency.service';
+import { KeyFilterModule } from 'primeng/keyfilter';
 declare const google: any;
 
 @Component({
@@ -33,6 +34,11 @@ declare const google: any;
 })
 
 export class CustomerGeneralInformationComponent implements OnInit {
+    mobnumPattern = "^((\\+91-?)|0)?[0-9]{10}$";
+    emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+
+    allSubChapter: ATAChapter[];
+
     disableSaveCusCode: boolean;
     disableSaveCusName: boolean;
     disableSaveContries: boolean = false;
@@ -181,7 +187,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
     allCurrencyInfo: any[];
     selectedCustomerClassification: any;
     disableSaveCustomerClassification: boolean;
-    disableSaveParentName: boolean;
 
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
@@ -214,7 +219,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
         this.loadCurrencyData();
-       
+
     }
 
     constructor(public integration: IntegrationService, public customerClassificationService: CustomerClassificationService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
@@ -244,6 +249,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.sourceAuditHistory.stateOrProvince = this.workFlowtService.listCollection.ad.stateOrProvince;
             this.sourceAuditHistory.postalCode = this.workFlowtService.listCollection.ad.postalCode;
             this.sourceCustomer.customerAffiliationId = this.sourceCustomer.customerAffiliationId;
+            if (this.workFlowtService.listCollection.t.ataChapterId) {
+                this.getATASubChapterData(this.workFlowtService.listCollection.t.ataChapterId);
+            }
+
         }
         if (this.vendorser.isVendorAlsoCustomer == true) {
             this.sourceCustomer = this.vendorser.localCollectiontoCustomer;
@@ -258,11 +267,26 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
 
+    //calling for ATA Subchapter Data
+
+    getATASubChapterData(ataMainId) {
+        this.vendorser.getATASubchapterData(ataMainId).subscribe( //calling and Subscribing for Address Data
+            results => this.onDataLoadAtaSubChapterDataSuccessful(results[0]), //sending Address
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onDataLoadAtaSubChapterDataSuccessful(data: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allSubChapter = data;
+    }
+
     closethis() {
         this.closeCmpny = false;
     }
 
-   // loading Customer details//
+    // loading Customer details//
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -296,7 +320,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         });
     }
 
-   //loading integrationData//
+    //loading integrationData//
     private integrationalData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -306,7 +330,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         );
 
     }
-     private onDataLoadintegratnSuccessful(allWorkFlows: Integration[]) {
+    private onDataLoadintegratnSuccessful(allWorkFlows: Integration[]) {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -370,6 +394,16 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.dataSource.data = allWorkFlows;
         this.allCountryinfo = allWorkFlows;
 
+        this.countrycollection = [];
+        if (this.allCountryinfo.length > 0) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                let countryName = this.allCountryinfo[i].nice_name;
+                if (countryName) {
+                    this.countrycollection.push(countryName);
+                }
+            }
+        }
+
     }
 
     // loading ATAMain data
@@ -388,7 +422,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     //To Open Model Popup based on Aircraft Type//
-    openModelPopup(content) {
+    openModelPopups(content) {
         if (this.workFlowtService.isEditMode == false) {
             this.modal = this.modalService.open(content, { size: 'sm' });
             this.modal.result.then(() => {
@@ -468,7 +502,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         );
 
     }
-    
+
     private onDataLoadaircraftmodelSuccessful(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -527,13 +561,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.options = {
                 center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
                 zoom: 1,
-             };
+            };
             this.overlays = [
                 new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
 
             ];
             return data;
-            
+
         });
     }
 
@@ -570,7 +604,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
 
-    
+
     opencountry(content) {
         this.isEditMode = false;
         this.isDeleteMode = false;
@@ -619,7 +653,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.modal.close();
     }
 
-   // save Customer Info//
+    // save Customer Info//
     editItemCloseModel() {
         this.isSaving = true;
         if (this.isEditMode == false) {
@@ -669,7 +703,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private refresh() {
         this.applyFilter(this.dataSource.filter);
     }
-  
+
     eventHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -703,8 +737,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.allCountryinfo) {
             for (let i = 0; i < this.allCountryinfo.length; i++) {
                 if (event == this.allCountryinfo[i].nice_name) {
-                    this.sourceCustomer.nice_name = event;
-                    this.disablesave = false;
+                    this.sourceCustomer.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesave = true;
 
                     this.selectedCountries = event;
                 }
@@ -717,10 +751,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             let value = event.target.value.toLowerCase();
             if (this.selectedCountries) {
                 if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesave = false;
+                    this.disablesave = true;
                 }
                 else {
-                    this.disablesave = true;
+                    this.disablesave = false;
                 }
             }
 
@@ -834,20 +868,20 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
     }
 
-   
+
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
     }
-   
+
     private onGeneralObjUrl(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.sourceCustomer = allWorkFlows;
     }
-   
+
     open(content) {
         this.isEditMode = false;
         this.isDeleteMode = false;
@@ -1164,10 +1198,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     private saveFailedHelper(error: any) {
-     
+
     }
 
-    
+
     onUpload(event) {
         for (let file of event.files) {
             this.uploadedFiles.push(file);
@@ -1320,7 +1354,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.selectedCustomerClassification) {
                 if (value == this.selectedCustomerClassification.toLowerCase()) {
                     this.disableSaveCusCode = true;
-                    this.disableSaveCustomerClassification= true;
+                    this.disableSaveCustomerClassification = true;
                 }
                 else {
                     this.disableSaveCusCode = false;
@@ -1336,39 +1370,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.disableSaveCusCode = true;
                 this.disableSaveCustomerClassification = true;
                 this.selectedCustomerClassification = event;
-            }
-        }
-    }
-
-    parentEventHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedActionName) {
-                if (value == this.selectedActionName.toLowerCase()) {
-                    this.disableSaveParentName = false;
-
-                }
-                else {
-                    this.disableSaveParentName = true;
-
-                }
-            }
-
-        }
-    }
-
-    onParentNameselected(event) {
-        if (this.allActions) {
-            for (let i = 0; i < this.allActions.length; i++) {
-                if (event == this.allActions[i].name)
-                {
-                    this.sourceCustomer.customerParentName = event;
-
-                    this.disableSaveParentName = false;
-
-                    this.selectedActionName = event;
-                }
-
             }
         }
     }

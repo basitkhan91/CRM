@@ -146,6 +146,8 @@ export class CustomerWarningsComponent implements OnInit {
             this.sourePerformReceiving.allow = true;
             this.sourePerformReceiving.isRestrict = false;
 
+            this.sourePerformReceiving.isRestrict = true;
+
 		}
 
 	}
@@ -176,6 +178,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isOnlyRead = true;
             this.sourceQuoting.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 	}
@@ -208,7 +211,9 @@ export class CustomerWarningsComponent implements OnInit {
 		else if (value == "A") {
             this.isOnlyReads = true;
             this.sourePerformReceiving.isRestrict = false;
-			this.sourceWOCreation.allow = true;
+            this.sourceWOCreation.allow = true;
+            this.sourePerformReceiving.isRestrict = true;//added New
+
 		}
 
 	}
@@ -241,6 +246,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isOnlyClose = true;
             this.sourceCreatingInvoicing.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 
 		}
 
@@ -270,6 +276,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isReClose = true;
             this.sourceCreditMemo.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 	}
@@ -304,6 +311,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isRepair1 = true;
             this.soureRepairOrder.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 	}
 
@@ -328,6 +336,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.sales = true;
             this.sourceSalesOrder.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 
@@ -353,6 +362,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isnetAp = true;
             this.sourceNetAPAR.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 
@@ -364,7 +374,8 @@ export class CustomerWarningsComponent implements OnInit {
 			this.Edidisable = false;
 		}
 		else if (value == "A") {
-			this.Edidisable = true;
+            this.Edidisable = true;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 	}
@@ -417,6 +428,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isaerodisble = true;
             this.sourceAeroxchange.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 
@@ -445,6 +457,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.ispmadisable = true;
             this.sourcePMA.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 
@@ -475,6 +488,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isDerdisable = true;
             this.sourceDAR.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 
@@ -507,6 +521,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isWarrdisable = true;
             this.sourceWarranty.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 	}
 
@@ -525,6 +540,7 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isOnlyReas = true;
             this.sourceShipping.allow = true;
             this.sourePerformReceiving.isRestrict = false;
+            this.sourePerformReceiving.isRestrict = true;//added New
 		}
 
 	}
@@ -1091,7 +1107,8 @@ export class CustomerWarningsComponent implements OnInit {
 	isAllwarningEnable(value) {
 
 
-        if (this.sourePerformReceiving.isWarning == true) {
+        if (this.sourePerformReceiving.isWarning == true)
+        {
 
 			this.sourePerformReceiving.warning = true;
 			this.sourceQuoting.warning = true;
@@ -1120,7 +1137,46 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isaeroEnable = false;
 			this.ispmaenable = false;
 			this.isDerEnable = false;
-			this.isWarrenable = false;
+            this.isWarrenable = false;
+
+            if (this.sourePerformReceiving.isAllow == true)
+            {
+                this.sourePerformReceiving.isAllow = false;
+
+                this.sourePerformReceiving.allow = false;
+                this.sourceQuoting.allow = false;
+                this.sourceWOCreation.allow = false;
+                this.sourceCreatingInvoicing.allow = false;
+                this.sourceCreditMemo.allow = false;
+                this.sourceShipping.allow = false;
+                this.soureRepairOrder.allow = false;
+                this.sourceSalesOrder.allow = false;
+                this.sourceNetAPAR.allow = false;
+                this.sourceEDI.allow = false;
+                this.sourceAeroxchange.allow = false;
+                this.sourcePMA.allow = false;
+                this.sourceDAR.allow = false;
+                this.sourceWarranty.allow = false;
+            }
+
+            if (this.sourePerformReceiving.isRestrict == true)
+            {
+                this.sourcerestrictall.restrict = false;
+                this.sourePerformReceiving.restrict = false;
+                this.sourceQuoting.restrict = false;
+                this.sourceWOCreation.restrict = false;
+                this.sourceCreatingInvoicing.restrict = false;
+                this.sourceCreditMemo.restrict = false;
+                this.sourceShipping.restrict = false;
+                this.soureRepairOrder.restrict = false;
+                this.sourceSalesOrder.restrict = false;
+                this.sourceNetAPAR.restrict = false;
+                this.sourceEDI.restrict = false;
+                this.sourceAeroxchange.restrict = false;
+                this.sourcePMA.restrict = false;
+                this.sourceDAR.restrict = false;
+                this.sourceWarranty.restrict = false;
+            }
 		}
 		else{
 			this.sourePerformReceiving.warning = false;

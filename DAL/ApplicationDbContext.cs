@@ -328,6 +328,12 @@ namespace DAL
         public DbSet<GatecodeClassAudit> GatecodeAudit { get; set; }
         public DbSet<InterCompanySetup> InterCompanySetup { get; set; }
 
+        public DbSet<JournalBatch> JournalBatch { get; set; }
+        public DbSet<JournalType> JournalType { get; set; }
+        public DbSet<JournalPeriod> JournalPeriod { get; set; }
+        public DbSet<JournalSource> JournalSource { get; set; }
+
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
