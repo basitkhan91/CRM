@@ -79,9 +79,13 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	stateOrProvince: any;
 	postalCode: number;
     country: any;
+    defaultPaymentMethod: number;
+    disablesaveforCountry: boolean;
+    disablesavefoInternalrCountry: boolean;
+    disablesaveforBeneficiary: boolean;
     ngOnInit(): void {
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl); 
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
 		if (this.local) {
 			this.loadData();
 			this.defaultPaymentValue = true;
@@ -136,7 +140,14 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		if (this.workFlowtService.financeCollection) {
 			this.local = this.workFlowtService.financeCollection;
-		}
+        }
+        if (this.defaultPaymentMethod == 1) {
+            this.showPament();
+        }
+        if (this.defaultPaymentMethod == 2) {
+            this.showDomesticWire();
+        }
+
 		this.dataSource = new MatTableDataSource();
 		if (this.local) {
 			this.workFlowtService.contactCollection = this.local;
@@ -779,7 +790,33 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         }
 
         this.loadData();
-	}
+    }
+
+    onInternalBankCountrieselected(event) {
+        if (this.allCountryinfo) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                if (event == this.allCountryinfo[i].nice_name) {
+                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesavefoInternalrCountry = false;
+                    this.selectedCountries = event;
+                }
+            }
+        }
+    }
+    eventInternalBankCountryHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesavefoInternalrCountry = false;
+                }
+                else {
+                    this.disablesavefoInternalrCountry = true;
+                }
+            }
+
+        }
+    }
 	private savesuccessCompleted(user?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
@@ -838,8 +875,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		if (this.allCountryinfo) {
 			for (let i = 0; i < this.allCountryinfo.length; i++) {
 				if (event == this.allCountryinfo[i].nice_name) {
-					this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-					this.disablesave = true;
+                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesave = false;
 					this.selectedCountries = event;
 				}
 			}
@@ -849,11 +886,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedCountries) {
-				if (value == this.selectedCountries.toLowerCase()) {
-					this.disablesave = true;
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesave = false;
 				}
-				else {
-					this.disablesave = false;
+                else {
+                    this.disablesave = true;
 				}
 			}
 
@@ -870,5 +907,58 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				}
 			}
 		}
-	}
+    }
+
+    onBankCountrieselected(event) {
+        if (this.allCountryinfo) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                if (event == this.allCountryinfo[i].nice_name) {
+                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesaveforCountry = false;
+                    this.selectedCountries = event;
+                }
+            }
+        }
+    }
+    eventBankCountryHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesaveforCountry = false;
+                }
+                else {
+                    this.disablesaveforCountry = true;
+                }
+            }
+
+        }
+    }
+
+
+    onBeneficiaryselected(event) {
+        if (this.alldata) {
+            for (let i = 0; i < this.alldata.length; i++) {
+                if (event == this.alldata[i].beneficiaryCustomer) {
+                    this.sourceVendor.beneficiaryCustomer = event;
+                    this.disablesaveforBeneficiary = true;
+                    this.selectedCountries = event;
+                }
+            }
+        }
+    }
+    eventBeneficiaryHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesaveforBeneficiary = true;
+                }
+                else {
+                    this.disablesaveforBeneficiary = false;
+                }
+            }
+
+        }
+    }
 }

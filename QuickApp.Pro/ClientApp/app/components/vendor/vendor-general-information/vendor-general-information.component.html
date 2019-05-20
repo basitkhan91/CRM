@@ -53,7 +53,7 @@
 									<div class="col-sm-7">
 										<div class="inner-addon right-addon inline-block">
 
-											<p-autoComplete (onSelect)="onVendorselected($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourceVendor.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+											<p-autoComplete (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event) [(ngModel)]="sourceVendor.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
 															[minLength]="1" [dropdown]="true">
 												<ng-template let-vendorName pTemplate="item">
 													<div class="ui-helper-clearfix">{{vendorName}}</div>
@@ -90,17 +90,18 @@
 									<label class="control-label col-sm-4">Parent</label>
 									<div class="col-sm-7">
 										<input class="" type="checkbox" id="cparent" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.parent">
-										<div class="cparent-input cust-name input-icon1" *ngIf="sourceVendor.parent">
-											<div class="inner-addon right-addon inline-block">
-												<i class="fa fa-search"></i>
-												<p-autoComplete (onSelect)="selectedValue(vendorParentName)" [(ngModel)]="sourceVendor.vendorParentName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
-																[minLength]="1" [dropdown]="true">
-													<ng-template let-vendorParentName pTemplate="item">
-														<div class="ui-helper-clearfix">{{vendorParentName}}</div>
-													</ng-template>
-												</p-autoComplete>
-											</div>
-										</div>
+                                        <div class="cparent-input cust-name input-icon1" *ngIf="sourceVendor.parent">
+                                            <div class="inner-addon right-addon inline-block">
+                                                <i class="fa fa-search"></i>
+                                                <p-autoComplete (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event) [(ngModel)]="sourceVendor.vendorParentName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
+                                                                [minLength]="1" [dropdown]="true">
+                                                    <ng-template let-vendorParentName pTemplate="item">
+                                                        <div class="ui-helper-clearfix">{{vendorParentName}}</div>
+                                                    </ng-template>
+                                                </p-autoComplete>
+                                            </div>
+                                            <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
+                                        </div>
 									</div>
 								</div>
 								<div class="form-group col-sm-12">
@@ -157,16 +158,17 @@
 								</div>
 								<div class="form-group col-sm-12">
 									<label class="control-label col-sm-4">Country<strong class="clr-red">*</strong></label>
-									<div class="col-sm-7">
-										<div class="inner-addon right-addon inline-block">
+                                    <div class="col-sm-7">
+                                        <div class="inner-addon right-addon inline-block">
 
-											<p-autoComplete (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-															[minLength]="1" [dropdown]="true">
-												<ng-template let-nice_name pTemplate="item">
-													<div class="ui-helper-clearfix">{{nice_name}}</div>
-												</ng-template>
-											</p-autoComplete>
-										</div>
+                                            <p-autoComplete (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                            [minLength]="1" [dropdown]="true">
+                                                <ng-template let-nice_name pTemplate="item">
+                                                    <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                        </div>
+                                        <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
                                     </div>
 								</div>
 								<div class="form-group col-sm-12">
@@ -271,7 +273,7 @@
 							<!--Right End-->
 							<div class="clear"></div>
 							<hr>
-							<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveVenName || disableSaveVenCode" (click)="editItemAndCloseModel()">Save</button>
+							<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave" (click)="editItemAndCloseModel()">Save</button>
 						</div>
 						<div class="clear"></div>
 					</div>
@@ -294,13 +296,13 @@
 			<div class="form-group  input-icon1">
 				<label for="classificationName" class="control-label">Classification Name<span class="clr-red">*</span></label>
 				    <div class="inner-addon right-addon inline-block">
-					    <p-autoComplete [(ngModel)]="vendorClassName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCollection" (completeMethod)="filterVendors($event)" [size]="30"
+					    <p-autoComplete  (onSelect)="onClassificationelected($event)" (onKeyUp)=eventClassificationHandler($event)  [(ngModel)]="vendorClassName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCollection" (completeMethod)="filterVendors($event)" [size]="30"
 									    [minLength]="1" [dropdown]="true">
 						    <ng-template let-vendorName pTemplate="item">
 							    <div class="ui-helper-clearfix">{{vendorName}}</div>
 						    </ng-template>
 					    </p-autoComplete>
-
+                        <div *ngIf="disablesaveForClassification" style="color:red">Already Exist</div>
 					    <div class="clear"></div>
 				    </div>
 				</div>
@@ -321,7 +323,7 @@
 					<div class="clear"></div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" [disabled]="!userForm.valid">Submit</button>
+					<button class="btn btn-success" [disabled]="disablesaveForClassification">Submit</button>
 					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
 				</div>
 </form>

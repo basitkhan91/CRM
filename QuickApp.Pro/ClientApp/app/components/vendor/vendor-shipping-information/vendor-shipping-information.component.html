@@ -166,6 +166,7 @@
 												</ng-template>
 											</p-autoComplete>
 										</div>
+                                        <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div>
 									</div>
 								</div>
 
@@ -186,7 +187,7 @@
 								</div>
 							</div>
 							<div class="clear"></div>
-							<button type="button" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+							<button type="button" class="btn btn-success pull-right submit-btn" [disabled]="disablesave" (click)="editItemAndCloseModel()">Save</button>
 							<div class="clear"></div>
 							<hr />
 

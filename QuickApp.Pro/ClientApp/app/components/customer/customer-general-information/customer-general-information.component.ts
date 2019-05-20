@@ -187,6 +187,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     allCurrencyInfo: any[];
     selectedCustomerClassification: any;
     disableSaveCustomerClassification: boolean;
+    disableSaveParentName: boolean;
 
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
@@ -738,7 +739,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             for (let i = 0; i < this.allCountryinfo.length; i++) {
                 if (event == this.allCountryinfo[i].nice_name) {
                     this.sourceCustomer.nice_name = this.allCountryinfo[i].nice_name;
-                    this.disablesave = true;
+                    this.disablesave = false;
 
                     this.selectedCountries = event;
                 }
@@ -751,10 +752,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             let value = event.target.value.toLowerCase();
             if (this.selectedCountries) {
                 if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesave = true;
+                    this.disablesave = false;
                 }
                 else {
-                    this.disablesave = false;
+                    this.disablesave = true;
                 }
             }
 
@@ -1353,11 +1354,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
             let value = event.target.value.toLowerCase();
             if (this.selectedCustomerClassification) {
                 if (value == this.selectedCustomerClassification.toLowerCase()) {
-                    this.disableSaveCusCode = true;
                     this.disableSaveCustomerClassification = true;
                 }
                 else {
-                    this.disableSaveCusCode = false;
                     this.disableSaveCustomerClassification = false;
                 }
             }
@@ -1367,9 +1366,40 @@ export class CustomerGeneralInformationComponent implements OnInit {
     onCustomerclassifiactionSelected(event) {
         for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
             if (event == this.allcustomerclassificationInfo[i].description) {
-                this.disableSaveCusCode = true;
                 this.disableSaveCustomerClassification = true;
                 this.selectedCustomerClassification = event;
+            }
+        }
+    }
+
+    parentEventHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveParentName = false;
+
+                }
+                else {
+                    this.disableSaveParentName = true;
+
+                }
+            }
+
+        }
+    }
+
+    onParentNameselected(event) {
+        if (this.allActions) {
+            for (let i = 0; i < this.allActions.length; i++) {
+                if (event == this.allActions[i].name) {
+                    this.sourceCustomer.customerParentName = event;
+
+                    this.disableSaveParentName = false;
+
+                    this.selectedActionName = event;
+                }
+
             }
         }
     }

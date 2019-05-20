@@ -862,8 +862,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 	discountvaluedesc(event) {
 		if (this.alldiscountvalueInfo) {
 			for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-				if (event == this.alldiscountvalueInfo[i].discontValue) {
-					this.sourceVendor.itemClassificationCode = this.alldiscountvalueInfo[i].discontValue;
+                if (event == this.alldiscountvalueInfo[i].discontValue) {
+                    this.sourceVendor.itemClassificationCode = event;
 					this.disableSaveConsume = true;
 					this.selectedConsume = event;
 				}

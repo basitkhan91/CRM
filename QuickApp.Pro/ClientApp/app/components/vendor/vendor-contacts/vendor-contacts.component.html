@@ -131,41 +131,44 @@
 								</div>
 								<div class="form-group col-sm-12 input-icon1">
 									<label for="First Name" class="control-label col-sm-4">First Name<strong class="clr-red">*</strong></label>
-									<div class="col-sm-7">
-										<div class="inner-addon right-addon inline-block">
-											<p-autoComplete [(ngModel)]="sourceVendor.firstName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
-															[minLength]="1" [dropdown]="true">
-												<ng-template let-firstName pTemplate="item">
-													<div class="ui-helper-clearfix">{{firstName}}</div>
-												</ng-template>
-											</p-autoComplete>
-										</div>
-									</div>
+                                    <div class="col-sm-7">
+                                        <div class="inner-addon right-addon inline-block">
+                                            <p-autoComplete [(ngModel)]="sourceVendor.firstName" (onSelect)="onFirstNameSelected($event)" (onKeyUp)=eventFirstNameHandler($event) [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                                            [minLength]="1" [dropdown]="true">
+                                                <ng-template let-firstName pTemplate="item">
+                                                    <div class="ui-helper-clearfix">{{firstName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                        </div>
+                                        <div *ngIf="disablesaveForFirstname" class="clr-red">Already Exist</div>
+                                    </div>
 								</div>
 								<div class="form-group col-sm-12 input-icon1">
 									<label class="control-label col-sm-4">Middle Name</label>
 									<div class="col-sm-7">
 										<div class="inner-addon right-addon inline-block">
-											<p-autoComplete [(ngModel)]="sourceVendor.middleName" [ngModelOptions]="{standalone: true}" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30"
+											<p-autoComplete [(ngModel)]="sourceVendor.middleName" (onSelect)="onMiddleNameSelected($event)" (onKeyUp)=eventMiddleNameHandler($event) [ngModelOptions]="{standalone: true}" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30"
 															[minLength]="1" [dropdown]="true">
 												<ng-template let-middleName pTemplate="item">
 													<div class="ui-helper-clearfix">{{middleName}}</div>
 												</ng-template>
 											</p-autoComplete>
 										</div>
+                                        <div *ngIf="disablesaveForMiddlename" style="color:red">Already Exist</div>
 									</div>
 								</div>
 								<div class="form-group col-sm-12 input-icon1">
 									<label for="Last Name" class="control-label col-sm-4">Last Name<strong class="clr-red">*</strong></label>
 									<div class="col-sm-7">
 										<div class="inner-addon right-addon inline-block">
-											<p-autoComplete [(ngModel)]="sourceVendor.lastName" [ngModelOptions]="{standalone: true}" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30"
+											<p-autoComplete [(ngModel)]="sourceVendor.lastName" (onSelect)="onLastNameSelected($event)" (onKeyUp)=eventlastNameHandler($event) [ngModelOptions]="{standalone: true}" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30"
 															[minLength]="1" [dropdown]="true">
 												<ng-template let-lastName pTemplate="item">
 													<div class="ui-helper-clearfix">{{lastName}}</div>
 												</ng-template>
 											</p-autoComplete>
 										</div>
+                                        <div *ngIf="disablesaveForlastname" style="color:red">Already Exist</div>
 									</div>
 								</div>
 								<div class="form-group col-sm-12">
@@ -242,7 +245,7 @@
 							<div class="clear"></div>
 							<hr>
 
-							<button type="button" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+							<button type="button" class="btn btn-success pull-right submit-btn" [disabled]="disablesaveForFirstname || disablesaveForlastname || disablesaveForMiddlename" (click)="editItemAndCloseModel()">Save</button>
 
 
 							<div class="clear"></div>
