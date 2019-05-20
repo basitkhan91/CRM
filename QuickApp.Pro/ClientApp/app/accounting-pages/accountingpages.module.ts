@@ -31,6 +31,9 @@ import { AccountingPagesComponent } from "./accounting-pages.component";
 import { AccountingPagesRoutingModule } from "./accountingpages-routing.module";
 import { CreateBatchComponent } from "../components/accounting/general-ledger/Journals/create-batch/create-batch.component";
 import { ViewBatchTsComponent } from "../components/accounting/general-ledger/Journals/view-batch/view-batch.component";
+import { JournelService } from "../services/journals/journals.service";
+import { JournelsEndpointService } from "../services/journals/journals-endpoint.service";
+import { CreateJournelComponent } from "../components/accounting/general-ledger/Journals/create-journel/create-journel.component";
 
 
 
@@ -54,10 +57,11 @@ import { ViewBatchTsComponent } from "../components/accounting/general-ledger/Jo
     declarations: [AccountingPagesComponent,
         // NodeSetupComponent,
         CreateBatchComponent,
-        ViewBatchTsComponent
+        ViewBatchTsComponent,
+        CreateJournelComponent
 
     ],
-    providers: [
+    providers: [JournelService, JournelsEndpointService
 
     ],
     entryComponents: [
