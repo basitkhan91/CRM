@@ -626,8 +626,8 @@ export class VendorShippingInformationComponent {
 		if (this.allCountryinfo) {
 			for (let i = 0; i < this.allCountryinfo.length; i++) {
 				if (event == this.allCountryinfo[i].nice_name) {
-					this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-					this.disablesave = true;
+                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesave = false;
 					this.selectedCountries = event;
 				}
 			}
@@ -637,11 +637,11 @@ export class VendorShippingInformationComponent {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedCountries) {
-				if (value == this.selectedCountries.toLowerCase()) {
-					this.disablesave = true;
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesave = false;
 				}
-				else {
-					this.disablesave = false;
+                else {
+                    this.disablesave = true;
 				}
 			}
 

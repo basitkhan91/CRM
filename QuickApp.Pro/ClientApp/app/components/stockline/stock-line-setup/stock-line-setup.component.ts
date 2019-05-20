@@ -369,8 +369,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			//praveen's code//
 			this.selectedModels.map((row) => {
 				if (selectedRow.integrationPortalId == row.integrationPortalId) {
-					//selectedRow.isListed = true;
-					//row.isListed = event.target.value;
 					ischange = true;
 				}
 			});
@@ -406,32 +404,13 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         }
     }
 
-	//filterpartItems(event) {
-	//	this.partCollection = [];
-	//	this.itemclaColl = [];
- //       if (this.allPartnumbersInfo && this.allPartnumbersInfo.length > 0) {
- //           this.itemclaColl = this.allPartnumbersInfo.filter(function (partNumberInfo) {
- //               if (partNumberInfo.partNumber.toLowerCase() == event.query.toLowerCase()) {
- //                   this.partCollection.push(partNumberInfo.partNumber);
- //                   return {
- //                       "partId": partNumberInfo.itemMasterId,
- //                       "partName": event.query.toLowerCase()
- //                   };
- //               }
- //           });
- //       }
-	//}
-
-
 
 	partnmId(event) {
-        debugger;
 		if (this.itemclaColl) {
 			for (let i = 0; i < this.itemclaColl.length; i++) {
 				if (event == this.itemclaColl[i][0].partName) {
 					this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
 					this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
-					//this.disableSavepartNumber = true;
 					this.selectedActionName = event;
 				}
 			}
@@ -441,7 +420,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 
 			);
-			//this.disableSavepartDescription = true;
 		}
 	}
 

@@ -215,8 +215,8 @@
 																			</ng-template>
 																		</p-autoComplete>
 																	</div>
-																	<!--<input class="form-control" type="text" id="vbcountry" (keypress)="onBlurMethod('country')" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.country">-->
-																</div>
+                                                                    <div *ngIf="disablesave" style="color:red">Please Select from DropDown</div>
+																	</div>
 																<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showcountry">
 																	<p class="fs10">
 																		Please Enter Required feilds
@@ -252,7 +252,7 @@
 												</div>
 												<div class="clear"></div>
 												<hr class="hr-light-grey">
-												<button type="button" class="btn btn-success pull-right submit-btn" (click)="saveCheckPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-success pull-right submit-btn" [disabled]="disablesave" (click)="saveCheckPaymentInfo()">Save</button>
 												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showDomesticWire()">Go to Domestic Wire</button>
 												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showDefault()">Go to Default</button>
 
@@ -360,15 +360,21 @@
 														</div>
 														<div class="form-group col-sm-12">
 															<label class="control-label col-sm-4">Bank Country </label>
-															<div class="col-sm-7">
-																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="domesticSaveObj.country">
-															</div>
+                                                            <div class="col-sm-7">
+                                                                <p-autoComplete (onSelect)="onBankCountrieselected($event)" (onKeyUp)=eventBankCountryHandler($event) [(ngModel)]="domesticSaveObj.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                                                [minLength]="1" [dropdown]="true">
+                                                                    <ng-template let-nice_name pTemplate="item">
+                                                                        <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                                                    </ng-template>
+                                                                </p-autoComplete>
+                                                                <div *ngIf="disablesaveforCountry" style="color:red">Please Select from DropDown</div>
+                                                            </div>
 														</div>
 													</div>
 												</div>
 												<div class="clear"></div>
 												<hr class="hr-light-grey">
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="saveDomesticPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" [disabled]="disablesaveforCountry"(click)="saveDomesticPaymentInfo()">Save</button>
 												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showInternational()">Go to International</button>
 												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showPament()">Go to Check</button>
 											</div>
@@ -445,9 +451,15 @@
 														</div>
 														<div class="form-group col-sm-12">
 															<label class="control-label col-sm-4">Bank Country </label>
-															<div class="col-sm-7">
-																<input class="form-control" type="text" id="vbcountry" [ngModelOptions]="{standalone: true}" [(ngModel)]="internationalSaveObj.country">
-															</div>
+                                                            <div class="col-sm-7">
+                                                                <p-autoComplete (onSelect)="onInternalBankCountrieselected($event)" (onKeyUp)=eventInternalBankCountryHandler($event) [(ngModel)]="internationalSaveObj.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                                                [minLength]="1" [dropdown]="true">
+                                                                    <ng-template let-nice_name pTemplate="item">
+                                                                        <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                                                    </ng-template>
+                                                                </p-autoComplete>
+                                                                <div *ngIf="disablesavefoInternalrCountry" style="color:red">Please Select from DropDown</div>
+                                                            </div>
 														</div>
 
 														<div class="form-group col-sm-12 input-icon1">
@@ -455,15 +467,14 @@
 															<div class="col-sm-7">
 																<div class="inner-addon right-addon inline-block">
 
-																	<p-autoComplete [(ngModel)]="internationalSaveObj.beneficiaryCustomer" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection"
+																	<p-autoComplete (onSelect)="onBeneficiaryselected($event)" (onKeyUp)=eventBeneficiaryHandler($event) [(ngModel)]="internationalSaveObj.beneficiaryCustomer" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection"
 																					(completeMethod)="filterbencus($event)" [size]="30" [minLength]="1" [dropdown]="true">
 																		<ng-template let-actionName pTemplate="item">
 																			<div class="ui-helper-clearfix">{{actionName}}</div>
 																		</ng-template>
 																	</p-autoComplete>
-
-
 																</div>
+                                                                <div *ngIf="disablesaveforBeneficiary" style="color:red">Select From DropDown</div>
 
 															</div>
 														</div>
@@ -472,8 +483,7 @@
 												</div>
 												<div class="clear"></div>
 												<hr class="hr-light-grey">
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="saveInternationalPaymentInfo()">Save</button>
-												<!--<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="nextClick()">Next</button>-->
+												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" [disabled]="disablesavefoInternalrCountry || disablesaveforBeneficiary" (click)="saveInternationalPaymentInfo()">Save</button>
 												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showDomesticWire()">Go to Domestic Wire</button>
 											</div>
 											<div class="clear"></div>

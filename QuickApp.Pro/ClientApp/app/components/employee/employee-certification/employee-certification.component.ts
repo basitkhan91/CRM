@@ -434,7 +434,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 		if (this.allCertification) {
 
 			for (let i = 0; i < this.allCertification.length; i++) {
-				if (event == this.allCertification[i].employeeLicensureId) {
+                if (event == this.allCertification[i].description) {
 					this.disablesave = true;
 					this.selecteddescription = event;
 				}
@@ -447,7 +447,6 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 			let value = event.target.value.toLowerCase();
 			if (this.selecteddescription) {
 				if (value == this.selecteddescription.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disablesave = true;
 
 				}

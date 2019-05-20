@@ -24,53 +24,49 @@
                                                         <label class="control-label col-sm-4">Employee First Name: </label>
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
-                                                                <p-autoComplete [(ngModel)]="sourceEmployee.firstName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                                                <p-autoComplete [(ngModel)]="sourceEmployee.firstName" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                                                                 [minLength]="1" [dropdown]="true">
                                                                     <ng-template let-firstName pTemplate="item">
                                                                         <div class="ui-helper-clearfix">{{firstName}}</div>
                                                                     </ng-template>
                                                                 </p-autoComplete>
                                                             </div>
+                                                            <div *ngIf="disableSaveFirstName" style="color:red">Already Exist</div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12 input-icon1">
                                                         <label class="control-label col-sm-4">Middle Name:</label>
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
-                                                                <p-autoComplete [(ngModel)]="sourceEmployee.middleName" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
+                                                                <p-autoComplete [(ngModel)]="sourceEmployee.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
                                                                                 [minLength]="1" [dropdown]="true">
                                                                     <ng-template let-middleName pTemplate="item">
                                                                         <div class="ui-helper-clearfix">{{middleName}}</div>
                                                                     </ng-template>
                                                                 </p-autoComplete>
                                                             </div>
+                                                            <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12 input-icon1">
                                                         <label class="control-label col-sm-4">Last Name: </label>
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
-                                                                <p-autoComplete [(ngModel)]="sourceEmployee.lastName" [ngModelOptions]="{standalone: true}" [suggestions]="lastNameCollection" (completeMethod)="filterlastName($event)" [size]="30"
+                                                                <p-autoComplete [(ngModel)]="sourceEmployee.lastName" (onKeyUp)=onKeyUpLastNames($event) (onSelect)="onSelectLastName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="lastNameCollection" (completeMethod)="filterlastName($event)" [size]="30"
                                                                                 [minLength]="1" [dropdown]="true">
                                                                     <ng-template let-lastName pTemplate="item">
                                                                         <div class="ui-helper-clearfix">{{lastName}}</div>
                                                                     </ng-template>
                                                                 </p-autoComplete>
                                                             </div>
+                                                            <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div>
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Emp ID</label>
-                                                        <div class="col-sm-7">
-                                                            <!--<p-autoComplete [(ngModel)]="sourceEmployee.employeeId" [ngModelOptions]="{standalone: true}" [suggestions]="empIdCollection" (completeMethod)="filterempIdName($event)" [size]="30"
-                                [minLength]="1" [dropdown]="true">
-                    <ng-template let-employeeId pTemplate="item">
-                        <div class="ui-helper-clearfix">{{employeeId}}</div>
-                    </ng-template>
-                </p-autoComplete>-->
+                                                        <div class="col-sm-7">                                                           
                                                             <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly>
-
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
@@ -146,42 +142,7 @@
                                                         </div>
                                                     </div>
                                                     </div>
-
-                                                    <!--<div class="col-sm-6 w400">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Company</label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="sourceEmployee.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceEmployee.companyId)">
-                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">BU</label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="sourceEmployee.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceEmployee.businessUnitId)">
-                        <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Dept</label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="sourceEmployee.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceEmployee.departmentId)">
-                        <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Division</label>
-                <div class="col-sm-7">
-                        <select [(ngModel)]="sourceEmployee.divisionId" [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                        </select>
-                </div>
-            </div>
-
-        </div>-->
+                                                   
                                                 </div>
                                                 <div class="clear"></div>
                                                 <hr class="hr-dark" />
@@ -355,7 +316,7 @@
                                                 </div>
                                                 <div class="clear"></div>
                                                 <hr class="hr-light-grey" />
-                                                <button type="button" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+                                                <button type="button" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveFirstName || disableSaveMiddleName || disableSaveLastName" (click)="editItemAndCloseModel()">Save</button>
 
 
                                             </div>
@@ -645,13 +606,13 @@
 			<div class="form-group">
 				<label for="description" class="control-label">Description<span class="clr-red">*</span></label>
 				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localleaveCollection" (completeMethod)="filterLeaves($event)" [size]="30"
+					<p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localleaveCollection" (onKeyUp)=onKeyUpLeaveNames($event) (onSelect)="onSelectLeaveName($event)" (completeMethod)="filterLeaves($event)" [size]="30"
 									[minLength]="1" [dropdown]="true">
 						<ng-template let-description pTemplate="item">
 							<div class="ui-helper-clearfix">{{description}}</div>
 						</ng-template>
 					</p-autoComplete>
-
+                    <div *ngIf="disableSaveLeaveName" style="color:red">Already Exist</div>
 					<div class="clear"></div>
 				</div>
 				</div>
@@ -666,10 +627,10 @@
 				</div>
 				<div class="modal-footer">
 
-					<button class="btn btn-success" [disabled]="!userForm.valid">Submit</button>
+					<button class="btn btn-success" [disabled]="disableSaveLeaveName">Submit</button>
 					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
 				</div>
-</form>
+        </form>
 	</div>
 </ng-template>
 

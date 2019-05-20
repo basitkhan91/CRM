@@ -75,6 +75,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     allmultiLeaves: any[];
     allMultipleLeaves: any[]=[];
     managementStructureData: any[];
+    selectedFirstName: any;
+    disableSaveFirstName: boolean;
+    disableSaveMiddleName: boolean;
+    disableSaveName: any;
+    disableSaveLastName: boolean;
+    disableSaveLeaveName: boolean;
 	ngOnInit(): void {
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
 		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
@@ -1014,5 +1020,127 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
 
+    }
+    onKeyUpFirstNames(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedFirstName) {
+                if (value == this.selectedFirstName.toLowerCase()) {
+                    this.disableSaveFirstName = true;
+
+                }
+                else {
+                    this.disableSaveFirstName = false;
+
+                }
+            }
+
+        }
+    }
+
+    onSelectFirstName(event) {
+        if (this.allEmployeeinfo) {
+            for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+                if (event == this.allEmployeeinfo[i].firstName) {
+                    this.sourceEmployee.firstName = event;
+                    this.disableSaveFirstName = true;
+
+                    this.selectedFirstName = event;
+                }
+
+            }
+        }
+    }
+
+    onKeyUpMiddleNames(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.disableSaveName) {
+                if (value == this.disableSaveName.toLowerCase()) {
+                    this.disableSaveMiddleName = true;
+
+                }
+                else {
+                    this.disableSaveMiddleName = false;
+
+                }
+            }
+
+        }
+    }
+
+    onSelectMiddleName(event) {
+        if (this.allEmployeeinfo) {
+            for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+                if (event == this.allEmployeeinfo[i].middleName) {
+                    this.sourceEmployee.middleName = event;
+                    this.disableSaveMiddleName = true;
+
+                    this.disableSaveName = event;
+                }
+
+            }
+        }
+    }
+
+    onKeyUpLastNames(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.disableSaveName) {
+                if (value == this.disableSaveName.toLowerCase()) {
+                    this.disableSaveLastName = true;
+
+                }
+                else {
+                    this.disableSaveLastName = false;
+
+                }
+            }
+
+        }
+    }
+
+    onSelectLastName(event) {
+        if (this.allEmployeeinfo) {
+            for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+                if (event == this.allEmployeeinfo[i].lastName) {
+                    this.sourceEmployee.lastName = event;
+                    this.disableSaveLastName = true;
+
+                    this.disableSaveName = event;
+                }
+
+            }
+        }
+    }
+    onKeyUpLeaveNames(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.disableSaveName) {
+                if (value == this.disableSaveName.toLowerCase()) {
+                    this.disableSaveLeaveName = true;
+
+                }
+                else {
+                    this.disableSaveLeaveName = false;
+
+                }
+            }
+
+        }
+    }
+
+    onSelectLeaveName(event) {
+        if (this.allLeaves) {
+            for (let i = 0; i < this.allLeaves.length; i++) {
+                if (event == this.allLeaves[i].description) {
+                    this.sourceEmployee.description = event;
+                    this.disableSaveLeaveName = true;
+
+                    this.disableSaveName = event;
+                }
+
+            }
+        }
     }
 }

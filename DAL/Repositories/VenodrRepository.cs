@@ -35,11 +35,15 @@ namespace DAL.Repositories
                             from currency in curr.DefaultIfEmpty()
                             join creditterms in _appContext .CreditTerms on t.CreditTermsId equals creditterms.CreditTermsId into cred
                             from creditterms in cred.DefaultIfEmpty()
+                            join vendorclassification in _appContext.VendorClassification on t.VendorClassificationId equals vendorclassification.VendorClassificationId into venclass
+                            from vendorclassification in venclass.DefaultIfEmpty()
                             where t.IsDelete==true || t.IsDelete==null
                                  // select new { t, ad, vt }).ToList();
                             select new { t.CreditTermsId,t.VendorId,t,t.VendorEmail,t.IsActive,
                                 creditterms,
                                 currency,
+                                vendorclassification,
+                                vendorclassification.ClassificationName,
                                 Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode}).ToList();
                 return data;
 
@@ -84,7 +88,8 @@ namespace DAL.Repositories
                                 t.UpdatedDate,
                                 ad.AddressId,
                                 ad.Country,
-                                ad.PostalCode
+                                ad.PostalCode,
+                                
                             }).ToList();
                 return data;
 

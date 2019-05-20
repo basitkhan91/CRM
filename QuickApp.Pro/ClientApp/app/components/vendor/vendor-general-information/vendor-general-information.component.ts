@@ -92,6 +92,9 @@ export class VendorGeneralInformationComponent implements OnInit {
     countrycollection: any;
     selectedCountries: any;
     isVendorAlsoCustomer: boolean = false;
+    disableSaveParentName: boolean;
+    disablesaveForClassification: boolean;
+    selectedClass: any;
 
     ngOnInit(): void {
         this.matSpinner = false;
@@ -390,9 +393,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             }
         }
     }
-    selectedValue(name) {
-        this.venname = name;
-    }
+  
     filterVendorCodes(event) {
         this.vendorCodes = [];
         for (let i = 0; i < this.allActions.length; i++) {
@@ -686,7 +687,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             for (let i = 0; i < this.allCountryinfo.length; i++) {
                 if (event == this.allCountryinfo[i].nice_name) {
                     this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-                    this.disablesave = true;
+                    this.disablesave = false;
                     this.selectedCountries = event;
                 }
             }
@@ -697,10 +698,10 @@ export class VendorGeneralInformationComponent implements OnInit {
             let value = event.target.value.toLowerCase();
             if (this.selectedCountries) {
                 if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesave = true;
+                    this.disablesave = false;
                 }
                 else {
-                    this.disablesave = false;
+                    this.disablesave = true;
                 }
             }
         }
@@ -717,4 +718,60 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
     }
 
+    parentEventHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveParentName = false;
+
+                }
+                else {
+                    this.disableSaveParentName = true;
+
+                }
+            }
+
+        }
+    }
+
+    onParentNameselected(event) {
+        if (this.allActions) {
+            for (let i = 0; i < this.allActions.length; i++) {
+                if (event == this.allActions[i].vendorName) {
+                    this.sourceVendor.vendorParentName = event;
+
+                    this.disableSaveParentName = false;
+
+                    this.selectedActionName = event;
+                }
+
+            }
+        }
+    }
+
+    onClassificationelected(event) {
+        if (this.allVendorClassInfo) {
+            for (let i = 0; i < this.allVendorClassInfo.length; i++) {
+                if (event == this.allVendorClassInfo[i].classificationName) {
+                    this.sourceVendor.vendorClassificationId = event;
+                    this.disablesaveForClassification = true;
+                    this.selectedClass = event;
+                }
+            }
+        }
+    }
+    eventClassificationHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedClass) {
+                if (value == this.selectedClass.toLowerCase()) {
+                    this.disablesaveForClassification = true;
+                }
+                else {
+                    this.disablesaveForClassification = false;
+                }
+            }
+        }
+    }
 }

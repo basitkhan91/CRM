@@ -948,21 +948,22 @@
 		</button>
 	</div>
 	<div class="modal-body">
-		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemCloseModel()">
-			<div class="form-group">
-				<label for="name" class="control-label">Discount Percent<strong class="clr-red">*</strong></label>
-				<p-autoComplete [(ngModel)]="discontValue" [ngModelOptions]="{standalone: true}" (onKeyUp)=discountvalueHandler($event) (onSelect)="discountvaluedesc($event)" [suggestions]="discountcollection" (completeMethod)="filterDiscountvalue($event)" [size]="30"
-								[minLength]="1" [dropdown]="true">
-					<ng-template let-discountValue pTemplate="item">
-						<div class="ui-helper-clearfix">{{discountValue}}</div>
-					</ng-template>
-				</p-autoComplete>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-success">Submit</button>
-				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-			</div>
-		</form>
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemCloseModel()">
+            <div class="form-group">
+                <label for="name" class="control-label">Discount Percent<strong class="clr-red">*</strong></label>
+                <p-autoComplete [(ngModel)]="discontValue" [ngModelOptions]="{standalone: true}" (onKeyUp)=discountvalueHandler($event) (onSelect)="discountvaluedesc($event)" [suggestions]="discountcollection" (completeMethod)="filterDiscountvalue($event)" [size]="30"
+                                [minLength]="1" [dropdown]="true">
+                    <ng-template let-discountValue pTemplate="item">
+                        <div class="ui-helper-clearfix">{{discountValue}}</div>
+                    </ng-template>
+                </p-autoComplete>
+            </div>
+            <div *ngIf="disableSaveConsume" style="color:red">Already Exist</div>
+            <div class="modal-footer">
+                <button class="btn btn-success"  [disabled]="disableSaveConsume">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
 	</div>
 </ng-template>
 
