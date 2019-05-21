@@ -149,6 +149,8 @@ namespace QuickApp.Pro.ViewModels
 
         public long? ATAChapterId { get; set; }
 
+        public long? ataSubChapterId { get; set; }
+
         public int? MasterCompanyId { get; set; }
 
 
@@ -158,7 +160,7 @@ namespace QuickApp.Pro.ViewModels
 
         public Int32? MarkUpPercentageId { get; set; }
 
-        public int? GeneralCurrencyId { get; set; }
+        public Int64? GeneralCurrencyId { get; set; }
         public bool? IsAddressForBillingAndShipping { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
 
