@@ -376,11 +376,18 @@ namespace QuickApp.Pro.Controllers
         public IActionResult updatereceivingcustomer([FromBody] LegalEntity legalEntity)
         {
             if (ModelState.IsValid)
+            {
                 legalEntity.MasterCompanyId = 1;
-            legalEntity.UpdatedDate = DateTime.Now;
-            _unitOfWork.Repository<LegalEntity>().Update(legalEntity);
-            _unitOfWork.SaveChanges();
-            return Ok();
+                legalEntity.UpdatedDate = DateTime.Now;
+                _unitOfWork.Repository<LegalEntity>().Update(legalEntity);
+                _unitOfWork.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
         }
     }
 }
