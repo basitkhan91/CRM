@@ -35,7 +35,7 @@ declare const google: any;
 
 export class CustomerGeneralInformationComponent implements OnInit {
     mobnumPattern = "^((\\+91-?)|0)?[0-9]{10}$";
-    emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+    emailPattern = "^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
 
     allSubChapter: ATAChapter[];
 
@@ -271,6 +271,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //calling for ATA Subchapter Data
 
     getATASubChapterData(ataMainId) {
+        this.allSubChapter = [];
         this.vendorser.getATASubchapterData(ataMainId).subscribe( //calling and Subscribing for Address Data
             results => this.onDataLoadAtaSubChapterDataSuccessful(results[0]), //sending Address
             error => this.onDataLoadFailed(error)
@@ -984,13 +985,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // Save Customer Data//
     editItemAndCloseModel() {
         if (!(this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
-            && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.currency && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
+            && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
         )) {
             this.display = true;
             this.modelValue = true;
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
-            && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.currency && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
+            && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
         ) {
             this.isSaving = true;
             if (!this.sourceCustomer.customerId) {

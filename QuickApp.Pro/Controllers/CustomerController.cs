@@ -314,6 +314,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
                 actionobject.ATAChapterId = customerViewModel.ATAChapterId;
                 actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
+                actionobject.ataSubChapterId = customerViewModel.ataSubChapterId;
                 actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
@@ -378,6 +379,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.ATAChapterId = customerViewModel.ATAChapterId;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
+                actionobject.ataSubChapterId = customerViewModel.ataSubChapterId;
                 actionobject.CreatedBy = customerViewModel.CreatedBy;
                 actionobject.UpdatedBy = customerViewModel.UpdatedBy;
                 address.Line1 = customerViewModel.Address1;

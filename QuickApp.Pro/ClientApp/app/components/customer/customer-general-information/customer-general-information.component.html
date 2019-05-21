@@ -37,7 +37,7 @@
                                                     <label class="control-label col-sm-4"></label>
                                                     <div class="col-sm-7">
                                                         <label class="radio-inline">
-                                                            <input type="radio" [value]="2" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerAffiliationId">
+                                                            <input type="radio" [value]="2" checked="checked" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerAffiliationId">
                                                             External
                                                         </label>
                                                         <label class="radio-inline">
@@ -106,13 +106,14 @@
                                                     <div class="cparent-input cust-name input-icon1" *ngIf="sourceCustomer.parent">
                                                         <div class="inner-addon right-addon inline-block">
                                                             <i class="fa fa-search"></i>
-                                                            <p-autoComplete [(ngModel)]="sourceCustomer.customerParentName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterCustomerParentNames($event)" [size]="30"
+                                                            <p-autoComplete (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event) [(ngModel)]="sourceCustomer.customerParentName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterCustomerParentNames($event)" [size]="30"
                                                                             [minLength]="1" [dropdown]="true">
                                                                 <ng-template let-customerParentName pTemplate="item">
                                                                     <div class="ui-helper-clearfix">{{customerParentName}}</div>
                                                                 </ng-template>
                                                             </p-autoComplete>
                                                         </div>
+                                                        <div *ngIf="disableSaveParentName" style="color:red">Select From DropDown</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -205,6 +206,7 @@
                                                             </ng-template>
                                                         </p-autoComplete>
                                                     </div>
+                                                    <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div>
                                                 </div>
                                             </div>
                                             <!--<div class="form-group col-sm-12">
@@ -327,7 +329,7 @@
                                             <div class="form-group col-sm-12">
                                                 <label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
                                                 <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.currency">
+                                                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.generalCurrencyId">
                                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                 [ngValue]="currencyName.currencyId">
                                                             {{currencyName.symbol}}
@@ -374,7 +376,7 @@
                                         </div>
                                         <div class="clear"></div>
                                         <hr>
-                                        <button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode" (click)="editItemAndCloseModel()">Save</button>
+                                        <button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode ||disablesave || disableSaveParentName" (click)="editItemAndCloseModel()">Save</button>
 
                                         <div class="clear"></div>
                                     </div>
