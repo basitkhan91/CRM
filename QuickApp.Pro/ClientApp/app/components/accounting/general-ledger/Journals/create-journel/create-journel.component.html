@@ -1,1 +1,323 @@
-﻿<div style="border: 1px solid red">create-journel Component</div>
+﻿<div class="x_content">
+    <div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="tab-content form-bg">
+                <div class="tab-pane active">
+                    <div class="col-sm-12">
+                        <div class="form-group col-sm-12">
+                            <label class="wauto" data-toggle="tooltip" title="Note, this is for a manual Entry">
+                                <input type="radio" name="journal-type" id="manual">
+                                Manual
+                            </label>
+                            <label class="wauto" data-toggle="tooltip" title="Import UI to be developed">
+                                <input type="radio" name="journal-type" id="import">
+                                Import
+                            </label>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <hr class="hr-dark">
+                    <div class="col-sm-3">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Ledger Name</label>
+                            <div class="col-sm-7 inner-addon right-addon inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" class="form-control compnames ui-autocomplete-input" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Batch Num</label>
+                            <div class="col-sm-7 inner-addon right-addon inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Batch Name</label>
+                            <div class="col-sm-7 inner-addon right-addon inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Batch Description</label>
+                            <div class="col-sm-7">
+                                <input class="form-control wauto" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Balance Type</label>
+                            <div class="col-sm-7">
+                                <select class="form-control w150">
+                                    <option>-- Select --</option>
+                                    <option>Actual</option>
+                                    <option>Budget</option>
+                                    <option>Forecast</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Category</label>
+                            <div class="col-sm-7">
+                                <select class="form-control w150">
+                                    <option>-- Select --</option>
+                                    <option>Manual</option>
+                                    <option>Adjustment</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Journal Type</label>
+                            <div class="col-sm-7">
+                                <select class="form-control w150">
+                                    <option>-- Select --</option>
+                                    <option>Standard</option>
+                                    <option>Intercompany</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Entry Date</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422095">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Effective Date</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422096">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Period Name</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control wauto" name="" id="">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Employee</label>
+                            <div class="col-sm-7">
+                                <div class="inner-addon right-addon inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h5 class="form-block-heading">Conversion</h5>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Local Currency</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="" name="">
+                                    <option value="inr">₹</option>
+                                    <option value="usd" selected="1">$</option>
+                                    <option value="pound">£</option>
+                                    <option value="euro">€</option>
+                                    <option value="yen">¥</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Reporting Currency <span class="comments-show-btn" data-toggle="tooltip" title="1. This is the Reporting currency 2. Default to what is set up for this company"><i class="fa fa-info"></i></span></label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="" name="">
+                                    <option value="inr">₹</option>
+                                    <option value="usd" selected="1">$</option>
+                                    <option value="pound">£</option>
+                                    <option value="euro">€</option>
+                                    <option value="yen">¥</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Currency Date <span class="comments-show-btn" data-toggle="tooltip" title="This is manually populated via calendar.  This is the date of the currency to rate to be used"><i class="fa fa-info"></i></span></label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422097">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Type <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to what is set up in the currenctytable for this entity. 2. No changes allowed here Can be on eof the following (need to set up in a currency table -Corporate -Spot -Daily -User (meaning user defined)"><i class="fa fa-info"></i></span></label>
+                            <div class="col-sm-7">
+                                <select class="form-control w150">
+                                    <option>-- Select --</option>
+                                    <option>Corporate</option>
+                                    <option>Spot</option>
+                                    <option>Daily</option>
+                                    <option selected="">User</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Rate <span class="comments-show-btn" data-toggle="tooltip" title="5 decimal places. Thid comes from the currency set up module and is automatically populated and NOT allowed to changed except if the user defined option is selected ONLY then the user can enter a different rate"><i class="fa fa-info"></i></span></label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control wauto" name="" id="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 switch-block">
+                        <h5 class="form-block-heading"><input type="checkbox" class="form-control inline-block switch-check-radio">&nbsp;Reversing <span class="comments-show-btn" data-toggle="tooltip" title="1. Radio Button 2. If checked then all the field below become mandatory"><i class="fa fa-info"></i></span></h5>
+
+                        <div class="switch-content" style="display: block;">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Date <span class="comments-show-btn" data-toggle="tooltip" title="1. Mandatory field if Reversing is checked 2. Default to the first day in the following period 3. For the reveral to occur the in the following month the following period, the following period MUST be open"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422098">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Period Name <span class="comments-show-btn" data-toggle="tooltip" title="Drop Down (no Add) (Mandatory Field if reverse is checked).. Default to the next period… However, if the next period is not set up and open in the ledger then the reveral will nto happen.  Note reversing entries always occur in the next period"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control wauto" name="" id="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Status <span class="comments-show-btn" data-toggle="tooltip" title="Needs to be dynamic - i.e. if journal did not reverse then say 'Not Reversed' else 'Reversed'"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <p>Not Reversed</p>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Recurring <span class="comments-show-btn" data-toggle="tooltip" title="Check Box If checked by user - (a) This entry is saved with the exact data BUT with a4/3/2018 effective date and Period Name Apr-18 and in pending status in the batch list"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="checkbox">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clear"></div>
+        <div id="" class="table-responsive default-bg ">
+            <br>
+            <a href="#" class="btn btn-success" data-toggle="tooltip" title="1. This saves the entry and does not send it for approval 2. A batch number is generated after saved 3. Put the entry in pending (not approved) status 4. All rules e.g. validation, balancing etc must be OK before journal is saved">Save</a>
+            <a href="#" class="btn btn-success" data-toggle="tooltip" title="This will follow the approval rule. Note:  If no approval rule is set up in global approval engine this this button is not an option for the user">Submit for Approval</a>
+            <a href="#" class="btn btn-success" data-toggle="tooltip" title="This (inherirntly) Saves and post (update) the general ledget at the same time">Post</a>
+            <a href="#" class="btn btn-success" data-toggle="tooltip" title="Ability to upload supporting doc or analysis and accociate with the Batch #">Upload Doc</a>
+
+            <button type="button" id="" name="" class="btn btn-success add pull-right mleft10" data-toggle="modal" data-target="#success-popup"><span data-dismiss="modal">Sent to Approval</span></button>
+            <a href="journal-batches.php" class="btn btn-success pull-right">Post</a>
+            <table class="table table-bordered table-striped input-85">
+                <thead>
+                    <tr>
+                        <th colspan="6"></th>
+                        <th colspan="2">USD <span class="comments-show-btn" data-toggle="tooltip" title="This is the functional currency picked up the currency above"><i class="fa fa-info"></i></span></th>
+                        <th colspan="2">CDN <span class="comments-show-btn" data-toggle="tooltip" title="This is defaulted from the currency set up table (this is the reporting currency)"><i class="fa fa-info"></i></span></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>Line <span class="comments-show-btn" data-toggle="tooltip" title="Starts with 1 and Increment by 1"><i class="fa fa-info"></i></span></th>
+                        <th>CO <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the company associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                        <th>BU <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the BU associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                        <th>Div <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the Div associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                        <th>Dept <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the Dept associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                        <th>Account <span class="comments-show-btn" data-toggle="tooltip" title="User has to select via a pop up (drown down allowing user to search by Description or Acct # and then select the correct acct (note the acct number ONLY is then populated in this field"><i class="fa fa-info"></i></span></th>
+                        <th>Dr.</th>
+                        <th>Cr.</th>
+                        <th>Dr.</th>
+                        <th>Cr.</th>
+                        <th>Description <span class="comments-show-btn" data-toggle="tooltip" title="Each row will Default to description in header but any row can be changed manually in this grid"><i class="fa fa-info"></i></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select>
+                                <option>01</option>
+                                <option selected="">02</option>
+                                <option>03</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option>20</option>
+                                <option>30</option>
+                                <option>40</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option>000</option>
+                                <option selected="">300</option>
+                                <option>400</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option>0000</option>
+                                <option selected="">1000</option>
+                                <option>2000</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option>60201</option>
+                                <option>20200</option>
+                                <option>20780</option>
+                            </select>
+                        </td>
+                        <td><input type="text" value="10,000.00" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" value="12,900.00" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td>March Vacation Accrual</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>
+                            <select>
+                                <option>01</option>
+                                <option selected="">02</option>
+                                <option>03</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option>20</option>
+                                <option>30</option>
+                                <option>40</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option selected="">000</option>
+                                <option>300</option>
+                                <option>400</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option selected="">0000</option>
+                                <option>1000</option>
+                                <option>2000</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option>60201</option>
+                                <option selected="">20200</option>
+                                <option>20780</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" value="10,000.00" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" value="12,900.00" class="form-control"></td>
+                        <td>March Vacation Accrual</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="clear"></div>
+            <hr>
+        </div>
+    </div>
+</div>

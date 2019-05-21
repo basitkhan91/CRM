@@ -34,6 +34,9 @@ import { ViewBatchTsComponent } from "../components/accounting/general-ledger/Jo
 import { JournelService } from "../services/journals/journals.service";
 import { JournelsEndpointService } from "../services/journals/journals-endpoint.service";
 import { CreateJournelComponent } from "../components/accounting/general-ledger/Journals/create-journel/create-journel.component";
+import { ImportComponent } from "../components/accounting/general-ledger/Journals/import/import.component";
+import { ScheduleComponent } from "../components/accounting/general-ledger/Journals/schedule/schedule.component";
+import { JournelStepsComponent } from "../components/accounting/general-ledger/Journals/journel-steps/journel-steps.component";
 
 
 
@@ -58,7 +61,10 @@ import { CreateJournelComponent } from "../components/accounting/general-ledger/
         // NodeSetupComponent,
         CreateBatchComponent,
         ViewBatchTsComponent,
-        CreateJournelComponent
+        CreateJournelComponent,
+        ImportComponent,
+        ScheduleComponent,
+        JournelStepsComponent
 
     ],
     providers: [JournelService, JournelsEndpointService

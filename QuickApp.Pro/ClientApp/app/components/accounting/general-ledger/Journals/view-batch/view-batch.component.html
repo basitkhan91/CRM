@@ -6,711 +6,690 @@
             <li class="breadcrumb-item active" aria-current="page">View Batches</li>
         </ol>
     </nav>
-    <div class="pheading">
-        <h4 class="page-heading">Batches</h4>
-    </div>
-    <!--<div class="cdetails-top">
-        <span class="cdetails-top-close"><i class="fa fa-times"></i></span>
-        <div class="col-sm-12">
-            <label>Company</label>
-            <span>Silverxis</span>
-        </div>
-        <div class="col-sm-12">
-            <label>BU</label>
-            <span>Adso</span>
-        </div>
-        <div class="col-sm-12">
-            <label>Division</label>
-            <span>Development</span>
-        </div>
-        <div class="col-sm-12">
-            <label>Dept</label>
-            <span>Java</span>
-        </div>
-    </div>-->
-    <div class="clear"></div>
-    <br>
-    <form action="#" method="post" id="" name="" class="form-horizontal add-custustomer search-form">
-        <div class="employee-setup">
-            <div class="col-md-12 col-sm-12 col-xs-12 employer-block tabs-btns">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#view-batches">View Batches</a></li>
-                    <li><a data-toggle="tab" href="#add-journal">Add a Journal</a></li>
-                    <li><a data-toggle="tab" href="#import">Import</a></li>
-                    <li><a data-toggle="tab" href="#schedule">Schedule?</a></li>
-                </ul>
+    <p>Hi</p>
+    <div class="tab-content">
+        <div>
+            <div class="" id="home">
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-12">
 
-                <div class="tab-content">
-                    <div id="view-batches" class="tab-pane fade in active">
-                        <div class="" id="home">
-                            <div class="col-sm-6">
-                                <div class="form-group col-sm-12">
-                                    <div class="col-sm-7">
-                                        <label>
-                                            <input type="radio" name="status" id="pending">
-                                            Pending
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="status" id="posted">
-                                            Posted
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="status" id="all" checked="">
-                                            All
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                            <hr class="hr-dark">
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Batch Number</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Batch Name</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label text-left">Description</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Ledger</label>
+                        <label class="wauto">
+                            <input type="radio" name="status" id="pending1">
+                            Pending (Waiting Approval)
+                        </label>
+                        <label class="wauto">
+                            <input type="radio" name="status" id="pending2">
+                            Pending (Approved - To be posted)
+                        </label>
+                        <label class="wauto">
+                            <input type="radio" name="status" id="posted">
+                            Posted
+                        </label>
+                        <label class="wauto">
+                            <input type="radio" name="status" id="all" checked="">
+                            All
+                        </label>
 
-                                    <select class="w200 multiselect" id="" name="" multiple="" style="display: none;">
-                                        <option value="">-- Select --</option>
-                                        <option value="CO123">CO123</option>
-                                        <option value="CO124">CO124</option>
-                                        <option value="CO125">CO125</option>
-                                        <option value="CO126">CO126</option>
-                                        <option value="CO127">CO127</option>
-                                        <option value="CO128">CO128</option>
-                                        <option value="CO129">CO129</option>
-                                        <option value="CO130">CO130</option>
-                                    </select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value=""> -- Select --</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO123"> CO123</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO124"> CO124</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO125"> CO125</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO126"> CO126</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO127"> CO127</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO128"> CO128</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO129"> CO129</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO130"> CO130</label></a></li></ul></div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <hr class="hr-dark">
+                <div class="col-sm-2 w120">
+                    <div class="form-group col-sm-12">
+                        <label class="w120 control-label text-left">Batch Number</label>
+                        <div class="inner-addon right-addon w110 inline-block">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 w120">
+                    <div class="form-group col-sm-12">
+                        <label class="w120 control-label text-left">Batch Name</label>
+                        <div class="inner-addon right-addon w110 inline-block">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 w120">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label text-left">Description</label>
+                        <div class="inner-addon right-addon w110 inline-block">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 w120">
+                    <div class="form-group col-sm-12">
+                        <label class="w120 control-label text-left">Ledger</label>
 
+                        <select class="w200 multiselect" id="" name="" multiple="" style="display: none;">
+                            <option value="">-- Select --</option>
+                            <option value="CO123">CO123</option>
+                            <option value="CO124">CO124</option>
+                            <option value="CO125">CO125</option>
+                            <option value="CO126">CO126</option>
+                            <option value="CO127">CO127</option>
+                            <option value="CO128">CO128</option>
+                            <option value="CO129">CO129</option>
+                            <option value="CO130">CO130</option>
+                        </select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected" aria-expanded="false"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li class="multiselect-item multiselect-all"><a tabindex="0" class="multiselect-all"><label class="checkbox"><input type="checkbox" value="multiselect-all">  Select all</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value=""> -- Select --</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO123"> CO123</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO124"> CO124</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO125"> CO125</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO126"> CO126</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO127"> CO127</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO128"> CO128</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO129"> CO129</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="CO130"> CO130</label></a></li></ul></div>
+
+                    </div>
+                </div>
+                <div class="col-sm-2 w110">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label text-left">Period Name</label>
+                        <div class="col-sm-7">
+                            <select class="w100" id="" name="">
+                                <option value="">-- Select --</option>
+                                <option value="">Jan-2018</option>
+                                <option value="">Feb-2018</option>
+                                <option value="">Mar-2018</option>
+                                <option value="">Apr-2018</option>
+                                <option value="">May-2018</option>
+                                <option value="">Jun-2018</option>
+                                <option value="">Jul-2018</option>
+                                <option value="">Aug-2018</option>
+                                <option value="">Sep-2018</option>
+                                <option value="">Oct-2018</option>
+                                <option value="">Nov-2018</option>
+                                <option value="">Dec-2018</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 w110">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label text-left">Source <span class="comments-show-btn" data-toggle="tooltip" title="Need a single screen for this... E.g. SS-Fixed Assets, SS-AR, SS-AP, SS-Cash, SS-Invoicing, Manual"><i class="fa fa-info"></i></span></label>
+                        <div class="col-sm-7">
+                            <select class="input-width100">
+                                <option value="">-- Select --</option>
+                                <option value="">Budget</option>
+                                <option value="">Fixed Assets</option>
+                                <option value="">Manual</option>
+                                <option value="">PaymentsPayables</option>
+                                <option value="">Purchasing</option>
+                                <option value="">Receipts</option>
+                                <option value="">Receivables</option>
+                                <option value="">Work Order</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 w110">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label text-left">Journal Type</label>
+                        <select class="input-width100">
+                            <option value="">-- Select --</option>
+                            <option value="">InterCo</option>
+                            <option value="">Standard</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2 w120">
+                    <div class="form-group col-sm-12">
+                        <label class="w120 control-label text-left">Employee</label>
+                        <div class="inner-addon right-addon w110 inline-block">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="col-sm-7 bg-block2">
+                    <h5 class="m0 text-center">Date Range Search</h5>
+                    <hr>
+                    <div class="col-sm-6 w300">
+                        <h5 class="m0">Created Date</h5>
+                        <div class="col-sm-2 w120">
+                            <div class="form-group col-sm-12">
+
+                                <div class="inner-addon right-addon w110 inline-block">
+                                    <input type="text" class="form-control datepicker hasDatepicker" id="dp1558429426509" name="">
                                 </div>
                             </div>
-                            <div class="col-sm-2 w110">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label text-left">Period Name</label>
-                                    <div class="col-sm-7">
-                                        <select class="w100" id="" name="">
-                                            <option value="">-- Select --</option>
-                                            <option value="">Jan-2018</option>
-                                            <option value="">Feb-2018</option>
-                                            <option value="">Mar-2018</option>
-                                            <option value="">Apr-2018</option>
-                                            <option value="">May-2018</option>
-                                            <option value="">Jun-2018</option>
-                                            <option value="">Jul-2018</option>
-                                            <option value="">Aug-2018</option>
-                                            <option value="">Sep-2018</option>
-                                            <option value="">Oct-2018</option>
-                                            <option value="">Nov-2018</option>
-                                            <option value="">Dec-2018</option>
-                                        </select>
+                        </div>
+                        <div class="col-sm-2 w120">
+                            <div class="form-group col-sm-12">
+
+                                <div class="inner-addon right-addon w110 inline-block">
+                                    <input type="text" class="form-control datepicker hasDatepicker" id="dp1558429426510" name="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 w300">
+                        <h5 class="m0">Posted Date</h5>
+                        <div class="col-sm-2 w120">
+                            <div class="form-group col-sm-12">
+                                <div class="inner-addon right-addon w110 inline-block">
+                                    <input type="text" class="form-control datepicker hasDatepicker" id="dp1558429426511" name="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 w120">
+                            <div class="form-group col-sm-12">
+                                <div class="inner-addon right-addon w110 inline-block">
+                                    <input type="text" class="form-control datepicker hasDatepicker" id="dp1558429426512" name="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1 mtop20">
+                    <button type="button" class="btn btn-default search-btn"><i class="fa fa-search"></i></button>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div id="" class="table-responsive default-bg clear journal-table">
+                <br>
+                <a href="#" class="btn btn-success pull-right mleft10">Send for Approval</a> <a href="#" class="btn btn-success pull-right">Post</a>
+                <div class="clear"></div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="9"></th>
+                            <th colspan="3">Local Currency</th>
+                            <th colspan="3">Reporting Currency</th>
+                            <th colspan="3" class="events6"></th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">&nbsp; <span class="comments-show-btn" data-toggle="tooltip" title="Select all Unselect Check to select individual lines"><i class="fa fa-info"></i></span></th>
+                            <th rowspan="2">Batch Num <span class="comments-show-btn" data-toggle="tooltip" title="This was autogenerated when the batch was created"><i class="fa fa-info"></i></span></th>
+                            <th rowspan="2">Source</th>
+                            <th rowspan="2">Batch Status</th>
+                            <th rowspan="2">Batch Name</th>
+                            <th rowspan="2">Description <span class="comments-show-btn" data-toggle="tooltip" title="Entered when a batch or Journal is created"><i class="fa fa-info"></i></span></th>
+                            <th rowspan="2">Ledger <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to entities where user is logged in 2. Note - multiple currency meanign user perfroming search has access to multiple Company/Ledgers"><i class="fa fa-info"></i></span></th>
+                            <th rowspan="2">Journal Type <span class="comments-show-btn" data-toggle="tooltip" title="Drop Down selection drop down in the grid"><i class="fa fa-info"></i></span></th>
+                            <th rowspan="2">Period Name <span class="comments-show-btn" data-toggle="tooltip" title="Defined when the accounting calendar is set up and auto populate when a JE or Journal batch is created"><i class="fa fa-info"></i></span></th>
+                            <th>Currency <span class="comments-show-btn" data-toggle="tooltip" title="Functioal currency of the entity Drop doewn in the grid"><i class="fa fa-info"></i></span></th>
+                            <th>Debit <span class="comments-show-btn" data-toggle="tooltip" title="Total Debit per batch"><i class="fa fa-info"></i></span></th>
+                            <th>Credit <span class="comments-show-btn" data-toggle="tooltip" title="Total credit per batch"><i class="fa fa-info"></i></span></th>
+                            <th>Currency <span class="comments-show-btn" data-toggle="tooltip" title="Functioal currency of the entity Drop doewn in the grid"><i class="fa fa-info"></i></span></th>
+                            <th>Debit <span class="comments-show-btn" data-toggle="tooltip" title="Total Debit per batch"><i class="fa fa-info"></i></span></th>
+                            <th>Credit <span class="comments-show-btn" data-toggle="tooltip" title="Total credit per batch"><i class="fa fa-info"></i></span></th>
+                            <th rowspan="2">Reversing <span class="comments-show-btn" data-toggle="tooltip" title="If reversing have a check box checked at set up - cannot be changed here"><i class="fa fa-info"></i></span></th>
+                            <th rowspan="2">Recurring <span class="comments-show-btn" data-toggle="tooltip" title="1. If recurring has been check when entry was created 2. The line items automatically move to the next period in pending status with the indentical entries"><i class="fa fa-info"></i></span></th>
+                            <th class="events6"> <span class="comments-show-btn" data-toggle="tooltip" title="For Edit: Do not allow if entry is: - 1. posted 2.approved 3. Cancelled "><i class="fa fa-info"></i></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="posted-row">
+                            <td><input type="checkbox"></td>
+                            <td>234455</td>
+                            <td>Manual</td>
+                            <td>Posted</td>
+                            <td>Payroll Accrual</td>
+                            <td>Payroll Accrual</td>
+                            <td>ABC, Inc</td>
+                            <td>InterCo</td>
+                            <td>Mar-2018</td>
+                            <td>AUD</td>
+                            <td> 10,013.00 </td>
+                            <td> 10,013.00 </td>
+                            <td>USD</td>
+                            <td> 7,009.10 </td>
+                            <td> 7,009.10 </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
+                                    <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
+                                </span>
+                                <div class="btn-group actions-btn">
+                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <span data-toggle="modal" data-target="#viewcustomer">View</span>
+                                        <a href="edit-batch.php">Edit</a>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-2 w110">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label text-left">Source</label>
-                                    <div class="col-sm-7">
-                                        <select class="input-width100">
-                                            <option value="">-- Select --</option>
-                                            <option value="">Budget</option>
-                                            <option value="">Fixed Assets</option>
-                                            <option value="">Manual</option>
-                                            <option value="">PaymentsPayables</option>
-                                            <option value="">Purchasing</option>
-                                            <option value="">Receipts</option>
-                                            <option value="">Receivables</option>
-                                            <option value="">Work Order</option>
-                                        </select>
+                            </td>
+                        </tr>
+                        <tr class="posted-row">
+                            <td><input type="checkbox"></td>
+                            <td>245667</td>
+                            <td>AR Sub Ledger</td>
+                            <td>Pending Approval</td>
+                            <td>Cash Receipt</td>
+                            <td>3/3/2018 Lockbox Payment</td>
+                            <td>XZY Ltd</td>
+                            <td>Standard</td>
+                            <td>Mar-2018</td>
+                            <td>USD</td>
+                            <td> 1,500.00 </td>
+                            <td> 1,500.00 </td>
+                            <td>USD</td>
+                            <td> 1,500.00 </td>
+                            <td> 1,500.00 </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
+                                    <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
+                                </span>
+                                <div class="btn-group actions-btn">
+                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <span data-toggle="modal" data-target="#viewcustomer">View</span>
+                                        <a href="edit-batch.php">Edit</a>
                                     </div>
                                 </div>
+                            </td>
+                        </tr>
+                        <tr class="posted-row">
+                            <td><input type="checkbox"></td>
+                            <td>267889</td>
+                            <td>Manual</td>
+                            <td>Pending <span class="comments-show-btn" data-toggle="tooltip" title="This means either: 1. The Journal is approved and waiting to be posted 2. The Journal is Saved and not yet sent for approval 3. The journal is completed and ready for posting because the company does not use an approval policy"><i class="fa fa-info"></i></span></td>
+                            <td>Consulting Services</td>
+                            <td>Accrual for March Consulting</td>
+                            <td>123 System Inc.</td>
+                            <td>Standard</td>
+                            <td>Mar-2018</td>
+                            <td>AUD</td>
+                            <td> 2,100.00 </td>
+                            <td> 2,100.00 </td>
+                            <td>USD</td>
+                            <td> 1,575.00 </td>
+                            <td> 1,575.00 </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
+                                    <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
+                                </span>
+                                <div class="btn-group actions-btn">
+                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <span data-toggle="modal" data-target="#viewcustomer">View</span>
+                                        <a href="edit-batch.php">Edit</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="posted-row">
+                            <td><input type="checkbox"></td>
+                            <td>267775</td>
+                            <td>Manual</td>
+                            <td>Canceled</td>
+                            <td>Bonus Accrual</td>
+                            <td>March Commission Accrual</td>
+                            <td>123 System Inc.</td>
+                            <td>Standard</td>
+                            <td>Mar-2018</td>
+                            <td>CDN</td>
+                            <td> 3,200.00 </td>
+                            <td> 3,200.00 </td>
+                            <td>USD</td>
+                            <td> 2,400.00 </td>
+                            <td> 2,400.00 </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
+                                    <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
+                                </span>
+                                <div class="btn-group actions-btn">
+                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <span data-toggle="modal" data-target="#viewcustomer">View</span>
+                                        <a href="edit-batch.php">Edit</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div id="add-journal" class="tab-pane fade">
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="tab-content form-bg">
+                    <div class="tab-pane active" id="home">
+                        <div class="col-sm-12">
+                            <div class="form-group col-sm-12">
+
+                                <label class="wauto" data-toggle="tooltip" title="Note, this is for a manual Entry">
+                                    <input type="radio" name="journal-type" id="manual">
+                                    Manual
+                                </label>
+                                <label class="wauto" data-toggle="tooltip" title="Import UI to be developed">
+                                    <input type="radio" name="journal-type" id="import" class="active">
+                                    Import
+                                </label>
                             </div>
-                            <div class="col-sm-2 w110">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label text-left">Journal Type</label>
-                                    <select class="input-width100">
-                                        <option value="">-- Select --</option>
-                                        <option value="">InterCo</option>
-                                        <option value="">Standard</option>
+                        </div>
+                        <div class="clear"></div>
+                        <hr class="hr-dark">
+                        <div class="col-sm-3">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Ledger Name <span class="comments-show-btn" data-toggle="tooltip" title="Notes: 1. Default to the ledger name of the Company employee is logged into 2. Can selected a different Ledger to Add a journal if security access allows.  E.g. the corporate controller needs to record an entry on a subsidiary ledger"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7 inner-addon right-addon inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" class="form-control compnames ui-autocomplete-input" id="" name="" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Batch Num <span class="comments-show-btn" data-toggle="tooltip" title="Message to say 'creating' while data is entered.  This number is generated when data is saved"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7 inner-addon right-addon inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Batch Name <span class="comments-show-btn" data-toggle="tooltip" title="Mandatory Field - 150 character long"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7 inner-addon right-addon inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Batch Description <span class="comments-show-btn" data-toggle="tooltip" title="Optional Data Entry Field default to same description as Batch Name (150 characters field)"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input class="form-control wauto" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Balance Type <span class="comments-show-btn" data-toggle="tooltip" title="Drop Down (Default to Actual) Other options are: - Actual - Budget - Forecast"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control w150">
+                                        <option>-- Select --</option>
+                                        <option>Actual</option>
+                                        <option>Budget</option>
+                                        <option>Forecast</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Employee</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Category <span class="comments-show-btn" data-toggle="tooltip" title="Drop Down: - Manual - Adjustment"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control w150">
+                                        <option>-- Select --</option>
+                                        <option>Manual</option>
+                                        <option>Adjustment</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Journal Type <span class="comments-show-btn" data-toggle="tooltip" title="Drop Down: - Standard (Default) - Intercompany (note will provide other option - will need a table to support this)"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control w150">
+                                        <option>-- Select --</option>
+                                        <option>Standard</option>
+                                        <option>Intercompany</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Entry Date <span class="comments-show-btn" data-toggle="tooltip" title="1. Mandatory field 2. Default to system Date 3.Not allowed to change"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558429426513">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Effective Date <span class="comments-show-btn" data-toggle="tooltip" title="1. Mandatory Field 2. Dafault to Entry Date 3. Effective date MUST be a date within the Period Name"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558429426514">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Period Name <span class="comments-show-btn" data-toggle="tooltip" title="1. Defaults to the period associated to the effective date as defined in the accounting Calendar 2. Mandatory field"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control wauto" name="" id="">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Employee <span class="comments-show-btn" data-toggle="tooltip" title="Employee entering the Journal Note - First Initial Last Name is a good default"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <div class="inner-addon right-addon inline-block">
                                         <i class="fa fa-search"></i>
                                         <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Created Date from</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control datepicker hasDatepicker" id="dp1557142713708" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Created Date TO</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control datepicker hasDatepicker" id="dp1557142713709" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Posted Date from</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control datepicker hasDatepicker" id="dp1557142713710" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 w120">
-                                <div class="form-group col-sm-12">
-                                    <label class="w120 control-label text-left">Posted Date TO</label>
-                                    <div class="inner-addon right-addon w110 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control datepicker hasDatepicker" id="dp1557142713711" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-1 mtop20">
-                                <button type="button" class="btn btn-default search-btn"><i class="fa fa-search"></i></button>
-                            </div>
-                            <div class="clear"></div>
                         </div>
-                        <div id="" class="table-responsive default-bg clear journal-table">
-                            <br>
-                            <!--<a href="#" class="btn btn-success pull-right">Review Journal</a> <a href="#" class="btn btn-success pull-right">Review Batch</a> <a href="#" class="btn btn-success pull-right">Post</a> <a href="#" class="btn btn-success pull-right">Reverse Journal</a> <a href="#" class="btn btn-success pull-right">Approve</a> <a href="#" class="btn btn-success pull-right">New Batch</a> <a href="#" class="btn btn-success pull-right">New Journal</a> <a href="#" class="btn btn-success pull-right">Reverse Batch</a>-->
-                            <div class="clear"></div>
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th colspan="9"></th>
-                                        <th colspan="3">Local Currency</th>
-                                        <th colspan="3">Reporting Currency</th>
-                                        <th colspan="3" class="events6"></th>
-                                    </tr>
-                                    <tr>
-                                        <th rowspan="2">&nbsp;</th>
-                                        <th rowspan="2">Batch Num</th>
-                                        <th rowspan="2">Batch Status</th>
-                                        <th rowspan="2">Batch Name</th>
-                                        <th rowspan="2">Description</th>
-                                        <th rowspan="2">Ledger</th>
-                                        <th rowspan="2">Source</th>
-                                        <th rowspan="2">Journal Type</th>
-                                        <th rowspan="2">Period Name</th>
-                                        <th>Currency</th>
-                                        <th>Debit</th>
-                                        <th>Credit</th>
-                                        <th>Currency</th>
-                                        <th>Debit</th>
-                                        <th>Credit</th>
-                                        <th rowspan="2">Reversing</th>
-                                        <th rowspan="2">Recurring</th>
-                                        <th class="events6"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="posted-row">
-                                        <td><input type="checkbox"></td>
-                                        <td>234455</td>
-                                        <td>Posted</td>
-                                        <td>Payroll Accrual</td>
-                                        <td>Payroll Accrual</td>
-                                        <td>ABC, Inc</td>
-                                        <td>Manual</td>
-                                        <td>InterCo</td>
-                                        <td>Mar-2018</td>
-                                        <td>AUD</td>
-                                        <td> 10,013.00 </td>
-                                        <td> 10,013.00 </td>
-                                        <td>USD</td>
-                                        <td> 7,009.10 </td>
-                                        <td> 7,009.10 </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
-                                                <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
-                                            </span>
-                                            <div class="btn-group actions-btn">
-                                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Actions
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <span data-toggle="modal" data-target="#viewcustomer">View</span>
-                                                    <a href="edit-batch.php">Edit</a>
-                                                    <span data-toggle="modal" data-target="#history">History</span>
-                                                    <span data-toggle="modal" data-target="#delete">Delete</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="posted-row">
-                                        <td><input type="checkbox"></td>
-                                        <td>245667</td>
-                                        <td>Pending Approval</td>
-                                        <td>Cash Receipt</td>
-                                        <td>3/3/2018 Lockbox Payment</td>
-                                        <td>XZY Ltd</td>
-                                        <td>AR Sub Ledger</td>
-                                        <td>Standard</td>
-                                        <td>Mar-2018</td>
-                                        <td>USD</td>
-                                        <td> 1,500.00 </td>
-                                        <td> 1,500.00 </td>
-                                        <td>USD</td>
-                                        <td> 1,500.00 </td>
-                                        <td> 1,500.00 </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
-                                                <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
-                                            </span>
-                                            <div class="btn-group actions-btn">
-                                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Actions
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <span data-toggle="modal" data-target="#viewcustomer">View</span>
-                                                    <a href="edit-batch.php">Edit</a>
-                                                    <span data-toggle="modal" data-target="#history">History</span>
-                                                    <span data-toggle="modal" data-target="#delete">Delete</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="posted-row">
-                                        <td><input type="checkbox"></td>
-                                        <td>267889</td>
-                                        <td>Pending</td>
-                                        <td>Consulting Services</td>
-                                        <td>Accrual for March Consulting</td>
-                                        <td>123 System Inc.</td>
-                                        <td>Manual</td>
-                                        <td>Standard</td>
-                                        <td>Mar-2018</td>
-                                        <td>AUD</td>
-                                        <td> 2,100.00 </td>
-                                        <td> 2,100.00 </td>
-                                        <td>USD</td>
-                                        <td> 1,575.00 </td>
-                                        <td> 1,575.00 </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
-                                                <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
-                                            </span>
-                                            <div class="btn-group actions-btn">
-                                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Actions
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <span data-toggle="modal" data-target="#viewcustomer">View</span>
-                                                    <a href="edit-batch.php">Edit</a>
-                                                    <span data-toggle="modal" data-target="#history">History</span>
-                                                    <span data-toggle="modal" data-target="#delete">Delete</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="posted-row">
-                                        <td><input type="checkbox"></td>
-                                        <td>267775</td>
-                                        <td>Canceled</td>
-                                        <td>Bonus Accrual</td>
-                                        <td>March Commission Accrual</td>
-                                        <td>123 System Inc.</td>
-                                        <td>Manual</td>
-                                        <td>Standard</td>
-                                        <td>Mar-2018</td>
-                                        <td>CDN</td>
-                                        <td> 3,200.00 </td>
-                                        <td> 3,200.00 </td>
-                                        <td>USD</td>
-                                        <td> 2,400.00 </td>
-                                        <td> 2,400.00 </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <span data-toggle="tooltip" class="status" title="Active" data-placement="right">
-                                                <div class="toggle btn btn-success" data-toggle="toggle" style="width: 30px; height: 19px;"><input type="checkbox" checked="" data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"><div class="toggle-group"><label class="btn btn-success toggle-on"><i class="fa fa-check"></i></label><label class="btn btn-danger active toggle-off"><i class="fa fa-times"></i></label><span class="toggle-handle btn btn-default"></span></div></div>
-                                            </span>
-                                            <div class="btn-group actions-btn">
-                                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Actions
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <span data-toggle="modal" data-target="#viewcustomer">View</span>
-                                                    <a href="edit-batch.php">Edit</a>
-                                                    <span data-toggle="modal" data-target="#history">History</span>
-                                                    <span data-toggle="modal" data-target="#delete">Delete</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                            <div class="clear"></div>
-                        </div>
-
-
-
-                    </div>
-                    <div id="add-journal" class="tab-pane fade">
-
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="tab-content form-bg">
-                                <div class="tab-pane active" id="home">
-                                    <div class="col-sm-3">
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Ledger Name</label>
-                                            <div class="col-sm-7 inner-addon right-addon inline-block">
-                                                <i class="fa fa-search"></i>
-                                                <input type="text" class="form-control compnames ui-autocomplete-input" id="" name="" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Batch Num</label>
-                                            <div class="col-sm-7 inner-addon right-addon inline-block">
-                                                <i class="fa fa-search"></i>
-                                                <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Batch Name</label>
-                                            <div class="col-sm-7 inner-addon right-addon inline-block">
-                                                <i class="fa fa-search"></i>
-                                                <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Batch Description</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control wauto" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Balance Type</label>
-                                            <div class="col-sm-7">
-                                                <select class="form-control w150">
-                                                    <option>-- Select --</option>
-                                                    <option>Actual</option>
-                                                    <option>Budget</option>
-                                                    <option>Forecast</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Category</label>
-                                            <div class="col-sm-7">
-                                                <select class="form-control w150">
-                                                    <option>-- Select --</option>
-                                                    <option>Manual</option>
-                                                    <option>Adjustment</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Journal Type</label>
-                                            <div class="col-sm-7">
-                                                <select class="form-control w150">
-                                                    <option>-- Select --</option>
-                                                    <option>Standard</option>
-                                                    <option>Intercompany</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Entry Date</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1557142713712">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Effective Date</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1557142713713">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Period Name</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control wauto" name="" id="">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Employee</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" autocomplete="off" class="autosuggest es-input">
-                                                <ul class="es-list"><li class="es-visible">Adriana</li><li class="es-visible">Ocampo Uria</li><li class="es-visible">Albert Einstein</li><li class="es-visible">Anna K. Behrensmeyer</li><li class="es-visible">Blaise Pascal</li><li class="es-visible">Caroline Herschel</li><li class="es-visible">Cecilia Payne-Gaposchkin</li><li class="es-visible">Chien-Shiung Wu</li></ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <h5 class="form-block-heading">Conversion</h5>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Local Currency</label>
-                                            <div class="col-sm-7">
-                                                <select class="form-control" id="" name="">
-                                                    <option value="inr">₹</option>
-                                                    <option value="usd" selected="1">$</option>
-                                                    <option value="pound">£</option>
-                                                    <option value="euro">€</option>
-                                                    <option value="yen">¥</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Reporting Currency</label>
-                                            <div class="col-sm-7">
-                                                <select class="form-control" id="" name="">
-                                                    <option value="inr">₹</option>
-                                                    <option value="usd" selected="1">$</option>
-                                                    <option value="pound">£</option>
-                                                    <option value="euro">€</option>
-                                                    <option value="yen">¥</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Currency Date</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1557142713714">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Type</label>
-                                            <div class="col-sm-7">
-                                                <select class="form-control w150">
-                                                    <option>-- Select --</option>
-                                                    <option>Corporate</option>
-                                                    <option>Spot</option>
-                                                    <option>Daily</option>
-                                                    <option selected="">User</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Rate</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control wauto" name="" id="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 switch-block">
-                                        <h5 class="form-block-heading"><input type="checkbox" class="form-control inline-block switch-check-radio">&nbsp;Reversing</h5>
-
-                                        <div class="switch-content" style="display: none;">
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Date</label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1557142713715">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Period Name</label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" class="form-control wauto" name="" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Status</label>
-                                                <div class="col-sm-7">
-                                                    <p>Not Reversed</p>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Recurring</label>
-                                                <div class="col-sm-7">
-                                                    <input type="checkbox">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="clear"></div>
+                        <div class="col-sm-3">
+                            <h5 class="form-block-heading">Conversion <span class="comments-show-btn" data-toggle="tooltip" title="The Convsersion options ONLY if the company is set up with a Local and Reporting curency.  Else this option is not displayed"><i class="fa fa-info"></i></span></h5>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Local Currency <span class="comments-show-btn" data-toggle="tooltip" title="1. This is the functional currency 2. Default to what is set up for this company"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="" name="">
+                                        <option value="inr">₹</option>
+                                        <option value="usd" selected="1">$</option>
+                                        <option value="pound">£</option>
+                                        <option value="euro">€</option>
+                                        <option value="yen">¥</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Reporting Currency <span class="comments-show-btn" data-toggle="tooltip" title="1. This is the Reporting currency 2. Default to what is set up for this company"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="" name="">
+                                        <option value="inr">₹</option>
+                                        <option value="usd" selected="1">$</option>
+                                        <option value="pound">£</option>
+                                        <option value="euro">€</option>
+                                        <option value="yen">¥</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Currency Date <span class="comments-show-btn" data-toggle="tooltip" title="This is manually populated via calendar.  This is the date of the currency to rate to be used"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558429426515">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Type <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to what is set up in the currenctytable for this entity. 2. No changes allowed here Can be on eof the following (need to set up in a currency table -Corporate -Spot -Daily -User (meaning user defined)"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control w150">
+                                        <option>-- Select --</option>
+                                        <option>Corporate</option>
+                                        <option>Spot</option>
+                                        <option>Daily</option>
+                                        <option selected="">User</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Rate <span class="comments-show-btn" data-toggle="tooltip" title="5 decimal places. Thid comes from the currency set up module and is automatically populated and NOT allowed to changed except if the user defined option is selected ONLY then the user can enter a different rate"><i class="fa fa-info"></i></span></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control wauto" name="" id="">
+                                </div>
+                            </div>
                         </div>
+                        <div class="col-sm-3 switch-block">
+                            <h5 class="form-block-heading"><input type="checkbox" class="form-control inline-block switch-check-radio">&nbsp;Reversing <span class="comments-show-btn" data-toggle="tooltip" title="1. Radio Button 2. If checked then all the field below become mandatory"><i class="fa fa-info"></i></span></h5>
 
+                            <div class="switch-content" style="display: none;">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Date <span class="comments-show-btn" data-toggle="tooltip" title="1. Mandatory field if Reversing is checked 2. Default to the first day in the following period 3. For the reveral to occur the in the following month the following period, the following period MUST be open"><i class="fa fa-info"></i></span></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558429426516">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Period Name <span class="comments-show-btn" data-toggle="tooltip" title="Drop Down (no Add) (Mandatory Field if reverse is checked).. Default to the next period… However, if the next period is not set up and open in the ledger then the reveral will nto happen.  Note reversing entries always occur in the next period"><i class="fa fa-info"></i></span></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control wauto" name="" id="">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Status <span class="comments-show-btn" data-toggle="tooltip" title="Needs to be dynamic - i.e. if journal did not reverse then say 'Not Reversed' else 'Reversed'"><i class="fa fa-info"></i></span></label>
+                                    <div class="col-sm-7">
+                                        <p>Not Reversed</p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Recurring <span class="comments-show-btn" data-toggle="tooltip" title="Check Box If checked by user - (a) This entry is saved with the exact data BUT with a4/3/2018 effective date and Period Name Apr-18 and in pending status in the batch list"><i class="fa fa-info"></i></span></label>
+                                    <div class="col-sm-7">
+                                        <input type="checkbox">
+                                    </div>
+                                </div>
+                            </div>
 
+                        </div>
                         <div class="clear"></div>
-                        <div id="" class="table-responsive default-bg ">
-                            <br>
-                            <button type="button" id="" name="" class="btn btn-success add pull-right" data-toggle="modal" data-target="#success-popup"><span data-dismiss="modal">Submit Journal to Approval</span></button>
-                            <a href="journal-batches.php" class="btn btn-success pull-right">Post</a>
-                            <table class="table table-bordered table-striped input-85">
-                                <thead>
-                                    <tr>
-                                        <th colspan="6"></th>
-                                        <th colspan="2">USD</th>
-                                        <th colspan="2">CDN</th>
-                                        <th></th>
-                                    </tr>
-                                    <tr>
-                                        <th>Line</th>
-                                        <th>CO</th>
-                                        <th>BU</th>
-                                        <th>Div</th>
-                                        <th>Dept</th>
-                                        <th>Account</th>
-                                        <th>Dr.</th>
-                                        <th>Cr.</th>
-                                        <th>Dr.</th>
-                                        <th>Cr.</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>
-                                            <select>
-                                                <option>01</option>
-                                                <option selected="">02</option>
-                                                <option>03</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option>20</option>
-                                                <option>30</option>
-                                                <option>40</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option>000</option>
-                                                <option selected="">300</option>
-                                                <option>400</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option>0000</option>
-                                                <option selected="">1000</option>
-                                                <option>2000</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option>60201</option>
-                                                <option>20200</option>
-                                                <option>20780</option>
-                                            </select>
-                                        </td>
-                                        <td><input type="text" value="10,000.00" class="form-control"></td>
-                                        <td><input type="text" class="form-control"></td>
-                                        <td><input type="text" value="12,900.00" class="form-control"></td>
-                                        <td><input type="text" class="form-control"></td>
-                                        <td>March Vacation Accrual</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>
-                                            <select>
-                                                <option>01</option>
-                                                <option selected="">02</option>
-                                                <option>03</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option>20</option>
-                                                <option>30</option>
-                                                <option>40</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option selected="">000</option>
-                                                <option>300</option>
-                                                <option>400</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option selected="">0000</option>
-                                                <option>1000</option>
-                                                <option>2000</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option>60201</option>
-                                                <option selected="">20200</option>
-                                                <option>20780</option>
-                                            </select>
-                                        </td>
-                                        <td><input type="text" class="form-control"></td>
-                                        <td><input type="text" value="10,000.00" class="form-control"></td>
-                                        <td><input type="text" class="form-control"></td>
-                                        <td><input type="text" value="12,900.00" class="form-control"></td>
-                                        <td>March Vacation Accrual</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="clear"></div>
-                            <hr>
-                        </div>
-
-
-                    </div>
-                    <div id="import" class="tab-pane fade">
-                        <h3>Import data not available</h3>
-                    </div>
-                    <div id="schedule" class="tab-pane fade">
-                        <h3>Schedule data not available</h3>
                     </div>
                 </div>
-
-
-
-
-
+                <div class="clearfix"></div>
             </div>
+
+
+            <div class="clear"></div>
+            <div id="" class="table-responsive default-bg ">
+                <br>
+                <a href="#" class="btn btn-success" data-toggle="tooltip" title="1. This saves the entry and does not send it for approval 2. A batch number is generated after saved 3. Put the entry in pending (not approved) status 4. All rules e.g. validation, balancing etc must be OK before journal is saved">Save</a>
+                <a href="#" class="btn btn-success" data-toggle="tooltip" title="This will follow the approval rule. Note:  If no approval rule is set up in global approval engine this this button is not an option for the user">Submit for Approval</a>
+                <a href="#" class="btn btn-success" data-toggle="tooltip" title="This (inherirntly) Saves and post (update) the general ledget at the same time">Post</a>
+                <a href="#" class="btn btn-success" data-toggle="tooltip" title="Ability to upload supporting doc or analysis and accociate with the Batch #">Upload Doc</a>
+
+                <button type="button" id="" name="" class="btn btn-success add pull-right mleft10" data-toggle="modal" data-target="#success-popup"><span data-dismiss="modal">Sent to Approval</span></button>
+                <a href="journal-batches.php" class="btn btn-success pull-right">Post</a>
+                <table class="table table-bordered table-striped input-85">
+                    <thead>
+                        <tr>
+                            <th colspan="6"></th>
+                            <th colspan="2">USD <span class="comments-show-btn" data-toggle="tooltip" title="This is the functional currency picked up the currency above"><i class="fa fa-info"></i></span></th>
+                            <th colspan="2">CDN <span class="comments-show-btn" data-toggle="tooltip" title="This is defaulted from the currency set up table (this is the reporting currency)"><i class="fa fa-info"></i></span></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>Line <span class="comments-show-btn" data-toggle="tooltip" title="Starts with 1 and Increment by 1"><i class="fa fa-info"></i></span></th>
+                            <th>CO <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the company associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                            <th>BU <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the BU associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                            <th>Div <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the Div associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                            <th>Dept <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the Dept associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
+                            <th>Account <span class="comments-show-btn" data-toggle="tooltip" title="User has to select via a pop up (drown down allowing user to search by Description or Acct # and then select the correct acct (note the acct number ONLY is then populated in this field"><i class="fa fa-info"></i></span></th>
+                            <th>Dr.</th>
+                            <th>Cr.</th>
+                            <th>Dr.</th>
+                            <th>Cr.</th>
+                            <th>Description <span class="comments-show-btn" data-toggle="tooltip" title="Each row will Default to description in header but any row can be changed manually in this grid"><i class="fa fa-info"></i></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <select>
+                                    <option>01</option>
+                                    <option selected="">02</option>
+                                    <option>03</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>20</option>
+                                    <option>30</option>
+                                    <option>40</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>000</option>
+                                    <option selected="">300</option>
+                                    <option>400</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>0000</option>
+                                    <option selected="">1000</option>
+                                    <option>2000</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>60201</option>
+                                    <option>20200</option>
+                                    <option>20780</option>
+                                </select>
+                            </td>
+                            <td><input type="text" value="10,000.00" class="form-control"></td>
+                            <td><input type="text" class="form-control"></td>
+                            <td><input type="text" value="12,900.00" class="form-control"></td>
+                            <td><input type="text" class="form-control"></td>
+                            <td>March Vacation Accrual</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <select>
+                                    <option>01</option>
+                                    <option selected="">02</option>
+                                    <option>03</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>20</option>
+                                    <option>30</option>
+                                    <option>40</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option selected="">000</option>
+                                    <option>300</option>
+                                    <option>400</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option selected="">0000</option>
+                                    <option>1000</option>
+                                    <option>2000</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>60201</option>
+                                    <option selected="">20200</option>
+                                    <option>20780</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control"></td>
+                            <td><input type="text" value="10,000.00" class="form-control"></td>
+                            <td><input type="text" class="form-control"></td>
+                            <td><input type="text" value="12,900.00" class="form-control"></td>
+                            <td>March Vacation Accrual</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="clear"></div>
+                <hr>
+            </div>
+
+
         </div>
-    </form>
-    <div class="clear"></div>
+        <div id="import" class="tab-pane fade">
+            <h3>Import data not available</h3>
+        </div>
+        <div id="schedule" class="tab-pane fade">
+            <h3>Schedule data not available</h3>
+        </div>
+    </div>
 
     <div class="pull-right"> © <span class="currentyear">2019</span> <a href="#">PAS</a> </div>
 </div>
