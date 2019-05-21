@@ -19,7 +19,8 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly _managementposturl: string = "/api/ManagementStrcture/managementEntitypost";
 	private readonly _deleteLegalEntity: string = "/api/legalEntity/deleteLegalEntity";
 
-	private readonly _JobTilesUrlAuditHistory: string = "/api/legalEntity/auditHistoryById";
+    private readonly _JobTilesUrlAuditHistory: string = "/api/legalEntity/auditHistoryById";
+    private readonly _activeUrl: string = "/api/legalEntity/UpdateActive";
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
 	get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
@@ -147,7 +148,7 @@ export class LegalEntityEndpontService extends EndpointFactory {
 			'achSWIFTID': roleObject.achSWIFTID,
 			'legalEntityId': roleObject.legalEntityId,
 			'createdBy': roleObject.createdBy,
-			'updatedBy':roleObject.updatedBy
+            'updatedBy': roleObject.updatedBy,
 
 		}
 		return this.http.put<T>(endpointUrl, JSON.stringify(obj), this.getRequestHeaders())
@@ -172,5 +173,14 @@ export class LegalEntityEndpontService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getHistoryLegalEntityEndpontService(jobTitleId));
 			});
-	}
+    }
+
+    getUpdateLegalEntityActive<T>(roleObject: any, legalEntityId: number): Observable<T> {
+       // let endpointUrl = `${this._entityUrlNew}/${legalEntityId}`;
+
+        return this.http.put<T>(this._activeUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateLegalEntityActive(roleObject, legalEntityId));
+            });
+    }
 }

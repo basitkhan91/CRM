@@ -629,10 +629,6 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemmaserObj.ATAChapterId = null;
                 }
-                if (itemMasterViewModel.ATASubChapterId == null)
-                {
-                    itemmaserObj.ATASubChapterId = null;
-                }
 
                 if (itemMasterViewModel.StockUnitOfMeasureId == null)
                 {
@@ -874,10 +870,6 @@ namespace QuickApp.Pro.Controllers
                 if (itemMasterViewModel.ATAChapterId == null)
                 {
                     itemmaserObj.ATAChapterId = null;
-                }
-                if (itemMasterViewModel.ATASubChapterId == null)
-                {
-                    itemmaserObj.ATASubChapterId = null;
                 }
 
                 if (itemMasterViewModel.StockUnitOfMeasureId == null)

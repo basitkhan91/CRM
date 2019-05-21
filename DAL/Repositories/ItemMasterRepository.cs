@@ -258,8 +258,8 @@ namespace DAL.Repositories
                                 join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
                                 from achdata in achdetails.DefaultIfEmpty()
 
-                                where e.IsActive==true || e.IsActive==null
-                                
+                                where e.IsDelete == false || e.IsDelete == null
+
 
                                 select new
                                 {
@@ -278,7 +278,7 @@ namespace DAL.Repositories
                                     CageCode = e.CageCode,
                                     e.LegalEntityId,
                                     LockboxAddressid = lockboxaddressdetails.AddressId,
-                                    DomesticIntermediateBank=domeswire.IntermediaryBankName,
+                                    DomesticIntermediateBank = domeswire.IntermediaryBankName,
                                     department.AddressId,
                                     BankStreetaddress1 = lockboxaddressdetails.Line1,
                                     BankStreetaddress2 = lockboxaddressdetails.Line2,
@@ -309,12 +309,14 @@ namespace DAL.Repositories
                                     e.InternationalWirePaymentId,
                                     e.LockBoxAddressId,
                                     e.ACHId,
-                                    achBankName=achdata.BankName,
+                                    achdata,
+                                    achBankName = achdata.BankName,
                                     achIntermediateBank = achdata.IntermediateBankName,
                                     achBenficiaryBankName = achdata.BeneficiaryBankName,
                                     achBankAccountNumber = achdata.AccountNumber,
                                     achABANumber = achdata.ABA,
-                                    achSWIFTID=achdata.SwiftCode
+                                    achSWIFTID = achdata.SwiftCode,
+                                    IsBankingInfo = e.IsBankingInfo,
 
                                 };
 

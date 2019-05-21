@@ -157,7 +157,7 @@
 														<label class="control-label col-sm-4">Functional Currency </label>
 														<div class="col-sm-7">
 															<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.functionalCurrencyId">
-																<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.code}}  {{currencyName.symbol}}</option>
+																<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
 															</select>
 														</div>
 													</div>
@@ -166,7 +166,7 @@
 														<label class="control-label col-sm-4">Reporting Currency </label>
 														<div class="col-sm-7">
 															<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.reportingCurrencyId">
-																<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.code}}  {{currencyName.symbol}}</option>
+																<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
 															</select>
 														</div>
 													</div>

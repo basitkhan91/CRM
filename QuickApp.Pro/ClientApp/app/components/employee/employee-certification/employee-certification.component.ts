@@ -506,7 +506,6 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 		this.disablesave = false;
 		this.isSaving = true;
 		this.loadMasterCompanies();
-		this.sourceEmployee = new CertificationType();
 		this.description = "";
 		this.sourceEmployee.isActive = true;
 		this.modal = this.modalService.open(content, { size: 'sm' });

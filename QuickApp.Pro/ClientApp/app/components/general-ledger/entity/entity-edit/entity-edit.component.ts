@@ -69,6 +69,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	ACHStyle: boolean;
 	ACHValue: boolean;
 	entityName: string;
+    Active: string;
+    entityViewFeilds: any = {};
 	//selectedNode1: TreeNode
 
 	constructor(
@@ -113,7 +115,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService.getEntityforEdit().subscribe(
+		this.workFlowtService.getEntityList().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -239,25 +241,15 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 	open(content) {
 		this.sourceLegalEntity = {};
-		//this.isEditMode = false;
-		//this.isDeleteMode = false;
-
-		//this.isSaving = true;
-		//this.loadMasterCompanies();
-		//this.sourceLegalEntity = new ATAMain();
 		this.sourceLegalEntity.isActive = true;
 		this.entityName = "";
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allComapnies = allComapnies;
@@ -275,11 +267,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 	}
 	private oncurrencySuccessful(getCreditTermsList: Currency[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		//this.dataSource.data = getCreditTermsList;
-
 		this.allCurrencyInfo = getCreditTermsList;
 	}
 	private onDataLoadFailed(error: any) {
@@ -322,34 +311,30 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(
 				role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
-
-            this.loadData();
             this.workFlowtService.getEntityforEdit().subscribe(
                 results => this.onDataLoadSuccessful(results[0]),
                 error => this.onDataLoadFailed(error)
             );
 
+            this.loadData();
 		}
 		else {
 
 			this.sourceLegalEntity.createdBy = this.userName;
 			this.sourceLegalEntity.updatedBy = this.userName;
-			this.sourceLegalEntity.masterCompanyId = 1;
+            this.sourceLegalEntity.masterCompanyId = 1;
 			this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(
 				response => this.saveCompleted(this.sourceLegalEntity),
                 error => this.saveFailedHelper(error));
-
-            this.loadData();
             this.workFlowtService.getEntityforEdit().subscribe(
                 results => this.onDataLoadSuccessful(results[0]),
                 error => this.onDataLoadFailed(error)
             );
 
-
+            this.loadData();
 		}
 		if (this.modal) { this.modal.close();}
-		if (this.modal1) { this.modal1.close();}
-		
+		if (this.modal1) { this.modal1.close();}		
 		
 	}
 
@@ -437,5 +422,48 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	openHist(content, row) {
 		this.sourceLegalEntity = row;
 
-	}
+    }
+
+    toggleIsActive(rowData, e) {
+        if (e.checked == false) {
+            this.sourceLegalEntity = rowData;
+            this.sourceLegalEntity.updatedBy = this.userName;
+            this.Active = "In Active";
+            this.sourceLegalEntity.isActive == false;
+            this.workFlowtService.updateLegalEntityForActive(this.sourceLegalEntity).subscribe(
+                response => this.saveCompleted(this.sourceLegalEntity),
+                error => this.saveFailedHelper(error));
+            //alert(e);
+        }
+        else {
+            this.sourceLegalEntity = rowData;
+            this.sourceLegalEntity.updatedBy = this.userName;
+            this.Active = "Active";
+            this.sourceLegalEntity.isActive == true;
+            this.workFlowtService.updateLegalEntityForActive(this.sourceLegalEntity).subscribe(
+                response => this.saveCompleted(this.sourceLegalEntity),
+                error => this.saveFailedHelper(error));
+            //alert(e);
+        }
+
+    }
+    openView(content, row) {
+
+        this.entityViewFeilds.name = row.name;
+        this.entityViewFeilds.description = row.description;
+        this.entityViewFeilds.doingLegalAs = row.doingLegalAs;
+        this.entityViewFeilds.address1 = row.address1;
+        this.entityViewFeilds.address2 = row.address2;
+        this.entityViewFeilds.city = row.city;
+        this.entityViewFeilds.stateOrProvince = row.stateOrProvince;
+        this.entityViewFeilds.postalCode = row.postalCode;
+        this.entityViewFeilds.country = row.country;
+        this.entityViewFeilds.faxNumber = row.faxNumber;
+        this.entityViewFeilds.phoneNumber1 = row.phoneNumber1;
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+  
 }
