@@ -187,38 +187,6 @@
 	</div>
 </ng-template>
 
-
-<!--<ng-template #content class="modal fade " id="view" role="dialog">
-
-	<div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-			<h4 class="modal-title">Details of Customer Contact</h4>
-		</div>
-		<div class="table-responsive default-bg clear">
-
-
-			<div class="col-sm-4">
-				<p><span class="label"><b>Contact Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
-				<p><span class="label"><b>Contact Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-				<p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
-				<p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
-				<p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
-				<p><span class="label"><b>Alternate Phone: </b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
-				<p><span class="label"><b>Default Contact: </b></span><span class="value">{{sourceViewforContact.isdefaultcontact}}</span></p>
-				<p><span class="label"><b>Website: </b></span><span class="value">{{sourceViewforContact.WebsiteURL}}</span></p>
-				<p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
-				<p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
-				<div class="clear"></div>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-		</div>
-	</div>
-
-</ng-template>-->
-
 <div class="clear"></div>
 <div class="x_panel bg-block2">
 	
@@ -318,9 +286,9 @@
                             <div class="form-group col-sm-12">
                                 <label class="control-label col-sm-4">Work Phone <strong class="clr-red">*</strong></label>
                                 <div class="col-sm-7">
-                                    <input class="form-contro" type="text"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhone">
-                                    <!---
-                                    <input class="form-control w50" type="text" (keypress)="keyPress($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhoneExtn">-->
+                                    <input class="form-contro  w80" type="text"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhone">
+                                    -
+                                    <input class="form-control w50" type="text" (keypress)="keyPress($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhoneExtn">
                                 </div>
                             </div>
 

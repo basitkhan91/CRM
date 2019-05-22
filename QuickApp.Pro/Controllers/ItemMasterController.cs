@@ -504,6 +504,7 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.POCoreCharge = itemMasterViewModel.POCoreCharge;
                 itemmaserObj.SOCoreCharge = itemMasterViewModel.SOCoreCharge;
                 itemmaserObj.IsAlternatePartChecked = itemMasterViewModel.IsAlternatePartChecked;
+                //itemmaserObj.PartAlternatePartId = itemMasterViewModel.PartAlternatePartId;
                 if (itemMasterViewModel.IsSerialized == null)
                 {
                     itemMasterViewModel.IsSerialized = false;
@@ -615,6 +616,7 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
                 itemmaserObj.CreatedDate = DateTime.Now;
                 itemmaserObj.UpdatedDate = DateTime.Now;
+                itemmaserObj.StockLevel = itemMasterViewModel.StockLevel;
                 itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
                 itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
                 itemmaserObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
@@ -815,6 +817,8 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.UnitCost = itemMasterViewModel.UnitCost;
                 itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
                 itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
+                itemmaserObj.StockLevel = itemMasterViewModel.StockLevel;
+                //itemmaserObj.PartAlternatePartId = itemMasterViewModel.PartAlternatePartId;
 
                 if (itemMasterViewModel.AircraftTypeId != null)
                 {

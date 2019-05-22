@@ -439,14 +439,10 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 				this.activeIndex = 1;
 				this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
-                if (this.sourceCustomer.isDefaultContact == true) {
-                    this.sourceCustomer.isDefaultContact = this.isDefaultContact;
-                }
-                else {
-                    this.sourceCustomer.isDefaultContact = null;
-                }
+                this.isDefault = this.sourceCustomer.isDefaultContact;
+              
 				this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(data => {
-					this.loadData();
+                    this.loadData();                  
 					if (data) { this.sourceCustomer = new Object(); }
 
 				})

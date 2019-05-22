@@ -319,7 +319,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'tagDate': roleObject.tagDate,
 			'partDescription': roleObject.partDescription,
             'shelfLife': roleObject.shelfLife,
-			//'alterPartNumber': roleObject.alterPartNumber,
+            'partAlternatePartId': roleObject.partAlternatePartId,
 			'isAlternatePartChecked': roleObject.isAlternatePartChecked,
             'partNumber': roleObject.partNumber,
             'createdDate': roleObject.createdDate,

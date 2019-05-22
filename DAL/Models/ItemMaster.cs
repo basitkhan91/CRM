@@ -93,6 +93,7 @@ namespace DAL.Models
         public bool? SalesIsFixedPrice { get; set; }
         public DateTime? PurchaseLastListPriceAfterDiscountDate { get; set; }
         public long? ItemNonStockClassificationId { get; set; }
+        public int? StockLevel { get; set; }
 
         [ForeignKey("ManufacturerId")]
         public long? ManufacturerId { get; set; }

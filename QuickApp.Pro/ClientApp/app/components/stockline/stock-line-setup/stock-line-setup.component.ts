@@ -115,6 +115,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     showDepError: boolean;
     hasSerialized: boolean;
     showSerialNumberError: boolean;
+    disableSavepartNumber: boolean;
 	ngOnInit(): void
 	{
 		this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
@@ -411,7 +412,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 				if (event == this.itemclaColl[i][0].partName) {
 					this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
 					this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
-					this.selectedActionName = event;
+                    this.selectedActionName = event;
+                    this.disableSavepartNumber = false;
 				}
 			}
 			this.itemser.getDescriptionbypart(event).subscribe(
@@ -729,37 +731,18 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
 	}
-
-	//eventHandler(event) {
-	//	if (event.target.value != "") {
-	//		let value = event.target.value.toLowerCase();
-	//		if (this.selectedActionName) {
-	//			if (value == this.selectedActionName.toLowerCase()) {
-					
-
-	//			}
-	//			else {
-					
-
-	//			}
-	//		}
-
-	//	}
-	//}
+    
 
 	eventHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
-				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
-					//this.disableSavepartNumber = true;
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSavepartNumber = false;
 
 				}
-				else {
-					//this.disableSavepartNumber = false;
-					this.sourceStockLineSetup.partDescription = "";
-					//alert("Please Select Correct PN Number")
+                else {
+                    this.disableSavepartNumber = true
 					
 				}
 			}

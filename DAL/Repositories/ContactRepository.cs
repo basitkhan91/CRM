@@ -86,10 +86,11 @@ namespace DAL.Repositories
                             c.WorkPhone,
                             c.IsActive,
                             vc.CustomerContactId,
+                            vc.IsDefaultContact,
                             vc.CustomerId,
                             c.CreatedDate,
                             c.UpdatedDate,
-                            //vc.IsDefaultContact
+                            c.WorkPhoneExtn,
 
                         }).ToList();
             return data;

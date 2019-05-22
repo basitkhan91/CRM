@@ -240,6 +240,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     capabilityEditCollection: any;
     allGlInfo: GlAccount[];
     allSubChapter: ATAChapter[];
+    disableSaveNHANumber: boolean;
+    disableSaveAlterumber: boolean;
 
 
     constructor(private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -521,6 +523,35 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
     }
+
+    alterPnHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveAlterumber = false;
+                }
+                else {
+                    this.disableSaveAlterumber = true;
+                }
+            }
+
+        }
+    }
+
+
+    onAlterPnSelect(event) {
+        if (this.itemclaColl) {
+            for (let i = 0; i < this.itemclaColl.length; i++) {
+                if (event == this.itemclaColl[i][0].partName) {
+                    this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
+                    this.disableSaveAlterumber = false;
+                    this.selectedActionName = event;
+                }
+            }
+        }
+    }
+
 
 
     private OnCapesLoadSuccessfull(allWorkFlows: any[]) {
@@ -4013,4 +4044,31 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.allSubChapter = data;
     }
 
- }
+    nhaHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveNHANumber = false;
+                }
+                else {
+                    this.disableSaveNHANumber = true;
+                }
+            }
+
+        }
+    }
+
+
+    onNHASelect(event) {
+        if (this.itemclaColl) {
+            for (let i = 0; i < this.itemclaColl.length; i++) {
+                if (event == this.itemclaColl[i][0].partName) {
+                    this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
+                    this.disableSaveNHANumber = false;
+                    this.selectedActionName = event;
+                }
+            }           
+        }
+    }
+}
