@@ -7,5 +7,6 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<UserRole> GetAllUserRoles();
         UserRole GetUserRoles(long userRoleId);
+        IEnumerable<UserRole> GetUserRoleWithPermission(string userId);
     }
 }

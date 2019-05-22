@@ -19,21 +19,26 @@ import { LoginResponse, AccessToken } from '../models/login-response.model';
 import { User } from '../models/user.model';
 import { UserLogin } from '../models/user-login.model';
 import { Permission, PermissionNames, PermissionValues } from '../models/permission.model';
+import { UserRole, ModuleHierarchyMaster, RolePermission } from '../components/user-role/ModuleHierarchyMaster.model';
+import { UserRoleService } from '../components/user-role/user-role-service';
 
 @Injectable()
 export class AuthService {
     public get loginUrl() { return this.configurations.loginUrl; }
+
     public get homeUrl() { return this.configurations.homeUrl; }
 
     public loginRedirectUrl: string;
+
     public logoutRedirectUrl: string;
 
     public reLoginDelegate: () => void;
 
     private previousIsLoggedInCheck = false;
+
     private _loginStatus = new Subject<boolean>();
 
-    constructor(private router: Router, private configurations: ConfigurationService, private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager) {
+    constructor(private router: Router, private configurations: ConfigurationService, private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager,private userRoleService:UserRoleService ) {
         this.initializeLoginStatus();
     }
 
@@ -106,6 +111,67 @@ export class AuthService {
             .map(response => this.processLoginResponse(response, user.rememberMe));
     }
 
+    public checkUserAccessByModuleName(moduleName: string) : boolean {
+        let modules : ModuleHierarchyMaster[] = this.getAllModulesNameFromLocalStorage();
+        var selectedModules =  modules.filter(function (module) {
+            return module.moduleCode == moduleName;
+        });
+
+        if (selectedModules != undefined && selectedModules.length > 0) {
+            let moduleId : number = selectedModules[0].id;
+            let userRoles : UserRole[] = this.getUserRoleWithPermissionFromLocalStorage();
+            for (let userRole of userRoles)
+            {
+                var userAssignedModules = userRole.rolePermissions.filter(function (role: RolePermission) {
+                    return role.moduleHierarchyMasterId == moduleId;
+                });
+
+                if (userAssignedModules != undefined && userAssignedModules.length > 0) {
+                    if (userAssignedModules[0].canAdd || userAssignedModules[0].canUpdate || userAssignedModules[0].canDelete || userAssignedModules[0].canView)
+                    {
+                        return true;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isPermissibleAction(moduleName: string, permissionType: string): boolean {
+
+        let modules: ModuleHierarchyMaster[] = this.getAllModulesNameFromLocalStorage();
+        var selectedModules = modules.filter(function (module) {
+            return module.moduleCode == moduleName;
+        });
+
+        if (selectedModules != undefined && selectedModules.length > 0) {
+            let moduleId: number = selectedModules[0].id;
+            let userRoles: UserRole[] = this.getUserRoleWithPermissionFromLocalStorage();
+            for (let userRole of userRoles) {
+                var userAssignedModules = userRole.rolePermissions.filter(function (role: RolePermission) {
+                    return role.moduleHierarchyMasterId == moduleId;
+                });
+                if (userAssignedModules != undefined && userAssignedModules.length > 0) {
+                    if (userAssignedModules[0][permissionType] != undefined && userAssignedModules[0][permissionType])
+                    {
+                        return true;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
     private processLoginResponse(response: LoginResponse, rememberMe: boolean) {
 
         let accessToken = response.access_token;
@@ -143,7 +209,8 @@ export class AuthService {
         user.isEnabled = true;
 
         this.saveUserDetails(user, permissions, accessToken, refreshToken, accessTokenExpiry, rememberMe);
-
+        this.getUserRolePermissionByUserId(user.id);
+        this.loadAllModulesNameToLocalStorage();
         this.reevaluateLoginStatus(user);
 
         return user;
@@ -168,13 +235,40 @@ export class AuthService {
         this.localStorage.savePermanentData(rememberMe, DBkeys.REMEMBER_ME);
     }
 
+    private loadAllModulesNameToLocalStorage() {
+        this.userRoleService.getAllModuleHierarchies().subscribe(result => {
+            this.localStorage.saveSyncedSessionData(result[0], DBkeys.Module_Hierarchy);
+        });
+    }
+
+    public getAllModulesNameFromLocalStorage() : ModuleHierarchyMaster[] {
+        return this.localStorage.getData(DBkeys.Module_Hierarchy);
+    }
+
+    private getUserRolePermissionByUserId(userId: string) {
+        this.userRoleService.getUserRoleByUserId(userId).subscribe(roles => {
+            this.saveUserRoleWithPermission(roles[0]);
+        },
+        error => {
+            console.log('Error while retreiving roles.');
+        });
+    }
+
+    public getUserRoleWithPermissionFromLocalStorage(){
+        return this.localStorage.getData(DBkeys.User_Role_Permission);
+    }
+
+    private saveUserRoleWithPermission(userRole: UserRole[]) {
+        this.localStorage.saveSyncedSessionData(userRole, DBkeys.User_Role_Permission);
+    }
+
     logout(): void {
         this.localStorage.deleteData(DBkeys.ACCESS_TOKEN);
         this.localStorage.deleteData(DBkeys.REFRESH_TOKEN);
         this.localStorage.deleteData(DBkeys.TOKEN_EXPIRES_IN);
         this.localStorage.deleteData(DBkeys.USER_PERMISSIONS);
         this.localStorage.deleteData(DBkeys.CURRENT_USER);
-
+        this.localStorage.deleteData(DBkeys.User_Role_Permission);
         this.configurations.clearLocalChanges();
 
         this.reevaluateLoginStatus();

@@ -30,14 +30,14 @@ declare const google: any;
 })
 /** VendorShippingInformation component*/
 export class VendorShippingInformationComponent {
-	modelValue: boolean;
-	display: boolean;
-	activeIndex: number;
-	public overlays: any[];
-	options: any;
-	shipViaCollection: any;
-	allShipViaDetails: any[];
-	updatedCollection: {};
+    modelValue: boolean;
+    display: boolean;
+    activeIndex: number;
+    public overlays: any[];
+    options: any;
+    shipViaCollection: any;
+    allShipViaDetails: any[];
+    updatedCollection: {};
     vendorshippingAddressdetails: any;
     local: any;
     addressId: any;
@@ -52,33 +52,33 @@ export class VendorShippingInformationComponent {
     updatedBy: any = "";
     createddate: any = "";
     updatedDate: any = "";
-	shipViaObj: any = {};
-	checkAddress: boolean = false;
-	viewName: string = "Create"; 
-	siteName: any;
-	address1: any;
-	address2: any;
-	address3: any;
-	city: any;
-	stateOrProvince: any;
-	postalCode: number;
-	country: any;
+    shipViaObj: any = {};
+    checkAddress: boolean = false;
+    viewName: string = "Create";
+    siteName: any;
+    address1: any;
+    address2: any;
+    address3: any;
+    city: any;
+    stateOrProvince: any;
+    postalCode: number;
+    country: any;
     selectedShipVia: any;
     shipviacollection: any[];
     ngOnInit(): void {
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl); 
-		if (this.local) {
-			this.loadData();
-		}
-		this.countrylist();
-		this.options = {
-			center: { lat: 36.890257, lng: 30.707417 },
-			zoom: 12
-		};
-        
+        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        if (this.local) {
+            this.loadData();
+        }
+        this.countrylist();
+        this.options = {
+            center: { lat: 36.890257, lng: 30.707417 },
+            zoom: 12
+        };
+
     }
-     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
     displayedColumns = ['actionId', 'companyName', 'description', 'memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
@@ -92,11 +92,11 @@ export class VendorShippingInformationComponent {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-	selectedColumns: any[];
-	selectedShipViaColumn: any[];
-	selectedShipViaColumns: any[];
-	cols: any[];
-	shipViacols: any[];
+    selectedColumns: any[];
+    selectedShipViaColumn: any[];
+    selectedShipViaColumns: any[];
+    cols: any[];
+    shipViacols: any[];
     title: string = "Create";
     id: number;
     errorMessage: any;
@@ -104,65 +104,65 @@ export class VendorShippingInformationComponent {
     actionName: string;
     Active: string = "Active";
     length: number;
-	localCollection: any;
-	allCountryinfo: any[];
-	disablesave: boolean;
-	countrycollection: any;
-	selectedCountries: any;
+    localCollection: any;
+    allCountryinfo: any[];
+    disablesave: boolean;
+    countrycollection: any;
+    selectedCountries: any;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		this.dataSource = new MatTableDataSource();
-		if (this.local) {
-			this.workFlowtService.contactCollection = this.local;
-		}
-		if (this.workFlowtService.generalCollection) {
-			this.local = this.workFlowtService.generalCollection;
-		}
-		if (this.workFlowtService.paymentCollection) {
-			this.local = this.workFlowtService.paymentCollection;
-		}
-		this.dataSource = new MatTableDataSource();
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-			this.local = this.workFlowtService.listCollection.t;
-		}
-		if (this.workFlowtService.paymentCollection) {
+        this.dataSource = new MatTableDataSource();
+        if (this.local) {
+            this.workFlowtService.contactCollection = this.local;
+        }
+        if (this.workFlowtService.generalCollection) {
+            this.local = this.workFlowtService.generalCollection;
+        }
+        if (this.workFlowtService.paymentCollection) {
+            this.local = this.workFlowtService.paymentCollection;
+        }
+        this.dataSource = new MatTableDataSource();
+        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+            this.local = this.workFlowtService.listCollection.t;
+        }
+        if (this.workFlowtService.paymentCollection) {
             this.local = this.workFlowtService.paymentCollection;
             this.sourceVendor.siteName = this.local.vendorName;
-			this.sourceVendor.address1 = this.local.address1;
-			this.sourceVendor.address2 = this.local.address2;
-			this.sourceVendor.address3 = this.local.address3;
-			this.sourceVendor.city = this.local.city;
-			this.sourceVendor.country = this.local.country;
-			this.sourceVendor.stateOrProvince = this.local.stateOrProvince;
-			this.sourceVendor.postalCode = this.local.PostalCode;
-		}
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-			this.viewName = "Edit";
-			this.local = this.workFlowtService.listCollection;
-			this.loadData();
-		}
+            this.sourceVendor.address1 = this.local.address1;
+            this.sourceVendor.address2 = this.local.address2;
+            this.sourceVendor.address3 = this.local.address3;
+            this.sourceVendor.city = this.local.city;
+            this.sourceVendor.country = this.local.country;
+            this.sourceVendor.stateOrProvince = this.local.stateOrProvince;
+            this.sourceVendor.postalCode = this.local.PostalCode;
+        }
+        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+            this.viewName = "Edit";
+            this.local = this.workFlowtService.listCollection;
+            this.loadData();
+        }
     }
     public sourceVendor: any = {};
-   
+
     ngAfterViewInit() {
-	}
-	getlatlng(address) {
-		this.checkAddress = true;
-		return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-			this.options = {
-				center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
-				zoom: 12
-			};
-			this.overlays = [
-				new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
-			];
-			return data;
-		});
-	}
-    
+    }
+    getlatlng(address) {
+        this.checkAddress = true;
+        return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
+            this.options = {
+                center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
+                zoom: 12
+            };
+            this.overlays = [
+                new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
+            ];
+            return data;
+        });
+    }
+
     private getgeneralInnfo() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -201,62 +201,62 @@ export class VendorShippingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-		this.workFlowtService.getVendorShipAddressGet(this.local.vendorId).subscribe(
+        this.workFlowtService.getVendorShipAddressGet(this.local.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
         this.cols = [
             { field: 'siteName', header: 'Site Name' },
-			{ field: 'address1', header: 'Address1' },
-			{ field: 'address2', header: 'Address2' },
-			{ field: 'address3', header: 'Address3' },
+            { field: 'address1', header: 'Address1' },
+            { field: 'address2', header: 'Address2' },
+            { field: 'address3', header: 'Address3' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
-			{ field: 'postalCode', header: 'Postal Code' },
+            { field: 'postalCode', header: 'Postal Code' },
             { field: 'country', header: 'Country' }
         ];
         this.selectedColumns = this.cols;
-	}
-	
-	private countrylist() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.workFlowtService.getCountrylist().subscribe(
-			results => this.onDatacountrySuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+    }
 
-	private onDatacountrySuccessful(allWorkFlows: any[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allCountryinfo = allWorkFlows;
-	}
+    private countrylist() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getCountrylist().subscribe(
+            results => this.onDatacountrySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-	private loadShipViaCollection(rowData) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.workFlowtService.getVendorShipViaDetails(rowData).subscribe(
-			results => this.onShipViadetails(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-		this.shipViacols = [
-			{ field: 'shipVia', header: 'Ship Via' },
-			{ field: 'shippingAccountinfo', header: 'Shipping Account Info' },
-			{ field: 'shippingURL', header: 'Shipping Url' },
-			{ field: 'shippingId', header: 'Shipping Id' },
-			{ field: 'memo', header: 'Memo' }
-		];
-		this.selectedShipViaColumn = this.shipViacols;
-	}
-	openShipViaEdit(rowObject) {
-		this.isEditMode = true;
-		this.isSaving = true;
-		this.shipViaObj = rowObject;
-		this.loadMasterCompanies();
-	}
-	private loadMasterCompanies() {
+    private onDatacountrySuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allCountryinfo = allWorkFlows;
+    }
+
+    private loadShipViaCollection(rowData) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getVendorShipViaDetails(rowData).subscribe(
+            results => this.onShipViadetails(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+        this.shipViacols = [
+            { field: 'shipVia', header: 'Ship Via' },
+            { field: 'shippingAccountinfo', header: 'Shipping Account Info' },
+            { field: 'shippingURL', header: 'Shipping Url' },
+            { field: 'shippingId', header: 'Shipping Id' },
+            { field: 'memo', header: 'Memo' }
+        ];
+        this.selectedShipViaColumn = this.shipViacols;
+    }
+    openShipViaEdit(rowObject) {
+        this.isEditMode = true;
+        this.isSaving = true;
+        this.shipViaObj = rowObject;
+        this.loadMasterCompanies();
+    }
+    private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.masterComapnyService.getMasterCompanies().subscribe(
@@ -289,14 +289,14 @@ export class VendorShippingInformationComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-		this.allActions = allWorkFlows;
-	}
-	private onShipViadetails(allWorkFlows: any) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allShipViaDetails = allWorkFlows;
-	}
+        this.allActions = allWorkFlows;
+    }
+    private onShipViadetails(allWorkFlows: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allShipViaDetails = allWorkFlows;
+    }
 
     filterActions(event) {
         this.localCollection = [];
@@ -357,15 +357,15 @@ export class VendorShippingInformationComponent {
         this.loadMasterCompanies();
     }
     openView(content, row) {
-        this.sourceVendor = row;		
-		this.siteName = row.siteName;
-		this.address1 = row.address1;
-		this.city = row.city;
-		this.stateOrProvince = row.stateOrProvince;
-		this.postalCode = row.postalCode;
-		this.country = row.country;		
-		this.address2 = row.address2;
-		this.address3 = row.address3;		
+        this.sourceVendor = row;
+        this.siteName = row.siteName;
+        this.address1 = row.address1;
+        this.city = row.city;
+        this.stateOrProvince = row.stateOrProvince;
+        this.postalCode = row.postalCode;
+        this.country = row.country;
+        this.address2 = row.address2;
+        this.address3 = row.address3;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createddate = row.createdDate;
@@ -388,136 +388,136 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = true;
         this.shipViaObj = row;
         this.isSaving = true;
-		this.workFlowtService.shipviaHistory(this.sourceVendor.vendorShippingId).subscribe(
+        this.workFlowtService.shipviaHistory(this.sourceVendor.vendorShippingId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
-	}
-	openShipaddressHistory(content, row) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.sourceVendor = row;
-		this.isSaving = true;
-		this.workFlowtService.shipaddressHistory(this.sourceVendor.vendorShippingAddressId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
-	}
+    }
+    openShipaddressHistory(content, row) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.sourceVendor = row;
+        this.isSaving = true;
+        this.workFlowtService.shipaddressHistory(this.sourceVendor.vendorShippingAddressId).subscribe(
+            results => this.onHistoryLoadSuccessful(results[0], content),
+            error => this.saveFailedHelper(error));
+    }
 
     editItemAndCloseModel() {
-		this.isSaving = true;
-		if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
-			this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country
-		)) {
-			this.display = true;
-			this.modelValue = true;
-		}
-		if (this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
-			this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country) {
-			if (!this.sourceVendor.vendorId) {
-				this.sourceVendor.createdBy = this.userName;
-				this.sourceVendor.updatedBy = this.userName;
-				this.sourceVendor.masterCompanyId = 1;
-				this.sourceVendor.vendorId = this.local.vendorId;
-				this.workFlowtService.newShippingAdd(this.sourceVendor).subscribe(data => {
-					this.localCollection = data;
-					this.loadData();
-					this.savesuccessCompleted(this.sourceVendor);
-					this.sourceVendor = {};
-				})
-			}
-			else {
-				this.sourceVendor.isActive = true;
-				this.sourceVendor.updatedBy = this.userName;
+        this.isSaving = true;
+        if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
+            this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country
+        )) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        if (this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
+            this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country) {
+            if (!this.sourceVendor.vendorId) {
+                this.sourceVendor.createdBy = this.userName;
+                this.sourceVendor.updatedBy = this.userName;
+                this.sourceVendor.masterCompanyId = 1;
+                this.sourceVendor.vendorId = this.local.vendorId;
+                this.workFlowtService.newShippingAdd(this.sourceVendor).subscribe(data => {
+                    this.localCollection = data;
+                    this.loadData();
+                    this.savesuccessCompleted(this.sourceVendor);
+                    this.sourceVendor = {};
+                })
+            }
+            else {
+                this.sourceVendor.isActive = true;
+                this.sourceVendor.updatedBy = this.userName;
 
-				this.sourceVendor.masterCompanyId = 1;
-				this.workFlowtService.updateshippinginfo(this.sourceVendor).subscribe(data => {
-					this.updatedCollection = data;
-					this.loadData();
-					this.sourceVendor = {};
-				})
-			}
+                this.sourceVendor.masterCompanyId = 1;
+                this.workFlowtService.updateshippinginfo(this.sourceVendor).subscribe(data => {
+                    this.updatedCollection = data;
+                    this.loadData();
+                    this.sourceVendor = {};
+                })
+            }
 
-		}
-	}
-	saveVendorShipViaDetails() {
-		this.isSaving = true;
-		if (!this.shipViaObj.vendorShippingId) {
-			this.shipViaObj.createdBy = this.userName;
-			this.shipViaObj.updatedBy = this.userName;
-			this.shipViaObj.masterCompanyId = 1;
-			this.shipViaObj.isActive = true;
-			this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
-				this.shipViaCollection = data;
-				this.loadShipViaCollection(this.shipViaCollection);
-			if (this.shipViaCollection) {
-				this.shipViaObj.shipVia = "";
-				this.shipViaObj.shippingAccountinfo = "";
-				this.shipViaObj.shippingURL = "";
-				this.shipViaObj.shippingId = "";
-				this.shipViaObj.memo = "";
-				}
-			})
-		}
-		else {
+        }
+    }
+    saveVendorShipViaDetails() {
+        this.isSaving = true;
+        if (!this.shipViaObj.vendorShippingId) {
+            this.shipViaObj.createdBy = this.userName;
+            this.shipViaObj.updatedBy = this.userName;
+            this.shipViaObj.masterCompanyId = 1;
+            this.shipViaObj.isActive = true;
+            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
+                this.shipViaCollection = data;
+                this.loadShipViaCollection(this.shipViaCollection);
+                if (this.shipViaCollection) {
+                    this.shipViaObj.shipVia = "";
+                    this.shipViaObj.shippingAccountinfo = "";
+                    this.shipViaObj.shippingURL = "";
+                    this.shipViaObj.shippingId = "";
+                    this.shipViaObj.memo = "";
+                }
+            })
+        }
+        else {
 
-			this.sourceVendor.updatedBy = this.userName;
-			this.sourceVendor.masterCompanyId = 1;
-			this.shipViaObj.isActive = true;
-			this.workFlowtService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
-				this.shipViaCollection = data;
-				this.loadShipViaCollection(this.shipViaCollection);
-				if (this.shipViaCollection) {
-					this.shipViaObj.shipVia = "";
-					this.shipViaObj.shippingAccountinfo = "";
-					this.shipViaObj.shippingURL = "";
-					this.shipViaObj.shippingId = "";
-					this.shipViaObj.memo = "";
-				}
-			})
-		}
+            this.sourceVendor.updatedBy = this.userName;
+            this.sourceVendor.masterCompanyId = 1;
+            this.shipViaObj.isActive = true;
+            this.workFlowtService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
+                this.shipViaCollection = data;
+                this.loadShipViaCollection(this.shipViaCollection);
+                if (this.shipViaCollection) {
+                    this.shipViaObj.shipVia = "";
+                    this.shipViaObj.shippingAccountinfo = "";
+                    this.shipViaObj.shippingURL = "";
+                    this.shipViaObj.shippingId = "";
+                    this.shipViaObj.memo = "";
+                }
+            })
+        }
 
-	}
+    }
 
-	previousClick() {
-		this.activeIndex = 3;
-		this.workFlowtService.indexObj.next(this.activeIndex);
-		this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
-	}
-	openShipVia(content,rowData) {
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.shipViaObj = rowData;
-		this.shipViaObj.shipVia = "";
-		this.shipViaObj.shippingAccountinfo = "";
-		this.shipViaObj.shippingURL = "";
-		this.shipViaObj.shippingId = "";
-		this.shipViaObj.memo = "";
-		this.isSaving = true;
-		this.loadShipViaCollection(rowData);
-		this.loadMasterCompanies();
-		this.sourceAction.isActive = true;
-		this.modal = this.modalService.open(content, { size: 'lg' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+    previousClick() {
+        this.activeIndex = 3;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
+    }
+    openShipVia(content, rowData) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.shipViaObj = rowData;
+        this.shipViaObj.shipVia = "";
+        this.shipViaObj.shippingAccountinfo = "";
+        this.shipViaObj.shippingURL = "";
+        this.shipViaObj.shippingId = "";
+        this.shipViaObj.memo = "";
+        this.isSaving = true;
+        this.loadShipViaCollection(rowData);
+        this.loadMasterCompanies();
+        this.sourceAction.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
     updateVendorShippingAddress(updateObj: any) {
-         debugger;
+        debugger;
         this.workFlowtService.updateVendorShippingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
             this.vendorshippingAddressdetails = data;
-            this.workFlowtService.newShippingAddWithAddress(this.sourceVendor,this.vendorshippingAddressdetails.vendorShippingAddressId).subscribe(data => {
+            this.workFlowtService.newShippingAddWithAddress(this.sourceVendor, this.vendorshippingAddressdetails.vendorShippingAddressId).subscribe(data => {
                 this.localCollection = data;
                 this.updateVendorShippingAddress(this.localCollection);
             })
             this.loadData();
         })
     }
-    
-	deleteItemAndCloseModel(vendorShippingAddressId) {
+
+    deleteItemAndCloseModel(vendorShippingAddressId) {
         this.isSaving = true;
         this.sourceVendor.isActive = false;
-		this.sourceVendor.addressStatus = false;
-		this.sourceVendor.updatedBy = this.userName;
+        this.sourceVendor.addressStatus = false;
+        this.sourceVendor.updatedBy = this.userName;
         this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
         this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
             response => this.saveCompleted(this.sourceVendor),
@@ -525,24 +525,24 @@ export class VendorShippingInformationComponent {
     }
 
     deleteItemShippingCloseModel(vendorShippingId) {
-		this.isSaving = true;
-		this.shipViaObj.isActive = true;
+        this.isSaving = true;
+        this.shipViaObj.isActive = true;
         this.shipViaObj.updatedBy = this.userName;
         this.shipViaObj.vendorShippingId = vendorShippingId;
-		this.workFlowtService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
-			this.loadShipViaCollection(data);
-		})
+        this.workFlowtService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
+            this.loadShipViaCollection(data);
+        })
     }
     dismissShipViaModelModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();
-	}
-	dismissModel() {
-		this.isDeleteMode = false;
-		this.isEditMode = false;
-		this.modal.close();
-	}
+    }
+    dismissModel() {
+        this.isDeleteMode = false;
+        this.isEditMode = false;
+        this.modal.close();
+    }
     private saveCompleted(user?: any) {
         this.isSaving = false;
         if (this.isDeleteMode == true) {
@@ -551,14 +551,14 @@ export class VendorShippingInformationComponent {
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-             }
+        }
         this.loadData();
     }
-	private savesuccessCompleted(user?: any) {
-		this.isSaving = false;
-		this.alertService.showMessage("Success", `Action was added successfully`, MessageSeverity.success);
+    private savesuccessCompleted(user?: any) {
+        this.isSaving = false;
+        this.alertService.showMessage("Success", `Action was added successfully`, MessageSeverity.success);
         this.loadData();
-	}
+    }
 
     private saveSuccessHelper(role?: any) {
         this.isSaving = false;
@@ -586,113 +586,113 @@ export class VendorShippingInformationComponent {
         } else {
             return `with: ${reason}`;
         }
-	}
+    }
 
-	toggledbldisplay(data) {
-		this.sourceVendor = data;
-	}
-	nextClick() {
-		if (this.local) {
-			this.workFlowtService.shippingCollection = this.local;
-		}
-		this.activeIndex = 5;
-		this.workFlowtService.indexObj.next(this.activeIndex);
-		this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
-	}
-	handleChanges(rowData, e) {
-		if (e.checked == false) {
-			this.sourceVendor = rowData;
-			this.sourceVendor.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourceVendor.isActive == false;
+    toggledbldisplay(data) {
+        this.sourceVendor = data;
+    }
+    nextClick() {
+        if (this.local) {
+            this.workFlowtService.shippingCollection = this.local;
+        }
+        this.activeIndex = 5;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+    }
+    handleChanges(rowData, e) {
+        if (e.checked == false) {
+            this.sourceVendor = rowData;
+            this.sourceVendor.updatedBy = this.userName;
+            this.Active = "In Active";
+            this.sourceVendor.isActive == false;
             this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
-				response => this.saveCompleted(this.sourceVendor),
+                response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
-		}
-		else {
-			this.sourceVendor = rowData;
-			this.sourceVendor.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourceVendor.isActive == true;
+        }
+        else {
+            this.sourceVendor = rowData;
+            this.sourceVendor.updatedBy = this.userName;
+            this.Active = "Active";
+            this.sourceVendor.isActive == true;
             this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
-				response => this.saveCompleted(this.sourceVendor),
+                response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
-		}
+        }
 
-	}
-	onCountrieselected(event) {
-		if (this.allCountryinfo) {
-			for (let i = 0; i < this.allCountryinfo.length; i++) {
-				if (event == this.allCountryinfo[i].nice_name) {
+    }
+    onCountrieselected(event) {
+        if (this.allCountryinfo) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                if (event == this.allCountryinfo[i].nice_name) {
                     this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
                     this.disablesave = false;
-					this.selectedCountries = event;
-				}
-			}
-		}
-	}
-	eventCountryHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedCountries) {
+                    this.selectedCountries = event;
+                }
+            }
+        }
+    }
+    eventCountryHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
                 if (value == this.selectedCountries.toLowerCase()) {
                     this.disablesave = false;
-				}
+                }
                 else {
                     this.disablesave = true;
-				}
-			}
+                }
+            }
 
-		}
-	}
-	filtercountry(event) {
-		this.countrycollection = [];
-		if (this.allCountryinfo) {
-			for (let i = 0; i < this.allCountryinfo.length; i++) {
-				let countryName = this.allCountryinfo[i].nice_name;
-				if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.countrycollection.push(countryName);
-				}
-			}
-		}
-	}
-	onShipVia(event) {
-		if (this.allShipViaDetails) {
-			for (let i = 0; i < this.allShipViaDetails.length; i++) {
-				if (event == this.allShipViaDetails[i].shipVia) {
-					this.shipViaObj.shipVia = this.allShipViaDetails[i].shipVia;
-					this.selectedShipVia = event;
-				}
-			}
-		}
-	}
+        }
+    }
+    filtercountry(event) {
+        this.countrycollection = [];
+        if (this.allCountryinfo) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                let countryName = this.allCountryinfo[i].nice_name;
+                if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.countrycollection.push(countryName);
+                }
+            }
+        }
+    }
+    onShipVia(event) {
+        if (this.allShipViaDetails) {
+            for (let i = 0; i < this.allShipViaDetails.length; i++) {
+                if (event == this.allShipViaDetails[i].shipVia) {
+                    this.shipViaObj.shipVia = this.allShipViaDetails[i].shipVia;
+                    this.selectedShipVia = event;
+                }
+            }
+        }
+    }
 
-	eventShipviaHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedShipVia) {
-				if (value == this.selectedShipVia.toLowerCase()) {
-					this.disablesave = true;
-				}
-				else {
-					this.disablesave = false;
-				}
-			}
+    eventShipviaHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedShipVia) {
+                if (value == this.selectedShipVia.toLowerCase()) {
+                    this.disablesave = true;
+                }
+                else {
+                    this.disablesave = false;
+                }
+            }
 
-		}
-	}
-	filterShipVia(event) {
-		this.shipviacollection = [];
-		if (this.allShipViaDetails.length > 0) {
-			for (let i = 0; i < this.allShipViaDetails.length; i++) {
-				let shipName = this.allShipViaDetails[i].shipVia;
-				if (shipName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.shipviacollection.push(shipName);
-				}
-			}
-		}
-	}
+        }
+    }
+    filterShipVia(event) {
+        this.shipviacollection = [];
+        if (this.allShipViaDetails.length > 0) {
+            for (let i = 0; i < this.allShipViaDetails.length; i++) {
+                let shipName = this.allShipViaDetails[i].shipVia;
+                if (shipName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.shipviacollection.push(shipName);
+                }
+            }
+        }
+    }
 }
-	
+

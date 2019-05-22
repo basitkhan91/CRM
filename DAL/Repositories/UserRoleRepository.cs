@@ -41,6 +41,16 @@ namespace DAL.Repositories
             return data;
         }
 
+        public IEnumerable<UserRole> GetUserRoleWithPermission(string userId) {
+
+            var roleIds =  _appContext.UserRoleMapper.Where(x => x.UserId.Equals(new Guid(userId)))
+                                .Select(x => x.UserRoleId)
+                                .ToList();
+            var roles = _appContext.UserRole.Include("RolePermissions").Where(x => roleIds.Contains(x.Id) && x.isDelete == false).ToList();
+
+            return roles;
+        }
+
         #endregion Public Methods
 
     }

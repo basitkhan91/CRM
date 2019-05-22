@@ -4,34 +4,38 @@ import { AlertService, MessageSeverity } from "../../services/alert.service";
 import { OnInit, Component } from "@angular/core";
 import { fadeInOut } from "../../services/animations";
 import { UserRoleService } from "./user-role-service";
-import { ModuleHierarchyMaster, UserRole, RolePermission } from "./ModuleHierarchyMaster.model";
+import { ModuleHierarchyMaster, UserRole, RolePermission, User } from "./ModuleHierarchyMaster.model";
 import { forEach } from "@angular/router/src/utils/collection";
 import { single } from "rxjs/operators";
 import { Role } from "../../models/role.model";
 
 @Component({
-    selector: 'app-roles-setup',
-    templateUrl: './user-role-setup.component.html',
+    selector: 'edit-app-roles',
+    templateUrl: './edit-user-roles.component.html',
     styleUrls: [],
     animations: [fadeInOut]
 })
 
-export class UserRolesSetupComponent implements OnInit {
+export class EditUserRolesComponent implements OnInit {
     public moduleHierarchy: ModuleHierarchyMaster[];
     public sortedHierarchy: ModuleHierarchyMaster[] = [];
     public selectedHierarchy: ModuleHierarchyMaster[] = [];
     public currentUserRole: UserRole;
     public pages: ModuleHierarchyMaster[];
     public pagesToHide: ModuleHierarchyMaster[];
+    public userRoles: UserRole[] = [];
+
     constructor(private messageService: MessageService, private authService: AuthService, private alertService: AlertService, private userRoleService: UserRoleService) {
 
     }
 
     ngOnInit(): void {
         this.getAllModuleHierarchies();
+        this.getAllUserRoles();
         this.currentUserRole = new UserRole();
         this.currentUserRole.rolePermissions = [];
         this.pages = [];
+        this.currentUserRole.id = 0;
     }
 
     getAllModuleHierarchies(): void {
@@ -42,6 +46,7 @@ export class UserRolesSetupComponent implements OnInit {
     }
 
     sortModules(): void {
+        this.sortedHierarchy = [];
         var parentModules = this.moduleHierarchy.filter(function (module) {
             return module.parentId == null;
         });
@@ -61,14 +66,7 @@ export class UserRolesSetupComponent implements OnInit {
         }
 
     }
-
-    resetRolePermission(rolePermission: RolePermission): void {
-        rolePermission.canAdd = false;
-        rolePermission.canView = false;
-        rolePermission.canDelete = false;
-        rolePermission.canUpdate = false;
-    }
-
+    
     hasChild(currentModule: ModuleHierarchyMaster) {
         var modules = this.moduleHierarchy.filter(function (module: ModuleHierarchyMaster) {
             return module.parentId == currentModule.id;
@@ -77,7 +75,7 @@ export class UserRolesSetupComponent implements OnInit {
             currentModule.hasChildren = true;
             for (let module of modules) {
                 module.level = currentModule.level + 1;
-                module.visible = false;
+                module.visible = true;
                 module.parentId = currentModule.id;
                 module.rolePermission = new RolePermission();
                 this.resetRolePermission(module.rolePermission);
@@ -85,6 +83,13 @@ export class UserRolesSetupComponent implements OnInit {
                 this.hasChild(module);
             }
         }
+    }
+
+    resetRolePermission(rolePermission: RolePermission): void {
+        rolePermission.canAdd = false;
+        rolePermission.canView = false;
+        rolePermission.canDelete = false;
+        rolePermission.canUpdate = false;
     }
 
     showChildModules(currentModule: ModuleHierarchyMaster, event): void {
@@ -118,6 +123,48 @@ export class UserRolesSetupComponent implements OnInit {
         }
     }
 
+    getAllUserRoles() {
+        return this.userRoleService.getAllUserRole().subscribe(result => {
+            this.userRoles = result[0];
+        });
+    }
+
+    userRoleChanged(event): void {
+        this.sortModules();
+        this.currentUserRole.rolePermissions = [];
+
+        if (this.currentUserRole.id != 0) {
+            let userRoleId: number = this.currentUserRole.id;
+            let selectedUserRole: UserRole = this.userRoles.filter(function (userRole: UserRole) {
+                return userRole.id == userRoleId;
+            })[0];
+
+            this.currentUserRole.name = selectedUserRole.name;
+            for (let modules of this.sortedHierarchy) {
+
+                let rolePermission: RolePermission[] = selectedUserRole.rolePermissions.filter(function (rolePermission) {
+                    return rolePermission.moduleHierarchyMasterId == modules.id;
+                });
+
+                if (rolePermission != undefined && rolePermission.length > 0) {
+                    modules.rolePermission.canAdd = rolePermission[0].canAdd;
+                    modules.rolePermission.canUpdate = rolePermission[0].canUpdate;
+                    modules.rolePermission.canDelete = rolePermission[0].canDelete;
+                    modules.rolePermission.canView = rolePermission[0].canView;
+                    rolePermission[0].id = 0;
+                    
+                    this.currentUserRole.rolePermissions.push(Object.assign({}, rolePermission[0]));
+                }
+                else {
+                    modules.rolePermission.canAdd = false;
+                    modules.rolePermission.canUpdate = false;
+                    modules.rolePermission.canDelete = false;
+                    modules.rolePermission.canView = false;
+                }
+            }
+        }
+    }
+    
     setPermissionByType(currentModule: ModuleHierarchyMaster, type: string, value: boolean) {
         if (type == 'canView')
             currentModule.rolePermission.canView = value;
@@ -190,7 +237,9 @@ export class UserRolesSetupComponent implements OnInit {
         }
         else {
             var currentRolePermission = Object.assign({}, currentModule.rolePermission);
+            currentRolePermission.userRoleId = this.currentUserRole.id;
             currentRolePermission.moduleHierarchyMasterId = currentModule.id;
+            currentRolePermission.id = 0;
             this.currentUserRole.rolePermissions.push(currentRolePermission);
         }
 
@@ -218,16 +267,22 @@ export class UserRolesSetupComponent implements OnInit {
         }
     }
 
-    addUserRole(): void {
-        this.userRoleService.add(this.currentUserRole).subscribe(
+    UpdateUserRole(): void {
+        debugger;
+        this.userRoleService.update(this.currentUserRole).subscribe(
             result => {
-                this.alertService.showMessage('User Role', this.currentUserRole.name + ' Role added successfully.', MessageSeverity.success);
+                debugger;
+                this.alertService.showMessage('User Role', this.currentUserRole.name + ' Role updated successfully.', MessageSeverity.success);
                 for (let module of this.sortedHierarchy) {
                     this.resetRolePermission(module.rolePermission);
                 }
                 this.currentUserRole = new UserRole();
+                this.currentUserRole.id = 0;
                 this.currentUserRole.rolePermissions = [];
                 this.pages = [];
+                this.userRoleService.getAllUserRole().subscribe(result => {
+                    this.userRoles = result[0];
+                });
             },
             error => {
                 var message = '';

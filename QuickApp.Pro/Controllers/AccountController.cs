@@ -524,7 +524,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(Mapper.Map<List<PermissionViewModel>>(ApplicationPermissions.AllPermissions));
         }
 
-
+        
 
         private async Task<UserViewModel> GetUserViewModelHelper(string userId)
         {

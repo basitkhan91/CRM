@@ -24,4 +24,6 @@ export class DBkeys {
     public static readonly SHOW_DASHBOARD_NOTIFICATIONS = "show_dashboard_notifications";
     public static readonly SHOW_DASHBOARD_TODO = "show_dashboard_todo";
     public static readonly SHOW_DASHBOARD_BANNER = "show_dashboard_banner";
+    public static readonly User_Role_Permission = "user_role_permission";
+    public static readonly Module_Hierarchy = "module_hierarchy";
 }

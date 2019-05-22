@@ -185,20 +185,24 @@ import { AccountCalenderEndpointService } from "./services/account-calender/acco
 import { ActionsButtonsComponent } from "./components/ActionButtons/actions-buttons.component";
 import { InterCompanySetupService } from "./services/intercompany-setup-service";
 import { InterCompanySetupEndPointService } from "./services/intercompany-setup-endpoint.service";
+import { UserRoleEndPointService } from "./components/user-role/user-role-endpoint.service";
+import { UserRoleService } from "./components/user-role/user-role-service";
+import { RolesGuardService } from "./services/roles-guard.service";
+import { UnauthorizedAccessComponent } from "../unauthorizedaccess/unauthorized-access.component";
 
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 
 
 @NgModule({
-    imports: [
-        SharedModule,
-        FooterModule,
+	imports: [
+		SharedModule,
+		FooterModule,
         ThemePickerModule,
-        HttpClientModule,
-        AdminModule,
+		HttpClientModule,		
+        AdminModule,       
         SettingsModule,
-        AppRoutingModule,
+		AppRoutingModule,
 
         TranslateModule.forRoot({
             loader: {
@@ -206,10 +210,10 @@ import { InterCompanySetupEndPointService } from "./services/intercompany-setup-
                 useClass: TranslateLanguageLoader
             }
         }),
-        ToastyModule.forRoot(),
-        ChartsModule,
-        NgbModule.forRoot(),
-
+		ToastyModule.forRoot(),
+	    ChartsModule,       
+		NgbModule.forRoot(),
+		
     ],
     declarations: [
         AppComponent,
@@ -229,14 +233,13 @@ import { InterCompanySetupEndPointService } from "./services/intercompany-setup-
         NotificationsViewerComponent,
         AddTaskDialogComponent,
         StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
-        ActionsButtonsComponent
-
-        //AuditComponent
-
+        ActionsButtonsComponent,
+        UnauthorizedAccessComponent,
+		
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
-        { provide: ErrorHandler, useClass: AppErrorHandler },
+		{ provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,
         ConfigurationService,
         AppTitleService,
@@ -252,19 +255,19 @@ import { InterCompanySetupEndPointService } from "./services/intercompany-setup-
         ActionService,
         ActionEndpoint,
         AtaMainService,
-        ATAMainEndpoint,
-        AtaSubChapter1Service,
-        ATASubChapter1Endpoint,
-        AtaSubChapter2Service,
-        ATASubChapter2Endpoint,
-        SiteService,
-        SiteEndpoint,
-        WarehouseService,
-        WarehouseEndpoint,
-        BinService,
-        BinEndpoint,
-        GLAccountCategoryService,
-        GLAccountCategoryEndpointservice,
+		ATAMainEndpoint,
+		AtaSubChapter1Service,
+		ATASubChapter1Endpoint,
+		AtaSubChapter2Service,
+		ATASubChapter2Endpoint,
+		SiteService,
+		SiteEndpoint,
+		WarehouseService,
+		WarehouseEndpoint,
+		BinService,
+		BinEndpoint,
+		GLAccountCategoryService,
+		GLAccountCategoryEndpointservice,
         NgbActiveModal,
         MasterCompanyEndpoint,
         MasterComapnyService,
@@ -294,9 +297,9 @@ import { InterCompanySetupEndPointService } from "./services/intercompany-setup-
         ItemClassificationEndpointService,
         ItemGroupService,
         ItemgroupEndpointService,
-        TaxRateService,
-        ManufacturerService,
-        ManufacturerEndpoint,
+		TaxRateService,
+		ManufacturerService,
+		ManufacturerEndpoint,
         TaxRateEndpointService,
         VendorClassificationService,
         VendorClassificationEndpoint,
@@ -325,39 +328,39 @@ import { InterCompanySetupEndPointService } from "./services/intercompany-setup-
         ChargeService,
         ChargeEndpoint,
         ModalService,
-        Globals,
-        GLAccountClassEndpoint,
-        GLAccountClassService,
+		Globals,
+		GLAccountClassEndpoint,
+		GLAccountClassService,
         VendorService,
         VendorEndpointService,
         EmployeeService,
         EmployeeEndpoint,
         ItemMasterEndpoint,
-        ItemMasterService,
-        StocklineService,
-        StocklineEndpoint,
-        ReceivingCustomerWorkService,
-        ReceivingCustomerWorkEndpoint,
-        LegalEntityService,
-        LegalEntityEndpontService,
-        AuthService,
-        SingleScreenBreadcrumbService,
-        GlCashFlowClassificationService,
-        GlCashFlowClassificationEndpoint,
-        VendorCapabilitiesService,
-        VendorCapabilitiesEndpoint,
-        LocationService,
-        LocationEndpoint,
-        laborAndOverheadCostEndpointservice,
-        LaborAndOverheadCostService,
-        ShelfService,
-        ShelfEndpoint,
-        MessageService,
-        RolesManagementStructureService,
-        RolesManagementStructureEndpoint,
-        CertificationTypeEndpoint,
+		ItemMasterService,
+		StocklineService,
+		StocklineEndpoint,
+		ReceivingCustomerWorkService,
+		ReceivingCustomerWorkEndpoint,
+		LegalEntityService,
+		LegalEntityEndpontService,
+		AuthService,
+		SingleScreenBreadcrumbService,
+		GlCashFlowClassificationService,
+		GlCashFlowClassificationEndpoint,
+		VendorCapabilitiesService,
+		VendorCapabilitiesEndpoint,
+		LocationService,
+		LocationEndpoint,
+		laborAndOverheadCostEndpointservice,
+		LaborAndOverheadCostService,
+		ShelfService,
+		ShelfEndpoint,
+		MessageService,
+		RolesManagementStructureService,
+		RolesManagementStructureEndpoint,
+		CertificationTypeEndpoint,
         CertificationtypeService,
-        AssetStatusService,
+        AssetStatusService,       
         AssetStatusEndpointService,
         AssetTypeService,
         AssetTypeEndpointService,
@@ -380,8 +383,11 @@ import { InterCompanySetupEndPointService } from "./services/intercompany-setup-
         AccountCalenderService,
         AccountCalenderEndpointService,
         InterCompanySetupService,
-        InterCompanySetupEndPointService
-
+        InterCompanySetupEndPointService,
+        UserRoleEndPointService,
+        UserRoleService,
+        RolesGuardService,
+		
     ],
     entryComponents: [
         LoginDialogComponent,

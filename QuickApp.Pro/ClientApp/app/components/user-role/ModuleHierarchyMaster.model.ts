@@ -4,6 +4,7 @@
     parentId: number;
     isPage: boolean;
     displayOrder: number;
+    moduleCode: string;
     level: number;
     hasChildren: boolean;
     visible: boolean;
@@ -29,4 +30,22 @@ export class RolePermission {
     reports: boolean;
     canUpload: boolean;
     canDownload: boolean;
+}
+
+export class UserRoleMapper {
+    id: number;
+    userId: string;
+    userRoleId: number;
+}
+
+export class User {
+    id: number;
+    userName: string;
+    fullName: string;
+    email: string;
+    jobTitle: string;
+    phoneNumber: string;
+    configuration: string;
+    isEnabled: boolean;
+    isLockedOut: boolean;
 }

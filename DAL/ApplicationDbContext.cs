@@ -18,6 +18,7 @@ namespace DAL
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public string CurrentUserId { get; set; }
+        public DbSet<UserRoleMapper> UserRoleMapper { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<RolePermission> RolePermission { get; set; }
         public DbSet<ModuleHierarchyMaster> ModuleHierarchyMaster { get; set; }

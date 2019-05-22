@@ -10,6 +10,6 @@ namespace DAL.Models
        public int? ParentId { get; set; }
        public bool? IsPage { get; set; }
        public int? DisplayOrder { get; set; }
-       public int? ModuleCode { get; set; }
+       public string ModuleCode { get; set; }
     }
 }

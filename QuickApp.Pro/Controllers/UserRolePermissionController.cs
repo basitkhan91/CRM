@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DAL;
 using DAL.Models;
+using DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
@@ -12,7 +14,7 @@ namespace QuickApp.Pro.Controllers
         #region Private Members
 
         private IUnitOfWork unitOfWork;
-
+        //private IUserRoleRepository userRoleRepository;
         #endregion Private Members
 
         #region Constructor
@@ -20,6 +22,7 @@ namespace QuickApp.Pro.Controllers
         public UserRolePermissionController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
+            //this.userRoleRepository = userRoleRepository;
         }
 
         #endregion Constructor
@@ -37,7 +40,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAllUserRole")]
         public IActionResult getAllUserRole()
         {
-            var userRoles = unitOfWork.Repository<UserRole>().GetAll();
+            var userRoles = unitOfWork.UserRole.GetAllUserRoles();
             return Ok(userRoles);
         }
 
@@ -68,7 +71,7 @@ namespace QuickApp.Pro.Controllers
                     {
                         return BadRequest(new Exception("Please assign access to the role."));
                     }
-                    
+
                     userRole.CreatedDate = DateTime.Now;
                     unitOfWork.Repository<UserRole>().Add(userRole);
                     unitOfWork.SaveChanges();
@@ -84,6 +87,74 @@ namespace QuickApp.Pro.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpPost("updateUserRole")]
+        public IActionResult updateUserRole([FromBody] UserRole userRole)
+        {
+            if (userRole.Id != 0)
+            {
+                var rolePermissions = unitOfWork.Repository<RolePermission>().Find(x => x.UserRoleId == userRole.Id);
+                unitOfWork.Repository<RolePermission>().RemoveRange(rolePermissions);
+                userRole.RolePermissions = userRole.RolePermissions.Where(x => x.CanAdd ||
+                                        x.CanView ||
+                                        x.CanUpdate ||
+                                        x.CanDelete).ToList();
+
+                var permissionExist = userRole.RolePermissions.Count == 0;
+                var anyPermission = userRole.RolePermissions.Any(x =>
+                                        x.CanAdd ||
+                                        x.CanView ||
+                                        x.CanUpdate ||
+                                        x.CanDelete);
+                if (permissionExist || !anyPermission)
+                {
+                    return BadRequest(new Exception("Please assign access to the role."));
+                }
+
+                userRole.UpdatedDate = DateTime.Now;
+                
+                unitOfWork.Repository<RolePermission>().AddRange(userRole.RolePermissions);
+                unitOfWork.SaveChanges();
+            }
+            else
+            {
+                return BadRequest(new Exception("Please select role."));
+            }
+
+            return Ok();
+        }
+
+
+        [HttpPost("assignRoleToUser")]
+        public IActionResult addUserRoleMapping([FromBody] List<UserRoleMapper> userRoleMapper)
+        {
+            if (userRoleMapper.Count() > 0)
+            {
+                var dbUserRoles = unitOfWork.Repository<UserRoleMapper>()
+                .Find(x => x.UserId == userRoleMapper.FirstOrDefault().UserId).ToList();
+
+                if (dbUserRoles != null && dbUserRoles.Count > 0)
+                {
+                    unitOfWork.Repository<UserRoleMapper>().RemoveRange(dbUserRoles);
+                }
+
+                unitOfWork.Repository<UserRoleMapper>().AddRange(userRoleMapper);
+                unitOfWork.SaveChanges();
+
+            }
+            else {
+                return BadRequest(new Exception("No role is assigned."));
+            }
+
+            return Ok();
+        }
+
+        [HttpGet("getUserRolesByUserId/{userId}")]
+        public IActionResult getUserRolesByUserId(string userId)
+        {
+            var roles = unitOfWork.UserRole.GetUserRoleWithPermission(userId);
+            return Ok(roles);        
         }
 
         #endregion Public Methods

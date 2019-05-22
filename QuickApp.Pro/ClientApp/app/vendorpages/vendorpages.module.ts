@@ -65,6 +65,9 @@ import { TreeTableModule } from 'primeng/treetable';
 import { VendorCapabilitiesListComponent } from "../components/vendor/vendor-caps/vendor-capabilities-list/vendor-capabilities-list.component";
 import { AddVendorCapabilitiesComponent } from "../components/vendor/vendor-caps/add-vendor-capabilities/add-vendor-capabilities.component";
 import { EditVendorCapabilitiesComponent } from "../components/vendor/vendor-caps/edit-vendor-capabilities/edit-vendor-capabilities.component";
+import { AuthService } from "../services/auth.service";
+import { RolesGuardService } from "../services/roles-guard.service";
+import { ValidateAccessModule } from "../validateaccess/validateaccess.module";
 
 @NgModule({
 	imports: [
@@ -90,7 +93,7 @@ import { EditVendorCapabilitiesComponent } from "../components/vendor/vendor-cap
 		BreadcrumbModule, DialogModule, CalendarModule,
 		TreeModule,
         TreeTableModule,
-
+        ValidateAccessModule
 
 	],
 	declarations: [
@@ -120,10 +123,10 @@ import { EditVendorCapabilitiesComponent } from "../components/vendor/vendor-cap
 		VendorCapabilitiesListComponent,
         AddVendorCapabilitiesComponent,
         EditVendorCapabilitiesComponent
-	
+        
 	],
 	providers: [
-		VendorClassificationComponent
+        VendorClassificationComponent
 	],
     entryComponents: [
         AddActionsDialogComponent

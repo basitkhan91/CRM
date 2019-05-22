@@ -39,6 +39,7 @@ import { SupervisorComponent } from "./components/supervisor/supervisor.componen
 import { NotFoundComponent } from "./components/not-found/not-found.component";
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './services/auth-guard.service';
+import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-access.component';
 //import { PoRoSetupComponent } from './components/receiving/po-ro/po-ro-setup/po-ro-setup.component';
 //import { PoSetupComponent } from './components/receiving/po-ro/po-setup/po-setup.component';
 //import { ReceivingPoComponent } from './components/receiving/po-ro/receiving-po/receiving-po.component';
@@ -58,6 +59,7 @@ import { AuthGuard } from './services/auth-guard.service';
             { path: "orders", component: OrdersComponent, canActivate: [AuthGuard], data: { title: "Orders" } },
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Settings" } },
             { path: "about", component: AboutComponent, data: { title: "About Us" } },       
+            { path: "unauthorized-access", component: UnauthorizedAccessComponent, data: { title: "Unauthorized Access" } },
 
             //{ path: "singlescreens", loadChildren: './components/actions/actionslazymodule#ActionsLazyModule' },
 
@@ -65,11 +67,14 @@ import { AuthGuard } from './services/auth-guard.service';
 
             { path: "singlepages", loadChildren: './singlepages/singlepages.module#SinglePgesModule' },
 
-			{ path: "customersmodule", loadChildren: './customerpages/customerpages.module#CustomerPagesModule' },
+            { path: "customersmodule", loadChildren: './customerpages/customerpages.module#CustomerPagesModule' },
 
             { path: "accountmodule", loadChildren: './accounting-pages/accountingpages.module#AccountingPagesModule' },
 
             { path: "vendorsmodule", loadChildren: './vendorpages/vendorpages.module#VendorPagesModule' },
+
+            
+            { path: "vendorsmodule", loadChildren: './vendorpages/vendorpages.module#VendorPagesModule', canLoad: [AuthGuard]  },
 
 			{ path: "employeesmodule", loadChildren: './employeepages/employeepages.module#EmployeepagesModule' },
 

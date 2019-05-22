@@ -27,24 +27,24 @@ import { CustomerService } from '../../../services/customer.service';
     animations: [fadeInOut]
 })
 /** anys component*/
-export class VendorContactsComponent implements OnInit{
-	modelValue: boolean;
-	display: boolean;
-	matSpinner: boolean;
-	activeIndex: any;
-	showFirstName: boolean;
-	showemail: boolean;
-	showworkPhone: boolean;
-	showmobilePhone: boolean;
-	showLastName: boolean;
-	showvendorContractReference: boolean;
-	alldata: any[];
+export class VendorContactsComponent implements OnInit {
+    modelValue: boolean;
+    display: boolean;
+    matSpinner: boolean;
+    activeIndex: any;
+    showFirstName: boolean;
+    showemail: boolean;
+    showworkPhone: boolean;
+    showmobilePhone: boolean;
+    showLastName: boolean;
+    showvendorContractReference: boolean;
+    alldata: any[];
     middleNames: any[];
-	lastNames: any;
-	isDefault: boolean = false;
+    lastNames: any;
+    isDefault: boolean = false;
     firstNames: any;
-    vendorCode: any="";
-    vendorname: any="";
+    vendorCode: any = "";
+    vendorname: any = "";
     allgeneralInfo: any[];
     collection: any;
     action_name: any = "";
@@ -54,31 +54,31 @@ export class VendorContactsComponent implements OnInit{
     createddate: any = "";
     updatedDate: any = "";
     sub: any;
-	local: any;
-	viewName: string = "Create";
-	lastName: any = "";
-	firstName: any = "";
-	contactTitle: any = "";
-	email: any = "";
-	mobilePhone: number;
+    local: any;
+    viewName: string = "Create";
+    lastName: any = "";
+    firstName: any = "";
+    contactTitle: any = "";
+    email: any = "";
+    mobilePhone: number;
     fax: any;
-	sourceVendorforView: any = {};
+    sourceVendorforView: any = {};
     selectedFirstName: any;
     disablesaveForFirstname: boolean;
     disablesaveForlastname: boolean;
     disablesaveForMiddlename: boolean;
-	ngOnInit(): void {
-		this.matSpinner = true;
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-contacts';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);   
-		if (this.local) {
-			this.loadData();
-		}
-	   this.loadCompleteddata();
-       this.loadEmptyObject();
-       this.router.queryParams.subscribe((params: Params) => {
+    ngOnInit(): void {
+        this.matSpinner = true;
+        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-contacts';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        if (this.local) {
+            this.loadData();
+        }
+        this.loadCompleteddata();
+        this.loadEmptyObject();
+        this.router.queryParams.subscribe((params: Params) => {
         });
-	}
+    }
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -88,7 +88,7 @@ export class VendorContactsComponent implements OnInit{
     allActions: any[] = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
-    public sourceVendor: any={}
+    public sourceVendor: any = {}
     public sourceAction: any = [];
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
@@ -104,31 +104,31 @@ export class VendorContactsComponent implements OnInit{
     actionName: string;
     Active: string = "Active";
     length: number;
-	localCollection: any;
-	comName: string;
+    localCollection: any;
+    comName: string;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
-	constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-	if (this.local) {
-			this.workFlowtService.contactCollection = this.local;
-		}
-		if (this.workFlowtService.generalCollection) {
-			this.local = this.workFlowtService.generalCollection;
-		}
-		if (this.customerser.isCustomerAlsoVendor == true) {
-			this.sourceVendor = this.customerser.localCollectiontoVendor;
-		}
+    constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        if (this.local) {
+            this.workFlowtService.contactCollection = this.local;
+        }
+        if (this.workFlowtService.generalCollection) {
+            this.local = this.workFlowtService.generalCollection;
+        }
+        if (this.customerser.isCustomerAlsoVendor == true) {
+            this.sourceVendor = this.customerser.localCollectiontoVendor;
+        }
         this.dataSource = new MatTableDataSource();
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-			this.local = this.workFlowtService.listCollection.t;
-			this.loadData();
-		}
-		this.alertService.stopLoadingMessage();
+        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+            this.local = this.workFlowtService.listCollection.t;
+            this.loadData();
+        }
+        this.alertService.stopLoadingMessage();
     }
     filterFirstNames(event) {
         this.firstNames = [];
-		for (let i = 0; i < this.alldata.length; i++) {
-			let firstName = this.alldata[i].firstName;
+        for (let i = 0; i < this.alldata.length; i++) {
+            let firstName = this.alldata[i].firstName;
             if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.firstNames.push(firstName);
             }
@@ -136,8 +136,8 @@ export class VendorContactsComponent implements OnInit{
     }
     filterLastNames(event) {
         this.lastNames = [];
-		for (let i = 0; i < this.alldata.length; i++) {
-			let lastName = this.alldata[i].lastName;
+        for (let i = 0; i < this.alldata.length; i++) {
+            let lastName = this.alldata[i].lastName;
             if (lastName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.lastNames.push(lastName);
             }
@@ -145,14 +145,14 @@ export class VendorContactsComponent implements OnInit{
     }
     filterMiddleNames(event) {
         this.middleNames = [];
-		for (let i = 0; i < this.alldata.length; i++) {
-			let middleName = this.alldata[i].middleName;
-            if (middleName != "" && middleName!=null && middleName!="Null") {
+        for (let i = 0; i < this.alldata.length; i++) {
+            let middleName = this.alldata[i].middleName;
+            if (middleName != "" && middleName != null && middleName != "Null") {
                 if (middleName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                     this.middleNames.push(middleName);
                 }
             }
-         }
+        }
     }
     public allWorkFlows: any[] = [];
     private getgeneralInnfo() {
@@ -187,7 +187,7 @@ export class VendorContactsComponent implements OnInit{
             { field: 'lastName', header: 'Last  Name' },
             { field: 'contactTitle', header: 'Contact Title' },
             { field: 'email', header: 'Email' },
-			{ field: 'workPhone', header: 'Mobile Phone' },
+            { field: 'workPhone', header: 'Mobile Phone' },
             { field: 'fax', header: 'Fax' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
@@ -197,14 +197,14 @@ export class VendorContactsComponent implements OnInit{
         this.selectedColumns = this.cols;
     }
 
-	private loadCompleteddata() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.workFlowtService.getContactsFirstName().subscribe(
-			results => this.ondata(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+    private loadCompleteddata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getContactsFirstName().subscribe(
+            results => this.ondata(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -218,27 +218,27 @@ export class VendorContactsComponent implements OnInit{
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
-	handleChanges(rowData, e) {
-		if (e.checked == false) {
-			this.sourceVendor = rowData;
-			this.sourceVendor.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourceVendor.isActive == false;
-			this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
-				response => this.saveCompleted(this.sourceVendor),
-				error => this.saveFailedHelper(error));
-		}
-		else {
-			this.sourceVendor = rowData;
-			this.sourceVendor.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourceVendor.isActive == true;
-			this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
-				response => this.saveCompleted(this.sourceVendor),
-				error => this.saveFailedHelper(error));
-		}
+    handleChanges(rowData, e) {
+        if (e.checked == false) {
+            this.sourceVendor = rowData;
+            this.sourceVendor.updatedBy = this.userName;
+            this.Active = "In Active";
+            this.sourceVendor.isActive == false;
+            this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
+                response => this.saveCompleted(this.sourceVendor),
+                error => this.saveFailedHelper(error));
+        }
+        else {
+            this.sourceVendor = rowData;
+            this.sourceVendor.updatedBy = this.userName;
+            this.Active = "Active";
+            this.sourceVendor.isActive == true;
+            this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
+                response => this.saveCompleted(this.sourceVendor),
+                error => this.saveFailedHelper(error));
+        }
 
-	}
+    }
 
     private refresh() {
         this.applyFilter(this.dataSource.filter);
@@ -249,17 +249,17 @@ export class VendorContactsComponent implements OnInit{
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
-	}
-	private ondata(allWorkFlows: any[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.alldata = allWorkFlows;
-	}
+    }
+    private ondata(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.alldata = allWorkFlows;
+    }
 
-	dismissModel() {
-		this.modal.close();
-	}
+    dismissModel() {
+        this.modal.close();
+    }
     private onEmptyObjUrl(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -273,13 +273,13 @@ export class VendorContactsComponent implements OnInit{
         this.allgeneralInfo = allWorkFlows;
         this.vendorname = this.allgeneralInfo[0].vendorName;
         this.vendorCode = this.allgeneralInfo[0].vendorCode;
-         console.log(this.allgeneralInfo);
+        console.log(this.allgeneralInfo);
     }
 
     filterActions(event) {
         this.localCollection = [];
-		for (let i = 0; i < this.alldata.length; i++) {
-			let actionName = this.alldata[i].description;
+        for (let i = 0; i < this.alldata.length; i++) {
+            let actionName = this.alldata[i].description;
             if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.localCollection.push(actionName);
             }
@@ -366,122 +366,120 @@ export class VendorContactsComponent implements OnInit{
         this.workFlowtService.historyAcion(this.sourceVendor.contactId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
-	}
+    }
 
-	onBlurMethod(data) {
-		if (data == 'firstName') {
-			this.showFirstName = false;
-		}
-		if (data == 'lastName') {
-			this.showLastName = false;
-		}
-		if (data == 'workPhone') {
-			this.showworkPhone = false;
-		}
-		if (data == 'email') {
-			this.showemail = false;
-		}
-	}
+    onBlurMethod(data) {
+        if (data == 'firstName') {
+            this.showFirstName = false;
+        }
+        if (data == 'lastName') {
+            this.showLastName = false;
+        }
+        if (data == 'workPhone') {
+            this.showworkPhone = false;
+        }
+        if (data == 'email') {
+            this.showemail = false;
+        }
+    }
 
     editItemAndCloseModel() {
-		this.isSaving = true;
-		if (!(this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
-			this.sourceVendor.email
-		)) {
-			this.display = true;
-			this.modelValue = true;
-		}
-		if (this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
-			this.sourceVendor.email)
-		{
-			if (!this.sourceVendor.vendorId) {
-				this.sourceVendor.createdBy = this.userName;
-				this.sourceVendor.updatedBy = this.userName;
-				this.sourceVendor.masterCompanyId = 1;
-				this.isDefault = this.sourceVendor.isDefaultContact;
-				this.workFlowtService.newAddContactInfo(this.sourceVendor).subscribe(data => {
+        this.isSaving = true;
+        if (!(this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
+            this.sourceVendor.email
+        )) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        if (this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
+            this.sourceVendor.email) {
+            if (!this.sourceVendor.vendorId) {
+                this.sourceVendor.createdBy = this.userName;
+                this.sourceVendor.updatedBy = this.userName;
+                this.sourceVendor.masterCompanyId = 1;
+                this.isDefault = this.sourceVendor.isDefaultContact;
+                this.workFlowtService.newAddContactInfo(this.sourceVendor).subscribe(data => {
 
-					this.localCollection = data;
-					this.sourceVendor = new Object();
-					this.localCollection.VendorId = this.local.vendorId;
-					this.localCollection.ContactId = this.local.contactId;
-					this.localCollection.IsDefaultContact = false;
-					this.loadData();
-					if (data) {
-						this.updateVendorContact(this.localCollection);
-						this.localCollection.isDefaultContact = this.isDefault;
-						this.loadData();
-					}
-				
-					this.workFlowtService.contactCollection = this.local;
-					this.saveCompleted(this.sourceVendor);
-					this.sourceVendor = {};
-				})
-			}
-			else {
-				this.sourceVendor.updatedBy = this.userName;
-				this.sourceVendor.masterCompanyId = 1;
-				this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(data => {
-					this.loadData();
-					if (data) { this.sourceVendor = new Object(); }
-					this.savesuccessCompleted(this.sourceVendor);
-					this.sourceVendor = {};
-				})
-			}
-		}
+                    this.localCollection = data;
+                    this.sourceVendor = new Object();
+                    this.localCollection.VendorId = this.local.vendorId;
+                    this.localCollection.ContactId = this.local.contactId;
+                    this.localCollection.IsDefaultContact = false;
+                    this.loadData();
+                    if (data) {
+                        this.updateVendorContact(this.localCollection);
+                        this.localCollection.isDefaultContact = this.isDefault;
+                        this.loadData();
+                    }
 
-		else
-		{
-		}
-		this.workFlowtService.contactCollection = this.local;
+                    this.workFlowtService.contactCollection = this.local;
+                    this.saveCompleted(this.sourceVendor);
+                    this.sourceVendor = {};
+                })
+            }
+            else {
+                this.sourceVendor.updatedBy = this.userName;
+                this.sourceVendor.masterCompanyId = 1;
+                this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(data => {
+                    this.loadData();
+                    if (data) { this.sourceVendor = new Object(); }
+                    this.savesuccessCompleted(this.sourceVendor);
+                    this.sourceVendor = {};
+                })
+            }
+        }
+
+        else {
+        }
+        this.workFlowtService.contactCollection = this.local;
     }
 
 
-	toggledbldisplay(data) {
-		this.sourceVendor = data;
-	}
+    toggledbldisplay(data) {
+        this.sourceVendor = data;
+    }
 
-	previousClick() {
-		this.activeIndex = 0;
-		this.workFlowtService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-	}
-	nextClick() {
-		this.activeIndex = 2;
-		this.workFlowtService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
-	}
+    previousClick() {
+        this.activeIndex = 0;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+    }
+    nextClick() {
+        this.activeIndex = 2;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
+    }
 
     deleteItemAndCloseModel(contactId) {
         this.isSaving = true;
-		this.workFlowtService.deleteContact(contactId).subscribe(
+        this.workFlowtService.deleteContact(contactId).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
     }
 
-    updateVendorContact(updateObj:any) {
+    updateVendorContact(updateObj: any) {
         this.workFlowtService.newAddvendorContact(updateObj).subscribe(data => {
-           this.loadData();
+            this.loadData();
         })
     }
 
     private saveCompleted(user?: any) {
-		this.isSaving = false;
+        this.isSaving = false;
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
         }
         else {
-			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-			this.saveCompleted
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
         }
         this.loadData();
     }
-	private savesuccessCompleted(user?: any) {
-		this.isSaving = false;
-		this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
-		this.loadData();
-	}
+    private savesuccessCompleted(user?: any) {
+        this.isSaving = false;
+        this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
+        this.loadData();
+    }
     private saveSuccessHelper(role?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
@@ -504,25 +502,25 @@ export class VendorContactsComponent implements OnInit{
         } else {
             return `with: ${reason}`;
         }
-	}
-	opencontactView(content, row) {
+    }
+    opencontactView(content, row) {
 
-		this.sourceVendorforView = row;
-		this.firstName = row.firstName;
-		this.lastName = row.lastName;
-		this.contactTitle = row.contactTitle;
-		this.email = row.email;
-		this.mobilePhone = row.mobilePhone;
-		this.fax = row.fax;
-		this.createdBy = row.createdBy;
-		this.updatedBy = row.updatedBy;
-		this.createddate = row.createdDate;
-		this.updatedDate = row.updatedDate;
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+        this.sourceVendorforView = row;
+        this.firstName = row.firstName;
+        this.lastName = row.lastName;
+        this.contactTitle = row.contactTitle;
+        this.email = row.email;
+        this.mobilePhone = row.mobilePhone;
+        this.fax = row.fax;
+        this.createdBy = row.createdBy;
+        this.updatedBy = row.updatedBy;
+        this.createddate = row.createdDate;
+        this.updatedDate = row.updatedDate;
+        this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
 
     onFirstNameSelected(event) {
