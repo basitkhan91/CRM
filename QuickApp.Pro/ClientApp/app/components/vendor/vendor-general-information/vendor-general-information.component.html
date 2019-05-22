@@ -21,19 +21,19 @@
                             </div>
                             <div class="form-group row">
 
-                                <div class="form-group col-sm-12 vendor-details-heading" *ngIf="showalert">
-                                    <p class="fs10">
-                                        Please Enter Mandatory Feilds
-                                    </p>
-                                </div>
-                            </div>
-                            <h5 class="heading">{{viewName}} General Information</h5>
-                            <div class="col-sm-4 page-3blocks">
-                                <div class="form-group col-sm-12">
+								<div class="form-group col-sm-12 vendor-details-heading" *ngIf="showalert">
+									<p class="fs10">
+										Please Enter Mandatory Feilds
+									</p>
+								</div>
+							</div>
+							<h5 class="heading">{{viewName}} General Information</h5>
+							<div class="col-sm-4 page-3blocks">
+								<div class="form-group col-sm-12">
                                     <label class="control-label col-sm-4"></label>
 									<div class="col-sm-7">
 										<label class="radio-inline">
-											<input type="radio" [value]="2" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.vendorTypeId">
+											<input type="radio" [value]="2" checked="checked" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.vendorTypeId">
 											External
 										</label>
 										<label class="radio-inline">
@@ -296,39 +296,42 @@
     </div>
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveVendorClassificationDetails()">
-			<div class="form-group  input-icon1">
-				<label for="classificationName" class="control-label">Classification Name<span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
-					    <p-autoComplete  (onSelect)="onClassificationelected($event)" (onKeyUp)=eventClassificationHandler($event)  [(ngModel)]="vendorClassName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCollection" (completeMethod)="filterVendors($event)" [size]="30"
-									    [minLength]="1" [dropdown]="true">
-						    <ng-template let-vendorName pTemplate="item">
-							    <div class="ui-helper-clearfix">{{vendorName}}</div>
-						    </ng-template>
-					    </p-autoComplete>
+            <div class="form-group  input-icon1">
+                <label for="classificationName" class="control-label">Classification Name<span class="clr-red">*</span></label>
+                <div class="col-sm-7">
+                    <div class="inner-addon right-addon inline-block">
+                        <p-autoComplete (onSelect)="onClassificationelected($event)" (onKeyUp)=eventClassificationHandler($event) [(ngModel)]="vendorClassName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorCollection" (completeMethod)="filterVendors($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-vendorName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{vendorName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
                         <div *ngIf="disablesaveForClassification" style="color:red">Already Exist</div>
-					    <div class="clear"></div>
-				    </div>
-				</div>
-				<div class="form-group">
-					<label for="description" class="control-label">Memo</label>
-					<div class="inner-addon col-sm-7 right-addon inline-block">
-						<input placeholder="Memo" #memo="ngModel" type="text" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
-						
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-6">
-						<label class="form-check-label" for="isActive">
-							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-						</label>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-success" [disabled]="disablesaveForClassification">Submit</button>
-					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-				</div>
+                        <div class="clear"></div>
+                    </div>
+                    </div>
+                </div>
+            <div class="clear"></div>
+                <div class="form-group">
+                    <label for="description" class="control-label">Memo</label>
+                    <div class="inner-addon col-sm-7 right-addon inline-block">
+                        <input placeholder="Memo" #memo="ngModel" type="text" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <label class="form-check-label" for="isActive">
+                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                        </label>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" [disabled]="disablesaveForClassification">Submit</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                </div>
 </form>
     </div>
 

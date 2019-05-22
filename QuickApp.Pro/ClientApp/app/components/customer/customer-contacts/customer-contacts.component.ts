@@ -197,8 +197,9 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 			{ field: 'lastName', header: 'Last  Name' },
 			{ field: 'contactTitle', header: 'Contact Title' },
 			{ field: 'email', header: 'Email' },
-			{ field: 'workPhone', header: 'Mobile Phone' },
-			{ field: 'fax', header: 'Fax' },
+			{ field: 'workPhone', header: 'Work Phone' },
+            { field: 'mobilePhone', header: 'Mobile Phone' },
+            { field: 'fax', header: 'Fax' },
 			{ field: 'createdBy', header: 'Created By' },
 			{ field: 'updatedBy', header: 'Updated By' },
 			{ field: 'updatedDate', header: 'Updated Date' },
@@ -438,14 +439,10 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 				this.activeIndex = 1;
 				this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
-                if (this.sourceCustomer.isDefaultContact == true) {
-                    this.sourceCustomer.isDefaultContact = this.isDefaultContact;
-                }
-                else {
-                    this.sourceCustomer.isDefaultContact = null;
-                }
+                this.isDefault = this.sourceCustomer.isDefaultContact;
+              
 				this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(data => {
-					this.loadData();
+                    this.loadData();                  
 					if (data) { this.sourceCustomer = new Object(); }
 
 				})

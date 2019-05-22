@@ -14,7 +14,7 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.LegalEntity> GetAllLegalEntityData()
         {
-            return _appContext.LegalEntity.OrderByDescending(c => c.LegalEntityId).ToList();
+            return _appContext.LegalEntity.Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.LegalEntityId).ToList();
 
         }
 

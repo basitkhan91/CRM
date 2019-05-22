@@ -7594,13 +7594,12 @@ table tr td .btn i.fa-plus {
 	padding-right: 25px;
 }
 
-.inner-addon.right-addon.inline-block input {
-	width: 100% !important
+.ui-table .inner-addon.right-addon {width:auto !important;
 }
 
 .filters input, .filters select {
-	width: 100% !important;
-	margin-left: 0 !important;
+    width: 100% !important;
+    margin-left: 0 !important;
 }
 
 
@@ -11037,9 +11036,6 @@ body.modal-open {
 	display: inline-block;
 }
 
-.modal-body input, .modal-body select {
-	width: 194px !important;
-}
 
 .modal-footer button {
 	margin-bottom: 0px !important;
@@ -12293,9 +12289,7 @@ p-autocomplete .ui-autocomplete {
 	min-width: 100px;
 }
 
-p-autocomplete .ui-autocomplete input.ui-autocomplete-input {
-	width: 85% !important;
-}
+
 
 p-autocomplete .ui-autocomplete-dropdown {
 	position: relative;
@@ -12374,3 +12368,10 @@ body .ui-steps:before {
     padding: 5px 15px;
     margin-bottom: 15px;
 }
+.ui-autocomplete .ui-autocomplete-dropdown {
+    width: 25px !important;
+}
+.inner-addon .ui-autocomplete-input {
+    width: calc(100% - 25px) !important;
+}
+.inner-addon.right-addon {width:100% !important;}

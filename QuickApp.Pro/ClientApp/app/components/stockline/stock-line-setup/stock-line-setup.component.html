@@ -81,7 +81,7 @@
 												<div class="ui-helper-clearfix">{{partName}}</div>
 											</ng-template>
 										</p-autoComplete>
-
+                                        <div *ngIf="disableSavepartNumber" style="color:red">Please Select From DropDown</div>
 									</div>
 								</div>
 								<!--<div class="form-group col-sm-12 mtop50">
@@ -713,7 +713,7 @@
 							</div>
 							<div class="clear"></div>
 							<hr>
-							<button type="submit" class="btn btn-success pull-right submit-btn"  (click)="savestockLineclose()">Save</button>
+							<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSavepartNumber" (click)="savestockLineclose()">Save</button>
 							<div class="clear"></div>
 						<!--</div>-->
 				<!--</div>-->

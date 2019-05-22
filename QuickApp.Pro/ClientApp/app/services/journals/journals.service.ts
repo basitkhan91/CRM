@@ -6,9 +6,19 @@ import 'rxjs/add/operator/map';
 import { JournelsEndpointService } from './journals-endpoint.service';
 import { JournalBatch } from '../../models/JournalBatch';
 import { AssetStatus } from '../../models/asset-status.model';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class JournelService {
+
+    
+    ShowPtab: boolean = true;
+    //for steps start
+    public alertObj = new Subject<any>();
+    public alertChangeObject$ = this.alertObj.asObservable();
+    public indexObj = new Subject<any>();
+    public indexObjChangeObject$ = this.indexObj.asObservable();
+      //for steps End
 
     constructor(private journelsEndpoint: JournelsEndpointService) {
     }

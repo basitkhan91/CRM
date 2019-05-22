@@ -166,6 +166,11 @@ export class LegalEntityService {
 
 	historyEntity(actionId: number) {
 		return Observable.forkJoin(this.legalEntityEndpont.getHistoryLegalEntityEndpontService<AuditHistory[]>(actionId));
-	}
+    }
+
+
+    updateLegalEntityForActive(action: any) {
+        return this.legalEntityEndpont.getUpdateLegalEntityActive(action, action.legalEntityId);
+    }
 
 }

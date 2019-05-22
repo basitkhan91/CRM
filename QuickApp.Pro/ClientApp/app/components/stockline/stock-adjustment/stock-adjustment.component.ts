@@ -192,6 +192,7 @@ export class StockAdjustmentComponent implements OnInit {
 	previousIsSerialized: any;
 	partSerializedAdjustmentReasonError: boolean;
     serializedValue: any;
+    disableSavepartNumber: boolean;
 	//collectionofstockLine: any;
 	ngOnInit(): void {
 		
@@ -1431,13 +1432,13 @@ export class StockAdjustmentComponent implements OnInit {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
-				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
-					//this.disableSavepartNumber = true;
+                if (value == this.selectedActionName.toLowerCase()) {
+                this.disableSavepartNumber = false;
 
 				}
-				else {
-					//this.disableSavepartNumber = false;
+                else {
+                this.disableSavepartNumber = true;
+
 
 				}
 			}
@@ -1514,9 +1515,8 @@ export class StockAdjustmentComponent implements OnInit {
 		if (this.itemclaColl) {
 			for (let i = 0; i < this.itemclaColl.length; i++) {
 				if (event == this.itemclaColl[i][0].partName) {
-					//this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
-					this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
-
+                    this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
+                    this.disableSavepartNumber = false;
 					console.log(this.selectedPartId);
 					this.selectedActionName = event;
 					

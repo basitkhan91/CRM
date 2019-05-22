@@ -24,13 +24,6 @@
 					<div class="employee-setup">
 
 						<div class="col-12 employer-block">
-							<!--<div class="col-2">
-					<ul class="nav nav-pills tabs-left">
-						<li><a routerLink="/employeesmodule/employeepages/app-employee-general-information">General Information</a></li>
-						<li><a routerLink="/employeesmodule/employeepages/app-employee-certification" class="active">Certification</a></li>
-						<li><a routerLink="/employeesmodule/employeepages/app-employee-training">Training</a></li>
-					</ul>
-				</div>-->
 							<div class="col-12">
 								<div class="tab-content form-bg" id="employee-block">
 									<div class="tab-pane step-data active" id="step2">
@@ -129,40 +122,41 @@
 	</div>
 	<div class="modal-body">
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCertification()">
-			<div class="form-group">
-				<label for="name" class="control-label">Certification Type<span class="clr-red">*</span></label>
+            <div class="form-group">
+                <label for="name" class="control-label">Certification Type<span class="clr-red">*</span></label>
+
+                <div class="col-sm-7">
+                    <div class="inner-addon right-addon inline-block">
+
+                        <p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" (onKeyUp)=certificationHandlerHandler($event) (onSelect)="certificationType($event)" [suggestions]="certificationtypeCollection" (completeMethod)="filtercertificationType($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-description pTemplate="item">
+                                <div class="ui-helper-clearfix">{{description}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disablesave" class="clr-red">Entry Already Exists</div>
+                    </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
 
 
-				<div class="inner-addon right-addon inline-block">
-
-					<p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" (onKeyUp)=certificationHandlerHandler($event) (onSelect)="certificationType($event)" [suggestions]="certificationtypeCollection" (completeMethod)="filtercertificationType($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-description pTemplate="item">
-							<div class="ui-helper-clearfix">{{description}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disablesave" class="clr-red">Entry Already Exists</div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			
-			
-			<div class="form-group">
-				<div class="col-sm-6">
-					<label class="form-check-label" for="isActive">
-						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceEmployee.isActive"> Active
-					</label>
-				</div>
-				<div class="clear"></div>
-			</div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <label class="form-check-label" for="isActive">
+                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceEmployee.isActive"> Active
+                        </label>
+                    </div>
+                    <div class="clear"></div>
+                </div>
 
 
-			<div class="modal-footer">
+                <div class="modal-footer">
 
-				<button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" (click)="saveCertification()">Submit</button>
-				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-			</div>
-		</form>
+                    <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" (click)="saveCertification()">Submit</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                </div>
+</form>
 	</div>
 
 </ng-template>

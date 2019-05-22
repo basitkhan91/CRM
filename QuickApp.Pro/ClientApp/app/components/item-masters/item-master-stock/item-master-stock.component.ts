@@ -54,6 +54,7 @@ import {  FormArray } from '@angular/forms';
 import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilities.model';
 import { GlAccountService } from '../../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../../models/GlAccount.model';
+import { VendorService } from '../../../services/vendor.service';
 
 
 @Component({
@@ -238,9 +239,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     allATAMaininfo1: ATAMain[];
     capabilityEditCollection: any;
     allGlInfo: GlAccount[];
+    allSubChapter: ATAChapter[];
+    disableSaveNHANumber: boolean;
+    disableSaveAlterumber: boolean;
 
 
-    constructor(private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService, public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+        private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
+        public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
+        public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
 		this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
 		this.displayedColumns.push('action');
@@ -251,7 +258,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			this.sourceItemMaster = this.itemser.listCollection;
 			this.sourceItemMaster.itemMasterId = this.itemser.listCollection.itemMasterId;
 			this.sourceItemMaster.partdescription = this.itemser.listCollection.partDescription;
-			this.sourceItemMaster.isHazardousMaterial = this.itemser.listCollection.isHazardousMaterial;
+            this.sourceItemMaster.isHazardousMaterial = this.itemser.listCollection.isHazardousMaterial;
+
+            if (this.sourceItemMaster.ataChapterId)
+            {
+                this.getATASubChapterData(this.sourceItemMaster.ataChapterId);
+            }
 			
 			this.sourceItemMaster.expirationDate = this.itemser.listCollection.expirationDate;
 			if (this.sourceItemMaster.manufacturer) {
@@ -328,7 +340,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			}
 			else {
 				this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
-			}
+            }
 
 		}
 
@@ -511,6 +523,35 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
     }
+
+    alterPnHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveAlterumber = false;
+                }
+                else {
+                    this.disableSaveAlterumber = true;
+                }
+            }
+
+        }
+    }
+
+
+    onAlterPnSelect(event) {
+        if (this.itemclaColl) {
+            for (let i = 0; i < this.itemclaColl.length; i++) {
+                if (event == this.itemclaColl[i][0].partName) {
+                    this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
+                    this.disableSaveAlterumber = false;
+                    this.selectedActionName = event;
+                }
+            }
+        }
+    }
+
 
 
     private OnCapesLoadSuccessfull(allWorkFlows: any[]) {
@@ -1431,11 +1472,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 				if (value == this.selectedActionName.toLowerCase()) {
 					this.disableSavepartNumber = true;
                 }
-
 				else {
 					this.disableSavepartNumber = false;
-					this.sourceItemMaster.partDescription = "";
-					this.disableSavepartDescription = false;
 				}
 			}
 
@@ -1465,7 +1503,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 			
 				
 			);
-			this.disableSavepartDescription = true;
 		}
     }
 
@@ -1485,23 +1522,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
-
-
-	descriptionHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedActionName) {
-				if (value == this.selectedActionName.toLowerCase()) {
-					this.disableSavepartDescription = true;
-				}
-				else {
-					this.disableSavepartDescription = false;
-				}
-			}
-		}
-    }
-
-
 	ItemHandler(event) {
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
@@ -3797,18 +3817,31 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 	partdescriptionId(event) {
-		//
-		if (this.itemclaColl) {
-			for (let i = 0; i < this.itemclaColl.length; i++) {
-				if (event == this.itemclaColl[i][0].partDescription) {
-					this.sourceItemMaster.partDescription = this.itemclaColl[i][0].partDescription;
+        if (this.allPartnumbersInfo) {
+            for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+                if (event == this.allPartnumbersInfo[i].partDescription) {
+                    this.sourceItemMaster.partDescription = event;
 					this.disableSavepartDescription = true;
 					this.selectdescription = event;
 				}
 			}
 		}
-	}
+    }
 
+
+    descriptionHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSavepartDescription = true;
+                }
+                else {
+                    this.disableSavepartDescription = false;
+                }
+            }
+        }
+    }
 
 
 	private onIntegrationData(getEmployeeCerficationList: any[]) {
@@ -3995,4 +4028,47 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         })
 
     }
- }
+    //calling for ATA Subchapter Data
+
+    getATASubChapterData(ataMainId) {
+        this.allSubChapter = [];
+        this.vendorser.getATASubchapterData(ataMainId).subscribe( //calling and Subscribing for Address Data
+            results => this.onDataLoadAtaSubChapterDataSuccessful(results[0]), //sending Address
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onDataLoadAtaSubChapterDataSuccessful(data: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allSubChapter = data;
+    }
+
+    nhaHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveNHANumber = false;
+                }
+                else {
+                    this.disableSaveNHANumber = true;
+                }
+            }
+
+        }
+    }
+
+
+    onNHASelect(event) {
+        if (this.itemclaColl) {
+            for (let i = 0; i < this.itemclaColl.length; i++) {
+                if (event == this.itemclaColl[i][0].partName) {
+                    this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
+                    this.disableSaveNHANumber = false;
+                    this.selectedActionName = event;
+                }
+            }           
+        }
+    }
+}

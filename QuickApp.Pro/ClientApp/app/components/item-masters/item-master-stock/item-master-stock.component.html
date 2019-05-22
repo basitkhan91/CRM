@@ -81,20 +81,20 @@
                                     </div>
 
 
-                                <div class="form-group col-sm-12">
+                                 <div class="form-group col-sm-12">
                                     <label class="control-label col-sm-4">Alternate</label>
                                     <div class="col-sm-7">
                                         <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.isAlternatePartChecked">
                                     </div>
                                     <div class="col-sm-7" *ngIf="sourceItemMaster.isAlternatePartChecked">
                                         <div class="inner-addon right-addon inline-block" id="alternate-input">
-                                            <p-autoComplete [(ngModel)]="sourceItemMaster.partAlternatePartId" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                            <p-autoComplete [(ngModel)]="sourceItemMaster.partAlternatePartId" (onKeyUp)=alterPnHandler($event) (onSelect)="onAlterPnSelect($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                             [minLength]="1" [dropdown]="true">
                                                 <ng-template let-partName pTemplate="part">
                                                     <div class="ui-helper-clearfix">{{partName}}</div>
                                                 </ng-template>
                                             </p-autoComplete>
-                                         
+                                         <div *ngIf="disableSaveAlterumber" style="color:red">Please Select From DropDown</div>
                                         </div>
                                     </div>
                                 </div>
@@ -114,13 +114,14 @@
                                     <label class="control-label col-sm-4">NHA</label>
                                     <div class="col-sm-7">
                                         <div class="inner-addon right-addon inline-block">
-                                            <p-autoComplete [(ngModel)]="sourceItemMaster.nha" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                            <p-autoComplete [(ngModel)]="sourceItemMaster.nha" (onKeyUp)=nhaHandler($event) (onSelect)="onNHASelect($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                             [minLength]="1" [dropdown]="true">
                                                 <ng-template let-partName pTemplate="part">
                                                     <div class="ui-helper-clearfix">{{partName}}</div>
                                                 </ng-template>
                                             </p-autoComplete>
                                         </div>
+                                        <div *ngIf="disableSaveNHANumber" style="color:red">Please Select From DrpDown</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
@@ -309,14 +310,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1">
-
                                     <label class="control-label col-sm-4">ATA Chapter </label>
                                     <div class="col-sm-7">
                                         <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.ataChapterId">
+                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.ataChapterId" (change)="getATASubChapterData(sourceItemMaster.ataChapterId)">
                                                 <option class="form-control" *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterCode}}-{{ataName.ataChapterName}}</option>
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">ATA Sub Chapter</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.ataSubChapterId">
+                                            <option *ngFor="let subchapter of allSubChapter" [ngValue]="subchapter.ataSubChapterId">{{subchapter.ataSubChapterCode}}-{{subchapter.description}}</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -421,7 +430,7 @@
                                             </select>
                                             <a data-toggle="modal" data-target="#addPurchaseUom" class="add-icon" (click)="unitmeasure(conEdit)"><i class="fa fa-plus"></i></a>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
                                         <label class="control-label col-sm-4">Stock UOM  </label>
@@ -431,7 +440,7 @@
                                             </select>
                                             <a href="#" data-toggle="modal" data-target="#addPurchaseUom" class="add-icon" (click)="unitmeasure(conmodel)"><i class="fa fa-plus"></i></a>
                                         </div>
-                                        
+
                                     </div>
 
                                     <div class="form-group col-sm-12 input-icon1">
@@ -442,7 +451,7 @@
                                             </select>
                                             <a href="#" data-toggle="modal" data-target="#addPurchaseUom" class="add-icon" (click)="unitmeasure(conEdited)"><i class="fa fa-plus"></i></a>
                                         </div>
-                                       
+
                                     </div>
 
                                     <div class="form-group col-sm-12 input-icon1">
@@ -453,7 +462,7 @@
                                             </select>
                                             <a href="#" data-toggle="modal" data-target="#addPurchaseUom" class="add-icon" (click)="unitmeasure(contextEdited)"><i class="fa fa-plus"></i></a>
                                         </div>
-                                       
+
                                     </div>
 
 
@@ -959,7 +968,7 @@
                             </div>
                         </div>
                         <div class="clear"></div>
-                        <button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSavepartNumber " (click)="saveitemMasterclose()">Save</button>
+                        <button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSavepartNumber || disableSaveNHANumber || disableSaveAlterumber" (click)="saveitemMasterclose()">Save</button>
                     </div>
                     <div class="clear"></div>
                     <hr>

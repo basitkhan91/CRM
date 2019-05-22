@@ -475,17 +475,19 @@
 											<!--<a href="item-master-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
 										</div>
 										<div *ngIf="showPart">
-											<div class="inner-addon right-addon inline-block">
-												<p-autoComplete [(ngModel)]="sourceStockLineSetup.AfterpartNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event,5,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.AfterpartNumber,sourceStockLineSetup.PartAdjustmentReason)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-																[minLength]="1" [dropdown]="true">
-													<ng-template let-partName pTemplate="part">
-														<div class="ui-helper-clearfix">{{partName}}</div>
-													</ng-template>
-												</p-autoComplete>
-												<!--(change)="partValueSelect(5,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.afterpartNumber,sourceStockLineSetup.PartAdjustmentReason)"-->
+                                            <div class="col-sm-7">
+                                                <div class="inner-addon right-addon inline-block">
+                                                    <p-autoComplete [(ngModel)]="sourceStockLineSetup.AfterpartNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event,5,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.AfterpartNumber,sourceStockLineSetup.PartAdjustmentReason)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                                    [minLength]="1" [dropdown]="true">
+                                                        <ng-template let-partName pTemplate="part">
+                                                            <div class="ui-helper-clearfix">{{partName}}</div>
+                                                        </ng-template>
+                                                    </p-autoComplete>
+                                                    <div *ngIf="disableSavepartNumber" style="color:red">Please select From DropDown</div>
+                                                </div>
+                                            </div>
 											</div>
-											</div>
-</td>
+                                    </td>
 									<td>
 										<textarea *ngIf="hidePart" style="height: 80px; display: none;" class="editable-field"></textarea>
 										<textarea *ngIf="showPart" (change)="partValueSelect(5,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.afterpartNumber,sourceStockLineSetup.PartAdjustmentReason)" [(ngModel)]="sourceStockLineSetup.PartAdjustmentReason" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
@@ -725,7 +727,7 @@
 	</div>-->
 					<div class="clear"></div>
 					<br>
-					<button href="#" [disabled]="!disableSave" class="btn btn-success pull-right" (click)="savestockLineadjustmentclose()">Save</button>
+					<button href="#" [disabled]="disableSavepartNumber" class="btn btn-success pull-right" (click)="savestockLineadjustmentclose()">Save</button>
 				</div>
 				
 			</div>

@@ -116,6 +116,13 @@ namespace QuickApp.Pro.ViewModels
         public DateTime RecordModifiedDate { get; set; }
 
 
+        public string City { get; set; }
+
+        public string StateOrProvince { get; set; }
+
+        public bool? IsBankingInfo { get; set; }
+
+
 
     }
 }

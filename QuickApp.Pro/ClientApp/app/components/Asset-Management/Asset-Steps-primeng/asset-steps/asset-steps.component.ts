@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 //import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { MenuItem } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { AssetService } from '../../../../services/asset/Assetservice';
     styleUrls: ['./asset-steps.component.scss']
 })
 /** Asset-Steps component*/
-export class AssetStepsComponent {
+export class AssetStepsComponent implements OnInit {
     ifvalue: boolean;
     generalcollection: any;
     collection: any;
