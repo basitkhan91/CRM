@@ -3,6 +3,7 @@
 ################################################################################
 
 /DAL/DAL.csproj.user
+/QuickApp.Pro/node_modules
 /QuickApp.Pro/wwwroot/dist
 /.vs
 /QuickApp.Pro/obj
