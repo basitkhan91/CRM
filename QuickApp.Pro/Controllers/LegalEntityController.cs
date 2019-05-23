@@ -99,6 +99,8 @@ namespace QuickApp.Pro.Controllers
                 entityobject.LockBoxAddressId = legalEntityViewModel.LockBoxAddressId;
                 entityobject.ReportingCurrencyId = legalEntityViewModel.ReportingCurrencyId;
                 entityobject.TaxId = legalEntityViewModel.TaxId;
+                entityobject.FaxNumber = legalEntityViewModel.FaxNumber;
+                entityobject.PhoneNumber1 = legalEntityViewModel.PhoneNumber1;
                 entityobject.IsActive = true;
                 entityobject.CreatedDate = DateTime.Now;
                 entityobject.UpdatedDate = DateTime.Now;
@@ -120,6 +122,7 @@ namespace QuickApp.Pro.Controllers
                 entityobject.AddressId = legalEntityViewModel.AddressId.Value;
                 address.Line1 = legalEntityViewModel.Address1;
                 address.Line2 = legalEntityViewModel.Address2;
+                address.City = legalEntityViewModel.City;
                 address.PostalCode = legalEntityViewModel.PostalCode;
                 address.StateOrProvince = legalEntityViewModel.BankProvince;
                 address.Country = legalEntityViewModel.Country;
@@ -242,6 +245,7 @@ namespace QuickApp.Pro.Controllers
                     var domesticWirePaymentObj = _context.DomesticWirePayment.Where(a => a.DomesticWirePaymentId == entityobject.DomesticWirePaymentId).SingleOrDefault();
                     var internationalWirePaymentObj = _context.InternationalWirePayment.Where(a => a.InternationalWirePaymentId == entityobject.InternationalWirePaymentId).SingleOrDefault();
                     var address = _context.Address.Where(a => a.AddressId == entityobject.AddressId).SingleOrDefault();
+                    var lockAddress = _context.Address.Where(a => a.AddressId == entityobject.LockBoxAddressId).SingleOrDefault();
                     var ach = _context.ACH.Where(a => a.ACHId == entityobject.ACHId).SingleOrDefault();
                     entityobject.MasterCompanyId = 1;
                     entityobject.Name = legalEntityViewModel.Name;
@@ -281,6 +285,30 @@ namespace QuickApp.Pro.Controllers
                         _unitOfWork.SaveChanges();
                        
                     }
+
+                    if (lockAddress != null)
+                    {
+                        lockAddress.PoBox = legalEntityViewModel.PoBox;
+                        lockAddress.Line1 = legalEntityViewModel.BankStreetaddress1;
+                        lockAddress.Line2 = legalEntityViewModel.BankStreetaddress2;
+                        lockAddress.StateOrProvince = legalEntityViewModel.BankProvince;
+                        lockAddress.City = legalEntityViewModel.BankCity;
+                        lockAddress.Country = legalEntityViewModel.Country;
+                        lockAddress.PostalCode = legalEntityViewModel.PostalCode;
+                        lockAddress.Country = legalEntityViewModel.Country;lockAddress.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
+                        lockAddress.MasterCompanyId = 1;
+                        lockAddress.RecordCreateDate = DateTime.Now;
+                        lockAddress.CreatedBy = legalEntityViewModel.CreatedBy;
+                        lockAddress.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                        lockAddress.CreatedDate = DateTime.Now;
+                        lockAddress.UpdatedDate = DateTime.Now;
+                        lockAddress.PoBox = legalEntityViewModel.PoBox;
+                        _unitOfWork.Address.Update(lockAddress);
+                        _unitOfWork.SaveChanges();
+
+                    }
+
+
                     if (domesticWirePaymentObj != null)
                     {
                         domesticWirePaymentObj.MasterCompanyId = 1;
