@@ -239,7 +239,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 
 
-	open(content) {
+    open(content) {
+        this.GeneralInformation();
 		this.sourceLegalEntity = {};
 		this.sourceLegalEntity.isActive = true;
 		this.entityName = "";
@@ -303,27 +304,29 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 		this.isSaving = true;
 
-		if (!this.sourceLegalEntity.legalEntityId) {
+        if (!this.sourceLegalEntity.legalEntityId)
+        {
 			this.sourceLegalEntity.createdBy = this.userName;
 			this.sourceLegalEntity.updatedBy = this.userName;
 
 			this.sourceLegalEntity.masterCompanyId = 1;
-			this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(
-				role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-          
-            this.loadData();
+            this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data =>
+            {
+                this.alertService.showMessage('Legal Entity added successfully.');
+                this.loadData();
+
+            });
 		}
 		else {
 
 			this.sourceLegalEntity.createdBy = this.userName;
 			this.sourceLegalEntity.updatedBy = this.userName;
             this.sourceLegalEntity.masterCompanyId = 1;
-			this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(
-				response => this.saveCompleted(this.sourceLegalEntity),
-                error => this.saveFailedHelper(error));          
-
-            this.loadData();
+            this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data =>
+            {
+                this.alertService.showMessage('Legal Entity updated successfully.');
+                this.loadData();
+            }); 
 		}
 		if (this.modal) { this.modal.close();}
 		if (this.modal1) { this.modal1.close();}		
