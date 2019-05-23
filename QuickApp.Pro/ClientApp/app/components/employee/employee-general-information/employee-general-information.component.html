@@ -530,19 +530,18 @@
 
 			<div class="form-group">
 				<label for="description" class="control-label">Description<span class="clr-red">*</span></label>
-				<!--<div>
-		<input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description">
-	</div>-->
-				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete [(ngModel)]="jobName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-jobName pTemplate="item">
-							<div class="ui-helper-clearfix">{{jobName}}</div>
-						</ng-template>
-					</p-autoComplete>
-
-					<div class="clear"></div>
-				</div>
+                <div class="col-sm-7">
+                    <div class="inner-addon right-addon inline-block">
+                        <p-autoComplete [(ngModel)]="jobName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeyJob($event) (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-jobName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{jobName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
 				</div>
 				<div class="form-group">
 					<label for="description" class="control-label">Memo</label>
@@ -557,18 +556,7 @@
 					</div>
 					<div class="clear"></div>
 				</div>
-				<!--<div class="form-group">
-		<label for="masterCompanyId" class="control-label">Company</label>
-		<div class="">
-			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-				<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-			</select>
-		</div>
-		<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-			Master company required.
-		</div>
-		<div class="clear"></div>
-	</div>-->
+				
 				<div class="form-group">
 
 					<div class="col-sm-6">
@@ -582,7 +570,7 @@
 
 				<div class="modal-footer">
 
-					<button class="btn btn-success" [disabled]="!userForm.valid">Submit</button>
+					<button class="btn btn-success" [disabled]="disableJobTitle">Submit</button>
 					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
 				</div>
 </form>
@@ -605,16 +593,18 @@
 
 			<div class="form-group">
 				<label for="description" class="control-label">Description<span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localleaveCollection" (onKeyUp)=onKeyUpLeaveNames($event) (onSelect)="onSelectLeaveName($event)" (completeMethod)="filterLeaves($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-description pTemplate="item">
-							<div class="ui-helper-clearfix">{{description}}</div>
-						</ng-template>
-					</p-autoComplete>
-                    <div *ngIf="disableSaveLeaveName" style="color:red">Already Exist</div>
-					<div class="clear"></div>
-				</div>
+                <div class="col-sm-7">
+                    <div class="inner-addon right-addon inline-block">
+                        <p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localleaveCollection" (onKeyUp)=onKeyUpLeaveNames($event) (onSelect)="onSelectLeaveName($event)" (completeMethod)="filterLeaves($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-description pTemplate="item">
+                                <div class="ui-helper-clearfix">{{description}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSaveLeaveName" style="color:red">Already Exist</div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
 				</div>
 				<div class="form-group">
 
@@ -647,25 +637,19 @@
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemExpertiesCloseModel()">
 			<div class="form-group">
 				<label for="name" class="control-label">Employee Expertise<span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
-					<!--<div class="control-data">
-			<input type="text" name="description" class="form-control" required minlength="5" #description="ngModel" [(ngModel)]="sourceAction.description">
-			<div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-				Name required.
-			</div>
-			<div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
-				Name must be at least 5 characters long.
-			</div>
-		</div>-->
-					<p-autoComplete [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-employeeName pTemplate="item">
-							<div class="ui-helper-clearfix">{{employeeName}}</div>
-						</ng-template>
-					</p-autoComplete>
+                <div class="col-sm-7">
+                    <div class="inner-addon right-addon inline-block">
 
-					<div class="clear"></div>
-				</div>
+                        <p-autoComplete [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeyUpExp($event) (onSelect)="onSelectExp($event)" [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-employeeName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{employeeName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableExpTitle" style="color:red">Already Exist</div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
 				</div>
 				<div class="form-group">
 					<label for="description" class="control-label">Memo</label>
@@ -682,19 +666,7 @@
 					</div>
 					
 					<div class="clear"></div>
-				</div>
-				<!--<div class="form-group">
-		<label for="masterCompanyId" class="control-label">Company</label>
-		<div class="">
-			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-				<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-			</select>
-		</div>
-		<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-			Master company required.
-		</div>
-		<div class="clear"></div>
-	</div>-->
+				</div>				
 				<div class="form-group">
 					<div class="col-sm-6">
 						<label class="form-check-label" for="isActive">
@@ -707,7 +679,7 @@
 
 				<div class="modal-footer">
 
-					<button class="btn btn-success" [disabled]="!userForm.valid">Submit</button>
+					<button class="btn btn-success" [disabled]="disableExpTitle">Submit</button>
 					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
 				</div>
 </form>

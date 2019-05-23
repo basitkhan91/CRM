@@ -53,7 +53,7 @@
 									<div class="col-sm-7">
 										<div class="inner-addon right-addon inline-block">
 
-											<p-autoComplete (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event) [(ngModel)]="sourceVendor.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+											<p-autoComplete (onSelect)="onVendorselected($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourceVendor.vendorName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
 															[minLength]="1" [dropdown]="true">
 												<ng-template let-vendorName pTemplate="item">
 													<div class="ui-helper-clearfix">{{vendorName}}</div>

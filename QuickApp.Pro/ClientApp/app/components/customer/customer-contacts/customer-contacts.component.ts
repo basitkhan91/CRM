@@ -118,6 +118,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.sourceCustomer.isDefaultContact = true;
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-contacts';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         this.workFlowtService.ShowPtab = true;

@@ -81,6 +81,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     disableSaveName: any;
     disableSaveLastName: boolean;
     disableSaveLeaveName: boolean;
+    selectedActionName: any;
+    disableJobTitle: boolean;
+    disableExpTitle: boolean;
 	ngOnInit(): void {
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
 		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
@@ -1140,6 +1143,63 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                     this.disableSaveName = event;
                 }
 
+            }
+        }
+    }
+
+
+    onKeyJob(event)
+    {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableJobTitle = true;
+                }
+                else {
+                    this.disableJobTitle = false;
+                }
+            }
+
+        }
+    }
+
+    onSelectJob(event)
+    {
+        if (this.allJobTitlesinfo) {
+            for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
+                if (event == this.allJobTitlesinfo[i].description) {
+                    this.sourceEmployee.jobName = event;
+                    this.disableJobTitle = true;
+                    this.selectedActionName = event;
+                }
+            }
+        }
+    }
+
+    onKeyUpExp(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableExpTitle = true;
+                }
+                else {
+                    this.disableExpTitle = false;
+                }
+            }
+
+        }
+    }
+
+    onSelectExp(event) {
+        if (this.allEmployeeExpertiseInfo) {
+            for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+                if (event == this.allEmployeeExpertiseInfo[i].description) {
+                    this.sourceEmployee.employeeName = event;
+                    this.disableExpTitle = true;
+                    this.selectedActionName = event;
+                }
             }
         }
     }
