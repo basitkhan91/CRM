@@ -139,12 +139,24 @@ namespace DAL.Repositories
             {
 
                 var data = (from po in _appContext.PurchaseOrder
-                            join purchaseOderPart in _appContext.PurchaseOrderPart on po.PurchaseOrderId equals purchaseOderPart.PurchaseOrderId
-                            join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                            join im in _appContext.ItemMaster on purchaseOderPart.ItemMasterId equals im.ItemMasterId
-                            //join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId
-                            //join uom in _appContext.UnitOfMeasure on im.PurchaseUnitOfMeasureId equals uom.UnitOfMeasureId
+                            join pop in _appContext.PurchaseOrderPart on po.PurchaseOrderId equals pop.PurchaseOrderId into purpart
+                            from pop in purpart.DefaultIfEmpty()
+                            join v in _appContext.Vendor on po.VendorId equals v.VendorId into ve
+                            from v in ve.DefaultIfEmpty()
+                            join im in _appContext.ItemMaster on pop.ItemMasterId equals im.ItemMasterId into item
+                            from im in item.DefaultIfEmpty()
+                                //join p in _appContext.Part on im.PartId equals p.PartId into part
+                                //from p in part.DefaultIfEmpty()
+                            join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId into gj
+                            from x in gj.DefaultIfEmpty()
 
+                            join uom in _appContext.UnitOfMeasure on im.PurchaseUnitOfMeasureId equals uom.UnitOfMeasureId into um
+                            from uom in um.DefaultIfEmpty()
+
+                                join sto in _appContext.StockLine on pop.PurchaseOrderId equals sto.PurchaseOrderId  into sto
+                                from st in sto.DefaultIfEmpty()
+
+                               join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId
                             where po.PurchaseOrderId == id
 
                             select new
@@ -166,17 +178,15 @@ namespace DAL.Repositories
                                 po.Resale,
                                 po.DateApprovied,
                                 po.NeedByDate,
-                                //pop.NeedByDate,
-                                //pop.NonInventory,
-                                //pop.POPartSplitAddress1,
-                                //pop.POPartSplitAddress2,
-                                //pop.POPartSplitAddress3,
-                                //pop.POPartSplitCity,
-                                //pop.POPartSplitPostalCode,
-                                //pop.POPartSplitState,
-                                //pop.POPartSplitUserName,
-                                //pop.POPartSplitUserTypeId,
-                                //pop.QuantityOrdered,
+                                pop.NonInventory,
+                                pop.POPartSplitAddress1,
+                                pop.POPartSplitAddress2,
+                                pop.POPartSplitAddress3,
+                                pop.POPartSplitCity,
+                                pop.POPartSplitPostalCode,
+                                pop.POPartSplitState,
+                                pop.POPartSplitUserTypeId,
+                                pop.QuantityOrdered,
                                 po.MasterCompanyId,
                                 po.StatusId,
                                 po.EmployeeId,
@@ -184,17 +194,19 @@ namespace DAL.Repositories
                                 po.VendorContactId,
                                 po.ShipToCompanyId,
                                 po.ShipViaAccountId,
+                                pop,
                                 im.ItemMasterId,
                                 im.PartNumber,
                                 im.PartDescription,
                                 im.ItemTypeId,
                                 im.ManufacturerId,
+                                x.Name,
                                 im.GLAccountId,
                                 //im.SerialNumber,
                                 //pop.ConditionCode,
                                 //pop.UOMId,
-                                purchaseOderPart.UnitCost,
-                                purchaseOderPart.PurchaseOrderPartRecordId,
+                                pop.UnitCost,
+                                pop.PurchaseOrderPartRecordId,
                                 po.ShipToUserType,
                                 po.ShipToUserName,
                                 po.ShipToContactName,
@@ -203,16 +215,15 @@ namespace DAL.Repositories
                                 po.BillToUserName,
                                 po.BillToContactName,
                                 po.BillToMemo,
-                                //uom.ShortName,
+                                uom.ShortName,
                                 v.VendorContact,
                                 v.VendorContractReference,
                                 im.Manufacturer,
                                 im.PMA,
                                 im.DER,
                                 im.SalesDiscountPercent,
-                                purchaseOrderPartPurchaseOrderId = purchaseOderPart.PurchaseOrderId,
-                                //purchaseOderPart,
-
+                                purchaseOrderPartPurchaseOrderId = pop.PurchaseOrderId
+                                // sto
 
                             }).ToList();
 
