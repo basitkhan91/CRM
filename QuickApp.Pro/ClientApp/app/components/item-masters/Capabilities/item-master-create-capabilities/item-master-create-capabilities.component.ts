@@ -60,8 +60,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     capabilityEditCollection: any;
     constructor(public ataservice: AtaMainService, public workFlowtService1: LegalEntityService, private modalService: NgbModal, private alertService: AlertService, public itemser: ItemMasterService,
         private formBuilder: FormBuilder, private router: Router) {
-        //this.dataSource = new MatTableDataSource();
-
+        this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities';
+        this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
 
     }
 

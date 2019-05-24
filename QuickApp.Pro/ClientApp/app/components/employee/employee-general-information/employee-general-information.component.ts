@@ -32,6 +32,7 @@ import * as moment from 'moment'
 import { CalendarModule } from 'primeng/calendar';
 import { LegalEntityService } from '../../../services/legalentity.service';
 import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
+import { PhoneNumber } from '../../../models/phoneNumber.model';
 
 @Component({
 	selector: 'app-employee-general-information',
@@ -41,6 +42,8 @@ import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
 })
 
 export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {
+    phoneNumber = new PhoneNumber()
+    
 	local: any;
 	activeIndex: number;
 	allLeaves: EmployeeLeaveType[];
@@ -143,7 +146,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     updateMode: boolean = false;
 
 	constructor(private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		this.displayedColumns.push('action');
+        this.displayedColumns.push('action');
+
+
+        const control = new FormControl('1', Validators.pattern('[a-zA-Z ]*'));
+
+        console.log(control.errors);
+
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
 		
@@ -614,7 +623,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 			if (this.selectedLeaveValues != null) //separting Array whic is having ","
 			{
-				this.sourceEmployee.EmployeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
+                this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
 			}
 
 		}
@@ -625,7 +634,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			}
 			if (this.selectedLeaveValues != null) //separting Array which is having ","
 			{
-				this.sourceEmployee.EmployeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
+                this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
 			}
 
 

@@ -47,6 +47,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService)
     {
         this.dataSource = new MatTableDataSource();
+        this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
+        this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
     }
 
     ngOnInit()

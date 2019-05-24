@@ -323,7 +323,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 				this.sourceEmployee.masterCompanyId = 1;
 				this.sourceEmployee.employeeId = this.local.employeeId;
 				this.employeeService.newAddCertification(this.sourceEmployee).subscribe(
-					data => {
+                    data => {
+                        this.alertService.showMessage('Employee Certification Added successfully.');
 						this.localCollection = data;
 						this.employeeService.generalCollection = this.local;
                 })
@@ -337,7 +338,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
             this.sourceEmployee.updatedBy = this.userName;
 			this.sourceEmployee.masterCompanyId = 1;
-			this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
+            this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
+                this.alertService.showMessage('Employee Certification updated successfully.');
 				this.employeeService.generalCollection = this.local;
             })
 
