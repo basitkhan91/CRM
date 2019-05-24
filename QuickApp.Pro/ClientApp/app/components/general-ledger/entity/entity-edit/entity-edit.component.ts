@@ -23,6 +23,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CustomerService } from '../../../../services/customer.service';
 
 @Component({
 	selector: 'app-entity-edit',
@@ -71,10 +72,15 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	entityName: string;
     Active: string;
     entityViewFeilds: any = {};
+    allCountryinfo: any[];
+    countrycollection: any[];
+    disablesave: boolean;
+    selectedCountries: any;
 	//selectedNode1: TreeNode
 
 	constructor(
-		private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService, private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,
+        private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerService: CustomerService) {
 
 		this.dataSource = new MatTableDataSource();
 		if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
@@ -87,7 +93,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 	ngOnInit(): void {
 		this.CurrencyData();
-		this.loadData();
+        this.loadData();
+        this.countrylist();
 	}
 
 	modal: NgbModalRef;
@@ -488,6 +495,73 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    private countrylist() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.customerService.getCountrylist().subscribe(
+            results => this.onDatacountrySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onDatacountrySuccessful(allCountries: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allCountryinfo = allCountries;
+
+        this.countrycollection = [];
+        if (this.allCountryinfo.length > 0) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                let countryName = this.allCountryinfo[i].nice_name;
+                if (countryName) {
+                    this.countrycollection.push(countryName);
+                }
+            }
+        }
+    }
+
+    filtercountry(event) {
+        this.countrycollection = [];
+        if (this.allCountryinfo.length > 0) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                let countryName = this.allCountryinfo[i].nice_name;
+                if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.countrycollection.push(countryName);
+                }
+            }
+        }
+    }
+
+
+    onCountrieselected(event) {
+        if (this.allCountryinfo) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                if (event == this.allCountryinfo[i].nice_name) {
+                    this.sourceLegalEntity.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesave = false;
+
+                    this.selectedCountries = event;
+                }
+            }
+        }
+    }
+
+
+    eventCountryHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesave = false;
+                }
+                else {
+                    this.disablesave = true;
+                }
+            }
+
+        }
     }
   
 }
