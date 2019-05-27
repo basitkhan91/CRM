@@ -6,12 +6,13 @@ import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
 import { AssetStatus } from '../../models/asset-status.model';
 import { JournalBatch } from '../../models/JournalBatch';
+import { JournalManual } from '../../models/journal-manual';
 
 @Injectable()
 export class JournelsEndpointService extends EndpointFactory {
     //Urls for Batch
     private readonly getAllBatchURL: string = "/api/Batch/getAllBatch";
-    private readonly getBatchByIdURL: string = "/api/Batch/getBatchById";
+    private readonly getBatchByIdURL: string = "/api/Batch/getById";
     private readonly addBatchURL: string = "/api/Batch/addBatch";
     private readonly updateBatchURL: string = "/api/Batch/updateBatch";
     private readonly removeBatchByIdURL: string = "/api/Batch/removeBatchById";
@@ -19,13 +20,13 @@ export class JournelsEndpointService extends EndpointFactory {
     private readonly getBatchAuditDataById: string = "/api/Batch/auditsBatch";
 
     //Urls for Journel
-    private readonly getAllJournelURL: string = "/api/Journals/getAllJournel";
-    private readonly getJournelByIdURL: string = "/api/Journals/getJournelById";
-    private readonly addJournelURL: string = "/api/Journals/addJournel";
-    private readonly updateJournelURL: string = "/api/Journals/updateJournel";
-    private readonly removeJournelByIdURL: string = "/api/Journals/removeJournelById";
-    private readonly updateJournelForActive: string = "/api/Journals/updateJournelActive";
-    private readonly getJournelAuditDataById: string = "/api/Journals/auditsJournel";
+    private readonly getAllJournelURL: string = "/api/journals/getAll";
+    private readonly getJournelByIdURL: string = "/api/journals/getById";
+    private readonly addJournelURL: string = "/api/journals/add";
+    private readonly updateJournelURL: string = "/api/journals/update";
+    private readonly removeJournelByIdURL: string = "/api/journals/removeById";
+    private readonly updateJournelForActive: string = "/api/journals/updateActive";
+    private readonly getJournelAuditDataById: string = "/api/journals/audits";
 
 
     get getBatchAll() { return this.configurations.baseUrl + this.getAllBatchURL; }
@@ -119,39 +120,39 @@ export class JournelsEndpointService extends EndpointFactory {
             });
     }
 
-    getJournelById<T>(assetId: number): Observable<T> {
-        let endpointUrl = `${this.getByIdJournel}/${assetId}`;
+    getJournelById<T>(journelId: number): Observable<T> {
+        let endpointUrl = `${this.getByIdJournel}/${journelId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getJournelById(assetId));
+                return this.handleError(error, () => this.getJournelById(journelId));
             });
     }
 
-    addJournel<T>(asset: AssetStatus): Observable<T> {
+    addEndpointJournel<T>(journel: JournalManual): Observable<T> {
         let endpointUrl = this.journelAdd;
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(asset), this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(journel), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.addJournel(asset));
+                return this.handleError(error, () => this.addEndpointJournel(journel));
             });
     }
 
-    updateJournel<T>(assetStatus: AssetStatus): Observable<T> {
+    updateJournel<T>(journel: JournalManual): Observable<T> {
         let endpointUrl = this.journelUpdate;
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(assetStatus), this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(journel), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.updateJournel(assetStatus));
+                return this.handleError(error, () => this.updateJournel(journel));
             });
     }
 
-    removeJournelById<T>(assetId: number): Observable<T> {
-        let endpointUrl = `${this.removeByIdjournel}/${assetId}`;
+    removeJournelById<T>(journelId: number): Observable<T> {
+        let endpointUrl = `${this.removeByIdjournel}/${journelId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.removeJournelById(assetId));
+                return this.handleError(error, () => this.removeJournelById(journelId));
             });
     }
 
@@ -164,12 +165,12 @@ export class JournelsEndpointService extends EndpointFactory {
             });
     }
 
-    getJournelAuditById<T>(assetId: number): Observable<T> {
-        let endpointUrl = `${this.getJournelAuditDataById}/${assetId}`;
+    getJournelAuditById<T>(journelId: number): Observable<T> {
+        let endpointUrl = `${this.getJournelAuditDataById}/${journelId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getJournelAuditById(assetId));
+                return this.handleError(error, () => this.getJournelAuditById(journelId));
             });
     }
 

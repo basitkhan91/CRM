@@ -9,6 +9,7 @@ import { ViewBatchTsComponent } from '../components/accounting/general-ledger/Jo
 import { CreateJournelComponent } from '../components/accounting/general-ledger/Journals/create-journel/create-journel.component';
 import { ImportComponent } from '../components/accounting/general-ledger/Journals/import/import.component';
 import { ScheduleComponent } from '../components/accounting/general-ledger/Journals/schedule/schedule.component';
+import { ListJournelComponent } from '../components/accounting/general-ledger/Journals/list-journel/list-journel.component';
 //import { NodeSetupComponent } from '../components/accounting/general-ledger/node-setup/node-setup.component';
 
 const accountingPagesRoutes: Routes = [
@@ -21,6 +22,7 @@ const accountingPagesRoutes: Routes = [
             { path: "app-create-journel", component: CreateJournelComponent, data: { title: "CreateJournel" } },
             { path: "app-import", component: ImportComponent, data: { title: "import Component" } },
             { path: "app-schedule", component: ScheduleComponent, data: { title: "Schedule Component" } },
+            { path: "app-list-journel", component: ListJournelComponent, data: { title: "journel List Component" } },
         ]
     }
 ];

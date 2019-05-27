@@ -333,7 +333,7 @@ namespace DAL
         public DbSet<JournalType> JournalType { get; set; }
         public DbSet<JournalPeriod> JournalPeriod { get; set; }
         public DbSet<JournalSource> JournalSource { get; set; }
-
+        public DbSet<JournalManual> JournalManual { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

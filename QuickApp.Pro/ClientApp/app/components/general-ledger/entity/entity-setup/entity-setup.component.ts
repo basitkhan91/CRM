@@ -214,7 +214,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceAction = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })

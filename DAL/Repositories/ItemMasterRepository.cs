@@ -231,6 +231,30 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<object> getLegalEntityAccountsData(long value)
+        {
+            var data =          (from e in _appContext.LegalEntity
+                                join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
+                                from domeswire in domesticwire.DefaultIfEmpty()
+                                join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
+                                from internalwire in interwire.DefaultIfEmpty()
+                                join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
+                                from achdata in achdetails.DefaultIfEmpty()
+
+                                where e.LegalEntityId == value
+
+
+                                select new
+                                {
+                                    e.LegalEntityId,
+                                    domeswire.AccountNumber,
+                                    internalwire.BeneficiaryBankAccount,
+                                    achAccountNumber = achdata.AccountNumber
+
+                                }).ToList();
+
+            return data;
+        }
 
         public IEnumerable<object> getAllItemMasterStockdata()
         {
@@ -323,7 +347,7 @@ namespace DAL.Repositories
             return leftOuterJoin.OrderByDescending(a=>a.LegalEntityId).ToList();
         }
 
-
+        
 
         public IEnumerable<object> getAllItemMasterNonstockdata()
         {

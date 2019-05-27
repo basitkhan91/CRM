@@ -97,7 +97,15 @@
                         <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeBudget" />
                         <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeForecast" />
                            </span></p>
-                    <p><span class="label"><b>Account Type: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
+                    <p>
+                        <span class="label col-sm-6"><b>Account Type: </b></span>
+                        <span class="col-sm-6">
+                            <select [(ngModel)]="glAccountViewData.glAccountTypeId" [disabled]="true" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">{{accounttype.glAccountClassName}}</option>
+                            </select>
+                        </span>
+                        <!--<span class="value">{{glAccountViewData.allowManualJE}}</span>-->
+                    </p>
                     <p><span class="label"><b>C-Flows Classification: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
                  
                     <p><span class="label"><b>Created By: </b></span><span class="value">{{glAccountViewData.createdBy}}</span></p>

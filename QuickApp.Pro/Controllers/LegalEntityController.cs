@@ -52,6 +52,14 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("legalEntityAccountsById/{id}")]
+        [Produces(typeof(List<AuditHistory>))]
+        public IActionResult GetLegalEntityAccountsById(long id)
+        {
+            var accountsData = _unitOfWork.itemMaster.getLegalEntityAccountsData(id);
+            return Ok(accountsData);
+        }
+
         [HttpGet("Get")]
         [Produces(typeof(List<LegalEntityViewModel>))]
         public IActionResult Get()

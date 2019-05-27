@@ -251,6 +251,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
     open(content) {
         this.GeneralInformation();
         this.sourceLegalEntity = {};
+        this.sourceLegalEntity.isBalancingEntity = true;
 		this.sourceLegalEntity.isActive = true;
 		this.entityName = "";
 		this.modal = this.modalService.open(content, { size: 'lg' });

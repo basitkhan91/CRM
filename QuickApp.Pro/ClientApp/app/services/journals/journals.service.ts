@@ -7,11 +7,14 @@ import { JournelsEndpointService } from './journals-endpoint.service';
 import { JournalBatch } from '../../models/JournalBatch';
 import { AssetStatus } from '../../models/asset-status.model';
 import { Subject } from 'rxjs';
+import { JournalManual } from '../../models/journal-manual';
 
 @Injectable()
 export class JournelService {
 
     
+    manulaBatchCollection: any;
+    manulaJournelCollection: any;
     ShowPtab: boolean = true;
     //for steps start
     public alertObj = new Subject<any>();
@@ -52,30 +55,32 @@ export class JournelService {
         return this.journelsEndpoint.getBatchAuditById<any>(batchId);
     }
 
+    //Journel manual Service methods Start
+
     getAllJournel() {
         return Observable.forkJoin(
-            this.journelsEndpoint.getAllJournel<AssetStatus[]>());
+            this.journelsEndpoint.getAllJournel<JournalManual[]>());
     }
 
     getJournelById(journelId: number) {
         return Observable.forkJoin(
-            this.journelsEndpoint.getJournelById<AssetStatus>(journelId)
+            this.journelsEndpoint.getJournelById<JournalManual>(journelId)
         );
     }
 
-    addJournel(assetStatus: AssetStatus) {
-        return this.journelsEndpoint.addJournel<AssetStatus>(assetStatus);
+    addJournel(journel: JournalManual) {
+        return this.journelsEndpoint.addEndpointJournel<JournalManual>(journel);
     }
 
-    updateJournel(assetStatus: AssetStatus) {
-        return this.journelsEndpoint.updateJournel<AssetStatus>(assetStatus);
+    updateJournel(journel: JournalManual) {
+        return this.journelsEndpoint.updateJournel<JournalManual>(journel);
     }
 
-    removeJournel(batchId: number) {
-        return this.journelsEndpoint.removeJournelById(batchId);
+    removeJournel(journelId: number) {
+        return this.journelsEndpoint.removeJournelById(journelId);
     }
-    updateActiveJournel(assetStatus: any) {
-        return this.journelsEndpoint.getUpdateJournelForActive(assetStatus, assetStatus.id);
+    updateActiveJournel(journel: any) {
+        return this.journelsEndpoint.getUpdateJournelForActive(journel, journel.id);
     }
     getJournelAudit(journelId: number) {
         return this.journelsEndpoint.getJournelAuditById<any>(journelId);

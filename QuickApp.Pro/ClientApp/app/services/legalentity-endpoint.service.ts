@@ -20,6 +20,8 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly _deleteLegalEntity: string = "/api/legalEntity/deleteLegalEntity";
 
     private readonly _JobTilesUrlAuditHistory: string = "/api/legalEntity/auditHistoryById";
+    private readonly getEntitySetupAccounts: string = "/api/legalEntity/legalEntityAccountsById";
+
     private readonly _activeUrl: string = "/api/legalEntity/UpdateActive";
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
@@ -173,6 +175,15 @@ export class LegalEntityEndpontService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getHistoryLegalEntityEndpontService(jobTitleId));
 			});
+    }
+
+    getAccountsInfoById<T>(entityId: number): Observable<T> {
+        let endpointUrl = `${this.getEntitySetupAccounts}/${entityId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAccountsInfoById(entityId));
+            });
     }
 
     getUpdateLegalEntityActive<T>(roleObject: any, legalEntityId: number): Observable<T> {
