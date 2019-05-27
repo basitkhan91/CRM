@@ -48,10 +48,10 @@ namespace DAL.Models
 
         public long? POROCategoryId { get; set; }
 
-        [ForeignKey("GLClassFlowClassificationId")]
         public long? GLClassFlowClassificationId { get; set; }        
        
         public virtual GlClassFlowClassification GlClassFlowClassification { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
+        
     }
 }

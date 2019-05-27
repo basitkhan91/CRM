@@ -54,9 +54,9 @@
                             </div>
                            
                             <div class=" col-sm-12 summary-account-block">
-                                <label class="control-label col-sm-4">In- Active<strong class="clr-red">*</strong></label>
+                                <label class="control-label col-sm-4">Active</label>
                                 <div class="col-sm-7">
-                                    <input name="test3" type="checkbox" [(ngModel)]="currentGLAccount.activeFlag" [ngModelOptions]="{standalone: true}">
+                                    <input name="test3" type="checkbox" value="true" [(ngModel)]="currentGLAccount.activeFlag" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class=" col-sm-12">
@@ -91,9 +91,9 @@
                                 </div>
                             </div>
                             <div class=" col-sm-12 allow-manual-je-block">
-                                <label class="control-label col-sm-4">Allow Manual JE<strong class="clr-red">*</strong></label>
+                                <label class="control-label col-sm-4">Allow Manual JE</label>
                                 <div class="col-sm-7">
-                                    <input value="true" type="checkbox" [(ngModel)]="currentGLAccount.allowManualJE" [ngModelOptions]="{standalone: true}" disabled>
+                                    <input value="true" type="checkbox" [(ngModel)]="currentGLAccount.allowManualJE" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div>

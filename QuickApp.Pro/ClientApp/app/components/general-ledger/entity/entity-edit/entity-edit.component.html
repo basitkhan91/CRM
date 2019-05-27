@@ -208,7 +208,8 @@
 
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Balancing Entity</label>
-														<div class="col-sm-7"> <input class="form-control" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBalancingEntity"> </div>
+														<div class="col-sm-7">
+                                                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBalancingEntity"> </div>
 													</div>
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Cage Code</label>
@@ -229,7 +230,7 @@
 														<label class="control-label col-sm-4">Banking Info</label>
 														<div class="col-sm-7"> <input type="checkbox" class="form-control comp-banking-info-checkbox" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBankingInfo"> </div>
 													</div>
-													<div class="form-group col-sm-12">
+													<!--<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Last Level</label>
 														<div class="col-sm-7"> <input type="checkbox" class="form-control leaf" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isLastLevel"> </div>
 														<div class="form-group col-sm-12 tag-names"  *ngIf="sourceLegalEntity.isLastLevel" >
@@ -240,7 +241,7 @@
 															</div>
 														
 														</div>
-													</div>
+													</div>-->
 												</div>
 												<div class="clear"></div>
 											</div>
@@ -275,13 +276,22 @@
                                                 </div>
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Country</label>
-                                                    <div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.bankcountry"> </div>
+                                                    <div class="col-sm-7">
+                                                        <div class="inner-addon right-addon inline-block">
+                                                            <p-autoComplete (onSelect)="onCountrieselected($event)" filter="true" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceLegalEntity.bankcountry" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                                            [minLength]="1" [dropdown]="true">
+                                                                <ng-template let-nice_name pTemplate="item">
+                                                                    <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                                                </ng-template>
+                                                            </p-autoComplete>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Postal Code</label>
+                                                        <div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.bankpostalCode"> </div>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Postal Code</label>
-                                                    <div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.bankpostalCode"> </div>
-                                                </div>
-                                            </div>
                                             <div class="clear"></div>
 
                                             <button type="button" class="btn btn-success pull-right submit-btn" (click)="DomesticWire()">Next</button>

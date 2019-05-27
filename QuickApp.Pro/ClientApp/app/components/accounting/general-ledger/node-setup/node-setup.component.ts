@@ -89,11 +89,11 @@ export class NodeSetupComponent implements OnInit {
         });
     }
     addNodeSetup(): void {
-        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType)) {
+        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType)) {
             this.display = true;
             this.modelValue = true;
         }
-        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType))
+        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType))
         {
             this.currentNodeSetup.createdBy = this.userName;
             this.currentNodeSetup.updatedBy = this.userName;
@@ -140,9 +140,10 @@ export class NodeSetupComponent implements OnInit {
     removeNodeSetup(nodeId: number): void {
         this.nodeSetupService.remove(nodeId).subscribe(response => {
             this.alertService.showMessage("Node Setup removed successfully.");
-            this.nodeSetupService.getAll().subscribe(nodes => {
-                this.nodeSetupList = nodes[0];
-            });
+            //this.nodeSetupService.getAll().subscribe(nodes => {
+            //    this.nodeSetupList = nodes[0];
+            //});
+            this.setManagementDesctoList();
         });
     }
 

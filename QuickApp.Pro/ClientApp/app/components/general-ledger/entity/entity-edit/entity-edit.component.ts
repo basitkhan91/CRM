@@ -82,6 +82,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,
         private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerService: CustomerService) {
 
+       
 		this.dataSource = new MatTableDataSource();
 		if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
 			this.sourceLegalEntity = this.workFlowtService.listCollection;
@@ -91,7 +92,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	
 	}
 
-	ngOnInit(): void {
+    ngOnInit(): void {
+        this.sourceLegalEntity.isBalancingEntity = true;
 		this.CurrencyData();
         this.loadData();
         this.countrylist();
@@ -248,7 +250,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
     open(content) {
         this.GeneralInformation();
-		this.sourceLegalEntity = {};
+        this.sourceLegalEntity = {};
 		this.sourceLegalEntity.isActive = true;
 		this.entityName = "";
 		this.modal = this.modalService.open(content, { size: 'lg' });

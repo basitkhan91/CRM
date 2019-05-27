@@ -372,7 +372,7 @@ export class AccountingCalendarComponent implements OnInit {
     }
     addCalendar() {
         this.isBoolean = false;
-        if (!(this.currentCalendarObj.name && this.currentCalendarObj.legalEntityId && this.currentCalendarObj.description && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType && this.currentCalendarObj.fiscalYear
+        if (!(this.currentCalendarObj.name && this.currentCalendarObj.legalEntityId && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType && this.currentCalendarObj.fiscalYear
             && this.currentCalendarObj.noOfPeriods)) {
             this.display = true;
         }
@@ -595,4 +595,5 @@ export class AccountingCalendarComponent implements OnInit {
             this.showFiscal = false;
         }
     }
+  
 }
