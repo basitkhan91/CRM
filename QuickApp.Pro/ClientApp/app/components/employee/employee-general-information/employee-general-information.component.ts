@@ -32,7 +32,6 @@ import * as moment from 'moment'
 import { CalendarModule } from 'primeng/calendar';
 import { LegalEntityService } from '../../../services/legalentity.service';
 import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
-import { PhoneNumber } from '../../../models/phoneNumber.model';
 
 @Component({
 	selector: 'app-employee-general-information',
@@ -41,9 +40,7 @@ import { PhoneNumber } from '../../../models/phoneNumber.model';
 	animations: [fadeInOut]
 })
 
-export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {
-    phoneNumber = new PhoneNumber()
-    
+export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {    
 	local: any;
 	activeIndex: number;
 	allLeaves: EmployeeLeaveType[];
