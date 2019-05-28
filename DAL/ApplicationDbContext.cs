@@ -335,6 +335,9 @@ namespace DAL
         public DbSet<JournalSource> JournalSource { get; set; }
         public DbSet<JournalManual> JournalManual { get; set; }
 
+
+        public DbSet<VendorCapability> VendorCapability { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

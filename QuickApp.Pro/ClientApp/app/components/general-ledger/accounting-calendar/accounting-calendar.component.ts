@@ -40,6 +40,9 @@ export class AccountingCalendarComponent implements OnInit {
         this.minDate= new Date(year + '-' + '01-01');
         this.loadCompleteCalendarData();
         this.loadCompaniesData();
+        this.currentCalendarObj.fiscalYear = "2019";
+        this.currentCalendarObj.fromDate = "01/01/2019";
+        this.currentCalendarObj.toDate= "12/31/2019";
     }
     loadCompleteCalendarData() {
         this.calendarService.getAll().subscribe(data => {
