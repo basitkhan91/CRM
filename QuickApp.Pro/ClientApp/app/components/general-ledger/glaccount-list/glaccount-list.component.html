@@ -92,11 +92,13 @@
 
                 </div>
                 <div class="col-sm-6">
-                    <p><span class="label"><b>Balance Type: </b></span><span class="value">
-                        <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeActual" />
-                        <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeBudget" />
-                        <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeForecast" />
-                           </span></p>
+                    <p>
+                        <span class="label"><b>Balance Type: </b></span><span class="value">
+                            <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeActual" />
+                            <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeBudget" />
+                            <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeForecast" />
+                        </span>
+                    </p>
                     <p>
                         <span class="label col-sm-6"><b>Account Type: </b></span>
                         <span class="col-sm-6">
@@ -104,10 +106,23 @@
                                 <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">{{accounttype.glAccountClassName}}</option>
                             </select>
                         </span>
-                        <!--<span class="value">{{glAccountViewData.allowManualJE}}</span>-->
                     </p>
-                    <p><span class="label"><b>C-Flows Classification: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
-                 
+                    <p><span class="label"><b class="col-sm-4">C-Flows Classification: </b></span>
+                    <span class="col-sm-4">
+                        <select [(ngModel)]="glAccountViewData.glClassFlowClassificationId" [disabled]="true" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
+                        </select>
+                     </span>
+                    </p>
+
+                    <p>
+                        <span class="label col-sm-6"><b>PO Category: </b></span>
+                        <span class="col-sm-6">
+                            <select [(ngModel)]="glAccountViewData.poroCategoryId" [disabled]="true" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
+                            </select>
+                        </span>
+                    </p>
                     <p><span class="label"><b>Created By: </b></span><span class="value">{{glAccountViewData.createdBy}}</span></p>
                     <p><span class="label"><b>Created Date: </b></span><span class="value">{{glAccountViewData.createdDate}}</span></p>
                 </div>

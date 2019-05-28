@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../../../services/alert.service';
 import { GLAccountClassService } from '../../../services/glaccountclass.service';
+import { POROCategoryService } from '../../../services/porocategory/po-ro-category.service';
+import { GlCashFlowClassificationService } from '../../../services/gl-cash-flow-classification.service';
 
 @Component({
     selector: 'app-glaccount-list',
@@ -21,14 +23,19 @@ export class GlaccountListComponent implements OnInit {
     glAccountObj: any;
     Active: string;
     glAccountViewData: any;
+    poroCategoryList: any[] = [];
+    allGLCashFlowClassInfo: any[] = [];
+
     /** GLAccountList ctor */
-    constructor(public glAccountClassService: GLAccountClassService,private glAccountService: GlAccountService, private router: Router, private modalService: NgbModal, private alertService: AlertService) {
+    constructor(public glAccountClassService: GLAccountClassService, private glAccountService: GlAccountService, private poroCategoryService: POROCategoryService,
+        private router: Router, private modalService: NgbModal, private alertService: AlertService, private glcashFlowClassifcationService: GlCashFlowClassificationService) {
 
     }
 
     ngOnInit(): void {
         this.loadGLAccountTypeData();
-
+        this.loadPOCategory();
+        this.loadGLCashFlowClassification();
         this.glAccountService.glAccountEditCollection = null;
         this.glAccountService.getAll().subscribe(glAccountData => {
             this.glAccountList = glAccountData[0];
@@ -41,6 +48,19 @@ export class GlaccountListComponent implements OnInit {
         })
     }
 
+    private loadPOCategory() {
+        
+        this.poroCategoryService.getAll().subscribe(poroCategory => {
+            this.poroCategoryList = poroCategory[0];
+
+        })
+    }
+
+    private loadGLCashFlowClassification() {
+        this.glcashFlowClassifcationService.getWorkFlows().subscribe(cahsFlowClassdata => {
+            this.allGLCashFlowClassInfo = cahsFlowClassdata[0];
+        })
+    }
     private glAccountEdit(glAccount) {
         this.glAccountService.glAccountEditCollection = glAccount;
         this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-glaccount-create')

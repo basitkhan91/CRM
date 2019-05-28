@@ -108,7 +108,14 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Node Code <span class="clr-red">*</span> </label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" [(ngModel)]="currentNodeSetup.nodeCode" [ngModelOptions]="{standalone: true}">
+                    <p-autoComplete (onSelect)="codeSelect($event)" (onKeyUp)=codeHandler($event) [(ngModel)]="currentNodeSetup.nodeCode" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterCodes($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                        <ng-template let-nodeCode pTemplate="item">
+                            <div class="ui-helper-clearfix">{{nodeCode}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="disablesave" class="clr-red">Already Exists</div>
+
                 </div>
             </div>
             <div class="form-group col-sm-12">
@@ -157,8 +164,8 @@
             </div>
             <div class="clear"></div>
             <div class="modal-footer">
-                <button class="btn btn-success pull-right submit-btn" *ngIf="!this.updateMode" (click)="addNodeSetup()">Save</button>
-                <button class="btn btn-success pull-right submit-btn" *ngIf="this.updateMode" (click)="updateNodeSetup()">Save</button>
+                <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" *ngIf="!this.updateMode" (click)="addNodeSetup()">Save</button>
+                <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" *ngIf="this.updateMode" (click)="updateNodeSetup()">Save</button>
             </div>
         </form>
     </div>
