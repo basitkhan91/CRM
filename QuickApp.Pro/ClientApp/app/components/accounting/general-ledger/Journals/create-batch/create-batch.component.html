@@ -39,21 +39,21 @@
                             <div class="col-sm-7">
                                 <div class="inner-addon right-addon inline-block">
                                     <i class="fa fa-search"></i>
-                                    <input type="text" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
+                                    <input type="text" class="form-control numberids ui-autocomplete-input" [(ngModel)]="currentJournelBatch.journalBatchNumber" [ngModelOptions]="{standalone: true}" autocomplete="off">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Batch Name <span class="clr-red">*</span></label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                <input type="text" class="form-control names ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentJournelBatch.journalBatchName" id="" name="" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Batch Description <span class="clr-red">*</span></label>
                             <div class="col-sm-7">
 
-                                <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                <input type="text" class="form-control names ui-autocomplete-input" [(ngModel)]="currentJournelBatch.journalBatchDescription" [ngModelOptions]="{standalone: true}" autocomplete="off">
 
                             </div>
                         </div>
@@ -61,11 +61,8 @@
                             <label class="control-label col-sm-4">Ledger <span class="clr-red">*</span></label>
                             <div class="col-sm-7">
                                 <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                    <select>
-                                        <option>CO123</option>
-                                        <option>CO124</option>
-                                        <option>CO125</option>
-                                        <option>CO126</option>
+                                    <select [(ngModel)]="currentJournelBatch.glAccountId" [ngModelOptions]="{standalone: true}" (change)="getLegalEntityData(currentManualJournel.glAccountId)">
+                                        <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
                                     </select>
                                 </div>
                                 <a href="#" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -75,46 +72,48 @@
                             <label class="control-label col-sm-4">Source <span class="clr-red">*</span></label>
                             <div class="col-sm-7">
                                 <select class="">
-                                    <option value="">-- Select --</option>
-                                    <option value="">Budget</option>
-                                    <option value="">Fixed Assets</option>
                                     <option value="">Manual</option>
+                                    <!--<option value="">Budget</option>
+                                    <option value="">Fixed Assets</option>
                                     <option value="">PaymentsPayables</option>
                                     <option value="">Purchasing</option>
                                     <option value="">Receipts</option>
                                     <option value="">Receivables</option>
-                                    <option value="">Work Order</option>
+                                    <option value="">Work Order</option>-->
                                 </select>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Journal Type</label>
                             <div class="col-sm-7">
-                                <select class="">
+                                <select class="" [(ngModel)]="currentJournelBatch.journalTypeId" [ngModelOptions]="{standalone: true}">
                                     <option value="">-- Select --</option>
-                                    <option value="">InterCo</option>
-                                    <option value="">Standard</option>
+                                    <option value="1">Standard</option>
+                                    <option value="2">Inter Company</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Period Name <span class="clr-red">*</span></label>
                             <div class="col-sm-7">
-                                <select class="" id="" name="">
-                                    <option value="">-- Select --</option>
-                                    <option value="">Jan-2018</option>
-                                    <option value="">Feb-2018</option>
-                                    <option value="">Mar-2018</option>
-                                    <option value="">Apr-2018</option>
-                                    <option value="">May-2018</option>
-                                    <option value="">Jun-2018</option>
-                                    <option value="">Jul-2018</option>
-                                    <option value="">Aug-2018</option>
-                                    <option value="">Sep-2018</option>
-                                    <option value="">Oct-2018</option>
-                                    <option value="">Nov-2018</option>
-                                    <option value="">Dec-2018</option>
-                                </select>
+                                <div class="col-sm-7">
+                                    <input type="text" [(ngModel)]="currentJournelBatch.journalPeriodName" [ngModelOptions]="{standalone: true}" class="form-control wauto" name="" id="">
+                                </div>
+                                <!--<select class="" id="" name="">
+        <option value="">-- Select --</option>
+        <option value="">Jan-2018</option>
+        <option value="">Feb-2018</option>
+        <option value="">Mar-2018</option>
+        <option value="">Apr-2018</option>
+        <option value="">May-2018</option>
+        <option value="">Jun-2018</option>
+        <option value="">Jul-2018</option>
+        <option value="">Aug-2018</option>
+        <option value="">Sep-2018</option>
+        <option value="">Oct-2018</option>
+        <option value="">Nov-2018</option>
+        <option value="">Dec-2018</option>
+    </select>-->
                             </div>
                         </div>
 
@@ -125,25 +124,21 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Currency</label>
                             <div class="col-sm-7">
-                                <select class="form-control" id="" name="">
-                                    <option value="inr">₹</option>
-                                    <option value="usd" selected="1">$</option>
-                                    <option value="pound">£</option>
-                                    <option value="euro">€</option>
-                                    <option value="yen">¥</option>
+                                <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentJournelBatch.localCurrencyId">
+                                    <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Debit</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" name="">
+                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.localDebitAmount" [ngModelOptions]="{standalone: true}" >
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Credit</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" name="">
+                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.localCreditAmount" [ngModelOptions]="{standalone: true}">
                             </div>
                         </div>
                     </div>
@@ -152,25 +147,21 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Currency</label>
                             <div class="col-sm-7">
-                                <select class="form-control" id="" name="">
-                                    <option value="inr">₹</option>
-                                    <option value="usd" selected="1">$</option>
-                                    <option value="pound">£</option>
-                                    <option value="euro">€</option>
-                                    <option value="yen">¥</option>
+                                <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentJournelBatch.reportingCurrencyId">
+                                    <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                 </select>
                             </div>
-                        </div>
+                            </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Debit</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" name="">
+                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.reportingDebitAmount" [ngModelOptions]="{standalone: true}" >
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Credit</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" name="">
+                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.reportingCreditAmount" [ngModelOptions]="{standalone: true}">
                             </div>
                         </div>
                     </div>
@@ -178,13 +169,13 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Reversing</label>
                             <div class="col-sm-7">
-                                <input type="checkbox">
+                                <input type="checkbox" [(ngModel)]="currentJournelBatch.isReversing" [ngModelOptions]="{standalone: true}">
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Recurring</label>
                             <div class="col-sm-7">
-                                <input type="checkbox">
+                                <input type="checkbox" [(ngModel)]="currentJournelBatch.isRecurring" [ngModelOptions]="{standalone: true}">
                             </div>
                         </div>
 
@@ -193,7 +184,7 @@
 
                     <div class="clear"></div>
                     <hr>
-                    <a href="#" class="btn btn-success pull-right">Save</a>
+                    <a href="#" class="btn btn-success pull-right" (click)="updateBatch()">Update</a>
                     <div class="clear"></div>
                 </div>
             </div>

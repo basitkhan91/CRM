@@ -65,7 +65,7 @@ export class ViewBatchTsComponent implements OnInit{
 
     updateBatch(batch): void {
         this.journelService.manulaBatchCollection = batch;
-        this.router.navigateByUrl('/accountmodule/accountpages/app-list-journel')
+        this.router.navigateByUrl('/accountmodule/accountpages/app-create-batch')
     }
 
     removeBatch(): void {

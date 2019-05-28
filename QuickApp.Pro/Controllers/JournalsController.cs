@@ -76,11 +76,11 @@ namespace QuickApp.Pro.Controllers
                         journalBatch.JournalPeriodName = journelData.JournalManualPeriodName;
                         journalBatch.LocalCurrencyId = journelData.JournalManualLocalCurrencyId;
                         journalBatch.LocalDebitAmount = journelData.JournalManualLocalDebitCurrency;
-                        journalBatch.LocalCreditAmount = journelData.JournalManualLocalCreditCurrency;
+                        journalBatch.LocalCreditAmount = journelData.JournalManualLocalDebitCurrency;
                         journalBatch.ReportingCurrencyId = journelData.JournalManualReportingCurrencyId;
                         journalBatch.ReportingDebitAmount = journelData.JournalManualReposrtingDebitCurrency;
 
-                        journalBatch.ReportingCreditAmount = journelData.JournalManualReposrtingCreditCurrency;
+                        journalBatch.ReportingCreditAmount = journelData.JournalManualReposrtingDebitCurrency;
                         journalBatch.IsReversing = journelData.isreversing;
                         journalBatch.IsRecurring = journelData.isrecurring;
                         journalBatch.MasterCompanyId = journelData.MasterCompanyId;

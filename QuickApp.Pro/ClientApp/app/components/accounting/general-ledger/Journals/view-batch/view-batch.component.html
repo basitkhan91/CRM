@@ -59,14 +59,14 @@
                                 </td>
                                 <td>{{batch.journalPeriodName}}</td>
                                 <td>
-                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="batch.localCurrencyId">
+                                    <select class="" [ngModelOptions]="{standalone: true}" [disabled]="true" [(ngModel)]="batch.localCurrencyId">
                                         <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                     </select>
                                 </td>
                                 <td>{{batch.localDebitAmount}}</td>
                                 <td>{{batch.localCreditAmount}}</td>
                                 <td>
-                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="batch.reportingCurrencyId">
+                                    <select class="" [ngModelOptions]="{standalone: true}" [disabled]="true" [(ngModel)]="batch.reportingCurrencyId">
                                         <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                     </select>
                                 </td>
@@ -82,7 +82,7 @@
                                     <p-inputSwitch *ngIf="batch['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(batch,$event)" [(ngModel)]="batch['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="batch['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(batch,$event)" [(ngModel)]="batch['isActive']"></p-inputSwitch>
                                     <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" matTooltip="View" (click)="showViewData(contentView,batch)"><i class="fa fa-eye"></i></a> </span>
-                                    <a data-toggle="tooltip" title="" class="btn btn-primary boxed-float-btn nobg" data-original-title="Edit"><i class="fa fa-edit" matTooltip="Edit" (click)="manualJournelEdit(batch)"></i></a>
+                                    <a data-toggle="tooltip" title="" class="btn btn-primary boxed-float-btn nobg" data-original-title="Edit"><i class="fa fa-edit" matTooltip="Edit" (click)="updateBatch(batch)"></i></a>
                                     <span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" matTooltip="History" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
                                     <!--<span data-toggle="modal" data-target="#delete"> <a href="#" class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a> </span>-->
                                     <span data-toggle="modal"> <a class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete" matTooltip="Delete" (click)="confirmDelete(content,batch.id)"><i class="fa fa-trash"></i></a> </span>
@@ -119,31 +119,21 @@
         <div class="modal-body viewform">
             <div class="panel-body">
                 <div class="col-sm-6">
-                    <!--<p><span class="label"><b>Ledger Name: </b></span><span class="value">{{manualJournelData.glAccountId}}</span></p>
-                    <p><span class="label"><b>Batch Number: </b></span><span class="value">{{manualJournelData.journalManualBatchNumber}}</span></p>
-                    <p><span class="label"><b>Batch Name: </b></span><span class="value">{{manualJournelData.journalManualBatchName}}</span></p>
-                    <p><span class="label"><b>Batch Description: </b></span><span class="value">{{manualJournelData.journalManualBatchDescription}}</span></p>
-                    <p><span class="label"><b>Balance Type: </b></span><span class="value">{{manualJournelData.journalManualBalanceTypeId}}</span></p>
-                    <p><span class="label"><b>Journal Type: </b></span><span class="value">{{manualJournelData.journalManualTypeId}}</span></p>
-                    <p><span class="label"><b>Entry Date: </b></span><span class="value">{{manualJournelData.journalManualEntryDate}}</span></p>
-                    <p><span class="label"><b>Effective Date: </b></span><span class="value">{{manualJournelData.journalManualEffectiveDate}}</span></p>
-                    <p><span class="label"><b>Period Name: </b></span><span class="value">{{manualJournelData.journalManualPeriodName}}</span></p>
-                    <p><span class="label"><b>Employee: </b></span><span class="value">{{manualJournelData.journalManualEmployeeId}}</span></p>-->
+                    <p><span class="label"><b>Ledger Name: </b></span><span class="value">{{manualBatchData.glAccountId}}</span></p>
+                    <p><span class="label"><b>Batch Number: </b></span><span class="value">{{manualBatchData.journalBatchNumber}}</span></p>
+                    <p><span class="label"><b>Batch Name: </b></span><span class="value">{{manualBatchData.journalBatchName}}</span></p>
+                    <p><span class="label"><b>Batch Type: </b></span><span class="value">{{manualBatchData.journalTypeId}}</span></p>
+                    <p><span class="label"><b>Balance Description: </b></span><span class="value">{{manualBatchData.journalBatchDescription}}</span></p>
+                    <p><span class="label"><b>Journal Type: </b></span><span class="value">{{manualBatchData.journalTypeId}}</span></p>
+                    <p><span class="label"><b>Period Name: </b></span><span class="value">{{manualBatchData.journalPeriodName}}</span></p>
 
                 </div>
                 <div class="col-sm-6">
-                    <p><span class="label"><b>Local Currency: </b></span><span class="value">{{manualJournelData.journalManualLocalCurrencyId}}</span></p>
-                    <p><span class="label"><b>Reporting Currency: </b></span><span class="value">{{manualJournelData.journalManualReportingCurrencyId}}</span></p>
-                    <p><span class="label"><b>Currency Date: </b></span><span class="value">{{manualJournelData.journalManualCurrencyDate}}</span></p>
-                    <p><span class="label"><b>Type: </b></span><span class="value">{{manualJournelData.journalManualCurrencyType}}</span></p>
-                    <p><span class="label"><b>Rate: </b></span><span class="value">{{manualJournelData.journalManualCurrencyRate}}</span></p>
-                    <p><span class="label"><b>Reversing: </b></span><span class="value">{{manualJournelData.isReversing}}</span></p>
-                    <p><span class="label"><b>Date: </b></span><span class="value">{{manualJournelData.journalManualReversingDate}}</span></p>
-                    <p><span class="label"><b>Period Name: </b></span><span class="value">{{manualJournelData.reversingPeriodName}}</span></p>
-                    <p><span class="label"><b>Status: </b></span><span class="value"></span></p>
-
-                    <p><span class="label"><b>Recurring: </b></span><span class="value">{{manualJournelData.createdBy}}</span></p>
-                    <p><span class="label"><b>Created Date: </b></span><span class="value">{{manualJournelData.createdDate}}</span></p>
+                    <p><span class="label"><b>Local Currency: </b></span><span class="value">{{manualBatchData.localCurrencyId}}</span></p>
+                    <p><span class="label"><b>Reporting Currency: </b></span><span class="value">{{manualBatchData.reportingCurrencyId}}</span></p>
+                    <p><span class="label"><b>Recurring: </b></span><span class="value">{{manualBatchData.isRecurring}}</span></p>
+                    <p><span class="label"><b>Reversing: </b></span><span class="value">{{manualBatchData.isReversing}}</span></p>
+                    <p><span class="label"><b>Created Date: </b></span><span class="value">{{manualBatchData.createdDate}}</span></p>
                 </div>
             </div>
         </div>

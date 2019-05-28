@@ -35,7 +35,7 @@ declare const google: any;
 
 export class CustomerGeneralInformationComponent implements OnInit {
     mobnumPattern = "^((\\+91-?)|0)?[0-9]{13}$";
-    emailPattern = "^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
 
     allSubChapter: ATAChapter[];
 
