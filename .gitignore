@@ -3,7 +3,6 @@
 ################################################################################
 
 /DAL/DAL.csproj.user
-/QuickApp.Pro/node_modules
 /QuickApp.Pro/wwwroot/dist
 /.vs
 /QuickApp.Pro/obj
@@ -18,4 +17,4 @@
 /DAL/obj/Debug/netstandard2.0/DAL.assets.cache
 /DAL/obj/Debug/netstandard2.0/DAL.csproj.CoreCompileInputs.cache
 /DAL/obj/Debug/netstandard2.0/DAL.csprojAssemblyReference.cache
-/DAL/obj/project.assets.json
+
