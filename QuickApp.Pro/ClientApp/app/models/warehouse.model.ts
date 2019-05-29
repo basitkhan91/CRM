@@ -23,7 +23,8 @@ export class Warehouse {
 	//public ataSubChapter1Id: number;
 	public warehouseId: number;
 	public name: string;
-	public masterCompanyId: number;
+    public warehouseName: string;
+    public masterCompanyId: number;
 	public createdBy: string;
 	public updatedBy: string;
 	public createdDate: Date;

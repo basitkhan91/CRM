@@ -14,6 +14,7 @@ import { User } from '../models/user.model';
 
 import { ManufacturerEndpoint } from './manufacturer-endpoint.service';
 import { Role } from '../models/role.model';
+import { Manufacturer } from '../models/manufacturer.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -34,6 +35,11 @@ export class ManufacturerService {
     getWorkFlows() {
         return Observable.forkJoin(
             this.manufacturerEndpoint.getManufacturerEndpoint<any[]>());
+    }
+
+    getManufacturers() {
+        return Observable.forkJoin(
+            this.manufacturerEndpoint.getManufacturerEndpoint<Manufacturer[]>());
     }
 
     historyManufacturer(ManufacturerId: number) {

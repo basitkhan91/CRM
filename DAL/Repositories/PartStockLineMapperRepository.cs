@@ -28,6 +28,14 @@ namespace DAL.Repositories
                                    //.Include("StockLine")
                                    .Where(x => x.PurchaseOrderId == id).ToList();
 
+            purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
+            {
+                if (!part.isParent)
+                {
+                    part.POPartSplitAddress = _appContext.Address.Where(x => x.AddressId == part.POPartSplitAddressId).FirstOrDefault();
+                }
+            });
+
             purchaseOrder.StockLine = _appContext.StockLine
                                     .Include("TimeLifeObject")
                                     .Where(x => x.PurchaseOrderId == id).ToList();

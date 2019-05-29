@@ -120,6 +120,7 @@ export class AuthService {
         if (selectedModules != undefined && selectedModules.length > 0) {
             let moduleId : number = selectedModules[0].id;
             let userRoles : UserRole[] = this.getUserRoleWithPermissionFromLocalStorage();
+            var isAllowedToAccess = false;
             for (let userRole of userRoles)
             {
                 var userAssignedModules = userRole.rolePermissions.filter(function (role: RolePermission) {
@@ -129,13 +130,12 @@ export class AuthService {
                 if (userAssignedModules != undefined && userAssignedModules.length > 0) {
                     if (userAssignedModules[0].canAdd || userAssignedModules[0].canUpdate || userAssignedModules[0].canDelete || userAssignedModules[0].canView)
                     {
-                        return true;
+                        isAllowedToAccess = true;
+                        break;
                     }
                 }
-                else {
-                    return false;
-                }
             }
+            return isAllowedToAccess;
         }
         else {
             return false;

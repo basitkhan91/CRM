@@ -7,3 +7,8 @@
 /.vs
 /QuickApp.Pro/obj
 /QuickApp.Pro/Logs
+/QuickApp.Pro/bin/Debug/netcoreapp2.0/DAL.dll
+/QuickApp.Pro/bin/Debug/netcoreapp2.0/DAL.pdb
+/QuickApp.Pro/bin/Debug/netcoreapp2.0/QuickApp.Pro.dll
+/QuickApp.Pro/bin/Debug/netcoreapp2.0/QuickApp.Pro.pdb
+/DAL/obj/Debug/netstandard2.0/DAL.assets.cache

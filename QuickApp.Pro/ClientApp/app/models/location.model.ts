@@ -34,3 +34,16 @@ export class Location {
 
 
 }
+
+export class MyLocation {
+    public locationId: number;
+    public name: string;
+    public masterCompanyId: number;
+    public createdBy: string;
+    public updatedBy: string;
+    public createdDate: Date;
+    public updatedDate: Date;
+    public masterCompany?: MasterCompany;
+    public isActive: boolean;
+    public memo: string;
+}

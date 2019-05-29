@@ -150,6 +150,14 @@ export class BinEndpoint extends EndpointFactory {
 			});
 	}
 
+    getWareHouseBySiteIdEndpoint<T>(siteId: number): Observable<T> {
+        let endpointUrl = `${this._actionsUrlNew2}/${siteId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getWareHouseBySiteIdEndpoint(siteId));
+            });
+    }
 	getLocationDataEndpoint<T>(binId: any): Observable<T> {
 		let endpointUrl = `${this._actionsUrlNew3}/${binId}`;
 
@@ -157,7 +165,16 @@ export class BinEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getLocationDataEndpoint(binId));
 			});
-	}
+    }
+
+    getLocationByWareHouseIdEndpoint<T>(wareHouseId: number): Observable<T> {
+        let endpointUrl = `${this._actionsUrlNew3}/${wareHouseId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getLocationByWareHouseIdEndpoint(wareHouseId));
+            });
+    }
 
 	getShelfDataEndpoint<T>(binId: any): Observable<T> {
 		let endpointUrl = `${this._actionsUrlNew4}/${binId}`;
@@ -168,6 +185,15 @@ export class BinEndpoint extends EndpointFactory {
 			});
 	}
 
+    getShelfByLocationIdEndpoint<T>(locationId: number): Observable<T> {
+        let endpointUrl = `${this._actionsUrlNew4}/${locationId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getShelfByLocationIdEndpoint(locationId));
+            });
+    }
+
 	getBinDataEndpoint<T>(binId: any): Observable<T> {
 		let endpointUrl = `${this._actionsUrlNew5}/${binId}`;
 
@@ -175,6 +201,15 @@ export class BinEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getShelfDataEndpoint(binId));
 			});
+    }
+
+    getBinByShelfIdEndpoint<T>(shelfId: number): Observable<T> {
+        let endpointUrl = `${this._actionsUrlNew5}/${shelfId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getBinByShelfIdEndpoint(shelfId));
+            });
     }
 
     

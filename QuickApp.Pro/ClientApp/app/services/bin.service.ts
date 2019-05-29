@@ -14,6 +14,8 @@ import { Role } from '../models/role.model';
 import { Shelf } from '../models/shelf.model';
 import { AuditHistory } from '../models/audithistory.model';
 import { Bin } from '../models/bin.model';
+import { Warehouse } from '../models/warehouse.model';
+import { MyLocation } from '../models/location.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -82,17 +84,33 @@ export class BinService {
 		return this.binEndpoint.getWareHouseDataEndpoint(binId);
 	}
 
+    getWareHouseBySiteId(siteId: number) {
+        return this.binEndpoint.getWareHouseBySiteIdEndpoint<Warehouse[]>(siteId);
+    }
+
 	getLocationDate(binId: any) {
 		return this.binEndpoint.getLocationDataEndpoint(binId);
-	}
+    }
+
+    getLocationByWareHouseId(wareHouseId: number) {
+        return this.binEndpoint.getLocationByWareHouseIdEndpoint<MyLocation[]>(wareHouseId);
+    }
 
 	getShelfDate(binId: any) {
 		return this.binEndpoint.getShelfDataEndpoint(binId);
-	}
+    }
+
+    getShelfByLocationId(locationId: number) {
+        return this.binEndpoint.getShelfByLocationIdEndpoint<Shelf[]>(locationId);
+    }
 
 	getBinDataById(binId: any) {
 		return this.binEndpoint.getBinDataEndpoint(binId);
-	}
+    }
+
+    getBinByShelfId(shelfId: number) {
+        return this.binEndpoint.getBinByShelfIdEndpoint<Bin[]>(shelfId);
+    }
 
 	getManagementBinEditData(binId?: number) {
 		return this.binEndpoint.getManagementBinEditEndpoint<any>(binId);

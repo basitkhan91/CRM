@@ -22,7 +22,7 @@ using IdentityServer4.AccessTokenValidation;
 
 namespace QuickApp.Pro.Controllers
 {
-    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class AccountController : Controller
     {
@@ -46,12 +46,12 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("users/{id}", Name = GetUserByIdActionName)]
+        [HttpGet("users/{id}")]
         [Produces(typeof(UserViewModel))]
         public async Task<IActionResult> GetUserById(string id)
         {
-            if (!(await _authorizationService.AuthorizeAsync(this.User, id, AccountManagementOperations.Read)).Succeeded)
-                return new ChallengeResult();
+            //if (!(await _authorizationService.AuthorizeAsync(this.User, id, AccountManagementOperations.Read)).Succeeded)
+            //    return new ChallengeResult();
 
 
             UserViewModel userVM = await GetUserViewModelHelper(id);
@@ -81,7 +81,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("users")]
         [Produces(typeof(List<UserViewModel>))]
-        [Authorize(Authorization.Policies.ViewAllUsersPolicy)]
+        //[Authorize(Authorization.Policies.ViewAllUsersPolicy)]
         public async Task<IActionResult> GetUsers()
         {
             return await GetUsers(-1, -1);

@@ -10,7 +10,7 @@ import { CreditTerms } from './credit-terms.model';
 //import { customerclassification } './CustomerClassification.model';
 export class Customer {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-    constructor(masterCompany?: MasterCompany, crediTerms?: CreditTerms, CustomerId?: number, Name?: string, CustomerCode?: string,
+    constructor(masterCompany?: MasterCompany, crediTerms?: CreditTerms, customerId?: number, name?: string, CustomerCode?: string,
         IsInternalCustomer?: boolean, DoingBuinessAsName?: string, CoreDueIn?: number, Parent?: number, CustomerClassificationId?: number, ContractReference?: string,
         PriorityCustomerId?: number,
         IsPBHCustomer?: boolean, PBHCustomerMemo?: string, RestrictPMA?: boolean, RestrictPMAMemo?: string, RestrictBER?: boolean,
@@ -25,8 +25,10 @@ export class Customer {
 		MasterCompanyId?: number, IsActive?: boolean, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean
 		) {
 
-        this.CustomerId = CustomerId;
-        this.Name = Name;
+        this.CustomerId = customerId;
+        this.customerId = customerId;
+        this.Name = name;
+        this.name = name;
         this.CustomerCode = CustomerCode;
         this.IsInternalCustomer = IsInternalCustomer;
         this.DoingBuinessAsName = DoingBuinessAsName;
@@ -63,7 +65,9 @@ export class Customer {
     }
 
     public CustomerId: number;
+    public customerId: number;
     public Name: string;
+    public name: string;
     public CustomerCode: string;
     public IsInternalCustomer: boolean;
     public DoingBuinessAsName: string;

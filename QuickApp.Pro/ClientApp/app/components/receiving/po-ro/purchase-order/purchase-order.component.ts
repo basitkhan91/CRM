@@ -163,14 +163,11 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
 
 
-	private onDataLoadordrSuccessful(purchaseOrder: PurchaseOrder) {
-        // alert('success');
-        debugger
+    private onDataLoadordrSuccessful(purchaseOrder: PurchaseOrder) {
         this.allPurchaseorderInfo = purchaseOrder;
         this.receivingService.selectedPurchaseorderCollection = this.allPurchaseorderInfo;
-		this.vendorservice.selectedPoCollection = this.allPurchaseorderInfo;
-		
-	}
+        this.vendorservice.selectedPoCollection = this.allPurchaseorderInfo;
+    }
 	//handleChange(rowData, e) {
 	//	if (e.checked == false) {
 	//		this.sourceAction = rowData;

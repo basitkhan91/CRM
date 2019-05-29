@@ -189,6 +189,8 @@ import { UserRoleEndPointService } from "./components/user-role/user-role-endpoi
 import { UserRoleService } from "./components/user-role/user-role-service";
 import { RolesGuardService } from "./services/roles-guard.service";
 import { UnauthorizedAccessComponent } from "../unauthorizedaccess/unauthorized-access.component";
+import { CompanyService } from "./services/company.service";
+import { CompanyEndpoint } from "./services/company-endpoint.service";
 
 //import { AuditComponent } from "./components/Audit/audit.component";
 
@@ -387,6 +389,8 @@ import { UnauthorizedAccessComponent } from "../unauthorizedaccess/unauthorized-
         UserRoleEndPointService,
         UserRoleService,
         RolesGuardService,
+        CompanyService,
+        CompanyEndpoint,
 		
     ],
     entryComponents: [
