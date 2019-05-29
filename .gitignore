@@ -13,3 +13,9 @@
 /QuickApp.Pro/bin/Debug/netcoreapp2.0/QuickApp.Pro.dll
 /QuickApp.Pro/bin/Debug/netcoreapp2.0/QuickApp.Pro.pdb
 /DAL/obj/Debug/netstandard2.0/DAL.assets.cache
+/DAL/obj/DAL.csproj.nuget.cache
+/DAL/obj/DAL.csproj.nuget.g.props
+/DAL/obj/Debug/netstandard2.0/DAL.assets.cache
+/DAL/obj/Debug/netstandard2.0/DAL.csproj.CoreCompileInputs.cache
+/DAL/obj/Debug/netstandard2.0/DAL.csprojAssemblyReference.cache
+/DAL/obj/project.assets.json
