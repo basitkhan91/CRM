@@ -120,11 +120,11 @@
                                             <div class="form-group col-sm-12">
                                                 <label class="control-label col-sm-4">Phone <strong class="clr-red">*</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="number" [pattern]="mobnumPattern" #mobPattern="ngModel" minlength=10 maxlength=12 class="form-control" ng-pattern="phoneNumbr" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerPhone">
+                                                    <input type="text" [pattern]="mobnumPattern" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerPhone">
                                                     <div *ngIf="mobPattern.errors" [ngClass]="'error'">
-                                                        <div *ngIf="mobPattern.errors.pattern">
+                                                        <!--<div *ngIf="mobPattern.errors.pattern">
                                                             <span style="color:red">Mobile Number is not valid</span>
-                                                        </div>
+                                                        </div>-->
                                                     </div>
                                                 </div>
                                             </div>

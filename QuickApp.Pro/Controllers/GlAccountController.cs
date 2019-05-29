@@ -70,6 +70,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     glAccountData.IsActive = true;
                     glAccountData.MasterCompanyId = 1;
+                    glAccountData.UpdatedDate = DateTime.Now;
                     glAccountData.CreatedDate = DateTime.Now;
                     unitOfWork.Repository<GLAccount>().Add(glAccountData);
                     unitOfWork.SaveChanges();

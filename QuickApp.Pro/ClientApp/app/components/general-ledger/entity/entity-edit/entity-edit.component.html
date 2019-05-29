@@ -153,7 +153,14 @@
 													</div>
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Country</label>
-														<div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.country"> </div>
+                                                        <div class="col-sm-7">
+                                                            <p-autoComplete (onSelect)="onCountrieselected($event)" filter="true" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceLegalEntity.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                                            [minLength]="1" [dropdown]="true">
+                                                                <ng-template let-nice_name pTemplate="item">
+                                                                    <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                                                </ng-template>
+                                                            </p-autoComplete>
+                                                        </div>
 													</div>
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Invoice Address position</label>
@@ -201,7 +208,8 @@
 
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Balancing Entity</label>
-														<div class="col-sm-7"> <input class="form-control" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBalancingEntity"> </div>
+														<div class="col-sm-7">
+                                                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBalancingEntity"> </div>
 													</div>
 													<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Cage Code</label>
@@ -222,7 +230,7 @@
 														<label class="control-label col-sm-4">Banking Info</label>
 														<div class="col-sm-7"> <input type="checkbox" class="form-control comp-banking-info-checkbox" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBankingInfo"> </div>
 													</div>
-													<div class="form-group col-sm-12">
+													<!--<div class="form-group col-sm-12">
 														<label class="control-label col-sm-4">Last Level</label>
 														<div class="col-sm-7"> <input type="checkbox" class="form-control leaf" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isLastLevel"> </div>
 														<div class="form-group col-sm-12 tag-names"  *ngIf="sourceLegalEntity.isLastLevel" >
@@ -233,7 +241,7 @@
 															</div>
 														
 														</div>
-													</div>
+													</div>-->
 												</div>
 												<div class="clear"></div>
 											</div>
@@ -268,13 +276,22 @@
                                                 </div>
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Country</label>
-                                                    <div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.bankcountry"> </div>
+                                                    <div class="col-sm-7">
+                                                        <div class="inner-addon right-addon inline-block">
+                                                            <p-autoComplete (onSelect)="onCountrieselected($event)" filter="true" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceLegalEntity.bankcountry" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                                            [minLength]="1" [dropdown]="true">
+                                                                <ng-template let-nice_name pTemplate="item">
+                                                                    <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                                                </ng-template>
+                                                            </p-autoComplete>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Postal Code</label>
+                                                        <div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.bankpostalCode"> </div>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Postal Code</label>
-                                                    <div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.bankpostalCode"> </div>
-                                                </div>
-                                            </div>
                                             <div class="clear"></div>
 
                                             <button type="button" class="btn btn-success pull-right submit-btn" (click)="DomesticWire()">Next</button>
@@ -402,11 +419,10 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" id="" (click)="dismissModel()">×</button>
-            <h4 class="modal-title">Details of Entity{{entityViewFeilds.name}}</h4>
+            <h4 class="modal-title">Details of Entity {{entityViewFeilds.name}}</h4>
         </div>
         <div class="modal-body viewform">
             <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
-                <p class="clr-red">This is a static data. Dynamic functionalities will be done in development. </p>
                 <div class="col-sm-6">
                     <p><span class="label"><b>Company Code: </b></span><span class="value">{{entityViewFeilds.name}}</span></p>
                     <p><span class="label"><b>Company: </b></span><span class="value">{{entityViewFeilds.description}}</span></p>
@@ -419,21 +435,14 @@
                     <p><span class="label"><b>Country: </b></span><span class="value">{{entityViewFeilds.country}}</span></p>
                     <p><span class="label"><b>Fax: </b></span><span class="value">{{entityViewFeilds.faxNumber}}</span></p>
                     <p><span class="label"><b>Phone: </b></span><span class="value">{{entityViewFeilds.phoneNumber1}}</span></p>
-                    <!--<p><span class="label"><b>Invoice Address Positioning: </b></span><span class="value">{{entityViewFeilds.name}}</span></p>
-                    <p><span class="label"><b>Invoice Fax/Phone Positioning: </b></span><span class="value">{{entityViewFeilds.name}}</span></p>-->
                 </div>
                 <div class="col-sm-6">
-                    <p><span class="label"><b>Functional Currency: </b></span><span class="value">$</span></p>
-                    <p><span class="label"><b>Reporting Currency: </b></span><span class="value">$</span></p>
-                    <p><span class="label"><b>Balancing Entity: </b></span><span class="value">Yes</span></p>
-                    <p><span class="label"><b>Cage Code: </b></span><span class="value">C123</span></p>
-                    <p><span class="label"><b>FAA Lic: </b></span><span class="value">FAA123</span></p>
-                    <p><span class="label"><b>Tax ID: </b></span><span class="value">TAX12345</span></p>
-                    <p><span class="label"><b>Created By: </b></span><span class="value">Shabbir</span></p>
-                    <p><span class="label"><b>Created Date: </b></span><span class="value">06/22/2018</span></p>
-                    <p><span class="label"><b>Modify By: </b></span><span class="value">Shabbir</span></p>
-                    <p><span class="label"><b>Modify Date: </b></span><span class="value">06/22/2018</span></p>
-                    <p><span class="label"><b>Tag Names: </b></span><span class="value">Tag 1, Tag 2, Tag 3</span></p>
+                    <p><span class="label"><b>Functional Currency: </b></span><span class="value">{{entityViewFeilds.functionalCurrencyId}}</span></p>
+                    <p><span class="label"><b>Reporting Currency: </b></span><span class="value">{{entityViewFeilds.reportingCurrencyId}}</span></p>
+                    <p><span class="label"><b>Balancing Entity: </b></span><span class="value">{{entityViewFeilds.isBalancingEntity}}</span></p>
+                    <p><span class="label"><b>Cage Code: </b></span><span class="value">{{entityViewFeilds.cageCode}}</span></p>
+                    <p><span class="label"><b>FAA Lic: </b></span><span class="value">{{entityViewFeilds.faaLicense}}</span></p>
+                    <p><span class="label"><b>Tax ID: </b></span><span class="value">{{entityViewFeilds.taxId}}</span></p>
                 </div>
                 <div class="clear"></div>
                 <hr>
@@ -441,44 +450,44 @@
                     <div class="col-sm-6 col-md-3">
                         <div class="bg-block2">
                             <h3>Lockbox</h3>
-                            <p><span class="label"><b>PO Box: </b></span><span class="value">PO12345</span></p>
-                            <p><span class="label"><b>Bank Street Address line 1: </b></span><span class="value">Filmnagar</span></p>
-                            <p><span class="label"><b>Bank Street Address line 2: </b></span><span class="value">Jubileehills</span></p>
-                            <p><span class="label"><b>City: </b></span><span class="value">Hyderabad</span></p>
-                            <p><span class="label"><b>Province/State: </b></span><span class="value">Telanagana</span></p>
-                            <p><span class="label"><b>Country: </b></span><span class="value">India</span></p>
-                            <p><span class="label"><b>Postal Code: </b></span><span class="value">500001</span></p>
+                            <p><span class="label"><b>PO Box: </b></span><span class="value">{{entityViewFeilds.poBox}}</span></p>
+                            <p><span class="label"><b>Bank Street Address line 1: </b></span><span class="value">{{entityViewFeilds.bankStreetaddress1}}</span></p>
+                            <p><span class="label"><b>Bank Street Address line 2: </b></span><span class="value">{{entityViewFeilds.bankStreetaddress2}}</span></p>
+                            <p><span class="label"><b>City: </b></span><span class="value">{{entityViewFeilds.bankCity}}</span></p>
+                            <p><span class="label"><b>Province/State: </b></span><span class="value">{{entityViewFeilds.bankProvince}}</span></p>
+                            <p><span class="label"><b>Country: </b></span><span class="value">{{entityViewFeilds.bankcountry}}</span></p>
+                            <p><span class="label"><b>Postal Code: </b></span><span class="value">{{entityViewFeilds.bankpostalCode}}</span></p>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <div class="bg-block2">
                             <h3>Domestic Wire</h3>
-                            <p><span class="label"><b>Bank Name: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Intermediate Bank: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Benficiary Bank Name: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Bank Account Number: </b></span><span class="value">123456789</span></p>
-                            <p><span class="label"><b>ABA Number: </b></span><span class="value">ABA12345</span></p>
+                            <p><span class="label"><b>Bank Name: </b></span><span class="value">{{entityViewFeilds.domesticBankName}}</span></p>
+                            <p><span class="label"><b>Intermediate Bank: </b></span><span class="value">{{entityViewFeilds.domesticIntermediateBank}}</span></p>
+                            <p><span class="label"><b>Benficiary Bank Name: </b></span><span class="value">{{entityViewFeilds.domesticBenficiaryBankName}}</span></p>
+                            <p><span class="label"><b>Bank Account Number: </b></span><span class="value">{{entityViewFeilds.domesticBankAccountNumber}}</span></p>
+                            <p><span class="label"><b>ABA Number: </b></span><span class="value">{{entityViewFeilds.domesticABANumber}}</span></p>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <div class="bg-block2">
                             <h3>International Wire</h3>
-                            <p><span class="label"><b>Bank Name: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Intermediate Bank: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Benficiary Bank Name: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Bank Account Number: </b></span><span class="value">123456789</span></p>
-                            <p><span class="label"><b>SWIFT ID: </b></span><span class="value">S12345</span></p>
+                            <p><span class="label"><b>Bank Name: </b></span><span class="value">{{entityViewFeilds.internationalBankName}}</span></p>
+                            <p><span class="label"><b>Intermediate Bank: </b></span><span class="value">{{entityViewFeilds.internationalIntermediateBank}}</span></p>
+                            <p><span class="label"><b>Benficiary Bank Name: </b></span><span class="value">{{entityViewFeilds.internationalBenficiaryBankName}}</span></p>
+                            <p><span class="label"><b>Bank Account Number: </b></span><span class="value">{{entityViewFeilds.internationalBankAccountNumber}}</span></p>
+                            <p><span class="label"><b>SWIFT ID: </b></span><span class="value">{{entityViewFeilds.internationalSWIFTID}}</span></p>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <div class="bg-block2">
                             <h3>ACH</h3>
-                            <p><span class="label"><b>Bank Name: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Intermediate Bank: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Benficiary Bank Name: </b></span><span class="value">HDFC Bank</span></p>
-                            <p><span class="label"><b>Bank Account Number: </b></span><span class="value">123456789</span></p>
-                            <p><span class="label"><b>ABA Number: </b></span><span class="value">ABA12345</span></p>
-                            <p><span class="label"><b>SWIFT ID: </b></span><span class="value">S12345</span></p>
+                            <p><span class="label"><b>Bank Name: </b></span><span class="value">{{entityViewFeilds.achBankName}}</span></p>
+                            <p><span class="label"><b>Intermediate Bank: </b></span><span class="value">{{entityViewFeilds.achIntermediateBank}}</span></p>
+                            <p><span class="label"><b>Benficiary Bank Name: </b></span><span class="value">{{entityViewFeilds.achBenficiaryBankName}}</span></p>
+                            <p><span class="label"><b>Bank Account Number: </b></span><span class="value">{{entityViewFeilds.achBankAccountNumber}}</span></p>
+                            <p><span class="label"><b>ABA Number: </b></span><span class="value">{{entityViewFeilds.achABANumber}}</span></p>
+                            <p><span class="label"><b>SWIFT ID: </b></span><span class="value">{{entityViewFeilds.achSWIFTID}}</span></p>
                         </div>
                     </div>
                 </div>

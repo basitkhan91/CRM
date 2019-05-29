@@ -29,34 +29,72 @@ namespace QuickApp.Pro.Controllers
 
         #region Public Methods
 
-        [HttpGet("getAllJournel")]
-        public IActionResult getAllJournel()
+        [HttpGet("getAll")]
+        public IActionResult getAllManualJournel()
         {
-            var journel = unitOfWork.Repository<AssetStatus>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.Id);
+            var journel = unitOfWork.Repository<JournalManual>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.ID);
             return Ok(journel);
         }
 
-        [HttpGet("getJournelById/{id}")]
-        public IActionResult getJournelById(long id)
+        [HttpGet("getById/{id}")]
+        public IActionResult getManualJournelById(long id)
         {
-            var journel = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id && x.IsDeleted != true);
+            var journel = unitOfWork.Repository<JournalManual>().Find(x => x.ID == id && x.IsDeleted != true);
             return Ok(journel);
         }
 
-        [HttpPost("addJournel")]
-        public IActionResult addJournel([FromBody]AssetStatus journel)
+        [HttpPost("add")]
+        public IActionResult AddManualJournel([FromBody]JournalManual journelData,JournalBatch journalBatch)
         {
-            if (journel != null)
+            if (journelData != null)
             {
                 if (ModelState.IsValid)
                 {
-                    journel.IsActive = true;
-                    journel.CreatedDate = DateTime.Now;
-                    journel.UpdatedDate = null;
-                    journel.MasterCompanyId = 1;
-                    unitOfWork.Repository<AssetStatus>().Add(journel);
+                    journelData.IsActive = true;
+                    journelData.CreatedDate = DateTime.Now;
+                    journelData.UpdatedDate = null;
+                    journelData.MasterCompanyId = 1;
+                    journelData.IsManual = true;
+                    unitOfWork.Repository<JournalManual>().Add(journelData);
                     unitOfWork.SaveChanges();
-                    return Ok(journel);
+
+                    if (journelData.ID != 0)
+                    {
+                        journelData.JournalManualBatchNumber = journelData.ID;
+                        unitOfWork.Repository<JournalManual>().Update(journelData);
+                        unitOfWork.SaveChanges();
+                    }
+
+                    if (journelData != null)
+                    {
+                        journalBatch.JournalBatchNumber = journelData.JournalManualBatchNumber;
+                        journalBatch.JournalBatchName = journelData.JournalManualBatchName;
+                        journalBatch.JournalBatchDescription = journelData.JournalManualBatchDescription;
+                        journalBatch.GLAccountId = journelData.GLAccountId;
+                        journalBatch.JournalSourceId = 1;
+                        journalBatch.JournalTypeId = journelData.JournalManualTypeId;
+                        journalBatch.JournalPeriodName = journelData.JournalManualPeriodName;
+                        journalBatch.LocalCurrencyId = journelData.JournalManualLocalCurrencyId;
+                        journalBatch.LocalDebitAmount = journelData.JournalManualLocalDebitCurrency;
+                        journalBatch.LocalCreditAmount = journelData.JournalManualLocalDebitCurrency;
+                        journalBatch.ReportingCurrencyId = journelData.JournalManualReportingCurrencyId;
+                        journalBatch.ReportingDebitAmount = journelData.JournalManualReposrtingDebitCurrency;
+
+                        journalBatch.ReportingCreditAmount = journelData.JournalManualReposrtingDebitCurrency;
+                        journalBatch.IsReversing = journelData.isreversing;
+                        journalBatch.IsRecurring = journelData.isrecurring;
+                        journalBatch.MasterCompanyId = journelData.MasterCompanyId;
+                        //journalBatch.createdBy = journelData.CreatedBy;
+                        journalBatch.UpdatedBy = journelData.UpdatedBy;
+                        journalBatch.CreatedDate = journelData.CreatedDate;
+                        journalBatch.UpdatedDate = journelData.UpdatedDate;
+                        journalBatch.IsDeleted = journelData.IsDeleted;
+                        journalBatch.IsActive = journelData.IsActive;
+
+                        unitOfWork.Repository<JournalBatch>().Add(journalBatch);
+                        unitOfWork.SaveChanges();
+                    }
+                    return Ok(journelData);
                 }
                 else
                 {
@@ -71,15 +109,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("updateJournel")]
-        public IActionResult updateJournel([FromBody]AssetStatus journel)
+        [HttpPost("update")]
+        public IActionResult updateManualJournel([FromBody]JournalManual journel)
         {
             if (journel != null)
             {
                 if (ModelState.IsValid)
                 {
                     journel.UpdatedDate = DateTime.Now;
-                    unitOfWork.Repository<AssetStatus>().Update(journel);
+                    unitOfWork.Repository<JournalManual>().Update(journel);
                     unitOfWork.SaveChanges();
                     return Ok(journel);
                 }
@@ -96,15 +134,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("removeJournelById/{id}")]
-        public IActionResult removeJournelById(long id)
+        [HttpGet("removeById/{id}")]
+        public IActionResult removeManualJournelById(long id)
         {
-            var journel = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
+            var journel = unitOfWork.Repository<JournalManual>().Find(x => x.ID == id).FirstOrDefault();
             if (journel != null)
             {
                 journel.UpdatedDate = DateTime.Now;
                 journel.IsDeleted = true;
-                unitOfWork.Repository<AssetStatus>().Update(journel);
+                unitOfWork.Repository<JournalManual>().Update(journel);
                 unitOfWork.SaveChanges();
                 return Ok();
             }
@@ -114,17 +152,17 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        [HttpPut("updateJournelActive/{id}")]
-        public IActionResult updateJournelActive(long id, [FromBody] AssetStatus journel)
+        [HttpPut("updateActive/{id}")]
+        public IActionResult updateManualJournelActive(long id, [FromBody] JournalManual journel)
         {
             if (ModelState.IsValid)
             {
                 if (journel != null)
                 {
-                    var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
+                    var existingResult = unitOfWork.Repository<JournalManual>().Find(x => x.ID == id).FirstOrDefault();
                     journel.UpdatedDate = DateTime.Now;
                     existingResult.IsActive = journel.IsActive;
-                    unitOfWork.Repository<AssetStatus>().Update(journel);
+                    unitOfWork.Repository<JournalManual>().Update(journel);
                     unitOfWork.SaveChanges();
                     return Ok();
                 }
@@ -132,19 +170,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpGet("auditsJournel/{id}")]
-        public IActionResult AuditDetails(long id)
-        {
-            var audits = unitOfWork.Repository<AssetStatusAudit>()
-                .Find(x => x.Id == id)
-                .OrderByDescending(x => x.AssetStatusAuditId);
+        //[HttpGet("audits/{id}")]
+        //public IActionResult AuditDetails(long id)
+        //{
+        //    var audits = unitOfWork.Repository<JournalManual>()
+        //        .Find(x => x.Id == id)
+        //        .OrderByDescending(x => x.AssetStatusAuditId);
 
-            var auditResult = new List<AuditResult<AssetStatusAudit>>();
+        //    var auditResult = new List<AuditResult<AssetStatusAudit>>();
 
-            auditResult.Add(new AuditResult<AssetStatusAudit> { AreaName = "Journel Status", Result = audits.ToList() });
+        //    auditResult.Add(new AuditResult<AssetStatusAudit> { AreaName = "Journel Status", Result = audits.ToList() });
 
-            return Ok(auditResult);
-        }
+        //    return Ok(auditResult);
+        //}
 
         #endregion Public Methods
 

@@ -7,7 +7,10 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../../../../models/si
 import { AuthService } from "../../../../../services/auth.service";
 import { JournalBatch } from "../../../../../models/JournalBatch";
 import { JournelService } from "../../../../../services/journals/journals.service";
-
+import { CurrencyService } from "../../../../../services/currency.service";
+import { Currency } from '../../../../../models/currency.model';
+import { LegalEntityService } from "../../../../../services/legalentity.service";
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
     selector: 'app-create-batch',
     templateUrl: './create-batch.component.html',
@@ -17,6 +20,7 @@ import { JournelService } from "../../../../../services/journals/journals.servic
 /** create-batch component*/
 export class CreateBatchComponent implements OnInit
 {
+    loadingIndicator: boolean;
     currentJournelBatch: JournalBatch;
     journelBatchToUpdate: JournalBatch;
     journelBatchToRemove: JournalBatch;
@@ -25,43 +29,56 @@ export class CreateBatchComponent implements OnInit
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    allCurrencyInfo: any[];
+    companyList: any[] = [];
 
-    constructor(private alertService: AlertService, private journelService: JournelService, private modalService: NgbModal, private authService: AuthService)
+    constructor(private router: Router,private legalEntityservice: LegalEntityService,public currency: CurrencyService,private alertService: AlertService, private journelService: JournelService, private modalService: NgbModal, private authService: AuthService)
     {
-
+        if (this.journelService.manulaBatchCollection)
+        {
+            this.currentJournelBatch = this.journelService.manulaBatchCollection;
+        }
     }
 
     ngOnInit(): void
     {
-        this.journelService.getAllBatch().subscribe(journelBatch => {
-            this.journelBatchList = journelBatch[0];
-            this.journelBatchList.forEach(function (journelBatch) {
-                journelBatch.isActive = journelBatch.isActive == false ? false : true;
-            });
-        });
-        this.currentJournelBatch = new JournalBatch();
+        this.CurrencyData();
+        this.loadCompaniesData();
+
+        //this.journelService.getAllBatch().subscribe(journelBatch => {
+        //    this.journelBatchList = journelBatch[0];
+        //    this.journelBatchList.forEach(function (journelBatch) {
+        //        journelBatch.isActive = journelBatch.isActive == false ? false : true;
+        //    });
+        //});
+        //this.currentJournelBatch = new JournalBatch();
     }
 
+    private loadCompaniesData() {
+        this.legalEntityservice.getEntityList().subscribe(entitydata => {
+            this.companyList = entitydata[0];
+        });
+    }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    addJournelBatch(): void {
-        this.currentJournelBatch.createdBy = this.userName;
-        this.currentJournelBatch.updatedBy = this.userName;
-        this.journelService.addBatch(this.currentJournelBatch).subscribe(batch => {
-            this.alertService.showMessage('Batch added successfully.');
-            this.journelService.getAllBatch().subscribe(batch => {
-                this.journelBatchList = batch[0];
-            });
-            this.resetAddBatch();
-        });
+    //addJournelBatch(): void {
+    //    this.currentJournelBatch.createdBy = this.userName;
+    //    this.currentJournelBatch.updatedBy = this.userName;
+    //    this.journelService.addBatch(this.currentJournelBatch).subscribe(batch => {
+    //        this.alertService.showMessage('Batch added successfully.');
+    //        this.journelService.getAllBatch().subscribe(batch => {
+    //            this.journelBatchList = batch[0];
+    //        });
+    //        this.resetAddBatch();
+    //    });
 
-    }
+    //}
 
     setJournelBatchToUpdate(editBatchPopup: any, id: number): void {
-        this.journelBatchToUpdate = Object.assign({}, this.journelBatchList.filter(function (batch) {
+        this.currentJournelBatch = Object.assign({}, this.journelBatchList.filter(function (batch) {
             return batch.id == id;
         })[0]);
         this.modal = this.modalService.open(editBatchPopup, { size: 'sm' });
@@ -69,14 +86,16 @@ export class CreateBatchComponent implements OnInit
 
     updateBatch(): void {
         this.currentJournelBatch.updatedBy = this.userName;
-        this.journelService.updateBatch(this.journelBatchToUpdate).subscribe(batch => {
+        this.journelService.updateBatch(this.currentJournelBatch).subscribe(batch => {
             this.alertService.showMessage('Batch updated successfully.');
-            this.journelService.getAllBatch().subscribe(batches => {
-                this.journelBatchList = batches[0];
-            });
-            this.resetUpdateBatch();
+            //this.journelService.getAllBatch().subscribe(batches => {
+            //    this.journelBatchList = batches[0];
+            //});
+            //this.resetUpdateBatch();
+            this.router.navigateByUrl('/accountmodule/accountpages/app-view-batch');
             this.dismissModel();
         });
+        this.router.navigateByUrl('/accountmodule/accountpages/app-view-batch');
     }
 
     removeBatch(): void {
@@ -89,9 +108,9 @@ export class CreateBatchComponent implements OnInit
         });
 
     }
-    resetAddBatch(): void {
-        this.currentJournelBatch = new JournalBatch();
-    }
+    //resetAddBatch(): void {
+    //    this.currentJournelBatch = new JournalBatch();
+    //}
 
     resetUpdateBatch(): void {
         this.journelBatchToUpdate = new JournalBatch();
@@ -114,6 +133,25 @@ export class CreateBatchComponent implements OnInit
         this.journelBatchToUpdate = assetStatus;
         this.journelBatchToUpdate.isActive = event.checked == false ? false : true;
         this.updateBatch();
+    }
+
+    //Currency Data
+    private CurrencyData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.currency.getCurrencyList().subscribe(
+            results => this.oncurrencySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private oncurrencySuccessful(getCreditTermsList: Currency[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allCurrencyInfo = getCreditTermsList;
+    }
+
+    private onDataLoadFailed(error: any) {
+
     }
 
     //showAuditPopup(template, id): void {

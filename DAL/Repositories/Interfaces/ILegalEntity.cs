@@ -6,8 +6,8 @@ using System.Text;
 namespace DAL.Repositories.Interfaces
 {
   public  interface ILegalEntity : IRepository<LegalEntity>
-    { 
-        IEnumerable<LegalEntity> GetAllLegalEntityData();
+    {
+        IEnumerable<object> GetAllLegalEntityData();
 
     }
 }

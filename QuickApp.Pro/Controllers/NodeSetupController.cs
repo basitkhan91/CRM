@@ -91,6 +91,8 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    node.CreatedDate = DateTime.Now;
+                    node.UpdatedDate = DateTime.Now;
                     node.MasterCompanyId = 1;
                     unitOfWork.Repository<GLAccountNodeShareWithEntityMapper>().Add(node);
                     unitOfWork.SaveChanges();

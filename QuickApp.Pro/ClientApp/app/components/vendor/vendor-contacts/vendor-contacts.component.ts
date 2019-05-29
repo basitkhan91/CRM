@@ -68,6 +68,7 @@ export class VendorContactsComponent implements OnInit {
     disablesaveForlastname: boolean;
     disablesaveForMiddlename: boolean;
     ngOnInit(): void {
+        this.sourceVendor.isdefaultContact = true;
         this.matSpinner = true;
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-contacts';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);

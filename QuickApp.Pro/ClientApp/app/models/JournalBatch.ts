@@ -1,17 +1,18 @@
 ﻿export class JournalBatch {
     id: number;
-    JournalBatchNumber: string;
+    JournalBatchNumber: number;
     JournalBatchDescription: string;
-    GLAccountId: number;
+    JournalBatchName: string;
+    glAccountId: number;
     JournalSourceId: number;
     JournalTypeId: number;
-    JournalPeriodId: number;
+    JournalPeriodName: string;
     LocalCurrencyId: number;
     LocalDebitAmount: number;
     LocalCreditAmount: number;
     ReportingCurrencyId: number;
-    ReportingDebitAmount: number
-    ReportingCreditAmount
+    ReportingDebitAmount: number;
+    ReportingCreditAmount: number;
     IsReversing: boolean;
     IsRecurring: boolean;
     MasterCompanyId: number;

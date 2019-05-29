@@ -40,7 +40,7 @@ import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
 	animations: [fadeInOut]
 })
 
-export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {
+export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {    
 	local: any;
 	activeIndex: number;
 	allLeaves: EmployeeLeaveType[];
@@ -81,6 +81,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     disableSaveName: any;
     disableSaveLastName: boolean;
     disableSaveLeaveName: boolean;
+    selectedActionName: any;
+    disableJobTitle: boolean;
+    disableExpTitle: boolean;
 	ngOnInit(): void {
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
 		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
@@ -140,7 +143,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     updateMode: boolean = false;
 
 	constructor(private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		this.displayedColumns.push('action');
+        this.displayedColumns.push('action');
+
+
+        const control = new FormControl('1', Validators.pattern('[a-zA-Z ]*'));
+
+        console.log(control.errors);
+
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
 		
@@ -611,7 +620,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 			if (this.selectedLeaveValues != null) //separting Array whic is having ","
 			{
-				this.sourceEmployee.EmployeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
+                this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
 			}
 
 		}
@@ -622,7 +631,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			}
 			if (this.selectedLeaveValues != null) //separting Array which is having ","
 			{
-				this.sourceEmployee.EmployeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
+                this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
 			}
 
 
@@ -1140,6 +1149,63 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                     this.disableSaveName = event;
                 }
 
+            }
+        }
+    }
+
+
+    onKeyJob(event)
+    {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableJobTitle = true;
+                }
+                else {
+                    this.disableJobTitle = false;
+                }
+            }
+
+        }
+    }
+
+    onSelectJob(event)
+    {
+        if (this.allJobTitlesinfo) {
+            for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
+                if (event == this.allJobTitlesinfo[i].description) {
+                    this.sourceEmployee.jobName = event;
+                    this.disableJobTitle = true;
+                    this.selectedActionName = event;
+                }
+            }
+        }
+    }
+
+    onKeyUpExp(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableExpTitle = true;
+                }
+                else {
+                    this.disableExpTitle = false;
+                }
+            }
+
+        }
+    }
+
+    onSelectExp(event) {
+        if (this.allEmployeeExpertiseInfo) {
+            for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+                if (event == this.allEmployeeExpertiseInfo[i].description) {
+                    this.sourceEmployee.employeeName = event;
+                    this.disableExpTitle = true;
+                    this.selectedActionName = event;
+                }
             }
         }
     }

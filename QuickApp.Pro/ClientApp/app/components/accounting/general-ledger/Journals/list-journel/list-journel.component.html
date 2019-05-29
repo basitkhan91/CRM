@@ -1,0 +1,145 @@
+﻿<div class="col-xs-12">
+    <h4 class="page-heading">Journels List</h4>
+    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper no-footer">
+        <div id="DataTables_Table_0_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="DataTables_Table_0"></label></div><div class="dataTables_scroll">
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 1138px; padding-right: 0px;">
+                    <table class="table table-bordered table-striped table-sorting dataTable no-footer" role="grid" style="margin-left: 0px; width: 1138px;">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 202px;" aria-label="Old GL Account Code: activate to sort column ascending">Ledger Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 202px;" aria-label="Old GL Account Code: activate to sort column ascending">batch Number</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 165px;" aria-label="GL Account Code: activate to sort column descending" aria-sort="ascending">batch Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Balance Type</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Category</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 271px;" aria-label="Financial Statement Mapping: activate to sort column ascending">Journel Type</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Employee</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Created By</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Updated By</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Updated Date</th>
+                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 128px;" aria-label="Account Type: activate to sort column ascending">Created Date</th>
+                                <th class="events5 sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 246px;" aria-label=": activate to sort column ascending"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let journel of manualJournelList">
+                                <!--<td>{{journel.glAccountId}}</td>-->
+                                <td>
+                                    <select class="form-control w150" [disabled]="true" [(ngModel)]="journel.glAccountId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">{{entity.name}}</option>
+                                    </select>
+                                </td>
+                                <td>{{journel.journalManualBatchNumber}}</td>
+                                <td>{{journel.journalManualBatchName}}</td>
+                                <!--<td>{{journel.journalManualBalanceTypeId}}</td>-->
+                                <td>
+                                    <select class="form-control w150" [disabled]="true" [(ngModel)]="journel.journalManualBalanceTypeId">
+                                        <option>-- Select --</option>
+                                        <option value="1">Actual</option>
+                                        <option value="2">Budget</option>
+                                        <option value="3">Forecast</option>
+                                    </select>
+                                </td>
+                                <!--<td>{{journel.journalManualCategoryId}}</td>-->
+                                <td>
+                                    <select class="form-control w150"  [disabled]="true" [(ngModel)]="journel.journalManualCategoryId">
+                                        <option>-- Select --</option>
+                                        <option value="1">Manual</option>
+                                        <option value="2">Adjustment</option>
+                                    </select>
+                                </td>
+                                <!--<td>{{journel.journalManualTypeId}}</td>-->
+                                <td>
+                                    <select class="form-control w150" [disabled]="true" [(ngModel)]="journel.journalManualTypeId">
+                                        <option>-- Select --</option>
+                                        <option value="1">Standard</option>
+                                        <option value="2">Intercompany</option>
+                                    </select>
+                                </td>
+                                <!--<td>{{journel.journalManualEmployeeId}}</td>-->
+                                <td>
+                                    <select class="form-control w150" [disabled]="true" [(ngModel)]="journel.journalManualEmployeeId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.legalEntityId">{{employee.firstName}}{{employee.lastName}}</option>
+                                    </select>
+                                </td>
+                                <td>{{journel.createdBy}}</td>
+                                <td>{{journel.updatedBy}}</td>
+                                <td>{{journel.updatedDate}}</td>
+                                <td>{{journel.createdDate}}</td>
+                                <td>
+
+                                    <p-inputSwitch *ngIf="journel['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(journel,$event)" [(ngModel)]="journel['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="journel['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(journel,$event)" [(ngModel)]="journel['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="journel['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(journel,$event)" [(ngModel)]="journel['isActive']"></p-inputSwitch>
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" matTooltip="View" (click)="showViewData(contentView,journel)"><i class="fa fa-eye"></i></a> </span>
+                                    <a data-toggle="tooltip" title="" class="btn btn-primary boxed-float-btn nobg" data-original-title="Edit"><i class="fa fa-edit" matTooltip="Edit" (click)="manualJournelEdit(journel)"></i></a>
+                                    <span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" matTooltip="History" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
+                                    <!--<span data-toggle="modal" data-target="#delete"> <a href="#" class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a> </span>-->
+                                    <span data-toggle="modal"> <a class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="Delete" matTooltip="Delete" (click)="confirmDelete(content,journel.id)"><i class="fa fa-trash"></i></a> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div><div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">Showing 1 to 1 of 1 entries</div>
+    </div>
+</div>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you sure you want to delete Journel List</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="removeManualJournel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+
+</ng-template>
+<ng-template #contentView let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="dismissModel()">×</button>
+            <h4 class="modal-title">Journel List</h4>
+        </div>
+        <div class="modal-body viewform">
+            <div class="panel-body">
+                <div class="col-sm-6">
+                    <p><span class="label"><b>Ledger Name: </b></span><span class="value">{{manualJournelData.glAccountId}}</span></p>
+                    <p><span class="label"><b>Batch Number: </b></span><span class="value">{{manualJournelData.journalManualBatchNumber}}</span></p>
+                    <p><span class="label"><b>Batch Name: </b></span><span class="value">{{manualJournelData.journalManualBatchName}}</span></p>
+                    <p><span class="label"><b>Batch Description: </b></span><span class="value">{{manualJournelData.journalManualBatchDescription}}</span></p>
+                    <p><span class="label"><b>Balance Type: </b></span><span class="value">{{manualJournelData.journalManualBalanceTypeId}}</span></p>
+                    <p><span class="label"><b>Journal Type: </b></span><span class="value">{{manualJournelData.journalManualTypeId}}</span></p>
+                    <p><span class="label"><b>Entry Date: </b></span><span class="value">{{manualJournelData.journalManualEntryDate}}</span></p>
+                    <p><span class="label"><b>Effective Date: </b></span><span class="value">{{manualJournelData.journalManualEffectiveDate}}</span></p>
+                    <p><span class="label"><b>Period Name: </b></span><span class="value">{{manualJournelData.journalManualPeriodName}}</span></p>
+                    <p><span class="label"><b>Employee: </b></span><span class="value">{{manualJournelData.journalManualEmployeeId}}</span></p>
+                    
+                </div>
+                <div class="col-sm-6">
+                    <p><span class="label"><b>Local Currency: </b></span><span class="value">{{manualJournelData.journalManualLocalCurrencyId}}</span></p>
+                    <p><span class="label"><b>Reporting Currency: </b></span><span class="value">{{manualJournelData.journalManualReportingCurrencyId}}</span></p>
+                    <p><span class="label"><b>Currency Date: </b></span><span class="value">{{manualJournelData.journalManualCurrencyDate}}</span></p>
+                    <p><span class="label"><b>Type: </b></span><span class="value">{{manualJournelData.journalManualCurrencyType}}</span></p>
+                    <p><span class="label"><b>Rate: </b></span><span class="value">{{manualJournelData.journalManualCurrencyRate}}</span></p>
+                    <p><span class="label"><b>Reversing: </b></span><span class="value">{{manualJournelData.isReversing}}</span></p>
+                    <p><span class="label"><b>Date: </b></span><span class="value">{{manualJournelData.journalManualReversingDate}}</span></p>
+                    <p><span class="label"><b>Period Name: </b></span><span class="value">{{manualJournelData.reversingPeriodName}}</span></p>
+                    <p><span class="label"><b>Status: </b></span><span class="value"></span></p>
+
+                    <p><span class="label"><b>Recurring: </b></span><span class="value">{{manualJournelData.createdBy}}</span></p>
+                    <p><span class="label"><b>Created Date: </b></span><span class="value">{{manualJournelData.createdDate}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+</ng-template>

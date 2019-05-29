@@ -12,7 +12,6 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { AuditHistory } from '../../../models/audithistory.model';
 import { MasterCompany } from '../../../models/mastercompany.model';
 import { Customer } from '../../../models/customer.model';
-
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';

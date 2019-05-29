@@ -6,10 +6,10 @@
     accountName: string='';
     accountDescription: string='';
     summaryAccount: boolean;
-    allowManualJE: boolean;
+    allowManualJE: boolean = false;
     currencyId: number = NaN;
     interCompany: boolean;
-    activeFlag: boolean;
+    activeFlag: boolean = false;
     balanceTypeActual: boolean;
     balanceTypeBudget: boolean;
     balanceTypeForecast: boolean;

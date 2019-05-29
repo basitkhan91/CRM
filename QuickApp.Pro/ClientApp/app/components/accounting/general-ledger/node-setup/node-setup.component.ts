@@ -41,6 +41,10 @@ export class NodeSetupComponent implements OnInit {
     display: boolean = false;
     Active: string;
     modelValue: boolean = false;
+    selectedCodeName: any;
+    disablesave: boolean;
+    localCollection: any[];
+    codeCollection: any;
     constructor(private modalService: NgbModal, public glAccountService: GLAccountClassService, public legalEntityService: LegalEntityService, private alertService: AlertService, private nodeSetupService: NodeSetupService, private authService:AuthService )
     {
     }
@@ -89,11 +93,11 @@ export class NodeSetupComponent implements OnInit {
         });
     }
     addNodeSetup(): void {
-        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType)) {
+        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType)) {
             this.display = true;
             this.modelValue = true;
         }
-        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType))
+        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType))
         {
             this.currentNodeSetup.createdBy = this.userName;
             this.currentNodeSetup.updatedBy = this.userName;
@@ -140,9 +144,10 @@ export class NodeSetupComponent implements OnInit {
     removeNodeSetup(nodeId: number): void {
         this.nodeSetupService.remove(nodeId).subscribe(response => {
             this.alertService.showMessage("Node Setup removed successfully.");
-            this.nodeSetupService.getAll().subscribe(nodes => {
-                this.nodeSetupList = nodes[0];
-            });
+            //this.nodeSetupService.getAll().subscribe(nodes => {
+            //    this.nodeSetupList = nodes[0];
+            //});
+            this.setManagementDesctoList();
         });
     }
 
@@ -297,6 +302,47 @@ export class NodeSetupComponent implements OnInit {
                 });
             })
         }
+    }
 
+    codeHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCodeName) {
+                if (value == this.selectedCodeName.toLowerCase()) {
+                    this.disablesave = true;
+
+                }
+                else {
+                    this.disablesave = false;
+                }
+            }
+
+        }
+    }
+
+    codeSelect(event) {
+        if (this.nodeSetupListData) {
+
+            for (let i = 0; i < this.nodeSetupListData.length; i++) {
+                if (event == this.nodeSetupListData[i].nodeCode) {
+                    this.currentNodeSetup.nodeCode = this.nodeSetupListData[i].nodeCode;
+                    this.disablesave = true;
+
+                    this.selectedCodeName = event;
+                }
+            }
+        }
+    }
+
+    filterCodes(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.nodeSetupListData.length; i++) {
+            let nodeCode = this.nodeSetupListData[i].nodeCode;
+
+            if (nodeCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(nodeCode);
+            }
+        }
     }
 }

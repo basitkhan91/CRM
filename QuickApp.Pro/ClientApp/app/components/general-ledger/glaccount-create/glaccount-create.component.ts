@@ -43,10 +43,10 @@ export class GlaccountCreateComponent implements OnInit {
     isSaving: boolean;
     isDeleteMode: boolean;
     display: boolean = false; 
-    constructor(private legalEntityservice: LegalEntityService, private modalService:NgbModal, private poroCategoryService: POROCategoryService, private nodeSetupService: NodeSetupService,private router:Router, private authService: AuthService,private glcashFlowClassifcationService:GlCashFlowClassificationService,private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
+    constructor(private legalEntityservice: LegalEntityService, private modalService: NgbModal, private poroCategoryService: POROCategoryService, private nodeSetupService: NodeSetupService, private router: Router, private authService: AuthService, private glcashFlowClassifcationService: GlCashFlowClassificationService, private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
         if (this.glAccountService.glAccountEditCollection) {
             this.currentGLAccount = this.glAccountService.glAccountEditCollection;
-        }
+        }      
     }
 
     ngOnInit(): void {
@@ -63,11 +63,14 @@ export class GlaccountCreateComponent implements OnInit {
         this.loadGLCashFlowClassification();
         this.loadNodeSetup();
         this.loadPOCategory();
-        this.currentGLAccount.allowManualJE = true;
+        if (this.glAccountService.glAccountEditCollection == null) {
+            this.currentGLAccount.activeFlag = true;
+            this.currentGLAccount.allowManualJE = true;
+        }
     }
 
     addGLAccount(): void {
-        if (!(this.currentGLAccount.accountCode && this.currentGLAccount.accountName && this.currentGLAccount.glAccountTypeId && this.currentGLAccount.activeFlag && this.currentGLAccount.glAccountNodeId && this.currentGLAccount.allowManualJE && this.currentGLAccount.glClassFlowClassificationId && this.currentGLAccount.poroCategoryId && (this.currentGLAccount.balanceTypeActual || this.currentGLAccount.balanceTypeBudget || this.currentGLAccount.balanceTypeForecast )
+        if (!(this.currentGLAccount.accountCode && this.currentGLAccount.accountName && this.currentGLAccount.glAccountTypeId && this.currentGLAccount.glAccountNodeId && this.currentGLAccount.glClassFlowClassificationId && this.currentGLAccount.poroCategoryId && (this.currentGLAccount.balanceTypeActual || this.currentGLAccount.balanceTypeBudget || this.currentGLAccount.balanceTypeForecast )
         )) {
             this.display = true;
         }

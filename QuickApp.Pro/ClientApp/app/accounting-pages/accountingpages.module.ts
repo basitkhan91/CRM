@@ -37,6 +37,7 @@ import { CreateJournelComponent } from "../components/accounting/general-ledger/
 import { ImportComponent } from "../components/accounting/general-ledger/Journals/import/import.component";
 import { ScheduleComponent } from "../components/accounting/general-ledger/Journals/schedule/schedule.component";
 import { JournelStepsComponent } from "../components/accounting/general-ledger/Journals/journel-steps/journel-steps.component";
+import { ListJournelComponent } from "../components/accounting/general-ledger/Journals/list-journel/list-journel.component";
 
 
 
@@ -64,7 +65,8 @@ import { JournelStepsComponent } from "../components/accounting/general-ledger/J
         CreateJournelComponent,
         ImportComponent,
         ScheduleComponent,
-        JournelStepsComponent
+        JournelStepsComponent,
+        ListJournelComponent
 
     ],
     providers: [JournelService, JournelsEndpointService

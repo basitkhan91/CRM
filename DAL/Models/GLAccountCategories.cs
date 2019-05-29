@@ -9,9 +9,9 @@ namespace DAL.Models
     public class GLAccountCategories : IAudit
     {
         [Key]
-        public long GLAccountCategoryId { get; set; }
+        public long? GLAccountCategoryId { get; set; }
 
-        public long GLCID { get; set; }
+        public long? GLCID { get; set; }
 
         public string GLAccountCategoryName { get; set; }
 
@@ -22,9 +22,9 @@ namespace DAL.Models
 
         public string UpdatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public bool? IsActive { get; set; }
 

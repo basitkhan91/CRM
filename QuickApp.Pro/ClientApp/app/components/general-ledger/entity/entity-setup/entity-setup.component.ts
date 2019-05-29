@@ -72,6 +72,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 	selectedFile3: TreeNode;
 	items: MenuItem[];
 	selectedNode: TreeNode;
+    managementViewData: any = {};
 	
 	constructor(private messageService: MessageService,private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService, private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
@@ -214,7 +215,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceAction = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -229,7 +230,20 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 			this.loadManagementdata();
 		})
 		this.modal.close();
-	}
+    }
+
+    showViewData(viewContent, row) {
+
+        this.managementViewData.code = row.code;
+        this.managementViewData.name = row.name;
+        this.managementViewData.description = row.description;
+        this.modal = this.modalService.open(viewContent, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })    
+
+    }
+
 	makeNestedObj(arr, parent) {
 		var out = []
 		for (var i in arr) {

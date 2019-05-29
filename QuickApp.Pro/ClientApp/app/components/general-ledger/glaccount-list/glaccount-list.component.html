@@ -85,17 +85,44 @@
                     <p><span class="label"><b>Account Code: </b></span><span class="value">{{glAccountViewData.accountCode}}</span></p>
                     <p><span class="label"><b>Account Name: </b></span><span class="value">{{glAccountViewData.accountName}}</span></p>
                     <p><span class="label"><b>Account Description: </b></span><span class="value">{{glAccountViewData.accountCode}}_{{glAccountViewData.accountDescription}}</span></p>
-                    <p><input type="checkbox" [disabled]="true" [checked]="glAccountViewData.allowManualJE"   /></p>
-                    <p><span class="label"><b>Allow Manual JE: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
-                    <p><span class="label"><b>Active: </b></span><span class="value">{{glAccountViewData.isActive}}</span></p>
+                   
+                    <p><span class="label"><b>Allow Manual JE: </b></span><span class="value"><input type="checkbox" [disabled]="true" [checked]="glAccountViewData.allowManualJE"   /></span></p>
+                    <p><span class="label"><b>Active: </b></span><span class="value">
+                        <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.activeFlag" /></span></p>
 
                 </div>
                 <div class="col-sm-6">
-                    <p><span class="label"><b>Balance Type: </b></span><span class="value">{{glAccountViewData.balanceTypeActual}}</span></p>
-                    <p><span class="label"><b>Account Type: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
-                    <!--<p><span class="label"><b>Expenditure Type: </b></span><span class="value">Accounts Payable</span></p>                  -->
-                    <p><span class="label"><b>C-Flows Classification: </b></span><span class="value">{{glAccountViewData.allowManualJE}}</span></p>
-                 
+                    <p>
+                        <span class="label"><b>Balance Type: </b></span><span class="value">
+                            <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeActual" />
+                            <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeBudget" />
+                            <input type="checkbox" [disabled]="true" [checked]="glAccountViewData.balanceTypeForecast" />
+                        </span>
+                    </p>
+                    <p>
+                        <span class="label col-sm-6"><b>Account Type: </b></span>
+                        <span class="col-sm-6">
+                            <select [(ngModel)]="glAccountViewData.glAccountTypeId" [disabled]="true" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">{{accounttype.glAccountClassName}}</option>
+                            </select>
+                        </span>
+                    </p>
+                    <p><span class="label"><b class="col-sm-4">C-Flows Classification: </b></span>
+                    <span class="col-sm-4">
+                        <select [(ngModel)]="glAccountViewData.glClassFlowClassificationId" [disabled]="true" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
+                        </select>
+                     </span>
+                    </p>
+
+                    <p>
+                        <span class="label col-sm-6"><b>PO Category: </b></span>
+                        <span class="col-sm-6">
+                            <select [(ngModel)]="glAccountViewData.poroCategoryId" [disabled]="true" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
+                            </select>
+                        </span>
+                    </p>
                     <p><span class="label"><b>Created By: </b></span><span class="value">{{glAccountViewData.createdBy}}</span></p>
                     <p><span class="label"><b>Created Date: </b></span><span class="value">{{glAccountViewData.createdDate}}</span></p>
                 </div>

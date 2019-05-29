@@ -46,12 +46,15 @@ export class JournelStepsComponent implements OnInit
         else if (this.currentUrl == '/accountmodule/accountpages/app-create-journel') {
             this.activeIndex = 1;
         }
-
-        else if (this.currentUrl == '/accountmodule/accountpages/app-import') {
+        else if (this.currentUrl == '/accountmodule/accountpages/app-list-journel') {
             this.activeIndex = 2;
         }
-        else if (this.currentUrl == '/accountmodule/accountpages/app-schedule') {
+
+        else if (this.currentUrl == '/accountmodule/accountpages/app-import') {
             this.activeIndex = 3;
+        }
+        else if (this.currentUrl == '/accountmodule/accountpages/app-schedule') {
+            this.activeIndex = 4;
         }
 
 
@@ -74,11 +77,20 @@ export class JournelStepsComponent implements OnInit
                 this.msgs.push({ severity: 'info', summary: 'Capes', detail: event.item.label });
                 this.route.navigateByUrl('/accountmodule/accountpages/app-create-journel');
             }
-        },
+            },
+            {
+                label: 'Journel List',
+                command: (event: any) => {
+                    this.activeIndex = 2;
+                    this.msgs.length = 0;
+                    this.msgs.push({ severity: 'info', summary: 'Capes', detail: event.item.label });
+                    this.route.navigateByUrl('/accountmodule/accountpages/app-list-journel');
+                }
+            },
         {
             label: 'Import',
             command: (event: any) => {
-                this.activeIndex = 2;
+                this.activeIndex = 3;
                 this.msgs.length = 0;
                 this.msgs.push({ severity: 'info', summary: 'Calibration', detail: event.item.label });
                 this.route.navigateByUrl('/accountmodule/accountpages/app-import');
@@ -87,7 +99,7 @@ export class JournelStepsComponent implements OnInit
         {
             label: 'Schedule',
             command: (event: any) => {
-                this.activeIndex = 3;
+                this.activeIndex = 4;
                 this.msgs.length = 0;
                 this.msgs.push({ severity: 'info', summary: 'Maintance & Warrenty', detail: event.item.label });
                 this.route.navigateByUrl('/accountmodule/accountpages/app-schedule');

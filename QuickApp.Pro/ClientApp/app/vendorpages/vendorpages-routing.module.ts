@@ -5,9 +5,7 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { VendorpagesComponent } from "./vendorpages.component";
-
 import { VendorContactsComponent } from "../components/vendor/vendor-contacts/vendor-contacts.component";
 import { VendorEditComponent } from "../components/vendor/vendor-edit/vendor-edit.component";
 import { VendorFinancialInformationComponent } from "../components/vendor/vendor-financial-information/vendor-financial-information.component";

@@ -40,6 +40,9 @@ export class AccountingCalendarComponent implements OnInit {
         this.minDate= new Date(year + '-' + '01-01');
         this.loadCompleteCalendarData();
         this.loadCompaniesData();
+        this.currentCalendarObj.fiscalYear = "2019";
+        this.currentCalendarObj.fromDate = "01/01/2019";
+        this.currentCalendarObj.toDate= "12/31/2019";
     }
     loadCompleteCalendarData() {
         this.calendarService.getAll().subscribe(data => {
@@ -372,7 +375,7 @@ export class AccountingCalendarComponent implements OnInit {
     }
     addCalendar() {
         this.isBoolean = false;
-        if (!(this.currentCalendarObj.name && this.currentCalendarObj.legalEntityId && this.currentCalendarObj.description && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType && this.currentCalendarObj.fiscalYear
+        if (!(this.currentCalendarObj.name && this.currentCalendarObj.legalEntityId && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType && this.currentCalendarObj.fiscalYear
             && this.currentCalendarObj.noOfPeriods)) {
             this.display = true;
         }
@@ -595,4 +598,5 @@ export class AccountingCalendarComponent implements OnInit {
             this.showFiscal = false;
         }
     }
+  
 }

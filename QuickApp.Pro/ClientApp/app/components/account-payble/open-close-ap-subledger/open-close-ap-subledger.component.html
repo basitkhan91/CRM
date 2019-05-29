@@ -20,8 +20,9 @@
                                 <label class="control-label col-sm-4">Ledger Name</label>
                                 <div class="col-sm-7">
                                     <div class="inner-addon right-addon inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" [(ngModel)]="currentApledgerObj.ledgerName" [ngModelOptions]="{standalone: true}" >
+                                        <select [(ngModel)]="currentApledgerObj.legalEntityId" [ngModelOptions]="{standalone: true}">
+                                            <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -40,16 +41,14 @@
                             </div>
                            
                         </div>
-                        <div class="col-sm-3">
+                        <!--<div class="col-sm-3">
                             <div class=" col-sm-12">
                                 <label class="control-label col-sm-4">Ledger Name</label>
                                 <div class="col-sm-7">
-                                    <select [(ngModel)]="currentApledgerObj.legalEntityId" [ngModelOptions]="{standalone: true}">
-                                        <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
-                                    </select>
+                                    <input type="text" [(ngModel)]="currentApledgerObj.ledgerName" [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-sm-2">
                             <div class="form-group col-sm-12"> <button class="btn btn-success show-cal-btn" (click)="getDataBasedonYear()">Show Calendar</button> </div>
                         </div>

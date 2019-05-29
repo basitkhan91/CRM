@@ -77,13 +77,13 @@ export class ItemmasterPagesComponent {
 					{ label: 'Loan' }
 				];
 			}
-			else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-vendor-capabilities-list') {
+			else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list') {
 				this.items = [
 					{ label: 'Item Master' },
 					{ label: 'Capabilities-list' }
 				];
 			}
-			else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-add-vendor-capabilities') {
+            else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities') {
 				this.items = [
 					{ label: 'Item Master' },
 					{ label: 'Capabilities-add' }
@@ -132,13 +132,13 @@ export class ItemmasterPagesComponent {
 					{ label: 'Loan' }
 				];
 			}
-			else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-vendor-capabilities-list') {
+            else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list') {
 				this.items = [
 					{ label: 'Item Master' },
 					{ label: 'Capabilities-list' }
 				];
 			}
-			else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-add-vendor-capabilities') {
+            else if (this.currentUrl == '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities') {
 				this.items = [
 					{ label: 'Item Master' },
 					{ label: 'Capabilities-add' }

@@ -9,12 +9,13 @@ namespace DAL.Models
     {
         [Key]
         public long ID { get; set; }
-        public string JournalBatchNumber { get; set; }
+        public long JournalBatchNumber { get; set; }
         public string JournalBatchDescription { get; set; }
+        public string JournalBatchName { get; set; }
         public long  GLAccountId { get; set; }
         public long JournalSourceId { get; set; }
         public long JournalTypeId { get; set; }
-        public long JournalPeriodId { get; set; }
+        public string JournalPeriodName { get; set; }
         public Int32 LocalCurrencyId { get; set; }
         public Decimal LocalDebitAmount { get; set; }
         public Decimal LocalCreditAmount { get; set; }
