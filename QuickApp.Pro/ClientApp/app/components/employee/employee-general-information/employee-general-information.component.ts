@@ -84,6 +84,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     selectedActionName: any;
     disableJobTitle: boolean;
     disableExpTitle: boolean;
+    display: boolean = false;
+    modelValue: boolean = false;
+
 	ngOnInit(): void {
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
 		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
@@ -592,69 +595,78 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	}
 
 
-	editItemAndCloseModel() {
-		this.isSaving = true;
-		if (!this.sourceEmployee.employeeId) {
-			this.sourceEmployee.createdBy = this.userName;
-			this.sourceEmployee.updatedBy = this.userName;
-			this.sourceEmployee.masterCompanyId = 1;
-			this.sourceEmployee.employeeName = this.employeeName;
-			this.sourceEmployee.isActive = true;
-			if (this.sourceEmployee.singleShift) {
-				this.sourceEmployee.inMultipleShifts = false;
-			}
-			if (this.sourceEmployee.multiShift) {
-				this.sourceEmployee.inMultipleShifts = true;
-			}
-			this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(data => {
-				this.sourceEmployee.updatedBy = this.userName;
-				this.localCollection = data;
+    editItemAndCloseModel() {
+        if (!(this.sourceEmployee.firstName && this.sourceEmployee.middleName && this.sourceEmployee.employeeIdAsPerPayroll && this.sourceEmployee.stationId
+            && this.sourceEmployee.workPhone && this.sourceEmployee. employeeCertifyingStaff
+        )) {
+            this.display = true;
+            this.modelValue = true;
+        }
+        if (this.sourceEmployee.firstName && this.sourceEmployee.middleName && this.sourceEmployee.employeeIdAsPerPayroll && this.sourceEmployee.stationId
+            && this.sourceEmployee.workPhone && this.sourceEmployee.employeeCertifyingStaff
+        ) {
+            if (!this.sourceEmployee.employeeId) {
+                this.sourceEmployee.createdBy = this.userName;
+                this.sourceEmployee.updatedBy = this.userName;
+                this.sourceEmployee.masterCompanyId = 1;
+                this.sourceEmployee.employeeName = this.employeeName;
+                this.sourceEmployee.isActive = true;
+                if (this.sourceEmployee.singleShift) {
+                    this.sourceEmployee.inMultipleShifts = false;
+                }
+                if (this.sourceEmployee.multiShift) {
+                    this.sourceEmployee.inMultipleShifts = true;
+                }
+                this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(data => {
+                    this.sourceEmployee.updatedBy = this.userName;
+                    this.localCollection = data;
 
-				this.employeeService.generalCollection = this.localCollection;
-				this.activeIndex = 0;
-			})
-			if (this.selectedshiftValues != null) //separting Array whic is having ","
-			{
-				this.sourceEmployee.ShiftId = this.selectedshiftValues.toString().split(",");
-			}
+                    this.employeeService.generalCollection = this.localCollection;
+                    this.activeIndex = 0;
+                })
+                if (this.selectedshiftValues != null) //separting Array whic is having ","
+                {
+                    this.sourceEmployee.ShiftId = this.selectedshiftValues.toString().split(",");
+                }
 
-			if (this.selectedLeaveValues != null) //separting Array whic is having ","
-			{
-                this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
-			}
+                if (this.selectedLeaveValues != null) //separting Array whic is having ","
+                {
+                    this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
+                }
 
-		}
-		else {
-			if (this.selectedshiftValues != null) //separting Array whic is having ","
-			{
-				this.sourceEmployee.ShiftId = this.selectedshiftValues.toString().split(",");
-			}
-			if (this.selectedLeaveValues != null) //separting Array which is having ","
-			{
-                this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
-			}
+            }
+            else {
+                if (this.selectedshiftValues != null) //separting Array whic is having ","
+                {
+                    this.sourceEmployee.ShiftId = this.selectedshiftValues.toString().split(",");
+                }
+                if (this.selectedLeaveValues != null) //separting Array which is having ","
+                {
+                    this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues.toString().split(",");
+                }
 
 
-			if (this.sourceEmployee.singleShift) {
-				this.sourceEmployee.inMultipleShifts = false;
-			}
-			if (this.sourceEmployee.multiShift) {
-				this.sourceEmployee.inMultipleShifts = true;
-			}
-			if (this.sourceEmployee["employeeShift"]) {
-				delete this.sourceEmployee["employeeShift"];
-			}
-					this.sourceEmployee.updatedBy = this.userName;
-					this.sourceEmployee.employeeName = this.employeeName;
-					this.sourceEmployee.masterCompanyId = 1;
-					this.employeeService.updateEmployeeDetails(this.sourceEmployee).subscribe(
-						response => this.saveCompleted(this.sourceEmployee),
-						error => this.saveFailedHelper(error));
-					this.activeIndex = 0;
-					this.employeeService.indexObj.next(this.activeIndex);
-				}
-				//this.modal.close();
-	       }
+                if (this.sourceEmployee.singleShift) {
+                    this.sourceEmployee.inMultipleShifts = false;
+                }
+                if (this.sourceEmployee.multiShift) {
+                    this.sourceEmployee.inMultipleShifts = true;
+                }
+                if (this.sourceEmployee["employeeShift"]) {
+                    delete this.sourceEmployee["employeeShift"];
+                }
+                this.sourceEmployee.updatedBy = this.userName;
+                this.sourceEmployee.employeeName = this.employeeName;
+                this.sourceEmployee.masterCompanyId = 1;
+                this.employeeService.updateEmployeeDetails(this.sourceEmployee).subscribe(
+                    response => this.saveCompleted(this.sourceEmployee),
+                    error => this.saveFailedHelper(error));
+                this.activeIndex = 0;
+                this.employeeService.indexObj.next(this.activeIndex);
+            }
+        }
+        //this.modal.close();
+    }
 
 	editItemJobCloseModel() {
 		this.isSaving = true;

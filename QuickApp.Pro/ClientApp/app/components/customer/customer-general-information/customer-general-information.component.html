@@ -313,7 +313,7 @@
                                                 <div class="col-sm-7">
                                                     <div class="inner-addon right-addon autosuggesions-add inline-block">
                                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ataChapterId" (change)="getATASubChapterData(sourceCustomer.ataChapterId)">
-                                                            <option class="form-control" *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterId}}-{{ataName.ataChapterName}}</option>
+                                                            <option class="form-control" *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterCode}}-{{ataName.ataChapterName}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
