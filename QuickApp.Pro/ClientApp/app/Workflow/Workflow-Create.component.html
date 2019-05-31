@@ -463,7 +463,7 @@
 
 				<div class="clearfix selection-box ">
 					<div class="form-group col-sm-4">
-						<label>Actions</label><br />
+						<label>Tasks</label><br />
 						<div class="inner-addon col-sm-7 inline-block display-flex">
 							<select class="form-control custom-select"
 									[(ngModel)]="currenttaskId"
@@ -591,18 +591,32 @@
 						<h4 class="modal-title">Add Action</h4>
 					</div>
 					<div class="modal-body">
-						<div class="row selection-box ">
-							<div class="col-lg-6 col-md-2 col-sm-2 col-xs-10">
-								<label>Action Name</label>
-								<input type="text" class="custom-form-control" [(ngModel)]="newAction.Name" />
-							</div>
-							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-10">
-								<button class="btn add-btn"
-										data-dismiss="modal" (click)="addAction()">
-									Save
-								</button>
-							</div>
-						</div>
+						<div class=" selection-box ">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-2 col-sm-2 col-xs-10">
+                                    <label>Action Name</label>
+                                    <input type="text" class="custom-form-control" [(ngModel)]="newAction.Description" />
+
+                                </div>
+                            </div>
+                          
+                            
+                            <div class="row">
+                                <div class="col-lg-6 col-md-2 col-sm-2 col-xs-10">
+                                    <label>Memo</label>
+                                    <input type="text" class="custom-form-control" [(ngModel)]="newAction.Memo" />
+                                </div>
+                               
+                            </div>
+                            <br />  
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-10">
+                                    <button class="btn btn-success"
+                                            data-dismiss="modal" (click)="addAction()">
+                                        SAVE
+                                    </button>
+                                </div>
+                            </div>
 					</div>
 				</div>
 			</div>

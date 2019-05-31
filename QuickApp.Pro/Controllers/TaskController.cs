@@ -79,8 +79,9 @@ namespace QuickApp.Pro.Controllers
                 DAL.Models.Task actionobject = new DAL.Models.Task();
                 actionobject.Description = actionViewModel.Description;
                 actionobject.Memo = actionViewModel.Memo;
-                actionobject.MasterCompanyId = actionViewModel.MasterCompanyId;
-                actionobject.IsActive = actionViewModel.IsActive;
+                actionobject.MasterCompanyId = 1;
+                actionobject.IsActive = true;
+                actionobject.IsDelete = false;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = actionViewModel.CreatedBy;

@@ -12,8 +12,6 @@ namespace DAL.Models
 
         public long TaskId { get; set; }
 
-        public long? ActionId { get; set; }
-
         public string Description { get; set; }
 
         public string Memo { get; set; }
