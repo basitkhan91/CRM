@@ -4,6 +4,7 @@ import { AssetService } from '../../../services/asset/Assetservice';
 import { Router } from '@angular/router';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { fadeInOut } from '../../../services/animations';
+import { SingleScreenAuditDetails } from '../../../models/single-screen-audit-details.model';
 
 @Component({
     selector: 'app-asset-listing',
@@ -27,6 +28,11 @@ export class AssetListingComponent implements OnInit {
     unitOfMeasureId: any;
     assetTypeId: any;
     selectedColumn: any;
+
+   // comented for asset audit
+    //AuditDetails: SingleScreenAuditDetails[];
+
+
     ngOnInit(): void {
         this.loadData();
         this.activeIndex = 0;
@@ -226,4 +232,19 @@ export class AssetListingComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
+   // AssetCreation Audit please check
+    //showAuditPopup(template, assetRecordId): void {
+    //    this.audit(assetRecordId);
+    //    this.modal = this.modalService.open(template, { size: 'sm' });
+    //}
+
+    //audit(assetRecordId: number): void {
+    //    this.AuditDetails = [];
+    //    this.assetService.getAudit(assetRecordId).subscribe(audits => {
+    //        if (audits.length > 0) {
+    //            this.AuditDetails = audits;
+    //            this.AuditDetails[0].ColumnsToAvoid = ["assetRecordAuditId", "assetRecordId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+    //        }
+    //    });
+    //}
 }

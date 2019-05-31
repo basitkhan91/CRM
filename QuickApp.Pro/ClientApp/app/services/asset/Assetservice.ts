@@ -94,5 +94,9 @@ export class AssetService {
     getCapabilityData(assetRecordId?: number) {
         return this.assetEndpoint.getCapabilityDataEndpoint<any>(assetRecordId);
     }
+  //  Audit method in services
+    //getAudit(assetRecordId: number) {
+    //    return this.assetEndpoint.getAudit<any[]>(assetRecordId);
+    //}
 
 }

@@ -46,7 +46,8 @@ import { EmployeeStepsPrimeNgComponent } from "../components/employee/employee-s
         AutoCompleteModule,
         GMapModule
 		, RadioButtonModule,
-		CalendarModule, StepsModule, BreadcrumbModule
+        CalendarModule, StepsModule, BreadcrumbModule,
+        DialogModule
     ],
     declarations: [
         EmployeePagesComponent,
