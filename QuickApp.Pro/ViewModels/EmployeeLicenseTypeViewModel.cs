@@ -1,17 +1,12 @@
 ﻿using DAL.Models;
 using FluentValidation;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
     public class EmployeeLicenseTypeViewModel
     {
-        [Key]
-        public Byte? EmployeeLicenseTypeId { get; set; }
+        public Byte EmployeeLicenseTypeId { get; set; }
         public string Description { get; set; }
         public bool? IsActive { get; set; }
         public string CreatedBy { get; set; }
@@ -20,12 +15,6 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime UpdatedDate { get; set; }
         public Int32? MasterCompanyId { get; set; }
         public bool? IsDelete { get; set; }
-        public class EmployeeLicenseTypeViewModelValidator : AbstractValidator<EmployeeLicenseTypeViewModel>
-        {
-            public EmployeeLicenseTypeViewModelValidator()
-            {
-               
-            }
-        }
+       
     }
 }
