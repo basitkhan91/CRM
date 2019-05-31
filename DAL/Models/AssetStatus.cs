@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
+    // Branching sample test.
     public class AssetStatus : BaseEntity,IAudit
     {
         [Key]
