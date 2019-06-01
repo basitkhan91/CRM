@@ -7,7 +7,7 @@
 /DAL/bin/Release
 /QuickApp.Pro/node_modules
 /QuickApp.Pro/wwwroot/dist
-DAL/bin/Debug/netstandard2.0/DAL.dll
+/DAL/bin/Debug/netstandard2.0/DAL.dll
 /.vs
 /QuickApp.Pro/obj
 /QuickApp.Pro/Logs
