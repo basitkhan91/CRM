@@ -1,9 +1,0 @@
-D:\PAS\DAL\bin\Debug\netstandard2.0\DAL.deps.json
-D:\PAS\DAL\bin\Debug\netstandard2.0\DAL.dll
-D:\PAS\DAL\bin\Debug\netstandard2.0\DAL.pdb
-D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.csproj.CoreCompileInputs.cache
-D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfoInputs.cache
-D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
-D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.dll
-D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.pdb
-D:\PAS\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache
