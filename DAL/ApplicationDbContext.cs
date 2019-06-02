@@ -17,6 +17,7 @@ namespace DAL
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
+        // Test Changes....
         public string CurrentUserId { get; set; }
         public DbSet<UserRoleMapper> UserRoleMapper { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
