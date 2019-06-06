@@ -6,8 +6,7 @@ namespace DAL.Models
 {
   public  class EmployeeLicenseType:IAudit
     {
-        [Key]
-        public Byte? EmployeeLicenseTypeId { get; set; }
+        public Byte EmployeeLicenseTypeId { get; set; }
         [Required]
         public string Description { get; set; }
         public bool? IsActive { get; set; }

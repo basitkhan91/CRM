@@ -4,10 +4,13 @@ using System.Linq;
 using DAL;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
 {
+    
     [Route("api/userrolepermission")]
     public class UserRolePermissionController : Controller
     {
@@ -61,16 +64,12 @@ namespace QuickApp.Pro.Controllers
                 .FirstOrDefault();
                 if (existingUserRole == null)
                 {
-                    var permissionExist = userRole.RolePermissions.Count == 0;
-                    var anyPermission = userRole.RolePermissions.Any(x =>
-                                            x.CanAdd ||
-                                            x.CanView ||
-                                            x.CanUpdate ||
-                                            x.CanDelete);
-                    if (permissionExist || !anyPermission)
-                    {
-                        return BadRequest(new Exception("Please assign access to the role."));
-                    }
+                    //var permissionExist = userRole.RolePermissions.Count == 0;
+                    
+                    //if (permissionExist)
+                    //{
+                    //    return BadRequest(new Exception("Please assign access to the role."));
+                    //}
 
                     userRole.CreatedDate = DateTime.Now;
                     unitOfWork.Repository<UserRole>().Add(userRole);
@@ -102,15 +101,11 @@ namespace QuickApp.Pro.Controllers
                                         x.CanDelete).ToList();
 
                 var permissionExist = userRole.RolePermissions.Count == 0;
-                var anyPermission = userRole.RolePermissions.Any(x =>
-                                        x.CanAdd ||
-                                        x.CanView ||
-                                        x.CanUpdate ||
-                                        x.CanDelete);
-                if (permissionExist || !anyPermission)
-                {
-                    return BadRequest(new Exception("Please assign access to the role."));
-                }
+                
+                //if (permissionExist)
+                //{
+                //    return BadRequest(new Exception("Please assign access to the role."));
+                //}
 
                 userRole.UpdatedDate = DateTime.Now;
                 

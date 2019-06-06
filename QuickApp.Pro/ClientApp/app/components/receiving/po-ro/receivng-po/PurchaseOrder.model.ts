@@ -1,4 +1,5 @@
 ﻿import { Vendor } from "../../../../models/vendor.model";
+import { AddressModel } from "../../../../models/address.model";
 
 export class PurchaseOrder {
 
@@ -39,6 +40,7 @@ export class PurchaseOrder {
     deferredReceiver: boolean;
     resale: boolean;
     isActive: boolean;
+
 
     purchaseOderPart: PurchaseOrderPart[];
     vendor: Vendor;
@@ -81,16 +83,16 @@ export class PurchaseOrderPart {
     salesOrderId: number;
     generalLedgerAccounId: number;
     memo: string;
-    pOPartSplitUserTypeId: number;
-    pOPartSplitUserId: number;
-    pOPartSplitAddress1: string;
-    pOPartSplitAddress2: string;
-    pOPartSplitAddress3: string;
-    pOPartSplitCity: string;
-    pOPartSplitState: string;
-    pOPartSplitPostalCodestring; string;
-    pOPartSplitCountry: string;
-    pOPartSplitAddressId: number;
+    poPartSplitUserTypeId: number;
+    poPartSplitUserId: number;
+    poPartSplitAddress1: string;
+    poPartSplitAddress2: string;
+    poPartSplitAddress3: string;
+    poPartSplitCity: string;
+    poPartSplitState: string;
+    poPartSplitPostalCodestring; string;
+    poPartSplitCountry: string;
+    poPartSplitAddressId: number;
     managementStructureId: number;
     createdBy: string;
     updatedBy: string;
@@ -100,8 +102,21 @@ export class PurchaseOrderPart {
     isParent: boolean;
     itemMaster: any;
     visible: boolean;
-    showStockLineGrid: boolean;
+   
     stocklineListObj: StockLine[];
+    poPartSplitAddress: AddressModel;
+    // UI Properties
+    // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
+
+    managementStructureName: string[];
+    statusText: string;
+    userTypeName: string;
+    userName: string;
+    addressText: string;
+    showStockLineGrid: boolean;
+    quantityToReceive: number;
+
+
 }
 
 export class TimeLife {
@@ -196,7 +211,29 @@ export class StockLine
     isSerialized: boolean;
     idNumber: number;
 
+    /////////////////////
+    CompanyList: DropDownData[];
+    BusinessUnitList: DropDownData[];
+    DivisionList: DropDownData[];
+    DepartmentList: DropDownData[];
+    SiteList: DropDownData[];
+    WareHouseList: DropDownData[];
+    LocationList: DropDownData[];
+    ShelfList: DropDownData[];
+    BinList: DropDownData[];
+    CustomerList: DropDownData[];
+    VendorList: DropDownData[];
+
+    visible: boolean;
 }
 
+export class DropDownData {
+    contructor(key: string, value: string) {
+        this.Key = key;
+        this.Value = value;
+    }
 
+    Key: string;
+    Value: string;
+}
 

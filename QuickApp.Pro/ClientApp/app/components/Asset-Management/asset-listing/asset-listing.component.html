@@ -52,6 +52,13 @@
                                 <button class="btn-edit" mat-icon-button (click)="openAssetToEdit(rowData)" matTooltip="edit">
                                     <mat-icon>edit</mat-icon>
                                 </button>
+                                <!--Audit method for Asset creation
+                                <span (click)="showAuditPopup(auditContent,rowData.assetRecordId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                        <i class="fa fa-history"></i>
+                                    </a>
+                                </span>-->
+
                                 <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
@@ -64,7 +71,6 @@
             </div>
         </div>
     </div>
-
             <ng-template #view class="modal fade " id="view" role="dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -270,3 +276,9 @@
                 </div>
 
             </ng-template>
+<!--code for asset creation audit
+            <ng-template #auditContent let-c="close" let-d="dismiss">
+                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                </div>
+            </ng-template>-->

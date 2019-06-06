@@ -18,7 +18,7 @@ export class ActionEndpoint extends EndpointFactory {
 	private readonly _actionsUrl: string = "/api/Action/Get";
 	private readonly _actionsUrlNew: string = "/api/Action/actions";
 	private readonly _actionsUrlAuditHistory: string = "/api/Action/auditHistoryById";
-	private getActionURL: string = "/api/Action/Get";
+	private getActionURL: string = "/api/Task/Get";
 	private getActionAttributesURL: string = "/api/ActionAttribute/Get";
 	private getChargesTypeURL: string = 'api/mastertest/ChargesType';
 	private getChargesCurrencyURL: string = 'api/mastertest/ChargesCurrency';
@@ -34,7 +34,7 @@ export class ActionEndpoint extends EndpointFactory {
 	private getLocationsUrl: string = 'api/Location/Get';
 	private getPublicationStatusURL: string = 'api/mastertest/PublicationStatus';
 	private getExclusionEstimatedOccuranceURL: string = 'api/mastertest/ExclusionEstimatedOccurance';
-	private getAddActionURL: string = "api/action/add";
+	private getAddActionURL: string = "api/Task/add";
 	private AddWorkFlowURL: string = "api/workflow/addWorkFlow";
 	private AddChargesURL: string = "api/workflow/addCharges";
 	private AddDirectionURL: string = "api/workflow/addDirection";

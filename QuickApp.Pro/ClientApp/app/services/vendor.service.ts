@@ -170,7 +170,11 @@ export class VendorService {
     getVendorList() {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorList<any[]>());
-	}
+    }
+    getVendors() {
+        return Observable.forkJoin(
+            this.actionEndpoint.getvendorList<Vendor[]>());
+    }
 	getVendordata(vendorid:any) {
 		return Observable.forkJoin(
 			this.actionEndpoint.getVendorsDatawithid<any>(vendorid));

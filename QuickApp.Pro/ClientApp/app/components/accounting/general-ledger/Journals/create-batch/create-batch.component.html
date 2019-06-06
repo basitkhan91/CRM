@@ -1,4 +1,5 @@
-﻿<div class="x_content add-customer-work">
+﻿<div></div>
+<!--<div class="x_content add-customer-work">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item" aria-current="page">Accounting</li>
@@ -9,25 +10,7 @@
     <div class="pheading">
         <h4 class="page-heading">Create Batch</h4>
     </div>
-    <!--<div class="cdetails-top">
-        <span class="cdetails-top-close"><i class="fa fa-times"></i></span>
-        <div class="col-sm-12">
-            <label>Company</label>
-            <span>Silverxis</span>
-        </div>
-        <div class="col-sm-12">
-            <label>BU</label>
-            <span>Adso</span>
-        </div>
-        <div class="col-sm-12">
-            <label>Division</label>
-            <span>Development</span>
-        </div>
-        <div class="col-sm-12">
-            <label>Dept</label>
-            <span>Java</span>
-        </div>
-    </div>-->
+
     <div class="clear"></div>
     <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -73,13 +56,6 @@
                             <div class="col-sm-7">
                                 <select class="">
                                     <option value="">Manual</option>
-                                    <!--<option value="">Budget</option>
-                                    <option value="">Fixed Assets</option>
-                                    <option value="">PaymentsPayables</option>
-                                    <option value="">Purchasing</option>
-                                    <option value="">Receipts</option>
-                                    <option value="">Receivables</option>
-                                    <option value="">Work Order</option>-->
                                 </select>
                             </div>
                         </div>
@@ -99,21 +75,6 @@
                                 <div class="col-sm-7">
                                     <input type="text" [(ngModel)]="currentJournelBatch.journalPeriodName" [ngModelOptions]="{standalone: true}" class="form-control wauto" name="" id="">
                                 </div>
-                                <!--<select class="" id="" name="">
-        <option value="">-- Select --</option>
-        <option value="">Jan-2018</option>
-        <option value="">Feb-2018</option>
-        <option value="">Mar-2018</option>
-        <option value="">Apr-2018</option>
-        <option value="">May-2018</option>
-        <option value="">Jun-2018</option>
-        <option value="">Jul-2018</option>
-        <option value="">Aug-2018</option>
-        <option value="">Sep-2018</option>
-        <option value="">Oct-2018</option>
-        <option value="">Nov-2018</option>
-        <option value="">Dec-2018</option>
-    </select>-->
                             </div>
                         </div>
 
@@ -132,7 +93,7 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Debit</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.localDebitAmount" [ngModelOptions]="{standalone: true}" >
+                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.localDebitAmount" [ngModelOptions]="{standalone: true}">
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
@@ -151,11 +112,11 @@
                                     <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                 </select>
                             </div>
-                            </div>
+                        </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Debit</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.reportingDebitAmount" [ngModelOptions]="{standalone: true}" >
+                                <input type="text" class="form-control" name="" [(ngModel)]="currentJournelBatch.reportingDebitAmount" [ngModelOptions]="{standalone: true}">
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
@@ -194,4 +155,4 @@
     <div class="clear"></div>
     <hr>
     <div class="pull-right"> © <span class="currentyear">2019</span> <a href="#">PAS</a> </div>
-</div>
+</div>-->

@@ -14,7 +14,7 @@ export class AssetEndpoint extends EndpointFactory  {
     private readonly _updateAssetUrl: string = "/api/AssetModule/updateAsset";
     private readonly _capabilityListUrl: string = "/api/AssetModule/GetCapes";
     private readonly _getCapabilityUrl: string = "/api/AssetModule/capabilityGet";
-
+    private readonly getAuditById: string = "/api/AssetModule/audits";
     private readonly capesPost: string = "/api/AssetModule/Mancapespost";
 
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
@@ -85,4 +85,15 @@ export class AssetEndpoint extends EndpointFactory  {
                 return this.handleError(error, () => this.getCapabilityDataEndpoint(assetRecordId));
             });
     }
+
+    //Audit method in end pont services
+
+    //getAudit<T>(assetRecordId: number): Observable<T> {
+    //    let endpointUrl = `${this.getAuditById}/${assetRecordId}`;
+
+    //    return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+    //        .catch(error => {
+    //            return this.handleError(error, () => this.getAudit(assetRecordId));
+    //        });
+    //}
 }

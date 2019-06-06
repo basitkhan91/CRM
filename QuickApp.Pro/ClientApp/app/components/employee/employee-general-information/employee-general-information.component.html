@@ -21,7 +21,7 @@
                                             <div class="col-sm-12">
                                                 <div class="col-sm-6 w400">
                                                     <div class="form-group col-sm-12 input-icon1">
-                                                        <label class="control-label col-sm-4">Employee First Name: </label>
+                                                        <label class="control-label col-sm-4">Employee First Name:<span style="color:red">*</span> </label>
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
                                                                 <p-autoComplete [(ngModel)]="sourceEmployee.firstName" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
@@ -35,7 +35,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12 input-icon1">
-                                                        <label class="control-label col-sm-4">Middle Name:</label>
+                                                        <label class="control-label col-sm-4">Middle Name:<span style="color:red">*</span> </label>
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
                                                                 <p-autoComplete [(ngModel)]="sourceEmployee.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
@@ -70,7 +70,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Emp ID (Per Payroll)</label>
+                                                        <label class="control-label col-sm-4">Emp ID (Per Payroll)<span style="color:red">*</span> </label>
                                                         <div class="col-sm-7">
                                                             <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeIdAsPerPayroll">
                                                         </div>
@@ -97,7 +97,7 @@
                                                     </div>
 
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Station ID</label>
+                                                        <label class="control-label col-sm-4">Station ID<span style="color:red">*</span> </label>
                                                         <div class="col-sm-7">
                                                             <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.stationId">
 
@@ -191,7 +191,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Business Phone</label>
+                                                        <label class="control-label col-sm-4">Business Phone<span style="color:red">*</span> </label>
                                                         <div class="col-sm-7">
                                                             <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.workPhone">
                                                         </div>
@@ -279,7 +279,7 @@
                                                     </div>
 
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Leave<span style="color:red">*</span></label>
+                                                        <label class="control-label col-sm-4">Leave</label>
                                                         <div class="col-sm-6">
                                                             <p-multiSelect [options]="leavemultiValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedLeaveValues" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                                                         </div>
@@ -293,13 +293,13 @@
                                                     </div>
 
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Emp Certifying Staff?</label>
+                                                        <label class="control-label col-sm-4">Emp Certifying Staff?<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
                                                             <input class="form-control" type="checkbox" id="certification-radio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeCertifyingStaff">
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Supervisor Name</label>
+                                                        <label class="control-label col-sm-4">Supervisor Name<span style="color:red">*</span></label>
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <p-autoComplete [(ngModel)]="sourceEmployee.supervisorName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                                                             [minLength]="1" [dropdown]="true">
@@ -514,6 +514,22 @@
 	</div>
 
 </div>
+
+
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+
+
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>
+
 
 
 <ng-template #content let-c="close" let-d="dismiss" style="width:auto">

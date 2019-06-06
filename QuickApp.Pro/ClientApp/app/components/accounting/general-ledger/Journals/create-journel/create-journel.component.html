@@ -1,4 +1,5 @@
-﻿<div class="x_content">
+﻿<div></div>
+<!--<div class="x_content">
     <div>
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="tab-content form-bg">
@@ -25,9 +26,6 @@
                                     <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
                                 </select>
                             </div>
-                            <!--<div class="col-sm-7 inner-addon right-addon inline-block">
-                                <input type="text" [(ngModel)]="currentManualJournel.gLAccountId" class="form-control compnames ui-autocomplete-input" id="" name="" autocomplete="off">
-                            </div>-->
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Batch Num</label>
@@ -84,14 +82,12 @@
                             <label class="control-label col-sm-4">Entry Date</label>
                             <div class="col-sm-7">
                                 <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualEntryDate"></p-calendar>
-                                <!--<input type="date" [(ngModel)]="currentManualJournel.journalManualEntryDate" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422095">-->
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Effective Date</label>
                             <div class="col-sm-7">
                                 <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualEffectiveDate"></p-calendar>
-                                <!--<input type="date" [(ngModel)]="currentManualJournel.journalManualEffectiveDate" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422096">-->
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
@@ -105,13 +101,12 @@
                             <label class="control-label col-sm-4">Employee</label>
                             <div class="col-sm-7">
                                 <div class="inner-addon right-addon inline-block">
-                                    <p-autoComplete [(ngModel)]="employeeName"  (onSelect)="onEmployeeselected($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                    <p-autoComplete [(ngModel)]="employeeName" (onSelect)="onEmployeeselected($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true">
                                         <ng-template let-firstName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{firstName}}</div>
                                         </ng-template>
                                     </p-autoComplete>
-                                    <!--<input type="text" [(ngModel)]="currentManualJournel.journalManualEmployeeId" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">-->
                                 </div>
                             </div>
                         </div>
@@ -124,13 +119,6 @@
                                 <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualLocalCurrencyId">
                                     <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                 </select>
-                                <!--<select class="form-control" id="" name="" [(ngModel)]="currentManualJournel.journalManualLocalCurrencyId">
-                                    <option value="inr">₹</option>
-                                    <option value="usd" selected="1">$</option>
-                                    <option value="pound">£</option>
-                                    <option value="euro">€</option>
-                                    <option value="yen">¥</option>
-                                </select>-->
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
@@ -139,20 +127,12 @@
                                 <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReportingCurrencyId">
                                     <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                 </select>
-                                <!--<select class="form-control" id="" name="" [(ngModel)]="currentManualJournel.journalManualReportingCurrencyId">
-                                    <option value="inr">₹</option>
-                                    <option value="usd" selected="1">$</option>
-                                    <option value="pound">£</option>
-                                    <option value="euro">€</option>
-                                    <option value="yen">¥</option>
-                                </select>-->
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Currency Date</label>
                             <div class="col-sm-7">
                                 <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualEntryDate"></p-calendar>
-                                <!--<input type="date" [(ngModel)]="currentManualJournel.journalManualCurrencyDate" [ngModelOptions]="{standalone: true}" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422097">-->
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
@@ -251,31 +231,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!--<tr *ngFor="let row of AddRors">
+                        <tr>
                             <td>1</td>
                             <td>
                                 <select [(ngModel)]="companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(companyId)">
-                                    <option *ngFor="let ataName of row.maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                    <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                 </select>
                             </td>
                             <td>
                                 <select [(ngModel)]="businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(businessUnitId)">
-                                    <option *ngFor="let ataName of row.bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                    <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                 </select>
                             </td>
                             <td>
                                 <select [(ngModel)]="departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(departmentId)">
-                                    <option *ngFor="let ataName of row.departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                    <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                 </select>
                             </td>
                             <td>
                                 <select [(ngModel)]="divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(divisionId)">
-                                    <option *ngFor="let ataName of row.divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                    <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                 </select>
                             </td>
                             <td>
                                 <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReportingCurrencyId">
-                                    <option *ngFor="let account of row.accountNumberCollection" [ngValue]="account.currencyId">{{account.accountNO}}</option>
+                                    <option *ngFor="let account of accountNumberCollection" [ngValue]="account.currencyId">{{account.accountNO}}</option>
                                 </select>
                             </td>
                             <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualLocalDebitCurrency" (change)="localDebitCurrencyChange(currentManualJournel.journalManualLocalDebitCurrency)" class="form-control"></td>
@@ -283,87 +263,54 @@
                             <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReposrtingDebitCurrency" class="form-control"></td>
                             <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReposrtingCreditCurrency" class="form-control"></td>
                             <td><input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualDescription" class="form-control"></td>
-                        </tr>-->
+                        </tr>
                         <tr>
-        <td>1</td>
-        <td>
-            <select [(ngModel)]="companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(companyId)">
-                <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </td>
-        <td>
-            <select [(ngModel)]="businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(businessUnitId)">
-                <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </td>
-        <td>
-            <select [(ngModel)]="departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(departmentId)">
-                <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </td>
-        <td>
-            <select [(ngModel)]="divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(divisionId)">
-                <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-            </select>
-        </td>
-        <td>
-            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReportingCurrencyId">
-                <option *ngFor="let account of accountNumberCollection" [ngValue]="account.currencyId">{{account.accountNO}}</option>
-            </select>
-        </td>
-        <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualLocalDebitCurrency" (change)="localDebitCurrencyChange(currentManualJournel.journalManualLocalDebitCurrency)" class="form-control"></td>
-        <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualLocalCreditCurrency" class="form-control"></td>
-        <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReposrtingDebitCurrency" class="form-control"></td>
-        <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReposrtingCreditCurrency" class="form-control"></td>
-        <td><input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualDescription" class="form-control"></td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>
-            <select>
-                <option>01</option>
-                <option selected="">02</option>
-                <option>03</option>
-            </select>
-        </td>
-        <td>
-            <select>
-                <option>20</option>
-                <option>30</option>
-                <option>40</option>
-            </select>
-        </td>
-        <td>
-            <select>
-                <option selected="">000</option>
-                <option>300</option>
-                <option>400</option>
-            </select>
-        </td>
-        <td>
-            <select>
-                <option selected="">0000</option>
-                <option>1000</option>
-                <option>2000</option>
-            </select>
-        </td>
-        <td>
-            <select>
-                <option>60201</option>
-                <option selected="">20200</option>
-                <option>20780</option>
-            </select>
-        </td>
-        <td><input type="text" class="form-control"></td>
-        <td><input type="text" value="10,000.00" class="form-control"></td>
-        <td><input type="text" class="form-control"></td>
-        <td><input type="text" value="12,900.00" class="form-control"></td>
-        <td>March Vacation Accrual</td>
-    </tr>
+                            <td>2</td>
+                            <td>
+                                <select>
+                                    <option>01</option>
+                                    <option selected="">02</option>
+                                    <option>03</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>20</option>
+                                    <option>30</option>
+                                    <option>40</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option selected="">000</option>
+                                    <option>300</option>
+                                    <option>400</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option selected="">0000</option>
+                                    <option>1000</option>
+                                    <option>2000</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>60201</option>
+                                    <option selected="">20200</option>
+                                    <option>20780</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control"></td>
+                            <td><input type="text" value="10,000.00" class="form-control"></td>
+                            <td><input type="text" class="form-control"></td>
+                            <td><input type="text" value="12,900.00" class="form-control"></td>
+                            <td>March Vacation Accrual</td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="clear"></div>
                 <hr>
             </div>
         </div>
-    </div>
+    </div>-->

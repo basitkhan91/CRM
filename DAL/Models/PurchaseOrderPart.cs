@@ -57,6 +57,8 @@ namespace DAL.Models
         public bool isParent { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
-        public virtual List<PartStockLineMapper> PartStockLineMapper {get;set;}
+        public virtual List<PartStockLineMapper> PartStockLineMapper { get; set; }
+
+        public virtual Address POPartSplitAddress { get; set; }
     }
 }

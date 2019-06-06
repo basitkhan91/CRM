@@ -3,8 +3,18 @@
 ################################################################################
 
 /DAL/DAL.csproj.user
-/QuickApp.Pro/node_modules
+/DAL/bin/Debug
+/DAL/bin/Release
 /QuickApp.Pro/wwwroot/dist
+/DAL/bin/Debug/netstandard2.0/DAL.dll
 /.vs
 /QuickApp.Pro/obj
 /QuickApp.Pro/Logs
+/QuickApp.Pro/node_modules
+/QuickApp.Pro/bin/Release/netcoreapp2.0/DAL.dll
+/QuickApp.Pro/bin/Release/netcoreapp2.0/DAL.pdb
+/QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.deps.json
+/QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.dll
+/QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.pdb
+/QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.runtimeconfig.dev.json
+/QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.runtimeconfig.json

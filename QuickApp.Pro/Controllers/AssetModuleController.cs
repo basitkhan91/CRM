@@ -3,6 +3,7 @@ using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
+using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,6 +125,21 @@ namespace QuickApp.Pro.Controllers
             return Ok(capabilityData);
 
         }
+        // please check the below code for audit in AssetCreation
+
+        //[HttpGet("audits/{id}")]
+        //public IActionResult AuditDetails(long id)
+        //{
+        //    var audits = _unitOfWork.Repository<AssetAudit>()
+        //        .Find(x => x.AssetRecordId == id)
+        //        .OrderByDescending(x => x.AssetRecordAuditId);
+
+        //    var auditResult = new List<AuditResult<AssetAudit>>();
+
+        //    auditResult.Add(new AuditResult<AssetAudit> { AreaName = "Asset", Result = audits.ToList() });
+
+        //    return Ok(auditResult);
+        //}
     }
 }
 

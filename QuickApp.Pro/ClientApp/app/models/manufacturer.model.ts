@@ -5,10 +5,13 @@ export class Manufacturer {
 
 
 	// Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-	constructor(masterCompany?: MasterCompany, ManufacturerId?: number, Comments?: string, Name?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, memo?: string) {
+	constructor(masterCompany?: MasterCompany, manufacturerId?: number, Comments?: string, name?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, memo?: string) {
 
-		this.ManufacturerId = ManufacturerId;
-		this.Name = Name;
+        this.ManufacturerId = manufacturerId;
+        this.Name = name;
+        this.manufacturerId = manufacturerId;
+        this.name = name;
+
 		this.Comments = Comments;
 		this.masterCompanyId = masterCompanyId;
 		this.createdBy = createdBy;
@@ -22,7 +25,9 @@ export class Manufacturer {
 	}
 
 	public ManufacturerId: number;	
-	public Name: string;
+    public Name: string;
+    public manufacturerId: number;
+    public name: string;
 	public masterCompanyId: number;
 	public Comments: string;
 	public createdBy: string;

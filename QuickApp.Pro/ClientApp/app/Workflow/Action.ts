@@ -1,6 +1,8 @@
 export interface ITask {
 
-Id:string;
-Name:string;
+    Id: string;
+    Name: string;
+    Description: string;
+    Memo: string;
 
 }

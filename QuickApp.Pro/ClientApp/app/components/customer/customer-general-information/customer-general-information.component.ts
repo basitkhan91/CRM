@@ -34,6 +34,17 @@ declare const google: any;
 })
 
 export class CustomerGeneralInformationComponent implements OnInit {
+    customerAddressLine1Error: boolean;
+    customerTypeError: boolean;
+    customerClassificationError: boolean;
+    customerCountryError: boolean;
+    customerPostalCodeError: boolean;
+    customerCurrencyError: boolean;
+    customerStateOrProvidenceError: boolean;
+    customerEmailError: boolean;
+    customerPhoneError: boolean;
+    customerCodeError: boolean;
+    customerNameError: boolean;
     mobnumPattern = "^((\\+91-?)|0)?[0-9]{13}$";
     emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
 
@@ -984,15 +995,86 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // Save Customer Data//
     editItemAndCloseModel() {
-        if (!(this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
+        if (!(this.sourceCustomer.address1 && this.sourceCustomer.customerTypeId  && this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
-        )) {
+        ))
+        {
             this.display = true;
             this.modelValue = true;
+
+            if (!this.sourceCustomer.address1) {
+                this.customerAddressLine1Error = true;
+            }
+            else {
+                this.customerAddressLine1Error = false;
+            }
+
+            if (!this.sourceCustomer.customerTypeId) {
+                this.customerTypeError = true;
+            }
+            else {
+                this.customerTypeError = false;
+            }
+
+            if (!this.sourceCustomer.name) {
+                this.customerNameError = true;
+            }
+            else {
+                this.customerNameError = false;
+            }
+            if (!this.sourceCustomer.customerCode) {
+                this.customerCodeError = true;
+            }
+            else {
+                this.customerCodeError = false;
+            }
+            if (!this.sourceCustomer.customerPhone) {
+                this.customerPhoneError = true;
+            }
+            else {
+                this.customerPhoneError = false;
+            }
+            if (!this.sourceCustomer.email) {
+                this.customerEmailError = true;
+            }
+            else {
+                this.customerEmailError = false;
+            }
+            if (!this.sourceCustomer.stateOrProvince) {
+                this.customerStateOrProvidenceError = true;
+            }
+            else {
+                this.customerStateOrProvidenceError = false;
+            }
+            if (!this.sourceCustomer.generalCurrencyId) {
+                this.customerCurrencyError = true;
+            }
+            else {
+                this.customerCurrencyError = false;
+            }
+            if (!this.sourceCustomer.postalCode) {
+                this.customerPostalCodeError = true;
+            }
+            else {
+                this.customerPostalCodeError = false;
+            }
+            if (!this.sourceCustomer.country) {
+                this.customerCountryError = true;
+            }
+            else {
+                this.customerCountryError = false;
+            }
+            if (!this.sourceCustomer.customerClassificationId) {
+                this.customerClassificationError = true;
+            }
+            else {
+                this.customerClassificationError = false;
+            }
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
-        ) {
+        )
+        {
             this.isSaving = true;
             if (!this.sourceCustomer.customerId) {
                 this.sourceCustomer.createdBy = this.userName;
@@ -1038,6 +1120,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.activeIndex = 0;
                     this.workFlowtService.indexObj.next(this.activeIndex);
 
+
+                    this.nextClick();//I am calling After Data is Saved
+
                 })
                 if (this.selectedIntegrationTypes != null) //separting Array which is having ","
                 {
@@ -1061,7 +1146,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.sourceCustomer.customerParentName = '';
 
                 }
-                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data => {
+                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data =>
+                {
                     this.sourceCustomer.updatedBy = this.userName;
                     this.localCollection = data;
                     this.sourceCustomer = data;
@@ -1096,7 +1182,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.activeIndex = 0;
                     this.workFlowtService.indexObj.next(this.activeIndex);
 
-
+                    this.nextClick();
                 })
 
             }
