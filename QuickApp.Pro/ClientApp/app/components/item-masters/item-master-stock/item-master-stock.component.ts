@@ -66,6 +66,8 @@ import { VendorService } from '../../../services/vendor.service';
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	
+    disableIntegrationSave: boolean;
+    currencySymbol: any;
 	bulist: any[] = [];
 	bulistovh: any[] = [];
 	departmentList: any[] = [];
@@ -242,9 +244,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     allSubChapter: ATAChapter[];
     disableSaveNHANumber: boolean;
     disableSaveAlterumber: boolean;
+    portalURL: any = "";
+    public sourceIntegration: any = {};
+    integrationNamecolle: any[] = [];
 
 
-    constructor(private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+    constructor(public integrationService: IntegrationService,private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
         public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
@@ -336,10 +341,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 				this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
 			}
 			if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
-				this.sourceItemMaster.salesLastSalePriceDate = new Date();
+                this.sourceItemMaster.salesLastSalePriceDate = new Date();
+                this.sourceItemMaster.salesLastSalePriceDate = Date.now();
+                //this.sourceItemMaster.salesLastSalePriceDate.setValue(new Date().toISOString());
 			}
 			else {
 				this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
+            }
+
+            //adding for Currency
+            if (this.sourceItemMaster.purchaseCurrencyId)
+            {
+                this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
             }
 
 		}
@@ -4069,6 +4082,100 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.selectedActionName = event;
                 }
             }           
+        }
+    }
+    //adding for 
+    currencySymbolSelection(currencyid)
+    {
+        if (currencyid)
+        {
+            for (let i = 0; i < this.allCurrencyInfo.length;i++)
+            {
+                if (currencyid == this.allCurrencyInfo[i].currencyId)
+                {
+                    this.currencySymbol = this.allCurrencyInfo[i].symbol;
+                }
+            }
+            
+        }
+    }
+
+    //Add Intehration Model for Add Multi
+
+    addIntegrationModelSingle(integration)
+    {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceUOM = new UnitOfMeasure();
+        this.sourceUOM.isActive = true;
+        this.unitName = "";
+        this.modal = this.modalService.open(integration, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    createIntegration() {
+        this.isSaving = true;
+        if (this.isEditMode == false) {
+            this.sourceIntegration.createdBy = this.userName;
+            this.sourceIntegration.updatedBy = this.userName;
+            //this.sourceAction.description = this.integrationName;
+            this.sourceIntegration.portalURL = this.portalURL;
+            this.integrationService.newAction(this.sourceIntegration).subscribe(
+                role => this.saveSuccessHelper(role),
+                error => this.saveFailedHelper(error));
+        }
+        else {
+            this.sourceIntegration.updatedBy = this.userName;
+            this.sourceIntegration.description = this.integrationName;
+            this.sourceIntegration.portalURL = this.portalURL;
+            this.integrationService.updateAction(this.sourceIntegration).subscribe(
+                response => this.saveCompleted(this.sourceIntegration),
+                error => this.saveFailedHelper(error));
+        }
+        this.modal.close();
+    }
+
+    integrationEventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                //alert("Action Name already Exists");
+                this.disableIntegrationSave = true;
+            }
+            else {
+                this.disableIntegrationSave = false;
+            }
+        }
+
+    }
+    integrationPartnmId(event) {
+        //debugger;
+        for (let i = 0; i < this.integrationNamecolle.length; i++) {
+            if (event == this.integrationNamecolle[i][0].integrationName) {
+                //alert("Action Name already Exists");
+                this.disableIntegrationSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+
+
+    filterIntegrationsSelect(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allIntegrationInfo.length; i++) {
+            let integrationName = this.allIntegrationInfo[i].description;
+            if (integrationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.integrationNamecolle.push([{
+                    "chargeId": this.allIntegrationInfo[i].integrationPortalId,
+                    "integrationName": integrationName
+                }]),
+                    this.localCollection.push(integrationName);
+            }
         }
     }
 }
