@@ -179,7 +179,7 @@
                                             <div class="form-group col-sm-12">
                                                 <label class="control-label col-sm-4"> Postal <strong class="clr-red">*</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input class="form-control" (keypress)="onBlurMethod('postal')" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.postalCode">
+                                                    <input class="form-control" (keypress)="onBlurMethod('postal')" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.postalCode">
                                                 </div>
 
                                             </div>
@@ -533,6 +533,7 @@
     <p *ngIf="customerPostalCodeError" [ngStyle]="{'color':'red'}">Please Enter Customer Postal Code</p>
     <p *ngIf="customerCountryError" [ngStyle]="{'color':'red'}">Please Enter Customer Country</p>
     <p *ngIf="customerClassificationError" [ngStyle]="{'color':'red'}">Please Enter Customer Classification</p>
+    <p *ngIf="cityError" [ngStyle]="{'color':'red'}">Please Enter City</p>
 
     <p-footer>
         <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
