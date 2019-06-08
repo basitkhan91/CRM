@@ -34,6 +34,7 @@ declare const google: any;
 })
 
 export class CustomerGeneralInformationComponent implements OnInit {
+    cityError: boolean;
     customerAddressLine1Error: boolean;
     customerTypeError: boolean;
     customerClassificationError: boolean;
@@ -1069,6 +1070,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
             }
             else {
                 this.customerClassificationError = false;
+            }
+            if (!this.sourceCustomer.city) {
+                this.cityError = true;
+            }
+            else {
+                this.cityError = false;
             }
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email

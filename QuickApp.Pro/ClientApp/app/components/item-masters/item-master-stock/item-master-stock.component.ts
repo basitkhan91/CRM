@@ -257,6 +257,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
+        this.CurrencyData();
         if (this.itemser.listCollection != null && this.itemser.isEditMode == true) {
 
             this.showLable = true;
@@ -341,16 +342,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
             if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
                 this.sourceItemMaster.salesLastSalePriceDate = new Date();
-                this.sourceItemMaster.salesLastSalePriceDate = Date.now();
+                //this.sourceItemMaster.salesLastSalePriceDate = Date.now();
                 //this.sourceItemMaster.salesLastSalePriceDate.setValue(new Date().toISOString());
             }
             else {
                 this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
-            }
-
-            //adding for Currency
-            if (this.sourceItemMaster.purchaseCurrencyId) {
-                this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
             }
 
         }
@@ -1121,6 +1117,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allCurrencyInfo = getCreditTermsList;
+
+        if (this.itemser.listCollection != null && this.itemser.isEditMode == true)
+        {
+            //adding for Currency
+            if (this.sourceItemMaster.purchaseCurrencyId) {
+                this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
+            }
+        }
     }
 
 
