@@ -118,7 +118,6 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.sourceCustomer.isDefaultContact = true;
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-contacts';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         this.workFlowtService.ShowPtab = true;
@@ -409,6 +408,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 				this.sourceCustomer.createdBy = this.userName;
 				this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
+                this.sourceCustomer.isDefaultContact = true; 
                 this.isDefault = this.sourceCustomer.isDefaultContact;
 				this.workFlowtService.newAddContactInfo(this.sourceCustomer).subscribe(data => {
 

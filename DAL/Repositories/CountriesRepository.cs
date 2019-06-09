@@ -15,7 +15,7 @@ namespace DAL.Repositories
         public IEnumerable<Countries> GetCountries()
         {
             //return _appContext.ActionAttribute.Include("MasterCompany").OrderByDescending(c => c.ActionAttributeId).ToList();
-            return _appContext.Countries.OrderByDescending(c => c.countries_id).ToList();
+            return _appContext.Countries.OrderBy(c => c.countries_id).ToList();
         }
 
 
