@@ -108,7 +108,7 @@
             <div class="form-group">
                 <label for="description" class="control-label">GLCID</label>
                 <div class="control-data">
-                    <input #GLCID="ngModel" id="GLCID" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceglcashflowclassification.glcid" minlength="2" required>
+                    <input #GLCID="ngModel" type="number" id="GLCID" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceglcashflowclassification.glcid" minlength="2" required>
                     <!--<div *ngIf="GLCID.dirty && GLCID.errors?.required && GLCID.errors" class="invalid-form-error-message">
                         Memo is required.
                     </div>

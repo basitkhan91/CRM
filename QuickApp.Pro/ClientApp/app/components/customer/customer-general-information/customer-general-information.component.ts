@@ -34,6 +34,7 @@ declare const google: any;
 })
 
 export class CustomerGeneralInformationComponent implements OnInit {
+    disableSaveCustomerClassificationSave: boolean;
     cityError: boolean;
     customerAddressLine1Error: boolean;
     customerTypeError: boolean;
@@ -201,7 +202,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     disableSaveCustomerClassification: boolean;
     disableSaveParentName: boolean;
 
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         //steps Code  Start
@@ -232,6 +234,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
         this.loadCurrencyData();
+
+        if (!this.classificationName)
+        {
+            this.disableSaveCustomerClassificationSave = true;
+        }
 
     }
 
@@ -1449,9 +1456,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.selectedCustomerClassification) {
                 if (value == this.selectedCustomerClassification.toLowerCase()) {
                     this.disableSaveCustomerClassification = true;
+                    this.disableSaveCustomerClassificationSave = true;
                 }
                 else {
                     this.disableSaveCustomerClassification = false;
+                    this.disableSaveCustomerClassificationSave = false;
                 }
             }
         }
