@@ -121,7 +121,7 @@
                                                 </ng-template>
                                             </p-autoComplete>
                                         </div>
-                                        <div *ngIf="disableSaveNHANumber" style="color:red">Please Select From DrpDown</div>
+                                        <div *ngIf="disableSaveNHANumber" style="color:red">Please select from drop down</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
@@ -579,19 +579,16 @@
 
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1">
-
                                     <label class="control-label col-sm-4">Integration With <span class="clr-red"></span></label>
                                     <div class="col-sm-7">
                                         <p-multiSelect [options]="integrationvalues" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-
+                                        <a href="#" data-toggle="modal" data-target="#addIntegration" class="add-icon" (click)="addIntegrationModelSingle(integrationModel)"><i class="fa fa-plus"></i></a>
                                     </div>
                                 </div>
-
                                 <div class="form-group col-sm-12">
                                     <label class="control-label col-sm-4">Memo</label>
                                     <div class="col-sm-7">
                                         <textarea class="form-control" type="text" rows="4" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.memo"></textarea>
-
                                     </div>
                                 </div>
                             </div>
@@ -618,10 +615,9 @@
                                             <div class="form-group col-sm-12">
                                                 <label class="control-label col-sm-6">Currency</label> <div class="col-sm-5">
                                                     <select [ngModelOptions]="{standalone: true}"
-                                                            [(ngModel)]="sourceItemMaster.purchaseCurrencyId" style="width:125px">
+                                                            [(ngModel)]="sourceItemMaster.purchaseCurrencyId" style="width:125px" (change)="currencySymbolSelection(sourceItemMaster.purchaseCurrencyId)">
                                                         <option *ngFor="let currencyName of allCurrencyInfo"
                                                                 [ngValue]="currencyName.currencyId">
-
                                                             <!--{{currencyName.code}}-->
                                                             {{currencyName.symbol}}
                                                         </option>
@@ -631,9 +627,11 @@
 
                                             <div class="form-group col-sm-12 p-list-price-block">
                                                 <label class="control-label col-sm-6">List Price</label> <div class="col-sm-5">
-                                                    <input type="text" style="width:125px"
+                                                    <input type="text" style="width:60px"
                                                            [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.listPrice" />
+                                                    <!--<input style="width:65px" type="text" [(ngModel)]="currencySymbol" [ngModelOptions]="{standalone: true}"/>-->
+                                                    <span style="width:65px">{{currencySymbol}}</span>
                                                 </div>
                                             </div> <div class="form-group col-sm-12">
                                                 <label class="control-label col-sm-6"> Disc off List Price (%)</label> <div class="col-sm-5">
@@ -3221,11 +3219,11 @@
             <form method="post" id="" name="">
                 <div class="table-responsive default-bg clear">
                     <div style="overflow-y: scroll;height: 400px;">
-                        <table class="table table-bordered table-striped table-sorting">
-                            <thead>
-                                <tr align="center">
+                    <table class="table table-bordered table-striped table-sorting">
+                        <thead>
+                            <tr align="center">
                                     <th>Aircraft Manufacturer</th>
-                                    <th>Model</th>
+                                <th>Model</th>
                                     <th>Dash Number</th>
                                     <th>Select Model</th>
                                 </tr>
@@ -3235,10 +3233,10 @@
 
                                     <td>{{col.aircraftManufacturer}}</td>
                                     <td>{{col.label}}</td>
-                                    <td>
+                                <td>
                                         <input class="form-control w100" [(ngModel)]="col.dashNumber" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
-                                    </td>
-                                    <td>
+                                </td>
+                                <td>
                                         <input type="checkbox" class=" wauto" [(ngModel)]="col.checkbox" [ngModelOptions]="{standalone: true}" (click)="saveSelectedModel(col,i)">
                                     </td>
                                 </tr>
@@ -3464,4 +3462,65 @@
             </div>
         </form>
     </div>
+</ng-template>
+
+<ng-template #integrationModel let-c="close" let-d="dismiss" style="width:auto">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Integration</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Integration</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="createIntegration()">
+            <div class="form-group">
+                <label for="url" class="control-label">WebSite url</label>
+                <div class="inner-addon right-addon inline-block">
+                    <p-autoComplete (onSelect)="integrationPartnmId($event)" (onKeyUp)=integrationEventHandler($event) [(ngModel)]="portalURL" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterIntegrationsSelect($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                        <ng-template let-integrationName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{integrationName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="disableSave" style="color:red">Already Exists</div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
+                <label for="netDays" class="control-label">Integration</label>
+                <div>
+                    <input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceIntegration.description" minlength="2">
+                    <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
+                        Integration required.
+                    </div>
+                    <div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
+                        Integration must be at least 2 characters long.
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="control-label">Memo</label>
+                <div class="control-data">
+                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceIntegration.memo">
+
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label class="form-check-label" for="isActive">
+                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceIntegration.isActive"> Active
+                    </label>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" [disabled]="disableIntegrationSave">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
+    </div>
+
 </ng-template>

@@ -17,6 +17,7 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 })
 /** item-master-list component*/
 export class ItemMasterListComponent implements OnInit, AfterViewInit {
+    viewItemMaster: any;
 	EquipmentDelete: boolean = false;
 	isDeleteMode: boolean = false;
 	allitemstockinfo: any[] = [];
@@ -668,10 +669,16 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	}
 	openView(content, row) {
 
-		//this.sourceAction = row;
+		this.viewItemMaster = row;
 		this.partNumber = row.partNumber;
-		this.description = row.partDescription;
-		this.isAlternatePartChecked = row.isAlternatePartChecked;
+        this.description = row.partDescription;
+        if (row.isAlternatePartChecked) {
+            this.isAlternatePartChecked = true;
+        }
+        else
+        {
+            this.isAlternatePartChecked = false;
+        }
 		this.isSerialized = row.isSerialized;
 		this.isTimeLife = row.isTimeLife;
 		this.nha = row.nha;
@@ -769,7 +776,30 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.exportCountryId = row.exportCountryId;
 		this.memo = row.memo;
 		this.createddate = row.createdDate;
-		this.updatedDate = row.updatedDate;
+        this.updatedDate = row.updatedDate;
+
+        //Purchase Price List
+        //this.listPrice = row.listPrice
+        //this.purchaseCurrencyId = row.purchaseCurrencyId
+        //this.purchaseDiscountOffListPrice = row.purchaseDiscountOffListPrice
+        //this.purchaseLastDiscountPercentDate = row.purchaseLastDiscountPercentDate
+        //this.purchaseLastListPriceAfterDiscountDate = row.purchaseLastListPriceAfterDiscountDate
+        //this.purchaseListPriceAfterDiscount = row.purchaseListPriceAfterDiscount
+
+        //Sales Price
+        //this.salesPrice = row.salesPrice
+        //this.salesBaselineSalesPrice = row.salesBaselineSalesPrice
+        //this.salesCurrencyId = row.salesCurrencyId
+        //this.salesDiscountPercent = row.salesDiscountPercent
+        //this.salesIsFixedPrice = row.salesIsFixedPrice
+        //this.salesLastBaselineSalesPriceDate = row.salesLastBaselineSalesPriceDate
+        //this.salesLastMakUpPercentOnListPriceAfterDiscDate = row.salesLastMakUpPercentOnListPriceAfterDiscDate
+        //this.salesLastMarkUpPercentOnListPriceDate = row.salesLastMarkUpPercentOnListPriceDate
+        //this.salesLastSalePriceDate = row.salesLastSalePriceDate
+        //this.salesLastSalesDiscountPercentDate = row.salesLastSalesDiscountPercentDate
+        //this.salesMarkUpOnListPriceAfterDisc = row.salesMarkUpOnListPriceAfterDisc
+
+
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {

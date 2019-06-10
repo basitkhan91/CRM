@@ -34,6 +34,8 @@ declare const google: any;
 })
 
 export class CustomerGeneralInformationComponent implements OnInit {
+    disableSaveCustomerClassificationSave: boolean;
+    cityError: boolean;
     customerAddressLine1Error: boolean;
     customerTypeError: boolean;
     customerClassificationError: boolean;
@@ -200,7 +202,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     disableSaveCustomerClassification: boolean;
     disableSaveParentName: boolean;
 
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         //steps Code  Start
@@ -231,6 +234,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
         this.loadCurrencyData();
+
+        if (!this.classificationName)
+        {
+            this.disableSaveCustomerClassificationSave = true;
+        }
 
     }
 
@@ -1070,6 +1078,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
             else {
                 this.customerClassificationError = false;
             }
+            if (!this.sourceCustomer.city) {
+                this.cityError = true;
+            }
+            else {
+                this.cityError = false;
+            }
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
@@ -1442,9 +1456,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.selectedCustomerClassification) {
                 if (value == this.selectedCustomerClassification.toLowerCase()) {
                     this.disableSaveCustomerClassification = true;
+                    this.disableSaveCustomerClassificationSave = true;
                 }
                 else {
                     this.disableSaveCustomerClassification = false;
+                    this.disableSaveCustomerClassificationSave = false;
                 }
             }
         }

@@ -5,7 +5,7 @@ import { GLAccountNodeSetup } from "../../../../models/node-setup.model";
 import { NodeSetupService } from "../../../../services/node-setup/node-setup.service";
 import { LegalEntityService } from "../../../../services/legalentity.service";
 import { GLAccountClassService } from "../../../../services/glaccountclass.service";
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'; 
+import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -24,8 +24,12 @@ import { AuthService } from "../../../../services/auth.service";
 })
 /** node-setup component*/
 export class NodeSetupComponent implements OnInit {
+    nodeSetupViewData: any;
+    parentNode: string;
+    parentCodeCollection: any[];
     maincompanylist: any[] = [];
     allManagemtninfoData: any[];
+    parentNodeList: any[] = [];
     currentNodeSetup: GLAccountNodeSetup;
     nodeSetupList: GLAccountNodeSetup[] = [];
     nodeSetupListData: GLAccountNodeSetup[] = [];
@@ -45,8 +49,7 @@ export class NodeSetupComponent implements OnInit {
     disablesave: boolean;
     localCollection: any[];
     codeCollection: any;
-    constructor(private modalService: NgbModal, public glAccountService: GLAccountClassService, public legalEntityService: LegalEntityService, private alertService: AlertService, private nodeSetupService: NodeSetupService, private authService:AuthService )
-    {
+    constructor(private modalService: NgbModal, public glAccountService: GLAccountClassService, public legalEntityService: LegalEntityService, private alertService: AlertService, private nodeSetupService: NodeSetupService, private authService: AuthService) {
     }
 
     ngOnInit(): void {
@@ -55,7 +58,7 @@ export class NodeSetupComponent implements OnInit {
         this.setManagementDesctoList();
 
         this.currentNodeSetup = new GLAccountNodeSetup();
-       
+
         this.loadGlAccountClassData();
     }
     get userName(): string {
@@ -65,6 +68,13 @@ export class NodeSetupComponent implements OnInit {
         this.nodeSetupService.getAll().subscribe(nodes => {
             this.nodeSetupList = nodes[0];
             this.nodeSetupListData = nodes[0];
+            this.parentNodeList;
+            for (let i = 0; i < this.nodeSetupList.length; i++) {
+
+                if (this.nodeSetupList[i].leafNodeCheck == false) {
+                    this.parentNodeList.push(this.nodeSetupList[i]);
+                }
+            }
             if (this.nodeSetupListData) {
                 for (let nlength = 0; nlength < this.nodeSetupListData.length; nlength++) {
                     this.nodeSetupService.getShareWithOtherEntitysData(this.nodeSetupListData[nlength].glAccountNodeId).subscribe(msData => {
@@ -93,12 +103,11 @@ export class NodeSetupComponent implements OnInit {
         });
     }
     addNodeSetup(): void {
-        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType)) {
+        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.fsType)) {
             this.display = true;
             this.modelValue = true;
         }
-        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.glAccountTypeId && this.currentNodeSetup.fsType))
-        {
+        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.fsType)) {
             this.currentNodeSetup.createdBy = this.userName;
             this.currentNodeSetup.updatedBy = this.userName;
             this.nodeSetupService.add(this.currentNodeSetup).subscribe(node => {
@@ -114,16 +123,24 @@ export class NodeSetupComponent implements OnInit {
             });
         }
 
-        
+
     }
 
-    setNodeSetupToUpdate(id: number, content): void
-    {
+    setNodeSetupToUpdate(id: number, content): void {
         this.open(content);
         this.updateMode = true;
         this.currentNodeSetup = Object.assign({}, this.nodeSetupListData.filter(function (node) {
             return node.glAccountNodeId == id;
         })[0]);
+        if (this.currentNodeSetup.parentNodeId) {
+            for (let i = 0; i < this.nodeSetupList.length; i++) {
+                if (this.currentNodeSetup.parentNodeId == this.nodeSetupList[i].glAccountNodeId) {
+                    this.parentNode = this.nodeSetupList[i].nodeName;
+                }
+            }
+
+        }
+
         this.updateMode = true;
     }
 
@@ -137,7 +154,7 @@ export class NodeSetupComponent implements OnInit {
                 this.setManagementDesctoList();
             });
             this.updateMode = false;
-           
+
         });
     }
 
@@ -151,14 +168,12 @@ export class NodeSetupComponent implements OnInit {
         });
     }
 
-    toggleIsDeleted(nodeId: number): void
-    {
-       // this.setNodeSetupToUpdate(nodeId);
+    toggleIsDeleted(nodeId: number): void {
+        // this.setNodeSetupToUpdate(nodeId);
         this.currentNodeSetup.isActive = !this.currentNodeSetup.isActive;
     }
 
-    resetNodeSetup(): void
-    {
+    resetNodeSetup(): void {
         this.updateMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
         this.dismissModel();
@@ -208,20 +223,16 @@ export class NodeSetupComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
-    onDataLoadGlDataSuccessful(allWorkFlows: any[])
-    {
+    onDataLoadGlDataSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allGLAccountClassData = allWorkFlows;
     }
 
-    addGLAccountNodeShareWithEntityMapper()
-    {
+    addGLAccountNodeShareWithEntityMapper() {
         let data = [];
-        if (this.currentNodeSetup.selectedCompanysData)
-        {
-            for (let i = 0; i < this.currentNodeSetup.selectedCompanysData.length;i++)
-            {
+        if (this.currentNodeSetup.selectedCompanysData) {
+            for (let i = 0; i < this.currentNodeSetup.selectedCompanysData.length; i++) {
                 data.push({
                     "managementStructureId": this.currentNodeSetup.selectedCompanysData[i],
                     "GLAccountNodeId": this.currentNodeSetup.glAccountNodeId
@@ -234,8 +245,7 @@ export class NodeSetupComponent implements OnInit {
         }
     }
 
-    updateGLAccountNodeShareWithEntityMapper(id)
-    {
+    updateGLAccountNodeShareWithEntityMapper(id) {
         this.nodeSetupService.removeNodeShareEntityMapper(id).subscribe(Nodes => {
             this.nodeSetupList = Nodes[0];
 
@@ -255,11 +265,11 @@ export class NodeSetupComponent implements OnInit {
 
             this.resetNodeSetup();
         });
-        
+
     }
 
     open(content) {
-
+        this.parentNode = '';
         this.updateMode = false;
         this.isDeleteMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
@@ -273,7 +283,7 @@ export class NodeSetupComponent implements OnInit {
         this.isDeleteMode = false;
         this.updateMode = false;
         this.modal.close();
-       // this.currentNodeSetup.selectedCompanysData = [];
+        // this.currentNodeSetup.selectedCompanysData = [];
     }
 
     toggleIsActive(nodeSetup: any, e) {
@@ -345,4 +355,58 @@ export class NodeSetupComponent implements OnInit {
             }
         }
     }
+
+    //Parent Node Selection
+
+    parentCodeNodeHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCodeName) {
+                if (value == this.selectedCodeName.toLowerCase()) {
+                    //  this.disablesave = true;
+
+                }
+                else {
+                    this.disablesave = false;
+                }
+            }
+
+        }
+    }
+
+    parentCodeNodeSelect(event) {
+        if (this.parentNodeList) {
+
+            for (let i = 0; i < this.parentNodeList.length; i++) {
+                if (event == this.parentNodeList[i].nodeCode) {
+                    this.parentNode = this.parentNodeList[i].nodeCode;
+                    this.currentNodeSetup.parentNodeId = this.parentNodeList[i].glAccountNodeId;
+                    // this.disablesave = true;
+                    this.selectedCodeName = event;
+                }
+            }
+        }
+    }
+
+    filterParentNodeCodes(event) {
+
+        this.parentCodeCollection = [];
+        for (let i = 0; i < this.parentNodeList.length; i++) {
+            let nodeCode = this.parentNodeList[i].nodeCode;
+
+            if (nodeCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.parentCodeCollection.push(nodeCode);
+            }
+        }
+    }
+
+    showViewData(viewContent, node) {
+        this.nodeSetupService.getById(node.glAccountNodeId).subscribe(data => {
+            this.nodeSetupViewData = data[0][0];
+            this.modal = this.modalService.open(viewContent, { size: 'lg' });
+        })
+
+    }
+
+
 }

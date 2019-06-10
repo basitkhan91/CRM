@@ -145,7 +145,7 @@
 					<div class="form-group">
 						<label for="quantity" class="control-label">QTY</label>
 						<div class="control-data">
-							<input name="quantity" #quantity="ngModel" id="quantity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.quantity">
+							<input name="quantity" type="number" #quantity="ngModel" id="quantity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.quantity">
 
 						</div>
 
@@ -171,7 +171,7 @@
 					<div class="form-group">
 						<label for="cost" class="control-label">Cost</label>
 						<div class="control-data">
-							<input name="cost" #cost="ngModel" id="cost" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.cost">
+							<input name="cost" type="number" #cost="ngModel" id="cost" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.cost">
 
 						</div>
 
@@ -338,7 +338,7 @@
 					<div class="form-group">
 						<label for="generalLedgerId" class="control-label">GL Acct</label>
 						<div class="control-data">
-							<input name="generalLedgerId" #generalLedgerId="ngModel" id="generalLedgerId" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.generalLedgerId">
+							<input name="generalLedgerId" type="number" #generalLedgerId="ngModel" id="generalLedgerId" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.generalLedgerId">
 
 						</div>
 

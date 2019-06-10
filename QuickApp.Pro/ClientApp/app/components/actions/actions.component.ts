@@ -31,6 +31,7 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** Actions component*/
 export class ActionsComponent implements OnInit, AfterViewInit {
+    modelValue: boolean;
     selectedActionName: any;
     disableSave: boolean=false;
     actionamecolle: any[]=[];
@@ -40,7 +41,8 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createddate: any = "";
     updatedDate: any = "";
-   
+    display: boolean = false;
+
     ngOnInit(): void {
 		this.loadData();
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-tasks';
@@ -333,29 +335,37 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     editItemAndCloseModel() {
 
        // debugger;
+        if (!this.actionName)
+        {
+            this.display = true;
+            this.modelValue = true;
+        }
 
         this.isSaving = true;
-       
-        if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.actionName;
-              this.sourceAction.masterCompanyId= 1;
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-           
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.actionName;
-              this.sourceAction.masterCompanyId= 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
 
-        this.modal.close();
+        if (this.actionName)
+        {
+            if (this.isEditMode == false) {
+                this.sourceAction.createdBy = this.userName;
+                this.sourceAction.updatedBy = this.userName;
+                this.sourceAction.description = this.actionName;
+                this.sourceAction.masterCompanyId = 1;
+                this.workFlowtService.newAction(this.sourceAction).subscribe(
+                    role => this.saveSuccessHelper(role),
+                    error => this.saveFailedHelper(error));
+            }
+            else {
+
+                this.sourceAction.updatedBy = this.userName;
+                this.sourceAction.description = this.actionName;
+                this.sourceAction.masterCompanyId = 1;
+                this.workFlowtService.updateAction(this.sourceAction).subscribe(
+                    response => this.saveCompleted(this.sourceAction),
+                    error => this.saveFailedHelper(error));
+            }
+
+            this.modal.close();
+        }
     }
     
     deleteItemAndCloseModel() {

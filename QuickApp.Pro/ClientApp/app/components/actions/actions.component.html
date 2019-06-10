@@ -115,21 +115,16 @@
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="actionname" class="control-label">Task Name<span class="clr-red">*</span></label>
-                </div>
-                <div class="inner-addon right-addon inline-block">
-
-
-                    <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="actionName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterActions($event)" [size]="30"
-                                    [minLength]="2" [dropdown]="true">
-                        <ng-template let-actionName pTemplate="item">
-                            <div class="ui-helper-clearfix">{{actionName}}</div>
-
-                        </ng-template>
-
-                    </p-autoComplete>
-                    <div *ngIf="disableSave" class="clr-red">Entry Already Exists</div>
-                    <div class="clear"></div>
-                </div>
+                 </div>
+                    <div class="control-data">
+                        <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="actionName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterActions($event)" [size]="30"
+                                        [minLength]="2" [dropdown]="true">
+                            <ng-template let-actionName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{actionName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSave" class="clr-red">Entry Already Exists</div>
+                    </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
@@ -268,3 +263,15 @@
         <app-audit [Data]="AuditDetails" [Modal]="modal" title='Asset Depreciation Method Audit Details'></app-audit>
     </div>
 </ng-template>
+
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>
