@@ -10,7 +10,7 @@
         <div class="x_panel">
             <div class="x_content">
 
-                <h4 class="page-heading clr-green">Actions</h4>
+                <h4 class="page-heading clr-green">Tasks</h4>
                 <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
                 <p-table #dt [value]="allActions" [rows]="20" [paginator]="true" [metaKeySelection]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
@@ -88,7 +88,7 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete 'Receive' Action ?</h4>
+        <h4 class="modal-title">Are You Sure Want to Delete 'Receive' Task ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -103,8 +103,8 @@
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Action</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Action</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Task</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Task</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -114,7 +114,7 @@
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
             <div class="form-group">
                 <div class="col-sm-4">
-                    <label for="actionname" class="control-label">Action Name<span class="clr-red">*</span></label>
+                    <label for="actionname" class="control-label">Task Name<span class="clr-red">*</span></label>
                 </div>
                 <div class="inner-addon right-addon inline-block">
 
@@ -183,7 +183,7 @@
 <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
 
-        <h4 class="modal-title">History of Action</h4>
+        <h4 class="modal-title">History of Task</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -222,10 +222,10 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">Action Details</h4>
+            <h4 class="modal-title">Task Details</h4>
         </div>
         <div class="modal-body viewform">
-            <p><span class="label"><b>Action Name: </b></span><span class="value">{{action_name}}</span></p>
+            <p><span class="label"><b>Task Name: </b></span><span class="value">{{action_name}}</span></p>
             <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
             <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
             <p><span class="label"><b>Created Date: </b></span><span class="value">{{createddate | date: 'MM/dd/yyyy'}}</span></p>

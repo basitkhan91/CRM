@@ -90,14 +90,14 @@ const singlePagesRoutes: Routes = [
                 data: { title:'Asset Status' }
             },
             {
-                path: 'app-actions',
+                path: 'app-tasks',
                 component: ActionsComponent,
-                data: { title: "Actions" }
+                data: { title: "Tasks" }
             },
             {
-                path: 'app-action-attributes',
+                path: 'app-task-attributes',
                 component: ActionAttributesComponent,
-                data: { title: "Action Attributes" }
+                data: { title: "Task Attributes" }
             }
             ,
             {

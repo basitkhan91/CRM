@@ -7,7 +7,8 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IWorkFlowRepositoryTest : IRepository<Workflow>
     {
-        Workflow getWorkFlowWithChildren(int workFlowId);
+        Workflow getCompleteWorkFlowEntity(int workFlowId);
+        List<Workflow> getAllWorkFlow();
     }
 }   
     

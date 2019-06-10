@@ -43,7 +43,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
    
     ngOnInit(): void {
 		this.loadData();
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-actions';
+		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-tasks';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -100,7 +100,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
 
         this.cols = [
             //{ field: 'actionId', header: 'Action Id' },
-			{ field: 'description', header: 'Action Name' },
+			{ field: 'description', header: 'Task Name' },
 			{ field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },

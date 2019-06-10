@@ -314,11 +314,10 @@ export class WorkflowListComponent implements OnInit, AfterViewInit {
 
 
 	openEdit(row) {
-
-		
+        
 		this.workFlowtService.listCollection = row;
 		this.workFlowtService.enableUpdateMode = true;
-		
+        this.workFlowtService.currentWorkFlowId = row.workflowId;
 		this.route.navigateByUrl('/workflowmodule/workflowpages/wf-create');
 		
 	}
