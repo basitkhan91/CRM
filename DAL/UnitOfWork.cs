@@ -183,6 +183,8 @@ namespace DAL
 
         IPartStockLineMapper partStockLineMapper;
 
+        IDashNumberRepository dashNumberRepository;
+
 
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
@@ -1618,6 +1620,16 @@ namespace DAL
                 if (partStockLineMapper == null)
                     partStockLineMapper = new PartStockLineMapperRepository(_context);
                 return partStockLineMapper;
+            }
+        }
+
+        public IDashNumberRepository DashNumberRepository
+        {
+            get
+            {
+                if (dashNumberRepository == null)
+                    dashNumberRepository = new DashNumberRepository(_context);
+                return dashNumberRepository;
             }
         }
     }

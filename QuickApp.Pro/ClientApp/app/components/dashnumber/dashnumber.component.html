@@ -1,0 +1,186 @@
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_content">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" aria-current="page">Single Screen</li>
+                        <li class="breadcrumb-item active" aria-current="page">Dash Numbers</li>
+                    </ol>
+                </nav>
+                <h4 class="page-heading">Aircraft Dash Numbers</h4>
+                <div class="col-sm-12 form-bg">
+                    <div class="form-group add-inputs">
+                        <div class="form-group col-sm-4 w250">
+                            <label class="control-label col-sm-4">Aircraft Manufacturer<span class="clr-red">*</span></label>
+                            <div class="col-sm-7 cust-name">
+                                <div class="inner-addon right-addon w250 inline-block">
+                                    <select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+                                        <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 w250">
+                            <label class="control-label col-sm-4">Aircraft Model Name<span class="clr-red">*</span></label>
+                            <div class="col-sm-7 cust-name">
+                                <div class="inner-addon right-addon w200 inline-block">
+                                    <select [(ngModel)]="currentDashNumberType.aircraftModelId" [ngModelOptions]="{standalone: true}">
+                                        <option>select</option>
+                                        <option *ngFor="let model of aircraftModelsList" [ngValue]="model.aircraftModelId">{{model.modelName}}</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4 w250">
+                            <label class="control-label col-sm-4">Dash Number<span class="clr-red">*</span></label>
+                            <div class="col-sm-7 cust-name">
+                                <div class="inner-addon right-addon w200 inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" [(ngModel)]="currentDashNumberType.dashNumber" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <button type="button" id="btnFilterAssetStatus" name="" class="btn btn-warning" data-toggle="tooltip" data-original-title="Filter"><i class="fa fa-search"></i></button>
+                            <button type="button" id="btnAddAssetStatus" (click)="addDashNumber()" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Add"><i class="fa fa-plus"></i></button>
+
+                        </div>
+                        <div class="excel-upload mtop0">
+                            <input type="file" name="upload[]" multiple="" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <label for="upload"> <span data-toggle="tooltip" title="" data-original-title="Excel Upload (table rows)"><i class="fa fa-file-excel-o"></i></span> </label>
+                        </div>
+                        <!--</form>-->
+                    </div>
+                    <!--Add claffication End -->
+                    <!--Uplad Doc-->
+                    <!--End-->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Aircraft Manufacturer</th>
+                                    <th>Model Name</th>
+                                    <th>Dash Number</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let dashnumber of dashNumberList">
+                                    <td>{{dashnumber.aircraftType.description}}</td>
+                                    <td>{{dashnumber.aircraftModel.modelName}}</td>
+                                    <td>{{dashnumber.dashNumber}}</td>
+                                    <td>
+                                        <p-inputSwitch *ngIf="dashnumber.isActive == true || dashnumber.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(dashnumber,$event)" [(ngModel)]="dashnumber.isActive"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="dashnumber.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(dashnumber,$event)" [(ngModel)]="dashnumber.isActive"></p-inputSwitch>
+
+                                        <span (click)="setDashNumberToUpdate(dashNumberModel,dashnumber.dashNumberId)" data-toggle="modal" data-target="#edit">
+                                            <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </span>
+                                        <span (click)="showAuditPopup(auditContent,dashnumber.dashNumberId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                                            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                        <span (click)="confirmDelete(content,dashnumber.dashNumberId)" data-toggle="modal" data-target="#data">
+                                            <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                </div>
+
+            </div>
+        </div>
+        <ng-template #auditContent let-c="close" let-d="dismiss">
+            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+            </div>
+        </ng-template>
+
+        <ng-template #auditContent let-c="close" let-d="dismiss">
+            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+            </div>
+        </ng-template>
+
+        <ng-template #auditContent let-c="close" let-d="dismiss">
+            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+            </div>
+        </ng-template>
+
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure you want to delete Dash Number ?</h4>
+                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="removeDashNumber()">Yes</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+            </div>
+
+        </ng-template>
+
+        <ng-template #dashNumberModel let-c="close" let-d="dismiss">
+
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"> Edit</h4>
+                </div>
+                <div class="modal-body">
+
+                    <p>
+                        <span class="col-sm-3"><b>Aircraft Manufacturer: </b></span> <span class="col-sm-6">
+                            <select [(ngModel)]="dashNumberToUpdate.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+                                <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+                            </select>
+                        </span>
+                    </p>
+                    <p>
+                        <span class="col-sm-3"><b>Aircraft Model Name: </b></span> <span class="col-sm-6">
+                            <select [(ngModel)]="dashNumberToUpdate.aircraftModelId" [ngModelOptions]="{standalone: true}">
+                                <option>select</option>
+                                <option *ngFor="let model of aircraftModelsList" [ngValue]="model.aircraftModelId">{{model.modelName}}</option>
+                            </select>
+                        </span>
+                    </p>
+                    <p>
+                        <span class="col-sm-3"><b>Dash NUmber: </b></span> <span class="col-sm-6">
+                            <input type="text" [(ngModel)]="dashNumberToUpdate.dashNumber" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                        </span>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" (click)="updateDashNumber()" class="btn btn-success" data-dismiss="modal">Update</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </ng-template>
+
+        <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+                  [width]="350" [minWidth]="200" [responsive]="true"
+                  [minY]="1050" [baseZIndex]="1100000">
+            <h5 [ngStyle]="{'color':'red'}">
+                Please Enter (*) Mandatory Fields
+            </h5>
+            <p-footer>
+                <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+            </p-footer>
+
+        </p-dialog>
