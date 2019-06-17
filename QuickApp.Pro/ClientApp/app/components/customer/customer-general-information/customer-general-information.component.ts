@@ -34,6 +34,7 @@ declare const google: any;
 })
 
 export class CustomerGeneralInformationComponent implements OnInit {
+    displayCustomerClassification: boolean;
     disableSaveCustomerClassificationSave: boolean;
     cityError: boolean;
     customerAddressLine1Error: boolean;
@@ -676,28 +677,43 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // save Customer Info//
     editItemCloseModel() {
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.sourceClassification.createdBy = this.userName;
-            this.sourceClassification.updatedBy = this.userName;
-            this.sourceClassification.description = this.classificationName;
-            this.sourceClassification.masterCompanyId = 1;
-            this.customerClassificationService.newAddcustomerclass(this.sourceClassification).subscribe(data => {
-                if (data) { this.sourceCustomer.customerClassificationId = data.customerClassificationId }
-                this.loadCustomerClassifiData();
-            })
+        if (!(this.classificationName))
+        {
+            this.displayCustomerClassification = true;
+            this.customerClassificationError = true;
+            this.modelValue = true;
         }
-        else {
+        if (this.classificationName)
+        {
+            this.isSaving = true;
+            if (this.isEditMode == false) {
+                this.sourceClassification.createdBy = this.userName;
+                this.sourceClassification.updatedBy = this.userName;
+                this.sourceClassification.description = this.classificationName;
+                this.sourceClassification.masterCompanyId = 1;
+                this.customerClassificationService.newAddcustomerclass(this.sourceClassification).subscribe(data => {
+                    if (data) { this.sourceCustomer.customerClassificationId = data.customerClassificationId }
+                    this.loadCustomerClassifiData();
+                })
+            }
+            else {
 
-            this.sourceClassification.updatedBy = this.userName;
-            this.sourceClassification.description = this.classificationName;
-            this.sourceClassification.masterCompanyId = 1;
-            this.customerClassificationService.updatecustomerclass(this.sourceClassification).subscribe(
-                response => this.saveCompleted(this.sourceClassification),
-                error => this.saveFailedHelper(error));
+                this.sourceClassification.updatedBy = this.userName;
+                this.sourceClassification.description = this.classificationName;
+                this.sourceClassification.masterCompanyId = 1;
+                this.customerClassificationService.updatecustomerclass(this.sourceClassification).subscribe(
+                    response => this.saveCompleted(this.sourceClassification),
+                    error => this.saveFailedHelper(error));
+            }
+
+            this.displayCustomerClassification = false;
+            this.customerClassificationError = false;
+            this.modal.close();
         }
-
-        this.modal.close();
+        
+       
+        
+        
     }
 
     // Load  Customer Clasfication data
