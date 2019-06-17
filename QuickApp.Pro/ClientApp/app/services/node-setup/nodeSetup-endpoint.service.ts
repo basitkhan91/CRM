@@ -44,7 +44,7 @@ export class NodeSetupEndpointService extends EndpointFactory {
     }
 
     getNodeSetupById<T>(nodeId: number): Observable<T> {
-        let endpointUrl = `${this.getById}/${nodeId}`; 
+        let endpointUrl = `${this.getById}/${nodeId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {

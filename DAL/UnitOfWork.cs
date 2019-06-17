@@ -183,6 +183,8 @@ namespace DAL
 
         IPartStockLineMapper partStockLineMapper;
 
+        IGLAccountNodeRepository glAccountNode;
+
 
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
@@ -202,6 +204,17 @@ namespace DAL
                     _userRole = new UserRoleRepository(_context);
 
                 return _userRole;
+            }
+        }
+
+        public IGLAccountNodeRepository GLAccountNode
+        {
+            get
+            {
+                if (glAccountNode == null)
+                    glAccountNode = new GLAccountNodeRepository(_context);
+
+                return glAccountNode;
             }
         }
 
