@@ -23,8 +23,8 @@ export class UserRolesSetupComponent implements OnInit {
     public currentUserRole: UserRole;
     public pages: ModuleHierarchyMaster[];
     public pagesToHide: ModuleHierarchyMaster[];
-    constructor(private messageService: MessageService, private authService: AuthService, private alertService: AlertService, private userRoleService: UserRoleService) {
 
+    constructor(private messageService: MessageService, private authService: AuthService, private alertService: AlertService, private userRoleService: UserRoleService) {
     }
 
     ngOnInit(): void {

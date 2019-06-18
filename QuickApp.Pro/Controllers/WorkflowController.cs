@@ -29,79 +29,52 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("allWorkFlows")]
-        public IActionResult getAllWorkFlows(){
+        public IActionResult getAllWorkFlows()
+        {
             return Ok(UnitOfWork.Repository<Workflow>().GetAll());
-
         }
 
         [HttpPost("addWorkFlow")]
-        public  IActionResult addWorkFlow([FromBody] Workflow workFlow)
+        public IActionResult addWorkFlow([FromBody] Workflow workFlow)
         {
-            if (_context.Workflow.Any(o => o.WorkflowId == workFlow.WorkflowId))
-
+            if (ModelState.IsValid)
             {
-                if (workFlow == null)
-                    return BadRequest($"{nameof(workFlow)} cannot be null");
-                var actionobject = _context.Workflow.Where(a => a.WorkflowId == workFlow.WorkflowId).SingleOrDefault();
-                // var workFlow = new Workflow();
-               
-                actionobject.WorkflowDescription = workFlow.WorkflowDescription;
-                actionobject.PartNumberDescription = workFlow.PartNumberDescription;
-                actionobject.Version = workFlow.Version;
-                actionobject.WorkScopeId = workFlow.WorkScopeId;
-                actionobject.ItemMasterId = workFlow.ItemMasterId;
-                actionobject.ChangedPartNumber = workFlow.ChangedPartNumber;
-                actionobject.changedPartNumberDescription = workFlow.changedPartNumberDescription;
-                actionobject.CustomerId = workFlow.CustomerId;
-                actionobject.CurrencyId = workFlow.CurrencyId;
-                actionobject.WorkflowExpirationDate = workFlow.WorkflowExpirationDate;
-                actionobject.IsCalculatedBERThreshold = workFlow.IsCalculatedBERThreshold;
-                actionobject.IsFixedAmount = workFlow.IsFixedAmount;
-                actionobject.IsPercentageOfNew = workFlow.IsPercentageOfNew;
-                actionobject.IsPercentageOfReplacement = workFlow.IsPercentageOfReplacement;
-                actionobject.FixedAmount = workFlow.FixedAmount;
-                actionobject.CostOfNew = workFlow.CostOfNew;
-                actionobject.PercentageOfNew = workFlow.PercentageOfNew;
-                actionobject.CostOfReplacement = workFlow.CostOfReplacement;
-                actionobject.PercentageOfReplacement = workFlow.PercentageOfReplacement;
-                actionobject.Memo = workFlow.Memo;
-                actionobject.BERThresholdAmount = workFlow.BERThresholdAmount;
-                actionobject.FlatRate = workFlow.FlatRate;
-                actionobject.IsActive = true;
-                actionobject.CreatedDate = DateTime.Now;
-                actionobject.UpdatedDate = DateTime.Now;
-                actionobject.CreatedBy = "admin";
-                actionobject.UpdatedBy = "admin";
-                UnitOfWork.Repository<Workflow>().Update(actionobject);
-                UnitOfWork.SaveChanges();
-                return Ok(workFlow);
+                var existingWorkflow = UnitOfWork.Repository<Workflow>().Find(workflow => workflow.WorkflowId == workFlow.WorkflowId).FirstOrDefault();
 
+                if (existingWorkflow != null)
+                {
+                    existingWorkflow.CreatedDate = DateTime.Now;
+                    existingWorkflow.UpdatedDate = DateTime.Now;
+                    existingWorkflow.CreatedBy = "admin";
+                    existingWorkflow.UpdatedBy = "admin";
+                    UnitOfWork.Repository<Workflow>().Update(existingWorkflow);
+                    UnitOfWork.SaveChanges();
+                    return Ok(workFlow);
+                }
+                else
+                {
+                    workFlow.MasterCompanyId = 1;
+                    workFlow.CreatedDate = DateTime.Now;
+                    workFlow.UpdatedDate = DateTime.Now;
+                    UnitOfWork.Repository<Workflow>().Add(workFlow);
+                    UnitOfWork.SaveChanges();
+
+                    workFlow.WorkOrderNumber = "ACC" + workFlow.WorkflowId;
+                    UnitOfWork.Repository<Workflow>().Update(workFlow);
+                    UnitOfWork.SaveChanges();
+                    return Ok(workFlow);
+                }
             }
             else
             {
-                workFlow.MasterCompanyId = 1;
-                workFlow.CreatedDate = DateTime.Now;
-                workFlow.UpdatedDate = DateTime.Now;
-                UnitOfWork.Repository<Workflow>().Add(workFlow);
-                UnitOfWork.SaveChanges();
-                if (workFlow.WorkflowId != 0)
-                {
-                    var exists = _context.Workflow.Where(a => a.WorkflowId == workFlow.WorkflowId).SingleOrDefault();
-                    exists.WorkOrderNumber = "ACC" + workFlow.WorkflowId;
-                    _context.Workflow.Update(exists);
-                    _context.SaveChanges();
-                }
-                return Ok(workFlow);
-
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
             }
         }
 
         [HttpGet("getWorkFlow/{id:int}")]
         public IActionResult getWorkFlow(int id)
         {
-            
-            var workFlow = UnitOfWork.workFlowRepositoryTest.getWorkFlowWithChildren(id);
-
+            var workFlow = UnitOfWork.workFlowRepositoryTest.getCompleteWorkFlowEntity(id);
             return Ok(workFlow);
         }
 
@@ -115,8 +88,12 @@ namespace QuickApp.Pro.Controllers
                 charges.CreatedDate = DateTime.Now;
                 UnitOfWork.Repository<WorkflowChargesList>().Add(charges);
                 UnitOfWork.SaveChanges();
+                return Ok();
             }
-            return Ok();
+            else {
+                return BadRequest();
+            }
+            
         }
 
         [HttpPost("addDirection")]
@@ -143,9 +120,10 @@ namespace QuickApp.Pro.Controllers
                 equipment.CreatedDate = DateTime.Now;
                 _context.WorkflowEquipmentList.Add(equipment);
                 _context.SaveChanges();
+                return Ok();
             }
-            
-            return Ok();
+
+            return BadRequest();
         }
 
         [HttpPost("addExclusion")]
@@ -158,8 +136,9 @@ namespace QuickApp.Pro.Controllers
                 exclusion.CreatedDate = DateTime.Now;
                 _context.WorkFlowExclusion.Add(exclusion);
                 _context.SaveChanges();
+                return Ok();
             }
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPost("addExpertise")]
@@ -172,8 +151,9 @@ namespace QuickApp.Pro.Controllers
                 experties.CreatedDate = DateTime.Now;
                 _context.WorkflowExpertiseList.Add(experties);
                 _context.SaveChanges();
+                return Ok();
             }
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPost("addMeasurement")]
@@ -188,8 +168,9 @@ namespace QuickApp.Pro.Controllers
                 measurement.CreatedBy = "admin";
                 _context.WorkflowMeasurement.Add(measurement);
                 _context.SaveChanges();
+                return Ok();
             }
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPost("addPublication")]
@@ -202,8 +183,9 @@ namespace QuickApp.Pro.Controllers
                 publication.UpdatedDate = DateTime.Now;
                 UnitOfWork.Repository<Publications>().Add(publication);
                 UnitOfWork.SaveChanges();
+                return Ok();
             }
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPost("addMaterial")]
@@ -216,95 +198,130 @@ namespace QuickApp.Pro.Controllers
                 material.CreatedDate = DateTime.Now;
                 _context.WorkflowMaterial.Add(material);
                 _context.SaveChanges();
+                return Ok();
             }
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPost("updateCharges")]
         public IActionResult updateCharges([FromBody] WorkflowChargesList charges)
         {
-            charges.MasterCompanyId = 1;
-            charges.CreatedDate = DateTime.Now;
-            charges.UpdatedDate = DateTime.Now;
-            UnitOfWork.Repository<WorkflowChargesList>().Update(charges);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (charges != null)
+            {
+                charges.MasterCompanyId = 1;
+                charges.CreatedDate = DateTime.Now;
+                charges.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<WorkflowChargesList>().Update(charges);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
+            
         }
 
         [HttpPost("updateDirection")]
         public IActionResult updateDirection([FromBody] WorkFlowDirection direction)
         {
-            direction.MasterCompanyId = 1;
-            direction.CreatedDate = DateTime.Now;
-            direction.UpdaedDate = DateTime.Now;
-            UnitOfWork.Repository<WorkFlowDirection>().Update(direction);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (direction != null) {
+                direction.MasterCompanyId = 1;
+                direction.CreatedDate = DateTime.Now;
+                direction.UpdaedDate = DateTime.Now;
+                UnitOfWork.Repository<WorkFlowDirection>().Update(direction);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [HttpPost("updateEquipment")]
         public IActionResult updateEquipment([FromBody] WorkflowEquipmentList equipment)
         {
-            equipment.MasterCompanyId = 1;
-            equipment.CreatedDate = DateTime.Now;
-            equipment.UpdatedDate = DateTime.Now;
-            UnitOfWork.Repository<WorkflowEquipmentList>().Update(equipment);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (equipment != null)
+            {
+                equipment.MasterCompanyId = 1;
+                equipment.CreatedDate = DateTime.Now;
+                equipment.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<WorkflowEquipmentList>().Update(equipment);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
+           
         }
 
         [HttpPost("updateExclusion")]
         public IActionResult updateExclusion([FromBody] WorkFlowExclusion exclusion)
         {
-            exclusion.MasterCompanyId = 1;
-            exclusion.CreatedDate = DateTime.Now;
-            exclusion.UpdatedDate = DateTime.Now;
-            UnitOfWork.Repository<WorkFlowExclusion>().Update(exclusion);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (exclusion != null)
+            {
+                exclusion.MasterCompanyId = 1;
+                exclusion.CreatedDate = DateTime.Now;
+                exclusion.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<WorkFlowExclusion>().Update(exclusion);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [HttpPost("updateExpertise")]
         public IActionResult updateExpertise([FromBody] WorkflowExpertiseList experties)
         {
-            experties.MasterCompanyId = 1;
-            experties.CreatedDate = DateTime.Now;
-            experties.UpdatedDate = DateTime.Now;
-            UnitOfWork.Repository<WorkflowExpertiseList>().Update(experties);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (experties != null)
+            {
+                experties.MasterCompanyId = 1;
+                experties.CreatedDate = DateTime.Now;
+                experties.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<WorkflowExpertiseList>().Update(experties);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
+            
         }
 
         [HttpPost("updateMeasurement")]
         public IActionResult updateMeasurement([FromBody] WorkflowMeasurement measurement)
         {
-            measurement.MasterCompanyId = 1;
-            measurement.CreatedDate = DateTime.Now;
-            measurement.UpdatedDate = DateTime.Now;
-            measurement.CreatedBy = "admin";
-            UnitOfWork.Repository<WorkflowMeasurement>().Update(measurement);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (measurement != null) {
+                measurement.MasterCompanyId = 1;
+                measurement.CreatedDate = DateTime.Now;
+                measurement.UpdatedDate = DateTime.Now;
+                measurement.CreatedBy = "admin";
+                UnitOfWork.Repository<WorkflowMeasurement>().Update(measurement);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [HttpPost("updatePublication")]
         public IActionResult updatePublication([FromBody] Publications publication)
         {
-            publication.CreatedDate = DateTime.Now;
-            UnitOfWork.Repository<Publications>().Update(publication);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (publication != null)
+            {
+                publication.CreatedDate = DateTime.Now;
+                UnitOfWork.Repository<Publications>().Update(publication);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [HttpPost("updateMaterial")]
         public IActionResult updateMaterial([FromBody] WorkflowMaterial material)
         {
-            material.MasterCompanyId = 1;
-            material.CreatedDate = DateTime.Now;
-            material.UpdatedDate = DateTime.Now;
-            UnitOfWork.Repository<WorkflowMaterial>().Update(material);
-            UnitOfWork.SaveChanges();
-            return Ok();
+            if (material != null) {
+                material.MasterCompanyId = 1;
+                material.CreatedDate = DateTime.Now;
+                material.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<WorkflowMaterial>().Update(material);
+                UnitOfWork.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
+            
         }
 
     }

@@ -276,7 +276,7 @@
                                     <label class="control-label col-sm-4">Manufacturer </label>
                                     <div class="inner-addon col-sm-7 inline-block display-flex">
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.manufacturerId">
-                                            <option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
+                                            <option *ngFor="let manufacturer of allManufacturerInfo" [ngValue]="manufacturer.manufacturerId">{{manufacturer.name}}</option>
                                         </select>
                                         <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
                                     </div>
@@ -298,15 +298,22 @@
                                     <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
                                         <i class="fa fa-plus clr-blue cpointer" data-toggle="modal" data-target="#platform-block" (click)="openModelPopups(contentModel)"></i>
                                         <table *ngIf="showInput" [style.border]="showInput ? '1px solid gray' : 'none'">
-                                            <tr *ngFor="let word of selectedModels; let in=index">
+                                            <tr *ngFor="let model of selectedModels; let in=index">
                                                 <td>
-                                                    {{selectedModels[in].modelName}}
-
+                                                    {{model.label}}
                                                 </td>
                                             </tr>
                                         </table>
 
 
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Capes</label>
+                                    <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
+                                        <input class="form-control inline-block" type="checkbox" id="capes-checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="isEnabeCapes">
+                                        <i class="fa fa-eye capes-view-btn clr-blue" data-toggle="modal" title="View" *ngIf="isEnabeCapes" (click)="ViewFunction()"></i>
+                                        <i class="fa fa-edit capes-view-btn clr-blue" data-toggle="modal" title="Edit" data-target="#capes-block-edit" (click)="cunstructCapabilities(contentCapes)" *ngIf="isEnabeCapes"></i>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1">
@@ -395,14 +402,7 @@
                                         <div class="clear"></div>
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Capes</label>
-                                    <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
-                                        <input class="form-control inline-block" type="checkbox" id="capes-checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="isEnabeCapes">
-                                        <i class="fa fa-eye capes-view-btn clr-blue" data-toggle="modal" title="View" *ngIf="isEnabeCapes" (click)="ViewFunction()"></i>
-                                        <i class="fa fa-edit capes-view-btn clr-blue" data-toggle="modal" title="Edit" data-target="#capes-block-edit" (click)="cunstructCapabilities(contentCapes)" *ngIf="isEnabeCapes"></i>
-                                    </div>
-                                </div>
+
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label col-sm-4">RFQ Tracking</label>
@@ -3218,31 +3218,32 @@
         <div class="modal-body">
             <form method="post" id="" name="">
                 <div class="table-responsive default-bg clear">
+                    <div style="overflow-y: scroll;height: 400px;">
                     <table class="table table-bordered table-striped table-sorting">
                         <thead>
                             <tr align="center">
-                                <th>Aircraft Type</th>
+                                    <th>Aircraft Manufacturer</th>
                                 <th>Model</th>
-                                <th>Select Model</th>
-                                <th>Dash Number</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let col of allAircraftinfo; let i = index;">
+                                    <th>Dash Number</th>
+                                    <th>Select Model</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let col of allAircraftinfo; let i = index;">
 
-                                <td>{{col.description}}</td>
-                                <td>{{col.modelName}}</td>
-
+                                    <td>{{col.aircraftManufacturer}}</td>
+                                    <td>{{col.label}}</td>
                                 <td>
-                                    <input type="checkbox" class=" wauto" [(ngModel)]="col.checkbox" [ngModelOptions]="{standalone: true}" (click)="saveSelectedModel(col,i)">
+                                        <input class="form-control w100" [(ngModel)]="col.dashNumber" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
                                 </td>
                                 <td>
-                                    <input class="form-control w100" [(ngModel)]="col.dashNumber" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
+                                        <input type="checkbox" class=" wauto" [(ngModel)]="col.checkbox" [ngModelOptions]="{standalone: true}" (click)="saveSelectedModel(col,i)">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                     <div>
                         <button class="btn btn-success pull-right submit-btn" (click)="dismissAircraftModel()">Save</button>
                     </div>

@@ -10,9 +10,9 @@
 					</ol>
 				</nav>
 				<div class="pheading">
-					<!--<h4 class="page-heading">Adding New Workflow <span class="clr-black fs12">(Pulling data dynamically depending on selections can be done at the time of development. Currently this page is showing the layout)</span></h4>-->
 				</div>
-				<div class="cdetails-top" style="display: none;">
+				
+                <div class="cdetails-top" style="display: none;">
 					<span class="cdetails-top-close"><i class="fa fa-times"></i></span>
 					<div class="col-sm-12">
 						<label>Company</label>
@@ -31,7 +31,8 @@
 						<span>Java</span>
 					</div>
 				</div>
-				<div class="clear"></div>
+				
+                <div class="clear"></div>
 
 				<div class="col-sm-3 left-block">
 
@@ -67,6 +68,7 @@
 					</div>
 
 				</div>
+               
                 <div class="col-sm-3 left-block">
                     <div class="col-sm-12">
 
@@ -158,12 +160,13 @@
                     <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4">Workflow Exp. Date</label>
                         <div class="col-sm-7">
-                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate"></p-calendar>
+                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.expirationDate"></p-calendar>
                         </div>
                     </div>
 
                 </div>
-				<div class="col-sm-6 right-block">
+				
+                <div class="col-sm-6 right-block">
 					<div class="col-sm-12">
 						<label class="w200 active-text">
 							<input [(ngModel)]="sourceWorkFlow.isCalculatedBERThreshold" [value]="true" type="radio" name="ber-flat" class="trigger" data-rel="ber" (click)="isCalculatedBERThreshold('calculate')">
@@ -456,10 +459,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="clear"></div>
 				
-
-				<hr>
+                <div class="clear"></div>
+				
+                <hr>
 
 				<div class="clearfix selection-box ">
 					<div class="form-group col-sm-4">
@@ -482,7 +485,7 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-4" [hidden]="!showActionAttribute">
-						<label>Action Attribute</label><br />
+						<label>Task Attribute</label><br />
 						<div class="inner-addon col-sm-7 inline-block display-flex">
 							<ng-multiselect-dropdown class="form-control multiple-custom-select"
 													 [placeholder]="'Select'"
@@ -500,7 +503,8 @@
 					</div>
 
 				</div>
-				<div class="bhoechie-tab-container clearfix"
+				
+                <div class="bhoechie-tab-container clearfix"
 					 *ngIf="workFlowList != undefined && workFlowList.length > 0">
 					<div class="bhoechie-tab-menu">
 						<div class="list-group">
@@ -521,42 +525,42 @@
 								<ul class="nav nav-pills">
 									<li class=""
 										*ngFor="let item of workFlow.selectedItems"
-										(click)="setCurrentPanel(item.Id)">
+										(click)="setCurrentPanel(item.Name)">
 										<a data-toggle="pill"
-										   href="#tab{{item.Id}}">{{item.Name}}</a>
+										   href="#tab{{item.Name}}">{{item.Name}}</a>
 									</li>
 								</ul>
 								<div class="tab-content">
 
-									<div id="tab12" *ngIf="workFlow != undefined && workFlow.charges != undefined && workFlow.charges.length > 0"
+									<div id="tab_Charges" *ngIf="workFlow != undefined && workFlow.charges != undefined && workFlow.charges.length > 0"
 										 class="tab-pane fade in active pan">
 										<grd-charges [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-charges>
 									</div>
-									<div id="tab15" *ngIf="workFlow != undefined && workFlow.directions != undefined && workFlow.directions.length > 0"
+									<div id="tab_Directions" *ngIf="workFlow != undefined && workFlow.directions != undefined && workFlow.directions.length > 0"
 										 class="tab-pane fade pan">
 										<grd-directions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-directions>
 									</div>
-									<div id="tab13" *ngIf="workFlow != undefined && workFlow.equipments != undefined && workFlow.equipments.length > 0"
+									<div id="tab_Equipment" *ngIf="workFlow != undefined && workFlow.equipments != undefined && workFlow.equipments.length > 0"
 										 class="tab-pane fade pan">
 										<grd-equipment [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-equipment>
 									</div>
-									<div id="tab17" *ngIf="workFlow != undefined && workFlow.exclusions != undefined && workFlow.exclusions.length > 0"
+									<div id="tab_Exclusions" *ngIf="workFlow != undefined && workFlow.exclusions != undefined && workFlow.exclusions.length > 0"
 										 class="tab-pane fade pan">
 										<grd-exclusions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-exclusions>
 									</div>
-									<div id="tab14" *ngIf="workFlow != undefined && workFlow.expertise != undefined && workFlow.expertise.length > 0"
+									<div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined && workFlow.expertise.length > 0"
 										 class="tab-pane fade pan">
 										<grd-expertise [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-expertise>
 									</div>
-									<div id="tab11" *ngIf="workFlow != undefined && workFlow.materialList != undefined && workFlow.materialList.length > 0"
+									<div id="tab_Material_List" *ngIf="workFlow != undefined && workFlow.materialList != undefined && workFlow.materialList.length > 0"
 										 class="tab-pane fade pan">
 										<grd-material [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-material>
 									</div>
-									<div id="tab36" *ngIf="workFlow != undefined && workFlow.measurements != undefined && workFlow.measurements.length > 0"
+									<div id="tab_Measurements" *ngIf="workFlow != undefined && workFlow.measurements != undefined && workFlow.measurements.length > 0"
 										 class="tab-pane fade pan">
 										<grd-measurement [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-measurement>
 									</div>
-									<div id="tab43" *ngIf="workFlow != undefined && workFlow.publication != undefined && workFlow.publication.length > 0"
+									<div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication != undefined && workFlow.publication.length > 0"
 										 class="tab-pane fade pan">
 										<grd-publication [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-publication>
 									</div>
@@ -566,7 +570,8 @@
 					</div>
 
 				</div>
-				<div class="text-right save-work-btn" *ngIf="(showMainPage) && (!UpdateMode) && workFlowList.length > 0">
+				
+                <div class="text-right save-work-btn" *ngIf="(showMainPage) && (!UpdateMode) && workFlowList.length > 0">
 					<button class="btn add-btn" (click)="addWorkFlow()">Save Workflow Details</button>
 				</div>
 				<div class="text-right save-work-btn" *ngIf="(showMainPage) && (UpdateMode) && workFlowList.length > 0">

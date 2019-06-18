@@ -307,6 +307,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 			//this.sourceAction.ataChapterCode = this.ataChapterCode;
             this.ataMainService.newATAMain(this.sourceAction).subscribe(
                 //role => this.saveSuccessHelper(role),
+                response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
         else {

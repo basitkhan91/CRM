@@ -1301,7 +1301,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openModelPopups(capData) {
-
+        debugger;
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
@@ -1345,15 +1345,31 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
 
     }
-    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
+    private onDataLoadaircrafttypeSuccessful(AircraftType: any[], capData) //getting Models Based on Manfacturer Selection
 
     {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         capData.selectedAircraftDataModels = [];
-        allWorkFlows.forEach(element => {
-            capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
-        });
+        this.allAircraftinfo = [];
+
+        for (let models of AircraftType) {
+            var manufacturer = this.shiftValues.filter(function (manufacturerParam) {
+                return manufacturerParam.value == models.aircraftTypeId;
+            })[0].label;
+            
+            this.allAircraftinfo.push({ value: models.aircraftModelId, label: models.modelName, aircraftManufacturer: manufacturer });
+        }
+
+        this.modal = this.modalService.open(capData, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+
+        //allWorkFlows.forEach(element => {
+        //    this.allAircraftinfo.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId });
+        //    //capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+        //});
 
     }
 
@@ -2696,21 +2712,32 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     public saveSelectedModel(selectedRow, indeex) {
+        var models = this.selectedModels.filter(function (models) {
+            return models.aircraftModelId == selectedRow.aircraftModelId
+        });
 
-        selectedRow.isBoolean = indeex;
-        let ischange = false;
-        if (this.selectedModels.length > 0) {
-            this.selectedModels.map((row) => {
-                if (selectedRow.aircraftModelId == row.aircraftModelId) {
-
-                    ischange = true;
-                }
-            });
-        }
-        if (!ischange) {
+        if (models == undefined || models.length == 0) {
             this.selectedModels.push(selectedRow);
         }
-        console.log(this.selectedModels);
+        else {
+            this.selectedModels.splice(this.selectedModels.indexOf(models[0], 1));
+            this.selectedModels.push(selectedRow);
+        }
+
+        //selectedRow.isBoolean = indeex;
+        //let ischange = false;
+        //if (this.selectedModels.length > 0) {
+        //    this.selectedModels.map((row) => {
+        //        if (selectedRow.aircraftModelId == row.aircraftModelId) {
+
+        //            ischange = true;
+        //        }
+        //    });
+        //}
+        //if (!ischange) {
+            
+        //}
+        //console.log(this.selectedModels);
 
     }
 
