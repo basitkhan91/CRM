@@ -246,6 +246,8 @@ namespace DAL
 
         IPartStockLineMapper PartStockLineMapper { get; }
 
+        IDashNumberRepository DashNumberRepository { get; }
+
         void SaveChanges(Employee employeeobject);
     }
 }
