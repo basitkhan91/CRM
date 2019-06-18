@@ -55,6 +55,7 @@ import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilit
 import { GlAccountService } from '../../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../../models/GlAccount.model';
 import { VendorService } from '../../../services/vendor.service';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -258,6 +259,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
+        //Adding Below Code for By Default Date Should be current Date while Creation
+        this.sourceItemMaster.salesLastSalePriceDate = new Date();
+        this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
+        //end
         if (this.itemser.listCollection != null && this.itemser.isEditMode == true) {
 
             this.showLable = true;
@@ -340,7 +345,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             else {
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
             }
-            if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
+            if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined")
+            {
+                //let salesDate = new Date();
+                //this.sourceItemMaster.salesLastSalePriceDate = this.datePipe.transform(salesDate, 'yyyy-MM-dd');
                 this.sourceItemMaster.salesLastSalePriceDate = new Date();
                 //this.sourceItemMaster.salesLastSalePriceDate = Date.now();
                 //this.sourceItemMaster.salesLastSalePriceDate.setValue(new Date().toISOString());
