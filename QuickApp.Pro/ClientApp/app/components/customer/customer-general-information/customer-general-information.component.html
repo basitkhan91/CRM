@@ -433,14 +433,14 @@
                             <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceClassification.isActive"> Active
                         </label>
                     </div>
-                    <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCustomerClassificationSave">Submit</button>
+                    
                     <div class="clear"></div>
                 </div>
 
 
                 <div class="modal-footer">
 
-
+                    <button class="btn btn-success pull-right submit-btn">Submit</button>
                     <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                 </div>
 </form>
@@ -535,6 +535,17 @@
     <p *ngIf="customerClassificationError" [ngStyle]="{'color':'red'}">Please Enter Customer Classification</p>
     <p *ngIf="cityError" [ngStyle]="{'color':'red'}">Please Enter City</p>
 
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>
+
+<p-dialog header="Alert" [(visible)]="displayCustomerClassification" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <p *ngIf="customerClassificationError" [ngStyle]="{'color':'red'}">Please add Customer Classification name</p>
+    
     <p-footer>
         <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
     </p-footer>
