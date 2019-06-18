@@ -92,8 +92,8 @@
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
 	<div class="modal-header">
-		<h4 class="modal-title" *ngIf="isEditMode">Edit Action Attribute</h4>
-		<h4 class="modal-title" *ngIf="!isEditMode">Add Action Attribute</h4>
+		<h4 class="modal-title" *ngIf="isEditMode">Edit Task Attribute</h4>
+		<h4 class="modal-title" *ngIf="!isEditMode">Add Task Attribute</h4>
 		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
 			<span aria-hidden="true">&times;</span>
 		</button>
@@ -110,13 +110,12 @@
 				</div>
 				<div class="clear"></div>
 			</div>-->
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="netdays" class="control-label">Action Attribute Name<span class="clr-red">*</span></label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
+			<div class="form-group col-sm-12">
+					<label for="netdays" class="control-label col-sm-4">Action Attribute Name<span class="clr-red">*</span></label>
+				
+				<div class="col-sm-7">
 					<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="actionAttributeName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterActionAttributes($event)" [size]="30"
-									[minlength]="2" [minLength]="1" [dropdown]="true">
+									[minlength]="2" [minLength]="1" [dropdown]="true" [style]="{'height':'24px'}">
 						<ng-template let-actionAttributeName pTemplate="item">
 							<div class="ui-helper-clearfix">{{actionAttributeName}}</div>
 						</ng-template>
@@ -136,12 +135,10 @@
 		</div>
 		<div class="clear"></div>
 	</div>-->
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="description" class="control-label">Memo</label>
-				</div>
-				<div class="control-data">
-					<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
+			<div class="form-group col-sm-12">
+					<label for="description" class="control-label col-sm-4">Memo</label>
+				<div class="col-sm-7">
+					<input type="text" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
 					<!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
 		Memo is required.
 	</div>

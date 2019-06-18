@@ -107,18 +107,9 @@
     </div>
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-            <!--<div class="form-group">
-        <label for="ataChapterName" class="control-label">Condition Name <span class="clr-red">*</span></label>
-        <div class="control-data">
-            <input type="text" name="ataChapterName" class="form-control" placeholder="" required minlength="5" #ataChapterName="ngModel" [(ngModel)]="sourceAction.ataChapterName">
-        </div>
-        <div class="clear"></div>
-    </div>-->
-			<div class="form-group">
-				<label for="ataChapterName" class="control-label">Condition Name <span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
-					
-
+			<div class="form-group col-sm-12">
+				<label for="ataChapterName" class="control-label col-sm-4">Condition Name <span class="clr-red">*</span></label>
+				<div class="col-sm-7">
 						<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterconditions($event)" [size]="30"
 										[minLength]="1" [dropdown]="true">
 							<ng-template let-description pTemplate="item">
@@ -127,14 +118,11 @@
 						</p-autoComplete>
 						<div *ngIf="disableSave" style="color:red">Already exist</div>
 					</div>
-					</div>
-
-
-				<div class="form-group">
-					<label for="description" class="control-label">Memo</label>
-					<div class="control-data">
-						<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" />
-					
+			</div>
+				<div class="form-group col-sm-12">
+					<label for="description" class="control-label col-sm-4">Memo</label>
+					<div class="col-sm-7">
+						<input type="text" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" />
 					</div>
 					<div class="clear"></div>
 				</div>

@@ -122,12 +122,12 @@
 		</div>
 		<div class="clear"></div>
 	</div>-->
-			<div class="form-group">
+			<div class="form-group col-sm-12">
 
-				<label for="ataChapterName" class="control-label">ATA Name <span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
+				<label for="ataChapterName" class="control-label col-sm-4">ATA Name <span class="clr-red">*</span></label>
+				<div class="inner-addon right-addon inline-block col-sm-7">
 					<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="ataChapterName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterAtamains($event)" [size]="30"
-									[minLength]="2" [dropdown]="true">
+									[minLength]="2" [dropdown]="true" [style]="{'height':'24px'}">
 						<ng-template let-ataChapterName pTemplate="item">
 							<div class="ui-helper-clearfix">{{ataChapterName}}</div>
 						</ng-template>
@@ -136,37 +136,26 @@
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label for="ataChapterCategory" class="control-label">ATA Chapter Category<span class="clr-red">*</span></label>
-				<div class="control-data">
+			<div class="form-group col-sm-12">
+				<label for="ataChapterCategory" class="control-label col-sm-4">ATA Chapter Category<span class="clr-red">*</span></label>
+				<div class="col-sm-7">
 					<input type="text" name="ataChapterCategory" class="form-control" [(ngModel)]="sourceAction.ataChapterCategory">
-					<!--<div *ngIf="ataChapterCategory.dirty && ataChapterCategory.errors?.required && ataChapterCategory.errors" class="invalid-form-error-message">
-						ATA Chapter category required.
-					</div>
-					<div *ngIf="ataChapterCategory.dirty && ataChapterCategory.errors?.minlength && ataChapterCategory.errors" class="invalid-form-error-message">
-						ATA Chapter category must be at least 2 characters long.
-					</div>-->
 				</div>
 				<div class="clear"></div>
 			</div>
-			<div class="form-group">
-				<label for="ataChapterCategory" class="control-label">ATA Chapter Code<span class="clr-red">*</span></label>
+			<div class="form-group col-sm-12">
+				<label for="ataChapterCategory" class="control-label col-sm-4">ATA Chapter Code<span class="clr-red">*</span></label>
 				<div class="control-data">
-					<input type="number" class="form-control" [ngModelOptions]="{standalone: true}"  [(ngModel)]="sourceAction.ataChapterCode" >
+					<input type="number" class="form-control col-sm-7" [ngModelOptions]="{standalone: true}"  [(ngModel)]="sourceAction.ataChapterCode" >
 					
 				</div>
 				<div class="clear"></div>
 			</div>
-			<div class="form-group">
-				<label for="description" class="control-label">Memo</label>
-				<div class="control-data">
-					<input placeholder="Memo" name="description" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
-					<!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-						Memo is required.
-					</div>
-					<div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-						Memo must be at least 2 characters long.
-					</div>-->
+			<div class="form-group col-sm-12">
+				<label for="description" class="control-label col-sm-4">Memo</label>
+				<div class="col-sm-7">
+					<input type="text"  name="description" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
+					
 				</div>
 				<div class="clear"></div>
 			</div>

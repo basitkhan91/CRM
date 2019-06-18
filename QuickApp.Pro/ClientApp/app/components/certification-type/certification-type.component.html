@@ -99,8 +99,8 @@
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
 
 			<div class="form-group col-sm-12">
-				<label for="netdays" class="control-label">Certification Name<span class="clr-red">*</span></label>
-				<div class="inner-addon right-addon inline-block">
+				<label for="netdays" class="control-label col-sm-4">Certification Name<span class="clr-red">*</span></label>
+				<div class="col-sm-7">
 
 					<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcecertificationtype.description" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterGlAccountclass($event)" [size]="30"
 									[minLength]="1" [dropdown]="true">
