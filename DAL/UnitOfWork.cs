@@ -182,10 +182,11 @@ namespace DAL
         IGLAccountNodeShareWithEntityMapper gLAccountNodeShareWithEntityMapper;
 
         IPartStockLineMapper partStockLineMapper;
+        
+        IGLAccountNodeRepository glAccountNode;
 
         IDashNumberRepository dashNumberRepository;
-
-
+        
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
         public UnitOfWork(ApplicationDbContext context)
@@ -204,6 +205,17 @@ namespace DAL
                     _userRole = new UserRoleRepository(_context);
 
                 return _userRole;
+            }
+        }
+
+        public IGLAccountNodeRepository GLAccountNode
+        {
+            get
+            {
+                if (glAccountNode == null)
+                    glAccountNode = new GLAccountNodeRepository(_context);
+
+                return glAccountNode;
             }
         }
 

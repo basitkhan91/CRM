@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 
@@ -18,6 +19,7 @@ namespace DAL.Models
         [Required(ErrorMessage = "NodeName Is Required.")]
         public string NodeName { get; set; }
 
+        [ForeignKey("ParentNodeId")]
         public long? ParentNodeId { get; set; }
 
         public bool LeafNodeCheck { get; set; }
@@ -36,5 +38,7 @@ namespace DAL.Models
         public Int32 MasterCompanyId { get; set; }
 
         public long LedgerNameMgmStructureId { get; set; }
+
+        public virtual GLAccountNode ParentNode { get; set; }
     }
 }

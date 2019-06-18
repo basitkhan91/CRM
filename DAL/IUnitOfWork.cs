@@ -16,6 +16,7 @@ namespace DAL
 {
     public interface IUnitOfWork
     {
+        IGLAccountNodeRepository GLAccountNode { get; }
         IUserRoleRepository UserRole { get; }
         ICustomerRepository Customer { get; }
         IEnumerable<Customer> getAlldata();

@@ -15,7 +15,12 @@
     isActive: boolean;
     isDelete: boolean;
     ledgerNameMgmStructureId: number;
-    nodeSetupList: GLAccountNodeSetup[];
+
     comapnycodes: string;
     selectedCompanysData: any[] = [];
+
+    parentNode: GLAccountNodeSetup;
+
+    //the below property are related to client side code and has nothing to do with the actual entity
+    nodeSetupList: GLAccountNodeSetup[];
 }
