@@ -3780,8 +3780,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    Mfacturer(content) {
-
+    Manufacturer(content)
+    {
+        this.sourceItemMaster.manufacturerId = '';
+        this.sourcemanufacturer.name = '';
         this.isEditMode = false;
         this.isDeleteMode = false;
 

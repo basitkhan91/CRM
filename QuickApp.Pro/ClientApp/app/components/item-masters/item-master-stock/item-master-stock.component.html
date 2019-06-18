@@ -278,7 +278,7 @@
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.manufacturerId">
                                             <option *ngFor="let manufacturer of allManufacturerInfo" [ngValue]="manufacturer.manufacturerId">{{manufacturer.name}}</option>
                                         </select>
-                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
+                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Manufacturer(modeledt)"><i class="fa fa-plus"></i></a>
                                     </div>
 
 
@@ -3440,11 +3440,11 @@
     </div>
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveManufacturer()">
-            <div class="form-group">
-                <div class="col-sm-4">
-                    <label for="description" class="control-label">Manufacturer Name<span class="clr-red">*</span></label>
-                </div>
-                <div class="inner-addon right-addon inline-block">
+            <div class="form-group col-sm-12">
+                
+                    <label for="description" class="control-label col-sm-4">Manufacturer Name<span class="clr-red">*</span></label>
+                
+                <div class="col-sm-7">
                     <p-autoComplete [(ngModel)]="sourcemanufacturer.name" [ngModelOptions]="{standalone: true}" (onKeyUp)=ManufacturerHandler($event) (onSelect)="Manufacturerdescription($event)" [suggestions]="localmanufacturer" (completeMethod)="filtermanufacturer($event)" [size]="30"
                                     [minLength]="1" [dropdown]="true">
                         <ng-template let-name pTemplate="item">
