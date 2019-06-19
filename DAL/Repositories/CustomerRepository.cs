@@ -19,13 +19,18 @@ namespace DAL.Repositories
         public CustomerRepository(ApplicationDbContext context) : base(context)
         { }
 
-        
+
 
         //public IEnumerable<Customer> GetTopActiveCustomers(int count)
         //{
         //    throw new NotImplementedException();
         //}
 
+        public IEnumerable<Customer> getAllCustomer()
+        {
+            return _appContext.Customer.Include("CustomerContact").Where(x => x.IsDelete == null || x.IsDelete == false).ToList();
+
+        }
 
         public IEnumerable<object> GetAllCustomersData()
         {
@@ -37,7 +42,7 @@ namespace DAL.Repositories
                         join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                         from creditTerms in cre.DefaultIfEmpty()
                         join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-                        where t.IsDelete == true || t.IsDelete==null
+                        where t.IsDelete == true || t.IsDelete == null
                         // select new { t, ad, vt }).ToList();
                         select new
                         {
@@ -47,7 +52,7 @@ namespace DAL.Repositories
                             t.PrimarySalesPersonFirstName,
                             t.CustomerId,
                             t,
-                           // cc,
+                            // cc,
                             creditTerms,
                             currency,
                             currency.Symbol,
@@ -76,9 +81,9 @@ namespace DAL.Repositories
                             ad.Country,
                             ad.PostalCode,
                             vt.CustomerAffiliationId,
-                           cc.CustomerClassificationId,
-                           //cc.Description
-                        }).OrderByDescending(a=>a.UpdatedDate).ToList();
+                            cc.CustomerClassificationId,
+                            //cc.Description
+                        }).OrderByDescending(a => a.UpdatedDate).ToList();
             return data;
         }
         public IEnumerable<object> GetCustomerBynameList(string name)
@@ -119,7 +124,7 @@ namespace DAL.Repositories
                                 ad.Country,
                                 ad.PostalCode,
                                 t.ContractReference
-                                
+
                             }).ToList();
                 return data;
             }
@@ -154,8 +159,8 @@ namespace DAL.Repositories
                                 ad.AddressId,
                                 ad.Country,
                                 ad.PostalCode,
-                               // t.CurrencyId,
-                                
+                                // t.CurrencyId,
+
                             }).ToList();
                 return data;
 
@@ -178,7 +183,7 @@ namespace DAL.Repositories
                             {
                                 t.CustomerId,
                                 t,
-                               // t.CustomerEmail,
+                                // t.CustomerEmail,
                                 Address1 = ad.Line1,
                                 Address2 = ad.Line2,
                                 Address3 = ad.Line3,
@@ -236,6 +241,22 @@ namespace DAL.Repositories
         public IEnumerable<object> Getdescriptionbypart(string name)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Customer> getAllCustomersInfo()
+        {
+            return _appContext.Customer.Where(x => x.IsActive == true && x.IsDelete == false)
+                .Select(x =>
+                    new Customer
+                    {
+                        CustomerId = x.CustomerId,
+                        CustomerCode = x.CustomerCode,
+                        Name = x.Name,
+                        CustomerPhone = x.CustomerPhone,
+                        Email = x.Email,
+                        CustomerAddress = x.CustomerAddress
+
+                    }).ToList();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

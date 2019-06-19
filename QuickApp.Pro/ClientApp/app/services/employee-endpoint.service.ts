@@ -42,7 +42,8 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _getemployeeLeaveurl: string = "/api/Employee/getleavelistdata";
 	private readonly _multileavesurl: string = "/api/Employee/savemultileavetypes";
 	private readonly _shiftsurl: string = "/api/Employee/saveShifts";
-	private readonly _getMultiLeaveListUrl: string = "/api/Employee/GetLeaveData";
+    private readonly _getMultiLeaveListUrl: string = "/api/Employee/GetLeaveData";
+    private readonly _getAllEmployeeInfoURL: string = "/api/Employee/GetAllEmployeeInfo";
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 	get getView() { return this.configurations.baseUrl + this._getView; }
@@ -333,7 +334,16 @@ export class EmployeeEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getleavedata(employeeId));
 			});
-	}
+    }
+
+    getAllEmployeesInfo<T>(): Observable<T> {
+        let endPointURL = this._getAllEmployeeInfoURL;
+        return this.http.get<T>(endPointURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllEmployeesInfo());
+            });
+
+    }
 }
 
 

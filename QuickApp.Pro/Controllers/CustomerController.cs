@@ -62,7 +62,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("GetCustomerBynameList/{name}")]
         [Produces(typeof(List<CustomerViewModel>))]
-        public IActionResult GetCustomerByNameList(string name,CustomerViewModel customerViewModel)
+        public IActionResult GetCustomerByNameList(string name, CustomerViewModel customerViewModel)
         {
             var allCustomerBynamelistDetails = _unitOfWork.Customer.GetCustomerBynameList(name); //.GetAllCustomersData();
             return Ok(allCustomerBynamelistDetails);
@@ -90,7 +90,7 @@ namespace QuickApp.Pro.Controllers
 
         //Added by Vishnu:
         [HttpGet("CustomerTypeGet")]
-        
+
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult cusTypeGet(CustomerViewModel customerViewModel)
         {
@@ -100,11 +100,11 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("GetcountryList")]
-        
+
         [Produces(typeof(List<Countries>))]
         public IActionResult GetcountryList()
         {
-            var allcustomertype = _context.Countries.OrderByDescending(c => c.countries_id).ToList(); 
+            var allcustomertype = _context.Countries.OrderByDescending(c => c.countries_id).ToList();
             return Ok(allcustomertype);
 
         }
@@ -114,10 +114,10 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("aircraftTypeGet/{id}")]
         [Produces(typeof(List<AircraftModelViewModel>))]
-        public IActionResult aircraft(string id,AircraftModelViewModel aircraftModelViewModel)
+        public IActionResult aircraft(string id, AircraftModelViewModel aircraftModelViewModel)
         {
 
-         
+
             var allcustomertype = _unitOfWork.aircraftModel.GetAllAircraftModelData(id); //.GetAllCustomersData();
             return Ok(allcustomertype);
 
@@ -144,7 +144,7 @@ namespace QuickApp.Pro.Controllers
         }
         [HttpGet("customerAddressGet/{id}")]
         [Produces(typeof(List<CustomerBillingAddress>))]
-        public IActionResult customerAddressGet(long id,CustomerBillingAddress cstomerBillingAddress)
+        public IActionResult customerAddressGet(long id, CustomerBillingAddress cstomerBillingAddress)
         {
             var allCusbilldetails = _unitOfWork.CustomerBillingInformation.GetAllCusBillingDetails(id); //.GetAllCustomersData();
             return Ok(allCusbilldetails);
@@ -194,10 +194,10 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("insertToAuditaddress")]
-       // [HttpPost("insertToAuditaddress")]
+        // [HttpPost("insertToAuditaddress")]
         public IActionResult InsertToAuditaddress([FromBody] AuditAddressViewModel addressAuditViewmodel)
         {
-            
+
             AddressAudit au = new AddressAudit();
             addressAuditViewmodel.IsDeleted = false;
             au.City = addressAuditViewmodel.City;
@@ -206,7 +206,7 @@ namespace QuickApp.Pro.Controllers
             au.Line1 = addressAuditViewmodel.Line1;
             au.Line2 = addressAuditViewmodel.Line2;
             au.Line3 = addressAuditViewmodel.Line3;
-            
+
             au.IsDeleted = addressAuditViewmodel.IsDeleted;
             _context.Address_Audit.Add(au);
             _context.SaveChanges();
@@ -247,12 +247,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-                
+
         [HttpPut("updatediscount/{id}")]
         public IActionResult UpdateDiscont(long id, DiscountViewModel discountViewModel)
         {
             var disc = _context.Discount.First(a => a.DiscountId == id);
-            disc.DiscontValue = discountViewModel.DiscontValue;            
+            disc.DiscontValue = discountViewModel.DiscontValue;
             _context.Discount.Add(disc);
             _context.SaveChanges();
             return Ok(disc);
@@ -293,7 +293,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.ScanDocuments = customerViewModel.ScanDocuments;
                 actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
                 actionobject.RestrictPMA = customerViewModel.RestrictPMA;
-               // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
+                // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
                 actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
                 actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationId;
                 actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
@@ -338,63 +338,63 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPut("customers/{id}")]
-        public IActionResult UpdateCustomers(long id,[FromBody] CustomerViewModel customerViewModel,  CustomerType ct)
+        public IActionResult UpdateCustomers(long id, [FromBody] CustomerViewModel customerViewModel, CustomerType ct)
         {
-         
-                var actionobject = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
-                var address= _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
 
-                customerViewModel.MasterCompanyId = 1;
-                actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
-                actionobject.Name = customerViewModel.Name;
-                actionobject.Parent = customerViewModel.Parent;
-                actionobject.Email = customerViewModel.Email;
-                actionobject.CustomerPhone = customerViewModel.CustomerPhone;
-                actionobject.AnnualQuota = customerViewModel.AnnualQuota;
-                actionobject.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
-                actionobject.CustomerParentName = customerViewModel.CustomerParentName;
-                actionobject.ScanDocuments = customerViewModel.ScanDocuments;
-                actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
-                actionobject.RestrictPMA = customerViewModel.RestrictPMA;
-               // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
-                actionobject.RestrictBER = customerViewModel.RestrictBER;
-                actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationId;
-                actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
-                actionobject.CustomerType = customerViewModel.CustomerType;
-                actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
-                actionobject.IsPBHCustomer = customerViewModel.IsPBHCustomer;
-                actionobject.CustomerCode = customerViewModel.CustomerCode;
-                actionobject.ContractReference = customerViewModel.ContractReference;
-                actionobject.DoingBuinessAsName = customerViewModel.DoingBuinessAsName;
-                actionobject.CustomerURL = customerViewModel.CustomerURL;
-                actionobject.CustomerClassification = customerViewModel.CustomerClassification;
-                actionobject.CustomerAddress = customerViewModel.CustomerAddress;
-                actionobject.RestrictBER = customerViewModel.RestrictBER;
-                actionobject.RestrictPMA = customerViewModel.RestrictPMA;
-                actionobject.CustomerBillingAddress = customerViewModel.CustomerBillingAddress;
-                actionobject.RestrictPMAMemo = customerViewModel.RestrictPMAMemo;
-                actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
-                actionobject.IsActive = customerViewModel.IsActive;
-                actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
-                actionobject.ATAChapterId = customerViewModel.ATAChapterId;
-                actionobject.CreatedDate = DateTime.Now;
-                actionobject.UpdatedDate = DateTime.Now;
-                actionobject.ataSubChapterId = customerViewModel.ataSubChapterId;
-                actionobject.CreatedBy = customerViewModel.CreatedBy;
-                actionobject.UpdatedBy = customerViewModel.UpdatedBy;
-                address.Line1 = customerViewModel.Address1;
-                address.Line2 = customerViewModel.Address2;
-                address.Line3 = customerViewModel.Address3;
-                address.PostalCode = customerViewModel.PostalCode;
-                address.StateOrProvince = customerViewModel.StateOrProvince;
-                address.City = customerViewModel.City;
-                address.Country = customerViewModel.Country;
-                address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = customerViewModel.CreatedBy;
-                address.UpdatedBy = customerViewModel.UpdatedBy;
-                address.CreatedDate = DateTime.Now;
-                address.UpdatedDate = DateTime.Now;
+            var actionobject = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
+            var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
+
+            customerViewModel.MasterCompanyId = 1;
+            actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
+            actionobject.Name = customerViewModel.Name;
+            actionobject.Parent = customerViewModel.Parent;
+            actionobject.Email = customerViewModel.Email;
+            actionobject.CustomerPhone = customerViewModel.CustomerPhone;
+            actionobject.AnnualQuota = customerViewModel.AnnualQuota;
+            actionobject.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
+            actionobject.CustomerParentName = customerViewModel.CustomerParentName;
+            actionobject.ScanDocuments = customerViewModel.ScanDocuments;
+            actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
+            actionobject.RestrictPMA = customerViewModel.RestrictPMA;
+            // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
+            actionobject.RestrictBER = customerViewModel.RestrictBER;
+            actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationId;
+            actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
+            actionobject.CustomerType = customerViewModel.CustomerType;
+            actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
+            actionobject.IsPBHCustomer = customerViewModel.IsPBHCustomer;
+            actionobject.CustomerCode = customerViewModel.CustomerCode;
+            actionobject.ContractReference = customerViewModel.ContractReference;
+            actionobject.DoingBuinessAsName = customerViewModel.DoingBuinessAsName;
+            actionobject.CustomerURL = customerViewModel.CustomerURL;
+            actionobject.CustomerClassification = customerViewModel.CustomerClassification;
+            actionobject.CustomerAddress = customerViewModel.CustomerAddress;
+            actionobject.RestrictBER = customerViewModel.RestrictBER;
+            actionobject.RestrictPMA = customerViewModel.RestrictPMA;
+            actionobject.CustomerBillingAddress = customerViewModel.CustomerBillingAddress;
+            actionobject.RestrictPMAMemo = customerViewModel.RestrictPMAMemo;
+            actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
+            actionobject.IsActive = customerViewModel.IsActive;
+            actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
+            actionobject.ATAChapterId = customerViewModel.ATAChapterId;
+            actionobject.CreatedDate = DateTime.Now;
+            actionobject.UpdatedDate = DateTime.Now;
+            actionobject.ataSubChapterId = customerViewModel.ataSubChapterId;
+            actionobject.CreatedBy = customerViewModel.CreatedBy;
+            actionobject.UpdatedBy = customerViewModel.UpdatedBy;
+            address.Line1 = customerViewModel.Address1;
+            address.Line2 = customerViewModel.Address2;
+            address.Line3 = customerViewModel.Address3;
+            address.PostalCode = customerViewModel.PostalCode;
+            address.StateOrProvince = customerViewModel.StateOrProvince;
+            address.City = customerViewModel.City;
+            address.Country = customerViewModel.Country;
+            address.MasterCompanyId = 1;
+            address.RecordCreateDate = DateTime.Now;
+            address.CreatedBy = customerViewModel.CreatedBy;
+            address.UpdatedBy = customerViewModel.UpdatedBy;
+            address.CreatedDate = DateTime.Now;
+            address.UpdatedDate = DateTime.Now;
             actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
             actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
             if (customerViewModel.AircraftTypeId != null)
@@ -446,11 +446,11 @@ namespace QuickApp.Pro.Controllers
 
 
             _unitOfWork.Address.Update(address);
-               _unitOfWork.SaveChanges();
-               _unitOfWork.Customer.Update(actionobject);
-                _unitOfWork.SaveChanges();
-                return Ok(actionobject);
-            
+            _unitOfWork.SaveChanges();
+            _unitOfWork.Customer.Update(actionobject);
+            _unitOfWork.SaveChanges();
+            return Ok(actionobject);
+
 
             //return Ok(ModelState);
         }
@@ -602,7 +602,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("CustomerContactPost/{id}")]
-        public IActionResult updateContact(long id, [FromBody] ContactViewModel contactViewModel , CustomercontactViewModel customercontactView)
+        public IActionResult updateContact(long id, [FromBody] ContactViewModel contactViewModel, CustomercontactViewModel customercontactView)
         {
 
             if (ModelState.IsValid)
@@ -617,7 +617,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.Email = contactViewModel.Email;
                 contactObj.Fax = contactViewModel.Fax;
                 contactObj.Prefix = contactViewModel.Prefix;
-                contactObj.Suffix = contactViewModel.Suffix;               
+                contactObj.Suffix = contactViewModel.Suffix;
                 contactObj.FirstName = contactViewModel.FirstName;
                 contactObj.LastName = contactViewModel.LastName;
                 contactObj.MiddleName = contactViewModel.MiddleName;
@@ -680,7 +680,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("CustomerShippingPost")]
-        public IActionResult CreateShipping([FromBody] CustomerShippingViewModel Customershipping, Address address, long? CustomerAddressid, CustomerShippingAdressViewModel customerShippingAdressViewModel )
+        public IActionResult CreateShipping([FromBody] CustomerShippingViewModel Customershipping, Address address, long? CustomerAddressid, CustomerShippingAdressViewModel customerShippingAdressViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -688,7 +688,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(Customershipping)} cannot be null");
 
                 Customershipping.MasterCompanyId = 1;
-                Customershipping.IsActive =true;
+                Customershipping.IsActive = true;
                 customerShippingAdressViewModel.IsActive = true;
                 Customershipping.CreatedBy = Customershipping.CreatedBy;
                 Customershipping.UpdatedBy = Customershipping.UpdatedBy;
@@ -712,13 +712,13 @@ namespace QuickApp.Pro.Controllers
                 long? id = address.AddressId;
                 updateCusShipdetails(customerShippingAdressViewModel, id, Customershipping, address);
                 return Ok(Customershipping);
-               
+
             }
 
             return Ok(ModelState);
         }
         [HttpPut("updatelistStatus/{id}")]
-        public IActionResult updatelistStatus(long id,[FromBody]CustomerViewModel Customershipping)
+        public IActionResult updatelistStatus(long id, [FromBody]CustomerViewModel Customershipping)
         {
             if (ModelState.IsValid)
             {
@@ -817,7 +817,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(Customershipping)} cannot be null");
                 CustomerShippingAddress CustomerObj = new CustomerShippingAddress();
                 Customershipping.MasterCompanyId = 1;
-               // CustomerObj.IsActive = true;
+                // CustomerObj.IsActive = true;
                 CustomerObj.IsActive = Customershipping.IsActive;
                 CustomerObj.CreatedDate = DateTime.Now;
                 CustomerObj.UpdatedDate = DateTime.Now;
@@ -860,7 +860,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        
+
         public IActionResult updateCusShipdetails([FromBody] CustomerShippingAdressViewModel CustomershippingViewModel, long? id, CustomerShippingViewModel Customershipping, Address address)
         {
             if (ModelState.IsValid)
@@ -1083,7 +1083,7 @@ namespace QuickApp.Pro.Controllers
                 if (CustomerShippingViewModel == null)
                     return BadRequest($"{nameof(CustomerShippingViewModel)} cannot be null");
                 var checkPaymentObj = _unitOfWork.CustomerShippingAddress.GetSingleOrDefault(c => c.CustomerShippingAddressId == id);
-               checkPaymentObj.IsActive = CustomerShippingViewModel.IsActive;
+                checkPaymentObj.IsActive = CustomerShippingViewModel.IsActive;
                 checkPaymentObj.MasterCompanyId = 1;
                 checkPaymentObj.IsDelete = true;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
@@ -1097,7 +1097,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        
+
         [HttpPost("saveCustomerWarnings")]
         public IActionResult SaveCustomerWarnings([FromBody]  CustomerWarningViewModel CustomerWarningViewModel)
         {
@@ -1108,7 +1108,7 @@ namespace QuickApp.Pro.Controllers
                 CustomerWarning CustomerObject = new CustomerWarning();
 
                 CustomerWarningViewModel.MasterCompanyId = 1;
-               // CustomerWarningViewModel.IsActive = true;
+                // CustomerWarningViewModel.IsActive = true;
                 CustomerObject.CustomerId = CustomerWarningViewModel.CustomerId;
                 CustomerObject.Allow = CustomerWarningViewModel.Allow;
                 CustomerObject.SourceModule = CustomerWarningViewModel.SourceModule;
@@ -1342,7 +1342,7 @@ namespace QuickApp.Pro.Controllers
                 customerObj.AllowProformaBilling = customerViewModel.AllowProformaBilling;
                 customerObj.CurrencyId = customerViewModel.CurrencyId;
                 customerObj.Discount = customerViewModel.Discount;
-                 customerObj.DiscountId = customerViewModel.DiscountId;
+                customerObj.DiscountId = customerViewModel.DiscountId;
                 customerObj.EDIDescription = customerViewModel.EDIDescription;
                 customerObj.IsAeroExchange = customerViewModel.IsAeroExchange;
                 customerObj.IsTaxExempt = customerViewModel.IsTaxExempt;
@@ -1371,7 +1371,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(customerViewModel)} cannot be null");
                 DAL.Models.Customer actionobject = new DAL.Models.Customer();
                 customerViewModel.MasterCompanyId = 1;
-               // actionobject.IsActive = true;
+                // actionobject.IsActive = true;
                 actionobject.PrimarySalesPersonFirstName = customerViewModel.PrimarySalesPersonFirstName;
                 actionobject.PrimarySalesPersonId = customerViewModel.PrimarySalesPersonId;
                 actionobject.SecondarySalesPersonId = customerViewModel.SecondarySalesPersonId;
@@ -1598,7 +1598,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (markUpPercentage != null)
             {
-                markUpPercentage.MarkUpPercentageId = 0;               
+                markUpPercentage.MarkUpPercentageId = 0;
                 _context.MarkUpPercentage.Add(markUpPercentage);
                 _context.SaveChanges();
             }
@@ -1613,8 +1613,37 @@ namespace QuickApp.Pro.Controllers
             return Ok(markUpPercentage);
         }
 
+        [HttpGet("getAllCustomers")]
+        public IEnumerable<Customer> getAllCustomers()
+        {
+            try
+            {
+                var customers = _unitOfWork.Customer.getAllCustomer();
+                return customers;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("getAllCustomersInfo")]
+        public IActionResult getAllCustomersInfo()
+        {
+            try
+            {
+                var customersInfo = _unitOfWork.Customer.getAllCustomersInfo();
+                return Ok(customersInfo);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+                throw;
+            }
+        }
+
     }
 }
 
-   
+
 
