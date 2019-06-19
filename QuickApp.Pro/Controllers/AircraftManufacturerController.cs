@@ -131,12 +131,26 @@ namespace QuickApp.Pro.Controllers
                 }
                 return Ok(ModelState);
             }
-            #endregion Public Methods
 
-            #region Private Methods
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = unitOfWork.Repository<AircraftTypeAudit>()
+                .Find(x => x.AircraftTypeId == id)
+                .OrderByDescending(x => x.AircraftTypeAuditId);
 
-            #endregion Private Methods
-     
+            var auditResult = new List<AuditResult<AircraftTypeAudit>>();
+
+            auditResult.Add(new AuditResult<AircraftTypeAudit> { AreaName = "Aircraft Manufacturer Type", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+        #endregion Public Methods
+
+        #region Private Methods
+
+        #endregion Private Methods
+
 
     }
 }

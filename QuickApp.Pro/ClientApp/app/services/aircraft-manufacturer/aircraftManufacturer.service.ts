@@ -42,4 +42,7 @@ export class AircraftManufacturerService {
     updateActive(aircraftManufacturer: any) {
         return this.aircraftManufacturerEndpoint.getUpdateForActive(aircraftManufacturer, aircraftManufacturer.aircraftTypeId);
     }
+    getAudit(aircraftManufacturerId: number) {
+        return this.aircraftManufacturerEndpoint.getAudit<any[]>(aircraftManufacturerId);
+    }
 }

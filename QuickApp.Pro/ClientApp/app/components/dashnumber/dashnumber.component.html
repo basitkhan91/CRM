@@ -107,18 +107,6 @@
             </div>
         </ng-template>
 
-        <ng-template #auditContent let-c="close" let-d="dismiss">
-            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-            </div>
-        </ng-template>
-
-        <ng-template #auditContent let-c="close" let-d="dismiss">
-            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-            </div>
-        </ng-template>
-
         <ng-template #content let-c="close" let-d="dismiss">
             <div class="modal-header">
                 <h4 class="modal-title">Are you sure you want to delete Dash Number ?</h4>

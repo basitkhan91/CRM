@@ -61,6 +61,11 @@
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         </span>
+                                        <span (click)="showAuditPopup(auditContent,manufacturer.aircraftTypeId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                                            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
 
@@ -78,7 +83,6 @@
                 <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
             </div>
         </ng-template>
-
         <ng-template #content let-c="close" let-d="dismiss">
             <div class="modal-header">
                 <h4 class="modal-title">Are you sure you want to delete Aircraft manufacturer {{assetStatusToRemove.identification}}?</h4>
@@ -103,13 +107,13 @@
                     <h4 class="modal-title"> Edit</h4>
                 </div>
                 <div class="modal-body">
-                   
+
                     <p>
                         <span class="col-sm-3"><b>Name: </b></span> <span class="col-sm-6">
                             <input type="text" [(ngModel)]="aircraftManufacturerTypeToUpdate.description" class="form-control">
                         </span>
                     </p>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" (click)="updateAircraftManufacturer()" class="btn btn-success" data-dismiss="modal">Update</button>
