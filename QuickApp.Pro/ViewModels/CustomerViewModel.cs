@@ -18,7 +18,7 @@ namespace QuickApp.Pro.ViewModels
     public class CustomerViewModel : PasBase
     {
         public long CustomerId { get; set; }
-       
+
         public string Name { get; set; }
 
 
@@ -36,7 +36,7 @@ namespace QuickApp.Pro.ViewModels
 
         public long? CustomerClassificationId { get; set; }
 
-       // public int? IntegrationPortalId { get; set; }
+        // public int? IntegrationPortalId { get; set; }
         public string Discount { get; set; }
         public string EDIDescription { get; set; }
 
@@ -65,7 +65,7 @@ namespace QuickApp.Pro.ViewModels
 
         public string CustomerURL { get; set; }
 
- 
+
         public long? Addressid { get; set; }
 
         public bool IsCustomerAlsoVendor { get; set; }
@@ -102,7 +102,7 @@ namespace QuickApp.Pro.ViewModels
         public bool? EDI { get; set; }
 
 
-       // public string EDIDescription { get; set; }
+        // public string EDIDescription { get; set; }
 
         public bool? AllowProformaBilling { get; set; }
 
@@ -118,7 +118,7 @@ namespace QuickApp.Pro.ViewModels
 
         public string PrimarySalesPersonId { get; set; }
 
-       public string SecondarySalesPersonName { get; set; }
+        public string SecondarySalesPersonName { get; set; }
 
         public string SecondarySalesPersonId { get; set; }
 
@@ -143,7 +143,7 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? ExportLicenseRequired { get; set; }
 
-       // public string DiscontValue { get; set; }
+        // public string DiscontValue { get; set; }
 
         public long? DiscountId { get; set; }
 
@@ -160,7 +160,7 @@ namespace QuickApp.Pro.ViewModels
 
         public Int32? MarkUpPercentageId { get; set; }
 
-        public Int64? GeneralCurrencyId { get; set; }
+        public Int32? GeneralCurrencyId { get; set; }
         public bool? IsAddressForBillingAndShipping { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
 

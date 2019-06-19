@@ -336,6 +336,13 @@ namespace DAL
         public DbSet<JournalSource> JournalSource { get; set; }
         public DbSet<JournalManual> JournalManual { get; set; }
 
+        public DbSet<WorkOrder> WorkOrder { get; set; }
+        public DbSet<WorkOrderStatus> WorkOrderStatus { get; set; }
+        public DbSet<WorkOrderType> WorkOrderType { get; set; }
+        public DbSet<WorkOrderLabor> WorkOrderLabor { get; set; }
+        public DbSet<WorkOrderStage> WorkOrderStage { get; set; }
+        public DbSet<WorkOrderPartNumber> WorkOrderPartNumber { get; set; }
+
 
         public DbSet<VendorCapability> VendorCapability { get; set; }
 
