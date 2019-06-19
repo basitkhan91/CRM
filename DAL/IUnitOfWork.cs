@@ -16,6 +16,7 @@ namespace DAL
 {
     public interface IUnitOfWork
     {
+        IGLAccountNodeRepository GLAccountNode { get; }
         IUserRoleRepository UserRole { get; }
         ICustomerRepository Customer { get; }
         IEnumerable<Customer> getAlldata();
@@ -245,6 +246,8 @@ namespace DAL
         IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper { get; }
 
         IPartStockLineMapper PartStockLineMapper { get; }
+
+        IDashNumberRepository DashNumberRepository { get; }
 
         void SaveChanges(Employee employeeobject);
     }

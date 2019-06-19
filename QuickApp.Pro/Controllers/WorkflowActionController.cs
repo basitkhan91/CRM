@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
+using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,10 +16,17 @@ namespace QuickApp.Pro.Controllers
     [Route("api/[controller]")]
     public class WorkflowActionController : Controller
     {
+        #region Private Members
+
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
+
+        #endregion Private Members
+
+        #region Constructor
+
         public WorkflowActionController(IUnitOfWork unitOfWork, ApplicationDbContext context, ILogger<WorkflowActionController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
@@ -27,7 +35,9 @@ namespace QuickApp.Pro.Controllers
             _context = context;
         }
 
-        // GET: api/values
+        #endregion Constructor
+        
+        #region Public Members
 
         [HttpGet("Get")]
         [Produces(typeof(List<WorkflowActionViewModel>))]
@@ -39,31 +49,20 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("GetWorkFlows")]
-        
         public object GetWorkFlows()
         {
-           
-                var data = (from IM in _context.Workflow
-                            join MF in _context.ItemMaster on IM.ItemMasterId equals MF.ItemMasterId into mfg
-                            from MF in mfg.DefaultIfEmpty()
-                            join PS in _context.WorkScope on IM.WorkScopeId equals PS.WorkScopeId into pro
-                            from PS in pro.DefaultIfEmpty()
-                            select new
-                            {
-
-                                IM,
-                                IM.WorkflowId,
-                                PS.Description,
-                                PS.WorkScopeId,
-                                MF.PartNumber,
-                                MF.PartDescription,
-                                IM.WorkOrderNumber
-
-                            }).ToList();
-                return data;
-
-            }
-
+            var workflows = _unitOfWork.workFlowRepositoryTest.getAllWorkFlow(); //_unitOfWork.Repository<Workflow>().Find(workflow => workflow.IsDelete == null || workflow.IsDelete != true);
+            return workflows.Select(workflow => new
+            {
+                workflow,
+                workflow.WorkflowId,
+                workflow.WorkScope,
+                workflow.WorkScopeId,
+                workflow.ItemMaster.PartNumber,
+                workflow.ItemMaster.PartDescription,
+                workflow.WorkOrderNumber
+            });
+        }
 
         [HttpGet("GetActionAttributes")]
         [Produces(typeof(List<ActionAttributeViewModel>))]
@@ -73,6 +72,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allWorlFlowActionattributes);
 
         }
+
         [HttpGet("GetWorkflowActionAttributes/{workflowId}")]
         [Produces(typeof(List<WorkflowActionAttributeViewModel>))]
         public IActionResult GetWorkflowActionAttributes(long workflowid)
@@ -90,7 +90,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
 
         }
-
 
         [HttpGet("GetWorkflowMaterail")]
         [Produces(typeof(List<WorkflowMaterialViewModel>))]
@@ -133,9 +132,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 if (_context.Workflow.Any(o => o.WorkflowId == workflowViewModel.WorkflowId))
-
                 {
                     if (workflowViewModel == null)
                         return BadRequest($"{nameof(workflowViewModel)} cannot be null");
@@ -148,7 +145,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.WorkScopeId = workflowViewModel.WorkflowScopeId;
                     actionobject.ItemMasterId = workflowViewModel.ItemMasterId;
                     actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
-                    actionobject.changedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
+                    actionobject.ChangedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
                     actionobject.CustomerId = workflowViewModel.CustomerId;
                     //actionobject.CustomerName = workflowViewModel.CustomerName;
                     //actionobject.CustomerCode = workflowViewModel.CustomerCode;
@@ -187,7 +184,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.WorkScopeId = workflowViewModel.WorkflowScopeId;
                     actionobject.ItemMasterId = workflowViewModel.ItemMasterId;
                     actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
-                    actionobject.changedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
+                    actionobject.ChangedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
                     actionobject.CustomerId = workflowViewModel.CustomerId;
                     //actionobject.CustomerCode = workflowViewModel.CustomerCode;
                     actionobject.CurrencyId = workflowViewModel.CurrencyId;
@@ -212,12 +209,8 @@ namespace QuickApp.Pro.Controllers
                     _context.Workflow.Add(actionobject);
                     _unitOfWork.SaveChanges();
                     return Ok(actionobject);
-
                 }
             }
-
-
-
             return Ok(ModelState);
         }
 
@@ -226,14 +219,12 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 if (_context.WorkflowActionAttribute.Any(o => o.WorkflowActionAttributeId == workflowActionAttributeViewModel.WorkflowActionAttributeId))
 
                 {
                     if (workflowActionAttributeViewModel == null)
                         return BadRequest($"{nameof(workflowActionAttributeViewModel)} cannot be null");
                     var actionobject = _context.WorkflowActionAttribute.Where(a => a.WorkflowId == workflowActionAttributeViewModel.WorkflowActionAttributeId).SingleOrDefault();
-
                     workflowActionAttributeViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowActionAttributeViewModel.WorkflowId;
                     actionobject.WorkflowActionId = workflowActionAttributeViewModel.WorkflowActionId;
@@ -282,11 +273,8 @@ namespace QuickApp.Pro.Controllers
                     _context.WorkflowActionAttribute.Add(actionobject);
                     _unitOfWork.SaveChanges();
                     return Ok(actionobject);
-
                 }
             }
-
-
 
             return Ok(ModelState);
         }
@@ -296,9 +284,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 if (_context.WorkflowMaterial.Any(o => o.WorkflowMaterialListId == workflowMaterialViewModel.WorkflowMaterialListId))
-
                 {
                     if (workflowMaterialViewModel == null)
                         return BadRequest($"{nameof(workflowMaterialViewModel)} cannot be null");
@@ -352,14 +338,10 @@ namespace QuickApp.Pro.Controllers
                     _context.WorkflowMaterial.Add(actionobject);
                     _unitOfWork.SaveChanges();
                     return Ok(actionobject);
-
                 }
             }
             return Ok(ModelState);
         }
-
-
-
 
         [HttpPost("SaveChargeList")]
         public IActionResult SaveChargeList([FromBody] WorkflowChargesListViewModel workflowChargesListViewModel)
@@ -417,19 +399,17 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(ModelState);
         }
+
         [HttpPost("SaveEquipment")]
         public IActionResult SaveEquipment([FromBody] WorkflowEquipmentListViewModel workflowEquipmentListViewModel)
         {
             if (ModelState.IsValid)
             {
-
                 if (_context.WorkflowEquipmentList.Any(o => o.WorkflowEquipmentListId == workflowEquipmentListViewModel.WorkflowEquipmentListId))
-
                 {
                     if (workflowEquipmentListViewModel == null)
                         return BadRequest($"{nameof(workflowEquipmentListViewModel)} cannot be null");
                     var actionobject = _context.WorkflowEquipmentList.Where(a => a.WorkflowId == workflowEquipmentListViewModel.WorkflowEquipmentListId).SingleOrDefault();
-
                     workflowEquipmentListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowEquipmentListViewModel.WorkflowId;
                     actionobject.TaskId = workflowEquipmentListViewModel.ActionId;
@@ -486,7 +466,6 @@ namespace QuickApp.Pro.Controllers
                     if (workflowExpertiseListViewModel == null)
                         return BadRequest($"{nameof(workflowExpertiseListViewModel)} cannot be null");
                     var actionobject = _context.WorkflowExpertiseList.Where(a => a.WorkflowId == workflowExpertiseListViewModel.WorkflowExpertiseListId).SingleOrDefault();
-
                     workflowExpertiseListViewModel.MasterCompanyId = 1;
                     actionobject.WorkflowId = workflowExpertiseListViewModel.WorkflowId;
                     actionobject.TaskId = workflowExpertiseListViewModel.ActionId;
@@ -536,7 +515,9 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(ModelState);
         }
+
+        #endregion Public Members
+
+
     }
-
-
 }

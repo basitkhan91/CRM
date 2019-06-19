@@ -77,6 +77,9 @@ import { AssetDepConventionTypeComponent } from "../components/Asset-dep-convent
 import { DepreciationIntervalsComponent } from '../components/depreciation-intervals/depreciation-intervals.component';
 import { AssetIntangibleTypeSingleScreenComponent } from '../components/asset-intangible-type-single-screen/asset-intangible-type-single-screen.component';
 import { AssetTypeSingleScreenComponent } from '../components/asset-type-single-screen/asset-type-single-screen.component';
+import { AircraftManufacturerComponent } from '../components/aircraft-manufacturer/aircraft-manufacturer.component';
+import { AircraftModelComponent } from '../components/aircraft-model/aircraft-model.component';
+import { DashnumberComponent } from '../components/dashnumber/dashnumber.component';
 
 
 const singlePagesRoutes: Routes = [
@@ -90,14 +93,14 @@ const singlePagesRoutes: Routes = [
                 data: { title: 'Asset Status' }
             },
             {
-                path: 'app-actions',
+                path: 'app-tasks',
                 component: ActionsComponent,
-                data: { title: "Actions" }
+                data: { title: "Tasks" }
             },
             {
-                path: 'app-action-attributes',
+                path: 'app-task-attributes',
                 component: ActionAttributesComponent,
-                data: { title: "Action Attributes" }
+                data: { title: "Task Attributes" }
             }
             ,
             {
@@ -162,7 +165,10 @@ const singlePagesRoutes: Routes = [
             { path: "app-depreciation-intervals", component: DepreciationIntervalsComponent, data: { title: "Depreciation Intervals" } },
             { path: "app-asset-intangible-type-single-screen", component: AssetIntangibleTypeSingleScreenComponent, data: { title: "Intangible Type" } },
 
-            { path: "app-asset-type-single-screen", component: AssetTypeSingleScreenComponent, data: { title: "Asset Type" } }
+            { path: "app-asset-type-single-screen", component: AssetTypeSingleScreenComponent, data: { title: "Asset Type" } },
+            { path: "app-aircraft-manufacturer", component: AircraftManufacturerComponent, data: { title: "Aircraft Manufacturer" } },
+            { path: "app-aircraft-model", component: AircraftModelComponent, data: { title: "Aircraft Model" } },
+            { path: "app-dashnumber", component: DashnumberComponent, data: { title: "Dash Numbers" } }
         ]
     }
 ];

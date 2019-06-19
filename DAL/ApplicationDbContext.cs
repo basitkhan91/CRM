@@ -343,9 +343,10 @@ namespace DAL
         public DbSet<WorkOrderStage> WorkOrderStage { get; set; }
         public DbSet<WorkOrderPartNumber> WorkOrderPartNumber { get; set; }
 
-
         public DbSet<VendorCapability> VendorCapability { get; set; }
-
+        public DbSet<AircraftModelAudit> AircraftModelAudit { get; set; }
+        public DbSet<AircraftDashNumber> AircraftDashNumber { get; set; }
+        public DbSet<AircraftDashNumberAudit> AircraftDashNumberAudit { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

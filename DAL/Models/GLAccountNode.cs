@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 
 namespace DAL.Models
 {
-  public class GLAccountNode :PasBase
+    public class GLAccountNode : PasBase
     {
         public long GLAccountNodeId { get; set; }
-        
+
         public string LedgerName { get; set; }
 
         [Required(ErrorMessage = "NodeCode Is Required.")]
@@ -18,12 +19,12 @@ namespace DAL.Models
         [Required(ErrorMessage = "NodeName Is Required.")]
         public string NodeName { get; set; }
 
-        public long ParentNodeId { get; set; }
+        [ForeignKey("ParentNodeId")]
+        public long? ParentNodeId { get; set; }
 
         public bool LeafNodeCheck { get; set; }
 
-        [Required(ErrorMessage = "NodeCode Is Required.")]
-        public long GLAccountTypeId { get; set; }
+        public string GLAccountNodeType { get; set; }
 
         [Required(ErrorMessage = "NodeCode Is Required.")]
         public string FSType { get; set; }
@@ -37,5 +38,7 @@ namespace DAL.Models
         public Int32 MasterCompanyId { get; set; }
 
         public long LedgerNameMgmStructureId { get; set; }
+
+        public virtual GLAccountNode ParentNode { get; set; }
     }
 }

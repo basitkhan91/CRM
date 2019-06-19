@@ -34,6 +34,20 @@ declare const google: any;
 })
 
 export class CustomerGeneralInformationComponent implements OnInit {
+    displayCustomerClassification: boolean;
+    disableSaveCustomerClassificationSave: boolean;
+    cityError: boolean;
+    customerAddressLine1Error: boolean;
+    customerTypeError: boolean;
+    customerClassificationError: boolean;
+    customerCountryError: boolean;
+    customerPostalCodeError: boolean;
+    customerCurrencyError: boolean;
+    customerStateOrProvidenceError: boolean;
+    customerEmailError: boolean;
+    customerPhoneError: boolean;
+    customerCodeError: boolean;
+    customerNameError: boolean;
     mobnumPattern = "^((\\+91-?)|0)?[0-9]{13}$";
     emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
 
@@ -189,7 +203,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     disableSaveCustomerClassification: boolean;
     disableSaveParentName: boolean;
 
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         //steps Code  Start
@@ -220,6 +235,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
         this.loadCurrencyData();
+
+        if (!this.classificationName)
+        {
+            this.disableSaveCustomerClassificationSave = true;
+        }
 
     }
 
@@ -657,28 +677,43 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // save Customer Info//
     editItemCloseModel() {
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.sourceClassification.createdBy = this.userName;
-            this.sourceClassification.updatedBy = this.userName;
-            this.sourceClassification.description = this.classificationName;
-            this.sourceClassification.masterCompanyId = 1;
-            this.customerClassificationService.newAddcustomerclass(this.sourceClassification).subscribe(data => {
-                if (data) { this.sourceCustomer.customerClassificationId = data.customerClassificationId }
-                this.loadCustomerClassifiData();
-            })
+        if (!(this.classificationName))
+        {
+            this.displayCustomerClassification = true;
+            this.customerClassificationError = true;
+            this.modelValue = true;
         }
-        else {
+        if (this.classificationName)
+        {
+            this.isSaving = true;
+            if (this.isEditMode == false) {
+                this.sourceClassification.createdBy = this.userName;
+                this.sourceClassification.updatedBy = this.userName;
+                this.sourceClassification.description = this.classificationName;
+                this.sourceClassification.masterCompanyId = 1;
+                this.customerClassificationService.newAddcustomerclass(this.sourceClassification).subscribe(data => {
+                    if (data) { this.sourceCustomer.customerClassificationId = data.customerClassificationId }
+                    this.loadCustomerClassifiData();
+                })
+            }
+            else {
 
-            this.sourceClassification.updatedBy = this.userName;
-            this.sourceClassification.description = this.classificationName;
-            this.sourceClassification.masterCompanyId = 1;
-            this.customerClassificationService.updatecustomerclass(this.sourceClassification).subscribe(
-                response => this.saveCompleted(this.sourceClassification),
-                error => this.saveFailedHelper(error));
+                this.sourceClassification.updatedBy = this.userName;
+                this.sourceClassification.description = this.classificationName;
+                this.sourceClassification.masterCompanyId = 1;
+                this.customerClassificationService.updatecustomerclass(this.sourceClassification).subscribe(
+                    response => this.saveCompleted(this.sourceClassification),
+                    error => this.saveFailedHelper(error));
+            }
+
+            this.displayCustomerClassification = false;
+            this.customerClassificationError = false;
+            this.modal.close();
         }
-
-        this.modal.close();
+        
+       
+        
+        
     }
 
     // Load  Customer Clasfication data
@@ -984,15 +1019,92 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // Save Customer Data//
     editItemAndCloseModel() {
-        if (!(this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
+        if (!(this.sourceCustomer.address1 && this.sourceCustomer.customerTypeId  && this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
-        )) {
+        ))
+        {
             this.display = true;
             this.modelValue = true;
+
+            if (!this.sourceCustomer.address1) {
+                this.customerAddressLine1Error = true;
+            }
+            else {
+                this.customerAddressLine1Error = false;
+            }
+
+            if (!this.sourceCustomer.customerTypeId) {
+                this.customerTypeError = true;
+            }
+            else {
+                this.customerTypeError = false;
+            }
+
+            if (!this.sourceCustomer.name) {
+                this.customerNameError = true;
+            }
+            else {
+                this.customerNameError = false;
+            }
+            if (!this.sourceCustomer.customerCode) {
+                this.customerCodeError = true;
+            }
+            else {
+                this.customerCodeError = false;
+            }
+            if (!this.sourceCustomer.customerPhone) {
+                this.customerPhoneError = true;
+            }
+            else {
+                this.customerPhoneError = false;
+            }
+            if (!this.sourceCustomer.email) {
+                this.customerEmailError = true;
+            }
+            else {
+                this.customerEmailError = false;
+            }
+            if (!this.sourceCustomer.stateOrProvince) {
+                this.customerStateOrProvidenceError = true;
+            }
+            else {
+                this.customerStateOrProvidenceError = false;
+            }
+            if (!this.sourceCustomer.generalCurrencyId) {
+                this.customerCurrencyError = true;
+            }
+            else {
+                this.customerCurrencyError = false;
+            }
+            if (!this.sourceCustomer.postalCode) {
+                this.customerPostalCodeError = true;
+            }
+            else {
+                this.customerPostalCodeError = false;
+            }
+            if (!this.sourceCustomer.country) {
+                this.customerCountryError = true;
+            }
+            else {
+                this.customerCountryError = false;
+            }
+            if (!this.sourceCustomer.customerClassificationId) {
+                this.customerClassificationError = true;
+            }
+            else {
+                this.customerClassificationError = false;
+            }
+            if (!this.sourceCustomer.city) {
+                this.cityError = true;
+            }
+            else {
+                this.cityError = false;
+            }
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
-        ) {
+        )
+        {
             this.isSaving = true;
             if (!this.sourceCustomer.customerId) {
                 this.sourceCustomer.createdBy = this.userName;
@@ -1038,6 +1150,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.activeIndex = 0;
                     this.workFlowtService.indexObj.next(this.activeIndex);
 
+
+                    this.nextClick();//I am calling After Data is Saved
+
                 })
                 if (this.selectedIntegrationTypes != null) //separting Array which is having ","
                 {
@@ -1061,7 +1176,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.sourceCustomer.customerParentName = '';
 
                 }
-                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data => {
+                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data =>
+                {
                     this.sourceCustomer.updatedBy = this.userName;
                     this.localCollection = data;
                     this.sourceCustomer = data;
@@ -1096,7 +1212,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.activeIndex = 0;
                     this.workFlowtService.indexObj.next(this.activeIndex);
 
-
+                    this.nextClick();
                 })
 
             }
@@ -1356,9 +1472,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.selectedCustomerClassification) {
                 if (value == this.selectedCustomerClassification.toLowerCase()) {
                     this.disableSaveCustomerClassification = true;
+                    this.disableSaveCustomerClassificationSave = true;
                 }
                 else {
                     this.disableSaveCustomerClassification = false;
+                    this.disableSaveCustomerClassificationSave = false;
                 }
             }
         }

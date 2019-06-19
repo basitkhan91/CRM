@@ -39,8 +39,8 @@
 							<!--<input type="text" placeholder="Global Search" (input)="dt.filterGlobal($event.target.value, 'contains')" class="form-control pull-left global_search" id="usr">-->
 						</div>
 
-						<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" *ngIf="selectedstockColumn" (click)="dt.exportCSV()"></button>
-						<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedstockColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+						<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data"  (click)="dt.exportCSV()"></button>
+						<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected"  (click)="dt.exportCSV({selectionOnly:true})"></button>
 						<a matTooltip="Add Item Master stock" (click)="navigateTogeneralInfostock()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
 
 						<div class="excel-upload">
@@ -382,84 +382,144 @@
 </ng-template>
 
 
-<ng-template #view class="modal fade " id="view" role="dialog">
 
-	<div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-			<h4 class="modal-title">Details of Stock</h4>
-		</div>
-		<div class="modal-body viewform">
-			<div id="adminsearchlocationajax" class="table-responsive default-bg clear">
-				<div class="col-sm-4">
-					<p><span class="label"><b>PN: </b></span><span class="value">{{partNumber}}</span></p>
-					<p><span class="label"><b>PN Description: </b></span><span class="value">{{description}}</span></p>
-					<p><span class="label"><b>Alternate: </b></span><span class="value">{{isAlternatePartChecked}}</span></p>
-					<p><span class="label"><b>Is Serialized: </b></span><span class="value">{{isSerialized}}</span></p>
-					<p><span class="label"><b>Item Classification: </b></span><span class="value">{{itemClassificationId}}</span></p>
-					<p><span class="label"><b>Acquired: </b></span><span class="value">{{isAcquiredMethodBuy}}</span></p>
-					<p><span class="label"><b>Hazardous Material: </b></span><span class="value">{{isHazardousMaterial}}</span></p>
-					<p><span class="label"><b>Expiration Date: </b></span><span class="value">{{expirationDate}}</span></p>
-					<p><span class="label"><b>Expiration by Mfg date: </b></span><span class="value">{{manufacturingDays}}</span></p>
-					<!--<p><span class="label"><b>Shelf Life: </b></span><span class="value">Yes</span></p>
-					<p><span class="label"><b>Shelf Life by Mfg date: </b></span><span class="value">03/01/2018</span></p>-->
-					<!--<p><span class="label"><b>Active: </b></span><span class="value">Yes</span></p>-->
-					<p><span class="label"><b>Provision: </b></span><span class="value">{{provisionId}}</span></p>
-					<p><span class="label"><b>Capes: </b></span><span class="value">{{isEnabeCapes}}</span></p>
-					<p><span class="label"><b>PMA: </b></span><span class="value">{{pma}}</span></p>
-					<p><span class="label"><b>DER: </b></span><span class="value">{{der}}</span></p>
-					<p><span class="label"><b>Manufacturer: </b></span><span class="value">{{manufacturerId}}</span></p>
-				</div>
-				<div class="col-sm-4">
-					<p><span class="label"><b>Aircraft Manufacturer: </b></span><span class="value">{{selectedAircraftTypes}}</span></p>
-					<!--<p><span class="label"><b>Model: </b></span><span class="value">707</span></p>-->
-					<!--<p><span class="label"><b>Dash Number: </b></span><span class="value">456789</span></p>-->
-					<p><span class="label"><b>Chapter: </b></span><span class="value">{{ataChapterId}}</span></p>
-					<p><span class="label"><b>National Stock Number (NSN): </b></span><span class="value">{{nationalStockNumber}}</span></p>
-					<p><span class="label"><b>Schematic: </b></span><span class="value">{{isSchematic}}</span></p>
-					<!--<p><span class="label"><b>Not To Exceed: </b></span><span class="value">20 hours</span></p>-->
-					<p><span class="label"><b>Ovh: </b></span><span class="value">{{overhaulHours}}</span></p>
-					<p><span class="label"><b>RP: </b></span><span class="value">{{rpHours}}</span></p>
-					<p><span class="label"><b>Test: </b></span><span class="value">{{testHours}}</span></p>
-					<p><span class="label"><b>List Price: </b></span><span class="value">{{listPrice}}</span></p>
-					<!--<p><span class="label"><b>Price Date: </b></span><span class="value">02/21/2018</span></p>-->
-					<p><span class="label"><b>Mark Up (%) of List: </b></span><span class="value">{{salesMarkUpOnListPrice}}</span></p>
-					<p><span class="label"><b>CUR: </b></span><span class="value">{{currencyId}}</span></p>
-					<!--<p><span class="label"><b>Discount (%) on Purchases: </b></span><span class="value">10%</span></p>
-					<p><span class="label"><b>Discount (%) on Sales: </b></span><span class="value">5%</span></p>-->
-				</div>
-				<div class="col-sm-4">
-					<p><span class="label"><b>Purchase UOM: </b></span><span class="value">{{purchaseUnitOfMeasureId}}</span></p>
-					<p><span class="label"><b>Stock UOM: </b></span><span class="value">{{stockUnitOfMeasureId}}</span></p>
-					<p><span class="label"><b>Stock Level: </b></span><span class="value">{{stockLevel}}</span></p>
-					<p><span class="label"><b>Lead Time Days: </b></span><span class="value">{{leadTimeDays}}</span></p>
-					<p><span class="label"><b>Lead Time: </b></span><span class="value">{{leadTimeHours}} </span></p>
-					<p><span class="label"><b>Reorder Point: </b></span><span class="value">{{reorderPoint}}</span></p>
-					<p><span class="label"><b>Reorder Qty: </b></span><span class="value">{{reorderQuantiy}}</span></p>
-					<p><span class="label"><b>Min Order Qty: </b></span><span class="value">{{minimumOrderQuantity}}</span></p>
-					<p><span class="label"><b>Priority: </b></span><span class="value">{{priorityId}}</span></p>
-					<!--<p><span class="label"><b>Integrate With: </b></span><span class="value">145.com</span></p>-->
-					<p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
-					<p><span class="label"><b>Export Information</b></span></p>
-					<p><span class="label"><b>Country: </b></span><span class="value">{{exportCountryId}}</span></p>
-					<p><span class="label"><b>Value: </b></span><span class="value">{{exportValue}}</span></p>
-					<p><span class="label"><b>Currency: </b></span><span class="value">{{exportCurrencyId}}</span></p>
-					<p><span class="label"><b>Weight: </b></span><span class="value">{{exportWeight}}</span></p>
-					<p><span class="label"><b>Size (L, W, H): </b></span><span class="value">{{exportSizeLength}},{{exportSizeWidth}},{{exportSizeHeight}}</span></p>
-					<p><span class="label"><b>Classification: </b></span><span class="value">{{exportClassificationId}}</span></p>
-				</div>
-			</div>
-		</div>
+    <ng-template #view class="modal fade " id="view" role="dialog">
+        <div class="modal-body viewform">
+            <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                    <h4 class="modal-title">Details of Stock</h4>
 
-		<div class="modal-footer">
-			<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+                </div>
+                <!--<a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>-->
+                <hr>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step1">General Information</a> </h4>
+                        </div>
+                        <div id="step1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="modal-content">
+                                    <div class="table-responsive default-bg clear">
+                                        <div class="col-sm-4">
+                                            <p><span class="label"><b>PN: </b></span><span class="value">{{partNumber}}</span></p>
+                                            <p><span class="label"><b>PN Description: </b></span><span class="value">{{description}}</span></p>
+                                            <p><span class="label"><b>Alternate: </b></span><span class="value">{{isAlternatePartChecked}}</span></p>
+                                            <p><span class="label"><b>Is Serialized: </b></span><span class="value">{{isSerialized}}</span></p>
+                                            <p><span class="label"><b>Item Classification: </b></span><span class="value">{{itemClassificationId}}</span></p>
+                                            <p><span class="label"><b>Acquired: </b></span><span class="value">{{isAcquiredMethodBuy}}</span></p>
+                                            <p><span class="label"><b>Hazardous Material: </b></span><span class="value">{{isHazardousMaterial}}</span></p>
+                                            <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{expirationDate}}</span></p>
+                                            <p><span class="label"><b>Expiration by Mfg date: </b></span><span class="value">{{manufacturingDays}}</span></p>
+                                            <!--<p><span class="label"><b>Shelf Life: </b></span><span class="value">Yes</span></p>
+                                             <p><span class="label"><b>Shelf Life by Mfg date: </b></span><span class="value">03/01/2018</span></p>-->
+                                            <!--<p><span class="label"><b>Active: </b></span><span class="value">Yes</span></p>-->
+                                            <p><span class="label"><b>Provision: </b></span><span class="value">{{provisionId}}</span></p>
+                                            <p><span class="label"><b>Capes: </b></span><span class="value">{{isEnabeCapes}}</span></p>
+                                            <p><span class="label"><b>PMA: </b></span><span class="value">{{pma}}</span></p>
+                                            <p><span class="label"><b>DER: </b></span><span class="value">{{der}}</span></p>
+                                            <p><span class="label"><b>Manufacturer: </b></span><span class="value">{{manufacturerId}}</span></p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <p><span class="label"><b>Aircraft Manufacturer: </b></span><span class="value">{{selectedAircraftTypes}}</span></p>
+                                            <!--<p><span class="label"><b>Model: </b></span><span class="value">707</span></p>-->
+                                            <!--<p><span class="label"><b>Dash Number: </b></span><span class="value">456789</span></p>-->
+                                            <p><span class="label"><b>Chapter: </b></span><span class="value">{{ataChapterId}}</span></p>
+                                            <p><span class="label"><b>National Stock Number (NSN): </b></span><span class="value">{{nationalStockNumber}}</span></p>
+                                            <p><span class="label"><b>Schematic: </b></span><span class="value">{{isSchematic}}</span></p>
+                                            <!--<p><span class="label"><b>Not To Exceed: </b></span><span class="value">20 hours</span></p>-->
+                                            <p><span class="label"><b>Ovh: </b></span><span class="value">{{overhaulHours}}</span></p>
+                                            <p><span class="label"><b>RP: </b></span><span class="value">{{rpHours}}</span></p>
+                                            <p><span class="label"><b>Test: </b></span><span class="value">{{testHours}}</span></p>
+                                            <p><span class="label"><b>List Price: </b></span><span class="value">{{listPrice}}</span></p>
+                                            <!--<p><span class="label"><b>Price Date: </b></span><span class="value">02/21/2018</span></p>-->
+                                            <p><span class="label"><b>Mark Up (%) of List: </b></span><span class="value">{{salesMarkUpOnListPrice}}</span></p>
+                                            <p><span class="label"><b>CUR: </b></span><span class="value">{{currencyId}}</span></p>
+                                            <!--<p><span class="label"><b>Discount (%) on Purchases: </b></span><span class="value">10%</span></p>
+        <p><span class="label"><b>Discount (%) on Sales: </b></span><span class="value">5%</span></p>-->
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <p><span class="label"><b>Purchase UOM: </b></span><span class="value">{{purchaseUnitOfMeasureId}}</span></p>
+                                            <p><span class="label"><b>Stock UOM: </b></span><span class="value">{{stockUnitOfMeasureId}}</span></p>
+                                            <p><span class="label"><b>Stock Level: </b></span><span class="value">{{stockLevel}}</span></p>
+                                            <p><span class="label"><b>Lead Time Days: </b></span><span class="value">{{leadTimeDays}}</span></p>
+                                            <p><span class="label"><b>Lead Time: </b></span><span class="value">{{leadTimeHours}} </span></p>
+                                            <p><span class="label"><b>Reorder Point: </b></span><span class="value">{{reorderPoint}}</span></p>
+                                            <p><span class="label"><b>Reorder Qty: </b></span><span class="value">{{reorderQuantiy}}</span></p>
+                                            <p><span class="label"><b>Min Order Qty: </b></span><span class="value">{{minimumOrderQuantity}}</span></p>
+                                            <p><span class="label"><b>Priority: </b></span><span class="value">{{priorityId}}</span></p>
+                                            <!--<p><span class="label"><b>Integrate With: </b></span><span class="value">145.com</span></p>-->
+                                            <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
+                                            <p><span class="label"><b>Export Information</b></span></p>
+                                            <p><span class="label"><b>Country: </b></span><span class="value">{{exportCountryId}}</span></p>
+                                            <p><span class="label"><b>Value: </b></span><span class="value">{{exportValue}}</span></p>
+                                            <p><span class="label"><b>Currency: </b></span><span class="value">{{exportCurrencyId}}</span></p>
+                                            <p><span class="label"><b>Weight: </b></span><span class="value">{{exportWeight}}</span></p>
+                                            <p><span class="label"><b>Size (L, W, H): </b></span><span class="value">{{exportSizeLength}},{{exportSizeWidth}},{{exportSizeHeight}}</span></p>
+                                            <p><span class="label"><b>Classification: </b></span><span class="value">{{exportClassificationId}}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">Purchase and Sales</a> </h4>
+                            </div>
+                            <div id="step2" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-6">
+                                        <h4>Purchase Price</h4>
+                                        <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.purchaseCurrencyId}}</span></p>
+                                        <p><span class="label"><b>List Price: </b></span><span class="value">{{viewItemMaster.listPrice}}</span></p>
+                                        <p><span class="label"><b>Discount off list Price %: </b></span><span class="value">{{viewItemMaster.purchaseDiscountOffListPrice}}</span></p>
+                                        <p><span class="label"><b>List Price After Discount: </b></span><span class="value">{{viewItemMaster.purchaseListPriceAfterDiscount}}</span></p>
+                                        <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+                                        <p><span class="label"><b>Last List Price Date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceDate}}</span></p>
+                                        <p><span class="label"><b>Last disc(%) Date: </b></span><span class="value">{{viewItemMaster.purchaseLastDiscountPercentDate}}</span></p>
+                                        <p><span class="label"><b>Last list price after discount date:: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceAfterDiscountDate}}</span></p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h4>Sales Price</h4>
+                                        <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.salesCurrencyId}}</span></p>
+                                        <p><span class="label"><b>Markup (%) on List Price: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
+                                        <p><span class="label"><b>Baseline sale Price: </b></span><span class="value">{{viewItemMaster.salesLastBaselineSalesPriceDate}}</span></p>
+                                        <p><span class="label"><b>Sale Disc: </b></span><span class="value">{{viewItemMaster.salesMarkUpOnListPriceAfterDisc}}</span></p>
+                                        <p><span class="label"><b>sale Price: </b></span><span class="value">{{viewItemMaster.salesBaselineSalesPrice}}</span></p>
+                                        <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.salesIsFixedPrice}}</span></p>
+                                        <p><span class="label"><b>Last Markup(%) on List Price Date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
+                                        <p><span class="label"><b>Last List Price after disc Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
+                                        <p><span class="label"><b>Last Baseline sale price date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
+                                        <p><span class="label"><b>Last sale disc(%) Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Export Information</a> </h4>
+                            </div>
+                            <div id="step3" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-4">
+                                        <p><span class="label"><b>CountryId: </b></span><span class="value">{{viewItemMaster.exportCountryId}}</span></p>
+                                        <p><span class="label"><b>Value: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
+                                        <p><span class="label"><b>Weight: </b></span><span class="value">{{viewItemMaster.exportWeight}}</span></p>
+                                        <p><span class="label"><b>Size(L,W,H): </b></span><span class="value">{{viewItemMaster.exportSizeLength}} , {{viewItemMaster.exportSizeWidth}} , {{viewItemMaster.exportSizeHeight}}</span></p>
+                                        <p><span class="label"><b>Classification: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
 
+    </ng-template>
 
-		</div>
-	</div>
-
-</ng-template>
 
 
 

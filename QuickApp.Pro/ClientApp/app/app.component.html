@@ -1,40 +1,40 @@
 <div id="app_container" [class.is-mobile]="mobileQuery.matches" class="nav-container">
 
-	<mat-toolbar color="primary" class="app-toolbar">
-		<h1 class="app-name"><a routerLink="/">{{appTitle}}</a></h1>
-		<button mat-icon-button (click)="mainNav.toggle()"><mat-icon>menu</mat-icon></button>
-		<button type="button" class="btn btn-danger back-btn" (click)="goBack()"> <i class="fa fa-chevron-circle-left"></i> Back</button>
-		<span class="app-toolbar-spacer"></span>
-		<i class="fa fa-sitemap entity-block-btn" (click)="showthis()"></i>
-		<app-theme-picker tooltip="{{'mainMenu.Theme' | translate}}"></app-theme-picker>
+    <mat-toolbar color="primary" class="app-toolbar">
+        <h1 class="app-name"><a routerLink="/">{{appTitle}}</a></h1>
+        <button mat-icon-button (click)="mainNav.toggle()"><mat-icon>menu</mat-icon></button>
+        <button type="button" class="btn btn-danger back-btn" (click)="goBack()"> <i class="fa fa-chevron-circle-left"></i> Back</button>
+        <span class="app-toolbar-spacer"></span>
+        <i class="fa fa-sitemap entity-block-btn" (click)="showthis()"></i>
+        <app-theme-picker tooltip="{{'mainMenu.Theme' | translate}}"></app-theme-picker>
 
-		<button *ngIf="!isUserLoggedIn" mat-button (click)="router.navigateByUrl('/login')">
-			<mat-icon>lock_open</mat-icon>
-			<span>{{'mainMenu.Login' | translate}}</span>
-		</button>
+        <button *ngIf="!isUserLoggedIn" mat-button (click)="router.navigateByUrl('/login')">
+            <mat-icon>lock_open</mat-icon>
+            <span>{{'mainMenu.Login' | translate}}</span>
+        </button>
 
-		<button *ngIf="isUserLoggedIn" class="side-button" mat-button [matMenuTriggerFor]="accountMenu" matTooltip="{{'mainMenu.UserAccount' | translate}}">
-			<mat-icon class="menu-button">account_circle</mat-icon>
-			<span fxHide.lt-sm>{{'mainMenu.Account' | translate}}</span>
-		</button>
-		<mat-menu #accountMenu="matMenu">
-			<button mat-menu-item (click)="router.navigateByUrl('/settings')">
-				<mat-icon>person</mat-icon><span>{{'mainMenu.Profile' | translate}}</span>
-			</button>
-			<button mat-menu-item (click)="router.navigateByUrl('/settings#preferences')">
-				<mat-icon>settings</mat-icon><span>{{'mainMenu.Settings' | translate}}</span>
-			</button>
-			<button mat-menu-item (click)="logout()">
-				<mat-icon>lock</mat-icon><span>{{'mainMenu.Logout' | translate}}</span>
-			</button>
-		</mat-menu>
+        <button *ngIf="isUserLoggedIn" class="side-button" mat-button [matMenuTriggerFor]="accountMenu" matTooltip="{{'mainMenu.UserAccount' | translate}}">
+            <mat-icon class="menu-button">account_circle</mat-icon>
+            <span fxHide.lt-sm>{{'mainMenu.Account' | translate}}</span>
+        </button>
+        <mat-menu #accountMenu="matMenu">
+            <button mat-menu-item (click)="router.navigateByUrl('/settings')">
+                <mat-icon>person</mat-icon><span>{{'mainMenu.Profile' | translate}}</span>
+            </button>
+            <button mat-menu-item (click)="router.navigateByUrl('/settings#preferences')">
+                <mat-icon>settings</mat-icon><span>{{'mainMenu.Settings' | translate}}</span>
+            </button>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>lock</mat-icon><span>{{'mainMenu.Logout' | translate}}</span>
+            </button>
+        </mat-menu>
 
-	</mat-toolbar>
+    </mat-toolbar>
 
-	<mat-sidenav-container class="app-sidenav-container"
-						   [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-		<mat-sidenav #mainNav class="app-sidenav-nav mat-elevation-z6" [mode]="mobileQuery.matches ? 'over' : 'side'"
-					 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="!mobileQuery.matches">
+    <mat-sidenav-container class="app-sidenav-container"
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #mainNav class="app-sidenav-nav mat-elevation-z6" [mode]="mobileQuery.matches ? 'over' : 'side'"
+                     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="!mobileQuery.matches">
             <mat-nav-list *ngIf="isUserLoggedIn">
                 <a mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" routerLink="">{{'mainMenu.Home' | translate}}</a>
 
@@ -60,18 +60,18 @@
                     <a mat-list-item routerLinkActive="active" routerLink="/customersmodule/customerpages/app-customers-list">Customer's List</a>
                     <a mat-list-item routerLinkActive="active" routerLink="./customersmodule/customerpages/app-customer-general-information">Create Customer</a>
                     <!--<ul class="list-group nav child_menu left-nav-pills" style="display: block;">
-            <li class="list-group-item">
-                <mat-accordion>
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">
-                            Vendor Setup
-                        </mat-expansion-panel-header>
+                        <li class="list-group-item">
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">
+                                        Vendor Setup
+                                    </mat-expansion-panel-header>
 
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </li>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </li>
 
-        </ul>-->
+                    </ul>-->
 
                 </mat-expansion-panel>
                 <mat-accordion>
@@ -128,39 +128,39 @@
                 </mat-accordion>
                 <!--<a mat-list-item routerLinkActive='active' [routerLink]=['./vendorsmodule/vendorpages/app-vendor-general-information','./vendorsmodule/vendorpages/app-vendor-general-information','./vendorsmodule/vendorpages/app-vendor-financial-information','./vendorsmodule/vendorpages/app-vendor-payment-information','./vendorsmodule/vendorpages/app-vendor-shipping-information','./vendorsmodule/vendorpages/app-vendor-warnings','./vendorsmodule/vendorpages/app-vendor-memo','./vendorsmodule/vendorpages/app-vendor-emails','./vendorsmodule/vendorpages/app-vendor-conversations']>Vendor Setup</a>-->
                 <!--<ul class="list-group nav child_menu left-nav-pills" style="display: block;">
-        <li class="list-group-item">
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">
-                        Vendor Setup
-                    </mat-expansion-panel-header>
+                    <li class="list-group-item">
+                        <mat-accordion>
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">
+                                    Vendor Setup
+                                </mat-expansion-panel-header>
 
-                </mat-expansion-panel>
-            </mat-accordion>
-        </li>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </li>
 
-    </ul>-->
+                </ul>-->
                 <!--<a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendors-list">Vendor</a>-->
                 <!--<a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendors-list">Vendor's List</a>-->
                 <!--<a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">Vendor Setup</a>-->
                 <!--<ul class="list-group nav child_menu left-nav-pills" style="display: block;">
-        <li class="list-group-item">
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">Vendor Setup</a>
-                    </mat-expansion-panel-header>
-                    <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">General Information</a>
-    <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-contacts">Contacts</a>
-    <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-financial-information">Financial Information</a>
-    <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-payment-information">Payment Information</a>
-    <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-shipping-information">Shipping Information</a>
-    <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-warnings">Warnings</a>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </li>
+                    <li class="list-group-item">
+                        <mat-accordion>
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">Vendor Setup</a>
+                                </mat-expansion-panel-header>
+                                <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-general-information">General Information</a>
+                <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-contacts">Contacts</a>
+                <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-financial-information">Financial Information</a>
+                <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-payment-information">Payment Information</a>
+                <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-shipping-information">Shipping Information</a>
+                <a mat-list-item routerLinkActive="active" routerLink="./vendorsmodule/vendorpages/app-vendor-warnings">Warnings</a>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </li>
 
-    </ul>-->
+                </ul>-->
                 <!--</mat-expansion-panel>-->
 
                 <mat-expansion-panel #admin [class.mat-elevation-z0]="!admin.expanded" [expanded]="step === 4" (opened)="setStep(4)">
@@ -174,25 +174,25 @@
                 </mat-expansion-panel>
 
                 <!--<mat-expansion-panel *ngIf="canViewUsers || canViewRoles" #admin [class.mat-elevation-z0]="!admin.expanded">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                Receiving
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <mat-accordion>
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header>
-                            Customer Work
-                        </mat-expansion-panel-header>
-                        <a mat-list-item routerLinkActive="active" routerLink="/customersmodule/customerpages/app-receiving-customer-work-list">Customer Work List</a>
-                        <a mat-list-item routerLinkActive="active" routerLink="/customersmodule/customerpages/app-receiving-customer-work-add">Customer Work Setup</a>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </li>
-        </ul>
-    </mat-expansion-panel>-->
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Receiving
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        Customer Work
+                                    </mat-expansion-panel-header>
+                                    <a mat-list-item routerLinkActive="active" routerLink="/customersmodule/customerpages/app-receiving-customer-work-list">Customer Work List</a>
+                                    <a mat-list-item routerLinkActive="active" routerLink="/customersmodule/customerpages/app-receiving-customer-work-add">Customer Work Setup</a>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </li>
+                    </ul>
+                </mat-expansion-panel>-->
 
 
 
@@ -206,10 +206,10 @@
                         <a mat-list-item routerLinkActive="active" routerLink="./itemmastersmodule/itemmasterpages/app-item-master-list">Item Master List</a>
                         <a mat-list-item routerLinkActive="active" routerLink="./itemmastersmodule/itemmasterpages/app-item-master-stock">Create Item Master</a>
                         <!--<a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock">Item Master Stock</a>
-            <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-non-stock">Item Master non-stock</a>
-            <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-equipment">Item Master Equipement</a>
-            <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-exchange">Item Master Exchange</a>
-            <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-loan">Item Master Loan</a>-->
+                        <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-non-stock">Item Master non-stock</a>
+                        <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-equipment">Item Master Equipement</a>
+                        <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-exchange">Item Master Exchange</a>
+                        <a mat-list-item routerLinkActive="active" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-loan">Item Master Loan</a>-->
                         <mat-accordion>
                             <mat-expansion-panel>
                                 <mat-expansion-panel-header>
@@ -429,15 +429,12 @@
                         <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-glaccount-create">Create GL Account </a>
                         <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-accounting-calendar">Setup Accounting Calendar</a>
                         <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-entity-edit">Add Legal Entity Structure</a>
-                        <!--<a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-legalentity-structure">Legal Entity Structure</a>-->
                         <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-managemententity-structure">Management Structure</a>
                         <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-node-setup">Node</a>
                         <a mat-list-item routerLinkActive="active" routerLink="/generalledgermodule/generalledgerpage/app-po-ro-category">PO-RO Category</a>
                     </mat-expansion-panel>
 
-                        <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-view-batch">View Batch</a>
-                        <!--<a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-create-batch">Create Batch</a>
-        <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-create-journel">Add Journel</a>-->
+                    <a mat-list-item routerLinkActive="active" routerLink="/accountmodule/accountpages/app-view-batch">View Batch</a>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
@@ -446,12 +443,13 @@
                             Single Screens
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-
-                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-actions">Actions</a>
-                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-action-attributes">Action Attributes</a>
+                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-aircraft-manufacturer">Aircraft manufacturer</a>
+                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-aircraft-model">Aircraft Model</a>
+                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-dashnumber">Dash Number</a>
+                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-tasks">Tasks</a>
+                    <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-task-attributes">Task Attributes</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-ata-main">Ata Chapter</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-ata-sub-chapter1">ATA Sub Chapter</a>
-                    <!--<a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-ata-sub-chapter2">ATA Sub Chapter2</a>-->
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-certification-type">Certification Type</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-charges">Charges</a>
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-conditions">Conditions</a>
@@ -502,56 +500,28 @@
                     <a mat-list-item routerLinkActive="active" routerLink="/singlepages/singlepages/app-asset-intangible-type-single-screen">Intangible Type</a>
                 </mat-expansion-panel>
 
-
-                <!--
-    <mat-expansion-panel *ngIf="canViewUsers || canViewRoles" #admin [class.mat-elevation-z0]="!admin.expanded">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                Work Order
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <mat-accordion>
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header>
-                            Work Order's List
-                        </mat-expansion-panel-header>
-                        <a mat-list-item routerLinkActive="active" routerLink="/workordersmodule/workorderspages/app-work-order-add">Work Order Setup</a>
-                        <a mat-list-item routerLinkActive="active" routerLink="/workordersmodule/workorderspages/app-work-order-manual-entry-labor-hours">Add Labor</a>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </li>
-
-        </ul>
-    </mat-expansion-panel>
-
-        -->
-
-
             </mat-nav-list>
 
+        </mat-sidenav>
 
-		</mat-sidenav>
+        <mat-sidenav-content>
+            <div fxLayout="column" fxFill>
+                <div id="mainContent" fxFlex="grow">
+                    <router-outlet></router-outlet>
+                </div>
 
-		<mat-sidenav-content>
-			<div fxLayout="column" fxFill>
-				<div id="mainContent" fxFlex="grow">
-					<router-outlet></router-outlet>
-				</div>
-
-			</div>
-		</mat-sidenav-content>
-	</mat-sidenav-container>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 
 </div>
 
-<div class="cdetails-top" *ngIf="translationService.closeCmpny && isUserLoggedIn" >
-	<span class="cdetails-top-close-btn fa fa-times" (click)="closethis()"></span>
-	<div class="col-sm-12"><label>Comp</label><span>Silverxis</span></div>
-	<div class="col-sm-12"><label>BU</label><span>Adso</span></div>
-	<div class="col-sm-12"><label>Div</label><span>Development</span></div>
-	<div class="col-sm-12"><label>Dept</label><span>Java</span></div>
+<div class="cdetails-top" *ngIf="translationService.closeCmpny && isUserLoggedIn">
+    <span class="cdetails-top-close-btn fa fa-times" (click)="closethis()"></span>
+    <div class="col-sm-12"><label>Comp</label><span>Silverxis</span></div>
+    <div class="col-sm-12"><label>BU</label><span>Adso</span></div>
+    <div class="col-sm-12"><label>Div</label><span>Development</span></div>
+    <div class="col-sm-12"><label>Dept</label><span>Java</span></div>
 </div>
 
 <ng2-toasty></ng2-toasty>

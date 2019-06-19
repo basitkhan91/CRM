@@ -142,7 +142,12 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<DAL.Models.AircraftModel> GetAllAircraftModel()
+        {
+            return _appContext.AircraftModel.Include("AircraftType").Where(c => (c.IsDeleted == false || c.IsDeleted == null))
+                .OrderByDescending(c => c.AircraftModelId).ToList();
 
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

@@ -31,13 +31,20 @@ namespace QuickApp.Pro.Controllers
         #region Public Methods
 
         [HttpGet("getAll")]
-        public IActionResult getAll()
+        public IActionResult getAllGLAccountNode()
         {
-            //var nodes = unitOfWork.GLAccountClass.getAllNodeSetup(); 
-            //return Ok(nodes);
+            var glAccountNodes = unitOfWork.GLAccountNode.GetAllGLAccount();
+            
+            foreach (var node in glAccountNodes)
+            {
+                if (node.ParentNode != null)
+                {
+                    node.ParentNode.ParentNode = null;
 
-            var nodes = unitOfWork.Repository<GLAccountNode>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountNodeId);
-            return Ok(nodes);
+                }
+            }
+
+            return Ok(glAccountNodes);
         }
 
         [HttpGet("getById/{id}")]
