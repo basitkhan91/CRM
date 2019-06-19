@@ -3758,7 +3758,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.integrationName;
             this.sourceAction.masterCompanyId = 1;
-            this.itemser.savemanufacutrer(this.sourcemanufacturer).subscribe(data => { this.manufacturerdata() })
+            this.itemser.savemanufacutrer(this.sourcemanufacturer).subscribe(
+                data =>
+                {
+                    this.sourceItemMaster.manufacturerId = data.manufacturerId;
+                    this.manufacturerdata()
+                })
 
         }
         else {
@@ -3790,7 +3795,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     Manufacturer(content)
     {
-        this.sourceItemMaster.manufacturerId = '';
         this.sourcemanufacturer.name = '';
         this.isEditMode = false;
         this.isDeleteMode = false;
