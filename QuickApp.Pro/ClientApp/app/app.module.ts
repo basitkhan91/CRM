@@ -191,7 +191,10 @@ import { RolesGuardService } from "./services/roles-guard.service";
 import { UnauthorizedAccessComponent } from "../unauthorizedaccess/unauthorized-access.component";
 import { CompanyService } from "./services/company.service";
 import { CompanyEndpoint } from "./services/company-endpoint.service";
-
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
+import { LayoutComponent } from "./components/layout/layout.component";
+import { SpinnerComponent } from "./shared/spinner/spinner.component";
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 
@@ -205,7 +208,8 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
         AdminModule,       
         SettingsModule,
 		AppRoutingModule,
-
+        CardModule,
+        PanelModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -237,6 +241,9 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
         StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
         ActionsButtonsComponent,
         UnauthorizedAccessComponent,
+        LoginComponent,
+        LayoutComponent,
+        SpinnerComponent
 		
     ],
     providers: [
