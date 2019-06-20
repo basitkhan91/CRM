@@ -20,7 +20,6 @@ export class AircraftModelEndpointService extends EndpointFactory {
     private readonly updateURL: string = "/api/aircraftmodel/update";
     private readonly removeByIdURL: string = "/api/aircraftmodel/removeById";
     private readonly updateForActive: string = "/api/aircraftmodel/updateActive";
-    private readonly getAssetAuditById: string = "/api/aircraftmodel/audits";
     private readonly getAuditById: string = "/api/aircraftmodel/audits";
     private readonly getModelsListById: string = "/api/aircraftmodel/getModelsByManufacturerId";
 

@@ -347,6 +347,7 @@ namespace DAL
         public DbSet<AircraftModelAudit> AircraftModelAudit { get; set; }
         public DbSet<AircraftDashNumber> AircraftDashNumber { get; set; }
         public DbSet<AircraftDashNumberAudit> AircraftDashNumberAudit { get; set; }
+        public DbSet<AircraftTypeAudit> AircraftTypeAudit { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

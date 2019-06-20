@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DAL.Models
 {
-    public class AircraftDashNumber : BaseEntity
+    public class AircraftDashNumber : BaseEntity, IAudit
     {
         [Key]
         public Int32  DashNumberId { get; set; }
@@ -20,9 +19,9 @@ namespace DAL.Models
         public long   AircraftModelId { get; set; }
 
         [Required(ErrorMessage = "Dash Number is required.")]
-        public int  DashNumber { get; set; }
+        public Int32  DashNumber { get; set; }
         
-        public int? MasterCompanyId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
 
         public virtual AircraftType AircraftType { get; set; }
 

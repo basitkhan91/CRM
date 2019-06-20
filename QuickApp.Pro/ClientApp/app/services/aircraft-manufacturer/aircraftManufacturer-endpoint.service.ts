@@ -21,8 +21,7 @@ export class AircraftManufacturerEndpointService extends EndpointFactory {
     private readonly updateURL: string = "/api/aircraftmanufacturer/update";
     private readonly removeByIdURL: string = "/api/aircraftmanufacturer/removeById";
     private readonly updateForActive: string = "/api/aircraftmanufacturer/updateActive";
-    private readonly getAssetAuditById: string = "/api/aircraftmanufacturer/audits";
-
+    private readonly getAuditById: string = "/api/aircraftmanufacturer/audits";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
@@ -89,4 +88,12 @@ export class AircraftManufacturerEndpointService extends EndpointFactory {
             });
     }
 
+    getAudit<T>(aircraftManufacturerId: number): Observable<T> {
+        let endpointUrl = `${this.getAuditById}/${aircraftManufacturerId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAudit(aircraftManufacturerId));
+            });
+    }
 }
