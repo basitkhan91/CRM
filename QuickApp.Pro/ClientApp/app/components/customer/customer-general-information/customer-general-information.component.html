@@ -439,7 +439,6 @@
 
 
                 <div class="modal-footer">
-
                     <button class="btn btn-success pull-right submit-btn">Submit</button>
                     <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                 </div>
@@ -547,7 +546,7 @@
     <p *ngIf="customerClassificationError" [ngStyle]="{'color':'red'}">Please add Customer Classification name</p>
     
     <p-footer>
-        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+        <button type="button" pButton icon="pi pi-check" (click)="displayCustomerClassification=false" label="Close"></button>
     </p-footer>
 
 </p-dialog>
