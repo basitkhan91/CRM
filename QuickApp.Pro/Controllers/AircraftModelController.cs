@@ -155,6 +155,38 @@ namespace QuickApp.Pro.Controllers
             return Ok(aircraftModel);
         }
 
+        
+        [HttpPost("pagination")]
+        public IActionResult GetAircraftModel([FromBody]PaginateViewModel paginate)
+
+        {
+            var aircraftModels = unitOfWork.aircraftModel.GetAllAircraftModel();
+            var aircraftModelsCount = unitOfWork.aircraftModel.GetAllAircraftModel().Count();
+            var previousList = paginate.first;
+            var currentList = paginate.rows;
+
+            int i = 0;
+            for (i= previousList; i< currentList; i++)
+            {
+            }
+
+            if (paginate != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    return Ok(paginate);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        
         #endregion Public Methods
 
         #region Private Methods

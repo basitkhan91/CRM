@@ -8,6 +8,8 @@ import { AircraftModelService } from "../../services/aircraft-model/aircraft-mod
 import { AircraftManufacturerService } from "../../services/aircraft-manufacturer/aircraftManufacturer.service";
 import { AircraftType } from "../../models/AircraftType.model";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { PaginatorModule } from 'primeng/paginator';
+import { LazyLoadEvent } from "primeng/api";
 @Component({
     selector: 'app-aircraft-model',
     templateUrl: './aircraft-model.component.html',
@@ -24,10 +26,17 @@ export class AircraftModelComponent implements OnInit{
     aircraftModelTypeToRemove: AircraftModel;
     aircraftModelList: AircraftModel[];
     aircraftManufacturerList: AircraftType[];
+    aircraftModelsPagination: AircraftModel[];
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+
+    //adding for Pagination start
+    totalRecords: number;
+    cols: any[];
+    loading: boolean;
+    //adding for Pagination End
 
     constructor(private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
 
@@ -36,6 +45,7 @@ export class AircraftModelComponent implements OnInit{
     ngOnInit(): void {
         this.aircraftModelService.getAll().subscribe(aircraftModels => {
             this.aircraftModelList = aircraftModels[0];
+            this.totalRecords = this.aircraftModelList.length;//Adding for Pagination
             this.aircraftModelList.forEach(function (model) {
                 model.isActive = model.isActive == false ? false : true;
             });
@@ -45,8 +55,38 @@ export class AircraftModelComponent implements OnInit{
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
             this.aircraftManufacturerList = aircraftManufacturer[0];
         });
+
+        //Adding for Pagination start
+        this.cols = [
+            { field: 'aircraftModelId', header: 'ID' },
+            { field: 'aircraftType?.description', header: 'Aircraft Manufacturer' },
+            { field: 'modelName', header: 'Model Name' },
+        ];
+
+        this.loading = true;
+        //Pagination Code End
     }
 
+     //Adding for Pagination start
+    loadAircraftModels(event: LazyLoadEvent)
+    {
+        this.loading = true;
+        setTimeout(() => {
+            if (this.aircraftModelList)
+            {
+                this.aircraftModelService.getServerPages(event).subscribe(
+                    pages => {
+                        if (pages.length > 0)
+                        {
+                            this.aircraftModelsPagination = pages[0];
+                        }
+                    });
+                this.aircraftModelsPagination = this.aircraftModelList.slice(event.first, (event.first + event.rows));
+                this.loading = false;
+            }
+        }, 1000);
+    }
+    //Pagination Code End
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -148,5 +188,17 @@ export class AircraftModelComponent implements OnInit{
                 this.AuditDetails[0].ColumnsToAvoid = ["aircraftModelAuditId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    paginate(paginatioDetails)
+    {
+        console.log(paginatioDetails);
+        this.aircraftModelService.getServerPages(paginatioDetails).subscribe(
+            pages => {
+                if (pages.length > 0)
+                {
+
+                }
+            });
     }
 }

@@ -41,10 +41,8 @@
                         </div>
                         <!--</form>-->
                     </div>
-                    <!--Add claffication End -->
-                    <!--Uplad Doc-->
-                    <!--End-->
-                    <div class="table-responsive">
+                    
+                    <!--<div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -83,7 +81,7 @@
 
                             </tbody>
                         </table>
-                    </div>
+                    </div>-->
                     <br>
                 </div>
 
@@ -157,5 +155,31 @@
             <p-footer>
                 <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
             </p-footer>
-
         </p-dialog>
+
+        <!--Paginator added-->
+        <!--<p-paginator [rows]="10" [totalRecords]="120" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>-->
+
+        <p-table [columns]="cols" [value]="aircraftModelsPagination" [lazy]="true" (onLazyLoad)="loadAircraftModels($event)" [paginator]="true"
+                 [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [loading]="loading">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr>
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+                <!--<tr *ngFor="let col of columns">
+                    <td>{{col.aircraftModelId}}</td>
+                    <td>{{col.aircraftType.description}}</td>
+                    <td>{{col.modelName}}</td>
+                </tr>-->
+                
+            </ng-template>
+        </p-table>
