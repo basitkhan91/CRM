@@ -18,6 +18,7 @@ import { UserEditorComponent } from '../admin/user-editor.component';
 import { AppDialogComponent } from './app-dialog.component';
 
 import { GroupByPipe } from '../pipes/group-by.pipe';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { GroupByPipe } from '../pipes/group-by.pipe';
         PageHeaderComponent,
         GroupByPipe,
         UserEditorComponent,
-		AppDialogComponent
+        AppDialogComponent,
+        ProgressSpinnerModule,
     ],
     declarations: [
         PageHeaderComponent,

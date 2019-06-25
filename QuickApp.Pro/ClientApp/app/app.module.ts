@@ -5,7 +5,7 @@
 import { NgModule, ErrorHandler } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from '@angular/common/http';
-//import { Http } from '@angular/http’;
+//import { Http } from '@angular/httpâ€™;
 //import { HttpModule } from '@angular/http';
 
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -191,6 +191,10 @@ import { RolesGuardService } from "./services/roles-guard.service";
 import { UnauthorizedAccessComponent } from "../unauthorizedaccess/unauthorized-access.component";
 import { CompanyService } from "./services/company.service";
 import { CompanyEndpoint } from "./services/company-endpoint.service";
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
+import { LayoutComponent } from "./components/layout/layout.component";
+import { SpinnerComponent } from "./shared/spinner/spinner.component";
 import { WorkOrderService } from "./services/work-order/work-order.service";
 import { WorkOrderEndpointService } from "./services/work-order/work-order-endpoint.service";
 import { WorkOrderPartNumberService } from './services/work-order/work-order-part-number.service';
@@ -208,8 +212,9 @@ import { WorkOrderPartNumberEndpointService } from './services/work-order/work-o
         HttpClientModule,
         AdminModule,
         SettingsModule,
-        AppRoutingModule,
-
+		AppRoutingModule,
+        CardModule,
+        PanelModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -241,7 +246,9 @@ import { WorkOrderPartNumberEndpointService } from './services/work-order/work-o
         StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
         ActionsButtonsComponent,
         UnauthorizedAccessComponent,
-
+        LoginComponent,
+        LayoutComponent,
+        SpinnerComponent
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
