@@ -27,28 +27,28 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class CustomerService {
-	generalcustomer: boolean = false;
-	contacts: boolean = false;
-	financial: boolean = false;
-	billing: boolean = false;
-	shipping: boolean = false;
-	sales: boolean = false;
-	warnings: boolean = false;
-	readonly = true;
-	read = true;
-    enableExternal: boolean=false;
+    generalcustomer: boolean = false;
+    contacts: boolean = false;
+    financial: boolean = false;
+    billing: boolean = false;
+    shipping: boolean = false;
+    sales: boolean = false;
+    warnings: boolean = false;
+    readonly = true;
+    read = true;
+    enableExternal: boolean = false;
     customerobject: any[];
     financeCollection: any;
     paymentCollection: any;
     salesCollection: any;
     shippingCollection: any;
-    isEditMode: boolean=false;
+    isEditMode: boolean = false;
     listCollection: any;
-	generalCollection: any;
+    generalCollection: any;
     auditServiceCollection: any = {};
-	ShowPtab: boolean = true;
-	contactCollection: any;
-	customergeneralcollection: any;
+    ShowPtab: boolean = true;
+    contactCollection: any;
+    customergeneralcollection: any;
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
@@ -62,26 +62,26 @@ export class CustomerService {
     private _rolesChanged = new Subject<RolesChangedEventArg>();
     public isCOntact: boolean = false;
     public navigationObj = new Subject<any>();
-	public billingCollection: any;
-	public currentUrl = this.router.url;
-	navigationObjChangeObject$ = this.navigationObj.asObservable();
-	public bredcrumbObj = new Subject<any>();
+    public billingCollection: any;
+    public currentUrl = this.router.url;
+    navigationObjChangeObject$ = this.navigationObj.asObservable();
+    public bredcrumbObj = new Subject<any>();
     public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
     //for steps
-	public alertObj = new Subject<any>();
+    public alertObj = new Subject<any>();
     public alertChangeObject$ = this.alertObj.asObservable();
     //steps end
-	public indexObj = new Subject<any>();
-	public indexObjChangeObject$ = this.indexObj.asObservable();
-	public isCustomerAlsoVendor: boolean = false;
+    public indexObj = new Subject<any>();
+    public indexObjChangeObject$ = this.indexObj.asObservable();
+    public isCustomerAlsoVendor: boolean = false;
     customergeneralCollection: any;
     localCollectiontoVendor: any;
     name: any;
-	sourceCustomer: any;
-	isVendorAlsoCustomer: boolean = false;
-	
-   // sourceCustomer: any;
-    
+    sourceCustomer: any;
+    isVendorAlsoCustomer: boolean = false;
+
+    // sourceCustomer: any;
+
     constructor(
         private router: Router,
         private http: HttpClient,
@@ -147,7 +147,7 @@ export class CustomerService {
         return Observable.forkJoin(
             this.customerEndpoint.getGeneralrobj<any>());
     }
-   
+
     getCustomerdata(customerId: any) {
         return Observable.forkJoin(
             this.customerEndpoint.getCustomersDatawithid<any>(customerId));
@@ -207,11 +207,11 @@ export class CustomerService {
     }
     updateAction(action: any) {
         return this.customerEndpoint.getUpdatecustomerEndpoint<any>(action, action.customerId);
-	}
+    }
 
-	updateActionforActive(action: any) {
-		return this.customerEndpoint.getUpdatecustomerEndpointforActive(action, action.customerId);
-	}
+    updateActionforActive(action: any) {
+        return this.customerEndpoint.getUpdatecustomerEndpointforActive(action, action.customerId);
+    }
 
     updTeAuditAddress(action: any) {
         return this.customerEndpoint.updateAuditaddress(action, action.addressId);
@@ -246,21 +246,21 @@ export class CustomerService {
 
         return this.customerEndpoint.deleteContact(CustomerId);
     }
-   
+
     getCustomerShipAddressGet(customerId: any) {
         return Observable.forkJoin(
             this.customerEndpoint.getCusHippingaddresdetails<any[]>(customerId));
-	}
-	getCustomerShipAddressGetWIthAddressId(customerId: any) {
-		return Observable.forkJoin(
-			this.customerEndpoint.getCusHippingaddresdetailswithid<any>(customerId));
-	}
-	getvendorShipAddressGetWIthAddressId(customerId: any) {
-		return Observable.forkJoin(
-			this.customerEndpoint.getvenHippingaddresdetailswithid<any>(customerId));
-	}
+    }
+    getCustomerShipAddressGetWIthAddressId(customerId: any) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getCusHippingaddresdetailswithid<any>(customerId));
+    }
+    getvendorShipAddressGetWIthAddressId(customerId: any) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getvenHippingaddresdetailswithid<any>(customerId));
+    }
 
-   
+
 
     BillviaHistory(actionId: number) {
         return Observable.forkJoin(this.customerEndpoint.getBillviaHistory<AuditHistory[]>(actionId));
@@ -275,7 +275,7 @@ export class CustomerService {
     newBillingAdd(action: any) {
 
         return this.customerEndpoint.getNewBillinginfo<any>(action);
-	}
+    }
 
     newAddContactInfo(Customercontact: any) {
         return this.customerEndpoint.getNewCustomerContactInfo<any>(Customercontact);
@@ -286,8 +286,8 @@ export class CustomerService {
     updateDeleteBillinginfo(customerBilling: any) {
         return this.customerEndpoint.deleteBillingAddress(customerBilling, customerBilling.customerBillingAddressId);
     }
-  
-    
+
+
     newShippingViaAdd(action: any) {
 
         return this.customerEndpoint.saveBillViaDetails<any>(action);
@@ -298,7 +298,7 @@ export class CustomerService {
     }
     updateContactinfo(CustomerContact: any) {
         return this.customerEndpoint.getUpdateContactInfo(CustomerContact, CustomerContact.contactId);
-	}
+    }
 
     updatebillingViainfo(customerBilling: any) {
         return this.customerEndpoint.updateBillingViainfo(customerBilling, customerBilling.customerBillingId);
@@ -350,48 +350,48 @@ export class CustomerService {
     }
     Addcustomeraircrafttype(action: any) {
         return this.customerEndpoint.getcustomeraircrafttypeEndpoint<any>(action);
-	}
+    }
 
 
-	getDiscountList() {
-		return Observable.forkJoin(
-			this.customerEndpoint.getDiscountEndpoint<DiscountValue[]>());
-	}
-	
+    getDiscountList() {
+        return Observable.forkJoin(
+            this.customerEndpoint.getDiscountEndpoint<DiscountValue[]>());
+    }
 
-	newAddDiscount(action: DiscountValue) {
-		return this.customerEndpoint.getNewDiscount<DiscountValue>(action);
-	}
 
-	updatediscount(action: DiscountValue) {
-		return this.customerEndpoint.getupdateDiscount(action, action.discountId);
-	}
-	getcustomerByNameList(name) {
-		return Observable.forkJoin(
-			this.customerEndpoint.getCustomerByname<any[]>(name));
-	}
-	saveAircraftinfo(data) {
-		return this.customerEndpoint.saveAircraftinfo<any>(data);
-	}
-	getAircaftList(cusId: any) {
-		return Observable.forkJoin(
-			this.customerEndpoint.getAircraftList<any[]>(cusId));
-	}
-	updateActionforActiveforBilling(customerBilling: any) {
-		return this.customerEndpoint.getUpdateBillingEndpointforActive(customerBilling, customerBilling.customerBillingAddressId);
-	}
- 
-	updateActionforActiveforShiping(Customershipping: any) {
-		return this.customerEndpoint.getUpdateshippingEndpointforActive(Customershipping, Customershipping.customerShippingAddressId);
-	}
-	getAircraftManufacturer(cusId: any) {
-		return this.customerEndpoint.getAircraftManufacturerEndpoint<any[]>(cusId);
-	}
-	Addmultiintegrations(action: any) {
-		return this.customerEndpoint.getMultiIntegrations<any>(action);
-	}
-	getintegrationtypes(customerId: any) {
-		return this.customerEndpoint.getIntegrationEndpoint<any[]>(customerId);
+    newAddDiscount(action: DiscountValue) {
+        return this.customerEndpoint.getNewDiscount<DiscountValue>(action);
+    }
+
+    updatediscount(action: DiscountValue) {
+        return this.customerEndpoint.getupdateDiscount(action, action.discountId);
+    }
+    getcustomerByNameList(name) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getCustomerByname<any[]>(name));
+    }
+    saveAircraftinfo(data) {
+        return this.customerEndpoint.saveAircraftinfo<any>(data);
+    }
+    getAircaftList(cusId: any) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getAircraftList<any[]>(cusId));
+    }
+    updateActionforActiveforBilling(customerBilling: any) {
+        return this.customerEndpoint.getUpdateBillingEndpointforActive(customerBilling, customerBilling.customerBillingAddressId);
+    }
+
+    updateActionforActiveforShiping(Customershipping: any) {
+        return this.customerEndpoint.getUpdateshippingEndpointforActive(Customershipping, Customershipping.customerShippingAddressId);
+    }
+    getAircraftManufacturer(cusId: any) {
+        return this.customerEndpoint.getAircraftManufacturerEndpoint<any[]>(cusId);
+    }
+    Addmultiintegrations(action: any) {
+        return this.customerEndpoint.getMultiIntegrations<any>(action);
+    }
+    getintegrationtypes(customerId: any) {
+        return this.customerEndpoint.getIntegrationEndpoint<any[]>(customerId);
     }
     getDescriptionbypart(name) {
         return Observable.forkJoin(
@@ -408,6 +408,14 @@ export class CustomerService {
     }
     updateMarkUp(markUp: any) {
         return this.customerEndpoint.updateMarkUp(markUp, markUp.markUpPercentageId);
+    }
+
+    getAllCustomers() {
+        return this.customerEndpoint.getAllCustomers();
+    }
+
+    getAllCustomersInfo() {
+        return this.customerEndpoint.getAllCustomerInfo<Customer[]>();
     }
 
 }

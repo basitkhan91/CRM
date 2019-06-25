@@ -137,7 +137,7 @@ namespace QuickApp.Pro.Controllers
         {
             var audits = unitOfWork.Repository<AircraftDashNumberAudit>()
                 .Find(x => x.DashNumberId == id)
-                .OrderByDescending(x => x.DashNumberAuditId);
+                .OrderByDescending(x => x.DashNumberId);
 
             var auditResult = new List<AuditResult<AircraftDashNumberAudit>>();
 

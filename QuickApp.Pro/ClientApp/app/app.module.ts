@@ -5,7 +5,7 @@
 import { NgModule, ErrorHandler } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from '@angular/common/http';
-//import { Http } from '@angular/http’;
+//import { Http } from '@angular/httpâ€™;
 //import { HttpModule } from '@angular/http';
 
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -195,17 +195,22 @@ import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { LayoutComponent } from "./components/layout/layout.component";
 import { SpinnerComponent } from "./shared/spinner/spinner.component";
+import { WorkOrderService } from "./services/work-order/work-order.service";
+import { WorkOrderEndpointService } from "./services/work-order/work-order-endpoint.service";
+import { WorkOrderPartNumberService } from './services/work-order/work-order-part-number.service';
+import { WorkOrderPartNumberEndpointService } from './services/work-order/work-order-part-number-endpoint.service';
+
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 
 
 @NgModule({
-	imports: [
-		SharedModule,
-		FooterModule,
+    imports: [
+        SharedModule,
+        FooterModule,
         ThemePickerModule,
-		HttpClientModule,		
-        AdminModule,       
+        HttpClientModule,
+        AdminModule,
         SettingsModule,
 		AppRoutingModule,
         CardModule,
@@ -216,10 +221,10 @@ import { SpinnerComponent } from "./shared/spinner/spinner.component";
                 useClass: TranslateLanguageLoader
             }
         }),
-		ToastyModule.forRoot(),
-	    ChartsModule,       
-		NgbModule.forRoot(),
-		
+        ToastyModule.forRoot(),
+        ChartsModule,
+        NgbModule.forRoot(),
+
     ],
     declarations: [
         AppComponent,
@@ -244,11 +249,10 @@ import { SpinnerComponent } from "./shared/spinner/spinner.component";
         LoginComponent,
         LayoutComponent,
         SpinnerComponent
-		
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
-		{ provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,
         ConfigurationService,
         AppTitleService,
@@ -264,19 +268,19 @@ import { SpinnerComponent } from "./shared/spinner/spinner.component";
         ActionService,
         ActionEndpoint,
         AtaMainService,
-		ATAMainEndpoint,
-		AtaSubChapter1Service,
-		ATASubChapter1Endpoint,
-		AtaSubChapter2Service,
-		ATASubChapter2Endpoint,
-		SiteService,
-		SiteEndpoint,
-		WarehouseService,
-		WarehouseEndpoint,
-		BinService,
-		BinEndpoint,
-		GLAccountCategoryService,
-		GLAccountCategoryEndpointservice,
+        ATAMainEndpoint,
+        AtaSubChapter1Service,
+        ATASubChapter1Endpoint,
+        AtaSubChapter2Service,
+        ATASubChapter2Endpoint,
+        SiteService,
+        SiteEndpoint,
+        WarehouseService,
+        WarehouseEndpoint,
+        BinService,
+        BinEndpoint,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointservice,
         NgbActiveModal,
         MasterCompanyEndpoint,
         MasterComapnyService,
@@ -306,9 +310,9 @@ import { SpinnerComponent } from "./shared/spinner/spinner.component";
         ItemClassificationEndpointService,
         ItemGroupService,
         ItemgroupEndpointService,
-		TaxRateService,
-		ManufacturerService,
-		ManufacturerEndpoint,
+        TaxRateService,
+        ManufacturerService,
+        ManufacturerEndpoint,
         TaxRateEndpointService,
         VendorClassificationService,
         VendorClassificationEndpoint,
@@ -337,39 +341,39 @@ import { SpinnerComponent } from "./shared/spinner/spinner.component";
         ChargeService,
         ChargeEndpoint,
         ModalService,
-		Globals,
-		GLAccountClassEndpoint,
-		GLAccountClassService,
+        Globals,
+        GLAccountClassEndpoint,
+        GLAccountClassService,
         VendorService,
         VendorEndpointService,
         EmployeeService,
         EmployeeEndpoint,
         ItemMasterEndpoint,
-		ItemMasterService,
-		StocklineService,
-		StocklineEndpoint,
-		ReceivingCustomerWorkService,
-		ReceivingCustomerWorkEndpoint,
-		LegalEntityService,
-		LegalEntityEndpontService,
-		AuthService,
-		SingleScreenBreadcrumbService,
-		GlCashFlowClassificationService,
-		GlCashFlowClassificationEndpoint,
-		VendorCapabilitiesService,
-		VendorCapabilitiesEndpoint,
-		LocationService,
-		LocationEndpoint,
-		laborAndOverheadCostEndpointservice,
-		LaborAndOverheadCostService,
-		ShelfService,
-		ShelfEndpoint,
-		MessageService,
-		RolesManagementStructureService,
-		RolesManagementStructureEndpoint,
-		CertificationTypeEndpoint,
+        ItemMasterService,
+        StocklineService,
+        StocklineEndpoint,
+        ReceivingCustomerWorkService,
+        ReceivingCustomerWorkEndpoint,
+        LegalEntityService,
+        LegalEntityEndpontService,
+        AuthService,
+        SingleScreenBreadcrumbService,
+        GlCashFlowClassificationService,
+        GlCashFlowClassificationEndpoint,
+        VendorCapabilitiesService,
+        VendorCapabilitiesEndpoint,
+        LocationService,
+        LocationEndpoint,
+        laborAndOverheadCostEndpointservice,
+        LaborAndOverheadCostService,
+        ShelfService,
+        ShelfEndpoint,
+        MessageService,
+        RolesManagementStructureService,
+        RolesManagementStructureEndpoint,
+        CertificationTypeEndpoint,
         CertificationtypeService,
-        AssetStatusService,       
+        AssetStatusService,
         AssetStatusEndpointService,
         AssetTypeService,
         AssetTypeEndpointService,
@@ -398,7 +402,11 @@ import { SpinnerComponent } from "./shared/spinner/spinner.component";
         RolesGuardService,
         CompanyService,
         CompanyEndpoint,
-		
+        WorkOrderService,
+        WorkOrderEndpointService,
+        WorkOrderPartNumberService,
+        WorkOrderPartNumberEndpointService,
+
     ],
     entryComponents: [
         LoginDialogComponent,

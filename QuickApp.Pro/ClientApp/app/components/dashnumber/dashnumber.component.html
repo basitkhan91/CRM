@@ -107,18 +107,6 @@
             </div>
         </ng-template>
 
-        <ng-template #auditContent let-c="close" let-d="dismiss">
-            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-            </div>
-        </ng-template>
-
-        <ng-template #auditContent let-c="close" let-d="dismiss">
-            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-            </div>
-        </ng-template>
-
         <ng-template #content let-c="close" let-d="dismiss">
             <div class="modal-header">
                 <h4 class="modal-title">Are you sure you want to delete Dash Number ?</h4>
@@ -146,7 +134,7 @@
 
                     <p>
                         <span class="col-sm-3"><b>Aircraft Manufacturer: </b></span> <span class="col-sm-6">
-                            <select [(ngModel)]="dashNumberToUpdate.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+                            <select [(ngModel)]="dashNumberToUpdate.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(dashNumberToUpdate.aircraftTypeId)">
                                 <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
                             </select>
                         </span>

@@ -6,7 +6,7 @@ using System.Text;
 namespace DAL.Models
 {
 
-    public class AircraftModel : BaseEntity
+    public class AircraftModel : BaseEntity,IAudit
     {
         [Key]
         public long AircraftModelId { get; set; }

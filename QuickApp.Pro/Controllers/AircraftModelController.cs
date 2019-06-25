@@ -137,8 +137,8 @@ namespace QuickApp.Pro.Controllers
         public IActionResult AuditDetails(long id)
         {
             var audits = unitOfWork.Repository<AircraftModelAudit>()
-                .Find(x => x.AircraftModelAuditId == id)
-                .OrderByDescending(x => x.AircraftTypeId);
+                .Find(x => x.AircraftModelId == id)
+                .OrderByDescending(x => x.AircraftModelId);
 
             var auditResult = new List<AuditResult<AircraftModelAudit>>();
 

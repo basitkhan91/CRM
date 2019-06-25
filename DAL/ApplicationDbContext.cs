@@ -335,10 +335,19 @@ namespace DAL
         public DbSet<JournalPeriod> JournalPeriod { get; set; }
         public DbSet<JournalSource> JournalSource { get; set; }
         public DbSet<JournalManual> JournalManual { get; set; }
+
+        public DbSet<WorkOrder> WorkOrder { get; set; }
+        public DbSet<WorkOrderStatus> WorkOrderStatus { get; set; }
+        public DbSet<WorkOrderType> WorkOrderType { get; set; }
+        public DbSet<WorkOrderLabor> WorkOrderLabor { get; set; }
+        public DbSet<WorkOrderStage> WorkOrderStage { get; set; }
+        public DbSet<WorkOrderPartNumber> WorkOrderPartNumber { get; set; }
+
         public DbSet<VendorCapability> VendorCapability { get; set; }
         public DbSet<AircraftModelAudit> AircraftModelAudit { get; set; }
         public DbSet<AircraftDashNumber> AircraftDashNumber { get; set; }
         public DbSet<AircraftDashNumberAudit> AircraftDashNumberAudit { get; set; }
+        public DbSet<AircraftTypeAudit> AircraftTypeAudit { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

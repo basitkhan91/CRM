@@ -5,7 +5,7 @@ import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { AircraftType } from "../../models/AircraftType.model";
 import { AircraftManufacturerService } from "../../services/aircraft-manufacturer/aircraftManufacturer.service";
-
+import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
 @Component({
     selector: 'app-aircraft-manufacturer',
     templateUrl: './aircraft-manufacturer.component.html',
@@ -14,6 +14,7 @@ import { AircraftManufacturerService } from "../../services/aircraft-manufacture
 })
 /** aircraft-manufacturer component*/
 export class AircraftManufacturerComponent implements OnInit{
+    AuditDetails: any[];
     /** aircraft-manufacturer ctor */
 
     currentAircraftManufacturerType: AircraftType;
@@ -124,5 +125,20 @@ export class AircraftManufacturerComponent implements OnInit{
         this.aircraftManufacturerTypeToUpdate = assetStatus;
         this.aircraftManufacturerTypeToUpdate.isActive = event.checked == false ? false : true;
         this.updateAircraftManufacturer();
+    }
+
+    showAuditPopup(template, manufacturerId): void {
+        this.audit(manufacturerId);
+        this.modal = this.modalService.open(template, { size: 'sm' });
+    }
+
+    audit(manufacturerId: number): void {
+        this.AuditDetails = [];
+        this.aircraftManufacurerService.getAudit(manufacturerId).subscribe(audits => {
+            if (audits.length > 0) {
+                this.AuditDetails = audits;
+                this.AuditDetails[0].ColumnsToAvoid = ["AircraftTypeAuditId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+            }
+        });
     }
 }
