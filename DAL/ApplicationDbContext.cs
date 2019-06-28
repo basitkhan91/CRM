@@ -85,7 +85,7 @@ namespace DAL
         public DbSet<JobTitle> JobTitle { get; set; }
         public DbSet<GLAccountClass> GLAccountClass { get; set; }
 
-        //public DbSet<CertificationType> CertificationType { get; set; }
+        public DbSet<CertificationType> CertificationType { get; set; }
 
         public DbSet<DiscountModel> Discount { get; set; }
         public DbSet<ExpenditureCategory> ExpenditureCategory { get; set; }

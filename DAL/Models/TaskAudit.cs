@@ -8,7 +8,7 @@ namespace DAL.Models
     public class TaskAudit : PasBaseAuditing
     {
         [Key]
-        public long TaskAuditId { get; set; }
+        public long ActionAuditId { get; set; }
 
         public long TaskId { get; set; }
 
