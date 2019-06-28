@@ -37,7 +37,7 @@ import { LocalStoreManager } from "../../services/local-store-manager.service";
 })
 /** layout component*/
 export class LayoutComponent implements OnInit, AfterViewInit {
-    private items: MenuItem[]; //BreadCrumb Implimentation
+    public items: MenuItem[]; //BreadCrumb Implimentation
 
     @ViewChild('admin') adminExpander: MatExpansionPanel;
     routeActive: string = "active";
