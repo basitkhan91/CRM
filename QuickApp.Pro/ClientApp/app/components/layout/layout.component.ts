@@ -183,8 +183,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
         // /Sidebar
 
         init_sidebar();
-
-
     }
 
 
@@ -876,7 +874,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
                     error => {
                         this.alertService.logError(error);
                         this.alertService.showMessage("Notification Error", "Marking read notifications failed", MessageSeverity.error);
-
                     });
         }
     }

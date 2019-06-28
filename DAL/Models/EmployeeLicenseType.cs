@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-  public  class EmployeeLicenseType:IAudit
+    public  class EmployeeLicenseType:IAudit
     {
-        public Byte EmployeeLicenseTypeId { get; set; }
+        public long EmployeeLicenseTypeId { get; set; }
         [Required]
         public string Description { get; set; }
         public bool? IsActive { get; set; }
