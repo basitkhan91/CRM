@@ -31,7 +31,7 @@ namespace DAL.Repositories.Interfaces
         
         TEntity Get(int id);
         IEnumerable<TEntity> GetAll();
-
+        IQueryable<TEntity> GetPaginationData();
         //TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
         //                                 Expression<Func<TEntity, bool>> predicate = null,
         //                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,

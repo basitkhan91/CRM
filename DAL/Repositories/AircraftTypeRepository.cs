@@ -17,7 +17,11 @@ namespace DAL.Repositories
 
 
         }
-
+        public IQueryable<DAL.Models.AircraftType> GetPaginationData()
+        {
+            return _appContext.AircraftType.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
+                .OrderByDescending(c => c.AircraftTypeId).ToList().AsQueryable();
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

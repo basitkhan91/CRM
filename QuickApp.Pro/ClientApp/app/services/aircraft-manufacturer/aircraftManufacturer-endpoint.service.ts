@@ -22,12 +22,14 @@ export class AircraftManufacturerEndpointService extends EndpointFactory {
     private readonly removeByIdURL: string = "/api/aircraftmanufacturer/removeById";
     private readonly updateForActive: string = "/api/aircraftmanufacturer/updateActive";
     private readonly getAuditById: string = "/api/aircraftmanufacturer/audits";
+    private readonly getAircraftManufacturer: string = "/api/aircraftmanufacturer/pagination";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
     get add() { return this.configurations.baseUrl + this.addURL; }
     get update() { return this.configurations.baseUrl + this.updateURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
+    get paginate() { return this.configurations.baseUrl + this.getAircraftManufacturer; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -94,6 +96,14 @@ export class AircraftManufacturerEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAudit(aircraftManufacturerId));
+            });
+    }
+    getAircraftManufacturerRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAircraftManufacturerRecords(paginationOption));
             });
     }
 }

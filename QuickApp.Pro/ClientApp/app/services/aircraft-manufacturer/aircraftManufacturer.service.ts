@@ -45,4 +45,9 @@ export class AircraftManufacturerService {
     getAudit(aircraftManufacturerId: number) {
         return this.aircraftManufacturerEndpoint.getAudit<any[]>(aircraftManufacturerId);
     }
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.aircraftManufacturerEndpoint.getAircraftManufacturerRecords<AircraftType[]>(serverSidePagesData));
+    }
+    
 }
