@@ -1,0 +1,284 @@
+﻿
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/*.app-toolbar {
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+    z-index: 2
+}*/
+
+.is-mobile .app-toolbar {
+    position: fixed;
+    z-index: 2;
+}
+
+.title-name {
+    padding-left: 45px;
+    font: 20px Verdana;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.app-toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.app-name {
+    margin-left: 8px;
+}
+
+.app-name > a {
+    color: inherit;
+    cursor: default;
+    text-decoration: inherit;
+}
+
+.app-sidenav-nav {
+    min-width: 150px;
+
+
+    .mat-nav-list {
+        padding-top: 0;
+    }
+
+    .mat-icon {
+        margin-left: 0px;
+        margin-right: 16px;
+    }
+
+    .mat-expansion-panel-header {
+        padding-left: 16px;
+    }
+
+    .mat-expansion-panel-header-title {
+        line-height: 24px;
+    }
+
+    .mat-expansion-panel-body {
+        padding: 0;
+
+        .mat-list-item .mat-list-item-content {
+            padding-left: 32px;
+        }
+    }
+}
+
+.app-sidenav-container {
+    /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+    flex: 1;
+}
+
+.sidenav-content {
+    margin-left: 20px;
+}
+
+.is-mobile .app-sidenav-container {
+    /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+    flex: 1 0 auto;
+}
+.mat-expansion-panel-body a.active{
+    color: aqua !important;
+}
+.mat-nav-list  .mat-list-item.active{
+    background-color: transparent !important;
+}
+.mat-drawer {
+    /*background-color: white !important;*/
+    background: linear-gradient(to right, #66ccff 0%, #66ffff 100%);
+}
+.ui-panelmenu .ui-panelmenu-content {
+    background: none;
+}
+
+.ui-panelmenu .ui-panelmenu-header .ui-state-active {
+    border: none;
+    background: none !important;
+}
+
+.pi-fw {
+    width: 1.285714em;
+    text-align: center;
+}
+
+.ui-panelmenu {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.ui-panelmenu-header {
+    padding: 5px;
+}
+
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem-link:hover {
+    background: none;
+    color: rgb(217, 217, 235);
+}
+
+.ui-state-active {
+    background: none;
+}
+
+.ui-panelmenu-icon {
+    float: right;
+
+}
+
+.ui-menuitem-text {
+    background: none !important;
+}
+
+
+
+.ui-panelmenu-content {
+    border: none;
+}
+
+.ui-panelmenu {
+    background: none !important
+}
+
+.ui-panelmenu-content .ui-menuitem-text {
+    padding-left: 30px;
+}
+
+.ui-menuitem-icon {
+    padding-right: 40px;
+    padding-left: 15px
+    
+}
+
+body {
+    font-size: 15px;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.ui-widget{
+    padding: 6px;
+}
+.ui-panelmenu .ui-panelmenu-header {
+    border: none;
+    padding: 0px;
+    
+}
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link{
+    padding: 4px !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a {
+    border: none !important;
+    background-color: transparent !important;
+    color: black;
+}
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a {
+        color: black !important;
+    }
+
+    .ui-panelmenu .ui-panelmenu-header > a {
+        border: none !important;
+        background-color: white !important;
+        padding: 5px !important;
+    }
+
+    .ui-state-active, .ui-widget-content .ui-state-active {
+        background: none;
+        border: none;
+      
+    }
+
+    .ui-panelmenu .ui-panelmenu-content {
+        margin-top: 2px;
+        padding: 3px;
+        background-color: none;
+        border: none;
+        margin-top: 6px;
+        position: static;
+        border-top: 0 none;
+    }
+body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a:hover .ui-panelmenu-icon {
+    color: black !important;
+}
+body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a .ui-panelmenu-icon {
+    color: black !important;
+}
+body .ui-panelmenu .ui-panelmenu-content{
+    border: none !important;
+   
+    color: white !important;
+
+}
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem-link:hover {
+    background: none !important;
+    color: rgb(217, 217, 235);
+}
+.ui-panelmenu .ui-panelmenu-header.ui-state-active a {
+    color: rgb(0, 204, 255);
+    background: linear-gradient(to left, #66ffff 0%, #ccccff 100%);
+    
+}
+.ui-menuitem-icon{
+    padding-left: 0px !important;
+}
+.ui-panelmenu .ui-menuitem-icon{
+    margin-right: -0.75em;
+  }
+body .ui-panelmenu .ui-panelmenu-header > a:hover{
+    background-color: antiquewhite !important;
+    color: white;
+    border-radius: 1px;
+}
+body .ui-panelmenu .ui-panelmenu-header > a {
+    background-color: transparent !important;
+    /*background: transparent !important;*/
+}
+.ui-state-default {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+.ui-panelmenu .ui-menuitem-text {
+     font-family: Roboto,"Trebuchet MS",Arial,Helvetica,sans-serif;
+    font-size: 1em;
+}
+body .ui-panelmenu .ui-panelmenu-header > a {
+    font-weight: 600
+}
+.title-logo {
+    width: 240px;
+    height: 40px;
+    background-color: white;
+   
+}
+p {
+    padding-top: 6px;
+}
+#logo{
+    height: 30px;
+    padding-left: 80px;
+}
