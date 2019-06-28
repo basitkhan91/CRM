@@ -20,7 +20,7 @@ namespace DAL.Models
         //public string Cost { get; set; }
         //public string Provider { get; set; }
         //public string IndustryCode { get; set; }
-        public Byte? EmployeeLicenseTypeId  { get; set; }
+        public long EmployeeLicenseTypeId  { get; set; }
         public string CertifyingInstitution { get; set; }
         public DateTime CertificationDate { get; set; }
         //public DateTime ExpirationDate { get; set; }
