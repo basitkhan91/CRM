@@ -85,7 +85,10 @@ namespace DAL.Repositories
         {
             return _entities.ToList();
         }
-
+        public virtual IQueryable<TEntity> GetPaginationData()
+        {
+            return _entities.AsQueryable();
+        }
         public TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,
                                           Expression<Func<TEntity, bool>> predicate = null,
                                           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,

@@ -1,0 +1,182 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DAL;
+using DAL.Models;
+using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
+
+namespace QuickApp.Pro.Controllers
+{
+    [Route("api/AircraftModel")]
+    public class AircraftModelController : Controller
+    {
+
+        #region Private Members
+
+        private IUnitOfWork unitOfWork;
+
+        #endregion Private Members
+
+        #region Constructor
+
+        public AircraftModelController(IUnitOfWork unitOfWork)
+        {
+            this.unitOfWork = unitOfWork;
+        }
+
+        #endregion Constructor
+
+        #region Public Methods
+
+        [HttpGet("getAll")]
+        public IActionResult getAllAircraftModel()
+        {
+            var aircraftModels = unitOfWork.aircraftModel.GetAllAircraftModel();
+            //var aircraftModels = unitOfWork.Repository<AircraftModel>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AircraftModelId);
+            return Ok(aircraftModels);
+        }
+
+        [HttpGet("getById/{id}")]
+        public IActionResult getAircraftModelById(long id)
+        {
+            var aircraftModel = unitOfWork.Repository<AircraftModel>().Find(x => x.AircraftModelId == id && x.IsDeleted != true);
+            return Ok(aircraftModel);
+        }
+
+        [HttpPost("add")]
+        public IActionResult addAircraftModel([FromBody]AircraftModel aircraftModel)
+        {
+            if (aircraftModel != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    aircraftModel.IsActive = true;
+                    aircraftModel.CreatedDate = DateTime.Now;
+                    aircraftModel.UpdatedDate = null;
+                    aircraftModel.MasterCompanyId = 1;
+                    unitOfWork.Repository<AircraftModel>().Add(aircraftModel);
+                    unitOfWork.SaveChanges();
+                    return Ok(aircraftModel);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpPost("update")]
+        public IActionResult updateAircraftModel([FromBody]AircraftModel aircraftModel)
+        {
+            if (aircraftModel != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    aircraftModel.UpdatedDate = DateTime.Now;
+                    unitOfWork.Repository<AircraftModel>().Update(aircraftModel);
+                    unitOfWork.SaveChanges();
+                    return Ok(aircraftModel);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpGet("removeById/{id}")]
+        public IActionResult removeAircraftModelById(long id)
+        {
+            var aircraftModel = unitOfWork.Repository<AircraftModel>().Find(x => x.AircraftModelId == id).FirstOrDefault();
+            if (aircraftModel != null)
+            {
+                aircraftModel.UpdatedDate = DateTime.Now;
+                aircraftModel.IsDeleted = true;
+                unitOfWork.Repository<AircraftModel>().Update(aircraftModel);
+                unitOfWork.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("updateActive/{id}")]
+        public IActionResult UpdateActive(long id, [FromBody] AircraftModel aircraftModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (aircraftModel != null)
+                {
+                    var existingResult = unitOfWork.Repository<AircraftModel>().Find(x => x.AircraftModelId == id).FirstOrDefault();
+                    aircraftModel.UpdatedDate = DateTime.Now;
+                    existingResult.IsActive = aircraftModel.IsActive;
+                    unitOfWork.Repository<AircraftModel>().Update(aircraftModel);
+                    unitOfWork.SaveChanges();
+                    return Ok();
+                }
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = unitOfWork.Repository<AircraftModelAudit>()
+                .Find(x => x.AircraftModelId == id)
+                .OrderByDescending(x => x.AircraftModelId);
+
+            var auditResult = new List<AuditResult<AircraftModelAudit>>();
+
+            auditResult.Add(new AuditResult<AircraftModelAudit> { AreaName = "Aircraft Model", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
+
+        
+        [HttpGet("getModelsByManufacturerId/{id}")]
+        public IActionResult getAircraftModelsByManufacturerId(long id)
+        {
+            var aircraftModel = unitOfWork.Repository<AircraftModel>().Find(x => x.AircraftTypeId == id && x.IsDeleted != true);
+            return Ok(aircraftModel);
+        }
+
+        [HttpPost("pagination")]
+        public IActionResult GetAircraftModel([FromBody]PaginateViewModel paginate)
+        {
+            var pageListPerPage = paginate.rows;
+            var pageIndex = paginate.first;
+            var pageCount = (pageIndex / pageListPerPage)+1;
+            var data = DAL.Common.PaginatedList<AircraftModel>.Create(unitOfWork.aircraftModel.GetPaginationData(), pageCount, pageListPerPage);
+            return Ok(data);
+        }
+
+        [HttpGet("getLandingPage")]
+        public IActionResult getAllLandingPageAircraftModel()
+        {
+            var aircraftModels = unitOfWork.aircraftModel.GetAllAircraftModel();//getting List Here
+            var data = aircraftModels.Skip(0).Take(10).OrderByDescending(c => c.AircraftModelId).ToList();
+            return Ok(data);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        #endregion Private Methods
+    }
+}

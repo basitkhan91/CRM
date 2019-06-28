@@ -1,8 +1,8 @@
-﻿<div class="page-content" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
-    <div class="mtop100">
+﻿<ng2-toasty></ng2-toasty>
+<div class="page-content" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>    
         <mat-card class="mat-elevation-z6">
             <mat-card-header>
-                <mat-card-title>{{'mainMenu.Login' | translate}}</mat-card-title>
+                <mat-card-title class="card-title">{{'mainMenu.Login' | translate}}</mat-card-title>
             </mat-card-header>
             <mat-card-content>
                 <app-login-control [isModal]="false"></app-login-control>
@@ -10,6 +10,8 @@
             <mat-card-actions>
                 <button mat-raised-button color="primary" [disabled]="loginControl.isLoading" (click)="loginControl.login()"><mat-spinner *ngIf="loginControl.isLoading" [diameter]="24"></mat-spinner>{{'mainMenu.Login' | translate | uppercase}}</button>
             </mat-card-actions>
-        </mat-card>
-    </div>
+        </mat-card>    
 </div>
+
+
+

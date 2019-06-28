@@ -35,16 +35,19 @@ import { ButtonModule } from 'primeng/button'
 import { SelectButtonModule } from 'primeng/selectbutton'
 import { InputTextModule } from 'primeng/inputtext'
 import { MultiSelectModule } from 'primeng/multiselect'
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
     imports: [
+        FormsModule,
         CommonModule,
         WorkOrdersPagesRoutingModule,
         TableModule,
         ButtonModule,
         SelectButtonModule,
         InputTextModule,
-        MultiSelectModule
+        MultiSelectModule,
+        AutoCompleteModule
     ],
     declarations: [
         WorkOrderPagesComponent,

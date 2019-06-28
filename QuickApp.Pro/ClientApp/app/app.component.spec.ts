@@ -34,6 +34,7 @@ import { NotificationEndpoint } from './services/notification-endpoint.service';
 import { AccountService } from './services/account.service';
 import { AccountEndpoint } from './services/account-endpoint.service';
 import * as $ from 'jquery';
+import { LayoutComponent } from './components/layout/layout.component';
 
 describe('AppComponent', () => {
     beforeEach(async(() => {
@@ -76,19 +77,19 @@ describe('AppComponent', () => {
     }));
 
     it('should create the app', async(() => {
-        const fixture = TestBed.createComponent(AppComponent);
+        const fixture = TestBed.createComponent(LayoutComponent);
         const app = fixture.debugElement.componentInstance;
         expect(app).toBeTruthy();
     }));
 
     it(`should have as title 'PAS'`, async(() => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = <AppComponent>fixture.debugElement.componentInstance;
+        const fixture = TestBed.createComponent(LayoutComponent);
+        const app = <LayoutComponent>fixture.debugElement.componentInstance;
         expect(app.appTitle).toEqual('PAS');
     }));
 
     it(`should render 'PAS' in a p tag`, async(() => {
-        const fixture = TestBed.createComponent(AppComponent);
+        const fixture = TestBed.createComponent(LayoutComponent);
         fixture.detectChanges();
         const compiled = fixture.debugElement.nativeElement;
         expect(compiled.querySelector('p').textContent).toContain('QuickApp');

@@ -24,10 +24,10 @@ namespace DAL.Repositories
         public WorkFlowRepositoryTest(ApplicationDbContext context) : base(context)
         { }
 
-        public Workflow getWorkFlowWithChildren(int WorkflowId)
+        public Workflow getCompleteWorkFlowEntity(int WorkflowId)
         {
 
-            var workFlow = _appContext.Set<Workflow>().Where(x => x.WorkflowId == WorkflowId).FirstOrDefault();
+            var workFlow = _appContext.Set<Workflow>().Include("ItemMaster").Include("WorkScope").Where(x => x.WorkflowId == WorkflowId).FirstOrDefault();
 
             if(workFlow != null)
             {
@@ -39,7 +39,6 @@ namespace DAL.Repositories
                 workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
                 workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
                 workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == WorkflowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).ToList();
-
             }
             else
             {
@@ -49,6 +48,12 @@ namespace DAL.Repositories
            
             return workFlow;
         }
+
+        public List<Workflow> getAllWorkFlow()
+        {
+            return _appContext.Workflow.Include("ItemMaster").Include("WorkScope").Where(workflow => workflow.IsDelete == null || workflow.IsDelete != true).OrderByDescending(x => x.WorkflowId).ToList();
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

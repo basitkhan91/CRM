@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
-    
+
 @Injectable()
 export class CustomerEndpoint extends EndpointFactory {
 
@@ -15,8 +15,8 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customerTypeUrl: string = "/api/Customer/CustomerTypeGet";
     private readonly _aircraftTypeUrl: string = "/api/Customer/aircraftTypeGet";
     private readonly _updateShipAddressDetails: string = "/api/Customer/updateShipAddress";
-	private readonly _customersUrlNew: string = "/api/Customer/customers";
-	private readonly _updateActiveInactive: string = "/api/Customer/customersUpdateforActive";
+    private readonly _customersUrlNew: string = "/api/Customer/customers";
+    private readonly _updateActiveInactive: string = "/api/Customer/customersUpdateforActive";
     //private readonly _ataUrlNew: string = "/api/Customer/atachapter";
     private readonly _insertToaddAudit: string = "/api/Customer/insertToAuditaddress";
     private readonly _updateToaddressaudit: string = "/api/Customer/updateToAuditaddress";
@@ -25,10 +25,10 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _generalurl: string = "/api/Customer/customergeneralinfo";
     private readonly _addressUrl: string = "/api/Customer/AddressGet";
     private readonly _customerBillAddressUrl = "/api/Customer/customerAddressGet";
-	private readonly _cusShippingGeturl = "/api/Customer/cusshippingGet";
-	private readonly _cusShippingGeturlwithId = "/api/Vendor/cusshippingGetwithid";
+    private readonly _cusShippingGeturl = "/api/Customer/cusshippingGet";
+    private readonly _cusShippingGeturlwithId = "/api/Vendor/cusshippingGetwithid";
 
-	private readonly __venshipwithid = "/api/Vendor/venshippingGetwithid";
+    private readonly __venshipwithid = "/api/Vendor/venshippingGetwithid";
     private readonly _customerBillViaDetails = "/api/Customer/getCustomerBillViaDetails";
     private readonly _getBilladdresshistory = "/api/Customer/getCustomerBillAddressHistory";
     private readonly _billingInfoUrl: string = "/api/Customer/CustomerBillingPost";
@@ -40,7 +40,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _updateBillingViaDetails: string = "/api/Customer/customerBillAddressdetails";
     private readonly _deleteBillingCusDettilas: string = "/api/Customer/updateStatusCustomerBilling";
     private readonly _customerBillAddressdetails: string = "/api/Customer/customerBillAddressdetails";
-    private readonly _customerBillingUrlNew: string = "/api/Customer/updateStatusCustomerBilling";  
+    private readonly _customerBillingUrlNew: string = "/api/Customer/updateStatusCustomerBilling";
     private readonly _contacturl: string = "/api/Customer/ContactGet";
     private readonly _getATAchapterUrl: string = "/api/Customer/AtachapterGet";
     private readonly _fianlurl: string = "/api/Customer/fianlEmptyObj";
@@ -63,29 +63,31 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _CustomerwarningUrl: string = "/api/Customer/saveCustomerWarnings";
     private readonly _CustomerdataUrl: string = "/api/Customer/saveCustomeraircraftdata";
     private readonly _countryUrl: string = "/api/Customer/GetcountryList";
-	private readonly _countryUrlNew: string = "api/Customer/postCountryList";
-	private readonly _actionsUrl: string = "api/customer/Getdiscount";
-	private readonly _discountPutUrl: string = "api/Customer/updatediscount";
-	private readonly _newDiscount: string = "api/Customer/insertDiscount";
-	private readonly _Customerwarningget: string = "/api/Customer/CustomerWarningsget";
-	private readonly _aircraftmodelsPost: string = "/api/Customer/Aircraftpost";
+    private readonly _countryUrlNew: string = "api/Customer/postCountryList";
+    private readonly _actionsUrl: string = "api/customer/Getdiscount";
+    private readonly _discountPutUrl: string = "api/Customer/updatediscount";
+    private readonly _newDiscount: string = "api/Customer/insertDiscount";
+    private readonly _Customerwarningget: string = "/api/Customer/CustomerWarningsget";
+    private readonly _aircraftmodelsPost: string = "/api/Customer/Aircraftpost";
     private readonly _getAircraftUrl: string = "/api/Customer/Aircraftget";
     //private readonly _customersUrlAuditHistory: string = "/api/customer/auditHistoryById";
-	private readonly _listUrl: string = "/api/Customer/GetCustomerBynameList";
-	private readonly _aircraftmodelsurl: string = "/api/Customer/GetAircarftmodelsdata";
-	private readonly _updateActiveInactiveforBilling: string = "/api/Customer/billingUpdateforActive";
-	private readonly _updateActiveInactiveforshipping: string = "/api/Customer/shippingUpdateforActive";
-	private readonly _getAircraftManufacturerUrl: string = "/api/Customer/aircraftManufacturerGet";
-	private readonly _multiintegrationsdataUrl: string = "/api/Customer/savemultiIntegrations";
+    private readonly _listUrl: string = "/api/Customer/GetCustomerBynameList";
+    private readonly _aircraftmodelsurl: string = "/api/Customer/GetAircarftmodelsdata";
+    private readonly _updateActiveInactiveforBilling: string = "/api/Customer/billingUpdateforActive";
+    private readonly _updateActiveInactiveforshipping: string = "/api/Customer/shippingUpdateforActive";
+    private readonly _getAircraftManufacturerUrl: string = "/api/Customer/aircraftManufacturerGet";
+    private readonly _multiintegrationsdataUrl: string = "/api/Customer/savemultiIntegrations";
     private readonly _getIntegrationUrl: string = "/api/Customer/IntegrationGet";
     private readonly _listsUrl: string = "/api/Customer/GetDescriptionbypart";
     private readonly getMarkup: string = "api/customer/getMarkUpValues";
     private readonly addMarkUp: string = "/api/customer/addMarkUp";
+    private readonly getAllCustomersURL: string = "/api/customer/getAllCustomers";
+    private readonly getAllCustomersInfoURL: string = "/api/customer/getAllCustomersInfo";
 
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
-	get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
-	get cusShippingUrlwithaddressid() { return this.configurations.baseUrl + this._cusShippingGeturlwithId; }
-	get venShippingUrlwithaddressid() { return this.configurations.baseUrl + this.__venshipwithid; }
+    get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
+    get cusShippingUrlwithaddressid() { return this.configurations.baseUrl + this._cusShippingGeturlwithId; }
+    get venShippingUrlwithaddressid() { return this.configurations.baseUrl + this.__venshipwithid; }
     get customerBillViaDetails() { return this.configurations.baseUrl + this._customerBillViaDetails; }
     get getBilladdresshistory() { return this.configurations.baseUrl + this._getBilladdresshistory; }
     get customerShipViaDetails() { return this.configurations.baseUrl + this._customerShipViaDetails; }
@@ -106,17 +108,17 @@ export class CustomerEndpoint extends EndpointFactory {
     get fianlurl() { return this.configurations.baseUrl + this._fianlurl }
     get getShipViaHistory() { return this.configurations.baseUrl + this._getShipViaHistory; }
     get CustomerWarningsDetails() { return this.configurations.baseUrl + this._Customerwarningget; }
-	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
-	//get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; } 
-	//get discountPutUrl() { return this.configurations.baseUrl + this._discountPutUrl; }
-	//get discountPostUrl() { return this.configurations.baseUrl + this._discountPostUrl; }
-	get listUrl() { return this.configurations.baseUrl + this._listUrl; }
-	get aircraftmodelsurl() { return this.configurations.baseUrl + this._aircraftmodelsurl; }
-	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
-	get getAircraftManufacturerUrl() { return this.configurations.baseUrl + this._getAircraftManufacturerUrl; }
+    get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
+    //get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; } 
+    //get discountPutUrl() { return this.configurations.baseUrl + this._discountPutUrl; }
+    //get discountPostUrl() { return this.configurations.baseUrl + this._discountPostUrl; }
+    get listUrl() { return this.configurations.baseUrl + this._listUrl; }
+    get aircraftmodelsurl() { return this.configurations.baseUrl + this._aircraftmodelsurl; }
+    get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+    get getAircraftManufacturerUrl() { return this.configurations.baseUrl + this._getAircraftManufacturerUrl; }
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get listsUrl() { return this.configurations.baseUrl + this._listsUrl; }
-    
+
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -156,10 +158,10 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
-    getAirccraftTypes<T>(selectedvalues:any): Observable<T> {
+    getAirccraftTypes<T>(selectedvalues: any): Observable<T> {
 
         let url = `${this.getAircraftTypeUrl}/${selectedvalues}`;
-            
+
         return this.http.get<T>(url, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getcustomerEndpoint());
@@ -254,7 +256,7 @@ export class CustomerEndpoint extends EndpointFactory {
 
 
     getNewcustomerEndpoint<T>(userObject: any): Observable<T> {
-       
+
 
         return this.http.post<T>(this._customersUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
@@ -307,16 +309,16 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerId));
             });
 
-	}
-	getUpdatecustomerEndpointforActive<T>(roleObject: any, customerId: number): Observable<T> {
-		let endpointUrl = `${this._updateActiveInactive}/${roleObject.customerId}`;
+    }
+    getUpdatecustomerEndpointforActive<T>(roleObject: any, customerId: number): Observable<T> {
+        let endpointUrl = `${this._updateActiveInactive}/${roleObject.customerId}`;
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerId));
-			});
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerId));
+            });
 
-	}
+    }
     updateAuditaddress<T>(roleObject: any, customerId: number): Observable<T> {
         debugger;
         let endpointUrl = `${this._updateToaddressaudit}/${roleObject.addressId}`;
@@ -358,8 +360,8 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getDeleteShippingEndpoint(customerId));
             });
     }
-    
-   
+
+
     getContcatDetails<T>(CustomerId: any): Observable<T> {
         let endpointUrl = `${this.contctsUrl}/${CustomerId}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
@@ -374,7 +376,7 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getcustomerEndpoint());
             });
     }
-    
+
     getCustomerBillAddressdetails<T>(customerId: any): Observable<T> {
         let endpointurl = `${this.customerBillAddressUrl}/${customerId}`;
         return this.http.get<T>(endpointurl, this.getRequestHeaders())
@@ -388,22 +390,22 @@ export class CustomerEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getcustomerEndpoint());
             });
-	}
-	getCusHippingaddresdetailswithid<T>(customerId: any): Observable<T> {
-		let endpointurl = `${this.cusShippingUrlwithaddressid}/${customerId}`;
-		return this.http.get<T>(endpointurl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getcustomerEndpoint());
-			});
-	}
-	getvenHippingaddresdetailswithid<T>(customerId: any): Observable<T> {
-		let endpointurl = `${this.venShippingUrlwithaddressid}/${customerId}`;
-		return this.http.get<T>(endpointurl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getcustomerEndpoint());
-			});
-	}
-   
+    }
+    getCusHippingaddresdetailswithid<T>(customerId: any): Observable<T> {
+        let endpointurl = `${this.cusShippingUrlwithaddressid}/${customerId}`;
+        return this.http.get<T>(endpointurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getcustomerEndpoint());
+            });
+    }
+    getvenHippingaddresdetailswithid<T>(customerId: any): Observable<T> {
+        let endpointurl = `${this.venShippingUrlwithaddressid}/${customerId}`;
+        return this.http.get<T>(endpointurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getcustomerEndpoint());
+            });
+    }
+
     getCustomerBillViaDetails<T>(roleObject: any): Observable<T> {
         let endpointUrl = `${this.customerBillViaDetails}/${roleObject}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
@@ -420,7 +422,7 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getBillviaHistory(customerId));
             });
     }
-    
+
     getShipaddressHistory<T>(customerId: number): Observable<T> {
         let endpointUrl = `${this.getBilladdresshistory}/${customerId}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
@@ -507,7 +509,7 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getDeleteCustomerEndpoint(contactId));
             });
     }
-    
+
     updateBillingViainfo<T>(roleObject: any, customerId: any): Observable<T> {
         let endpointUrl = `${this._updateBillingViaDetails}/${customerId}`;
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
@@ -538,10 +540,10 @@ export class CustomerEndpoint extends EndpointFactory {
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-   
 
 
-    
+
+
     getShipviaHistory<T>(CustomerId: number): Observable<T> {
         let endpointUrl = `${this.getShipViaHistory}/${CustomerId}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
@@ -550,7 +552,7 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
-   
+
     getDeleteCustomerBillingEndpoint<T>(roleObject: any): Observable<T> {
         let endpointUrl = `${this._customerBillingUrlNew}/${roleObject.customerBillingId}`;
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
@@ -578,7 +580,7 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
 
-   
+
 
     getEmptyrobj<T>(): Observable<T> {
         return this.http.get<T>(this.contactEmptyurl, this.getRequestHeaders())
@@ -657,7 +659,7 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
 
-    
+
     getAddressDeatails<T>(): Observable<T> {
         return this.http.get<T>(this.addressUrl, this.getRequestHeaders())
             .catch(error => {
@@ -702,64 +704,64 @@ export class CustomerEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getcustomeraircrafttypeEndpoint(userObject));
             });
-	}
+    }
 
-	getDiscountEndpoint<T>(): Observable<T> {
+    getDiscountEndpoint<T>(): Observable<T> {
 
-		return this.http.get<T>(this._actionsUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getDiscountEndpoint());
-			});
-	}
-
-	
+        return this.http.get<T>(this._actionsUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDiscountEndpoint());
+            });
+    }
 
 
-	getNewDiscount<T>(userObject: any): Observable<T> {
-
-		return this.http.post<T>(this._newDiscount, JSON.stringify(userObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getNewDiscount(userObject));
-			});
-	}
 
 
-	getupdateDiscount<T>(roleObject: any, discountId: number): Observable<T> {
-		let endpointUrl = `${this._discountPutUrl}/${discountId}`;
+    getNewDiscount<T>(userObject: any): Observable<T> {
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getupdateDiscount(roleObject, discountId));
-			});
-	}
-	getCustomerByname<T>(name): Observable<T> {
-		let url = `${this.listUrl}/${name}`;
-		return this.http.get<T>(url, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getCustomerByname(name));
-			});
-	}
-	saveAircraftinfo<T>(data: any): Observable<T> {
-		//debugger;
-		return this.http.post<T>(this._aircraftmodelsPost, JSON.stringify(data), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.saveAircraftinfo(data));
-			});
-	}
-	geticustomertemMasterEndpoint<T>(): Observable<T> {
+        return this.http.post<T>(this._newDiscount, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewDiscount(userObject));
+            });
+    }
 
-		return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getcustomerEndpoint());
-			});
-	}
-	getAircraftList<T>(cusId: any): Observable<T> {
-		let url = `${this.aircraftmodelsurl}/${cusId}`;
-		return this.http.get<T>(url, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getcustomerEndpoint());
-			});
-	}
+
+    getupdateDiscount<T>(roleObject: any, discountId: number): Observable<T> {
+        let endpointUrl = `${this._discountPutUrl}/${discountId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getupdateDiscount(roleObject, discountId));
+            });
+    }
+    getCustomerByname<T>(name): Observable<T> {
+        let url = `${this.listUrl}/${name}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerByname(name));
+            });
+    }
+    saveAircraftinfo<T>(data: any): Observable<T> {
+        //debugger;
+        return this.http.post<T>(this._aircraftmodelsPost, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.saveAircraftinfo(data));
+            });
+    }
+    geticustomertemMasterEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getcustomerEndpoint());
+            });
+    }
+    getAircraftList<T>(cusId: any): Observable<T> {
+        let url = `${this.aircraftmodelsurl}/${cusId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getcustomerEndpoint());
+            });
+    }
     getUpdateBillingEndpointforActive<T>(roleObject: any, customerBillingAddressId: number): Observable<T> {
         let endpointUrl = `${this._updateActiveInactiveforBilling}/${roleObject.customerBillingAddressId}`;
 
@@ -770,56 +772,56 @@ export class CustomerEndpoint extends EndpointFactory {
 
     }
 
-	getUpdateBillingEndpoint<T>(roleObject: any, customerBillingAddressId: number): Observable<T> {
-		let endpointUrl = `${this._customerBillAddressdetails}/${roleObject.customerBillingAddressId}`;
+    getUpdateBillingEndpoint<T>(roleObject: any, customerBillingAddressId: number): Observable<T> {
+        let endpointUrl = `${this._customerBillAddressdetails}/${roleObject.customerBillingAddressId}`;
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerBillingAddressId));
-			});
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerBillingAddressId));
+            });
 
-	}
-	getUpdateshippingEndpointforActive<T>(roleObject: any, customerShippingAddressId: number): Observable<T> {
-		let endpointUrl = `${this._updateActiveInactiveforshipping}/${roleObject.customerShippingAddressId}`;
+    }
+    getUpdateshippingEndpointforActive<T>(roleObject: any, customerShippingAddressId: number): Observable<T> {
+        let endpointUrl = `${this._updateActiveInactiveforshipping}/${roleObject.customerShippingAddressId}`;
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getUpdateshippingEndpoint(roleObject, customerShippingAddressId));
-			});
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateshippingEndpoint(roleObject, customerShippingAddressId));
+            });
 
-	}
-	getUpdateshippingEndpoint<T>(roleObject: any, customerShippingAddressId: number): Observable<T> {
-		let endpointUrl = `${this._updateShippingViaDetails}/${roleObject.customerShippingAddressId}`;
+    }
+    getUpdateshippingEndpoint<T>(roleObject: any, customerShippingAddressId: number): Observable<T> {
+        let endpointUrl = `${this._updateShippingViaDetails}/${roleObject.customerShippingAddressId}`;
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerShippingAddressId));
-			});
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerShippingAddressId));
+            });
 
-	}
+    }
 
-	getAircraftManufacturerEndpoint<T>(cusId: any): Observable<T> {
-		let url = `${this.getAircraftManufacturerUrl}/${cusId}`;
-		return this.http.get<T>(url, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getcustomerEndpoint());
-			});
-	}
+    getAircraftManufacturerEndpoint<T>(cusId: any): Observable<T> {
+        let url = `${this.getAircraftManufacturerUrl}/${cusId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getcustomerEndpoint());
+            });
+    }
 
-	getMultiIntegrations<T>(userObject: any): Observable<T> {
+    getMultiIntegrations<T>(userObject: any): Observable<T> {
 
 
-		return this.http.post<T>(this._multiintegrationsdataUrl, JSON.stringify(userObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getMultiIntegrations(userObject));
-			});
-	}
-	getIntegrationEndpoint<T>(customerId: any): Observable<T> {
-		let url = `${this.getIntegrationUrl}/${customerId}`;
-		return this.http.get<T>(url, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getIntegrationEndpoint(customerId));
-			});
+        return this.http.post<T>(this._multiintegrationsdataUrl, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getMultiIntegrations(userObject));
+            });
+    }
+    getIntegrationEndpoint<T>(customerId: any): Observable<T> {
+        let url = `${this.getIntegrationUrl}/${customerId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getIntegrationEndpoint(customerId));
+            });
     }
     getDescriptionbypart<T>(name): Observable<T> {
         let url = `${this.listsUrl}/${name}`;
@@ -850,6 +852,23 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.updateMarkUp(roleObject, markUpPercentageId));
+            });
+    }
+
+    getAllCustomers<T>(): Observable<T> {
+        let endPointUrl = this.getAllCustomersURL;
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllCustomers());
+            });
+    }
+
+    getAllCustomerInfo<T>(): Observable<T> {
+        let endPointURL = this.getAllCustomersInfoURL;
+
+        return this.http.get<T>(endPointURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllCustomerInfo());
             });
     }
 }

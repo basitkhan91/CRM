@@ -36,9 +36,8 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult Get()
         {
-            var allTaxrateInfo = _unitOfWork.itemMaster.getAlldata(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<ItemMasterViewModel>>(allTaxrateInfo));
-
+            var allPartDetails = _context.ItemMaster.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
+            return Ok(allPartDetails);
         }
 
         [HttpGet("GetRolesData")]
@@ -1149,6 +1148,23 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ModelState);
             }
 
+        }
+
+        [HttpGet("GetSpecificInfo")]
+        public IActionResult getSpecificInfo()
+        {
+            var itemMasters = _unitOfWork.Repository<ItemMaster>()
+                .GetAll()
+                .Where(x => x.IsDelete == true || x.IsDelete == false)
+                .Select(x =>
+                new ItemMaster
+                {
+                    ItemMasterId = x.ItemMasterId,
+                    PartNumber = x.PartNumber,
+                    PartDescription = x.PartDescription
+                })
+                .ToList();
+            return Ok(itemMasters);
         }
     }
 

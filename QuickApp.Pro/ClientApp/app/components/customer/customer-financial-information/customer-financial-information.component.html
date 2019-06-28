@@ -233,7 +233,7 @@
 										<div class="form-group col-sm-12">
 											<label class="control-label col-sm-4">EDI</label>
 											<div class="col-sm-7">
-												<input class="edi-checkbox" type="checkbox" [checked]="true" id="tax" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.edi">
+												<input class="edi-checkbox" type="checkbox"  id="tax" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.edi">
 												<div class="edi-input" *ngIf="sourceCustomer.edi">
 													<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ediDescription">
 												</div>
@@ -242,7 +242,7 @@
 										<div class="form-group col-sm-12">
 											<label class="control-label col-sm-4">Aeroxchange</label>
 											<div class="col-sm-7">
-												<input class="aeroxchange-checkbox" type="checkbox" [checked]="true" id="Aeroxchange" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isAeroExchange">
+												<input class="aeroxchange-checkbox" type="checkbox"  id="Aeroxchange" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isAeroExchange">
 												<div class="aeroxchange-input" *ngIf="sourceCustomer.isAeroExchange">													
 													<input type="text" id="tax" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.aeroExchangeDescription">
 												</div>												

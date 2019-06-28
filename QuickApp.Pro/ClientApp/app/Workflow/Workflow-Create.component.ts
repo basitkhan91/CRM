@@ -75,7 +75,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
     worksScopeCollection: any[] = [];
     partWithId: any;
     partCollection: any[] = [];
-    itemclaColl: any[] = [];
+    filteredItems: any[] = [];
     /** workflow-create ctor */
     // Variables Declaration
 
@@ -144,7 +144,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
     ];
 
 
-    constructor(private actionService: ActionService, private route: ActivatedRoute, private router: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService :AlertService) {
+    constructor(private actionService: ActionService, private route: ActivatedRoute, private router: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService) {
     }
 
     GetChildData(): void {
@@ -194,7 +194,9 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
         this.workFlow.selectedItems = this.selectedItems;
 
     }
+
     updateWorkFlowId: string;
+
     updateMode(): void {
 
         this.actionService.getWorkFlow(this.updateWorkFlowId).subscribe(
@@ -336,42 +338,8 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
         this.getMaterialType();
         this.loadcustomerData();
         this.loadExpertiseData();
-        //this.router.events.subscribe((res) => {
-        if (this._workflowService.enableUpdateMode == true && !this.UpdateMode) {
-            //debugger;
-            if (this._workflowService.listCollection) {
-                this.sourceWorkFlow = this._workflowService.listCollection.im;
-                if (this.sourceWorkFlow.isCalculatedBERThreshold == true) {
-                    this.isCalculatedBERThreshold('calculate');
-                }
-                else {
-                    this.isCalculatedBERThreshold('flat');
-                }
-                if (this.sourceWorkFlow.isFixedAmount == true) {
-                    this.isFixedcheck('fixed');
-                }
-                if (this.sourceWorkFlow.isPercentageOfNew == true) {
-                    this.isFixedcheck('percentage');
-                }
-                if (this.sourceWorkFlow.isPercentageOfReplacement == true) {
-                    this.isFixedcheck('percentreplace');
-                }
-                this.sourceWorkFlow.workflowExpirationDate = new Date(this._workflowService.listCollection.im.workflowExpirationDate);
-                this.sourceWorkFlow.partNumber = this._workflowService.listCollection.partNumber;
-                //this.sourceWorkFlow.fixedAmount1 = this.sourceWorkFlow.fixedAmount;
-                if (this.sourceWorkFlow.costOfNew && this.sourceWorkFlow.percentageOfNew) {
-                    this.onPercentOfNew(this.sourceWorkFlow.costOfNew, this.sourceWorkFlow.percentageOfNew);
-                }
-                if (this.sourceWorkFlow.costOfReplacement && this.sourceWorkFlow.percentageOfReplacement) {
-                    this.onPercentOfReplcaement(this.sourceWorkFlow.costOfReplacement, this.sourceWorkFlow.percentageOfReplacement);
-                }
-                this.updateWorkFlowId = this.sourceWorkFlow.workflowId;
-                this.UpdateMode = true;
-                this.updateMode();
-            }
-        }
-        //});
-
+        
+        
         this.newAction = { Id: "0", Name: "", Description: "", Memo: "" };
         this.getAllActions();
         this.actionService.getActionAttributes().subscribe(
@@ -394,6 +362,44 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
             itemsShowLimit: 1,
             allowSearchFilter: false
         };
+        this.loadWorkFlowById();
+
+    }
+    loadWorkFlowById() {
+        debugger;
+        if (this._workflowService.enableUpdateMode == true && !this.UpdateMode) {
+            
+            if (this._workflowService.listCollection) {
+                this.sourceWorkFlow = this._workflowService.listCollection.workflow;
+                if (this.sourceWorkFlow.isCalculatedBERThreshold == true) {
+                    this.isCalculatedBERThreshold('calculate');
+                }
+                else {
+                    this.isCalculatedBERThreshold('flat');
+                }
+                if (this.sourceWorkFlow.isFixedAmount == true) {
+                    this.isFixedcheck('fixed');
+                }
+                if (this.sourceWorkFlow.isPercentageOfNew == true) {
+                    this.isFixedcheck('percentage');
+                }
+                if (this.sourceWorkFlow.isPercentageOfReplacement == true) {
+                    this.isFixedcheck('percentreplace');
+                }
+                this.sourceWorkFlow.expirationDate = new Date(this._workflowService.listCollection.workflow.expirationDate);
+                this.sourceWorkFlow.partNumber = this._workflowService.listCollection.partNumber;
+                //this.sourceWorkFlow.fixedAmount1 = this.sourceWorkFlow.fixedAmount;
+                if (this.sourceWorkFlow.costOfNew && this.sourceWorkFlow.percentageOfNew) {
+                    this.onPercentOfNew(this.sourceWorkFlow.costOfNew, this.sourceWorkFlow.percentageOfNew);
+                }
+                if (this.sourceWorkFlow.costOfReplacement && this.sourceWorkFlow.percentageOfReplacement) {
+                    this.onPercentOfReplcaement(this.sourceWorkFlow.costOfReplacement, this.sourceWorkFlow.percentageOfReplacement);
+                }
+                this.updateWorkFlowId = this.sourceWorkFlow.workflowId;
+                this.UpdateMode = true;
+                this.updateMode();
+            }
+        }
 
     }
     getActionsDD() {
@@ -436,30 +442,20 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
         });
     }
     filterpartItems(event) {
-
         this.partCollection = [];
-        this.itemclaColl = [];
-        if (this.allPartnumbersInfo) {
-            if (this.allPartnumbersInfo.length > 0) {
-
-                for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-                    let partName = this.allPartnumbersInfo[i].partNumber;
-                    if (partName) {
-                        if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                            this.itemclaColl.push([{
-                                "partId": this.allPartnumbersInfo[i].itemMasterId,
-                                "partName": partName,
-                                "description": this.allPartnumbersInfo[i].partDescription
-                            }]),
-
-                                this.partCollection.push(partName);
-                        }
-                    }
+        this.filteredItems = [];
+        if (this.allPartnumbersInfo != undefined && this.allPartnumbersInfo.length > 0) {
+            for (let part of this.allPartnumbersInfo) {
+                if (part.partNumber != undefined && part.partNumber.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.filteredItems.push({
+                        "partId": part.itemMasterId,
+                        "partName": part.partNumber,
+                        "description": part.partDescription
+                    });
+                    this.partCollection.push(part.partNumber);
                 }
             }
         }
-
-
     }
     public isCalculatedBERThreshold(event) {
         if (event == 'calculate') {
@@ -571,73 +567,19 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
     }
 
     private loadcustomerData() {
-
-
         this.cusservice.getWorkFlows().subscribe(data => { this.allCustomers = data[0] });
     }
+
     onPartSelect(event) {
-        if (this.itemclaColl) {
-            for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName) {
-                    this.sourceWorkFlow.itemMasterId = this.itemclaColl[i][0].partId;
-                    this.sourceWorkFlow.partNumberDescription = this.itemclaColl[i][0].description;
-                    //this.allSelectedParts.push(this.itemclaColl[i][0].partId);
-                    //this.selectedActionName = event;
-                    //this.partWithId = [];
-
-                    //this.vendorService.getPartDetailsWithidForSinglePart(this.sourceWorkFlow.itemMasterId).subscribe(
-                    //	data1 => {
-                    //		//if (data1[0][0]) {
-                    //		//	this.partWithId = data1[0][0];
-                    //		//	parentdata.partAlternatePartId = this.partWithId.partAlternatePartId;
-                    //		//	parentdata.partId = this.partWithId.itemMasterId;
-                    //		//	parentdata.partdescription = this.partWithId.partDescription;
-                    //		//	parentdata.partNumber = this.partWithId.partNumber;
-                    //		//	parentdata.itemTypeId = this.partWithId.itemTypeId;
-                    //		//	parentdata.name = this.partWithId.name;
-                    //		//	parentdata.itemMasterId = this.partWithId.itemMasterId;
-                    //		//	parentdata.glAccountId = this.partWithId.glAccountId;
-                    //		//	parentdata.shortName = this.partWithId.shortName;
-                    //		//}
-
-                    //	})
-                }
-            };
-        }
-    }
-    partnmId(parentdata, event) {
-        //debugger;
-
-        if (this.itemclaColl) {
-            for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName) {
-                    this.sourceWorkFlow.itemMasterId = this.itemclaColl[i][0].partId;
-                    //this.allSelectedParts.push(this.itemclaColl[i][0].partId);
-                    //this.selectedActionName = event;
-                    this.partWithId = [];
-
-                    this.vendorService.getPartDetailsWithidForSinglePart(this.sourceWorkFlow.itemMasterId).subscribe(
-                        data1 => {
-                            if (data1[0][0]) {
-                                this.partWithId = data1[0][0];
-                                parentdata.partAlternatePartId = this.partWithId.partAlternatePartId;
-                                parentdata.partId = this.partWithId.itemMasterId;
-                                parentdata.partdescription = this.partWithId.partDescription;
-                                parentdata.partNumber = this.partWithId.partNumber;
-                                parentdata.itemTypeId = this.partWithId.itemTypeId;
-                                parentdata.name = this.partWithId.name;
-                                parentdata.itemMasterId = this.partWithId.itemMasterId;
-                                parentdata.glAccountId = this.partWithId.glAccountId;
-                                parentdata.shortName = this.partWithId.shortName;
-                            }
-
-                        })
-                }
-            };
+        if (this.filteredItems != undefined) {
+            var part = this.filteredItems.filter(function (eachPart) {
+                return event == eachPart.partName;
+            })[0];
+            this.sourceWorkFlow.itemMasterId = part.partId;
+            this.sourceWorkFlow.partNumberDescription = part.description;
         }
     }
 
-    //Get Business Data 
     getSelectedWorkflowActions() {
         if (this.isWorkFlowEdit) {
             this._workflowService.getWorkflowActionAttributes(this.selectedWorkflow["workflowId"]).subscribe(data => {
@@ -910,16 +852,18 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
         );
     }
 
-    setCurrentPanel(panelId): void {
+    setCurrentPanel(itemName): void {
+        itemName = itemName.replace(" ", "_");
         var list = document.getElementsByClassName('pan');
         for (var i = 0; i < list.length; i++) {
             list[i].classList.remove('active');
             list[i].classList.remove('in');
         }
-        var elem = document.getElementById('tab' + panelId);
+        var elem = document.getElementById('tab_' + itemName);
         if (elem != null) {
-            document.getElementById('tab' + panelId).classList.add('in');
-            document.getElementById('tab' + panelId).classList.add('active');
+            document.getElementById('tab_' + itemName).classList.remove('fade');
+            document.getElementById('tab_' + itemName).classList.add('in');
+            document.getElementById('tab_' + itemName).classList.add('active');
         }
     }
 
@@ -957,37 +901,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
             if (this.workFlowList != undefined && this.workFlowList.length > 0) {
                 var currentWorkFlow = this.GetWorkFlow();
                 var isWorkFlowExist = false;
-                // var attributeArray = [
-                //     { "Name" : "Charges", Event:this.GetCharges},
-                //     { "Name" : "Directions", Event:this.GetDirections},
-                //     { "Name" : "Equipments", Event:this.GetEquipmentList},
-                //     { "Name" : "Expertise", Event:this.GetExpertise},
-                //     { "Name" : "MaterialList", Event:this.GetMaterialList},
-                //     { "Name" : "Publication", Event:this.GetPublication},
-                //     { "Name" : "Exclusions", Event:this.GetExclusions},
-                //     { "Name" : "Measurements", Event:this.GetMeasurements}];
-
-                // for(let workflow of this.workFlowList)
-                // {
-                //     if (workflow.ActionId == this.currentActionId) {
-                //         isWorkFlowExist = true;
-                //         for(let item of this.selectedItems)
-                //         {
-                //             for(let attribute of attributeArray)
-                //             {
-
-                //                 if (item.Name == attribute.Name && Object.keys(workflow)[attribute.Name]  == undefined) {
-                //                     Object.keys(workflow)[attribute.Name] = attribute.Event();
-                //                     break;
-                //                 }
-                //             }
-                //         }
-                //         currentWorkFlow.selectedItems = this.selectedItems;
-                //         this.workFlowList[i] = currentWorkFlow;
-                //     }
-                // }
-
-
+               
                 for (var i = 0; i < this.workFlowList.length; i++) {
                     //debugger;
                     if (this.workFlowList[i].taskId == currentWorkFlow.taskId) {
@@ -1042,7 +956,7 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
 
 
                             }
-                            if (this.selectedItems[j].Name == 'Publication' && (this.workFlowList[i].publication == undefined || (this.workFlowList[i].publication != undefined && this.workFlowList[i].publication.length == 0))) {
+                            if (this.selectedItems[j].Name == 'Publications' && (this.workFlowList[i].publication == undefined || (this.workFlowList[i].publication != undefined && this.workFlowList[i].publication.length == 0))) {
                                 var publication: any[];
                                 publication = this.GetPublication();
                                 if (this.UpdateMode) {
@@ -1502,16 +1416,24 @@ export class WorkflowCreateTestComponent implements OnInit, AfterViewInit {
     }
 
     addWorkFlow(): void {
-        //debugger;
         this.sourceWorkFlow.workflowId = undefined;
-
         this.sourceWorkFlow.berThresholdAmount = (Math.min((this.sourceWorkFlow.fixedAmount == undefined ? Infinity : this.sourceWorkFlow.fixedAmount), (this.sourceWorkFlow.percentOfNew == undefined ? Infinity : this.sourceWorkFlow.percentOfNew), (this.sourceWorkFlow.percentOfReplaceMent == undefined ? Infinity : this.sourceWorkFlow.percentOfReplaceMent)));
 
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
                 this.SaveWorkFlow(data);
             },
-            error => this.errorMessage = <any>error
+            error => {
+                var message = '';
+                if (error.error.constructor == Array) {
+                    message = error.error[0].errorMessage;
+                }
+                else {
+                    message = error.error.Message;
+                }
+                this.alertService.showMessage('Work Flow', message, MessageSeverity.error);
+            }
+            //error => this.errorMessage = <any>error
         );
     }
 

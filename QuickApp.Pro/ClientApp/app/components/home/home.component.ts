@@ -8,7 +8,8 @@ import { fadeInOut } from '../../services/animations';
 import { ConfigurationService } from '../../services/configuration.service';
 import { Params, ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import * as $ from 'jquery';
-import { AppComponent } from '../../app.component';
+import { LayoutComponent } from '../layout/layout.component';
+
 @Component({
     selector: 'home',
     templateUrl: './home.component.html',
@@ -17,8 +18,8 @@ import { AppComponent } from '../../app.component';
 })
 export class HomeComponent implements AfterViewInit 
 {
-	
-	constructor(public appcomponent:AppComponent,public configurations: ConfigurationService, private router: ActivatedRoute, private route: Router)
+
+    constructor(public appcomponent: LayoutComponent, public configurations: ConfigurationService, private router: ActivatedRoute, private route: Router)
     {
 
 	}

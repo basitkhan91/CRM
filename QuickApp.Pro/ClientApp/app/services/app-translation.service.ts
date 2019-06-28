@@ -12,7 +12,7 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class AppTranslationService
 {
-	public closeCmpny: boolean = true;
+	public closeCmpny: boolean = false;
     private _languageChanged = new Subject<string>();
     readonly defaultLanguage = "en";
 

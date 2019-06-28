@@ -11,10 +11,10 @@
                     </ol>
                 </nav>
                 <h4 class="page-heading clr-green">Nodes</h4>
-               
+
                 <div class="table-responsive">
                     <br />
-                    <a    class="btn btn-success pull-right" (click)="open(contentEdit)">Add Node</a>
+                    <a class="btn btn-success pull-right" (click)="open(contentEdit)">Add Node</a>
                     <br />
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -25,6 +25,7 @@
                                 <th>Node Name</th>
                                 <th>Description</th>
                                 <th>Leaf Node</th>
+                                <th>Parent Node</th>
                                 <th>Node Type</th>
                                 <th>&nbsp;</th>
                             </tr>
@@ -37,12 +38,13 @@
                                 <td>{{nodeSetup.nodeName}}</td>
                                 <td>{{nodeSetup.description}}</td>
                                 <td>{{nodeSetup.leafNodeCheck}}</td>
+                                <td>{{nodeSetup?.parentNode?.nodeCode}}</td>
                                 <td>{{nodeSetup.fsType}}</td>
                                 <td>
                                     <p-inputSwitch *ngIf="nodeSetup['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)" [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="nodeSetup['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)" [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="nodeSetup['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)" [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
-
+                                    <span (click)="showViewData(contentView,nodeSetup)" data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                     <span (click)="setNodeSetupToUpdate(nodeSetup.glAccountNodeId,contentEdit)" data-toggle="modal" data-target="#edit">
                                         <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                             <i class="fa fa-edit"></i>
@@ -102,7 +104,7 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Share with the Other Entities</label>
                 <div class="col-sm-7">
-                        <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                    <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                 </div>
             </div>
             <div class="form-group col-sm-12">
@@ -127,10 +129,9 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Parent Node</label>
                 <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.parentNodeId" [ngModelOptions]="{standalone: true}">
-                        <option value="1">Total Revenue</option>
-                        <option value="2">Revenue (Excl Interco)</option>
-                    </select>
+                    <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="parentNode" [ngModelOptions]="{standalone: true}" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                    </p-autoComplete>
                 </div>
             </div>
             <div class="form-group col-sm-12">
@@ -142,8 +143,8 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Node Type<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.glAccountTypeId" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let glAccountClass of allGLAccountClassData" [ngValue]="glAccountClass.glAccountClassId">{{glAccountClass.glAccountClassName}}</option>
+                    <select [(ngModel)]="currentNodeSetup.glAccountNodeType" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let glAccountClass of allGLAccountClassData" [ngValue]="glAccountClass.glAccountClassName">{{glAccountClass.glAccountClassName}}</option>
                     </select>
                 </div>
             </div>
@@ -236,4 +237,30 @@
 
 </p-dialog>
 
+<ng-template #contentView let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="dismissModel()">×</button>
+            <h4 class="modal-title">Details of Node</h4>
+        </div>
+        <div class="modal-body viewform">
+            <div class="panel-body">
+                <div class="col-sm-6">
+                    <p><span class="label"><b>Ledger Name: </b></span><span class="value">{{nodeSetupViewData.oldAccountCode}}</span></p>
+                    <p><span class="label"><b>Node Code: </b></span><span class="value">{{nodeSetupViewData.nodeCode}}</span></p>
+                    <p><span class="label"><b>Node Description: </b></span><span class="value">{{nodeSetupViewData.description}}</span></p>
+
+                    <p><span class="label"><b>Parent Node: </b></span><span class="value">{{nodeSetupViewData.parentNodeId}}</span></p>
+                    <p><span class="label"><b>Leaf Node: </b></span><span class="value">{{nodeSetupViewData.leafNodeCheck}}</span></p>
+                    <p><span class="label"><b>Node Type: </b></span><span class="value">{{nodeSetupViewData.glAccountNodeType}}</span></p>
+                    <p><span class="label"><b>F/S Type: </b></span><span class="value">{{nodeSetupViewData.fsType}}</span></p>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+</ng-template>
 
