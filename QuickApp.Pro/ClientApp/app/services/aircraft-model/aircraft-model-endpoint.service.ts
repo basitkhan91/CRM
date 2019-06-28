@@ -21,13 +21,17 @@ export class AircraftModelEndpointService extends EndpointFactory {
     private readonly removeByIdURL: string = "/api/aircraftmodel/removeById";
     private readonly updateForActive: string = "/api/aircraftmodel/updateActive";
     private readonly getAuditById: string = "/api/aircraftmodel/audits";
+    private readonly getAircraftModel: string = "/api/aircraftmodel/pagination";
     private readonly getModelsListById: string = "/api/aircraftmodel/getModelsByManufacturerId";
+    private readonly getLandingPageURL: string = "/api/aircraftmodel/getLandingPage";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
     get add() { return this.configurations.baseUrl + this.addURL; }
     get update() { return this.configurations.baseUrl + this.updateURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
+    get paginate() { return this.configurations.baseUrl + this.getAircraftModel; }
+    get getLandingPage() { return this.configurations.baseUrl + this.getLandingPageURL; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -103,6 +107,26 @@ export class AircraftModelEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAircraftModelListByAircraftManufacturerId(aircraftManufacturerId));
+            });
+    }
+
+    //getAircraftModelsRecords<T>(data: any) Observable<T>{
+    //}
+    getAircraftModelsRecords<T>(paginationOption: any): Observable<T>
+    {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption) ,this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAircraftModelsRecords(paginationOption));
+            });
+    }
+    getLandingPageList<T>(): Observable<T> {
+        let endpointUrl = this.getLandingPage;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getLandingPageList());
             });
     }
 

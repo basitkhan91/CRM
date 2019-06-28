@@ -155,6 +155,24 @@ namespace QuickApp.Pro.Controllers
             return Ok(aircraftModel);
         }
 
+        [HttpPost("pagination")]
+        public IActionResult GetAircraftModel([FromBody]PaginateViewModel paginate)
+        {
+            var pageListPerPage = paginate.rows;
+            var pageIndex = paginate.first;
+            var pageCount = (pageIndex / pageListPerPage)+1;
+            var data = DAL.Common.PaginatedList<AircraftModel>.Create(unitOfWork.aircraftModel.GetPaginationData(), pageCount, pageListPerPage);
+            return Ok(data);
+        }
+
+        [HttpGet("getLandingPage")]
+        public IActionResult getAllLandingPageAircraftModel()
+        {
+            var aircraftModels = unitOfWork.aircraftModel.GetAllAircraftModel();//getting List Here
+            var data = aircraftModels.Skip(0).Take(10).OrderByDescending(c => c.AircraftModelId).ToList();
+            return Ok(data);
+        }
+
         #endregion Public Methods
 
         #region Private Methods

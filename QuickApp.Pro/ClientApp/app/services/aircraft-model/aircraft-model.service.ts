@@ -52,5 +52,14 @@ export class AircraftModelService {
         return Observable.forkJoin(
             this.aircraftModelEndpoint.getAircraftModelListByAircraftManufacturerId<AircraftModel[]>(aircraftModelId));
     }
+    getServerPages(serverSidePagesData:any)
+    {
+        return Observable.forkJoin(
+            this.aircraftModelEndpoint.getAircraftModelsRecords<AircraftModel[]>(serverSidePagesData));
+    }
+    getLandingPageList() {
+        return Observable.forkJoin(
+            this.aircraftModelEndpoint.getLandingPageList<AircraftModel[]>());
+    }
 
 }
