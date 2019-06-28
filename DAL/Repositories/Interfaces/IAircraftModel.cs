@@ -18,6 +18,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetCapesWithMasterid(long id);
         IEnumerable<AircraftModel> GetAllAircraftModel();
 
-        IQueryable<AircraftModel> GetPaginationData();
+        new IQueryable<AircraftModel> GetPaginationData();
     }
 }
