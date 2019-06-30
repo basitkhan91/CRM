@@ -368,9 +368,9 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td><input type="text" class="form-control w50 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.overhaulHours"></td>
-                                                        <td><input type="text" class="form-control w50 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.rpHours"></td>
-                                                        <td><input type="text" class="form-control w50 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.testHours"></td>
+                                                        <td><input type="number" class="form-control w50 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.overhaulHours"></td>
+                                                        <td><input type="number" class="form-control w50 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.rpHours"></td>
+                                                        <td><input type="number" class="form-control w50 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.testHours"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -392,8 +392,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td><input type="text" class="form-control w60 time" placeholder="days" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours"></td>
-                                                        <td><input type="text" class="form-control w60 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.turnTimeRepairHours"></td>
+                                                        <td><input type="number" class="form-control w60 time" placeholder="days" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours"></td>
+                                                        <td><input type="number" class="form-control w60 time" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.turnTimeRepairHours"></td>
 
                                                     </tr>
                                                 </tbody>
@@ -627,7 +627,7 @@
 
                                             <div class="form-group col-sm-12 p-list-price-block">
                                                 <label class="control-label col-sm-6">List Price</label> <div class="col-sm-5">
-                                                    <input type="text" style="width:60px"
+                                                    <input type="number" style="width:60px"
                                                            [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.listPrice"/>
                                                     <!--<input style="width:65px" type="text" [(ngModel)]="currencySymbol" [ngModelOptions]="{standalone: true}"/>--> 
@@ -721,7 +721,7 @@
                                                 <div class="form-group col-sm-12 fixed sales-price-blocks" style="display: block;">
                                                     <label class="control-label col-sm-6">Sale Price</label>
                                                     <div class="col-sm-5">
-                                                        <input type="text" style="width:125px" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.salesPrice">
+                                                        <input type="number" style="width:125px" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.salesPrice">
                                                     </div>
                                                 </div>
 
@@ -730,7 +730,6 @@
                                                 <div class="form-group col-sm-12 fixed sales-price-blocks" style="display: block;">
                                                     <label class="control-label col-sm-6">Last Sale Price Date</label>
                                                     <div class="col-sm-3">
-                                                        <input type="date" [(ngModel)]="sourceItemMaster.salesLastSalePriceDate" [ngModelOptions]="{standalone: true}"/>
                                                         <p-calendar [showIcon]="true" [(ngModel)]="sourceItemMaster.salesLastSalePriceDate" name="salesPriceDate"></p-calendar>
                                                     </div>
                                                 </div>
