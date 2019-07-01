@@ -257,8 +257,8 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<AircraftTypeViewModel>))]
         public IActionResult aircraftGet(AircraftTypeViewModel aircraftTypeViewModel)
         {
-            var allatachapter = _unitOfWork.aircraftType.getAircraftTypeData(); //.GetAllCustomersData();
-            return Ok(allatachapter);
+            var aircraftManufacturer = _unitOfWork.aircraftType.getAircraftTypeData().Where(x => x.IsDeleted != true);
+            return Ok(aircraftManufacturer);
 
         }
 
