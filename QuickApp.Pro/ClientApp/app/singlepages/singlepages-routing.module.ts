@@ -80,6 +80,7 @@ import { AssetTypeSingleScreenComponent } from '../components/asset-type-single-
 import { AircraftManufacturerComponent } from '../components/aircraft-manufacturer/aircraft-manufacturer.component';
 import { AircraftModelComponent } from '../components/aircraft-model/aircraft-model.component';
 import { DashnumberComponent } from '../components/dashnumber/dashnumber.component';
+import { CreatePublicationComponent } from '../components/publication/create-publication/create-publication.component';
 
 
 const singlePagesRoutes: Routes = [
@@ -168,7 +169,8 @@ const singlePagesRoutes: Routes = [
             { path: "app-asset-type-single-screen", component: AssetTypeSingleScreenComponent, data: { title: "Asset Type" } },
             { path: "app-aircraft-manufacturer", component: AircraftManufacturerComponent, data: { title: "Aircraft Manufacturer" } },
             { path: "app-aircraft-model", component: AircraftModelComponent, data: { title: "Aircraft Model" } },
-            { path: "app-dashnumber", component: DashnumberComponent, data: { title: "Dash Numbers" } }
+            { path: "app-dashnumber", component: DashnumberComponent, data: { title: "Dash Numbers" } },
+            { path: "app-create-publication", component: CreatePublicationComponent, data: {title:"create publication"} }
         ]
     }
 ];

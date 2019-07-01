@@ -2,7 +2,7 @@
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
-import { NgModule, ErrorHandler } from "@angular/core";
+import { NgModule, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA  } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from '@angular/common/http';
 //import { Http } from '@angular/http’;
@@ -194,6 +194,7 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
 import { SpinnerComponent } from "./shared/spinner/spinner.component";
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { WorkOrderService } from "./services/work-order/work-order.service";
 
 //import { AuditComponent } from "./components/Audit/audit.component";
 
@@ -396,13 +397,15 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         RolesGuardService,
         CompanyService,
         CompanyEndpoint,
+        WorkOrderService
 
     ],
     entryComponents: [
         LoginDialogComponent,
         AddTaskDialogComponent,
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 

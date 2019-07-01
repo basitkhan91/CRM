@@ -14,7 +14,7 @@ import { TranslateModule } from "@ngx-translate/core";
 
 //import { CustomerPagesComponent } from "./customerpages.component";
 
-import { CommonModule } from '@angular/common'; //<-- This one
+import { CommonModule, DatePipe } from '@angular/common'; //<-- This one
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -51,8 +51,10 @@ import { PublicationCreateComponent } from "../shared/Publication-Create.compone
 import { ExclusionsCreateComponent } from "../shared/Exclusions-Create.component";
 import { MeasurementCreateComponent } from "../shared/Measurement-Create.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
-import { MatIconModule } from "@angular/material";
+import { MatIconModule, MatSelectModule, MatTabsModule } from "@angular/material";
 import { StarComponent } from "../shared/star.component";
+import { CreateWorkflowComponent } from "../components/workflow/create-workflow/create-workflow.component";
+
 @NgModule({
 	imports: [
 		FlexLayoutModule,
@@ -66,7 +68,9 @@ import { StarComponent } from "../shared/star.component";
 		InputTextModule,
 		MultiSelectModule,
 		WorkFlowPagesRoutingModule,
-		AutoCompleteModule,
+        AutoCompleteModule,
+        MatSelectModule,        
+        MatTabsModule,
 		MatIconModule,
 		GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule, AccordionModule, TabViewModule,
 		NgMultiSelectDropDownModule.forRoot()
@@ -84,7 +88,8 @@ import { StarComponent } from "../shared/star.component";
 		PublicationCreateComponent,
 		ExclusionsCreateComponent,
 		MeasurementCreateComponent,
-		StarComponent
+        StarComponent,
+        CreateWorkflowComponent,
 	],
 	exports: [WorkflowCreateTestComponent,
 		ChargesCreateComponent,
@@ -97,7 +102,8 @@ import { StarComponent } from "../shared/star.component";
 		MeasurementCreateComponent],
 	providers: [
 		ActionService,
-		ActionEndpoint
+        ActionEndpoint,
+        DatePipe
 	],
 	entryComponents: [
 	]

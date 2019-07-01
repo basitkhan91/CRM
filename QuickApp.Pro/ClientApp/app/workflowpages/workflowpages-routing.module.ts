@@ -15,6 +15,7 @@ import { WorkFlowPagesComponent } from './workflowpages.component';
 import { WorkflowListComponent } from '../components/workflow/workflow-list/workflow-list.component';
 import { WorkflowCreateComponent } from "../components/workflow/workflow-create/workflow-create.component";
 import { WorkflowCreateTestComponent } from '../Workflow/Workflow-Create.component';
+import { CreateWorkflowComponent } from '../components/workflow/create-workflow/create-workflow.component';
 
 const workflowpagesRoutes: Routes = [
 	{
@@ -23,7 +24,8 @@ const workflowpagesRoutes: Routes = [
 		children: [
 		
 			{ path: "app-workflow-list", component: WorkflowListComponent, data: { title: "WorkFlow List" } },
-			{ path: "app-workflow-create", component: WorkflowCreateComponent, data: { title: "WorkFlow Create" } },
+            { path: "app-workflow-create", component: WorkflowCreateComponent, data: { title: "WorkFlow Create" } },
+            { path: "app-create-workflow", component: CreateWorkflowComponent, data: { title: "Create Workflow"}},
 
 			
 			{ path: "wf-create", component: WorkflowCreateTestComponent, data: { title: "WorkFlow" } },

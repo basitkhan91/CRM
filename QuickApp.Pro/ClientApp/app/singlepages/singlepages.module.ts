@@ -121,6 +121,7 @@ import { DashnumberComponent } from "../components/dashnumber/dashnumber.compone
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import {PaginatorModule} from 'primeng/paginator';
+import { CreatePublicationComponent } from "../components/publication/create-publication/create-publication.component";
 @NgModule({
 	imports: [
         FlexLayoutModule,
@@ -140,6 +141,7 @@ import {PaginatorModule} from 'primeng/paginator';
         AuditModule, PaginatorModule
     ],
     declarations: [
+        CreatePublicationComponent,
         SingleComponent,
         ActionsComponent,
         ActionAttributesComponent,

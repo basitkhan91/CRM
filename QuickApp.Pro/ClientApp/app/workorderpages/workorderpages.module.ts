@@ -36,6 +36,11 @@ import { SelectButtonModule } from 'primeng/selectbutton'
 import { InputTextModule } from 'primeng/inputtext'
 import { MultiSelectModule } from 'primeng/multiselect'
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { WorkOrderService } from "../services/work-order/work-order.service";
+import { WorkOrderEndpointService } from "../services/work-order/work-order-endpoint.service";
+import { WorkOrderPartNumberService } from "../services/work-order/work-order-part-number.service";
+import { WorkOrderPartNumberEndpointService } from "../services/work-order/work-order-part-number-endpoint.service";
+import { DirectLabourComponent } from "../components/work-order/direct-labour/direct-labour.component";
 
 @NgModule({
     imports: [
@@ -69,11 +74,16 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
         WorkOrderBillingComponent,
         WorkOrderQuoteComponent,
         WorkOrderShippingComponent,
-        WorkOrderListComponent
+        WorkOrderListComponent,
+        DirectLabourComponent
 
     ],
     entryComponents: [
-    ]
+    ],
+    providers: [WorkOrderService,
+        WorkOrderEndpointService,
+        WorkOrderPartNumberService,
+        WorkOrderPartNumberEndpointService]
 })
 export class WorkOrderPagesModule {
 
