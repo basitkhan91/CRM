@@ -17,6 +17,7 @@ namespace DAL.Repositories
 
 
         }
+        override
         public IQueryable<DAL.Models.AircraftType> GetPaginationData()
         {
             return _appContext.AircraftType.Where(c => (c.IsDeleted == false || c.IsDeleted == null))

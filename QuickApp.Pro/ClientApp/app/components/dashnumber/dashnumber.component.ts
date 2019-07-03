@@ -10,6 +10,7 @@ import { AircraftDashNumber } from "../../models/dashnumber.model";
 import { DashNumberService } from "../../services/dash-number/dash-number.service";
 import { AircraftModelService } from "../../services/aircraft-model/aircraft-model.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { PaginationService } from "../../services/pagination/pagination.service";
 @Component({
     selector: 'app-dashnumber',
     templateUrl: './dashnumber.component.html',
@@ -33,17 +34,28 @@ export class DashnumberComponent implements OnInit{
     modelValue: boolean = false;
     Active: string;
 
-    constructor(private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private dashNumberService: DashNumberService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
+    //added for test pagination
+    messages: AircraftDashNumber[];
+    loading = false;
+    total = 20;
+    page = 3;
+    limit = 2;
+    //added for test pagination end
+
+    constructor(private paginationService: PaginationService,private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private dashNumberService: DashNumberService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
 
     }
 
     ngOnInit(): void {
-        this.dashNumberService.getAll().subscribe(dashNumbers => {
-            this.dashNumberList = dashNumbers[0];
-            this.dashNumberList.forEach(function (dashNumber) {
-                dashNumber.isActive = dashNumber.isActive == false ? false : true;
-            });
-        });
+        //this.dashNumberService.getAll().subscribe(dashNumbers => {
+        //    this.dashNumberList = dashNumbers[0];
+        //    this.dashNumberList.forEach(function (dashNumber) {
+        //        dashNumber.isActive = dashNumber.isActive == false ? false : true;
+        //    });
+        //});
+
+        this.getMessages();
+
         this.currentDashNumberType = new AircraftDashNumber();
 
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
@@ -181,4 +193,33 @@ export class DashnumberComponent implements OnInit{
             }
         });
     }
+
+    //pagination code start
+    getMessages(): void {
+        this.loading = true;
+        this.dashNumberService.getServerPages({ page: this.page, limit: this.limit }).subscribe(dashNumbers =>
+        {
+            this.dashNumberList = dashNumbers[0];
+            //this.total = dashNumbers.total;
+           // this.messages = dashNumbers.messages;
+            this.loading = false;
+        });
+    }
+
+
+    goToPage(n: number): void {
+        this.page = n;
+        this.getMessages();
+    }
+
+    onNext(): void {
+        this.page++;
+        this.getMessages();
+    }
+
+    onPrev(): void {
+        this.page--;
+        this.getMessages();
+    }
+    //pagination code End
 }

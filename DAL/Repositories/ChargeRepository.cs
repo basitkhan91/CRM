@@ -151,6 +151,12 @@ namespace DAL.Repositories
 
         }
 
+        override
+       public IQueryable<DAL.Models.Charge> GetPaginationData()
+        {
+            return _appContext.Charge.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.ChargeId).ToList().AsQueryable();
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

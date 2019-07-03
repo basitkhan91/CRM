@@ -14,6 +14,7 @@ import { User } from '../models/user.model';
 import { Role } from '../models/role.model';
 
 import { AuditHistory } from '../models/audithistory.model';
+import { GlCashFlowClassification } from '../models/glcashflowclassification.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -62,5 +63,10 @@ export class GlCashFlowClassificationService {
 
     getGLCashFlowClassificationAuditDetails(Id: number) {
         return this.glCashFlowClassificationEndpoint.getGLCashFlowClassificationAuditDetails<any[]>(Id);
+    }
+
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.glCashFlowClassificationEndpoint.getGlCashFlowClassificationRecords<GlCashFlowClassification[]>(serverSidePagesData));
     }
 }

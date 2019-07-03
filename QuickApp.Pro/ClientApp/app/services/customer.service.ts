@@ -418,4 +418,9 @@ export class CustomerService {
         return this.customerEndpoint.getAllCustomerInfo<Customer[]>();
     }
 
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getCustomerRecords<Customer[]>(serverSidePagesData));
+    }
+
 }

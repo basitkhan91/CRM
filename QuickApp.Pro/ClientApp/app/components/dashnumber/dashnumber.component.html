@@ -93,6 +93,25 @@
                                     </td>
                                 </tr>
 
+                                <!--<tr>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination pg-blue" (input)="testPagination( )">
+                                            <li class="page-item"><a class="page-link" mdbWavesEffect>Previous</a></li>
+                                            <li class="page-item"><a class="page-link" mdbWavesEffect>1</a></li>
+                                            <li class="page-item"><a class="page-link" mdbWavesEffect>2</a></li>
+                                            <li class="page-item"><a class="page-link" mdbWavesEffect>3</a></li>
+                                            <li class="page-item"><a class="page-link" mdbWavesEffect>Next</a></li>
+                                        </ul>
+                                    </nav>
+                                </tr>-->
+                                <app-pagination (goPage)="goToPage($event)"
+                                                (goNext)="onNext()"
+                                                (goPrev)="onPrev()"
+                                                [pagesToShow]="5"
+                                                [page]="page"
+                                                [perPage]="limit"
+                                                [count]="total">
+                                </app-pagination>
                             </tbody>
                         </table>
                     </div>

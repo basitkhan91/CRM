@@ -13,7 +13,7 @@ import { MasterComapnyService } from '../../services/mastercompany.service';
 import { AuthService } from '../../services/auth.service';
 import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { AuditHistory } from '../../models/audithistory.model';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
@@ -68,6 +68,16 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
     filteredBrands: any[];
     localCollection: any[] = [];
     /** Currency ctor */
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    currencyPagination: Currency[];//added
+    totalRecords: number;
+    loading: boolean;
+
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public currencyService: CurrencyService, private dialog: MatDialog) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -115,13 +125,13 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(getCreditTermsList: Currency[]) {
+    private onDataLoadSuccessful(getCurrencyList: Currency[]) {
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = getCreditTermsList;
-       
-        this.allCurrencyInfo = getCreditTermsList;
+        this.dataSource.data = getCurrencyList;
+        this.totalRecords = getCurrencyList.length;
+        this.allCurrencyInfo = getCurrencyList;
     }
 
     private onDataLoadFailed(error: any) {
@@ -361,25 +371,20 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
 
     private saveCompleted(user?: Currency) {
         this.isSaving = false;
-
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
         }
-
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: Currency) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-        this.loadData();
-
+        this.updatePaginatorState();
     }
 
     get userName(): string {
@@ -416,5 +421,34 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
                 this.AuditDetails[0].ColumnsToAvoid = ["currencyAuditId", "currencyId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadCurrency(this.paginatorState);
+        }
+    }
+
+    loadCurrency(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.totalRecords) {
+                this.currencyService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.currencyPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 }

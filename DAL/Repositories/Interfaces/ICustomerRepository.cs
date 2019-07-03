@@ -25,5 +25,6 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<Customer> getAllCustomer();
         IEnumerable<Customer> getAllCustomersInfo();
+        new IQueryable<Customer> GetPaginationData();
     }
 }

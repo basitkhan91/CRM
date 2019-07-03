@@ -40,4 +40,9 @@ export class DashNumberService {
     getDashNumberAudit(DashNumberId: number) {
         return this.dashNumberEndpoint.getDashNumberStatusAuditById<any>(DashNumberId);
     }
+
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.dashNumberEndpoint.getAircraftDashNumberRecords<AircraftDashNumber[]>(serverSidePagesData));
+    }
 }

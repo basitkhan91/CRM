@@ -19,7 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { TreeNode} from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
@@ -71,9 +71,9 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
     vendorName: any;
     gridData1: TreeNode[];
     AuditDetails: SingleScreenAuditDetails[];
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
 		this.loadData();
-
 		this.loadCurrencyData();
 		this.loadVendorData();
 		this.loadIntegrationData();
@@ -111,6 +111,15 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     Active: string = "Active";
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+    chargePagination: Charge[];//added
+    totalRecords: number;
+    loading: boolean;
+
 	constructor(public workFlowtService1: LegalEntityService,private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public chargeService: ChargeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -356,10 +365,11 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
     }
     private onDataLoadSuccessful(getChargeList: Charge[]) {
         // alert('success');
-        this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getChargeList;
+        this.totalRecords = getChargeList.length;
         this.allChargeinfo = getChargeList;
+        this.alertService.stopLoadingMessage();
     }
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
@@ -699,14 +709,14 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: Charge) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -745,5 +755,34 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
                 this.AuditDetails[0].ColumnsToAvoid = ["chargeAuditId", "chargeId", "masterCompanyId", "managementStructureId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadCharge(this.paginatorState);
+        }
+    }
+
+    loadCharge(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allChargeinfo) {
+                this.chargeService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.chargePagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 }

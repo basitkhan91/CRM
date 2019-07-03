@@ -13,7 +13,7 @@ import { MasterCompany } from '../../models/mastercompany.model';
 import { ItemClassificationService } from '../../services/item-classfication.service';
 import { ItemClassificationModel } from '../../models/item-classification.model';
 import { AuditHistory } from '../../models/audithistory.model';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
@@ -25,6 +25,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class ItemClassificationComponent implements OnInit, AfterViewInit {
+    itemClassificationPagination: any;
     item_Name: any = "";
     description: any = "";
     itemType: any = "";
@@ -74,6 +75,13 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     disabletypeSave: boolean;
     className: any;
     itemTypeName: any;
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+    totalRecords: number;
+    loading: boolean;
 
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ItemClassificationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
@@ -145,6 +153,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
+        this.totalRecords = allWorkFlows.length;
         this.allitemclassificationInfo = allWorkFlows;
     }
 
@@ -453,7 +462,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
 
@@ -485,7 +494,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -523,6 +532,35 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
                 this.AuditDetails[0].ColumnsToAvoid = ["itemClassificationAuditId", "itemClassificationId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    loadItemClassification(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allitemclassificationInfo) {
+                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.itemClassificationPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadItemClassification(this.paginatorState);
+        }
     }
 
 

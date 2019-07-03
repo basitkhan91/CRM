@@ -6,6 +6,7 @@ using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
