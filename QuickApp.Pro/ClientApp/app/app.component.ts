@@ -387,7 +387,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Create Workflow', routerLink: '/workflowmodule/workflowpages/wf-create' },
                     { label: 'Task', routerLink: '/singlepages/singlepages/app-tasks' },
                     { label: 'Task Attribute', routerLink: '/singlepages/singlepages/app-task-attributes' },
-                    { label: 'Create New Workflow', routerLink:'/workflowmodule/workflowpages/app-create-workflow'}
+                   
                 ]
             },
             {

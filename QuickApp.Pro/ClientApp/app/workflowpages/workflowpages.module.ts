@@ -53,7 +53,6 @@ import { MeasurementCreateComponent } from "../shared/Measurement-Create.compone
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { MatIconModule, MatSelectModule, MatTabsModule } from "@angular/material";
 import { StarComponent } from "../shared/star.component";
-import { CreateWorkflowComponent } from "../components/workflow/create-workflow/create-workflow.component";
 
 @NgModule({
 	imports: [
@@ -89,7 +88,7 @@ import { CreateWorkflowComponent } from "../components/workflow/create-workflow/
 		ExclusionsCreateComponent,
 		MeasurementCreateComponent,
         StarComponent,
-        CreateWorkflowComponent,
+      
 	],
 	exports: [WorkflowCreateTestComponent,
 		ChargesCreateComponent,
