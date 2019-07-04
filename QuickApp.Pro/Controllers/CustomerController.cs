@@ -104,7 +104,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Countries>))]
         public IActionResult GetcountryList()
         {
-            var allcustomertype = _context.Countries.OrderByDescending(c => c.countries_id).ToList();
+            var allcustomertype = _context.Countries.OrderBy(c => c.nice_name).ToList();
             return Ok(allcustomertype);
 
         }

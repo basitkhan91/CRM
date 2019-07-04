@@ -44,7 +44,9 @@ export class ActionEndpoint extends EndpointFactory {
 	private AddMaterialListURL: string = "api/workflow/addMaterial";
 	private AddMeasurementURL: string = "api/workflow/addMeasurement";
 	private AddPublicationURL: string = "api/workflow/addPublication";
-	private getWorkFlowURL: string = "api/workflow/getworkflow";
+    private getWorkFlowURL: string = "api/workflow/getworkflow";
+    private toggleStateURL: string = "api/workflow/toggleState";
+
 	private UpdateChargesURL: string = "api/workflow/updateCharges";
 	private UpdateDirectionURL: string = "api/workflow/updateDirection";
 	private UpdateEquipmentURL: string = "api/workflow/updateEquipment";
@@ -61,6 +63,14 @@ export class ActionEndpoint extends EndpointFactory {
 
 		super(http, configurations, injector);
 	}
+
+    toggleState<T>(workflowId: number): Observable<T> {
+        let endpointUrl = `${this.toggleStateURL}/${workflowId}`;
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.toggleState(workflowId));
+            });
+    }
 
 	getWorkFlow<T>(workflowid:any): Observable<T> {
 		//let endpointurl = this.getWorkFlowURL

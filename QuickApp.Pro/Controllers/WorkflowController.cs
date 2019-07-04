@@ -146,6 +146,7 @@ namespace QuickApp.Pro.Controllers
                     workFlow.MasterCompanyId = 1;
                     workFlow.CreatedDate = DateTime.Now;
                     workFlow.UpdatedDate = DateTime.Now;
+                    workFlow.IsActive = true;
                     UnitOfWork.Repository<Workflow>().Add(workFlow);
                     UnitOfWork.SaveChanges();
 
@@ -159,6 +160,24 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ModelState.Values.FirstOrDefault().Errors);
             }
+        }
+
+        [HttpDelete("toggleState/{workFlowId}")]
+        public IActionResult toggleState(long workFlowId) {
+            var workFlow = UnitOfWork.Repository<Workflow>().Get(workFlowId);
+            if (workFlow != null)
+            {
+                workFlow.IsActive = workFlow.IsActive == true ? false : true;
+                workFlow.UpdatedBy = "Admin";
+                workFlow.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<Workflow>().Update(workFlow);
+                UnitOfWork.SaveChanges();
+            }
+            else
+            {
+                return BadRequest(new Exception("Workflow does not exist."));
+            }
+            return Ok();
         }
 
         [HttpDelete("remove/{workFlowId}")]

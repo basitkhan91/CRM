@@ -183,4 +183,9 @@ export class ActionService {
         return Observable.forkJoin(
             this.actionEndpoint.getWorkFlow<any>(workflowid));
     }
+
+    toggleState(workflowId: number) {
+        return Observable.forkJoin(
+            this.actionEndpoint.toggleState<any>(workflowId));
+    }
 }

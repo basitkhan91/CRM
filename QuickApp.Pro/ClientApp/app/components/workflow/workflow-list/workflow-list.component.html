@@ -46,9 +46,10 @@
                             </td>
 
                             <td>
-                                <!--<p-inputSwitch *ngIf="assetStatus.isActive" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(assetStatus,$event)" [(ngModel)]="assetStatus.isActive"></p-inputSwitch>
-        <p-inputSwitch *ngIf="assetStatus.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(assetStatus,$event)" [(ngModel)]="assetStatus.isActive"></p-inputSwitch>
-        <p-inputSwitch *ngIf="assetStatus.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(assetStatus,$event)" [(ngModel)]="assetStatus.isActive"></p-inputSwitch>-->
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+
                                 <span (click)="openEdit(rowData)" data-toggle="modal" data-target="#edit">
                                     <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                         <i class="fa fa-edit"></i>

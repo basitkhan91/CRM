@@ -107,6 +107,25 @@ export class WorkflowListComponent implements OnInit {
             });
         this.dismissModel();
     }
+
+    toggleIsActive(workflow: any, event): void {
+        this.actionService.toggleState(workflow.workflowId).subscribe(
+            result => {
+                this.alertService.showMessage(this.title, "Workflow updated successfully.", MessageSeverity.success);
+            },
+            error => {
+                var message = '';
+                if (error.error.constructor == Array) {
+                    message = error.error[0].errorMessage;
+                }
+                else {
+                    message = error.error.Message;
+                }
+                this.alertService.showMessage(this.title, message, MessageSeverity.error);
+            }
+        )
+       
+    }
     
     openEdit(row) {
         this.workFlowtService.listCollection = row;

@@ -11,16 +11,7 @@ import { IMaterialList } from "./MaterialList";
 import { IPublication } from "./Publication";
 import { IExclusion } from "./Exclusion";
 import { IMeasurement } from "./Measurement";
-// import { ChargesCreateComponent } from "../shared/Charges-Create.component";
-// import { DirectionsCreateComponent } from "../shared/Directions-Create.component";
-// import { EquipmentCreateComponent } from "../shared/Equipment-Create.component";
-// import { ExclusionsCreateComponent } from "../shared/Exclusions-Create.component";
-// import { ExpertiseCreateComponent } from "../shared/Expertise-Create.component";
-// import { MaterialListCreateComponent } from "../shared/Material-List-Create.component";
-// import { MeasurementCreateComponent } from "../shared/Measurement-Create.component";
-// import { PublicationCreateComponent } from "../shared/Publication-Create.component";
 import { ActivatedRoute, Router } from "@angular/router";
-//import { $ } from "protractor";
 import { VirtualTimeScheduler } from "rxjs";
 import { SelectItem } from "primeng/api";
 import { VendorService } from "../services/vendor.service";
@@ -1446,6 +1437,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         );
     }
     title: string = "Work Flow";
+
     updateWorkFlow(): void {
         this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
         
@@ -1550,6 +1542,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
         }
     }
+
+  
+
 
     resetPage(): void {
         this.selectedItems = [];
