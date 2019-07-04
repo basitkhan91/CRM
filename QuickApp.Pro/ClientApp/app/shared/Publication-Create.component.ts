@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, EventEmitter , Output } from "@angular/core";
+import { Component, Input, OnChanges, OnInit, EventEmitter, Output } from "@angular/core";
 import { IWorkFlow } from "../Workflow/WorkFlow";
 import { ActionService } from "../Workflow/ActionService";
 import { IPublicationType } from "../Workflow/PublicationType";
@@ -7,49 +7,52 @@ import { IPublicationModel } from "../Workflow/PublicationModel";
 import { IPublicationStatus } from "../Workflow/PublicationStatus";
 import { IPublication } from "../Workflow/Publication";
 import { EmployeeService } from "../services/employee.service";
+import { PublicationService } from "../services/publication.service";
+import { Publication } from "../models/publication.model";
 
 @Component({
-    selector:'grd-publication',
-    templateUrl:'./Publication-Create.component.html',
-    styleUrls :['./Publication-Create.component.css']
-    })
-export class PublicationCreateComponent implements OnInit,OnChanges{
-	allEmployeeinfo: any[]=[];
-	firstCollection: any[]=[];
-    @Input() workFlow : IWorkFlow;
-    @Input() UpdateMode : boolean;
-    @Output() notify : EventEmitter<IWorkFlow> = 
-    new EventEmitter<IWorkFlow>();
-    publicationTypes:IPublicationType[];
-    publicationAircraftManufacturers:IPublicationAircraftManufacturer[];
-    publicationModels:IPublicationModel[];
-    publicationStatuses:IPublicationStatus[];
-    row:any;
-	errorMessage: string;
-	locations: any[] = [];
-	updateModeforModels: boolean = false;
-    
-	constructor(private actionService: ActionService, private employeeService:EmployeeService) {
+    selector: 'grd-publication',
+    templateUrl: './Publication-Create.component.html',
+    styleUrls: ['./Publication-Create.component.css']
+})
+export class PublicationCreateComponent implements OnInit, OnChanges {
+    allEmployeeinfo: any[] = [];
+    firstCollection: any[] = [];
+    @Input() workFlow: IWorkFlow;
+    @Input() UpdateMode: boolean;
+    @Output() notify: EventEmitter<IWorkFlow> =
+        new EventEmitter<IWorkFlow>();
+    publicationTypes: IPublicationType[];
+    publicationAircraftManufacturers: IPublicationAircraftManufacturer[];
+    publicationModels: IPublicationModel[];
+    publicationStatuses: IPublicationStatus[];
+    row: any;
+    errorMessage: string;
+    locations: any[] = [];
+    updateModeforModels: boolean = false;
+    publications: Publication[];
+
+    constructor(private actionService: ActionService, private employeeService: EmployeeService, private publicationService: PublicationService) {
+
     }
 
 
-	ngOnInit(): void {
-		//debugger;
-		this.row = this.workFlow.publication[0];
-		if (this.UpdateMode == true && this.workFlow.publication.length >= 0) {
-			for (let i = 0; i < this.workFlow.publication.length; i++) {
-				if (this.workFlow.publication[i].aircraftManufacturer != null) {
-					this.actionService.GetPublicationModel(this.workFlow.publication[i].aircraftManufacturer).subscribe(
-						model => {
-							//debugger;
-							this.workFlow.publication[i]["publicationModels"] = model;
-						},
-						error => this.errorMessage = <any>error
-					);
+    ngOnInit(): void {
+        this.getAllPublicationTypes();
+        this.row = this.workFlow.publication[0];
+        if (this.UpdateMode == true && this.workFlow.publication.length >= 0) {
+            for (let i = 0; i < this.workFlow.publication.length; i++) {
+                if (this.workFlow.publication[i].aircraftManufacturer != null) {
+                    this.actionService.GetPublicationModel(this.workFlow.publication[i].aircraftManufacturer).subscribe(
+                        model => {
+                            this.workFlow.publication[i]["publicationModels"] = model;
+                        },
+                        error => this.errorMessage = <any>error
+                    );
 
-				}
-			}
-		}
+                }
+            }
+        }
         this.actionService.GetPublicationType().subscribe(
             type => {
                 this.publicationTypes = type;
@@ -58,16 +61,14 @@ export class PublicationCreateComponent implements OnInit,OnChanges{
         );
 
         this.actionService.GetPublicationAircraftManufacturer().subscribe(
-			aircraftManufacturer => {
-				//debugger;
+            aircraftManufacturer => {
                 this.publicationAircraftManufacturers = aircraftManufacturer;
             },
             error => this.errorMessage = <any>error
         );
 
-		this.actionService.getLocations().subscribe(
-			location => {
-				//debugger;
+        this.actionService.getLocations().subscribe(
+            location => {
                 this.locations = location;
             },
             error => this.errorMessage = <any>error
@@ -78,82 +79,97 @@ export class PublicationCreateComponent implements OnInit,OnChanges{
                 this.publicationStatuses = status;
             },
             error => this.errorMessage = <any>error
-		);
-		this.employeeService.getEmployeeList().subscribe(
-			
-			data => {
-				//debugger;
-				this.allEmployeeinfo = data[0]
-			});
+        );
+        this.employeeService.getEmployeeList().subscribe(
+
+            data => {
+                this.allEmployeeinfo = data[0]
+            });
 
     }
 
-    Browse():void{
+    Browse(): void {
         var brws = document.getElementById("myFile");
         //brws.disabled = true;
     }
 
-    ngOnChanges():void{
-        
-	}
-	public getAircraftModels(publication,aircraftTypeId: any) {
-		publication["publicationModels"] = [];
-		this.actionService.GetPublicationModel(aircraftTypeId).subscribe(
-			model => {
-				//debugger;
-				publication["publicationModels"] = model;
-			},
-			error => this.errorMessage = <any>error
-		);
+    ngOnChanges(): void {
 
-	}
-	filterfirstName(event) {
+    }
 
-		this.firstCollection = [];
-		for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-			let firstName = this.allEmployeeinfo[i].firstName;
-			if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.firstCollection.push(firstName);
-			}
-		}
-	}
+    public getAircraftModels(publication, aircraftTypeId: any) {
+        publication["publicationModels"] = [];
+        this.actionService.GetPublicationModel(aircraftTypeId).subscribe(
+            model => {
+                publication["publicationModels"] = model;
+            },
+            error => this.errorMessage = <any>error
+        );
 
-    addRow():void{
-        var newRow = Object.assign({},this.row);
-        if(this.UpdateMode)
-        {
+    }
+
+    filterfirstName(event) {
+
+        this.firstCollection = [];
+        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+            let firstName = this.allEmployeeinfo[i].firstName;
+            if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.firstCollection.push(firstName);
+            }
+        }
+    }
+
+    addRow(): void {
+        var newRow = Object.assign({}, this.row);
+        if (this.UpdateMode) {
             newRow.id = "";
-            newRow.AllowEdit=true;
             newRow.taskId = this.workFlow.taskId;
-			newRow.publicationId = "";
-			newRow.publicationDescription = "";
-			newRow.publicationType = "";
-			newRow.sequence = "";
-			newRow.source = "";
-			newRow.aircraftManufacturer = "";
-			newRow.model = "";
-			newRow.location = "";
-			newRow.revision = "";
-			newRow.revisionDate = "";
-			newRow.verifiedBy = "";
-			newRow.status = "";
-			newRow.verifiedDate = "";
+            newRow.publicationId = "";
+            newRow.publicationDescription = "";
+            newRow.publicationType = "";
+            newRow.sequence = "";
+            newRow.source = "";
+            newRow.aircraftManufacturer = "";
+            newRow.model = "";
+            newRow.location = "";
+            newRow.revision = "";
+            newRow.revisionDate = "";
+            newRow.verifiedBy = "";
+            newRow.status = "";
+            newRow.verifiedDate = "";
+            newRow.isDeleted = false;
         }
 
         this.workFlow.publication.push(newRow);
     }
 
-    deleteRow(index):void{
-
-		this.workFlow.publication[index].IsDeleted = true;
+    deleteRow(index): void {
+        if (this.workFlow.publication[index].id == "0" || this.workFlow.publication[index].id == "") {
+            this.workFlow.publication.splice(index, 1);
+        }
+        else {
+            this.workFlow.publication[index].isDeleted = true;
+        }
     }
 
-    allowEdit(publication:IPublication):boolean{
-        return this.UpdateMode && !publication.AllowEdit;
+    private getAllPublicationTypes(): void {
+        this.publicationService.getAllPublications().subscribe(
+            result => {
+                this.publications = result[0];
+            });
     }
-    
-    editRow(publication:IPublication):void{
-        publication.AllowEdit=true;
+
+    private onPublicationChange(row) {
+        var selectedPublication = this.publications.filter(function (publication) {
+            return publication.publicationRecordId == row.publicationId;
+        });
+
+        if (selectedPublication != null && selectedPublication.length > 0) {
+            row.publicationDescription = selectedPublication[0].description;
+        }
+        else {
+            row.publicationDescription = "";
+        }
     }
 
 }

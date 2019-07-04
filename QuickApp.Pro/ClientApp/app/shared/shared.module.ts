@@ -18,7 +18,6 @@ import { UserEditorComponent } from '../admin/user-editor.component';
 import { AppDialogComponent } from './app-dialog.component';
 
 import { GroupByPipe } from '../pipes/group-by.pipe';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -27,7 +26,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         FormsModule, ReactiveFormsModule,
         BrowserModule, BrowserAnimationsModule,
         QuickAppProMaterialModule,
-		TranslateModule
+        TranslateModule
     ],
     exports: [
         FlexLayoutModule,
@@ -38,20 +37,19 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         PageHeaderComponent,
         GroupByPipe,
         UserEditorComponent,
-        AppDialogComponent,
-        ProgressSpinnerModule,
+        AppDialogComponent
     ],
     declarations: [
         PageHeaderComponent,
         GroupByPipe,
         UserEditorComponent,
-		AppDialogComponent
+        AppDialogComponent,
+        
     ],
     entryComponents: [
         AppDialogComponent
     ]
 })
-export class SharedModule
-{
+export class SharedModule {
 
 }

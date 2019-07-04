@@ -44,6 +44,11 @@ export class PublicationService {
             this.publicationEndpoint.getpublicationEndpoint<Publication[]>());
     }
 
+    getAllPublications() {
+        return Observable.forkJoin(
+            this.publicationEndpoint.getpublicationEndpoint<Publication[]>());
+    }
+
     newAction(action: Publication) {
         return this.publicationEndpoint.getNewpublicationEndpoint<Publication>(action);
     }

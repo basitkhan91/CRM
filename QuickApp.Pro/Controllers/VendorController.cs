@@ -228,7 +228,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Address>))]
         public IActionResult Getpartdetails()
         {
-            var allPartDetails = _context.ItemMaster.Where(a => a.IsDelete == true || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
+            var allPartDetails = _context.ItemMaster.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
             return Ok(allPartDetails);
 
         }

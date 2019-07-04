@@ -34,6 +34,12 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("GetAll")]
+        public IActionResult GetAllAsset() {
+            var assets = _unitOfWork.Asset.getAllAsset();
+            return Ok(assets);
+        }
+
 
         [HttpGet("GetCapes/{id}")]
         [Produces(typeof(List<Capability>))]

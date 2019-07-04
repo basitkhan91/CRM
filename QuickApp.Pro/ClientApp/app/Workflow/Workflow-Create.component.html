@@ -1,80 +1,79 @@
-<div class="" style="">
-	<div class="x_content workflow-page">
-		<!--<link href="../mycustom-style.css" rel="stylesheet" />-->
-		<div class="card-layout">
-			<div class="">
-				<nav aria-label="breadcrumb">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item" aria-current="page">Workflow</li>
-						<li class="breadcrumb-item active" aria-current="page">Create Workflow</li>
-					</ol>
-				</nav>
-				<div class="pheading">
-				</div>
-				
+<div>
+    <div class="x_content workflow-page">
+        <div class="card-layout">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" aria-current="page">Workflow</li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Workflow</li>
+                    </ol>
+                </nav>
+                <div class="pheading">
+                </div>
+
                 <div class="cdetails-top" style="display: none;">
-					<span class="cdetails-top-close"><i class="fa fa-times"></i></span>
-					<div class="col-sm-12">
-						<label>Company</label>
-						<span>Silverxis</span>
-					</div>
-					<div class="col-sm-12">
-						<label>BU</label>
-						<span>Adso</span>
-					</div>
-					<div class="col-sm-12">
-						<label>Division</label>
-						<span>Development</span>
-					</div>
-					<div class="col-sm-12">
-						<label>Dept</label>
-						<span>Java</span>
-					</div>
-				</div>
-				
+                    <span class="cdetails-top-close"><i class="fa fa-times"></i></span>
+                    <div class="col-sm-12">
+                        <label>Company</label>
+                        <span>Silverxis</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>BU</label>
+                        <span>Adso</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>Division</label>
+                        <span>Development</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>Dept</label>
+                        <span>Java</span>
+                    </div>
+                </div>
+
                 <div class="clear"></div>
 
-				<div class="col-sm-3 left-block">
+                <div class="col-sm-3 left-block">
 
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">Workflow ID</label>
-						<div class="col-sm-7">
-							<input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.workOrderNumber" readonly>
-						</div>
-					</div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Workflow ID</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" value="{{'ACC' + sourceWorkFlow.workflowId}}" readonly>
+                        </div>
+                    </div>
 
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">Workflow Description</label>
-						<div class="col-sm-7">
-							<input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.workflowDescription">
-						</div>
-					</div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Workflow Description</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.workflowDescription">
+                        </div>
+                    </div>
 
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">Version</label>
-						<div class="col-sm-7">
-							<input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.version">
-						</div>
-					</div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Version</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.version">
+                        </div>
+                    </div>
 
 
-					<div class="form-group col-sm-12">
-						<label class="control-label col-sm-4">Work Scope <span class="clr-red">*</span></label>
-						<div class="col-sm-7">
-							<select [(ngModel)]="sourceWorkFlow.workScopeId">
-								<option *ngFor="let workScope of worksScopeCollection" [ngValue]="workScope.workScopeId">  {{workScope.description}}</option>
-							</select>
-						</div>
-					</div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Work Scope <span class="clr-red">*</span></label>
+                        <div class="col-sm-7">
+                            <select [(ngModel)]="sourceWorkFlow.workScopeId">
+                                <option *ngFor="let workScope of worksScopeCollection" [ngValue]="workScope.workScopeId">  {{workScope.description}}</option>
+                            </select>
+                        </div>
+                    </div>
 
-				</div>
-               
+                </div>
+
                 <div class="col-sm-3 left-block">
                     <div class="col-sm-12">
 
 
                         <div class="form-group col-sm-12">
-                            <label for="vendorName" class="control-label col-sm-4">Part Number <span class="clr-red">*</span></label>
+                            <label class="control-label col-sm-4">Part Number <span class="clr-red">*</span></label>
                             <div class="col-sm-7">
                                 <p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                 [minLength]="1" [dropdown]="true">
@@ -96,18 +95,6 @@
                         </div>
                     </div>
 
-
-                    <!--<div class="form-group col-sm-12">
-        <label for="vendorName" class="control-label col-sm-4">Changed Part Number <span class="clr-red">*</span></label>
-        <div class="col-sm-7">
-            <p-autoComplete [(ngModel)]="sourceWorkFlow.changedPartNumber" (onSelect)="onPartSelect($event)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-                            [minLength]="1" [dropdown]="true">
-                <ng-template let-partName pTemplate="part">
-                    <div class="ui-helper-clearfix">{{partName}}</div>
-                </ng-template>
-            </p-autoComplete>
-        </div>
-    </div>-->
                     <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4">Changed PN</label>
                         <div class="col-sm-7">
@@ -115,19 +102,15 @@
                         </div>
                     </div>
 
-                    <!--<div class="col-sm-12">
-        <label>Customer Name</label>
-        <div class="inner-addon right-addon autosuggesions-add inline-block">
-            <i class="fa fa-search"></i>
-            <input type="text" [(ngModel)]="sourceWorkFlow.customerId" class="form-control names ui-autocomplete-input" id="" name="" placeholder="Customer Name" autocomplete="off">
-        </div>
-        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-    </div>-->
                     <div class="form-group col-sm-12">
                         <label for="vendorName" class="control-label col-sm-4">Customer Name <span class="clr-red">*</span></label>
                         <div class="col-sm-7">
-                            <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName" (onSelect)="onCustomerNameselected($event)" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                            <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName"
+                                            (onSelect)="onCustomerNameselected($event)"
+                                            [suggestions]="customerNames"
+                                            (completeMethod)="filterNames($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true">
+
                                 <ng-template let-name pTemplate="item">
                                     <div class="ui-helper-clearfix">{{name}}</div>
                                 </ng-template>
@@ -145,458 +128,308 @@
                     <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4">Currency <span class="clr-red">*</span></label>
                         <div class="col-sm-7">
-                            <!--<select class="w80" [(ngModel)]="sourceWorkFlow.currencyId">
-                <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
-            </select>-->
                             <select [(ngModel)]="sourceWorkFlow.currencyId">
                                 <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
                             </select>
                         </div>
                     </div>
-                    <!--<div class="col-sm-12">
-        <label class="">Workflow Exp. Date</label>
-        <input [(ngModel)]="sourceWorkFlow.workflowExpirationDate" type="text" class="form-control  hasDatepicker" id="datepicker" name="" placeholder="1/31/2018">
-    </div>-->
+
                     <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4">Workflow Exp. Date</label>
                         <div class="col-sm-7">
-                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.expirationDate"></p-calendar>
+                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate"></p-calendar>
                         </div>
                     </div>
 
                 </div>
-				
+
                 <div class="col-sm-6 right-block">
-					<div class="col-sm-12">
-						<label class="w200 active-text">
-							<input [(ngModel)]="sourceWorkFlow.isCalculatedBERThreshold" [value]="true" type="radio" name="ber-flat" class="trigger" data-rel="ber" (click)="isCalculatedBERThreshold('calculate')">
-							Calculate BER Threshold
-						</label>
-						<label class="w100 default-text">
-							<input [(ngModel)]="sourceWorkFlow.isCalculatedBERThreshold" [value]="false" type="radio" name="ber-flat" class="trigger" data-rel="flat" (click)="isCalculatedBERThreshold('flat')">
-							Use Flat Rate
-						</label>
-					</div>
-					<div *ngIf="isCalculate">
-						<div class="col-sm-12">
-							<label class="w100">
-								<input type="radio" name="ber-type" class="trigger2" data-rel="ber-fixed" (click)="isFixedcheck('fixed')" value="1">
-								Fixed Amount
-							</label>
-							<label class="w100">
-								<input type="radio" name="ber-type" class="trigger2" data-rel="ber-new" (click)="isFixedcheck('percentage')" value="2">
-								Percent of New
-							</label>
-							<label class="w150">
-								<input type="radio" name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace')" value="3">
-								Percent of Replaceent
-							</label>
-						</div>
-						<div *ngIf="isFixed">
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Fixed Amount</label>
-								<div class="col-sm-4">
-									<input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.fixedAmount">
-								</div>
-							</div>
+                    <div class="col-sm-12">
+                        <label class="w130">Calculate BER Threshold</label>
+                        <label class="w100">
+                            <input type="radio" name="ber-type" class="trigger2" data-rel="ber-fixed" [checked]="sourceWorkFlow.isFixedAmount" (click)="isFixedcheck('fixed')" value="1">
+                            Fixed Amount
+                        </label>
+                        <label class="w100">
+                            <input type="radio" name="ber-type" class="trigger2" data-rel="ber-new" [checked]="sourceWorkFlow.isPercentageofNew" (click)="isFixedcheck('percentage')" value="2">
+                            Percent of New
+                        </label>
+                        <label class="w150">
+                            <input type="radio" name="ber-type" class="trigger2" data-rel="ber-replace" [checked]="sourceWorkFlow.isPercentageOfReplacement" (click)="isFixedcheck('percentreplace')" value="3">
+                            Percent of Replacement
+                        </label>
+                    </div>
 
-						</div>
-						<div *ngIf="ispercent">
-							<div class="col-sm-12">
-								<label class="w90">Cost of New</label>
-								<input type="text" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70 amount" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
-								<label class="w50">Percent</label>
-								<select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
-									<option value="">Select</option>
-                                    <option value="0">0%</option>
-									<option value="1">1%</option>
-									<option value="2">2%</option>
-									<option value="3">3%</option>
-									<option value="4">4%</option>
-									<option value="5">5%</option>
-									<option value="6">6%</option>
-									<option value="7">7%</option>
-									<option value="8">8%</option>
-									<option value="9">9%</option>
-									<option value="10">10%</option>
-									<option value="11">11%</option>
-									<option value="12">12%</option>
-									<option value="13">13%</option>
-									<option value="14">14%</option>
-									<option value="15">15%</option>
-									<option value="16">16%</option>
-									<option value="17">17%</option>
-									<option value="18">18%</option>
-									<option value="19">19%</option>
-									<option value="20">20%</option>
-									<option value="21">21%</option>
-									<option value="22">22%</option>
-									<option value="23">23%</option>
-									<option value="24">24%</option>
-									<option value="25">25%</option>
-									<option value="26">26%</option>
-									<option value="27">27%</option>
-									<option value="28">28%</option>
-									<option value="29">29%</option>
-									<option value="30">30%</option>
-									<option value="31">31%</option>
-									<option value="32">32%</option>
-									<option value="33">33%</option>
-									<option value="34">34%</option>
-									<option value="35">35%</option>
-									<option value="36">36%</option>
-									<option value="37">37%</option>
-									<option value="38">38%</option>
-									<option value="39">39%</option>
-									<option value="40">40%</option>
-									<option value="41">41%</option>
-									<option value="42">42%</option>
-									<option value="43">43%</option>
-									<option value="44">44%</option>
-									<option value="45">45%</option>
-									<option value="46">46%</option>
-									<option value="47">47%</option>
-									<option value="48">47%</option>
-									<option value="49">49%</option>
-									<option value="50">50%</option>
-									<option value="51">51%</option>
-									<option value="52">52%</option>
-									<option value="53">53%</option>
-									<option value="54">54%</option>
-									<option value="55">55%</option>
-									<option value="56">56%</option>
-									<option value="57">57%</option>
-									<option value="58">58%</option>
-									<option value="59">59%</option>
-									<option value="60">60%</option>
-									<option value="61">61%</option>
-									<option value="62">62%</option>
-									<option value="63">63%</option>
-									<option value="64">64%</option>
-									<option value="65">65%</option>
-									<option value="66">66%</option>
-									<option value="67">67%</option>
-									<option value="68">68%</option>
-									<option value="69">69%</option>
-									<option value="70">70%</option>
-									<option value="71">71%</option>
-									<option value="72">72%</option>
-									<option value="73">73%</option>
-									<option value="74">74%</option>
-									<option value="75">75%</option>
-									<option value="76">76%</option>
-									<option value="77">77%</option>
-									<option value="78">78%</option>
-									<option value="79">79%</option>
-									<option value="80">80%</option>
-									<option value="81">81%</option>
-									<option value="82">82%</option>
-									<option value="83">83%</option>
-									<option value="84">84%</option>
-									<option value="85">85%</option>
-									<option value="86">86%</option>
-									<option value="87">87%</option>
-									<option value="88">88%</option>
-									<option value="89">89%</option>
-									<option value="90">90%</option>
-									<option value="91">91%</option>
-									<option value="92">92%</option>
-									<option value="93">93%</option>
-									<option value="94">94%</option>
-									<option value="95">95%</option>
-									<option value="96">96%</option>
-									<option value="97">97%</option>
-									<option value="98">98%</option>
-									<option value="99">99%</option>
-									<option value="100">100%</option>
-								</select>
-								<label class="w130">BER Threshold Amount</label>
-								<b class="clr-red">{{sourceWorkFlow.percentOfNew}}</b>
-							</div>
-						</div>
-						<div *ngIf="percentreplcae">
-							<div class="col-sm-12">
-								<label class="w90">Cost of Replace</label>
-								<input [(ngModel)]="sourceWorkFlow.costOfReplacement" class="form-control w70 amount" type="text" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
-								<label class="w50">Percent</label>
-								<select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
+                    <div class="col-sm-12">
+
+                        <div [hidden]="!isFixed" class="form-group col-sm-12">
+                            <label class="w90">Fixed Amount</label>
+                            <input class="form-control w70 amount" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount">
+                        </div>
+
+                        <div [hidden]="!ispercent" class="form-group col-sm-12">
+                            <label class="w90">Cost of New</label>
+                            <input type="number" placeholder=" $40,000 " [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
+                            <label class="w50">Percent</label>
+                            <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
+                                <option value="">Select</option>
+                                <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
+                            </select>
+                            <label class="w130">BER Threshold Amount</label>
+                            <b class="clr-red">{{sourceWorkFlow.percentOfNew}}</b>
+                        </div>
+
+                        <div [hidden]="!percentreplcae" class="form-group col-sm-12">
+                            <div class="col-sm-12">
+                                <label class="w90">Cost of Replace</label>
+                                <input [(ngModel)]="sourceWorkFlow.costOfReplacement" placeholder=" $40,000 " class="form-control w70 amount" type="number" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
+                                <label class="w50">Percent</label>
+                                <select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
                                     <option value="">Select</option>
-                                    <option value="0">0%</option>
-									<option value="1">1%</option>
-									<option value="2">2%</option>
-									<option value="3">3%</option>
-									<option value="4">4%</option>
-									<option value="5">5%</option>
-									<option value="6">6%</option>
-									<option value="7">7%</option>
-									<option value="8">8%</option>
-									<option value="9">9%</option>
-									<option value="10">10%</option>
-									<option value="11">11%</option>
-									<option value="12">12%</option>
-									<option value="13">13%</option>
-									<option value="14">14%</option>
-									<option value="15">15%</option>
-									<option value="16">16%</option>
-									<option value="17">17%</option>
-									<option value="18">18%</option>
-									<option value="19">19%</option>
-									<option value="20">20%</option>
-									<option value="21">21%</option>
-									<option value="22">22%</option>
-									<option value="23">23%</option>
-									<option value="24">24%</option>
-									<option value="25">25%</option>
-									<option value="26">26%</option>
-									<option value="27">27%</option>
-									<option value="28">28%</option>
-									<option value="29">29%</option>
-									<option value="30">30%</option>
-									<option value="31">31%</option>
-									<option value="32">32%</option>
-									<option value="33">33%</option>
-									<option value="34">34%</option>
-									<option value="35">35%</option>
-									<option value="36">36%</option>
-									<option value="37">37%</option>
-									<option value="38">38%</option>
-									<option value="39">39%</option>
-									<option value="40">40%</option>
-									<option value="41">41%</option>
-									<option value="42">42%</option>
-									<option value="43">43%</option>
-									<option value="44">44%</option>
-									<option value="45">45%</option>
-									<option value="46">46%</option>
-									<option value="47">47%</option>
-									<option value="48">47%</option>
-									<option value="49">49%</option>
-									<option value="50">50%</option>
-									<option value="51">51%</option>
-									<option value="52">52%</option>
-									<option value="53">53%</option>
-									<option value="54">54%</option>
-									<option value="55">55%</option>
-									<option value="56">56%</option>
-									<option value="57">57%</option>
-									<option value="58">58%</option>
-									<option value="59">59%</option>
-									<option value="60">60%</option>
-									<option value="61">61%</option>
-									<option value="62">62%</option>
-									<option value="63">63%</option>
-									<option value="64">64%</option>
-									<option value="65">65%</option>
-									<option value="66">66%</option>
-									<option value="67">67%</option>
-									<option value="68">68%</option>
-									<option value="69">69%</option>
-									<option value="70">70%</option>
-									<option value="71">71%</option>
-									<option value="72">72%</option>
-									<option value="73">73%</option>
-									<option value="74">74%</option>
-									<option value="75">75%</option>
-									<option value="76">76%</option>
-									<option value="77">77%</option>
-									<option value="78">78%</option>
-									<option value="79">79%</option>
-									<option value="80">80%</option>
-									<option value="81">81%</option>
-									<option value="82">82%</option>
-									<option value="83">83%</option>
-									<option value="84">84%</option>
-									<option value="85">85%</option>
-									<option value="86">86%</option>
-									<option value="87">87%</option>
-									<option value="88">88%</option>
-									<option value="89">89%</option>
-									<option value="90">90%</option>
-									<option value="91">91%</option>
-									<option value="92">92%</option>
-									<option value="93">93%</option>
-									<option value="94">94%</option>
-									<option value="95">95%</option>
-									<option value="96">96%</option>
-									<option value="97">97%</option>
-									<option value="98">98%</option>
-									<option value="99">99%</option>
-									<option value="100">100%</option>
-								</select>
-								<label class="w130">BER Threshold Amount</label>
-								<b class="clr-red">{{sourceWorkFlow.percentOfReplaceMent}}</b>
-							</div>
-						</div>
-						<div class="clear"></div>
-					</div>
-					<div *ngIf="isFlat">
-						<div class="form-group col-sm-12">
-							<label class="control-label col-sm-4">Flat Rate</label>
-							<div class="col-sm-4">
-								<input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.flatRate">
-							</div>
-						</div>
+                                    <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
+                                </select>
+                                <label class="w130">BER Threshold Amount</label>
+                                <b class="clr-red">{{sourceWorkFlow.percentOfReplacement}}</b>
+                            </div>
+                        </div>
 
-					</div>
-					<div class="col-sm-12">
-						<div class="form-group col-sm-12" *ngIf="UpdateMode">
-							<label class="control-label col-sm-4">BER Threshold Amount</label>
-							<div class="col-sm-4">
-								<input class="form-control" type="text" readonly value={{sourceWorkFlow.berThresholdAmount}}>
-							</div>
-						</div>
-						<div class="form-group col-sm-12">
-							<label class="control-label col-sm-4">Total WorkFlow Cost</label>
-							<div class="col-sm-4">
-								<input class="form-control" type="text" readonly>
-							</div>
-						</div>
+                        <div class="clear"></div>
+
+                    </div>
+
+                    <div class="col-sm-12">
+                        <label class="w130">Total Workflow Cost</label>
+                        <input type="text" class="form-control workflowcost" id="" name="" placeholder="Total Ext. Cost" disabled="">
+                        <br>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <label class="w130">Memo</label>
+                        <textarea class="form-control w200" [(ngModel)]="sourceWorkFlow.memo"></textarea>
+                    </div>
+
+                </div>
+                <!--<div class="col-sm-6 right-block">
+                    <div>
+                        <div class="col-sm-12">
+                            <label class="w100">
+                                <input type="radio" name="ber-type" class="trigger2" data-rel="ber-fixed" (click)="isFixedcheck('fixed')" value="1">
+                                Fixed Amount
+                            </label>
+                            <label class="w100">
+                                <input type="radio" name="ber-type" class="trigger2" data-rel="ber-new" (click)="isFixedcheck('percentage')" value="2">
+                                Percent of New
+                            </label>
+                            <label class="w150">
+                                <input type="radio" name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace')" value="3">
+                                Percent of Replaceent
+                            </label>
+                        </div>
+                        <div *ngIf="isFixed">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Fixed Amount</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.fixedAmount">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="ispercent">
+                            <div class="col-sm-12">
+                                <label class="w90">Cost of New</label>
+                                <input type="text" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70 amount" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
+                                <label class="w50">Percent</label>
+                                <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
+                                    <option value="">Select</option>
+                                    <option *ngFor="let i of totalPercent" value="{{i}}">{{i}}%</option>
+                                </select>
+                                <label class="w130">BER Threshold Amount</label>
+                                <b class="clr-red">{{sourceWorkFlow.percentOfNew}}</b>
+                            </div>
+                        </div>
+                        <div *ngIf="percentreplcae">
+                            <div class="col-sm-12">
+                                <label class="w90">Cost of Replace</label>
+                                <input [(ngModel)]="sourceWorkFlow.costOfReplacement" class="form-control w70 amount" type="text" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
+                                <label class="w50">Percent</label>
+                                <select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
+                                    <option value="">Select</option>
+                                    <option *ngFor="let i of totalPercent" value="{{i}}">{{i}}%</option>
+                                </select>
+                                <label class="w130">BER Threshold Amount</label>
+                                <b class="clr-red">{{sourceWorkFlow.percentOfReplaceMent}}</b>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div *ngIf="isFlat">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Flat Rate</label>
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.flatRate">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group col-sm-12" *ngIf="UpdateMode">
+                            <label class="control-label col-sm-4">BER Threshold Amount</label>
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" readonly value={{sourceWorkFlow.berThresholdAmount}}>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Total WorkFlow Cost</label>
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" readonly>
+                            </div>
+                        </div>
 
 
-						<div class="col-sm-12">
-							<label class="w130">Memo</label>
-							<textarea [(ngModel)]="sourceWorkFlow.memo" class="form-control w200"></textarea>
-						</div>
-					</div>
-				</div>
-				
+                        <div class="col-sm-12">
+                            <label class="w130">Memo</label>
+                            <textarea [(ngModel)]="sourceWorkFlow.memo" class="form-control w200"></textarea>
+                        </div>
+                    </div>
+                </div>-->
+
                 <div class="clear"></div>
-				
+
                 <hr>
 
-				<div class="clearfix selection-box ">
-					<div class="form-group col-sm-4">
-						<label>Tasks</label><br />
-						<div class="inner-addon col-sm-7 inline-block display-flex">
-							<select class="form-control custom-select"
-									[(ngModel)]="currenttaskId"
-									(change)="onActionChange()">
-								<option value="0">Select</option>
-								<option *ngFor="let action of actions"
-										value={{action.Id}}>
-									{{action.Name}}
-								</option>
-							</select>
-							<button class="btn add-btn"
-									data-toggle="modal"
-									data-target="#myModal">
-								<i class="fa fa-plus"></i>
-							</button>
-						</div>
-					</div>
-					<div class="form-group col-sm-4" [hidden]="!showActionAttribute">
-						<label>Task Attribute</label><br />
-						<div class="inner-addon col-sm-7 inline-block display-flex">
-							<ng-multiselect-dropdown class="form-control multiple-custom-select"
-													 [placeholder]="'Select'"
-													 [data]="actionAttributes"
-													 [(ngModel)]="selectedItems"
-													 [settings]="dropdownSettings"
-													 (onDeSelect)="onDeSelect($event)"
-													 (onSelect)="onItemSelect($event)"
-													 (onSelectAll)="onSelectAll($event)">
-							</ng-multiselect-dropdown>
+                <div class="clearfix selection-box ">
+                    <div class="form-group col-sm-4">
+                        <label>Tasks</label><br />
+                        <div class="inner-addon col-sm-7 inline-block display-flex">
+                            <select class="form-control custom-select"
+                                    [(ngModel)]="currenttaskId"
+                                    (change)="onActionChange()">
+                                <option value="0">Select</option>
+                                <option *ngFor="let action of actions"
+                                        value={{action.Id}}>
+                                    {{action.Name}}
+                                </option>
+                            </select>
+                            <button class="btn add-btn"
+                                    data-toggle="modal"
+                                    data-target="#myModal">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-4" [hidden]="!showActionAttribute">
+                        <label>Task Attribute</label><br />
+                        <div class="inner-addon col-sm-7 inline-block display-flex">
+                            <ng-multiselect-dropdown *ngIf="actionAttributes" class="form-control multiple-custom-select"
+                                                     [placeholder]="'Select'"
+                                                     [data]="actionAttributes"
+                                                     [(ngModel)]="selectedItems"
+                                                     [settings]="dropdownSettings"
+                                                     (onDeSelect)="onDeSelect($event)"
+                                                     (onSelect)="onItemSelect($event)"
+                                                     (onSelectAll)="onSelectAll($event)">
+                            </ng-multiselect-dropdown>
 
-							<button class="btn add-btn w50" (click)="AddActionAttribute()">Add</button>
-						</div>
-					
-					</div>
+                            <button class="btn add-btn w50" (click)="AddActionAttribute()">Add</button>
+                        </div>
 
-				</div>
-				
+                    </div>
+
+                </div>
+
                 <div class="bhoechie-tab-container clearfix"
-					 *ngIf="workFlowList != undefined && workFlowList.length > 0">
-					<div class="bhoechie-tab-menu">
-						<div class="list-group">
-							<a href="javascript:void(0)"
-							   class="list-group-item actrmv"
-							   id='tab_{{workFlow.taskId}}'
-							   (click)="SetCurrectTab(workFlow.taskId)"
-							   *ngFor="let workFlow of workFlowList">
-								{{workFlow.ActionName}}
-							</a>
-						</div>
-					</div>
-					<div class="bhoechie-tab">
-						<!-- flight section -->
-						<div class="bhoechie-tab-content active">
-							<h1 class="heading">{{workFlow.ActionName}}</h1>
-							<div class="custom-pill">
-								<ul class="nav nav-pills">
-									<li class=""
-										*ngFor="let item of workFlow.selectedItems"
-										(click)="setCurrentPanel(item.Name)">
-										<a data-toggle="pill"
-										   href="#tab{{item.Name}}">{{item.Name}}</a>
-									</li>
-								</ul>
-								<div class="tab-content">
+                     *ngIf="workFlowList != undefined && workFlowList.length > 0">
+                    <div class="bhoechie-tab-menu">
+                        <div class="list-group">
+                            <a href="javascript:void(0)"
+                               class="list-group-item actrmv"
+                               id='tab_{{workFlow.taskId}}'
+                               (click)="SetCurrectTab(workFlow.taskId)"
+                               *ngFor="let workFlow of workFlowList">
+                                {{workFlow.ActionName}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="bhoechie-tab">
+                        <!-- flight section -->
+                        <div class="bhoechie-tab-content active">
+                            <!--<h1 class="heading">{{workFlow.ActionName}}</h1>-->
+                            <div class="custom-pill">
+                                <ul class="nav nav-pills">
+                                    <li class=""
+                                        *ngFor="let item of workFlow.selectedItems"
+                                        (click)="setCurrentPanel(item.Name)">
+                                        <a data-toggle="pill"
+                                           href="#tab{{item.Name}}">{{item.Name}}</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
 
-									<div id="tab_Charges" *ngIf="workFlow != undefined && workFlow.charges != undefined && workFlow.charges.length > 0"
-										 class="tab-pane fade in active pan">
-										<grd-charges [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-charges>
-									</div>
-									<div id="tab_Directions" *ngIf="workFlow != undefined && workFlow.directions != undefined && workFlow.directions.length > 0"
-										 class="tab-pane fade pan">
-										<grd-directions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-directions>
-									</div>
-									<div id="tab_Equipment" *ngIf="workFlow != undefined && workFlow.equipments != undefined && workFlow.equipments.length > 0"
-										 class="tab-pane fade pan">
-										<grd-equipment [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-equipment>
-									</div>
-									<div id="tab_Exclusions" *ngIf="workFlow != undefined && workFlow.exclusions != undefined && workFlow.exclusions.length > 0"
-										 class="tab-pane fade pan">
-										<grd-exclusions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-exclusions>
-									</div>
-									<div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined && workFlow.expertise.length > 0"
-										 class="tab-pane fade pan">
-										<grd-expertise [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-expertise>
-									</div>
-									<div id="tab_Material_List" *ngIf="workFlow != undefined && workFlow.materialList != undefined && workFlow.materialList.length > 0"
-										 class="tab-pane fade pan">
-										<grd-material [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-material>
-									</div>
-									<div id="tab_Measurements" *ngIf="workFlow != undefined && workFlow.measurements != undefined && workFlow.measurements.length > 0"
-										 class="tab-pane fade pan">
-										<grd-measurement [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-measurement>
-									</div>
-									<div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication != undefined && workFlow.publication.length > 0"
-										 class="tab-pane fade pan">
-										<grd-publication [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-publication>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+                                    <div id="tab_Charges" *ngIf="workFlow != undefined && workFlow.charges != undefined && workFlow.charges.length > 0"
+                                         class="tab-pane fade in active pan">
+                                        <grd-charges [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-charges>
+                                    </div>
+                                    <div id="tab_Directions" *ngIf="workFlow != undefined && workFlow.directions != undefined && workFlow.directions.length > 0"
+                                         class="tab-pane fade pan">
+                                        <grd-directions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-directions>
+                                    </div>
+                                    <div id="tab_Equipment" *ngIf="workFlow != undefined && workFlow.equipments != undefined && workFlow.equipments.length > 0"
+                                         class="tab-pane fade pan">
+                                        <grd-equipment [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-equipment>
+                                    </div>
+                                    <div id="tab_Exclusions" *ngIf="workFlow != undefined && workFlow.exclusions != undefined && workFlow.exclusions.length > 0"
+                                         class="tab-pane fade pan">
+                                        <grd-exclusions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-exclusions>
+                                    </div>
+                                    <div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined && workFlow.expertise.length > 0"
+                                         class="tab-pane fade pan">
+                                        <grd-expertise [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-expertise>
+                                    </div>
+                                    <div id="tab_Material_List" *ngIf="workFlow != undefined && workFlow.materialList != undefined && workFlow.materialList.length > 0"
+                                         class="tab-pane fade pan">
+                                        <grd-material [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-material>
+                                    </div>
+                                    <div id="tab_Measurements" *ngIf="workFlow != undefined && workFlow.measurements != undefined && workFlow.measurements.length > 0"
+                                         class="tab-pane fade pan">
+                                        <grd-measurement [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-measurement>
+                                    </div>
+                                    <div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication != undefined && workFlow.publication.length > 0"
+                                         class="tab-pane fade pan">
+                                        <grd-publication [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-publication>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-				</div>
-				
+                </div>
+
                 <div class="text-right save-work-btn" *ngIf="(showMainPage) && (!UpdateMode) && workFlowList.length > 0">
-					<button class="btn add-btn" (click)="addWorkFlow()">Save Workflow Details</button>
-				</div>
-				<div class="text-right save-work-btn" *ngIf="(showMainPage) && (UpdateMode) && workFlowList.length > 0">
-					<button class="btn add-btn" (click)="updateWorkFlow()">Update Workflow Details</button>
-				</div>
-			</div>
+                    <button class="btn add-btn" (click)="addWorkFlow()">Save Workflow Details</button>
+                </div>
+                <div class="text-right save-work-btn" *ngIf="(showMainPage) && (UpdateMode) && workFlowList.length > 0">
+                    <button class="btn add-btn" (click)="updateWorkFlow()">Update Workflow Details</button>
+                </div>
+            </div>
 
-		</div>
-		<div class="clear"></div>
-		<div id="myModal"
-			 class="modal fade custom-popup"
-			 role="dialog">
-			<div class="modal-dialog">
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button"
-								class="close"
-								data-dismiss="modal">
-							<i class="fa fa-close"></i>
-						</button>
-						<h4 class="modal-title">Add Action</h4>
-					</div>
-					<div class="modal-body">
-						<div class=" selection-box ">
+        </div>
+        <div class="clear"></div>
+        <div id="myModal"
+             class="modal fade custom-popup"
+             role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal">
+                            <i class="fa fa-close"></i>
+                        </button>
+                        <h4 class="modal-title">Add Action</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class=" selection-box ">
                             <div class="row">
                                 <div class="col-lg-6 col-md-2 col-sm-2 col-xs-10">
                                     <label>Action Name</label>
@@ -604,16 +437,16 @@
 
                                 </div>
                             </div>
-                          
-                            
+
+
                             <div class="row">
                                 <div class="col-lg-6 col-md-2 col-sm-2 col-xs-10">
                                     <label>Memo</label>
                                     <input type="text" class="custom-form-control" [(ngModel)]="newAction.Memo" />
                                 </div>
-                               
+
                             </div>
-                            <br />  
+                            <br />
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-10">
                                     <button class="btn btn-success"
@@ -622,11 +455,12 @@
                                     </button>
                                 </div>
                             </div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
 </div>
-<div class="clear"></div>

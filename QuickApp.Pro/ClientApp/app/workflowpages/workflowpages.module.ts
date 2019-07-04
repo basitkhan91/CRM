@@ -53,6 +53,8 @@ import { MeasurementCreateComponent } from "../shared/Measurement-Create.compone
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { MatIconModule } from "@angular/material";
 import { StarComponent } from "../shared/star.component";
+import { AssetService } from "../services/asset/Assetservice";
+import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
 @NgModule({
 	imports: [
 		FlexLayoutModule,
@@ -97,7 +99,9 @@ import { StarComponent } from "../shared/star.component";
 		MeasurementCreateComponent],
 	providers: [
 		ActionService,
-		ActionEndpoint
+        ActionEndpoint,
+        AssetService,
+        AssetEndpoint,
 	],
 	entryComponents: [
 	]

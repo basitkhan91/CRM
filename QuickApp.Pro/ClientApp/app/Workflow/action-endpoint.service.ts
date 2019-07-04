@@ -52,7 +52,9 @@ export class ActionEndpoint extends EndpointFactory {
 	private UpdateExpertiseURL: string = "api/workflow/updateExpertise";
 	private UpdateMaterialListURL: string = "api/workflow/updateMaterial";
 	private UpdateMeasurementURL: string = "api/workflow/updateMeasurement";
-	private UpdatePublicationURL: string = "api/workflow/updatePublication";
+    private UpdatePublicationURL: string = "api/workflow/updatePublication";
+    private RemoveWorkFlowURL: string = "api/workflow/remove";
+
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -70,8 +72,27 @@ export class ActionEndpoint extends EndpointFactory {
 			});
 	}
 
-	getNewWorkFlow<T>(workflowData: any): Observable<T> {
+    removeWorkFlow<T>(workFlowId: number): Observable<T> {
+        let endpointUrl = `${this.RemoveWorkFlowURL}/${workFlowId}`;
+        return this.http.delete(endpointUrl, this.getRequestHeaders())
+            .catch(
+            error => {
+                return this.handleError(error, () => this.removeWorkFlow(workFlowId));
+            });
+    }
+
+    getNewWorkFlow<T>(workflowData: any): Observable<T> {
+        debugger;
         let obj = {
+            'charges': workflowData.charges,
+            'directions': workflowData.directions,
+            'equipments': workflowData.equipments,
+            'exclusions': workflowData.exclusions,
+            'expertise': workflowData.expertise,
+            'materialList': workflowData.materialList,
+            'measurements': workflowData.measurements,
+            'publication': workflowData.publication,
+
             'workflowDescription': workflowData.workflowDescription,
             'version': workflowData.version,
             'itemMasterId': workflowData.itemMasterId,
@@ -82,17 +103,20 @@ export class ActionEndpoint extends EndpointFactory {
             'customerId': workflowData.customerId,
             'workflowExpirationDate': workflowData.workflowExpirationDate,
             'isCalculatedBERThreshold': workflowData.isCalculatedBERThreshold,
+
             'isFixedAmount': workflowData.isFixedAmount,
+            'fixedAmount': workflowData.fixedAmount,
+
             'isPercentageofNew': workflowData.isPercentageofNew,
             'costOfNew': workflowData.costOfNew,
-            'fixedAmount': workflowData.fixedAmount,
-            'percenatgeOfNew': workflowData.percenatgeOfNew,
-            'isPercentageOfReplacement': workflowData.isPercentageOfReplacement,
-            'percentageOfReplacement': workflowData.percentageOfReplacement,
             'percentageOfNew': workflowData.percentageOfNew,
-            'berThresholdAmount': workflowData.berThresholdAmount,
+
+            'isPercentageOfReplacement': workflowData.isPercentageOfReplacement,
             'costOfReplacement': workflowData.costOfReplacement,
-            'pecentageOfReplacement': workflowData.pecentageOfReplacement,
+            'percentageOfReplacement': workflowData.percentageOfReplacement,
+
+            'berThresholdAmount': workflowData.berThresholdAmount,
+           
             'memo': workflowData.memo,
             'customerName': workflowData.customerName,
             'partNumber': workflowData.partNumber,
@@ -107,7 +131,28 @@ export class ActionEndpoint extends EndpointFactory {
 	}
 
 	addCharges<T>(charges: any): Observable<T> {
-       
+
+        let obj = {
+            'taskId': charges.taskId,
+            'workflowId': charges.workflowId,
+            //'vendorPriceOrUnit': charges.vendorPriceOrUnit,
+            'currencyId': charges.currencyId,
+            'description': charges.description,
+            'extendedCost': charges.extendedCost,
+            'vendorName': charges.vendorName,
+            'extendedPrice': charges.extendedPrice,
+            'forexRate': charges.forexRate,
+            'quantity': charges.quantity,
+            'unitCost': charges.unitCost,
+            'unitPrice': charges.unitPrice,
+            //'vendorId': charges.vendorId,
+            'vendorUnitPrice': charges.vendorUnitPrice,
+            'workflowChargeTypeId': charges.workflowChargeTypeId,
+            //'memo': charges.memo,
+            'isDelete': charges.isDelete,
+
+        }
+
         return this.http.post<T>(this.AddChargesURL, JSON.parse(JSON.stringify(charges)), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.addCharges(charges));
@@ -115,7 +160,15 @@ export class ActionEndpoint extends EndpointFactory {
 	}
 
 	addDirection<T>(direction: any): Observable<T> {
-		
+        let obj = {
+            'taskId': direction.taskId,
+            'workflowId': direction.workflowId,
+            'action': direction.action,
+            'description': direction.description,
+            'sequence': direction.sequence,
+            'memo': direction.memo,
+            'isDelete': direction.isDelete,
+        }
         return this.http.post<T>(this.AddDirectionURL, JSON.parse(JSON.stringify(direction)), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.addDirection(direction));
@@ -123,7 +176,17 @@ export class ActionEndpoint extends EndpointFactory {
     }
 
 	addEquipment<T>(equipment: any): Observable<T> {
-		
+        let obj = {
+            'taskId': equipment.taskId,
+            'workflowId': equipment.workflowId,
+            'assetDescription': equipment.assetDescription,
+            'assetId': equipment.assetId,
+            'assetTypeId': equipment.assetTypeId,
+            'quantity': equipment.quantity,
+            'memo': equipment.memo,
+            'isDelete': equipment.isDelete,
+            'partNumber': equipment.partNumber
+        }
         return this.http.post<T>(this.AddEquipmentURL, JSON.parse(JSON.stringify(equipment)), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.addEquipment(equipment));
@@ -131,7 +194,20 @@ export class ActionEndpoint extends EndpointFactory {
 	}
 
 	addExclusion<T>(exclusion: any): Observable<T> {
-		
+        let obj = {
+            'taskId': exclusion.taskId,
+            'workflowId': exclusion.workflowId,
+            'partDescription': exclusion.partDescription,
+            'estimtPercentOccurrance': exclusion.estimtPercentOccurrance,
+            'extendedCost': exclusion.extendedCost,
+            'partNumber': exclusion.partNumber,
+            'partName': exclusion.partName,
+            'itemMasterId': exclusion.itemMasterId,
+            'quantity': exclusion.quantity,
+            'unitCost': exclusion.unitCost,
+            'isDelete': exclusion.isDelete,
+            'memo': exclusion.memo
+        }
         return this.http.post<T>(this.AddExclusionURL, JSON.parse(JSON.stringify(exclusion)), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.addExclusion(exclusion));
@@ -139,7 +215,20 @@ export class ActionEndpoint extends EndpointFactory {
     }
 
 	addExpertise<T>(expertise: any): Observable<T> {
-		
+        let obj = {
+            'directLaborRate': expertise.directLaborRate,
+            'workflowId': expertise.workflowId,
+            'estimatedHours': expertise.estimatedHours,
+            'expertiseTypeId': expertise.expertiseTypeId,
+            'laborDirectRate': expertise.laborDirectRate,
+            'laborOverheadCost': expertise.laborOverheadCost,
+            'overheadBurden': expertise.overheadBurden,
+            'overheadCost': expertise.overheadCost,
+            'standardRate': expertise.standardRate,
+            'taskId': expertise.taskId,
+            'isDelete': expertise.isDelete,
+
+        }
         return this.http.post<T>(this.AddExpertiseURL, JSON.parse(JSON.stringify(expertise)), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.addExpertise(expertise));
@@ -147,16 +236,49 @@ export class ActionEndpoint extends EndpointFactory {
 	}
 
 	addMaterial<T>(material: any): Observable<T> {
-		
-        return this.http.post<T>(this.AddMaterialListURL, JSON.parse(JSON.stringify(material)), this.getRequestHeaders())
+        let obj = {
+            'taskId': material.actionId,
+            'conditionCodeId': material.conditionCodeId,
+            'extendedCost': material.extendedCost,
+            'extraCost': material.extraCost,
+            'isDeferred': material.isDeferred,
+            'itemClassificationId': material.itemClassificationId,
+            'itemMasterId': material.itemMasterId,
+            'mandatoryOrSupplemental': material.mandatoryOrSupplemental,
+            'partDescription': material.partDescription,
+            'memo': material.memo,
+            'price': material.price,
+            'provisionId': material.provisionId,
+            'quantity': material.quantity,
+            'unitCost': material.unitCost,
+            'unitOfMeasureId': material.unitOfMeasureId,
+            'workflowId': material.workflowId,
+            'isDelete': material.isDelete,
+            'partNumber': material.partNumber
+        }
+        return this.http.post<T>(this.AddMaterialListURL, JSON.parse(JSON.stringify(obj)), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.addMaterial(material));
 			});
     }
 
 	addMeasurement<T>(measurement: any): Observable<T> {
-		
-        return this.http.post<T>(this.AddMeasurementURL, JSON.stringify(measurement), this.getRequestHeaders())
+        let obj = {
+            'taskId': measurement.actionId,
+            'itemMasterId': measurement.itemMasterId,
+            'sequence': measurement.sequence,
+            'stage': measurement.stage,
+            'min': measurement.min,
+            'max': measurement.max,
+            'expected': measurement.expected,
+            'diagramURL': measurement.diagramURL,
+            'memo': measurement.memo,
+            'isDelete': measurement.isDelete,
+            'partNumber': measurement.partNumber,
+            'partDescription': measurement.partDescription,
+            'workflowId': measurement.workflowId
+        }
+        return this.http.post<T>(this.AddMeasurementURL, JSON.parse(JSON.stringify(obj)), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.addMeasurement(measurement));
 			});

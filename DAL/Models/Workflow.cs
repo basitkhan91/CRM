@@ -51,9 +51,10 @@ namespace DAL.Models
         [Required(ErrorMessage = "Changed Part Number is required")]
         public string ChangedPartNumber { get; set; }
 
-        [Required(ErrorMessage = "Changed Part Number Description is required")]
+        //[Required(ErrorMessage = "Changed Part Number Description is required")]
         public string ChangedPartNumberDescription { get; set; }
 
+        [ForeignKey("CustomerId")]
         public Nullable<long> CustomerId { get; set; }
 
         public Nullable<int> CurrencyId { get; set; }

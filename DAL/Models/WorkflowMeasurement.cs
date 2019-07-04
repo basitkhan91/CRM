@@ -16,26 +16,30 @@ using System.Text;
 
 namespace DAL.Models
 {
-
-
-
+    
     public partial class WorkflowMeasurement
     {
         [Key]
         public long WorkflowMeasurementId { get; set; }
         public long WorkflowId { get; set; }
-        public long ItemMasterId { get; set; }
+
+        [ForeignKey("TaskId")]
+        public long TaskId { get; set; }
+
+        [Required(ErrorMessage ="Sequence is required.")]
+        [MaxLength(5,ErrorMessage = "Sequence can only be 5 characters long")]
         public string Sequence { get; set; }
+
+        [MaxLength(20, ErrorMessage = "Sequence can only be 5 characters long")]
         public string Stage { get; set; }
+
         public Nullable<decimal> Min { get; set; }
         public Nullable<decimal> Max { get; set; }
         public Nullable<decimal> Expected { get; set; }
         public string DiagramURL { get; set; }
         public string Memo { get; set; }
 
-        [ForeignKey("TaskId")]
-        public long TaskId { get; set; }
-        public int MasterCompanyId { get; set; }
+        public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }

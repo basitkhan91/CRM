@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-
 namespace DAL.Models
 {
     public class Measurement : BaseClass
     {
         public string PN { get; set; }
+
         public string Sequence { get; set; }
         public string Stage { get; set; }
         public string Min { get; set; }

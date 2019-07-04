@@ -191,41 +191,36 @@ import { RolesGuardService } from "./services/roles-guard.service";
 import { UnauthorizedAccessComponent } from "../unauthorizedaccess/unauthorized-access.component";
 import { CompanyService } from "./services/company.service";
 import { CompanyEndpoint } from "./services/company-endpoint.service";
-import { CardModule } from 'primeng/card';
-import { PanelModule } from 'primeng/panel';
-import { LayoutComponent } from "./components/layout/layout.component";
 import { SpinnerComponent } from "./shared/spinner/spinner.component";
-import { WorkOrderService } from "./services/work-order/work-order.service";
-import { WorkOrderEndpointService } from "./services/work-order/work-order-endpoint.service";
-import { WorkOrderPartNumberService } from './services/work-order/work-order-part-number.service';
-import { WorkOrderPartNumberEndpointService } from './services/work-order/work-order-part-number-endpoint.service';
+import { CardModule } from 'primeng/card';
+import { PanelMenuModule } from 'primeng/panelmenu';
 
 //import { AuditComponent } from "./components/Audit/audit.component";
-import { PanelMenuModule } from 'primeng/panelmenu';
+
 
 
 @NgModule({
-	imports: [
-		SharedModule,
-		FooterModule,
-        ThemePickerModule,
-		HttpClientModule,		
-        AdminModule,       
-        SettingsModule,
-		AppRoutingModule,
+    imports: [
         CardModule,
-        PanelModule,
         PanelMenuModule,
+        SharedModule,
+        FooterModule,
+        ThemePickerModule,
+        HttpClientModule,
+        AdminModule,
+        SettingsModule,
+        AppRoutingModule,
+
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
                 useClass: TranslateLanguageLoader
             }
         }),
-		ToastyModule.forRoot(),
-	    ChartsModule,       
-		NgbModule.forRoot(),
-		
+        ToastyModule.forRoot(),
+        ChartsModule,
+        NgbModule.forRoot(),
+
     ],
     declarations: [
         AppComponent,
@@ -250,11 +245,10 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         LoginComponent,
         LayoutComponent,
         SpinnerComponent,
-        
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
-		{ provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,
         ConfigurationService,
         AppTitleService,
@@ -270,19 +264,19 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         ActionService,
         ActionEndpoint,
         AtaMainService,
-		ATAMainEndpoint,
-		AtaSubChapter1Service,
-		ATASubChapter1Endpoint,
-		AtaSubChapter2Service,
-		ATASubChapter2Endpoint,
-		SiteService,
-		SiteEndpoint,
-		WarehouseService,
-		WarehouseEndpoint,
-		BinService,
-		BinEndpoint,
-		GLAccountCategoryService,
-		GLAccountCategoryEndpointservice,
+        ATAMainEndpoint,
+        AtaSubChapter1Service,
+        ATASubChapter1Endpoint,
+        AtaSubChapter2Service,
+        ATASubChapter2Endpoint,
+        SiteService,
+        SiteEndpoint,
+        WarehouseService,
+        WarehouseEndpoint,
+        BinService,
+        BinEndpoint,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointservice,
         NgbActiveModal,
         MasterCompanyEndpoint,
         MasterComapnyService,
@@ -312,9 +306,9 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         ItemClassificationEndpointService,
         ItemGroupService,
         ItemgroupEndpointService,
-		TaxRateService,
-		ManufacturerService,
-		ManufacturerEndpoint,
+        TaxRateService,
+        ManufacturerService,
+        ManufacturerEndpoint,
         TaxRateEndpointService,
         VendorClassificationService,
         VendorClassificationEndpoint,
@@ -343,39 +337,39 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         ChargeService,
         ChargeEndpoint,
         ModalService,
-		Globals,
-		GLAccountClassEndpoint,
-		GLAccountClassService,
+        Globals,
+        GLAccountClassEndpoint,
+        GLAccountClassService,
         VendorService,
         VendorEndpointService,
         EmployeeService,
         EmployeeEndpoint,
         ItemMasterEndpoint,
-		ItemMasterService,
-		StocklineService,
-		StocklineEndpoint,
-		ReceivingCustomerWorkService,
-		ReceivingCustomerWorkEndpoint,
-		LegalEntityService,
-		LegalEntityEndpontService,
-		AuthService,
-		SingleScreenBreadcrumbService,
-		GlCashFlowClassificationService,
-		GlCashFlowClassificationEndpoint,
-		VendorCapabilitiesService,
-		VendorCapabilitiesEndpoint,
-		LocationService,
-		LocationEndpoint,
-		laborAndOverheadCostEndpointservice,
-		LaborAndOverheadCostService,
-		ShelfService,
-		ShelfEndpoint,
-		MessageService,
-		RolesManagementStructureService,
-		RolesManagementStructureEndpoint,
-		CertificationTypeEndpoint,
+        ItemMasterService,
+        StocklineService,
+        StocklineEndpoint,
+        ReceivingCustomerWorkService,
+        ReceivingCustomerWorkEndpoint,
+        LegalEntityService,
+        LegalEntityEndpontService,
+        AuthService,
+        SingleScreenBreadcrumbService,
+        GlCashFlowClassificationService,
+        GlCashFlowClassificationEndpoint,
+        VendorCapabilitiesService,
+        VendorCapabilitiesEndpoint,
+        LocationService,
+        LocationEndpoint,
+        laborAndOverheadCostEndpointservice,
+        LaborAndOverheadCostService,
+        ShelfService,
+        ShelfEndpoint,
+        MessageService,
+        RolesManagementStructureService,
+        RolesManagementStructureEndpoint,
+        CertificationTypeEndpoint,
         CertificationtypeService,
-        AssetStatusService,       
+        AssetStatusService,
         AssetStatusEndpointService,
         AssetTypeService,
         AssetTypeEndpointService,
@@ -404,8 +398,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         RolesGuardService,
         CompanyService,
         CompanyEndpoint,
-        
-		
     ],
     entryComponents: [
         LoginDialogComponent,
