@@ -19,7 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
@@ -75,7 +75,16 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: TaxTypeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    taxRatePagination: TaxType[];//added
+    totalRecords: number;
+    loading: boolean;
+
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public taxTypeService: TaxTypeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('taxType');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new TaxType();
@@ -92,7 +101,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.taxTypeService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -135,6 +144,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
+        this.totalRecords = allWorkFlows.length;
         this.allTaxTypes = allWorkFlows;
     }
 
@@ -247,7 +257,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
         this.sourceAction = row;
         //this.isSaving = true;
         // debugger;
-        this.workFlowtService.historyTaxType(this.sourceAction.taxTypeId).subscribe(
+        this.taxTypeService.historyTaxType(this.sourceAction.taxTypeId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
 
@@ -301,7 +311,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceAction.isActive == false;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.taxTypeService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -311,7 +321,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceAction.isActive == true;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.taxTypeService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -332,7 +342,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.description;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
+            this.taxTypeService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
@@ -341,7 +351,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.description;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.taxTypeService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
@@ -352,7 +362,7 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-        this.workFlowtService.deleteAcion(this.sourceAction.taxTypeId).subscribe(
+        this.taxTypeService.deleteAcion(this.sourceAction.taxTypeId).subscribe(
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -376,14 +386,14 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: TaxType) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `TaxType was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -415,11 +425,39 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
     }
 
     getTaxTypeAuditDetails(Id: number): void {
-        this.workFlowtService.getTaxTypeAuditDetails(Id).subscribe(audits => {
+        this.taxTypeService.getTaxTypeAuditDetails(Id).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
                 this.AuditDetails[0].ColumnsToAvoid = ["taxTypeAuditId", "TaxTypeId", "createdBy", "masterCompanyId", "createdDate", "updatedDate"];
             }
         });
+    }
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadTaxRate(this.paginatorState);
+        }
+    }
+
+    loadTaxRate(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allTaxTypes) {
+                this.taxTypeService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.taxRatePagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 }

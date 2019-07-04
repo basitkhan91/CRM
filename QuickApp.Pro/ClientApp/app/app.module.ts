@@ -242,7 +242,8 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
         ActionsButtonsComponent,
         UnauthorizedAccessComponent,
-        SpinnerComponent
+        LoginComponent,
+        SpinnerComponent,
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -396,7 +397,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         RolesGuardService,
         CompanyService,
         CompanyEndpoint,
-
     ],
     entryComponents: [
         LoginDialogComponent,

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DAL.Repositories.Interfaces
@@ -8,8 +10,8 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<DAL.Models.Document> GetDocuments();
 
+       new  IQueryable<Document> GetPaginationData();
+        //  void CreateAction(DAL.Models.Action action);
 
-      //  void CreateAction(DAL.Models.Action action);
-       
     }
 }

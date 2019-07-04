@@ -68,4 +68,9 @@ export class ItemClassificationService {
     getItemClassificationAudit(classificationAuditId: number) {
         return this.itemclassificationEndpoint.getItemClassificationDataAuditById<any>(classificationAuditId);
     }
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.itemclassificationEndpoint.getItemClassificationPagination<ItemClassificationModel[]>(serverSidePagesData));
+    }
+
 }

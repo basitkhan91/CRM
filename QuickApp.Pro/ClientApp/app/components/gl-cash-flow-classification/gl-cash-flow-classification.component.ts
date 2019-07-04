@@ -21,7 +21,7 @@ import { InputTextModule } from 'primeng/inputtext'
 import { MultiSelectModule } from 'primeng/multiselect'
 import { Action } from 'rxjs/scheduler/Action';
 import { AuditHistory } from '../../models/audithistory.model';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
@@ -72,9 +72,17 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
    // allGLcashflow: any[];
     cashflowViewFileds: any = {};
     AuditDetails: SingleScreenAuditDetails[];
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    glCashFlowClassificationPagination: GlCashFlowClassification[];//added
+    totalRecords: number;
+    loading: boolean;
 	
-	
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private workFlowtService:GlCashFlowClassificationService) {
+	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private glCashFlowClassificationService:GlCashFlowClassificationService) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		this.sourceglcashflowclassification = new GlCashFlowClassification();
@@ -90,7 +98,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getWorkFlows().subscribe(
+		this.glCashFlowClassificationService.getWorkFlows().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -111,8 +119,8 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		//this.dataSource.data = allWorkFlows;
-		this.allGlCashflow = allWorkFlows;
-		
+        this.allGlCashflow = allWorkFlows;
+        this.totalRecords = allWorkFlows.length;
 		this.selectedColumns = this.cols;
 
 	}
@@ -201,7 +209,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 
 		this.sourceglcashflowclassification = row;
 
-		this.workFlowtService.historyGlCashFlowClassification(this.sourceglcashflowclassification.glcashflowclassificationId).subscribe(
+		this.glCashFlowClassificationService.historyGlCashFlowClassification(this.sourceglcashflowclassification.glcashflowclassificationId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
 	}
@@ -212,7 +220,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 			this.sourceglcashflowclassification.updatedBy = this.userName;
 			this.Active = "In Active";
 			this.sourceglcashflowclassification.isActive == false;
-			this.workFlowtService.updateCashFlowClassification(this.sourceglcashflowclassification).subscribe(
+			this.glCashFlowClassificationService.updateCashFlowClassification(this.sourceglcashflowclassification).subscribe(
 				response => this.saveCompleted(this.sourceglcashflowclassification),
 				error => this.saveFailedHelper(error));
 			//alert(e);
@@ -222,7 +230,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 			this.sourceglcashflowclassification.updatedBy = this.userName;
 			this.Active = "Active";
 			this.sourceglcashflowclassification.isActive == true;
-			this.workFlowtService.updateCashFlowClassification(this.sourceglcashflowclassification).subscribe(
+			this.glCashFlowClassificationService.updateCashFlowClassification(this.sourceglcashflowclassification).subscribe(
 				response => this.saveCompleted(this.sourceglcashflowclassification),
 				error => this.saveFailedHelper(error));
 			//alert(e);
@@ -293,7 +301,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 			this.sourceglcashflowclassification.updatedBy = this.userName;
 			this.sourceglcashflowclassification.masterCompanyId = 1;
 			//this.sourceglaccountclass.glaccountclassname = this.glAccountclassName;
-			this.workFlowtService.newGlCashFlowClassification(this.sourceglcashflowclassification).subscribe(
+			this.glCashFlowClassificationService.newGlCashFlowClassification(this.sourceglcashflowclassification).subscribe(
 				role => this.saveSuccessHelper(role),
 				error => this.saveFailedHelper(error));
 		}
@@ -302,7 +310,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 			this.sourceglcashflowclassification.updatedBy = this.userName;
 			//this.sourceglcashflowclassification.glClassFlowClassificationName = this.glClassFlowClassificationName;
 			this.sourceglcashflowclassification.masterCompanyId = 1;
-			this.workFlowtService.updateCashFlowClassification(this.sourceglcashflowclassification).subscribe(
+			this.glCashFlowClassificationService.updateCashFlowClassification(this.sourceglcashflowclassification).subscribe(
 				response => this.saveCompleted(this.sourceglcashflowclassification),
 				error => this.saveFailedHelper(error));
 		}
@@ -312,7 +320,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.sourceglcashflowclassification.updatedBy = this.userName;
-		this.workFlowtService.deleteCashFlowClassification(this.sourceglcashflowclassification.glClassFlowClassificationId).subscribe(
+		this.glCashFlowClassificationService.deleteCashFlowClassification(this.sourceglcashflowclassification.glClassFlowClassificationId).subscribe(
 			response => this.saveCompleted(this.sourceglcashflowclassification),
 			error => this.saveFailedHelper(error));
 		this.modal.close();
@@ -328,7 +336,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-		this.loadData();
+        this.updatePaginatorState();
 
 	}
 
@@ -344,7 +352,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
 
 		}
 
-		this.loadData();
+        this.updatePaginatorState();
 	}
 
 	get userName(): string {
@@ -407,12 +415,41 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
     }
 
     getAuditDetails(Id: number): void {
-        this.workFlowtService.getGLCashFlowClassificationAuditDetails(Id).subscribe(audits => {
+        this.glCashFlowClassificationService.getGLCashFlowClassificationAuditDetails(Id).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
                 this.AuditDetails[0].ColumnsToAvoid = ["glClassFlowClassificationAuditId", "glClassFlowClassificationId", "glcid","masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadGlCashFlowClassification(this.paginatorState);
+        }
+    }
+
+    loadGlCashFlowClassification(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allGlCashflow) {
+                this.glCashFlowClassificationService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.glCashFlowClassificationPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 
 }

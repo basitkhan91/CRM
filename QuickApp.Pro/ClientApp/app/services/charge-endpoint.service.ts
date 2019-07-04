@@ -21,12 +21,14 @@ export class ChargeEndpoint extends EndpointFactory {
     private readonly _workflowActionsNewUrl: string = "/api/Charge/ChargePost";
     private readonly _actionsUrlAuditHistory: string = "/api/Charge/auditHistoryById";
     private readonly getChargeAuditDataById: string = "/api/Charge/audits";
+    private readonly getCharge: string = "/api/Charge/pagination";
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 	get actionsCurrency() { return this.configurations.baseUrl + this._actionsCurrency; }
 	get actionPO() { return this.configurations.baseUrl + this._actionsPO; }
 	get actionVendor() { return this.configurations.baseUrl + this._actionsVendor; }
 	get actionIntegrationPortal() { return this.configurations.baseUrl + this._actionsIntegrationPortal; }
+    get paginate() { return this.configurations.baseUrl + this.getCharge; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -120,6 +122,15 @@ export class ChargeEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getChargeAuditById(chargeId));
+            });
+    }
+
+    getChargeRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getChargeRecords(paginationOption));
             });
     }
 

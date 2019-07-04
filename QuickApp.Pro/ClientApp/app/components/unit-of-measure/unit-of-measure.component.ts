@@ -19,7 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
@@ -32,6 +32,11 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 /** Actions component*/
 export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
 
+    paginatorState: { rows: number; first: number; };
+    totalRecords: number;
+    first: number;
+    rows: number;
+    loading: boolean;
     selectedActionName: any;
     actionamecolle: any[]=[];
     disableSave: boolean = false;
@@ -44,6 +49,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     AuditDetails: SingleScreenAuditDetails[];
+    unitOfMeasurePagination: UnitOfMeasure[];//added
 
     isSaving: boolean;
     ngOnInit(): void {
@@ -137,6 +143,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getUnitOfMeasureList;
+        this.totalRecords = getUnitOfMeasureList.length;//Adding for Pagination
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
     }
 
@@ -392,14 +399,14 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: UnitOfMeasure) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -440,5 +447,34 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                     this.AuditDetails[0].ColumnsToAvoid = ["unitOfMeasureAuditId", "unitOfMeasureId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
                 }
         });
+    }
+
+    loadUnitOfMeasure(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allUnitOfMeasureinfo) {
+                this.unitofmeasureService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.unitOfMeasurePagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadUnitOfMeasure(this.paginatorState);
+        }
     }
 }

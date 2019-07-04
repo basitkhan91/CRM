@@ -20,7 +20,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { TaxTypeService } from '../../services/taxtype.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
@@ -80,6 +80,15 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
     filteredBrands: any[];
     localCollection: any[] = [];
     /** Actions ctor */
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    taxRatePagination: TaxRate[];//added
+    totalRecords: number;
+    loading: boolean;
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
@@ -150,6 +159,7 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getTaxRateList;
+        this.totalRecords = getTaxRateList.length;
         this.allTaxrateInfo = getTaxRateList;
     }
 	private loadTaxTypeData() {
@@ -424,14 +434,14 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: TaxRate) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -471,5 +481,34 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
                 this.AuditDetails[0].ColumnsToAvoid = ["taxRateAuditId", "taxRateId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadAircraftManufacturer(this.paginatorState);
+        }
+    }
+
+    loadAircraftManufacturer(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allTaxrateInfo) {
+                this.taxRateService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.taxRatePagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 }

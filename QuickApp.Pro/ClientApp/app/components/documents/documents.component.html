@@ -14,9 +14,13 @@
            
                 <div class="clear"></div>
                 <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
-                <p-table #dt [value]="alldocuments" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                <p-table #dt 
+                         [value]="documentPagination" [rows]="5"
+                         [lazy]="true" (onLazyLoad)="loadDocument($event)" [totalRecords]="totalRecords" [loading]="loading"
+                         [metaKeySelection]="true" [paginator]="true"
+                         [pageLinks]="3" [rowsPerPageOptions]="[5,10,20,30]" [columns]="selectedColumns"
+                         selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
-
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -29,20 +33,15 @@
                             <a (click)="open(contentEdit)" matTooltip="Add Document" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
                            
                         </div>
-
-
                     </ng-template>
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
-
                             <th></th>
-
                         </tr>
                     </ng-template>
 
@@ -120,12 +119,9 @@
     </div>
     <div class="modal-body">
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-
 			<div class="form-group">
 				<label for="netDays" class="control-label">Document code</label>
-			
 				<div class="inner-addon right-addon inline-block">
-
 					<p-autoComplete [(ngModel)]="documentName" [ngModelOptions]="{standalone: true}" (onSelect)="documentId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterDocuments($event)" [size]="30"
 									[minLength]="1" [dropdown]="true">
 						<ng-template let-documentName pTemplate="item">
@@ -177,14 +173,12 @@
 					</label>
 					<div class="clear"></div>
 				</div>
-
 				<hr />
 
 				<div class="form-group">
 					<label for="memo" class="control-label">Documents</label>
 					<div class="control-data">
 						<input type="file">
-
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -199,7 +193,6 @@
 
 
 				<div class="modal-footer">
-
 					<button class="btn btn-success" [disabled]="disableSave">Submit</button>
 					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
 				</div>

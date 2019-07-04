@@ -64,5 +64,11 @@ export class DefaultMessageService {
     getAudit(defaultMessageId: number) {
         return this.defaultmessageEndpoint.getDefaultAudit<any[]>(defaultMessageId);
     }
+
+    getServerPages(serverSidePagesData: any)
+    {
+        return Observable.forkJoin(
+            this.defaultmessageEndpoint.getDefaultMessageRecords<DefaultMessage[]>(serverSidePagesData));
+    }
 }
 

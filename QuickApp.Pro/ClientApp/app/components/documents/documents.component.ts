@@ -23,7 +23,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { DocumentService } from '../../services/document.service';
 import { DocumentModel } from '../../models/document.model';
 import { CheckboxModule } from 'primeng/checkbox';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 
@@ -83,11 +83,20 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
     modal: NgbModalRef;
     /** Actions ctor */
 
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    documentPagination: Document[];//added
+    totalRecords: number;
+    loading: boolean;
+
     AuditDetails: SingleScreenAuditDetails[];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService,private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: DocumentService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+	constructor(private breadCrumb: SingleScreenBreadcrumbService,private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public documentService: DocumentService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         //this.sourceAction = new Action();
@@ -104,7 +113,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.documentService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -131,7 +140,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
            
             this.sourceAction.isActive == false;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.documentService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -141,7 +150,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             
             this.sourceAction.isActive == true;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.documentService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -232,6 +241,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
+        this.totalRecords = allWorkFlows.length;
         this.alldocuments = allWorkFlows;
        // console.log(allWorkFlows);
     }
@@ -329,7 +339,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
 
         //this.isSaving = true;
         // debugger;
-        this.workFlowtService.historyAcion(this.sourceAction.documentId).subscribe(
+        this.documentService.historyAcion(this.sourceAction.documentId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
 
@@ -379,7 +389,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.documentCode = this.documentName;
               this.sourceAction.masterCompanyId= 1;
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
+            this.documentService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
@@ -388,7 +398,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.documentCode = this.documentName;
               this.sourceAction.masterCompanyId= 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.documentService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
@@ -399,7 +409,7 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-        this.workFlowtService.deleteAcion(this.sourceAction.documentId).subscribe(
+        this.documentService.deleteAcion(this.sourceAction.documentId).subscribe(
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -423,14 +433,14 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -462,11 +472,39 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
 
     auditDocument(documentId: number): void {
         this.AuditDetails = [];
-        this.workFlowtService.getAudit(documentId).subscribe(audits => {
+        this.documentService.getAudit(documentId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
                 this.AuditDetails[0].ColumnsToAvoid = ["documentAuditId", "documentId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadDocument(this.paginatorState);
+        }
+    }
+
+    loadDocument(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.alldocuments) {
+                this.documentService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.documentPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 }

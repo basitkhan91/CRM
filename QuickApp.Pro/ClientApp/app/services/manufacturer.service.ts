@@ -68,4 +68,10 @@ export class ManufacturerService {
         return this.manufacturerEndpoint.getManufacturerAuditDetails<any[]>(Id);
     }
 
+    getServerPages(serverSidePagesData: any)
+    {
+        return Observable.forkJoin(
+            this.manufacturerEndpoint.getManufacturerRecords<Manufacturer[]>(serverSidePagesData));
+    }
+
 }

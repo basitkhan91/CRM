@@ -11,10 +11,13 @@
 
 
                 <h4 class="page-heading clr-green">DefaultMessage</h4>
-                <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
-                <p-table #dt [value]="allDefaultMessageInfo" [rows]="5" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                <span class="help-icon" (click)="openHelpText(helpText)"
+                      data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
+                <p-table #dt [value]="defaultMessagePagination"
+                          [lazy]="true" (onLazyLoad)="loadDefaultMessage($event)" 
+                      [paginator]="true" [rows]="5" [totalRecords]="totalRecords" [loading]="loading"
+                          [metaKeySelection]="true"  [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
-
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -25,7 +28,6 @@
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <a (click)="open(contentEdit)" matTooltip="Add Default Message" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
-
                         </div>
                     </ng-template>
 

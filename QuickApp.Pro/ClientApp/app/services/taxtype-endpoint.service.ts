@@ -16,7 +16,9 @@ export class TaxTypeEndpointService extends EndpointFactory {
 	private readonly _taxTypeUrlAuditHistory: string = "/api/TaxType/auditHistoryById";
     private readonly getTaxTypeDataAuditById: string = "/api/TaxType/audits";
     private readonly _auditUrl: string = "/api/TaxType/audits";
+    private readonly getTaxType: string = "/api/TaxType/pagination";
 
+    get paginate() { return this.configurations.baseUrl + this.getTaxType; }
 	get taxTypeUrl() { return this.configurations.baseUrl + this._taxTypeUrl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -94,5 +96,12 @@ export class TaxTypeEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getDeleteTaxTypeEndpoint(Id));
             });
     }
-
+    
+    getTaxTypeRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getTaxTypeRecords(paginationOption));
+            });
+    }
 }

@@ -141,6 +141,12 @@
                     </th>
                     <th></th>
                 </tr>
+                <tr>
+                    <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                        <input  pInputText type="text"  (input)="filterGrid($event.target.value, col.field, col.filterMatchMode)">
+                       
+                    </th>
+                </tr>
             </ng-template>
             <ng-template pTemplate="body" ngFor let-model [ngForOf]="aircraftManufacturerPagination">
                 <tr>

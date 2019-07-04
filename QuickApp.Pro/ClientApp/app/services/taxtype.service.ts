@@ -67,4 +67,8 @@ export class TaxTypeService {
         return this.taxTypeEndpoint.getTaxTypeAuditDetails<any[]>(Id);
     }
 
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.taxTypeEndpoint.getTaxTypeRecords<TaxType[]>(serverSidePagesData));
+    }
 }
