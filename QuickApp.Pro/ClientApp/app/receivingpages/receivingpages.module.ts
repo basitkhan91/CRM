@@ -46,6 +46,7 @@ import { PurchaseOrderComponent } from "../components/receiving/po-ro/purchase-o
 import { ReceivngPoComponent } from "../components/receiving/po-ro/receivng-po/receivng-po.component";
 import { ReceivingService } from "../services/receiving/receiving.service";
 import { ReceivingEndpointService } from "../services/receiving/receiving-endpoint.service";
+import { RepairOrderComponent } from "../components/receiving/repair-order/repair-order.component";
 
 
 
@@ -72,7 +73,8 @@ import { ReceivingEndpointService } from "../services/receiving/receiving-endpoi
 		EditPoComponent,
 		PurchaseOrderComponent,
 		ReceivngPoComponent,
-		ReceivingpagesComponent
+        ReceivingpagesComponent,
+        RepairOrderComponent
 
 	],
     providers: [ReceivingService, ReceivingEndpointService

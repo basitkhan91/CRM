@@ -25,9 +25,9 @@ import { WorkOrderBillingComponent } from "../components/work-order/work-order-s
 import { WorkOrderQuoteComponent } from "../components/work-order/work-order-setup/work-order-quote/work-order-quote.component";
 import { WorkOrderShippingComponent } from "../components/work-order/work-order-setup/work-order-shipping/work-order-shipping.component";
 import { WorkOrderListComponent } from "../components/work-order/work-order-list/work-order-list.component";
-
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
+import { DirectLabourComponent } from "../components/work-order/direct-labour/direct-labour.component";
 
 const workorderPagesRoutes: Routes = [
     {
@@ -53,6 +53,7 @@ const workorderPagesRoutes: Routes = [
             { path: "app-work-order-billing", component: WorkOrderBillingComponent, data: { title: "Billing" } },
             { path: "app-work-order-quote", component: WorkOrderQuoteComponent, data: { title: "Quote" } },
             { path: "app-work-order-shipping", component: WorkOrderShippingComponent, data: { title: "Shipping" } },
+            { path:"app-work-order-direct-labour",component: DirectLabourComponent ,data:{title:"direct-labour"}}
 
         ]
     }

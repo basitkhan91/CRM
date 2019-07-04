@@ -224,16 +224,15 @@ body {
     position: static;
     border-top: 0 none;
 }
-
-body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a:hover .ui-panelmenu-icon {
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a:hover .ui-panelmenu-icon {
     color: black !important;
 }
 
-body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a .ui-panelmenu-icon {
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a .ui-panelmenu-icon {
     color: black !important;
 }
 
-body .ui-panelmenu .ui-panelmenu-content {
+.ui-panelmenu .ui-panelmenu-content {
     border: none !important;
     color: white !important;
 }
@@ -258,13 +257,13 @@ body .ui-panelmenu .ui-panelmenu-content {
     margin-right: -0.75em;
 }
 
-body .ui-panelmenu .ui-panelmenu-header > a:hover {
+.ui-panelmenu .ui-panelmenu-header > a:hover {
     background-color: antiquewhite !important;
     color: white;
     border-radius: 1px;
 }
 
-body .ui-panelmenu .ui-panelmenu-header > a {
+.ui-panelmenu .ui-panelmenu-header > a {
     background-color: transparent !important;
     background: transparent !important;
 }
@@ -279,7 +278,7 @@ body .ui-panelmenu .ui-panelmenu-header > a {
     font-size: 1em;
 }
 
-body .ui-panelmenu .ui-panelmenu-header > a {
+.ui-panelmenu .ui-panelmenu-header > a {
     font-weight: 600
 }
 
@@ -296,4 +295,9 @@ p {
 #logo {
     height: 30px;
     padding-left: 80px;
+}
+.fixed {
+    position: fixed;
+    margin: 0;
+    top: 0;
 }

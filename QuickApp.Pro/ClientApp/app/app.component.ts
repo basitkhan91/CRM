@@ -3,7 +3,7 @@
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
-import { Component, ChangeDetectorRef, ViewChild, ViewEncapsulation, OnInit, OnDestroy, ElementRef, AfterViewInit, Injectable } from "@angular/core";
+import { Component, ChangeDetectorRef, ViewChild, ViewEncapsulation, OnInit, OnDestroy, ElementRef, AfterViewInit, Injectable, HostListener } from "@angular/core";
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, NavigationStart } from '@angular/router';
 import { MatExpansionPanel, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -54,7 +54,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     dataLoadingConsecutiveFailures = 0;
     notificationsLoadingSubscription: any;
-
+    navIsFixed: any;
     closeCmpny: boolean = true;
 
 
@@ -64,6 +64,16 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.step = index;
     }
 
+    @ViewChild('fixedButtons') el: ElementRef;
+    @HostListener("window:scroll", [])
+    onWindowScroll() {
+        let number = this.el.nativeElement.offsetTop;
+        if (number > 65) {
+            this.navIsFixed = true;
+        } else if (this.navIsFixed && number < 10) {
+            this.navIsFixed = false;
+        }
+    }
 
     get notificationsTitle() {
 
@@ -301,7 +311,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 label: 'Stock Line',
                 icon: 'fa fa-fw fa-folder-open',
                 items: [
-                    { label: 'Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-lis' },
+                    { label: 'Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-list' },
                     { label: 'Add Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-setup' },
                     { label: 'Adjustment Reason', routerLink: '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason' },
                     {
@@ -319,7 +329,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
                     { label: 'Vendor List', routerLink: '/vendorsmodule/vendorpages/app-vendors-list' },
                     { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
-                    { label: 'Vendor Classification', routerLink: '/#' },
+                    { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                     { label: 'Process 1099', routerLink: '/#' },
                     {
                         label: 'Vendor Capabilities', items: [{ label: 'Vendor Caps List', routerLink: '/vendorsmodule/vendorpages/app-vendor-capabilities-list' },
@@ -328,8 +338,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
-                        { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
-                        { label: 'PO Approval', routerLink: '/vendorsmodule/vendorpages/app-po-approval' },
+                            { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                        { label: 'PO Approval', routerLink: '/#' },
                         { label: 'Create Vendor RMA', routerLink: '/#' }]
                     },
                     {
@@ -353,13 +363,14 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     {
                         label: 'Customer Work', items: [
-                            { label: 'Customer Work', routerLink: '/customersmodule/customerpages/app-receiving-customer-work-list' },
-                            { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-receiving-customer-work-add' }
+                            { label: 'Customer Work', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
+                            { label: 'Create Customer', routerLink: '/receivingmodule/receivingpages/app-customer-work-edit' }
                         ]
                     },
-                    { label: 'Purchase Order', routerLink: '/#' },
-                    { label: 'Repair Order', routerLink: '/#' },
-                    { label: 'Shipping Receiver', items: [{ label: 'Work Order', routerLink: '/#' }] },
+                    { label: 'Purchase Order', routerLink: '/receivingmodule/receivingpages/app-purchase-order' },
+                    { label: 'Repair Order', routerLink: '/receivingmodule/receivingpages/app-repair-order' },
+                    { label: 'Shipping Receiver', routerLink: '/receivingmodule/receivingpages/app-shipping' },
+                    {label:'Work Order', routerLink: '/#' },
                     {
                         label: 'Reports and forms', items: [{
                             label: 'Receiving Log', routerLink: '/#'
@@ -375,20 +386,21 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Workflow List', routerLink: '/workflowmodule/workflowpages/app-workflow-list' },
                     { label: 'Create Workflow', routerLink: '/workflowmodule/workflowpages/wf-create' },
                     { label: 'Task', routerLink: '/singlepages/singlepages/app-tasks' },
-                    { label: 'Task Attribute', routerLink: '/singlepages/singlepages/app-task-attributes' }
+                    { label: 'Task Attribute', routerLink: '/singlepages/singlepages/app-task-attributes' },
+                   
                 ]
             },
             {
                 label: 'Work Orders',
                 icon: 'fa fa-fw fa-clone',
                 items: [
-                    { label: 'Workorder List', routerLink: '/#' },
-                    { label: 'Create Workorder', routerLink: '/#' },
+                    { label: 'Workorder List', routerLink: '/workordersmodule/workorderspages/app-work-order-list' },
+                    { label: 'Create Workorder', routerLink: '/workordersmodule/workorderspages/app-work-order-add' },
                     { label: 'WO Shipping', routerLink: '/#' },
                     { label: 'WO Billing', routerLink: '/#' },
                     {
                         label: 'Direct Labour', items: [{
-                            label: 'Direct Labour and OH Cost', routerLink: '/#'
+                            label: 'Direct Labour and OH Cost', routerLink: '/workordersmodule/workorderspages/app-work-order-direct-labour'
                         }]
                     },
                     {
@@ -614,7 +626,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 icon: 'fa fa-fw fa-newspaper-o',
                 items: [
                     { label: 'List of Publications', routerLink: '/singlepages/singlepages/app-publication' },
-                    { label: 'Create New', routerLink: '/#' },
+                    { label: 'Create New', routerLink: '/singlepages/singlepages/app-create-publication' },
                     {
                         label: 'Reports and Forms', items: [
                             { label: 'CMM by PIN', routerLink: '/#' },
@@ -664,7 +676,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Currency', routerLink: '/singlepages/singlepages/app-currency' },
                             { label: 'GL Account Type', routerLink: '/singlepages/singlepages/app-gl-account-class' },
                             { label: 'Gl Account Classification', routerLink: '/singlepages/singlepages/app-gl-cash-flow-classification' },
-                            { label: 'GL Account Category', routerLink: '/#' },
+                            { label: 'GL Account Category', routerLink: '/singlepages/singlepages/app-glaccount-category' },
                             { label: 'Credit Type', routerLink: '/#' },
                             { label: 'Tax Rate', routerLink: '/singlepages/singlepages/app-tax-rate' },
                             { label: 'Tax Type', routerLink: '/singlepages/singlepages/app-tax-type' },
@@ -720,8 +732,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Employees', items: [
-                            { label: 'Job Titles', routerLink: '/#' },
-                            { label: 'Employee Expertise', routerLink: '/#' },
+                            { label: 'Job Titles', routerLink: '/singlepages/singlepages/app-job-title' },
+                            { label: 'Employee Expertise', routerLink: '/singlepages/singlepages/app-employee-expertise' },
                         ]
                     },
                 ]
