@@ -508,7 +508,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.sourceWorkFlow.percentageOfReplacement = "";
     }
 
-    private isFixedcheck(event) {
+    isFixedcheck(event) {
 
         this.resetBERThreshold();
 

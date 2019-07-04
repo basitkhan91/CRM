@@ -196,7 +196,7 @@ export class WorkflowCreateComponent implements OnInit {
 		}
 	}
 
-	private isFixedcheck(event) {
+	isFixedcheck(event) {
 		if (event == 'fixed') {
 			this.isFixed = true;
 			this.ispercent = false;
