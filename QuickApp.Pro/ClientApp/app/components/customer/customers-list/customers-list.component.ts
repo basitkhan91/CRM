@@ -19,6 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Router } from '@angular/router';
 import { Globals } from '../../../globals'
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
     selector: 'app-customers-list',
@@ -28,6 +29,17 @@ import { Globals } from '../../../globals'
 })
 /** CustomersList component*/
 export class CustomersListComponent implements OnInit, AfterViewInit {
+
+    condition: any;
+    email: any;
+    primarySalesPersonFirstName: any;
+    customerTypeId: any;
+    name: any;
+    customerCode: any;
+    customers = [];
+    jsonData: string;
+    searchData: { 'CustomerCode': any; };
+    inputFilterState: { field: any; value: any; };
 	activeIndex: number;
 	Active: string = "Active";
 	customerViewFeilds: any = {};
@@ -92,6 +104,15 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    customerPagination: Customer[];//added
+    totalRecords: number;
+    loading: boolean;
 
     constructor(private _route:Router,private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('Customer');
@@ -169,6 +190,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
+        this.totalRecords = allWorkFlows.length;
         this.allCustomer = allWorkFlows;
         console.log(allWorkFlows);
     }
@@ -343,14 +365,14 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: Customer) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -642,6 +664,115 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 		//this.onShipViadetails(row.customerShippingAddressId)
-	}
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadCustomerPages(this.paginatorState);
+        }
+    }
+
+    loadCustomerPages(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allCustomer) {
+                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.customerPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
+    }
+
+    inputGlobalFiler(dataEvent,contains)
+    {
+        console.log(dataEvent);
+        console.log(contains);
+    }
+
+    inputFiledFilter(event,filed,matchMode)
+    {
+        //this.jsonData = "{";
+        if (filed == 'customerCode')
+        {
+            this.customerCode = event;
+        }
+        else {
+            this.customerCode = '';
+        }
+        
+
+        if (filed == 'name')
+        {
+            this.name = event;
+        }
+        else {
+            this.name = '';
+        }
+
+
+        if (filed == 'customerTypeId') {
+            this.customerTypeId = event;
+        }
+        else {
+            this.customerTypeId = '';
+        }
+
+        if (filed == 'email') {
+            this.email = event;
+        }
+        else {
+            this.email = '';
+        }
+
+        if (filed == 'primarySalesPersonFirstName') {
+            this.primarySalesPersonFirstName = event;
+        }
+        else {
+            this.primarySalesPersonFirstName = '';
+        }
+        this.customers.push({
+            CustomerCode: "code11",//this.customerCode,//code11
+            Name: "test Customer11",//this.name, //test Customer11
+            Email: this.email,
+            PrimarySalesPersonFirstName: "test Sales",//this.primarySalesPersonFirstName,  //test Sales
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5,
+            condition: false,
+            GlobalSearchString: ""
+        })
+        if (this.customers) {
+            this.workFlowtService.getServerPages(this.customers[this.customers.length-1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.customerPagination = pages[0];
+                    }
+                });
+        }
+        else
+        {
+            //this.customers = {};
+        }
+        
+       
+        console.log(event);
+        console.log(filed);
+        console.log(matchMode);
+    }
+
 }
 

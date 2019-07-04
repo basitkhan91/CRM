@@ -21,6 +21,14 @@ namespace DAL.Repositories
             return _appContext.TaxType.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.TaxTypeId).ToList();
 
         }
+
+        override
+       public IQueryable<DAL.Models.TaxType> GetPaginationData()
+        {
+            return _appContext.TaxType.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.TaxTypeId).ToList().AsQueryable();
+        }
+
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

@@ -49,5 +49,10 @@ export class AircraftManufacturerService {
         return Observable.forkJoin(
             this.aircraftManufacturerEndpoint.getAircraftManufacturerRecords<AircraftType[]>(serverSidePagesData));
     }
-    
+
+    getPageSerach(serverSidePagesData: any)
+    {
+        return Observable.forkJoin(
+            this.aircraftManufacturerEndpoint.getAircraftManufacturerPages<AircraftType[]>(serverSidePagesData));
+    }
 }

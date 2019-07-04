@@ -15,6 +15,7 @@ import { LazyLoadEvent } from "primeng/api";
 })
 /** aircraft-manufacturer component*/
 export class AircraftManufacturerComponent implements OnInit{
+    pageSearch: { query: any; field: any; };
     first: number;
     rows: number;
     paginatorState: any;
@@ -27,6 +28,8 @@ export class AircraftManufacturerComponent implements OnInit{
     aircraftManufacturerTypeToRemove: AircraftType;
     aircraftManufacturerList: AircraftType[];
     aircraftManufacturerPagination: AircraftType[];//added
+
+    aircraftManufacturerSearchList: AircraftType[];
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
@@ -41,6 +44,18 @@ export class AircraftManufacturerComponent implements OnInit{
     constructor(private aircraftManufacurerService: AircraftManufacturerService,private alertService: AlertService, private modalService: NgbModal, private authService: AuthService,) {
 
     }
+
+    //filterGrid(query, field, Mode) {
+    //    this.pageSearch = {
+    //        query: query,
+    //        field: field
+    //    }
+    //    console.log(query, field, Mode);
+    //    this.aircraftManufacurerService.getPageSerach(pageSearch).subscribe(aircraftManufacturer => {
+    //        this.aircraftManufacturerSearchList = aircraftManufacturer[0];
+    //        this.totalRecords = this.aircraftManufacturerList.length;//Adding for Pagination
+    //    });
+    //  }
 
     ngOnInit(): void {
         this.aircraftManufacurerService.getAll().subscribe(aircraftManufacturer => {

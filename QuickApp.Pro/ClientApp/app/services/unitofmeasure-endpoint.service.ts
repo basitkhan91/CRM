@@ -15,9 +15,10 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/UnitOfMeasure/unitofmeasure";
     private readonly _actionsUrlAuditHistory: string = "/api/UnitOfMeasure/auditHistoryById";
     private readonly _auditsUrl: string = "/api/UnitOfMeasure/audits";
+    private readonly getUnitOfMeasure: string = "/api/UnitOfMeasure/pagination";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
-
+    get paginate() { return this.configurations.baseUrl + this.getUnitOfMeasure; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -80,6 +81,15 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
         return this.http.get<T>(endPointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getUnitOfWorkAuditDetails(Id));
+            });
+    }
+    
+    getUnitOfMeasurePages<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUnitOfMeasurePages(paginationOption));
             });
     }
 

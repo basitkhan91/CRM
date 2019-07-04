@@ -65,5 +65,9 @@ export class ReasonService {
         return this.reasonEndpoint.getReasonAuditById<any>(reasonId);
     }
 
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.reasonEndpoint.getReasonRecords<Reason[]>(serverSidePagesData));
+    }
 }
 

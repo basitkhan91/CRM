@@ -36,8 +36,13 @@ namespace DAL.Repositories
 
                 return null;
             }
+        }
 
-
+        override
+       public IQueryable<DAL.Models.Reason> GetPaginationData()
+        {
+            return _appContext.Reason.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.ReasonId).ToList().AsQueryable();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

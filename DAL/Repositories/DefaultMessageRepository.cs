@@ -25,6 +25,12 @@ namespace DAL.Repositories
             return _appContext.DefaultMessage.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.DefaultMessageId).ToList();
         }
 
+        override
+       public IQueryable<DAL.Models.DefaultMessage> GetPaginationData()
+        {
+            return _appContext.DefaultMessage.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.DefaultMessageId).ToList().AsQueryable();
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

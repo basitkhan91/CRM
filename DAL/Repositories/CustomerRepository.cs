@@ -259,6 +259,13 @@ namespace DAL.Repositories
                     }).ToList();
         }
 
+        override
+       public IQueryable<DAL.Models.Customer> GetPaginationData()
+        {
+            return _appContext.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

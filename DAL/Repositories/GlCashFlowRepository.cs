@@ -22,6 +22,12 @@ namespace DAL.Repositories
             return _appContext.GlClassFlowClassification.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.GlClassFlowClassificationId).ToList();
         }
 
+        override
+       public IQueryable<DAL.Models.GlClassFlowClassification> GetPaginationData()
+        {
+            return _appContext.GlClassFlowClassification.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.GlClassFlowClassificationId).ToList().AsQueryable();
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

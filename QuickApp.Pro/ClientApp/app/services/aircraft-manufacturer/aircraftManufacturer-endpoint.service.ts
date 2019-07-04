@@ -106,4 +106,13 @@ export class AircraftManufacturerEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getAircraftManufacturerRecords(paginationOption));
             });
     }
+
+    getAircraftManufacturerPages<T>(pageSearch: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(pageSearch), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAircraftManufacturerRecords(pageSearch));
+            });
+    }
 }

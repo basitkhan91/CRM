@@ -15,6 +15,9 @@ export class ItemgroupEndpointService extends EndpointFactory {
     private readonly _itemgroupUrlNew: string = "/api/Itemgroup/Itemgrouppost";
     private readonly _actionsUrlAuditHistory: string = "/api/Itemgroup/auditHistoryById";
     private readonly getItemGroupAuditDataById: string = "/api/Itemgroup/audits";
+    private readonly getItemGroup: string = "/api/Itemgroup/pagination";
+
+    get paginate() { return this.configurations.baseUrl + this.getItemGroup; }
 
     get getitemgroupUrl() { return this.configurations.baseUrl + this._itemgroupGetUrl; }
 
@@ -81,6 +84,14 @@ export class ItemgroupEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getItemGroupAuditById(itemGroupId));
+            });
+    }
+    getItemGroupPagination<T>(pageSearch: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(pageSearch), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getItemGroupPagination(pageSearch));
             });
     }
 }

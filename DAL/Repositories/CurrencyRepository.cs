@@ -37,8 +37,13 @@ namespace DAL.Repositories
 
                 return null;
             }
+        }
 
-
+        override
+       public IQueryable<DAL.Models.Currency> GetPaginationData()
+        {
+            return _appContext.Currency.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.CurrencyId).ToList().AsQueryable();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

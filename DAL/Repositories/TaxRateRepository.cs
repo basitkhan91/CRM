@@ -55,6 +55,12 @@ namespace DAL.Repositories
             return _appContext.TaxRate.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.TaxRateId).ToList();
         }
 
+        override
+        public IQueryable<DAL.Models.TaxRates> GetPaginationData()
+        {
+            return _appContext.TaxRate.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.TaxRateId).ToList().AsQueryable();
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

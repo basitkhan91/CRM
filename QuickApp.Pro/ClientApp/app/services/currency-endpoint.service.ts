@@ -16,9 +16,10 @@ export class CurrencyEndpoint extends EndpointFactory {
     private readonly _currencyPostUrl: string = "/api/Currency/CurrencyPost";
     private readonly _actionsUrlNewAuditHistory: string = "/api/Currency/auditHistoryById";
     private readonly getCurrencyAuditById: string = "/api/Currency/audits";
+    private readonly getCurrency: string = "/api/Currency/pagination";
 
     get CurrencyUrl() { return this.configurations.baseUrl + this._currencyUrl; }
-
+    get paginate() { return this.configurations.baseUrl + this.getCurrency; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -78,6 +79,15 @@ export class CurrencyEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getCurrencyDataAuditById(currencyId));
+            });
+    }
+    
+    getCurrencyRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCurrencyRecords(paginationOption));
             });
     }
 

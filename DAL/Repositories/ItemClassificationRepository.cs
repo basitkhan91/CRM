@@ -15,6 +15,12 @@ namespace DAL.Repositories
             return _appContext.ItemClassification.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.ItemClassificationId).ToList();
         }
 
+        override
+       public IQueryable<DAL.Models.ItemClassfication> GetPaginationData()
+        {
+            return _appContext.ItemClassification.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.ItemClassificationId).ToList().AsQueryable();
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

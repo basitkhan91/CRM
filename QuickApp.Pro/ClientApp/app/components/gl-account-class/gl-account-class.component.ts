@@ -2,7 +2,7 @@
 import { fadeInOut } from '../../services/animations';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import * as $ from 'jquery';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../models/mastercompany.model';
@@ -68,9 +68,17 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
     disablesave: boolean = false;
     AuditDetails: SingleScreenAuditDetails[];
 
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    glAccountClassPagination: GLAccountClass[];//added
+    totalRecords: number;
+    loading: boolean;
 
 	/** GlAccountClass ctor */
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: GLAccountClassService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public glAccountService: GLAccountClassService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		this.sourceglaccountclass = new GLAccountClass();
@@ -99,7 +107,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getWorkFlows().subscribe(
+		this.glAccountService.getWorkFlows().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -131,6 +139,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	private onDataLoadSuccessful(allWorkFlows: any[]) {
 		this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.totalRecords = allWorkFlows.length;
 		this.allGLAccountClass = allWorkFlows;
 
 	}
@@ -193,22 +202,13 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-	//openHist(content, row) {
-
-	//	this.sourceglaccountclass = row;
-
-	//	this.workFlowtService.historyGlAccountClass(this.sourceglaccountclass.glAccountClassId).subscribe(
-	//		results => this.onHistoryLoadSuccessful(results[0], content),
-	//		error => this.saveFailedHelper(error));
-	//}
-
 	handleChange(rowData, e) {
 		if (e.checked == false) {
 			this.sourceglaccountclass = rowData;
 			this.sourceglaccountclass.updatedBy = this.userName;
 			this.Active = "In Active";
 			this.sourceglaccountclass.isActive == false;
-			this.workFlowtService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
+			this.glAccountService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
 				response => this.saveCompleted(this.sourceglaccountclass),
 				error => this.saveFailedHelper(error));
 			//alert(e);
@@ -218,7 +218,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 			this.sourceglaccountclass.updatedBy = this.userName;
 			this.Active = "Active";
 			this.sourceglaccountclass.isActive == true;
-			this.workFlowtService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
+			this.glAccountService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
 				response => this.saveCompleted(this.sourceglaccountclass),
 				error => this.saveFailedHelper(error));
 			//alert(e);
@@ -283,7 +283,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 				this.sourceglaccountclass.createdBy = this.userName;
 				this.sourceglaccountclass.updatedBy = this.userName;
 				this.sourceglaccountclass.masterCompanyId = 1;
-				this.workFlowtService.newGlAccountClass(this.sourceglaccountclass).subscribe(
+				this.glAccountService.newGlAccountClass(this.sourceglaccountclass).subscribe(
 					role => this.saveSuccessHelper(role),
 					error => this.saveFailedHelper(error));
 			}
@@ -292,7 +292,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 				this.sourceglaccountclass.updatedBy = this.userName;
 				this.sourceglaccountclass.glaccountclassname = this.glAccountclassName;
 				this.sourceglaccountclass.masterCompanyId = 1;
-				this.workFlowtService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
+				this.glAccountService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
 					response => this.saveCompleted(this.sourceglaccountclass),
 					error => this.saveFailedHelper(error));
 			}
@@ -303,7 +303,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.sourceglaccountclass.updatedBy = this.userName;
-		this.workFlowtService.deleteGlAccountClass(this.sourceglaccountclass.glAccountClassId).subscribe(
+		this.glAccountService.deleteGlAccountClass(this.sourceglaccountclass.glAccountClassId).subscribe(
 			response => this.saveCompleted(this.sourceglaccountclass),
 			error => this.saveFailedHelper(error));
 		this.modal.close();
@@ -319,7 +319,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-		this.loadData();
+        this.updatePaginatorState();
 
 	}
 
@@ -335,7 +335,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 
 		}
 
-		this.loadData();
+        this.updatePaginatorState();
 	}
 
 	get userName(): string {
@@ -377,12 +377,41 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 
     auditGlAccountClass(glAccountClassId: number): void {
         this.AuditDetails = [];
-        this.workFlowtService.getGlAudit(glAccountClassId).subscribe(audits => {
+        this.glAccountService.getGlAudit(glAccountClassId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
                 this.AuditDetails[0].ColumnsToAvoid = ["glAccountClassAuditId", "glAccountClassId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
             }
         });
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadGlAccountPage(this.paginatorState);
+        }
+    }
+
+    loadGlAccountPage(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.totalRecords) {
+                this.glAccountService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.glAccountClassPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 
 }

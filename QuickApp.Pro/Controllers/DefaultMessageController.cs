@@ -151,6 +151,16 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpPost("pagination")]
+        public IActionResult GetDefaultMessage([FromBody]PaginateViewModel paginate)
+        {
+            var pageListPerPage = paginate.rows;
+            var pageIndex = paginate.first;
+            var pageCount = (pageIndex / pageListPerPage) + 1;
+            var data = DAL.Common.PaginatedList<DefaultMessage>.Create(_unitOfWork.DefaultMessage.GetPaginationData(), pageCount, pageListPerPage);
+            return Ok(data);
+        }
+
     }
 
 

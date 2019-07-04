@@ -13,7 +13,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { AuthService } from '../../services/auth.service';
 import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { MasterComapnyService } from '../../services/mastercompany.service';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
@@ -67,6 +67,15 @@ export class ReasonComponent {
     public allWorkFlows: Reason[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+
+    reasonPagination: Reason[];//added
+    totalRecords: number;
+    loading: boolean;
     /** Actions ctor */
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal,   private masterComapnyService: MasterComapnyService,private _fb: FormBuilder, private alertService: AlertService, public reasonService: ReasonService, private dialog: MatDialog) {
         this.displayedColumns.push('action');
@@ -132,6 +141,7 @@ export class ReasonComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
+        this.totalRecords = allWorkFlows.length;
         this.allReasonsInfo = allWorkFlows;
     }
 
@@ -371,22 +381,22 @@ export class ReasonComponent {
         this.isSaving = false;
 
         if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Reason was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
         }
         else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Reason was edited successfully`, MessageSeverity.success);
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: Reason) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        this.alertService.showMessage("Success", `Reason was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -425,4 +435,35 @@ export class ReasonComponent {
             }
         });
     }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadReason(this.paginatorState);
+        }
+    }
+
+    loadReason(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allReasonsInfo)
+            {
+                this.reasonService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.reasonPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
+    }
+
 }

@@ -15,7 +15,9 @@ export class GlCashFlowClassificationEndpoint extends EndpointFactory {
     private readonly _glCashFlowClassificationUrlNew: string = "/api/GlCashFlowClassification/glcashflowpost";
     private readonly _glCashFlowClassificationsUrlAuditHistory: string = "/api/GlCashFlowClassification/auditHistoryById";
     private readonly _auditUrl: string = '/api/GlCashFlowClassification/audits';
+    private readonly getGlCashFlowClassification: string = "/api/GlCashFlowClassification/pagination";
 
+    get paginate() { return this.configurations.baseUrl + this.getGlCashFlowClassification; }
     get glCashFlowClassificationsUrl() { return this.configurations.baseUrl + this._glCashFlowClassificationUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -84,5 +86,11 @@ export class GlCashFlowClassificationEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getGLCashFlowClassificationAuditDetails(Id));
             });
     }
-
+    getGlCashFlowClassificationRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getGlCashFlowClassificationRecords(paginationOption));
+            });
+    }
 }

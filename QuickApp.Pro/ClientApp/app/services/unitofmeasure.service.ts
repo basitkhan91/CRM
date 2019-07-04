@@ -66,4 +66,8 @@ export class UnitOfMeasureService {
         return this.unitofmeasureEndpoint.getUnitOfWorkAuditDetails<any[]>(Id);
     }
 
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.unitofmeasureEndpoint.getUnitOfMeasurePages<any[]>(serverSidePagesData));
+    }
 }

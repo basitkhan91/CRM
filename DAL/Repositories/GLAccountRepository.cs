@@ -30,6 +30,13 @@ namespace DAL.Repositories
         }
 
 
+        override
+       public IQueryable<DAL.Models.GLAccount> GetPaginationData()
+        {
+            return _appContext.GLAccount.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.GLAccountId).ToList().AsQueryable();
+        }
+
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

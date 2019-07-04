@@ -86,4 +86,9 @@ export class ChargeService {
         return this.chargeEndpoint.getChargeAuditById<any>(chargeId);
     }
 
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.chargeEndpoint.getChargeRecords<Charge[]>(serverSidePagesData));
+    }
+
 }

@@ -83,7 +83,10 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly addMarkUp: string = "/api/customer/addMarkUp";
     private readonly getAllCustomersURL: string = "/api/customer/getAllCustomers";
     private readonly getAllCustomersInfoURL: string = "/api/customer/getAllCustomersInfo";
+    private readonly getCustomer: string = "/api/customer/pagination";
 
+
+    get paginate() { return this.configurations.baseUrl + this.getCustomer; }
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
     get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
     get cusShippingUrlwithaddressid() { return this.configurations.baseUrl + this._cusShippingGeturlwithId; }
@@ -869,6 +872,14 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.get<T>(endPointURL, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAllCustomerInfo());
+            });
+    }
+    
+    getCustomerRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerRecords(paginationOption));
             });
     }
 }

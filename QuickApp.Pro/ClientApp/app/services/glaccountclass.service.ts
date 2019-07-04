@@ -13,6 +13,8 @@ import { Role } from '../models/role.model';
 
 
 import { GLAccountClassEndpoint } from './glaccountclass-endpoint.service';
+import { GlAccount } from '../models/GlAccount.model';
+import { GLAccountClass } from '../models/glaccountclass.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -59,5 +61,10 @@ export class GLAccountClassService {
 
     getGlAudit(glAccountClassId: number) {
         return this.glaccountclassEndpoint.getGlAccountAudit<any[]>(glAccountClassId);
+    }
+
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.glaccountclassEndpoint.getGlAccountRecords<GLAccountClass[]>(serverSidePagesData));
     }
 }

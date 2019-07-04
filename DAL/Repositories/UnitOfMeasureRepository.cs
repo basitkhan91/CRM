@@ -29,6 +29,11 @@ namespace DAL.Repositories
             return _appContext.UnitOfMeasure.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.UnitOfMeasureId).ToList();
         }
 
+        public IQueryable<DAL.Models.UnitOfMeasure> GetPaginationData()
+        {
+            return _appContext.UnitOfMeasure.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                .OrderByDescending(c => c.UnitOfMeasureId).ToList().AsQueryable();
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
