@@ -10,7 +10,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { HomeComponent } from "./components/home/home.component";
 import { ProductsComponent } from "./components/products/products.component";
 import { OrdersComponent } from "./components/orders/orders.component";
-import { SettingsComponent } from "./settings/settings.component"; 
+import { SettingsComponent } from "./settings/settings.component";
 import { AboutComponent } from "./components/about/about.component";
 
 
@@ -58,12 +58,12 @@ import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-
             { path: "products", component: ProductsComponent, canActivate: [AuthGuard], data: { title: "Products" } },
             { path: "orders", component: OrdersComponent, canActivate: [AuthGuard], data: { title: "Orders" } },
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Settings" } },
-            { path: "about", component: AboutComponent, data: { title: "About Us" } },       
+            { path: "about", component: AboutComponent, data: { title: "About Us" } },
             { path: "unauthorized-access", component: UnauthorizedAccessComponent, data: { title: "Unauthorized Access" } },
 
             //{ path: "singlescreens", loadChildren: './components/actions/actionslazymodule#ActionsLazyModule' },
 
-			{ path: "rolesmodule", loadChildren: './rolespages/rolespages.module#RolesPagesModule' },
+            { path: "rolesmodule", loadChildren: './rolespages/rolespages.module#RolesPagesModule' },
 
             { path: "singlepages", loadChildren: './singlepages/singlepages.module#SinglePgesModule' },
 
@@ -73,21 +73,21 @@ import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-
 
             { path: "vendorsmodule", loadChildren: './vendorpages/vendorpages.module#VendorPagesModule' },
 
-            
-            { path: "vendorsmodule", loadChildren: './vendorpages/vendorpages.module#VendorPagesModule', canLoad: [AuthGuard]  },
 
-			{ path: "employeesmodule", loadChildren: './employeepages/employeepages.module#EmployeepagesModule' },
+            { path: "vendorsmodule", loadChildren: './vendorpages/vendorpages.module#VendorPagesModule', canLoad: [AuthGuard] },
 
-			{ path: "itemmastersmodule", loadChildren: './itemmasterpages/itemmasterpages.module#ItemmasterpagesModule' },
+            { path: "employeesmodule", loadChildren: './employeepages/employeepages.module#EmployeepagesModule' },
 
-			{ path: "stocklinemodule", loadChildren: './stocklinepages/stocklinepages.module#StocklinePagesModule' },
-          
-			{ path: "workordersmodule", loadChildren: './workorderpages/workorderpages.module#WorkOrderPagesModule' },
+            { path: "itemmastersmodule", loadChildren: './itemmasterpages/itemmasterpages.module#ItemmasterpagesModule' },
+
+            { path: "stocklinemodule", loadChildren: './stocklinepages/stocklinepages.module#StocklinePagesModule' },
+
+            { path: "workordersmodule", loadChildren: './workorderpages/workorderpages.module#WorkOrderPagesModule' },
 
 
-			{ path: "receivingmodule", loadChildren: './receivingpages/receivingpages.module#ReceivingPagesModule' },
+            { path: "receivingmodule", loadChildren: './receivingpages/receivingpages.module#ReceivingPagesModule' },
 
-			{ path: "generalledgermodule", loadChildren: './generalledgerpages/generalledgerpages.module#GeneralledgerPageModule' },
+            { path: "generalledgermodule", loadChildren: './generalledgerpages/generalledgerpages.module#GeneralledgerPageModule' },
 
             { path: "workflowmodule", loadChildren: './workflowpages/workflowpages.module#WorkFlowPagesModule' },
 
@@ -99,34 +99,34 @@ import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-
             { path: "mastermodule", loadChildren: './mastermaintanacepages/mastermaintanacepages.module#MastermaintanceModule' },
 
             { path: "accountpayble", loadChildren: './accounts-payble-pages/accounts-payble.module#AccountsPaybleModule' },
-            
-      
-           
-            			          
+
+
+
+
 
             //{ path: "app-receiving-search-po-ro", component: SearchPoRoComponent, data: { title: "Search PO-RO" } },
             //{ path: "app-receiving-po-ro-setup", component: PoRoSetupComponent, data: { title: "PO-RO Setup" } },
             //{ path: "app-receiving-po-setup", component: PoSetupComponent, data: { title: "PO Setup" } },
             //{ path: "app-receiving-ro-setup", component: RoSetupComponent, data: { title: "RO Setup" } },
-           // { path: "app-receiving-po", component: ReceivingPoComponent, data: { title: "Receiving PO" } },
-           // { path: "app-receiving-ro", component: ReceivingRoComponent, data: { title: "Receiving RO" } },
-          //  { path: "app-receiving-po-grid", component: ReceivingPoGridComponent, data: { title: "Receiving PO Grid" } },
-           // { path: "app-receiving-ro-grid", component: ReceivingRoGridComponent, data: { title: "Receiving RO Grid" } },
+            // { path: "app-receiving-po", component: ReceivingPoComponent, data: { title: "Receiving PO" } },
+            // { path: "app-receiving-ro", component: ReceivingRoComponent, data: { title: "Receiving RO" } },
+            //  { path: "app-receiving-po-grid", component: ReceivingPoGridComponent, data: { title: "Receiving PO Grid" } },
+            // { path: "app-receiving-ro-grid", component: ReceivingRoGridComponent, data: { title: "Receiving RO Grid" } },
             { path: "app-receiving-rma", component: RmaComponent, data: { title: "RMA" } },
             { path: "app-receiving-sales-order", component: SalesOrderComponent, data: { title: "Sales Order" } },
             { path: "app-receiving-shipping", component: ShippingComponent, data: { title: "Shipping" } },
 
-            
 
-           
-          //  { path: "app-stockline", component: StocklineComponent, data: { title: "Stockline" } },
 
-           
-           
+
+            //  { path: "app-stockline", component: StocklineComponent, data: { title: "Stockline" } },
+
+
+
 
             //{ path: "app-capabilities", component: CapabilitiesComponent, data: { title: "Capabilities" } },
             { path: "app-lic-type", component: LicTypeComponent, data: { title: "Lic Type" } },
-            
+
             { path: "app-owner", component: OwnerComponent, data: { title: "Owner" } },
             { path: "app-platform", component: PlatformComponent, data: { title: "Platform" } },
             { path: "app-supervisor", component: SupervisorComponent, data: { title: "Supervisor" } },

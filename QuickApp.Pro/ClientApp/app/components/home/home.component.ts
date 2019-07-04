@@ -15,44 +15,42 @@ import { AppComponent } from '../../app.component';
     styleUrls: ['./home.component.scss'],
     animations: [fadeInOut]
 })
-export class HomeComponent implements AfterViewInit 
-{
-	
-	constructor(public appcomponent:AppComponent,public configurations: ConfigurationService, private router: ActivatedRoute, private route: Router)
-    {
+export class HomeComponent implements AfterViewInit {
 
-	}
+    constructor(public appcomponent: AppComponent, public configurations: ConfigurationService, private router: ActivatedRoute, private route: Router) {
+
+    }
     customerModule() {
         this.appcomponent.setStep(1);
         //this.configurations.configObj.next("1");
-		this.route.navigateByUrl('/customersmodule/customerpages/app-customers-list');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customers-list');
     }
     itemMasterModule() {
         this.appcomponent.setStep(5);
         //this.configurations.configObj.next("1");
         this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list');
-	}
+    }
 
 
     vendorModule() {
         this.appcomponent.setStep(3);
-		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendors-list');
-	}
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendors-list');
+    }
     employeeModule() {
         this.appcomponent.setStep(6);
-		this.route.navigateByUrl('/employeesmodule/employeepages/app-employees-list');
-	}
-	stocklineModule() {
-		this.appcomponent.setStep(2);
-		this.route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
-	}
-	roleModule() {
-		this.appcomponent.setStep(0);
-		this.route.navigateByUrl('/rolesmodule/rolespages/app-roles-list');
-	}
+        this.route.navigateByUrl('/employeesmodule/employeepages/app-employees-list');
+    }
+    stocklineModule() {
+        this.appcomponent.setStep(2);
+        this.route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
+    }
+    roleModule() {
+        this.appcomponent.setStep(0);
+        this.route.navigateByUrl('/rolesmodule/rolespages/app-roles-list');
+    }
 
     ngAfterViewInit() {
-      
+
         var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
             $BODY = $('body'),
             $MENU_TOGGLE = $('#menu_toggle'),
@@ -113,7 +111,7 @@ export class HomeComponent implements AfterViewInit
         };
         // /Sidebar
 
-		
+
         init_sidebar();
 
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using DAL.Models;
 using System.Text;
+using System.Linq;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -14,5 +16,8 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetSelectedAircraftModeldata(long id);
         IEnumerable<object> GetCapesWithMasterid(long id);
+        IEnumerable<AircraftModel> GetAllAircraftModel();
+
+        new IQueryable<AircraftModel> GetPaginationData();
     }
 }

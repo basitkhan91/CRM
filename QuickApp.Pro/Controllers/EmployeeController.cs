@@ -41,6 +41,15 @@ namespace QuickApp.Pro.Controllers
             return Ok(allEmployeeinfo);
 
         }
+
+        [HttpGet("GetAllEmployeeInfo")]
+        public List<Employee> getAllEmployeeInfo()
+        {
+            var employees = _unitOfWork.employee.getAllEmployeeInfo();
+            return employees;
+
+        }
+
         [HttpGet("GetforView/{employeeId}")]
         [Produces(typeof(List<EmployeeViewModel>))]
         public Object GetforView(long employeeId)
@@ -167,7 +176,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(employeeViewModel)} cannot be null");
                 DAL.Models.Employee employeeobject = new DAL.Models.Employee();
 
-                employeeobject.MasterCompanyId =1;
+                employeeobject.MasterCompanyId = 1;
                 employeeobject.IsActive = true;
                 employeeobject.FirstName = employeeViewModel.FirstName;
                 employeeobject.LastName = employeeViewModel.LastName;
@@ -318,7 +327,8 @@ namespace QuickApp.Pro.Controllers
                     _unitOfWork.SaveChanges();
                     foreach (string s in employeeViewModel.ShiftId)
                     {
-                        if (s != "") {
+                        if (s != "")
+                        {
                             var integrationTypes = new EmployeeShiftMapping();
                             integrationTypes.ShiftId = Convert.ToByte(s);
                             integrationTypes.EmployeeId = id;
@@ -328,11 +338,11 @@ namespace QuickApp.Pro.Controllers
                             integrationTypes.CreatedDate = DateTime.Now;
                             integrationTypes.UpdatedDate = DateTime.Now;
                             integrationTypes.IsActive = true;
-                            _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);                          
+                            _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
                             _unitOfWork.SaveChanges();
                             return Ok(integrationTypes);
                         }
-                        
+
                     }
                 }
 
@@ -378,7 +388,8 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 var employeeobject = _unitOfWork.EmployeeShiftMappingRepository.GetSingleOrDefault(a => a.EmployeeId == employeeid);
-                if (Convert.ToBoolean(employeeobject.EmployeeShiftMappingId)) {
+                if (Convert.ToBoolean(employeeobject.EmployeeShiftMappingId))
+                {
                     employeeobject.MasterCompanyId = 1;
 
                     employeeobject.IsActive = employeeLicensureViewModel.IsActive;
@@ -619,11 +630,11 @@ namespace QuickApp.Pro.Controllers
                 var existingResult = _unitOfWork.employeeTraining.GetSingleOrDefault(c => c.EmployeeTrainingId == id);
 
                 existingResult.MasterCompanyId = employeeTrainingViewModel.MasterCompanyId;
-               // existingResult.IsActive = employeeTrainingViewModel.IsActive;
+                // existingResult.IsActive = employeeTrainingViewModel.IsActive;
                 existingResult.AircraftModelId = employeeTrainingViewModel.AircraftModelId;
                 existingResult.EmployeeTrainingTypeId = employeeTrainingViewModel.EmployeeTrainingTypeId;
                 existingResult.ScheduleDate = employeeTrainingViewModel.ScheduleDate;
-                
+
                 existingResult.FrequencyOfTraining = employeeTrainingViewModel.FrequencyOfTraining;
                 existingResult.CompletionDate = employeeTrainingViewModel.CompletionDate;
                 existingResult.Provider = employeeTrainingViewModel.Provider;
@@ -707,7 +718,7 @@ namespace QuickApp.Pro.Controllers
             {
                 var Empobi = _unitOfWork.employee.GetSingleOrDefault(a => a.EmployeeId == id);
                 employee.MasterCompanyId = 1;
-               Empobi.IsActive = employee.IsActive;
+                Empobi.IsActive = employee.IsActive;
                 Empobi.UpdatedDate = DateTime.Now;
                 Empobi.UpdatedBy = employee.UpdatedBy;
                 Empobi.EmployeeId = employee.EmployeeId;
@@ -740,7 +751,7 @@ namespace QuickApp.Pro.Controllers
 
             if (existingobj.Count > 0)
             {
-                for(var i = 0; i < existingobj.Count; i++)
+                for (var i = 0; i < existingobj.Count; i++)
                 {
                     _context.UserRoleLevelEntity.Remove(existingobj[i]);
                     _context.SaveChanges();
@@ -759,7 +770,7 @@ namespace QuickApp.Pro.Controllers
             //        employeeobject.UserRoleLevelId = uirolelevEntity.UserRoleLevelId;
             //        employeeobject.UIRoleEntityId = uirolelevEntity.UIRoleEntityId;
             //        employeeobject.PermittedEditActionId =1;
-                   
+
             //        employeeobject.CreatedDate = DateTime.Now;
             //        employeeobject.UpdatedDate = DateTime.Now;
 
@@ -823,19 +834,19 @@ namespace QuickApp.Pro.Controllers
             //}
             return Ok(ModelState);
         }
-    //    [HttpDelete("employeepost/{id}")]
-    //    [Produces(typeof(EmployeeViewModel))]
-    //    public IActionResult DeleteAction(long id)
-    //    {
-    //        var existingResult = _unitOfWork.Employee.GetSingleOrDefault(c => c.employeeId == id);
-    //        existingResult.IsDelete = true;
-    //        _unitOfWork.Employee.Update(existingResult);
+        //    [HttpDelete("employeepost/{id}")]
+        //    [Produces(typeof(EmployeeViewModel))]
+        //    public IActionResult DeleteAction(long id)
+        //    {
+        //        var existingResult = _unitOfWork.Employee.GetSingleOrDefault(c => c.employeeId == id);
+        //        existingResult.IsDelete = true;
+        //        _unitOfWork.Employee.Update(existingResult);
 
-    //        //_unitOfWork.ActionAttribute.Remove(existingResult);
+        //        //_unitOfWork.ActionAttribute.Remove(existingResult);
 
-    //        _unitOfWork.SaveChanges();
+        //        _unitOfWork.SaveChanges();
 
-    //        return Ok(id);
-    //    }
+        //        return Ok(id);
+        //    }
     }
 }

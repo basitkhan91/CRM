@@ -5,7 +5,7 @@
 import { NgModule, ErrorHandler } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from '@angular/common/http';
-//import { Http } from '@angular/http’;
+//import { Http } from '@angular/httpâ€™;
 //import { HttpModule } from '@angular/http';
 
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -191,20 +191,25 @@ import { RolesGuardService } from "./services/roles-guard.service";
 import { UnauthorizedAccessComponent } from "../unauthorizedaccess/unauthorized-access.component";
 import { CompanyService } from "./services/company.service";
 import { CompanyEndpoint } from "./services/company-endpoint.service";
+import { SpinnerComponent } from "./shared/spinner/spinner.component";
+import { CardModule } from 'primeng/card';
+import { PanelMenuModule } from 'primeng/panelmenu';
 
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 
 
 @NgModule({
-	imports: [
-		SharedModule,
-		FooterModule,
+    imports: [
+        CardModule,
+        PanelMenuModule,
+        SharedModule,
+        FooterModule,
         ThemePickerModule,
-		HttpClientModule,		
-        AdminModule,       
+        HttpClientModule,
+        AdminModule,
         SettingsModule,
-		AppRoutingModule,
+        AppRoutingModule,
 
         TranslateModule.forRoot({
             loader: {
@@ -212,10 +217,10 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
                 useClass: TranslateLanguageLoader
             }
         }),
-		ToastyModule.forRoot(),
-	    ChartsModule,       
-		NgbModule.forRoot(),
-		
+        ToastyModule.forRoot(),
+        ChartsModule,
+        NgbModule.forRoot(),
+
     ],
     declarations: [
         AppComponent,
@@ -237,11 +242,11 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
         StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
         ActionsButtonsComponent,
         UnauthorizedAccessComponent,
-		
+        SpinnerComponent
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
-		{ provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: ErrorHandler, useClass: AppErrorHandler },
         AlertService,
         ConfigurationService,
         AppTitleService,
@@ -257,19 +262,19 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
         ActionService,
         ActionEndpoint,
         AtaMainService,
-		ATAMainEndpoint,
-		AtaSubChapter1Service,
-		ATASubChapter1Endpoint,
-		AtaSubChapter2Service,
-		ATASubChapter2Endpoint,
-		SiteService,
-		SiteEndpoint,
-		WarehouseService,
-		WarehouseEndpoint,
-		BinService,
-		BinEndpoint,
-		GLAccountCategoryService,
-		GLAccountCategoryEndpointservice,
+        ATAMainEndpoint,
+        AtaSubChapter1Service,
+        ATASubChapter1Endpoint,
+        AtaSubChapter2Service,
+        ATASubChapter2Endpoint,
+        SiteService,
+        SiteEndpoint,
+        WarehouseService,
+        WarehouseEndpoint,
+        BinService,
+        BinEndpoint,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointservice,
         NgbActiveModal,
         MasterCompanyEndpoint,
         MasterComapnyService,
@@ -299,9 +304,9 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
         ItemClassificationEndpointService,
         ItemGroupService,
         ItemgroupEndpointService,
-		TaxRateService,
-		ManufacturerService,
-		ManufacturerEndpoint,
+        TaxRateService,
+        ManufacturerService,
+        ManufacturerEndpoint,
         TaxRateEndpointService,
         VendorClassificationService,
         VendorClassificationEndpoint,
@@ -330,39 +335,39 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
         ChargeService,
         ChargeEndpoint,
         ModalService,
-		Globals,
-		GLAccountClassEndpoint,
-		GLAccountClassService,
+        Globals,
+        GLAccountClassEndpoint,
+        GLAccountClassService,
         VendorService,
         VendorEndpointService,
         EmployeeService,
         EmployeeEndpoint,
         ItemMasterEndpoint,
-		ItemMasterService,
-		StocklineService,
-		StocklineEndpoint,
-		ReceivingCustomerWorkService,
-		ReceivingCustomerWorkEndpoint,
-		LegalEntityService,
-		LegalEntityEndpontService,
-		AuthService,
-		SingleScreenBreadcrumbService,
-		GlCashFlowClassificationService,
-		GlCashFlowClassificationEndpoint,
-		VendorCapabilitiesService,
-		VendorCapabilitiesEndpoint,
-		LocationService,
-		LocationEndpoint,
-		laborAndOverheadCostEndpointservice,
-		LaborAndOverheadCostService,
-		ShelfService,
-		ShelfEndpoint,
-		MessageService,
-		RolesManagementStructureService,
-		RolesManagementStructureEndpoint,
-		CertificationTypeEndpoint,
+        ItemMasterService,
+        StocklineService,
+        StocklineEndpoint,
+        ReceivingCustomerWorkService,
+        ReceivingCustomerWorkEndpoint,
+        LegalEntityService,
+        LegalEntityEndpontService,
+        AuthService,
+        SingleScreenBreadcrumbService,
+        GlCashFlowClassificationService,
+        GlCashFlowClassificationEndpoint,
+        VendorCapabilitiesService,
+        VendorCapabilitiesEndpoint,
+        LocationService,
+        LocationEndpoint,
+        laborAndOverheadCostEndpointservice,
+        LaborAndOverheadCostService,
+        ShelfService,
+        ShelfEndpoint,
+        MessageService,
+        RolesManagementStructureService,
+        RolesManagementStructureEndpoint,
+        CertificationTypeEndpoint,
         CertificationtypeService,
-        AssetStatusService,       
+        AssetStatusService,
         AssetStatusEndpointService,
         AssetTypeService,
         AssetTypeEndpointService,
@@ -391,7 +396,7 @@ import { CompanyEndpoint } from "./services/company-endpoint.service";
         RolesGuardService,
         CompanyService,
         CompanyEndpoint,
-		
+
     ],
     entryComponents: [
         LoginDialogComponent,

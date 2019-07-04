@@ -144,7 +144,7 @@ namespace QuickApp.Pro.Controllers
         {
             var tasks = _unitOfWork.Repository<TaskAudit>()
                 .Find(X => X.TaskId == id)
-                .OrderByDescending(X => X.TaskAuditId)
+                .OrderByDescending(X => X.ActionAuditId)
                 .ToList();
 
             var auditResults = new List<AuditResult<TaskAudit>>();

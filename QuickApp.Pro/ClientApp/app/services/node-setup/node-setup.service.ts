@@ -37,8 +37,7 @@ export class NodeSetupService {
     add(assetStatus: GLAccountNodeSetup) {
         return this.nodeSetupEndpoint.addNode<GLAccountNodeSetup>(assetStatus);
     }
-    addGLAccountNodeShareWithEntityMapper(data: any)
-    {
+    addGLAccountNodeShareWithEntityMapper(data: any) {
         return this.nodeSetupEndpoint.addGLAccountNodeShareWithEntityMapper<any>(data);
     }
 

@@ -167,8 +167,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (this.local) {
             this.getCustomerList();
         }
-        this.sourceCustomer.isAeroExchange = true;
-        this.sourceCustomer.edi = true;
+        
     }
     private getCustomerList() {
         this.alertService.startLoadingMessage();

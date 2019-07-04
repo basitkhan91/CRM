@@ -111,7 +111,16 @@ import { AssetTypeSingleScreenService } from "../services/AssetTypeSingleScreen/
 import { AssetTypeSingleScreenComponent } from "../components/asset-type-single-screen/asset-type-single-screen.component";
 import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
 import { AuditModule } from "../audit/audit.module";
-
+import { AircraftManufacturerComponent } from "../components/aircraft-manufacturer/aircraft-manufacturer.component";
+import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
+import { AircraftManufacturerEndpointService } from "../services/aircraft-manufacturer/aircraftManufacturer-endpoint.service";
+import { AircraftModelService } from "../services/aircraft-model/aircraft-model.service";
+import { AircraftModelEndpointService } from "../services/aircraft-model/aircraft-model-endpoint.service";
+import { AircraftModelComponent } from "../components/aircraft-model/aircraft-model.component";
+import { DashnumberComponent } from "../components/dashnumber/dashnumber.component";
+import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
+import { DashNumberService } from "../services/dash-number/dash-number.service";
+import {PaginatorModule} from 'primeng/paginator';
 @NgModule({
 	imports: [
         FlexLayoutModule,
@@ -128,7 +137,7 @@ import { AuditModule } from "../audit/audit.module";
         AutoCompleteModule,
         InputSwitchModule,
 		CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule,
-		AuditModule
+        AuditModule, PaginatorModule
     ],
     declarations: [
         SingleComponent,
@@ -188,6 +197,9 @@ import { AuditModule } from "../audit/audit.module";
         DepreciationIntervalsComponent,
         AssetIntangibleTypeSingleScreenComponent,
         AssetTypeSingleScreenComponent,
+        AircraftManufacturerComponent,
+        AircraftModelComponent,
+        DashnumberComponent
     ],
     providers: [
         SingleScreenBreadcrumbService,
@@ -205,7 +217,13 @@ import { AuditModule } from "../audit/audit.module";
         AssetIntangibleTypeSingleScreenEndpointService,
         AssetIntangibleTypeSingleScreenService,
         AssetTypeSingleScreenEndpointService,
-        AssetTypeSingleScreenService
+        AssetTypeSingleScreenService,
+        AircraftManufacturerService,
+        AircraftManufacturerEndpointService,
+        AircraftModelService,
+        AircraftModelEndpointService,
+        DashNumberService,
+        DashNumberEndpointService
     ],
     exports: [
         FlexLayoutModule,

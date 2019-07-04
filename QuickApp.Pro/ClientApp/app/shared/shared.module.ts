@@ -26,7 +26,7 @@ import { GroupByPipe } from '../pipes/group-by.pipe';
         FormsModule, ReactiveFormsModule,
         BrowserModule, BrowserAnimationsModule,
         QuickAppProMaterialModule,
-		TranslateModule
+        TranslateModule
     ],
     exports: [
         FlexLayoutModule,
@@ -37,19 +37,19 @@ import { GroupByPipe } from '../pipes/group-by.pipe';
         PageHeaderComponent,
         GroupByPipe,
         UserEditorComponent,
-		AppDialogComponent
+        AppDialogComponent
     ],
     declarations: [
         PageHeaderComponent,
         GroupByPipe,
         UserEditorComponent,
-		AppDialogComponent
+        AppDialogComponent,
+        
     ],
     entryComponents: [
         AppDialogComponent
     ]
 })
-export class SharedModule
-{
+export class SharedModule {
 
 }

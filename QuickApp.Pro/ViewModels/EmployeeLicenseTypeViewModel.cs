@@ -6,7 +6,7 @@ namespace QuickApp.Pro.ViewModels
 {
     public class EmployeeLicenseTypeViewModel
     {
-        public Byte EmployeeLicenseTypeId { get; set; }
+        public long EmployeeLicenseTypeId { get; set; }
         public string Description { get; set; }
         public bool? IsActive { get; set; }
         public string CreatedBy { get; set; }

@@ -3,7 +3,7 @@
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
-import { Component, ViewChild,AfterViewInit } from "@angular/core";
+import { Component, ViewChild, AfterViewInit } from "@angular/core";
 
 import { LoginControlComponent } from './login-control.component';
 import * as $ from 'jquery';
@@ -12,13 +12,12 @@ import * as $ from 'jquery';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements AfterViewInit
-{
+export class LoginComponent implements AfterViewInit {
     @ViewChild(LoginControlComponent)
     loginControl: LoginControlComponent;
 
     ngAfterViewInit() {
-        
+
 
     }
 }
