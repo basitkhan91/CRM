@@ -243,7 +243,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         ActionsButtonsComponent,
         UnauthorizedAccessComponent,
         LoginComponent,
-        LayoutComponent,
         SpinnerComponent,
     ],
     providers: [
