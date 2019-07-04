@@ -135,8 +135,12 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             
       
         ];
-
-        this.selectedColumns = this.cols;
+        
+        if (!this.selectedColumns)
+        {
+            this.selectedColumns = this.cols;
+        }
+        
 
     }
 
