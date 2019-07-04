@@ -1,112 +1,108 @@
-
-                                    <div class="table-responsive custom-table">
-                                        <table class="table table-bordered ">
-                                            <tr>
-                                                <th>PN</th>
-                                                <th>Description</th>
-                                                <th>Condition</th>
-                                                <th>Mandatory / Supplemental</th>
-                                                <th>Item Classification</th>
-                                                <th>Oty</th>
-                                                <th>UOM</th>
-                                                <th>Unit Cost</th>
-                                                <th>Ext. Cost</th>
-                                                <th>Price</th>
-                                                <th>Memo</th>
-                                                <th>Deferred</th>
-                                                <th>Action</th>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="13" class="add-charges">
-                                                    <span (click)="addRow()">Add New Charges</span>
-                                                    <i (click)="addRow()" class="fa fa-plus-circle"></i>
-                                                </td>
-                                            </tr>
-                                            <tr [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
-												<td>
-													<p-autoComplete [disabled]="allowEdit(material)" (onSelect)="onPartSelect($event,material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
-																	[minLength]="1" [dropdown]="true">
-														<ng-template let-partName pTemplate="part">
-															<div class="ui-helper-clearfix">{{partName}}</div>
-														</ng-template>
-													</p-autoComplete>
-												</td>
-                                                <td>
-                                                    <textarea  [disabled]="allowEdit(material)"  rows="1" class="form-control" value="{{material.partDescription}}" [(ngModel)]="material.partDescription" readonly ></textarea>
-                                                </td>
-                                                <td>
-                                                    <select [disabled]="allowEdit(material)"  class="form-control custom-select"   id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId" >
-                                                        <option value="">Select</option>
-                                                        <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
-                                                          {{condition.description}}
-                                                        </option>
-                                                      </select>
-                                                 </td>
-                                                <td>
-                                                    <select [disabled]="allowEdit(material)"  class="form-control custom-select" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental">
-                                                        <option value="">Select</option>
-                                                        <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
-                                                          {{mandatory.name}}
-                                                        </option>
-                                                      </select>
-                                                </td>
-                                                <td>
-                                                    <!--<input [disabled]="allowEdit(material)"  type="text" class="form-control" value="{{material.itemClassificationId}}" [(ngModel)]="material.itemClassificationId" />-->
-
-													<select [disabled]="allowEdit(material)" class="form-control custom-select"  [(ngModel)]="material.itemClassificationId">
-														<option value="">Select</option>
-														<option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
-															{{item.description}}
-														</option>
-													</select>                                                </td>
-                                                <td>
-                                                    <input [disabled]="allowEdit(material)"  type="text" class="form-control" value="{{material.quantity}}" [(ngModel)]="material.quantity" />
-                                                </td>
-                                                <td>
-                                                    <select [disabled]="allowEdit(material)"  class="form-control custom-select" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId" >
-                                                        <option value="">Select</option>
-                                                        <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
-                                                          {{uom.shortName}}
-                                                        </option>
-                                                      </select>
-                                                </td>
-                                                <td>
-                                                    <input [disabled]="allowEdit(material)"  type="text" class="form-control" value="{{material.unitCost}}" [(ngModel)]="material.unitCost"  />
-                                                </td>
-                                                <td>
-                                                    <input [disabled]="allowEdit(material)"  type="text" class="form-control" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost"  />
-                                                </td>
-                                                <td>
-                                                    <input [disabled]="allowEdit(material)"  type="text" class="form-control" value="{{material.price}}" [(ngModel)]="material.price"  />
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control" value="{{material.Memo}}" [(ngModel)]="material.memo"  />
-                                                </td>
-                                                <td>
-                                                    <div class="custom-checkbox-box">
-                                                        <span class="">
-                                                            <input [disabled]="allowEdit(material)"  class="filled-in" id="PMS" type="checkbox" value="{{material.isDeferred}}" [(ngModel)]="material.isDeferred"  >
-                                                            <label for="PMS"></label>
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                        <span *ngIf="UpdateMode"
-                                                              style="font-size: 22px;cursor: pointer;"
-                                                              class="fa fa-pencil-square-o"
-                                                              (click)="editRow(material)"></span>
-                                                        <span class="fa fa-trash-o delete-btn"
-                                                              (click)="deleteRow(i)"></span>
-                                                    </td>
-                                            </tr>
-                                            <tfoot>
-                                                <tr>
-                                                    <td colspan="13"
-                                                        class="total-cost">
-                                                        Total Material Cost :
-                                                        <!--<span><b>1,00,000</b></span>-->
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
+<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
+    <table class="table table-bordered table-fixed">
+        <tr>
+            <td colspan="15" class="add-charges">
+                <p class="cat-heading cat4" (click)="addRow()">Add New Material List<i class="fa fa-plus-circle"></i></p>
+            </td>
+        </tr>
+        <tr>
+            <th>PN *</th>
+            <th>Description *</th>
+            <th>Condition *</th>
+            <th>Mandatory / Supplemental *</th>
+            <th>Item Classification</th>
+            <th>Oty *</th>
+            <th>UOM *</th>
+            <th>Unit Cost *</th>
+            <th>Ext. Cost *</th>
+            <th>Price *</th>
+            <th>Memo</th>
+            <th>Deferred</th>
+            <th>Action</th>
+        </tr>
+        <tr [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
+            <td>
+                <p-autoComplete (onSelect)="onPartSelect($event,material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
+                                [minLength]="1" [dropdown]="true">
+                    <ng-template let-partName pTemplate="part">
+                        <div class="ui-helper-clearfix">{{partName}}</div>
+                    </ng-template>
+                </p-autoComplete>
+            </td>
+            <td>
+                <textarea rows="1" class="form-control" value="{{material.partDescription}}" [(ngModel)]="material.partDescription"></textarea>
+            </td>
+            <td>
+                <select class="form-control custom-select" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
+                    <option value="">Select</option>
+                    <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
+                        {{condition.description}}
+                    </option>
+                </select>
+            </td>
+            <td>
+                <select class="form-control custom-select" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental">
+                    <option value="">Select</option>
+                    <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
+                        {{mandatory.name}}
+                    </option>
+                </select>
+            </td>
+            <td>
+                <select class="form-control custom-select" [(ngModel)]="material.itemClassificationId">
+                    <option value="">
+                        Select
+                    </option>
+                  
+                    <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
+                        {{item.description}}
+                    </option>
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control" value="{{material.quantity}}" (input)="calculateCost()" [(ngModel)]="material.quantity" />
+            </td>
+            <td>
+                <select class="form-control custom-select" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
+                    <option value="">Select</option>
+                    <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
+                        {{uom.shortName}}
+                    </option>
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control" value="{{material.unitCost}}" (input)="calculateCost()" [(ngModel)]="material.unitCost" />
+            </td>
+            <td>
+                <input type="number" class="form-control" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
+            </td>
+            <td>
+                <input type="number" class="form-control" value="{{material.price}}" [(ngModel)]="material.price" />
+            </td>
+            <td>
+                <input type="text" class="form-control" value="{{material.Memo}}" [(ngModel)]="material.memo" />
+            </td>
+            <td style="width:30px;">
+                <div class="custom-checkbox-box">
+                    <span class="">
+                        <input class="filled-in" id="PMS" type="checkbox" value="{{material.isDeferred}}" [(ngModel)]="material.isDeferred">
+                        <label for="PMS"></label>
+                    </span>
+                </div>
+            </td>
+            <td>
+                <button class="btn btn-danger nobg" (click)="deleteRow(i)">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="13"
+                    class="total-cost">
+                    Total Material Cost : {{ totalCost }}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

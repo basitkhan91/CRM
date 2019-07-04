@@ -74,6 +74,11 @@ export class AssetService {
     getAssetList() {
         return Observable.forkJoin(this.assetEndpoint.getAssetList<any[]>());
     }
+
+    getAllAssetList() {
+        return Observable.forkJoin(this.assetEndpoint.getAllAssetList<any[]>());
+    }
+
     updateAsset(asset: any) {
         return this.assetEndpoint.updateAsset(asset, asset.assetRecordId);
     }

@@ -17,5 +17,6 @@ export interface IPublication{
           taskId:string;
           workflowId:string;
           AllowEdit:boolean;
-          IsDeleted:boolean;
+          IsDeleted: boolean;
+          //isDelete: boolean;
 }

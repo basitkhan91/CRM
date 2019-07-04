@@ -27,18 +27,18 @@ namespace DAL.Repositories
         public Workflow getCompleteWorkFlowEntity(int WorkflowId)
         {
 
-            var workFlow = _appContext.Set<Workflow>().Include("ItemMaster").Include("WorkScope").Where(x => x.WorkflowId == WorkflowId).FirstOrDefault();
+            var workFlow = _appContext.Set<Workflow>().Include("ItemMaster").Include("WorkScope").Include("Customer").Where(x => x.WorkflowId == WorkflowId).FirstOrDefault();
 
             if(workFlow != null)
             {
-                workFlow.Charges = _appContext.Set<WorkflowChargesList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null  || x.IsDelete != true) ).ToList();
-                workFlow.Directions = _appContext.Set<WorkFlowDirection>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
-                workFlow.Equipments = _appContext.Set<WorkflowEquipmentList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
-                workFlow.Exclusions = _appContext.Set<WorkFlowExclusion>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
-                workFlow.Expertise = _appContext.Set<WorkflowExpertiseList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
-                workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
-                workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).ToList();
-                workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == WorkflowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).ToList();
+                workFlow.Charges = _appContext.Set<WorkflowChargesList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null  || x.IsDelete != true) ).OrderBy(x => x.WorkflowChargesListId).ToList();
+                workFlow.Directions = _appContext.Set<WorkFlowDirection>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowDirectionId).ToList();
+                workFlow.Equipments = _appContext.Set<WorkflowEquipmentList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowEquipmentListId).ToList();
+                workFlow.Exclusions = _appContext.Set<WorkFlowExclusion>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExclusionId).ToList();
+                workFlow.Expertise = _appContext.Set<WorkflowExpertiseList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExpertiseListId).ToList();
+                workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowActionId).ToList();
+                workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowMeasurementId).ToList();
+                workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == WorkflowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).OrderBy(x => x.Id).ToList();
             }
             else
             {
@@ -51,7 +51,7 @@ namespace DAL.Repositories
 
         public List<Workflow> getAllWorkFlow()
         {
-            return _appContext.Workflow.Include("ItemMaster").Include("WorkScope").Where(workflow => workflow.IsDelete == null || workflow.IsDelete != true).OrderByDescending(x => x.WorkflowId).ToList();
+            return _appContext.Workflow.Include("ItemMaster").Include("WorkScope").Include("Customer").Where(workflow => workflow.IsDelete == null || workflow.IsDelete != true).OrderByDescending(x => x.WorkflowId).ToList();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

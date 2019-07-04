@@ -56,7 +56,7 @@ namespace QuickApp.Pro.Controllers
             {
                 workflow,
                 workflow.WorkflowId,
-                workflow.WorkScope,
+                workflow.WorkScope.Description,
                 workflow.WorkScopeId,
                 workflow.ItemMaster.PartNumber,
                 workflow.ItemMaster.PartDescription,

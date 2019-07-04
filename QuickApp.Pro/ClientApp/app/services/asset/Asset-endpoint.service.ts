@@ -9,6 +9,7 @@ import { EndpointFactory } from '../endpoint-factory.service';
 export class AssetEndpoint extends EndpointFactory  {
 
     private readonly _assetlistUrl: string = "/api/AssetModule/Get";
+    private readonly _allAssetlistUrl: string = "/api/AssetModule/GetAll";
     private readonly _addAssetUrlNew: string = "/api/AssetModule/addAsset";
     private readonly removeByIdURL: string = "/api/AssetModule/removeById";
     private readonly _updateAssetUrl: string = "/api/AssetModule/updateAsset";
@@ -17,6 +18,7 @@ export class AssetEndpoint extends EndpointFactory  {
     private readonly getAuditById: string = "/api/AssetModule/audits";
     private readonly capesPost: string = "/api/AssetModule/Mancapespost";
 
+    get allAssetListURL() { return this.configurations.baseUrl + this._allAssetlistUrl; }
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
     get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -25,6 +27,15 @@ export class AssetEndpoint extends EndpointFactory  {
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
     }
+
+
+    getAllAssetList<T>(): Observable<T> {
+
+        return this.http.get<T>(this.allAssetListURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllAssetList());
+            });
+    } 
 
     getNewAsset<T>(userObject: any): Observable<T> {
 
