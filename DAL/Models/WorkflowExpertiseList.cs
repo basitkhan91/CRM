@@ -32,7 +32,7 @@ namespace DAL.Models
 
         [ForeignKey("TaskId")]
         public long TaskId { get; set; }
-        public int MasterCompanyId { get; set; }
+        public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

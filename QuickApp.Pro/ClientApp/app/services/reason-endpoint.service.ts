@@ -15,11 +15,11 @@ export class ReasonEndpoint extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/Reason/reason";
     private readonly _actionsUrlAuditHistory: string = "/api/Reason/auditHistoryById";
     private readonly getReasonAuditDataById: string = "/api/Reason/audits";
-
+    private readonly getReason: string = "/api/Reason/pagination";
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
     // private readonly _actionsUrlNew: string = "/api/Action/actions";
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
-
+    get paginate() { return this.configurations.baseUrl + this.getReason; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -84,6 +84,17 @@ export class ReasonEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getReasonAuditById(reasonId));
             });
     }
+    
+    getReasonRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getReasonRecords(paginationOption));
+            });
+    }
+
+
 
 }
 

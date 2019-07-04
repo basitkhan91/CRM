@@ -15,9 +15,9 @@ export class DefaultMessageEndpoint extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/DefaultMessage/defaultmessage";
     private readonly _actionsUrlAuditHistory: string = "/api/DefaultMessage/auditHistoryById";
     private readonly getAuditById: string = "/api/DefaultMessage/audits";
+    private readonly getDefaultMessage: string = "/api/DefaultMessage/pagination";
 
-
-   
+    get paginate() { return this.configurations.baseUrl + this.getDefaultMessage; }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -84,7 +84,14 @@ export class DefaultMessageEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getDefaultAudit(defaultMessageId));
             });
     }
-
+    
+    getDefaultMessageRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDefaultMessageRecords(paginationOption));
+            });
+    }
 }
 
 

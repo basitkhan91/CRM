@@ -104,7 +104,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Countries>))]
         public IActionResult GetcountryList()
         {
-            var allcustomertype = _context.Countries.OrderByDescending(c => c.countries_id).ToList();
+            var allcustomertype = _context.Countries.OrderBy(c => c.nice_name).ToList();
             return Ok(allcustomertype);
 
         }
@@ -1640,6 +1640,74 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
                 throw;
             }
+        }
+
+        [HttpPost("pagination")]
+        public IActionResult GetCustomer([FromBody]CustomerSearchViewModel paginate)
+   {
+            var query = _context.Customer.AsQueryable();
+            IQueryable<Customer> queryable = null;
+            //IQueryable<Customer> queryable = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null) || c.CustomerCode == paginate.CustomerCode || c.Name == paginate.Name)
+            //    .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
+
+            if (!string.IsNullOrEmpty(paginate.GlobalSearchString))
+            {
+                queryable = _context.Customer.Where(c => new[] { c.CustomerCode, c.Name, c.Email, c.PrimarySalesPersonFirstName }.Any(s => s.Contains(paginate.GlobalSearchString))).ToList().AsQueryable();
+            }
+            else if (!string.IsNullOrEmpty(paginate.CustomerCode)|| !string.IsNullOrEmpty(paginate.Name) ||  !string.IsNullOrEmpty(paginate.Email) || !string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName)) 
+            {
+                if (paginate.condition)
+                {
+                    queryable = _context.Customer.Where(c => c.CustomerCode.Contains(paginate.CustomerCode) && c.Name.Contains(paginate.Name) &&
+                           c.Email.Contains(paginate.Email) || c.PrimarySalesPersonFirstName.Contains(paginate.PrimarySalesPersonFirstName))
+                           .Where(n => n.Name != null && n.Name != "")
+                           .Where(ps => ps.PrimarySalesPersonFirstName != null && ps.PrimarySalesPersonFirstName != "")
+                                .OrderByDescending(c => c.CustomerId).ToList().AsQueryable(); 
+                }
+                else
+                {
+                    //queryable = _context.Customer.Where(c => c.CustomerCode.Contains(paginate.CustomerCode) || c.Name.Contains(paginate.Name) ||
+                    //       c.Email.Contains(paginate.Email) || c.PrimarySalesPersonFirstName.Contains(paginate.PrimarySalesPersonFirstName))
+                    //       .Where(n => n.Name != null && n.Name != "")
+                    //       .Where(ps => ps.PrimarySalesPersonFirstName != null && ps.PrimarySalesPersonFirstName != "")
+                    //            .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
+                    List<CustomerSearchViewModel> paginateModel = new List<CustomerSearchViewModel>();
+                    paginateModel.Add(paginate);
+                    foreach (var item in paginateModel)
+                    {
+                        if (!string.IsNullOrEmpty(item.CustomerCode))
+                        {
+                            query.Concat(query.Where(c => c.CustomerCode.Contains("code11")));//.AsQueryable());
+                            //query = query.Where(c => c.CustomerCode.Contains(item.CustomerCode.Trim())).AsQueryable();
+                            //query.Append(query.Where(c => c.CustomerCode.Contains(item.CustomerCode.Trim())).AsQueryable());
+                        }
+                        if (!string.IsNullOrEmpty(item.Name))
+                        {
+                            query.Concat(query.Where(c => c.CustomerCode.Contains("test Customer11")));//.AsQueryable());
+                            //query = query.Where(c => c.Name.Contains(item.Name.Trim())).AsQueryable();
+                        }
+                        if (!string.IsNullOrEmpty(item.PrimarySalesPersonFirstName.Trim()))
+                        {
+                            query.Concat(query.Where(c => c.CustomerCode.Contains("test Sales")));//.AsQueryable());
+                            //query = query.Where(c => c.PrimarySalesPersonFirstName.Contains(item.PrimarySalesPersonFirstName)).AsQueryable();
+                        }
+                    }
+                    queryable = query;
+                }
+            }
+            else
+                queryable = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                    .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<Customer>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data); 
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
 
     }

@@ -15,7 +15,7 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { fadeInOut } from '../../services/animations';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import * as $ from 'jquery';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../models/mastercompany.model';
@@ -93,6 +93,14 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     manufactureViewField: any = {};
     disableSave: boolean = false;
     AuditDetails: SingleScreenAuditDetails[];
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: any;
+    manufacturerPagination: Manufacturer[];//added
+    totalRecords: number;
+    loading: boolean;
     /** manufacturer1 ctor */
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ManufacturerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
@@ -241,7 +249,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
     deleteItemAndCloseModel() {
@@ -256,7 +264,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
+        this.totalRecords = allWorkFlows.length;
         this.allManufacturerInfo = allWorkFlows;
 
 
@@ -392,7 +400,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
@@ -446,5 +454,34 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
                 this.AuditDetails[0].ColumnsToAvoid = ["manufacturerAuditId", "manufacturerId","masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadManufacturer(this.paginatorState);
+        }
+    }
+
+    loadManufacturer(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allManufacturerInfo) {
+                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.manufacturerPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
     }
 }

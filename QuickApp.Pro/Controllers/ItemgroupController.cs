@@ -136,5 +136,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpPost("pagination")]
+        public IActionResult GetItemGroup([FromBody]PaginateViewModel paginate)
+        {
+            var pageListPerPage = paginate.rows;
+            var pageIndex = paginate.first;
+            var pageCount = (pageIndex / pageListPerPage) + 1;
+            var data = DAL.Common.PaginatedList<Itemgroup>.Create(_unitOfWork.Itemgroup.GetPaginationData(), pageCount, pageListPerPage);
+            return Ok(data);
+        }
     }
 }

@@ -1,5 +1,10 @@
-<div class="table-responsive custom-table">
-    <table class="table table-bordered ">
+<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
+    <table class="table table-bordered table-fixed">
+        <tr>
+            <td colspan="15" class="add-charges">
+                <p class="cat-heading cat4" (click)="addRow()">Add New Expertise<i class="fa fa-plus-circle"></i></p>
+            </td>
+        </tr>
         <tr>
             <th><label> Expertise Type </label></th>
             <th><label>Estimated Hours </label></th>
@@ -10,20 +15,12 @@
             <th><label>Labour And OH Cost </label></th>
             <th><label>Action </label></th>
         </tr>
-        <tr>
-            <td colspan="8"
-                class="add-charges">
-                <span (click)="addRow()">Add New Expertise</span>
-                <i (click)="addRow()"
-                   class="fa fa-plus-circle"></i>
-            </td>
-        </tr>
         <tr [hidden]="expert.isDelete" *ngFor="let expert of workFlow.expertise;let i = index">
             <td>
-                <select [disabled]="allowEdit(expert)"
-                        class="form-control custom-select"
+                <select class="form-control custom-select"
                         id="ddlExpertiesType"
                         [(ngModel)]="expert.expertiseTypeId">
+                    <option value="">Select</option>
                     <option *ngFor="let type of expertiseTypes"
                             value="{{type.id}}">
                         {{type.name}}
@@ -31,44 +28,48 @@
                 </select>
 
             </td>
-            <td><input [disabled]="allowEdit(expert)"
-                       type="text"
+            <td>
+                <input type="text"
                        class="form-control"
                        value="{{expert.estimatedHours}}"
-                       [(ngModel)]="expert.estimatedHours"></td>
-            <td><input [disabled]="allowEdit(expert)"
-                       type="text"
+                       [(ngModel)]="expert.estimatedHours">
+            </td>
+            <td>
+                <input type="text"
                        class="form-control"
                        value="{{expert.laborDirectRate}}"
-                       [(ngModel)]="expert.laborDirectRate"></td>
-            <td><input [disabled]="allowEdit(expert)"
-                       type="text"
+                       [(ngModel)]="expert.laborDirectRate">
+            </td>
+            <td>
+                <input type="text"
                        class="form-control"
                        value="{{expert.directLaborRate}}"
-                       [(ngModel)]="expert.directLaborRate"></td>
-            <td><input [disabled]="allowEdit(expert)"
-                       type="text"
+                       [(ngModel)]="expert.directLaborRate">
+            </td>
+            <td>
+                <input type="text"
                        class="form-control"
                        value="{{expert.overheadBurden}}"
-                       [(ngModel)]="expert.overheadBurden"></td>
-            <td><input [disabled]="allowEdit(expert)"
-                       type="text"
+                       [(ngModel)]="expert.overheadBurden">
+            </td>
+            <td>
+                <input type="text"
                        class="form-control"
                        value="{{expert.overheadCost}}"
-                       [(ngModel)]="expert.overheadCost"></td>
-            <td><input [disabled]="allowEdit(expert)"
-                       type="text"
+                       [(ngModel)]="expert.overheadCost">
+            </td>
+            <td>
+                <input type="text"
                        class="form-control"
                        value="{{expert.laborOverheadCost}}"
-                       [(ngModel)]="expert.laborOverheadCost"></td>
-            <td>
-                <span *ngIf="UpdateMode"
-                      style="font-size: 22px;cursor: pointer;"
-                      class="fa fa-pencil-square-o"
-                      (click)="editRow(expert)"></span>
-                <span class="fa fa-trash-o delete-btn"
-                      (click)="deleteRow(i)"></span>
+                       [(ngModel)]="expert.laborOverheadCost">
             </td>
+            <td>
+                <button class="btn btn-danger nobg" (click)="deleteRow(i)">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+            
         </tr>
     </table>
 </div>

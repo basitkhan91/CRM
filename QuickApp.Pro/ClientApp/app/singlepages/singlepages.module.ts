@@ -122,6 +122,9 @@ import { DashNumberEndpointService } from "../services/dash-number/dash-number-e
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import {PaginatorModule} from 'primeng/paginator';
 import { CreatePublicationComponent } from "../components/publication/create-publication/create-publication.component";
+import { PaginationComponent } from "../shared/pagination/pagination/pagination.component";
+import { PaginationService } from "../services/pagination/pagination.service";
+
 @NgModule({
 	imports: [
         FlexLayoutModule,
@@ -137,7 +140,7 @@ import { CreatePublicationComponent } from "../components/publication/create-pub
         MultiSelectModule,
         AutoCompleteModule,
         InputSwitchModule,
-		CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule,
+        CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule, 
         AuditModule, PaginatorModule
     ],
     declarations: [
@@ -201,7 +204,8 @@ import { CreatePublicationComponent } from "../components/publication/create-pub
         AssetTypeSingleScreenComponent,
         AircraftManufacturerComponent,
         AircraftModelComponent,
-        DashnumberComponent
+        DashnumberComponent,
+        PaginationComponent
     ],
     providers: [
         SingleScreenBreadcrumbService,
@@ -225,7 +229,8 @@ import { CreatePublicationComponent } from "../components/publication/create-pub
         AircraftModelService,
         AircraftModelEndpointService,
         DashNumberService,
-        DashNumberEndpointService
+        DashNumberEndpointService,
+        PaginationService
     ],
     exports: [
         FlexLayoutModule,

@@ -12,7 +12,7 @@ import { MasterCompany } from '../../models/mastercompany.model';
 import { Itemgroup } from '../../models/item-group.model';
 import { ItemGroupService } from '../../services/item-group.service';
 import { AuditHistory } from '../../models/audithistory.model';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
@@ -66,6 +66,13 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+
+    paginatorState: { rows: number; first: number; };
+    totalRecords: number;
+    first: number;
+    rows: number;
+    loading: boolean;
+    itemGroupPagination: Itemgroup[];//added
 
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ItemGroupService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
@@ -134,6 +141,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
+        this.totalRecords = allWorkFlows.length
         this.allitemgroupobjInfo = allWorkFlows;
     }
 
@@ -377,14 +385,14 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: Itemgroup) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.updatePaginatorState();
 
     }
 
@@ -422,5 +430,35 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
                 this.AuditDetails[0].ColumnsToAvoid = ["itemGroupAuditId", "itemGroupId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
+    }
+
+    loadItemGroup(event: LazyLoadEvent) //when page initilizes it will call this method
+    {
+        this.loading = true;
+        this.rows = event.rows;
+        this.first = event.first;
+        setTimeout(() => {
+            if (this.allitemgroupobjInfo)
+            {
+                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                    pages => {
+                        if (pages.length > 0) {
+                            this.itemGroupPagination = pages[0];
+                        }
+                    });
+                this.loading = false;
+            }
+        }, 1000);
+    }
+
+    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    {
+        this.paginatorState = {
+            rows: this.rows,
+            first: this.first
+        }
+        if (this.paginatorState) {
+            this.loadItemGroup(this.paginatorState);
+        }
     }
 }

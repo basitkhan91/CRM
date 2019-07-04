@@ -2,13 +2,11 @@
 
     <div class="right_col" role="main">
         <div class="x_content">
-
             <div class="right_col" role="main">
-                <p-table #dt [value]="allVendorList" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                <p-table #dt [value]="workflowList" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedGridColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedGridColumn" [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
-
                         <div style="text-align: right">
-                            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                            <p-multiSelect [options]="gridColumns" [(ngModel)]="selectedGridColumns" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                             <div class="inner-addon right-addon w200 inline-block">
                                 <i class="fa fa-search"></i>
@@ -17,7 +15,6 @@
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <a matTooltip="Add Work Flow" (click)="AddPage()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
-
                             <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label for="upload">
@@ -25,11 +22,9 @@
                                 </label>
                             </div>
                         </div>
-
                     </ng-template>
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -39,7 +34,6 @@
                         <tr>
                             <th *ngFor="let col of columns" [ngSwitch]="col.field">
                                 <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
-
                             </th>
                             <th></th>
                         </tr>
@@ -50,11 +44,27 @@
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
-                            <td>
 
-                                <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
+                            <td>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+
+                                <span (click)="openEdit(rowData)" data-toggle="modal" data-target="#edit">
+                                    <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </span>
+                                <span data-toggle="modal" data-target="#history">
+                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                        <i class="fa fa-history"></i>
+                                    </a>
+                                </span>
+                                <span (click)="confirmDelete(deleteConfirm,rowData)" data-toggle="modal" data-target="#data">
+                                    <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </span>
                             </td>
                         </tr>
                     </ng-template>
@@ -63,3 +73,16 @@
         </div>
     </div>
 </div>
+
+<ng-template #deleteConfirm let-c="close" let-d="dismiss">
+    <div class="modal-title">
+       <h4>Confirm workflow delete</h4>
+    </div>
+    <div>
+        <p> Are you sure you want to delete Worklflow ACC{{currentWorkflow.workOrderNumber}}?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="removeWorkFlow()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>

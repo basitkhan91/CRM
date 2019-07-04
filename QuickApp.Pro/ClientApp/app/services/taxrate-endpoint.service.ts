@@ -15,8 +15,9 @@ export class TaxRateEndpointService extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/TaxRate/taxrate";
     private readonly _actionsUrlAuditHistory: string = "/api/TaxRate/auditHistoryById";
     private readonly getTaxRateDataAuditById: string = "/api/TaxRate/audits";
+    private readonly getTaxRate: string = "/api/TaxRate/pagination";
 
-   
+    get paginate() { return this.configurations.baseUrl + this.getTaxRate; }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -83,6 +84,14 @@ export class TaxRateEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getTaxRateAuditById(taxrateId));
+            });
+    }
+    
+    getTaxRateRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getTaxRateRecords(paginationOption));
             });
     }
 

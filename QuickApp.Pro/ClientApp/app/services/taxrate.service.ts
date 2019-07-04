@@ -64,5 +64,8 @@ export class TaxRateService {
     getTaxRateAudit(taxrateId: number) {
         return this.taxRateEndpoint.getTaxRateAuditById<any>(taxrateId);
     }
-
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.taxRateEndpoint.getTaxRateRecords<TaxRate[]>(serverSidePagesData));
+    }
 }

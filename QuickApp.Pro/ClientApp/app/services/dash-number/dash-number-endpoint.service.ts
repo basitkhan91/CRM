@@ -16,13 +16,14 @@ export class DashNumberEndpointService extends EndpointFactory {
     private readonly removeByIdURL: string = "/api/dashnumber/removeById";
     private readonly updateForActive: string = "/api/dashnumber/updateActive";
     private readonly getDashNumberAuditById: string = "/api/dashnumber/audits";
-
+    private readonly getDashNumber: string = "/api/dashnumber/pagination";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
     get add() { return this.configurations.baseUrl + this.addURL; }
     get update() { return this.configurations.baseUrl + this.updateURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
+    get paginate() { return this.configurations.baseUrl + this.getDashNumber; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -91,5 +92,11 @@ export class DashNumberEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getDashNumberStatusAuditById(dashNumberId));
             });
     }
-
+    getAircraftDashNumberRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAircraftDashNumberRecords(paginationOption));
+            });
+    }
 }

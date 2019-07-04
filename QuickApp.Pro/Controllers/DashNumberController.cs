@@ -146,6 +146,18 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpPost("pagination")]
+        public IActionResult GetAircraftDashNumber([FromBody]PaginateViewModel paginate)
+        {
+            var pageListPerPage = paginate.limit;
+            //var pageListPerPage = paginate.rows;
+            var pageIndex = paginate.first;
+            var pageCount = paginate.page;
+            //var pageCount = (pageIndex / pageListPerPage) + 1;
+            var data = DAL.Common.PaginatedList<AircraftDashNumber>.Create(unitOfWork.DashNumberRepository.GetPaginationData(), pageCount, pageListPerPage);
+            return Ok(data);
+        }
+
         #endregion Public Methods
 
         #region Private Methods

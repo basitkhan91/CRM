@@ -14,7 +14,10 @@ export class ManufacturerEndpoint extends EndpointFactory {
     private readonly _manufacturerUrlNew: string = "/api/Manufacturer/manufacturerpost";
     private readonly _manufacturerUrlAuditHistory: string = "/api/Manufacturer/auditHistoryById";
     private readonly _auditUrl: string = '/api/Manufacturer/audits';
+    private readonly getManufacturer: string = "/api/Manufacturer/pagination";
+
     get glaccountclassUrl() { return this.configurations.baseUrl + this._manufacturerUrl; }
+    get paginate() { return this.configurations.baseUrl + this.getManufacturer; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -78,5 +81,15 @@ export class ManufacturerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getManufacturerAuditDetails(Id));
             });
     }
+
+    getManufacturerRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        //let endpointUrl = `${this.getPaginationData}/${data}`;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getManufacturerRecords(paginationOption));
+            });
+    }
+
 
 }

@@ -12,7 +12,10 @@
                 <h4 class="page-heading clr-green">Reason</h4>
                 <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
 
-                <p-table #dt [value]="allReasonsInfo" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedcolumn" [resizableColumns]="true" [reorderableColumns]="true">
+                <p-table #dt [value]="reasonPagination" [lazy]="true" (onLazyLoad)="loadReason($event)" [totalRecords]="totalRecords"
+                         [rows]="5" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20,30]"
+                         [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedcolumn" 
+                         [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
 
                         <div style="text-align: right">

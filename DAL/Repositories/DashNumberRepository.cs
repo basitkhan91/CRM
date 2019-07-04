@@ -18,6 +18,13 @@ namespace DAL.Repositories
             
 
         }
+
+        override
+       public IQueryable<DAL.Models.AircraftDashNumber> GetPaginationData()
+        {
+            return _appContext.AircraftDashNumber.Include("AircraftType").Include("AircraftModel").Where(c => (c.IsDeleted == false || c.IsDeleted == null))
+                .OrderByDescending(c => c.DashNumberId).ToList().AsQueryable();
+        }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

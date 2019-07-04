@@ -1,4 +1,5 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace DAL.Repositories
             var temp4 = temp3.Include("AssetType");
             var temp5=temp4.OrderByDescending(c => c.AssetRecordId).ToList();
             return data;
+        }
+
+        public IEnumerable<Asset> getAllAsset() {
+            var asset = _appContext.Asset.Where(c => c.IsDelete == false || c.IsDelete == null);
+            return asset.Include("AssetType").ToList();
         }
 
         public IEnumerable<object> getCapabilityData(long id)

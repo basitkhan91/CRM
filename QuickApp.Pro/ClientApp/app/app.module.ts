@@ -243,7 +243,8 @@ import { WorkOrderService } from "./services/work-order/work-order.service";
         StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
         ActionsButtonsComponent,
         UnauthorizedAccessComponent,
-        SpinnerComponent
+        LoginComponent,
+        SpinnerComponent,
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -398,7 +399,6 @@ import { WorkOrderService } from "./services/work-order/work-order.service";
         CompanyService,
         CompanyEndpoint,
         WorkOrderService
-
     ],
     entryComponents: [
         LoginDialogComponent,

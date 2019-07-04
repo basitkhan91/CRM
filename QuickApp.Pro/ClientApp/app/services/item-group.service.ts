@@ -69,6 +69,9 @@ export class ItemGroupService {
     getItemGroupAudit(itemGroupId: number) {
         return this.ItemgroupEndpoint.getItemGroupAuditById<any>(itemGroupId);
     }
-    
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.ItemgroupEndpoint.getItemGroupPagination<Itemgroup[]>(serverSidePagesData));
+    }
 
 }

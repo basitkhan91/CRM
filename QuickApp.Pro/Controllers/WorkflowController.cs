@@ -34,20 +34,110 @@ namespace QuickApp.Pro.Controllers
             return Ok(UnitOfWork.Repository<Workflow>().GetAll());
         }
 
+        [HttpGet("getWorkFlow/{id:int}")]
+        public IActionResult getWorkFlow(int id)
+        {
+            var workFlow = UnitOfWork.workFlowRepositoryTest.getCompleteWorkFlowEntity(id);
+            return Ok(workFlow);
+        }
+
         [HttpPost("addWorkFlow")]
         public IActionResult addWorkFlow([FromBody] Workflow workFlow)
         {
             if (ModelState.IsValid)
             {
-                var existingWorkflow = UnitOfWork.Repository<Workflow>().Find(workflow => workflow.WorkflowId == workFlow.WorkflowId).FirstOrDefault();
 
-                if (existingWorkflow != null)
+                if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                 {
-                    existingWorkflow.CreatedDate = DateTime.Now;
-                    existingWorkflow.UpdatedDate = DateTime.Now;
-                    existingWorkflow.CreatedBy = "admin";
-                    existingWorkflow.UpdatedBy = "admin";
-                    UnitOfWork.Repository<Workflow>().Update(existingWorkflow);
+                    foreach (var charge in workFlow.Charges)
+                    {
+                        charge.CreatedDate = DateTime.Now;
+                        charge.CreatedBy = "admin";
+                        charge.MasterCompanyId = 1;
+                    }
+                }
+
+                if (workFlow.Directions != null && workFlow.Directions.Count > 0)
+                {
+                    foreach (var direction in workFlow.Directions)
+                    {
+                        direction.CreatedDate = DateTime.Now;
+                        direction.CreatedBy = "admin";
+                        direction.MasterCompanyId = 1;
+                    }
+                }
+
+                if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
+                {
+                    foreach (var equipment in workFlow.Equipments)
+                    {
+                        equipment.CreatedDate = DateTime.Now;
+                        equipment.CreatedBy = "admin";
+                        equipment.MasterCompanyId = 1;
+                    }
+                }
+                
+                if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
+                {
+                    foreach (var exclusion in workFlow.Exclusions)
+                    {
+                        exclusion.CreatedDate = DateTime.Now;
+                        exclusion.CreatedBy = "admin";
+                        exclusion.MasterCompanyId = 1;
+                    }
+                }
+
+                if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
+                {
+                    foreach (var expert in workFlow.Expertise)
+                    {
+                        expert.CreatedDate = DateTime.Now;
+                        expert.CreatedBy = "admin";
+                        expert.MasterCompanyId = 1;
+                    }
+                }
+
+
+                if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
+                {
+                    foreach (var material in workFlow.MaterialList)
+                    {
+                        material.CreatedDate = DateTime.Now;
+                        material.CreatedBy = "admin";
+                        material.MasterCompanyId = 1;
+                    }
+                }
+
+                if (workFlow.Measurements != null && workFlow.Measurements.Count > 0)
+                {
+                    foreach (var measurement in workFlow.Measurements)
+                    {
+                        measurement.CreatedDate = DateTime.Now;
+                        measurement.CreatedBy = "admin";
+                        measurement.MasterCompanyId = 1;
+                    }
+                }
+                
+                if (workFlow.Publication != null && workFlow.Publication.Count > 0)
+                {
+                    foreach (var publication in workFlow.Publication)
+                    {
+                        publication.CreatedDate = DateTime.Now;
+                        publication.CreatedBy = "admin";
+                        publication.MasterCompanyId = 1;
+                    }
+                }
+                
+                //var existingWorkflow = UnitOfWork.Repository<Workflow>().Find(workflow => workflow.WorkflowId == workFlow.WorkflowId).FirstOrDefault();
+
+                if (workFlow != null && workFlow.WorkflowId > 0)
+                {
+                    workFlow.CreatedDate = DateTime.Now;
+                    workFlow.UpdatedDate = DateTime.Now;
+                    workFlow.CreatedBy = "admin";
+                    workFlow.UpdatedBy = "admin";
+
+                    UnitOfWork.Repository<Workflow>().Update(workFlow);
                     UnitOfWork.SaveChanges();
                     return Ok(workFlow);
                 }
@@ -56,6 +146,7 @@ namespace QuickApp.Pro.Controllers
                     workFlow.MasterCompanyId = 1;
                     workFlow.CreatedDate = DateTime.Now;
                     workFlow.UpdatedDate = DateTime.Now;
+                    workFlow.IsActive = true;
                     UnitOfWork.Repository<Workflow>().Add(workFlow);
                     UnitOfWork.SaveChanges();
 
@@ -71,11 +162,41 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        [HttpGet("getWorkFlow/{id:int}")]
-        public IActionResult getWorkFlow(int id)
+        [HttpDelete("toggleState/{workFlowId}")]
+        public IActionResult toggleState(long workFlowId) {
+            var workFlow = UnitOfWork.Repository<Workflow>().Get(workFlowId);
+            if (workFlow != null)
+            {
+                workFlow.IsActive = workFlow.IsActive == true ? false : true;
+                workFlow.UpdatedBy = "Admin";
+                workFlow.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<Workflow>().Update(workFlow);
+                UnitOfWork.SaveChanges();
+            }
+            else
+            {
+                return BadRequest(new Exception("Workflow does not exist."));
+            }
+            return Ok();
+        }
+
+        [HttpDelete("remove/{workFlowId}")]
+        public IActionResult removeWorkFlow(long workFlowId)
         {
-            var workFlow = UnitOfWork.workFlowRepositoryTest.getCompleteWorkFlowEntity(id);
-            return Ok(workFlow);
+            var workFlow = UnitOfWork.Repository<Workflow>().Get(workFlowId);
+            if (workFlow != null)
+            {
+                workFlow.IsDelete = true;
+                workFlow.UpdatedBy = "Admin";
+                workFlow.UpdatedDate = DateTime.Now;
+                UnitOfWork.Repository<Workflow>().Update(workFlow);
+                UnitOfWork.SaveChanges();
+            }
+            else
+            {
+                return BadRequest(new Exception("Workflow does not exist."));
+            }
+            return Ok();
         }
 
         [HttpPost("addCharges")]
@@ -90,10 +211,11 @@ namespace QuickApp.Pro.Controllers
                 UnitOfWork.SaveChanges();
                 return Ok();
             }
-            else {
+            else
+            {
                 return BadRequest();
             }
-            
+
         }
 
         [HttpPost("addDirection")]
@@ -217,13 +339,14 @@ namespace QuickApp.Pro.Controllers
             }
 
             return BadRequest();
-            
+
         }
 
         [HttpPost("updateDirection")]
         public IActionResult updateDirection([FromBody] WorkFlowDirection direction)
         {
-            if (direction != null) {
+            if (direction != null)
+            {
                 direction.MasterCompanyId = 1;
                 direction.CreatedDate = DateTime.Now;
                 direction.UpdaedDate = DateTime.Now;
@@ -247,7 +370,7 @@ namespace QuickApp.Pro.Controllers
                 return Ok();
             }
             return BadRequest();
-           
+
         }
 
         [HttpPost("updateExclusion")]
@@ -278,13 +401,14 @@ namespace QuickApp.Pro.Controllers
                 return Ok();
             }
             return BadRequest();
-            
+
         }
 
         [HttpPost("updateMeasurement")]
         public IActionResult updateMeasurement([FromBody] WorkflowMeasurement measurement)
         {
-            if (measurement != null) {
+            if (measurement != null)
+            {
                 measurement.MasterCompanyId = 1;
                 measurement.CreatedDate = DateTime.Now;
                 measurement.UpdatedDate = DateTime.Now;
@@ -312,7 +436,8 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("updateMaterial")]
         public IActionResult updateMaterial([FromBody] WorkflowMaterial material)
         {
-            if (material != null) {
+            if (material != null)
+            {
                 material.MasterCompanyId = 1;
                 material.CreatedDate = DateTime.Now;
                 material.UpdatedDate = DateTime.Now;
@@ -321,7 +446,7 @@ namespace QuickApp.Pro.Controllers
                 return Ok();
             }
             return BadRequest();
-            
+
         }
 
     }

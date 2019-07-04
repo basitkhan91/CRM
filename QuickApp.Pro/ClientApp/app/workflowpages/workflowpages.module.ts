@@ -27,7 +27,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';//Prime Ng Steps
 import { DialogModule } from 'primeng/dialog'; //Prime Ng Dailog
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 import { CalendarModule } from "primeng/calendar";
 
@@ -53,10 +53,13 @@ import { MeasurementCreateComponent } from "../shared/Measurement-Create.compone
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { MatIconModule, MatSelectModule, MatTabsModule } from "@angular/material";
 import { StarComponent } from "../shared/star.component";
+import { AssetService } from "../services/asset/Assetservice";
+import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
 
 @NgModule({
 	imports: [
-		FlexLayoutModule,
+        FlexLayoutModule,
+        InputSwitchModule,
 		FormsModule, ReactiveFormsModule,
 		//QuickAppProMaterialModule,
 		TranslateModule,
@@ -101,8 +104,9 @@ import { StarComponent } from "../shared/star.component";
 		MeasurementCreateComponent],
 	providers: [
 		ActionService,
-        ActionEndpoint,
-        DatePipe
+    ActionEndpoint,
+    AssetService,
+    AssetEndpoint,
 	],
 	entryComponents: [
 	]

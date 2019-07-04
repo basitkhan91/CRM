@@ -29,7 +29,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
         TEntity GetSingleOrDefault(Expression<Func<TEntity, bool>> predicate);
         
-        TEntity Get(int id);
+        TEntity Get(object id);
         IEnumerable<TEntity> GetAll();
         IQueryable<TEntity> GetPaginationData();
         //TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector,

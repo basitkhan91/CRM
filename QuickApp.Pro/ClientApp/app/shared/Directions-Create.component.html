@@ -1,28 +1,28 @@
-<div class="table-responsive custom-table">
-<table class="table table-bordered ">
-  <tr>
-      <th ><label>Action </label></th>
-      <th ><label>Description </label></th>
-      <th ><label>Sequence</label></th>
-      <th ><label>Memo</label></th>
-      <th ><label>Action</label></th>
-    
-  </tr>
-  <tr>
-      <td colspan="5" class="add-charges">
-          <span (click)="addRow()">Add New Directions</span>
-          <i class="fa fa-plus-circle" (click)="addRow()"></i>
-      </td>
-  </tr>
-  <tr [hidden]="direction.isDelete" *ngFor="let direction of workFlow.directions; let i = index" >
-    <td><input type="text" [disabled]="allowEdit(direction)"  value="{{direction.action}}" [(ngModel)]="direction.action" class="form-control"></td>
-    <td><textarea rows="1" [disabled]="allowEdit(direction)" value="{{direction.description}}" [(ngModel)]="direction.description" class="form-control"> </textarea></td>
-    <td><input type="text" [disabled]="allowEdit(direction)" value="{{direction.sequence}}" [(ngModel)]="direction.sequence" class="form-control"></td>
-    <td><input type="text" [disabled]="allowEdit(direction)" value="{{direction.memo}}" [(ngModel)]="direction.memo" class="form-control"></td>
-    <td>
-        <span *ngIf="UpdateMode" style="font-size: 22px;cursor: pointer;" class="fa fa-pencil-square-o"  (click)="editRow(direction)"></span>
-        <span class="fa fa-trash-o delete-btn"  (click)="deleteRow(i)"></span>
-    </td>
-  </tr>
-</table>
+<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
+    <table class="table table-bordered table-fixed">
+        <tr>
+            <td colspan="15" class="add-charges">
+                <p class="cat-heading cat4" (click)="addRow()">Add New Directions  <i class="fa fa-plus-circle"></i></p>
+            </td>
+        </tr>
+        <tr>
+            <th><label>Action </label></th>
+            <th><label>Description </label></th>
+            <th><label>Sequence</label></th>
+            <th><label>Memo</label></th>
+            <th><label>Action</label></th>
+
+        </tr>
+        <tr [hidden]="direction.isDelete" *ngFor="let direction of workFlow.directions; let i = index">
+            <td><input type="text" value="{{direction.action}}" [(ngModel)]="direction.action" class="form-control"></td>
+            <td><textarea rows="1" value="{{direction.description}}" [(ngModel)]="direction.description" class="form-control"> </textarea></td>
+            <td><input type="text" value="{{direction.sequence}}" [(ngModel)]="direction.sequence" class="form-control"></td>
+            <td><input type="text" value="{{direction.memo}}" [(ngModel)]="direction.memo" class="form-control"></td>
+            <td>
+                <button class="btn btn-danger nobg" (click)="deleteRow(i)">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
 </div>

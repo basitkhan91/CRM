@@ -15,7 +15,9 @@ export class DocumentEndpointService extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/Document/documentpost";
     private readonly _actionsUrlAuditHistory: string = "/api/Document/auditHistoryById";
     private readonly _getAuditById: string = "/api/Document/audits";
+    private readonly getDocument: string = "/api/Document/pagination";
 
+    get paginate() { return this.configurations.baseUrl + this.getDocument; }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -83,6 +85,14 @@ export class DocumentEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAuditById(assetId));
+            });
+    }
+    
+    getDocumentRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDocumentRecords(paginationOption));
             });
     }
 

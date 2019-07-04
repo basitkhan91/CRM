@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DAL.Models;
+using System.Collections.Generic;
 
 
 namespace DAL.Repositories.Interfaces
@@ -8,6 +9,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getAllAssetList();
         IEnumerable<object> getCapabilityData(long id);
         IEnumerable<object> getCapesList(long id);
+        IEnumerable<Asset> getAllAsset();
     }
     
 }

@@ -4,9 +4,13 @@
 			<div class="x_content">
 				<h4 class="page-heading clr-green">Charges</h4>
 				<span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
-                <p-table #dt [value]="allChargeinfo" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
-                    <ng-template pTemplate="caption">
-
+                <p-table #dt [value]="chargePagination" [paginator]="true" [totalRecords]="totalRecords" [lazy]="true"
+                         (onLazyLoad)="loadCharge($event)" 
+                          [rows]="10" [rowsPerPageOptions]="[10,20,30]" 
+                         [metaKeySelection]="true"  [columns]="selectedColumns" selectionMode="multiple"
+                         [(selection)]="selectedColumn" [resizableColumns]="true"
+                         [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                     <ng-template pTemplate="caption">
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>

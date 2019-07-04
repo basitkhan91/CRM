@@ -23,15 +23,13 @@ const workflowpagesRoutes: Routes = [
 		children: [
 		
 			{ path: "app-workflow-list", component: WorkflowListComponent, data: { title: "WorkFlow List" } },
-            { path: "app-workflow-create", component: WorkflowCreateComponent, data: { title: "WorkFlow Create" } },
 
-			
+      { path: "app-workflow-create", component: WorkflowCreateComponent, data: { title: "WorkFlow Create" } },
+
 			{ path: "wf-create", component: WorkflowCreateTestComponent, data: { title: "WorkFlow" } },
-			{ path: "wf-update", component: WorkflowCreateTestComponent, data: { title: "WorkFlow" } }
-
-
-
-		]
+      
+      { path: "wf-update", component: WorkflowCreateTestComponent, data: { title: "WorkFlow" } }
+        ]
 	}
 ];
 

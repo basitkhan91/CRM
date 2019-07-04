@@ -58,4 +58,9 @@ export class CurrencyService {
     getCurrencyAudit(currencyId: number) {
         return this.currencyEndpoint.getCurrencyDataAuditById<any>(currencyId);
     }
+
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.currencyEndpoint.getCurrencyRecords<Currency[]>(serverSidePagesData));
+    }
 }

@@ -68,6 +68,10 @@ export class DocumentService {
     getAudit(documentId: number) {
         return this.documentEndpoint.getAuditById<any[]>(documentId);
     }
+    getServerPages(serverSidePagesData: any) {
+        return Observable.forkJoin(
+            this.documentEndpoint.getDocumentRecords<Document[]>(serverSidePagesData));
+    }
 
 
 }
