@@ -6,6 +6,7 @@ import { IEquipmentList } from "../Workflow/EquipmentList";
 import { VendorService } from "../services/vendor.service";
 import { ItemMasterService } from "../services/itemMaster.service";
 import { AssetService } from "../services/asset/Assetservice";
+import { MessageSeverity, AlertService } from "../services/alert.service";
 
 @Component({
     selector: 'grd-equipment',
@@ -29,24 +30,18 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
     itemclaColl: any[];
     allPartnumbersInfo: any[] = [];
 
-    constructor(private itemser: ItemMasterService, private actionService: ActionService, private vendorService: VendorService, private assetService: AssetService) {
+    constructor(private itemser: ItemMasterService, private actionService: ActionService, private vendorService: VendorService, private assetService: AssetService, private alertService : AlertService) {
     }
 
     ngOnInit(): void {
         this.row = this.workFlow.equipments[0];
-        //this.assetService.getAllAssetList().subscribe(
-        //    result => {
-        //        console.log('this is asset list');
-        //        console.log(result);
-        //    },
-        //);
+
         this.actionService.getEquipmentAssetType().subscribe(
             equipmentAssetType => {
                 this.equipmentAssetType = equipmentAssetType;
             },
             error => this.errorMessage = <any>error
         );
-        //this.loadPartData();
         this.ptnumberlistdata();
     }
 
@@ -72,8 +67,8 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
         newRow.isDelete = false;
         this.workFlow.equipments.push(newRow);
     }
-    private loadPartData() {
 
+    private loadPartData() {
 
         this.vendorService.getPartDetails().subscribe(
             data => {
@@ -86,10 +81,8 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
                     }
                 }
             })
-
-
-
     }
+
     deleteRow(index): void {
         if (this.workFlow.equipments[index].workflowEquipmentListid == "0" || this.workFlow.equipments[index].workflowEquipmentListid == "") {
             this.workFlow.equipments.splice(index, 1);
@@ -101,14 +94,30 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
 
     onPartSelect(event, equipment) {
         if (this.itemclaColl) {
-            for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName) {
-                    equipment.itemMasterId = this.itemclaColl[i][0].partId;
-                    equipment.assetDescription = this.itemclaColl[i][0].description;
-                    equipment.partNumber = this.itemclaColl[i][0].partName;
 
-                }
-            };
+            var anyEquipment = this.workFlow.equipments.filter(equipment =>
+                equipment.taskId == this.workFlow.taskId && equipment.partNumber == event);
+
+            if (anyEquipment.length > 1) {
+                equipment.assetId = "";
+                equipment.partNumber = "";
+                equipment.assetDescription = "";
+                equipment.assetTypeId = "";
+                
+                this.alertService.showMessage("Workflow", "Asset Id is already in use in Equipment List", MessageSeverity.error);
+            }
+            else {
+                for (let i = 0; i < this.itemclaColl.length; i++) {
+                    if (event == this.itemclaColl[i][0].assetId) {
+                        equipment.assetId = this.itemclaColl[i][0].assetRecordId;
+                        equipment.partNumber = this.itemclaColl[i][0].assetId;
+                        equipment.assetDescription = this.itemclaColl[i][0].description;
+                        equipment.assetTypeId = this.itemclaColl[i][0].assetTypeId;
+                    }
+                };
+            }
+
+            
         }
     }
     filterpartItems(event) {
@@ -119,16 +128,18 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
             if (this.allPartnumbersInfo.length > 0) {
 
                 for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-                    let partName = this.allPartnumbersInfo[i].partNumber;
-                    if (partName) {
-                        if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    let assetId = this.allPartnumbersInfo[i].assetId;
+                    if (assetId) {
+                        if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                             this.itemclaColl.push([{
-                                "partId": this.allPartnumbersInfo[i].itemMasterId,
-                                "partName": partName,
-                                "description": this.allPartnumbersInfo[i].partDescription
-                            }]),
+                                "assetRecordId": this.allPartnumbersInfo[i].assetRecordId,
+                                "assetId": this.allPartnumbersInfo[i].assetId,
+                                "assetTypeId": this.allPartnumbersInfo[i].assetTypeId,
+                                "assetTypeName": this.allPartnumbersInfo[i].assetType.assetTypeName,
+                                "description": this.allPartnumbersInfo[i].description
+                            }]);
 
-                                this.partCollection.push(partName);
+                            this.partCollection.push(assetId);
                         }
                     }
                 }
@@ -136,20 +147,14 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
         }
     }
     private ptnumberlistdata() {
-
-
-        this.itemser.getPrtnumberslistList().subscribe(
-            results => this.onptnmbersSuccessful(results[0])
-            //error => this.onDataLoadFailed(error)
-        );
+        this.assetService.getAllAssetList().subscribe(results => {
+            this.onptnmbersSuccessful(results[0]);
+        });
+        
     }
     private onptnmbersSuccessful(allWorkFlows: any[]) {
-
-
-
+        
         this.allPartnumbersInfo = allWorkFlows;
-
-
 
     }
 }

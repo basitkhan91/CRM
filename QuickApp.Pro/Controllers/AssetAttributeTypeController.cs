@@ -11,7 +11,7 @@ namespace QuickApp.Pro.Controllers
 {
 
     [Route("api/AssetType")]
-    public class AssetTypeController : Controller
+    public class AssetAttributeTypeController : Controller
     {
         #region Private Members
 
@@ -21,7 +21,7 @@ namespace QuickApp.Pro.Controllers
 
         #region Constructor
 
-        public AssetTypeController(IUnitOfWork unitOfWork)
+        public AssetAttributeTypeController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }

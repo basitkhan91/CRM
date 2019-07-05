@@ -492,11 +492,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.sourceWorkFlow.isFixedAmount = false;
         this.sourceWorkFlow.isPercentageofNew = false;
         this.sourceWorkFlow.isPercentageOfReplacement = false;
-        this.sourceWorkFlow.fixedAmount = null;
-        this.sourceWorkFlow.costOfNew = null;
-        this.sourceWorkFlow.percentageOfNew = "";
-        this.sourceWorkFlow.costOfReplacement = null;
-        this.sourceWorkFlow.percentageOfReplacement = "";
+        //this.sourceWorkFlow.fixedAmount = null;
+        //this.sourceWorkFlow.costOfNew = null;
+        //this.sourceWorkFlow.percentageOfNew = "";
+        //this.sourceWorkFlow.costOfReplacement = null;
+        //this.sourceWorkFlow.percentageOfReplacement = "";
     }
 
     isFixedcheck(event) {

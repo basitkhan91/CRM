@@ -60,7 +60,7 @@
                 </select>
             </td>
             <td>
-                <input type="number" class="form-control" value="{{material.quantity}}" (input)="calculateCost()" [(ngModel)]="material.quantity" />
+                <input type="number" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.quantity" />
             </td>
             <td>
                 <select class="form-control custom-select" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
@@ -71,7 +71,7 @@
                 </select>
             </td>
             <td>
-                <input type="number" class="form-control" value="{{material.unitCost}}" (input)="calculateCost()" [(ngModel)]="material.unitCost" />
+                <input type="number" class="form-control" value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
             </td>
             <td>
                 <input type="number" class="form-control" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />

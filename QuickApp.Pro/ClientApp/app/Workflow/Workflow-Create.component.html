@@ -163,13 +163,13 @@
                     <div class="col-sm-12">
 
                         <div [hidden]="!isFixed" class="form-group col-sm-12">
-                            <label class="w90">Fixed Amount</label>
-                            <input class="form-control w70 amount" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount">
+                            <label class="form-control w90">Fixed Amount</label>
+                            <input class="form-control" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount" value="{{sourceWorkFlow.fixedAmount}}">
                         </div>
 
                         <div [hidden]="!ispercent" class="form-group col-sm-12">
                             <label class="w90">Cost of New</label>
-                            <input type="number" placeholder=" $40,000 " [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
+                            <input class="form-control w90"  type="number" [(ngModel)]="sourceWorkFlow.costOfNew" value="{{sourceWorkFlow.costOfNew}}">
                             <label class="w50">Percent</label>
                             <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
                                 <option value="">Select</option>
@@ -182,7 +182,7 @@
                         <div [hidden]="!percentreplcae" class="form-group col-sm-12">
                             <div class="col-sm-12">
                                 <label class="w90">Cost of Replace</label>
-                                <input [(ngModel)]="sourceWorkFlow.costOfReplacement" placeholder=" $40,000 " class="form-control w70 amount" type="number" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
+                                <input [(ngModel)]="sourceWorkFlow.costOfReplacement" class="form-control w70 amount" type="number" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
                                 <label class="w50">Percent</label>
                                 <select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
                                     <option value="">Select</option>

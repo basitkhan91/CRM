@@ -19,10 +19,16 @@ namespace DAL.Models
         [Key]
         public long WorkflowEquipmentListId { get; set; }
         public long WorkflowId { get; set; }
+
+        [Required(ErrorMessage = "AssetId is required in Equipment List")]
         public Nullable<long> AssetId { get; set; }
         public Nullable<long> AssetTypeId { get; set; }
         public string AssetDescription { get; set; }
+
+        [Required(ErrorMessage ="Quantity is required in Equipment List")]
         public short Quantity { get; set; }
+
+        public string PartNumber { get; set; }
 
         [ForeignKey("TaskId")]
         public long TaskId { get; set; }

@@ -9,6 +9,7 @@ import { ItemClassificationService } from "../services/item-classfication.servic
 import { UnitOfMeasureService } from "../services/unitofmeasure.service";
 import { ConditionService } from "../services/condition.service";
 import { VendorService } from "../services/vendor.service";
+import { AlertService, MessageSeverity } from "../services/alert.service";
 
 @Component({
     selector: 'grd-measurement',
@@ -24,10 +25,9 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     row: any;
-    constructor(private actionService: ActionService, private route: ActivatedRoute, private router: Router, private expertiseService: EmployeeExpertiseService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private itemser: ItemMasterService, private vendorService: VendorService) {
+    constructor(private actionService: ActionService, private route: ActivatedRoute, private router: Router, private expertiseService: EmployeeExpertiseService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService : AlertService) {
     }
     ngOnInit(): void {
-        //debugger;
         this.row = this.workFlow.measurements[0];
         this.ptnumberlistdata();
     }
@@ -41,12 +41,14 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
         newRow.workflowMeasurementId = "0";
         newRow.taskId = this.workFlow.taskId;
         newRow.partNumber = "";
+        newRow.partDescription = "";
         newRow.sequence = "";
         newRow.stage = "";
         newRow.min = "";
         newRow.max = "";
         newRow.expected = "";
         newRow.memo = "";
+        newRow.diagramURL = "";
         newRow.isDelete = false;
         this.workFlow.measurements.push(newRow);
     }
@@ -62,16 +64,28 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
     }
 
     onPartSelect(event, measurement) {
-        if (this.itemclaColl) {
-            for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName) {
-                    measurement.itemMasterId = this.itemclaColl[i][0].partId;
-                    measurement.partDescription = this.itemclaColl[i][0].description;
+        var anyMeasurement = this.workFlow.measurements.filter(measurement =>
+            measurement.taskId == this.workFlow.taskId && measurement.partDescription == event);
 
-                  
-                }
-            };
+        if (anyMeasurement.length > 1) {
+            measurement.partNumber = "";
+            measurement.partDescription = "";
+            event = "";
+            this.alertService.showMessage("Workflow", "PN in measurement is already in use", MessageSeverity.error);
+            return;
         }
+        else {
+            if (this.itemclaColl) {
+                for (let i = 0; i < this.itemclaColl.length; i++) {
+                    if (event == this.itemclaColl[i][0].partName) {
+                        measurement.partNumber = this.itemclaColl[i][0].partId;
+                        measurement.partDescription = this.itemclaColl[i][0].partName;
+                    }
+                };
+            }
+        }
+
+        
     }
 
     filterpartItems(event) {

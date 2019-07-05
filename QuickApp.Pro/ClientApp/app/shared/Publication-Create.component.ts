@@ -9,6 +9,7 @@ import { IPublication } from "../Workflow/Publication";
 import { EmployeeService } from "../services/employee.service";
 import { PublicationService } from "../services/publication.service";
 import { Publication } from "../models/publication.model";
+import { AlertService, MessageSeverity } from "../services/alert.service";
 
 @Component({
     selector: 'grd-publication',
@@ -32,7 +33,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     updateModeforModels: boolean = false;
     publications: Publication[];
 
-    constructor(private actionService: ActionService, private employeeService: EmployeeService, private publicationService: PublicationService) {
+    constructor(private actionService: ActionService, private employeeService: EmployeeService, private publicationService: PublicationService, private alertService : AlertService) {
 
     }
 
@@ -160,16 +161,30 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     private onPublicationChange(row) {
-        var selectedPublication = this.publications.filter(function (publication) {
-            return publication.publicationRecordId == row.publicationId;
-        });
+        // check for unique selection
+        var anyPublication = this.workFlow.publication.filter(publication =>
+            publication.taskId == this.workFlow.taskId && publication.publicationId == row.publicationId);
 
-        if (selectedPublication != null && selectedPublication.length > 0) {
-            row.publicationDescription = selectedPublication[0].description;
+        if (anyPublication.length > 1) {
+            row.publicationId = "";
+            row.publicationDescription = "";
+            this.alertService.showMessage("Workflow", "Publication is already in use", MessageSeverity.error);
+            
         }
         else {
-            row.publicationDescription = "";
+            var selectedPublication = this.publications.filter(function (publication) {
+                return publication.publicationRecordId == row.publicationId;
+            });
+
+            if (selectedPublication != null && selectedPublication.length > 0) {
+                row.publicationDescription = selectedPublication[0].description;
+            }
+            else {
+                row.publicationDescription = "";
+            }
         }
+
+        
     }
 
 }

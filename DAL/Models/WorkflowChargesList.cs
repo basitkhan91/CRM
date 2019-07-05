@@ -44,6 +44,7 @@ namespace DAL.Models
         public Nullable<decimal> ForexRate { get; set; }
 
         public Nullable<long> VendorId { get; set; }
+        public string VendorName { get; set; }
         public decimal VendorUnitPrice { get; set; }
 
         [ForeignKey("TaskId")]

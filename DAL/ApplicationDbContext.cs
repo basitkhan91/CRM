@@ -226,7 +226,7 @@ namespace DAL
         public DbSet<StocklineIntegrationPortal> StocklineIntegrationPortal { get; set; }
         public DbSet<WorkFlowDirection> WorkFlowDirection { get; set; }
 
-        public DbSet<ExpertiseType> ExpertiseTypes { get; set; }
+        public DbSet<ExpertiseType> ExpertiseType { get; set; }
         public DbSet<MaterialCondition> MaterialConditions { get; set; }
         public DbSet<MaterialMandatory> MaterialMandatories { get; set; }
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
@@ -267,11 +267,11 @@ namespace DAL
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
         public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
 
-        public DbSet<AssetTypeSingleScreen> AssetTypeSingleScreen { get; set; }
+        public DbSet<AssetType> AssetType { get; set; }
         public DbSet<Asset> Asset { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
-        public DbSet<AssetType> AssetType { get; set; }
+        public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
         public DbSet<AssetIntangibleType> AssetIntangibleType { get; set; }
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
@@ -324,7 +324,7 @@ namespace DAL
         public DbSet<BinAudit> BinAudit { get; set; }
         public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
         public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
-        public DbSet<AssetTypeSingleScreenAudit> AssetTypeSingleScreenAudit { get; set; }
+        public DbSet<AssetTypeAudit> AssetTypeAudit { get; set; }
 
 
         public DbSet<GatecodeClassAudit> GatecodeAudit { get; set; }

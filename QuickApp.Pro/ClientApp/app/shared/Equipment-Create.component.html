@@ -16,8 +16,8 @@
             <td>
                 <p-autoComplete (onSelect)="onPartSelect($event,eqp)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="eqp.partNumber"
                                 [minLength]="1" [dropdown]="true">
-                    <ng-template let-partName pTemplate="part">
-                        <div class="ui-helper-clearfix">{{partName}}</div>
+                    <ng-template let-assetId pTemplate="asset">
+                        <div class="ui-helper-clearfix">{{assetId}}</div>
                     </ng-template>
                 </p-autoComplete>
             </td>
@@ -27,7 +27,7 @@
                     <option value={{assetType.id}} *ngFor="let assetType of equipmentAssetType">{{assetType.name}}</option>
                 </select>
             </td>
-            <td><input type="text" class="form-control" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" readonly /></td>
+            <td><input type="text" class="form-control" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
             <td><input type="text" class="form-control" value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">

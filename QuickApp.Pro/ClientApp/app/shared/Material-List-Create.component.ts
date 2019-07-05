@@ -55,7 +55,7 @@ export class MaterialListCreateComponent implements OnInit {
 
     ngOnInit(): void {
         this.row = this.workFlow.materialList[0];
-       
+
         this.actionService.GetMaterialMandatory().subscribe(
             mandatory => {
                 this.materialMandatory = mandatory;
@@ -84,10 +84,11 @@ export class MaterialListCreateComponent implements OnInit {
                             this.itemclaColl.push([{
                                 "partId": this.allPartnumbersInfo[i].itemMasterId,
                                 "partName": partName,
-                                "description": this.allPartnumbersInfo[i].partDescription
-                            }]),
+                                "description": this.allPartnumbersInfo[i].partDescription,
+                                "itemClassificationId": this.allPartnumbersInfo[i].itemClassificationId,
+                            }]);
 
-                                this.partCollection.push(partName);
+                            this.partCollection.push(partName);
                         }
                     }
                 }
@@ -102,6 +103,7 @@ export class MaterialListCreateComponent implements OnInit {
                     material.itemMasterId = this.itemclaColl[i][0].partId;
                     material.partDescription = this.itemclaColl[i][0].description;
                     material.partNumber = this.itemclaColl[i][0].partName;
+                    material.itemClassificationId = this.itemclaColl[i][0].itemClassificationId;
                 }
             };
         }
@@ -177,6 +179,13 @@ export class MaterialListCreateComponent implements OnInit {
         }
         else {
             this.workFlow.materialList[index].isDelete = true;
+        }
+    }
+
+    calculateExtendedCost(material): void {
+        if (material.quantity != "" && material.unitCost) {
+            material.extendedCost = material.quantity * material.unitCost;
+            this.calculateCost()
         }
     }
 

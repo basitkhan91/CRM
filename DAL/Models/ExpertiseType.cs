@@ -6,10 +6,11 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class ExpertiseType : BaseClass
+    public class ExpertiseType : BaseEntity
     {
-
-        [MaxLength(50)]
-        public string Name { get; set; }
+        public Int16 ExpertiseTypeId { get; set; }
+        public string Description { get; set; }
+        public string Memo { get; set; }
+        public int MasterCompanyId { get; set; }
     }
 }

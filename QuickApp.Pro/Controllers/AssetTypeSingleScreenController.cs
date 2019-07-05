@@ -34,19 +34,19 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var assets = unitOfWork.Repository<AssetTypeSingleScreen>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetTypeSingleScreenId);
+            var assets = unitOfWork.Repository<AssetType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetTypeId);
             return Ok(assets);
         }
 
         [HttpGet("getById/{id}")]
         public IActionResult getAssetById(long id)
         {
-            var asset = unitOfWork.Repository<AssetTypeSingleScreen>().Find(x => x.AssetTypeSingleScreenId == id && x.IsDelete != true);
+            var asset = unitOfWork.Repository<AssetType>().Find(x => x.AssetTypeId == id && x.IsDelete != true);
             return Ok(asset);
         }
 
         [HttpPost("add")]
-        public IActionResult addAsset([FromBody]AssetTypeSingleScreen assetType)
+        public IActionResult addAsset([FromBody]AssetType assetType)
         {
             if (assetType != null)
             {
@@ -56,7 +56,7 @@ namespace QuickApp.Pro.Controllers
                     assetType.UpdatedDate = DateTime.Now;
                     assetType.IsActive = true;
                     assetType.MasterCompanyId = 1;
-                    unitOfWork.Repository<AssetTypeSingleScreen>().Add(assetType);
+                    unitOfWork.Repository<AssetType>().Add(assetType);
                     unitOfWork.SaveChanges();
                     return Ok(assetType);
                 }
@@ -74,14 +74,14 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult updateAsset([FromBody]AssetTypeSingleScreen assetType)
+        public IActionResult updateAsset([FromBody]AssetType assetType)
         {
             if (assetType != null)
             {
                 if (ModelState.IsValid)
                 {
                     assetType.UpdatedDate = DateTime.Now;
-                    unitOfWork.Repository<AssetTypeSingleScreen>().Update(assetType);
+                    unitOfWork.Repository<AssetType>().Update(assetType);
                     unitOfWork.SaveChanges();
                     return Ok(assetType);
                 }
@@ -101,11 +101,11 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeAssetById(long id)
         {
-            var assetType = unitOfWork.Repository<AssetTypeSingleScreen>().Find(x => x.AssetTypeSingleScreenId == id).FirstOrDefault();
+            var assetType = unitOfWork.Repository<AssetType>().Find(x => x.AssetTypeId == id).FirstOrDefault();
             if (assetType != null)
             {
                 assetType.IsDelete = true;
-                unitOfWork.Repository<AssetTypeSingleScreen>().Update(assetType);
+                unitOfWork.Repository<AssetType>().Update(assetType);
                 unitOfWork.SaveChanges();
                 return Ok();
             }
@@ -118,13 +118,13 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            var audits = unitOfWork.Repository<AssetTypeSingleScreenAudit>()
-                .Find(x => x.AssetTypeSingleScreenId == id)
-                .OrderByDescending(x => x.AssetTypeSingleScreenAuditId);
+            var audits = unitOfWork.Repository<AssetTypeAudit>()
+                .Find(x => x.AssetTypeId == id)
+                .OrderByDescending(x => x.AssetTypeAuditId);
 
-            var auditResult = new List<AuditResult<AssetTypeSingleScreenAudit>>();
+            var auditResult = new List<AuditResult<AssetTypeAudit>>();
 
-            auditResult.Add(new AuditResult<AssetTypeSingleScreenAudit> { AreaName = "Asset Type", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<AssetTypeAudit> { AreaName = "Asset Type", Result = audits.ToList() });
 
             return Ok(auditResult);
         }

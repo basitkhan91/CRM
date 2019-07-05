@@ -21,6 +21,8 @@ namespace DAL.Models
         [Key]
         public long WorkflowExpertiseListId { get; set; }
         public long WorkflowId { get; set; }
+
+        [Required(ErrorMessage ="Expertise Type is required in Expertise")]
         public Nullable<short> ExpertiseTypeId { get; set; }
         public Nullable<decimal> EstimatedHours { get; set; }
         public Nullable<decimal> LaborDirectRate { get; set; }

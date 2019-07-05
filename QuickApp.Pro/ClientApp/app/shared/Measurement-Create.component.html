@@ -6,6 +6,7 @@
             </td>
         </tr>
         <tr>
+            <th><label>PN *</label></th>
             <th><label>Sequence</label></th>
             <th><label>Stage</label></th>
             <th><label>Min </label></th>
@@ -15,7 +16,21 @@
             <th><label>Memo </label></th>
             <th><label>Action </label></th>
         </tr>
-        <tr  [hidden]="measurement.isDelete" *ngFor="let measurement of workFlow.measurements;let i= index">
+        <tr [hidden]="measurement.isDelete" *ngFor="let measurement of workFlow.measurements;let i= index">
+            <td>
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-7">
+                            <p-autoComplete (onSelect)="onPartSelect($event,measurement)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="measurement.partDescription"
+                                            [minLength]="1" [dropdown]="true">
+                                <ng-template let-partName pTemplate="part">
+                                    <div class="ui-helper-clearfix">{{partName}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+                        </div>
+                    </div>
+                </div>
+            </td>
             <td><input class="form-control" type="text" [(ngModel)]="measurement.sequence" value="{{measurement.sequence}}"></td>
             <td><input class="form-control" type="text" [(ngModel)]="measurement.stage" value="{{measurement.stage}}"></td>
             <td><input class="form-control" type="text" [(ngModel)]="measurement.min" value="{{measurement.min}}"></td>

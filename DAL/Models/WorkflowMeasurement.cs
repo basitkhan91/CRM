@@ -23,6 +23,13 @@ namespace DAL.Models
         public long WorkflowMeasurementId { get; set; }
         public long WorkflowId { get; set; }
 
+        [Required(ErrorMessage ="PN is Required.")]
+        public string PartNumber { get; set; }
+
+        [Required(ErrorMessage = "PN is Required.")]
+        public string PartDescription { get; set; }
+
+
         [ForeignKey("TaskId")]
         public long TaskId { get; set; }
 

@@ -6,7 +6,7 @@
             </td>
         </tr>
         <tr>
-            <th><label> Expertise Type </label></th>
+            <th><label> Expertise Type *</label></th>
             <th><label>Estimated Hours </label></th>
             <th><label>Labour Direct Rate</label></th>
             <th><label>Labour Direct Cost</label></th>
@@ -22,44 +22,44 @@
                         [(ngModel)]="expert.expertiseTypeId">
                     <option value="">Select</option>
                     <option *ngFor="let type of expertiseTypes"
-                            value="{{type.id}}">
-                        {{type.name}}
+                            value="{{type.expertiseTypeId}}">
+                        {{type.description}}
                     </option>
                 </select>
 
             </td>
             <td>
-                <input type="text"
+                <input type="number"
                        class="form-control"
                        value="{{expert.estimatedHours}}"
                        [(ngModel)]="expert.estimatedHours">
             </td>
             <td>
-                <input type="text"
+                <input type="number"
                        class="form-control"
                        value="{{expert.laborDirectRate}}"
                        [(ngModel)]="expert.laborDirectRate">
             </td>
             <td>
-                <input type="text"
+                <input type="number"
                        class="form-control"
                        value="{{expert.directLaborRate}}"
                        [(ngModel)]="expert.directLaborRate">
             </td>
             <td>
-                <input type="text"
+                <input type="number"
                        class="form-control"
                        value="{{expert.overheadBurden}}"
                        [(ngModel)]="expert.overheadBurden">
             </td>
             <td>
-                <input type="text"
+                <input type="number"
                        class="form-control"
                        value="{{expert.overheadCost}}"
                        [(ngModel)]="expert.overheadCost">
             </td>
             <td>
-                <input type="text"
+                <input type="number"
                        class="form-control"
                        value="{{expert.laborOverheadCost}}"
                        [(ngModel)]="expert.laborOverheadCost">

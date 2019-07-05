@@ -98,16 +98,16 @@ namespace DAL
             }
 
 
-            if (!await _context.ExpertiseTypes.AnyAsync())
-            {
-                _context.ExpertiseTypes.Add(new ExpertiseType { Id = 2, Name = "Engineer" });
-                _context.ExpertiseTypes.Add(new ExpertiseType { Id = 3, Name = "Inspector" });
-                _context.ExpertiseTypes.Add(new ExpertiseType { Id = 4, Name = "Mechanic" });
-                _context.ExpertiseTypes.Add(new ExpertiseType { Id = 5, Name = "Quality" });
-                _context.ExpertiseTypes.Add(new ExpertiseType { Id = 6, Name = "Receiver" });
-                _context.ExpertiseTypes.Add(new ExpertiseType { Id = 7, Name = "Technician" });
-                // _context.ExpertiseType.Add(new MaterialCondition { Id = 8, Name = "Technician" });
-            }
+            //if (!await _context.ExpertiseType.AnyAsync())
+            //{
+            //    _context.ExpertiseType.Add(new ExpertiseType { Id = 2, Name = "Engineer" });
+            //    _context.ExpertiseType.Add(new ExpertiseType { Id = 3, Name = "Inspector" });
+            //    _context.ExpertiseType.Add(new ExpertiseType { Id = 4, Name = "Mechanic" });
+            //    _context.ExpertiseType.Add(new ExpertiseType { Id = 5, Name = "Quality" });
+            //    _context.ExpertiseType.Add(new ExpertiseType { Id = 6, Name = "Receiver" });
+            //    _context.ExpertiseType.Add(new ExpertiseType { Id = 7, Name = "Technician" });
+            //    // _context.ExpertiseType.Add(new MaterialCondition { Id = 8, Name = "Technician" });
+            //}
 
             if (!await _context.MaterialConditions.AnyAsync())
             {

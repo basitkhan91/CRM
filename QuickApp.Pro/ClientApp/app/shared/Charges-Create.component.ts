@@ -80,10 +80,11 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.allActions = allWorkFlows;
     }
 
-    onVendorCodeselected(event) {
+    onVendorCodeselected(charge,event) {
         for (let i = 0; i < this.VendorCodesColl.length; i++) {
             if (event == this.VendorCodesColl[i][0].vendorCode) {
-
+                charge.vendorName = this.VendorCodesColl[i][0].vendorCode;
+                charge.vendorId = this.VendorCodesColl[i][0].vendorId;
             }
         }
     }
@@ -101,6 +102,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         newRow.unitCost = "";
         newRow.unitPrice = "";
         newRow.vendorUnitPrice = "";
+        newRow.vendorId = "";
         newRow.vendorName = "";
         newRow.workflowChargeTypeId = "";
         newRow.isDelete = false;
@@ -112,7 +114,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             this.workFlow.charges.splice(index, 1);
         }
         else {
-            this.workFlow.exclusions[index].isDelete = true;
+            this.workFlow.charges[index].isDelete = true;
         }
     }
 
