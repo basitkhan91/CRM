@@ -133,6 +133,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("CustomerRowByIdGet/{customerId}")]
+        [Produces(typeof(List<CustomerViewModel>))]
+        public IActionResult GetCustomerRowById(long customerId)
+        {
+            var customerDtails = _unitOfWork.Customer.GetCustomerRowByid(customerId); //.GetAllCustomersData();
+            return Ok(customerDtails);
+
+        }
+
 
         [HttpGet("AtachapterGet")]
         [Produces(typeof(List<ATAChapterViewModel>))]
@@ -1644,56 +1653,195 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPost("pagination")]
         public IActionResult GetCustomer([FromBody]CustomerSearchViewModel paginate)
-   {
-            var query = _context.Customer.AsQueryable();
-            IQueryable<Customer> queryable = null;
-            //IQueryable<Customer> queryable = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null) || c.CustomerCode == paginate.CustomerCode || c.Name == paginate.Name)
-            //    .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
+        {
 
+            IQueryable<CustomerModel> queryable = null;
+
+            #region working code with single table
+            //var query = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            //        .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
+            //if (!string.IsNullOrEmpty(paginate.CustomerCode) || !string.IsNullOrEmpty(paginate.Name) || !string.IsNullOrEmpty(paginate.Email) || !string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName))
+            //{
+            //    if (!string.IsNullOrEmpty(paginate.CustomerCode))
+            //    {
+            //        queryable = query.Where(c => c.CustomerCode.Contains(paginate.CustomerCode.Trim()));
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.Name))
+            //    {
+            //        queryable = query.Where(c => c.Name.Contains(paginate.Name.Trim()));
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.Email))
+            //    {
+            //        queryable = query.Where(c => c.Email.Contains(paginate.Email.Trim()));
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName))
+            //    {
+            //        queryable = query.Where(c => c.PrimarySalesPersonFirstName.Contains(paginate.PrimarySalesPersonFirstName.Trim()));//.AsQueryable();
+            //    }
+            //}
+            //else
+            //    queryable = query;
+            #endregion
+            List<CustomerModel> customersList = new List<CustomerModel>();
+            CustomerModel customer = null;
+            if (!string.IsNullOrEmpty(paginate.CustomerCode) || !string.IsNullOrEmpty(paginate.Name)
+                || !string.IsNullOrEmpty(paginate.Email)
+                || !string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName)
+                || !string.IsNullOrEmpty(paginate.City)
+                || !string.IsNullOrEmpty(paginate.StateOrProvince)
+                || !string.IsNullOrEmpty(paginate.CustomerType))
+            {
+                var customers = (from t in _context.Customer
+                                 join ad in _context.Address on t.AddressId equals ad.AddressId
+                                 join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
+
+                                 where t.IsDelete == true || t.IsDelete == null
+                                 select new
+                                 {
+                                     ct.Description,
+                                     t.CustomerId,
+                                     t,
+                                     Address1 = ad.Line1,
+                                     Address2 = ad.Line2,
+                                     Address3 = ad.Line3,
+                                     t.CustomerCode,
+                                     t.Name,
+                                     t.Email,
+                                     t.CustomerPhone,
+                                     ad.City,
+                                     ad.StateOrProvince,
+                                     t.CreatedDate,
+                                     t.CreatedBy,
+                                     t.UpdatedBy,
+                                     t.UpdatedDate,
+                                     ad.AddressId,
+                                     ad.Country,
+                                     ad.PostalCode,
+                                     t.PrimarySalesPersonFirstName,
+                                     t.IsActive
+                                 }).ToList();
+                foreach (var item in customers)
+                {
+                    customer = new CustomerModel();
+                    customer.CustomerId = item.CustomerId;
+                    customer.CustomerCode = item.CustomerCode;
+                    customer.City = item.City;
+                    customer.StateOrProvince = item.StateOrProvince;
+                    customer.CustomerType = item.Description;
+                    customer.Name = item.Name;
+                    customer.Email = item.Email;
+                    customer.CreatedDate = item.CreatedDate;
+                    customer.CreatedBy = item.CreatedBy;
+                    customer.UpdatedDate = item.UpdatedDate;
+                    customer.UpdatedBy = item.UpdatedBy;
+                    customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
+                    customer.IsActive = item.IsActive;
+                    customersList.Add(customer);
+                }
+                #region Pagination for join tables
+                if (!string.IsNullOrEmpty(paginate.CustomerCode))
+                {
+                    customersList = customersList.Where(c => c.CustomerCode.ToUpper().Contains(paginate.CustomerCode.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Name))
+                {
+                    customersList = customersList.Where(c => c.Name.ToUpper().Contains(paginate.Name.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Email))
+                {
+                    customersList = customersList.Where(c => c.Email.ToUpper().Contains(paginate.Email.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.City))
+                {
+                    customersList = customersList.Where(c => c.City.ToUpper().Contains(paginate.City.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.StateOrProvince))
+                {
+                    customersList = customersList.Where(c => c.StateOrProvince.ToUpper().Contains(paginate.StateOrProvince.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.CustomerType))
+                {
+                    customersList = customersList.Where(c => c.CustomerType.ToUpper().Contains(paginate.CustomerType.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName))
+                { 
+                    customersList = customersList.Where(c => c.PrimarySalesPersonFirstName.ToUpper().Contains(paginate.PrimarySalesPersonFirstName.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var customers = (from t in _context.Customer
+                                 join ad in _context.Address on t.AddressId equals ad.AddressId
+                                 join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
+
+                                 where t.IsDelete == true || t.IsDelete == null
+                                 select new
+                                 {
+                                     ct.Description,
+                                     t.CustomerId,
+                                     t,
+                                     Address1 = ad.Line1,
+                                     Address2 = ad.Line2,
+                                     Address3 = ad.Line3,
+                                     t.CustomerCode,
+                                     t.Name,
+                                     t.Email,
+                                     t.CustomerPhone,
+                                     ad.City,
+                                     ad.StateOrProvince,
+                                     t.CreatedDate,
+                                     t.CreatedBy,
+                                     t.UpdatedBy,
+                                     t.UpdatedDate,
+                                     ad.AddressId,
+                                     ad.Country,
+                                     ad.PostalCode,
+                                     t.PrimarySalesPersonFirstName,
+                                     t.IsActive
+                                 }).ToList();
+                foreach (var item in customers)
+                {
+                    customer = new CustomerModel();
+                    customer.CustomerId = item.CustomerId;
+                    customer.CustomerCode = item.CustomerCode;
+                    customer.City = item.City;
+                    customer.StateOrProvince = item.StateOrProvince;
+                    customer.CustomerType = item.Description;
+                    customer.Name = item.Name;
+                    customer.Email = item.Email;
+                    customer.CreatedDate = item.CreatedDate;
+                    customer.CreatedBy = item.CreatedBy;
+                    customer.UpdatedDate = item.UpdatedDate;
+                    customer.UpdatedBy = item.UpdatedBy;
+                    customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
+                    customer.IsActive = item.IsActive;
+                    customersList.Add(customer);
+                }
+            }
+            #endregion
+            queryable = customersList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<CustomerModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        [HttpPost("globalSearch")]
+        public IActionResult GetCustomer([FromBody]GlobalSearchModel paginate)
+        {
+            IQueryable<Customer> queryable = null;
             if (!string.IsNullOrEmpty(paginate.GlobalSearchString))
             {
-                queryable = _context.Customer.Where(c => new[] { c.CustomerCode, c.Name, c.Email, c.PrimarySalesPersonFirstName }.Any(s => s.Contains(paginate.GlobalSearchString))).ToList().AsQueryable();
-            }
-            else if (!string.IsNullOrEmpty(paginate.CustomerCode)|| !string.IsNullOrEmpty(paginate.Name) ||  !string.IsNullOrEmpty(paginate.Email) || !string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName)) 
-            {
-                if (paginate.condition)
-                {
-                    queryable = _context.Customer.Where(c => c.CustomerCode.Contains(paginate.CustomerCode) && c.Name.Contains(paginate.Name) &&
-                           c.Email.Contains(paginate.Email) || c.PrimarySalesPersonFirstName.Contains(paginate.PrimarySalesPersonFirstName))
-                           .Where(n => n.Name != null && n.Name != "")
-                           .Where(ps => ps.PrimarySalesPersonFirstName != null && ps.PrimarySalesPersonFirstName != "")
-                                .OrderByDescending(c => c.CustomerId).ToList().AsQueryable(); 
-                }
-                else
-                {
-                    //queryable = _context.Customer.Where(c => c.CustomerCode.Contains(paginate.CustomerCode) || c.Name.Contains(paginate.Name) ||
-                    //       c.Email.Contains(paginate.Email) || c.PrimarySalesPersonFirstName.Contains(paginate.PrimarySalesPersonFirstName))
-                    //       .Where(n => n.Name != null && n.Name != "")
-                    //       .Where(ps => ps.PrimarySalesPersonFirstName != null && ps.PrimarySalesPersonFirstName != "")
-                    //            .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
-                    List<CustomerSearchViewModel> paginateModel = new List<CustomerSearchViewModel>();
-                    paginateModel.Add(paginate);
-                    foreach (var item in paginateModel)
-                    {
-                        if (!string.IsNullOrEmpty(item.CustomerCode))
-                        {
-                            query.Concat(query.Where(c => c.CustomerCode.Contains("code11")));//.AsQueryable());
-                            //query = query.Where(c => c.CustomerCode.Contains(item.CustomerCode.Trim())).AsQueryable();
-                            //query.Append(query.Where(c => c.CustomerCode.Contains(item.CustomerCode.Trim())).AsQueryable());
-                        }
-                        if (!string.IsNullOrEmpty(item.Name))
-                        {
-                            query.Concat(query.Where(c => c.CustomerCode.Contains("test Customer11")));//.AsQueryable());
-                            //query = query.Where(c => c.Name.Contains(item.Name.Trim())).AsQueryable();
-                        }
-                        if (!string.IsNullOrEmpty(item.PrimarySalesPersonFirstName.Trim()))
-                        {
-                            query.Concat(query.Where(c => c.CustomerCode.Contains("test Sales")));//.AsQueryable());
-                            //query = query.Where(c => c.PrimarySalesPersonFirstName.Contains(item.PrimarySalesPersonFirstName)).AsQueryable();
-                        }
-                    }
-                    queryable = query;
-                }
+                queryable = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                    .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
+                // queryable = _context.Customer.Where(c => new[] { c.CustomerCode, c.Name, c.Email, c.PrimarySalesPersonFirstName }.Any(s => s.Contains(paginate.GlobalSearchString))).ToList().AsQueryable();
             }
             else
                 queryable = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
@@ -1704,7 +1852,7 @@ namespace QuickApp.Pro.Controllers
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
                 var data = DAL.Common.PaginatedList<Customer>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data); 
+                return Ok(data);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));

@@ -208,6 +208,67 @@ namespace DAL.Repositories
 
         }
 
+
+        public IEnumerable<object> GetCustomerRowByid(long customerId)
+        {
+
+            {
+                var data = (from t in _appContext.Customer
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
+                            join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
+                            from currency in curr.DefaultIfEmpty()
+                            join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
+                            from creditTerms in cre.DefaultIfEmpty()
+                            join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+                            where  t.CustomerId == customerId //&&  (t.IsDelete == true || t.IsDelete == null)
+                            // select new { t, ad, vt }).ToList();
+                            select new
+                            {
+                                t.CreditTermsId,
+                                t.CurrencyId,
+                                ad,
+                                t.PrimarySalesPersonFirstName,
+                                t.CustomerId,
+                                t,
+                                // cc,
+                                creditTerms,
+                                currency,
+                                currency.Symbol,
+                                //creditTerms.Name,
+                                t.Email,
+                                t.IsActive,
+                                Address1 = ad.Line1,
+                                Address2 = ad.Line2,
+                                Address3 = ad.Line3,
+                                t.CustomerCode,
+                                t.DoingBuinessAsName,
+                                t.Parent,
+                                t.RestrictPMAMemo,
+                                t.PBHCustomerMemo,
+                                t.ContractReference,
+                                t.CustomerURL,
+                                t.Name,
+                                ad.City,
+                                ad.StateOrProvince,
+                                vt.description,
+                                t.CreatedDate,
+                                t.CreatedBy,
+                                t.UpdatedBy,
+                                t.UpdatedDate,
+                                ad.AddressId,
+                                ad.Country,
+                                ad.PostalCode,
+                                vt.CustomerAffiliationId,
+                                cc.CustomerClassificationId,
+                                //cc.Description
+                            }).OrderByDescending(a => a.UpdatedDate).ToList();
+                return data;
+
+            }
+
+        }
+
         public IEnumerable<object> GetCustomerWithId(long customerId)
         {
             throw new NotImplementedException();

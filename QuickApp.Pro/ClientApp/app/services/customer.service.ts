@@ -153,6 +153,11 @@ export class CustomerService {
             this.customerEndpoint.getCustomersDatawithid<any>(customerId));
     }
 
+    getCustomerdataById(customerId: any) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getCustomerListByid<any>(customerId));
+    }
+
     getSalespersondata(customerId: any) {
         return Observable.forkJoin(
             this.customerEndpoint.getsalespersonwithid<any>(customerId));
@@ -423,4 +428,8 @@ export class CustomerService {
             this.customerEndpoint.getCustomerRecords<Customer[]>(serverSidePagesData));
     }
 
+    getGlobalSearch(pageData: any) {
+        return Observable.forkJoin(
+            this.customerEndpoint.getGlobalCustomerRecords<Customer[]>(pageData));
+    }
 }
