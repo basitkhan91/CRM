@@ -45,6 +45,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _getATAchapterUrl: string = "/api/Customer/AtachapterGet";
     private readonly _fianlurl: string = "/api/Customer/fianlEmptyObj";
     private readonly _customerListWithId: string = "/api/Customer/CustomerlistIdGet";
+    private readonly _customerRowBySearchId: string = "/api/Customer/CustomerRowByIdGet";
     private readonly _salesListWithId: string = "/api/Customer/Saleslist";
     private readonly _contactGeturl: string = "/api/Vendor/ContactCompleteGet";
     private readonly _deleteContactUrl: string = "/api/Customer/CustomerContact";
@@ -84,8 +85,10 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly getAllCustomersURL: string = "/api/customer/getAllCustomers";
     private readonly getAllCustomersInfoURL: string = "/api/customer/getAllCustomersInfo";
     private readonly getCustomer: string = "/api/customer/pagination";
+    private readonly getGlobalCustomer: string = "/api/customer/globalSearch";
 
 
+    get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
     get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
@@ -100,6 +103,7 @@ export class CustomerEndpoint extends EndpointFactory {
     get getAircraftTypeUrl() { return this.configurations.baseUrl + this._aircraftTypeUrl; }
     get generalurl() { return this.configurations.baseUrl + this._generalurl; }
     get customerListWithId() { return this.configurations.baseUrl + this._customerListWithId; }
+    get customerRowById() { return this.configurations.baseUrl + this._customerRowBySearchId; }
     get addressUrl() { return this.configurations.baseUrl + this._addressUrl }
     get customersattributesUrl() { return this.configurations.baseUrl + this._customersUrl; }
     get contctsCompleteUrl() { return this.configurations.baseUrl + this._contactGeturl; }
@@ -223,6 +227,14 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointurl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getCustomersDatawithid(customerId));
+            });
+    }
+
+    getCustomerListByid<T>(customerId: any): Observable<T> {
+        let endpointurl = `${this.customerRowById}/${customerId}`;
+        return this.http.get<T>(endpointurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerListByid(customerId));
             });
     }
 
@@ -874,9 +886,16 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getAllCustomerInfo());
             });
     }
-    
+
     getCustomerRecords<T>(paginationOption: any): Observable<T> {
         let endpointUrl = this.paginate;
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerRecords(paginationOption));
+            });
+    }
+    getGlobalCustomerRecords<T>(paginationOption: any): Observable<T> {
+        let endpointUrl = this.globalSearch;
         return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getCustomerRecords(paginationOption));

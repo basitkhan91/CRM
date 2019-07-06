@@ -7,10 +7,10 @@ namespace QuickApp.Pro.ViewModels
 {
     public class PaginateViewModel
     {
-        public int first { get; set;}
-        public int page { get; set;}
-        public int pageCount { get; set;}
-        public int rows { get; set;}
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
         public int limit { get; set; }
     }
 
@@ -23,6 +23,7 @@ namespace QuickApp.Pro.ViewModels
         int limit { get; set; }
     }
 
+    #region Customer List
     public class CustomerSearchViewModel : CustomerModel, IPaginateViewModel
     {
         public int first { get; set; }
@@ -30,8 +31,6 @@ namespace QuickApp.Pro.ViewModels
         public int pageCount { get; set; }
         public int rows { get; set; }
         public int limit { get; set; }
-        public bool condition { get; set; }
-        public string GlobalSearchString { get; set; }
     }
 
     public class CustomerModel
@@ -40,5 +39,28 @@ namespace QuickApp.Pro.ViewModels
         public string Name { get; set; }
         public string Email { get; set; }
         public string PrimarySalesPersonFirstName { get; set; }
+        public string City { get; set; }
+        public string StateOrProvince { get; set; }
+        public string CustomerType { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+        public long CustomerId { get; internal set; }
+        public bool? IsActive { get; internal set; }
     }
+    #endregion
+
+    #region Global Search
+    public class GlobalSearchModel : IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+        //public 
+        public string GlobalSearchString { get; set; }
+    }
+    #endregion
 }
