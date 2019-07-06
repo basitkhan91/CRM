@@ -137,7 +137,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             newRow.verifiedBy = "";
             newRow.status = "";
             newRow.verifiedDate = "";
-            newRow.isDelete = false;      
+            newRow.isDeleted = false;      
             this.workFlow.publication.push(newRow);
     }
 
@@ -146,7 +146,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             this.workFlow.publication.splice(index, 1);
         }
         else {
-            this.workFlow.publication[index].isDelete = true;
+            this.workFlow.publication[index].isDeleted = true;
         }
     
     

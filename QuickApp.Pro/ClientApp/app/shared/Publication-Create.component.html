@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr [hidden]="publ.isDelete" *ngFor="let publ of workFlow.publication;let i = index">
+                <tr [hidden]="publ.isDeleted" *ngFor="let publ of workFlow.publication;let i = index">
                     <td>
                         <select class="form-control custom-select"
                                 [(ngModel)]="publ.publicationId"
