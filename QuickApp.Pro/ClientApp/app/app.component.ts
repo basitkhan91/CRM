@@ -277,7 +277,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     {
                         label: 'Assets', items: [
-                            { label: 'Asset List', routerLink: '/assetmodule/assetpages/app-asset-listing"' },
+                            { label: 'Asset List', routerLink: '/assetmodule/assetpages/app-asset-listing' },
                             { label: 'Create Asset', routerLink: '/assetmodule/assetpages/app-create-asset' }]
                     },
                     {
@@ -701,11 +701,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                         ]
                     },
                     {
-                        label: 'Assets', items: [
+                        label: 'Asset Attributes', items: [
                             {
-                                label: 'Asset Type', items: [
-                                    { label: 'Asset Type List', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
-                                    { label: 'Create Asset', routerLink: '/#' },
+                                label: 'Asset Attribute Type', items: [
+                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
+                                    { label: 'Create Attribute Asset', routerLink: '/#' },
                                 ]
                             },
                             {

@@ -11246,7 +11246,7 @@ thead tr > a {
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
 	color: #4fa2fb;
-	background: #ffffff;
+	
 }
 
 ul.ui-dropdown-items {
@@ -12376,3 +12376,14 @@ body .ui-steps:before {
     width: calc(100% - 25px) !important;
 }
 .inner-addon.right-addon {width:100% !important;}
+.ui-button {
+    background-color: #337ab7 !important;
+}
+.ui-state-active, .ui-widget-content .ui-state-active{
+    border: 0px !important;
+}
+.ui-paginator-bottom .ui-paginator-pages a.ui-state-active {
+    background-color: #337ab7 !important;
+}
+mat-sidenav-content {display:block !important;}
+.bhoechie-tab-menu {width:15%;}

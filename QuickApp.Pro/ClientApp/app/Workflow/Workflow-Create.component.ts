@@ -25,7 +25,7 @@ import { ConditionService } from "../services/condition.service";
 import { WorkFlowtService } from "../services/workflow.service";
 import { ItemMasterService } from "../services/itemMaster.service";
 import { AlertService, MessageSeverity } from "../services/alert.service";
-
+import * as $ from 'jquery';
 
 @Component({
     selector: 'wf-create',
@@ -683,6 +683,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
             this.displaySelectedAction(selAction);
         }
+        
 
     }
 
@@ -860,6 +861,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         itemName = itemName.replace(" ", "_");
         var list = document.getElementsByClassName('pan');
         for (var i = 0; i < list.length; i++) {
+            list[i].classList.add('active');
             list[i].classList.remove('active');
             list[i].classList.remove('in');
         }
@@ -875,7 +877,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         var workflow = this.workFlowList[0];
         var list = document.getElementsByClassName('actrmv');
         for (var i = 0; i < list.length; i++) {
-            list[i].classList.remove('active');
+            list[i].classList.add('active');
         }
         document.getElementById('tab_' + workFlowId).classList.add('active');
         this.workFlowList.forEach(function (value, index) {
@@ -896,7 +898,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.setSelectedItems(this.workFlow);
     }
 
-    AddActionAttribute(): void {
+    AddActionAttribute(): void {       
+            $('.custom-pill .nav-pills li:first-child a').addClass('active show');
+            $('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');        
         if (this.selectedItems.length > 0) {
 
             if (this.workFlowList != undefined && this.workFlowList.length > 0) {

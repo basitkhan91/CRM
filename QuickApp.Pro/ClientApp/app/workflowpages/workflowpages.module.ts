@@ -51,14 +51,27 @@ import { PublicationCreateComponent } from "../shared/Publication-Create.compone
 import { ExclusionsCreateComponent } from "../shared/Exclusions-Create.component";
 import { MeasurementCreateComponent } from "../shared/Measurement-Create.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
-import { MatIconModule, MatSelectModule, MatTabsModule } from "@angular/material";
+import { MatIconModule, MatSelectModule, MatTabsModule, MatProgressSpinnerModule, MatToolbarModule } from "@angular/material";
 import { StarComponent } from "../shared/star.component";
 import { AssetService } from "../services/asset/Assetservice";
 import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
-
+import { CardModule } from "primeng/card";
+import { DropdownModule } from "primeng/dropdown";
+import { TooltipModule } from 'primeng/tooltip';
+import { CheckboxModule } from "primeng/checkbox";
+import { SpinnerModule } from 'primeng/spinner';
+import { ToolbarModule } from 'primeng/toolbar';
 @NgModule({
-	imports: [
-        FlexLayoutModule,
+    imports: [
+        CardModule,
+        TableModule,
+        AutoCompleteModule,
+        CheckboxModule,
+        DropdownModule,
+        SpinnerModule,
+        ToolbarModule,
+        TooltipModule,
+         FlexLayoutModule,
         InputSwitchModule,
 		FormsModule, ReactiveFormsModule,
 		//QuickAppProMaterialModule,
