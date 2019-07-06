@@ -32,12 +32,14 @@
                 <input type="number"
                        class="form-control"
                        value="{{expert.estimatedHours}}"
+                       (input)="calculateLabourCost(expert)"
                        [(ngModel)]="expert.estimatedHours">
             </td>
             <td>
                 <input type="number"
                        class="form-control"
                        value="{{expert.laborDirectRate}}"
+                       (input)="calculateLabourCost(expert)"
                        [(ngModel)]="expert.laborDirectRate">
             </td>
             <td>
@@ -49,12 +51,14 @@
             <td>
                 <input type="number"
                        class="form-control"
+                       (input)="calculateLabourOHCost(expert)"
                        value="{{expert.overheadBurden}}"
                        [(ngModel)]="expert.overheadBurden">
             </td>
             <td>
                 <input type="number"
                        class="form-control"
+                       (input)="calculateLabourOHCost(expert)"
                        value="{{expert.overheadCost}}"
                        [(ngModel)]="expert.overheadCost">
             </td>

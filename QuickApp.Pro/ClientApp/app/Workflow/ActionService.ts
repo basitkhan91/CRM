@@ -25,7 +25,7 @@ import { IExclusion } from "./Exclusion";
 import { IExpertise } from "./Expertise";
 import { IMaterialList } from "./MaterialList";
 import { IMeasurement } from "./Measurement";
-import { IPublication } from "./Publication";
+import { IPublication, IDashNumbers } from "./Publication";
 import { Router } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { ActionEndpoint } from "./action-endpoint.service";
@@ -53,6 +53,10 @@ export class ActionService {
 
     GetPublicationModel(aircraftTypeId) {
         return this.actionEndpoint.GetPublicationModel<any[]>(aircraftTypeId);
+    }
+
+    GetDashNumbersByModelId(modelId: number) {
+        return this.actionEndpoint.GetDashNumberByModelIdURL<any[]>(modelId);
     }
 
     RemoveWorkFlow(workFlowId: number) {

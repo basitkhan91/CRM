@@ -28,7 +28,7 @@
                 </select>
             </td>
             <td><input type="text" class="form-control" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
-            <td><input type="text" class="form-control" value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
+            <td><input type="number" class="form-control" value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>

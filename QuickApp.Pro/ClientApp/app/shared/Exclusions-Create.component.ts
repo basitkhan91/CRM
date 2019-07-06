@@ -49,6 +49,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         newRow.estimtPercentOccurrance = "";
         newRow.extendedCost = "";
         newRow.partName = "";
+        newRow.partNumber = "";
         newRow.itemMasterId = "";
         newRow.quantity = "";
         newRow.unitCost = "";

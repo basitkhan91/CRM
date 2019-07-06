@@ -1,6 +1,4 @@
-
-
-    <div class="fixed-table-container-inner table-responsive cat4-table">
+<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
         <div>            
                 <span class="cat-heading cat4" (click)="addRow()">Add New Publications/CMM<i class="fa fa-plus"></i></span>
         </div>
@@ -14,6 +12,7 @@
                     <th> Source  </th>
                     <th> Aircraft Manufacturer </th>
                     <th> Model </th>
+                    <th style="width:200px;"> Dash Number </th>
                     <th> Location </th>
                     <th> Revision </th>
                     <th> Revision Date </th>
@@ -52,13 +51,26 @@
                             </option>
                         </select>
                     </td>
+
                     <td>
-                        <select class="form-control custom-select" id="ddlModel" [(ngModel)]="publ.model">
+                        <select class="form-control custom-select" id="ddlModel" [(ngModel)]="publ.model" (change)="getDashNumbers(publ)">
                             <option value="">Select</option>
                             <option *ngFor="let model of publ.publicationModels" value="{{model.aircraftModelId}}">
                                 {{model.modelName}}
                             </option>
                         </select>
+                    </td>
+                    <td style="width:200px;" >
+                            <ng-multiselect-dropdown  class="form-control multiple-custom-select"
+                                                     [placeholder]="'Select'"
+                                                     [data]="publ.allDashNumbers"
+                                                     [(ngModel)]="publ.workflowPublicationDashNumbers"
+                                                     [settings]="dropdownSettings"
+                                                     (onDeSelect)="onDeSelect(publ,$event)"
+                                                     (onSelect)="onItemSelect(publ,$event)"
+                                                     (onSelectAll)="onSelectAll(publ,$event)">
+                            </ng-multiselect-dropdown>
+                       
                     </td>
                     <td>
                         <select class="form-control custom-select" value="{{publ.location}}" [(ngModel)]="publ.location">

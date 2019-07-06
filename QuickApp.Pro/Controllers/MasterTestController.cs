@@ -123,5 +123,12 @@ namespace QuickApp.Pro.Controllers
         }
 
 
+        [HttpGet("getDashNumberByModelId/{modelId}")]
+        public IActionResult GetDashNumberByModelId(long modelId)
+        {
+            var dashNumbers = _context.AircraftDashNumber.Where(x => x.AircraftModelId == modelId && x.IsActive == true && x.IsDeleted == false);
+            return Ok(dashNumbers);
+        }
+
     }
 }

@@ -26,6 +26,7 @@ import { WorkFlowtService } from "../services/workflow.service";
 import { ItemMasterService } from "../services/itemMaster.service";
 import { AlertService, MessageSeverity } from "../services/alert.service";
 import * as $ from 'jquery';
+import { forEach } from "@angular/router/src/utils/collection";
 
 @Component({
     selector: 'wf-create',
@@ -382,6 +383,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     if (workFlow[0].publication != undefined && workFlow[0].publication.length > 0) {
                                         var publication = workFlow[0].publication.filter(publication => publication.taskId == action.taskId);
                                         wf.publication = publication;
+                                        for (let pub of wf.publication) {
+                                            for (let dn of pub.workflowPublicationDashNumbers) {
+                                                dn.dashNumberId = dn.aircraftDashNumberId;
+                                                this.getDashNumbers(pub);
+                                            }
+                                        }
                                     }
 
                                     this.workFlowList.push(wf);
@@ -683,7 +690,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
             this.displaySelectedAction(selAction);
         }
-        
+
 
     }
 
@@ -898,9 +905,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.setSelectedItems(this.workFlow);
     }
 
-    AddActionAttribute(): void {       
-            $('.custom-pill .nav-pills li:first-child a').addClass('active show');
-            $('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');        
+    getDashNumbers(publication): void {
+        this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
+            console.log(result);
+            publication.allDashNumbers = result;
+            //for (let dashNumber of result) {
+            //    publication.allDashNumbers.push({ dashNumberId: dashNumber.dashNumberId, dashNumber: dashNumber.dashNumber });
+            //}
+        });
+    }
+
+    AddActionAttribute(): void {
+        $('.custom-pill .nav-pills li:first-child a').addClass('active show');
+        $('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
         if (this.selectedItems.length > 0) {
 
             if (this.workFlowList != undefined && this.workFlowList.length > 0) {
@@ -1444,7 +1461,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     updateWorkFlow(): void {
         this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
-        
+
         this.SaveWorkFlow();
 
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
@@ -1540,14 +1557,27 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         publication.id = publication.id > 0 ? publication.id : 0;
                         publication.workflowId = workflow.workflowId;
                         publication.taskId = workflow.taskId;
+                        debugger;
+                        for (let dashNumber of publication.workflowPublicationDashNumbers) {
+                            
+                            dashNumber.workflowId = this.workFlow.workflowId;
+                            dashNumber.aircraftDashNumberId = dashNumber.dashNumberId;
+                            dashNumber.taskId = this.workFlow.taskId;
+                            //dashNumber.aircraftDashNumber = 
+                            dashNumber.publicationsId = publication.id;
+                            dashNumber.dashNumberId = dashNumber.dashNumberId;
+                            dashNumber.dashNumber = dashNumber.dashNumber;
+                        }
+
                         this.sourceWorkFlow.publication.push(publication);
+
                     }
                 }
             }
         }
     }
 
-  
+
 
 
     resetPage(): void {
@@ -1567,7 +1597,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     onSelectAll(items: any) {
-       
+
     }
 
 }

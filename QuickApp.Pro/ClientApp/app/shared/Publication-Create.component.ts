@@ -32,13 +32,23 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     locations: any[] = [];
     updateModeforModels: boolean = false;
     publications: Publication[];
-
+    dropdownSettings: any;
     constructor(private actionService: ActionService, private employeeService: EmployeeService, private publicationService: PublicationService, private alertService : AlertService) {
 
     }
 
 
     ngOnInit(): void {
+        this.dropdownSettings = {
+            singleSelection: false,
+            idField: 'dashNumberId',
+            textField: 'dashNumber',
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
+            itemsShowLimit: 1,
+            allowSearchFilter: false
+        };
+
         this.getAllPublicationTypes();
         this.row = this.workFlow.publication[0];
         if (this.UpdateMode == true && this.workFlow.publication.length >= 0) {
@@ -152,6 +162,13 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     
 }
 
+    getDashNumbers(publication): void {
+        publication.allDashNumbers = [];
+        this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
+            publication.allDashNumbers = result;
+        });
+   }
+
     private getAllPublicationTypes(): void {
         this.publicationService.getAllPublications().subscribe(
             result => {
@@ -181,9 +198,27 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             else {
                 row.publicationDescription = "";
             }
-        }
+        }     
+    }
 
+    onDeSelect(publication,item: any) {
+        //publication.workflowPublicationDashNumbers = [];
+    }
+
+    onItemSelect(publication, item: any) {
+        //var workflowPublicationDashNumber = {
+        //    workflowId: this.workFlow.workflowId,
+        //    aircraftDashNumberId: item.dashNumber,
+        //    taskId: this.workFlow.taskId,
+        //    publicationsId: publication.id
+        //};
+
+        //var item = publication.workflowPublicationDashNumbers.push(workflowPublicationDashNumber);
         
+    }
+
+    onSelectAll(publication,items: any) {
+
     }
 
 }

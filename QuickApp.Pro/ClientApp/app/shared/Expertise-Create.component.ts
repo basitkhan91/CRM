@@ -63,4 +63,24 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         }
     }
 
+    calculateLabourCost(expertise): void {
+        var value = Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate);
+        if (value > 0) {
+            expertise.directLaborRate = Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate);
+        }
+        else {
+            expertise.directLaborRate = "";
+        }
+    }
+
+    calculateLabourOHCost(expertise): void {
+        var value = Number.parseFloat(expertise.overheadBurden) * Number.parseFloat(expertise.overheadCost);
+        if (value > 0) {
+            expertise.laborOverheadCost = Number.parseFloat(expertise.overheadBurden) * Number.parseFloat(expertise.overheadCost);
+        }
+        else {
+            expertise.laborOverheadCost = "";
+        }
+    }
+
 }

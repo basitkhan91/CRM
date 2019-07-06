@@ -36,7 +36,7 @@ export class MaterialListCreateComponent implements OnInit {
     errorMessage: string;
     allPartDetails: any[] = [];
     totalCost: number = 0;
-
+    globalDeffered = false;
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService) {
 
     }

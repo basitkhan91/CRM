@@ -19,6 +19,7 @@ namespace DAL
     {
         // Test Changes....
         public string CurrentUserId { get; set; }
+        public DbSet<WorkflowPublicationDashNumber> WorkflowPublicationDashNumber { get; set; }
         public DbSet<UserRoleMapper> UserRoleMapper { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<RolePermission> RolePermission { get; set; }
