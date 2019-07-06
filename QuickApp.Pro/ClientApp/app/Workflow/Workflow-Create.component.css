@@ -257,7 +257,6 @@ body {
 	padding-right: 0;
 	padding-left: 0;
 	padding-bottom: 0;
-	width: 15%;
 	float: left;
 	background: #e6e6e6;
 }
@@ -296,7 +295,7 @@ body {
 
 .bhoechie-tab-content {
 	background-color: #fcfcfc;
-	padding: 15px 26px;
+	
 }
 
 .bhoechie-tab .bhoechie-tab-content:not(.active) {
@@ -436,7 +435,7 @@ body {
 
 	.custom-table .custom-select {
 		margin: 0 auto;
-		width: 100px;
+		width: 160px;
 		padding: 3px 17px 3px 3px;
 		border: 1px solid #d8d8d8;
 		background: #fff url("../assets/images/ddrp-arrow.png") 95% center no-repeat;
@@ -731,6 +730,18 @@ select {border-radius: 0 !important;}
 .bhoechie-tab-menu .list-group-item {padding: 5px !important;background-color: #fff;margin: 2px 0;color:#111 !important;}
 .bhoechie-tab-menu .list-group-item.active {background-color: #337ab7 !important;color:#fff !important;}
 .multiselect-dropdown .dropdown-btn {padding: 2px !important;}
+.ui-button {
+    background-color: #295d92 !important;
+}
+.workflowcost{
+    width: 155%;
+}
+.ui-calendar.ui-calendar-w-btn .ui-inputtext {
+    width: 80% !important;
+}
+.sidenav{
 
+}
+.main-content{
 
-
+}

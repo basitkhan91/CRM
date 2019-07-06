@@ -57,7 +57,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             type => {
                 this.publicationTypes = type;
             },
-            error => this.errorMessage = <any>error
+            error => this.errorMessage = <any>error()
         );
 
         this.actionService.GetPublicationAircraftManufacturer().subscribe(
@@ -120,9 +120,8 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     addRow(): void {
-        var newRow = Object.assign({}, this.row);
-        if (this.UpdateMode) {
-            newRow.id = "";
+        var newRow = Object.assign({}, this.row);        
+            newRow.id = "0";
             newRow.taskId = this.workFlow.taskId;
             newRow.publicationId = "";
             newRow.publicationDescription = "";
@@ -137,10 +136,8 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             newRow.verifiedBy = "";
             newRow.status = "";
             newRow.verifiedDate = "";
-            newRow.isDeleted = false;
-        }
-
-        this.workFlow.publication.push(newRow);
+            newRow.isDelete = false;      
+            this.workFlow.publication.push(newRow);
     }
 
     deleteRow(index): void {
@@ -148,9 +145,11 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             this.workFlow.publication.splice(index, 1);
         }
         else {
-            this.workFlow.publication[index].isDeleted = true;
+            this.workFlow.publication[index].isDelete = true;
         }
-    }
+    
+    
+}
 
     private getAllPublicationTypes(): void {
         this.publicationService.getAllPublications().subscribe(

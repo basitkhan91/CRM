@@ -2,11 +2,11 @@
     <table class="table table-bordered table-fixed">
         <tr>
             <td colspan="15" class="add-charges">
-                <p class="cat-heading cat4" (click)="addRow()">Add New Equipments<i class="fa fa-plus-circle"></i></p>
+                <p class="cat-heading cat4" (click)="addRow()">Add New Equipments<i class="fa fa-plus"></i></p>
             </td>
         </tr>
         <tr>
-            <th><label> Asset Id </label></th>
+            <th><label>Asset Id </label></th>
             <th><label>Asset Type </label></th>
             <th><label>Asset Description</label></th>
             <th><label>Quantity</label></th>
@@ -22,8 +22,8 @@
                 </p-autoComplete>
             </td>
             <td>
-                <select class="form-control custom-select" id='dllEquipmentAssetTypes' [(ngModel)]="eqp.assetTypeId">
-                    <option value="">select</option>
+                <select class="form-control custom-select" id='dllEquipmentAssetTypes' [(ngModel)]="eqp.assetTypeId" disabled="true">
+                    <option value="" >select</option>
                     <option value={{assetType.id}} *ngFor="let assetType of equipmentAssetType">{{assetType.name}}</option>
                 </select>
             </td>
