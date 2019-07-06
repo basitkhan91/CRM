@@ -905,19 +905,25 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.setSelectedItems(this.workFlow);
     }
 
+    AddPage() {
+        this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
+    }
+    AddPageCustomer() {
+        this.route.navigateByUrl('/customersmodule/customerpages / app-customer-general-information');
+    }
+        
     getDashNumbers(publication): void {
         this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
             console.log(result);
             publication.allDashNumbers = result;
-            //for (let dashNumber of result) {
-            //    publication.allDashNumbers.push({ dashNumberId: dashNumber.dashNumberId, dashNumber: dashNumber.dashNumber });
-            //}
+         
         });
     }
 
     AddActionAttribute(): void {
         $('.custom-pill .nav-pills li:first-child a').addClass('active show');
         $('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
+
         if (this.selectedItems.length > 0) {
 
             if (this.workFlowList != undefined && this.workFlowList.length > 0) {

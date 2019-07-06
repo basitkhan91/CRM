@@ -126,7 +126,9 @@ export class WorkflowListComponent implements OnInit {
         )
        
     }
-    
+    AddPage() {
+        this.route.navigateByUrl('/workflowmodule/workflowpages/wf-create');
+    }
     openEdit(row) {
         this.workFlowtService.listCollection = row;
         this.workFlowtService.enableUpdateMode = true;

@@ -61,6 +61,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from "primeng/checkbox";
 import { SpinnerModule } from 'primeng/spinner';
 import { ToolbarModule } from 'primeng/toolbar';
+import { KeyFilterModule } from "primeng/keyfilter";
 @NgModule({
     imports: [
         CardModule,
@@ -71,6 +72,7 @@ import { ToolbarModule } from 'primeng/toolbar';
         SpinnerModule,
         ToolbarModule,
         TooltipModule,
+        KeyFilterModule,
          FlexLayoutModule,
         InputSwitchModule,
 		FormsModule, ReactiveFormsModule,

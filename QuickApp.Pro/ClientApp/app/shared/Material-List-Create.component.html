@@ -1,12 +1,11 @@
-<div class="fixed-table-container-inner table-responsive cat4-table" >
+<div class="fixed-table-container-inner table-responsive cat4-table">
+    <div>
+        <span class="cat-heading cat4" (click)="addRow()">Add New Material List<i class="fa fa-plus"></i>
+        <span class="float-right">Defereed &nbsp;<input  type="checkbox"/>
+            </span></span>
+    </div>
     <table class="table table-bordered table-fixed">
-        <tr>
-            <td colspan="15" class="add-charges">
-                <p class="cat-heading cat4" (click)="addRow()">Add New Material List<i class="fa fa-plus-circle"></i></p>
-                <!--<input type="checkbox" [(ngModel)]="globalDeffered" />-->
-            </td>
-          
-        </tr>
+      
         <tr>
             <th>PN *</th>
             <th>Description *</th>
@@ -55,7 +54,7 @@
                     <option value="">
                         Select
                     </option>
-                  
+
                     <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
                         {{item.description}}
                     </option>
@@ -73,13 +72,13 @@
                 </select>
             </td>
             <td>
-                <input type="number" class="form-control" value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
+                <input type="text" class="form-control" pInputText pKeyFilter="int"  value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
             </td>
             <td>
-                <input type="number" class="form-control" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
+                <input type="text" class="form-control" pInputText pKeyFilter="int" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
             </td>
             <td>
-                <input type="number" class="form-control" value="{{material.price}}" [(ngModel)]="material.price" />
+                <input type="text" class="form-control" pInputText pKeyFilter="int"  value="{{material.price}}" [(ngModel)]="material.price" />
             </td>
             <td>
                 <input type="text" class="form-control" value="{{material.Memo}}" [(ngModel)]="material.memo" />
