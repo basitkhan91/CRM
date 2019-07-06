@@ -30,7 +30,9 @@ export class ActionEndpoint extends EndpointFactory {
 
 	private getPublcationTypeURL: string = 'api/mastertest/PublicationType';
 	private getPublicationAircraftManufacturerURL: string = 'api/mastertest/PublicationAircraftManufacturer';
-	private getPublicationModelURL: string = 'api/mastertest/PublicationModel';
+    private getPublicationModelURL: string = 'api/mastertest/PublicationModel';
+    private getDashNumberByModelIdURL: string = 'api/mastertest/getDashNumberByModelId';
+
 	private getLocationsUrl: string = 'api/Location/Get';
 	private getPublicationStatusURL: string = 'api/mastertest/PublicationStatus';
 	private getExclusionEstimatedOccuranceURL: string = 'api/mastertest/ExclusionEstimatedOccurance';
@@ -451,6 +453,14 @@ export class ActionEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.GetPublicationModel(aircraftTypeId));
+            });
+    }
+
+    GetDashNumberByModelIdURL<T>(modelId : number): Observable<T> {
+        let endpointUrl = `${this.getDashNumberByModelIdURL}/${modelId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.GetDashNumberByModelIdURL(modelId));
             });
     }
 

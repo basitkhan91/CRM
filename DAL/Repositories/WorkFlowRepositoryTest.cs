@@ -39,6 +39,10 @@ namespace DAL.Repositories
                 workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowActionId).ToList();
                 workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowMeasurementId).ToList();
                 workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == WorkflowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).OrderBy(x => x.Id).ToList();
+                workFlow.Publication.ForEach(publ => {
+                    publ.WorkflowPublicationDashNumbers = _appContext.WorkflowPublicationDashNumber.Where(x => x.PublicationsId == publ.Id && x.WorkflowId == publ.WorkflowId).ToList();
+                });
+
             }
             else
             {

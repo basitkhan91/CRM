@@ -6,6 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
+    [Table("Publications")]
     public class Publications 
     {
         [Key]
@@ -61,5 +62,7 @@ namespace DAL.Models
         public long WorkflowId { get; set; }
 
         public int? MasterCompanyId { get; set; }
+
+        public List<WorkflowPublicationDashNumber> WorkflowPublicationDashNumbers { get; set; }
     }
 }

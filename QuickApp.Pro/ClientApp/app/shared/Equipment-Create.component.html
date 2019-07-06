@@ -27,6 +27,7 @@
             </td>
             <td><input type="text" class="form-control" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="int"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
+
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>
