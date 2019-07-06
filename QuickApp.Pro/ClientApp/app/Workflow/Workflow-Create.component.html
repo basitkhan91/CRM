@@ -79,12 +79,21 @@
                                 <label>Part Number<span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-8">
-                                <p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
-                                                [minLength]="1" [dropdown]="true">
-                                    <ng-template let-partName pTemplate="part">
-                                        <div class="ui-helper-clearfix">{{partName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
+                                <div class="col-sm-10">
+                                    <p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-partName pTemplate="part">
+                                            <div class="ui-helper-clearfix">{{partName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                   
+                                </div>
+                                <div class="col-sm-2 float-left" style="padding-top:6px;" >
+                                    <button class="btn add-btn"
+                                            (click)="AddPage()">
+                                        <i class="fa fa-plus"></i>
+                                    </button>                                
+                                </div>                                
                             </div>
                         </div>
                         <br />
@@ -111,16 +120,24 @@
                                 <label for="vendorName">Customer Name</label>
                             </div>
                             <div class="col-sm-8">
-                                <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName"
-                                                (onSelect)="onCustomerNameselected($event)"
-                                                [suggestions]="customerNames"
-                                                (completeMethod)="filterNames($event)" [size]="32"
-                                                [minLength]="1" [dropdown]="true">
+                                <div class="col-sm-10">
+                                    <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName"
+                                                    (onSelect)="onCustomerNameselected($event)"
+                                                    [suggestions]="customerNames"
+                                                    (completeMethod)="filterNames($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
 
-                                    <ng-template let-name pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{name}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
+                                        <ng-template let-name pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{name}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                                <div class="col-sm-2 float-left" style="padding-top:6px;">
+                                    <button class="btn add-btn"
+                                            (click)="AddPageCustomer()">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <br />

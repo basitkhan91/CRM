@@ -1,12 +1,10 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
+    <div>
+        <span class="cat-heading cat4" (click)="addRow()">Add New Equipments<i class="fa fa-plus"></i></span>
+    </div>
     <table class="table table-bordered table-fixed">
-        <tr>
-            <td colspan="15" class="add-charges">
-                <p class="cat-heading cat4" (click)="addRow()">Add New Equipments<i class="fa fa-plus"></i></p>
-            </td>
-        </tr>
-        <tr>
-            <th><label>Asset Id </label></th>
+         <tr>
+            <th><label>Asset Id *</label></th>
             <th><label>Asset Type </label></th>
             <th><label>Asset Description</label></th>
             <th><label>Quantity</label></th>
@@ -23,12 +21,12 @@
             </td>
             <td>
                 <select class="form-control custom-select" id='dllEquipmentAssetTypes' [(ngModel)]="eqp.assetTypeId" disabled="true">
-                    <option value="" >select</option>
+                    <option value="">select</option>
                     <option value={{assetType.id}} *ngFor="let assetType of equipmentAssetType">{{assetType.name}}</option>
                 </select>
             </td>
             <td><input type="text" class="form-control" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
-            <td><input type="text" class="form-control" value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>

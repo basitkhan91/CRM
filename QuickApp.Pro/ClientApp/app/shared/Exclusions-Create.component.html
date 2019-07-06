@@ -1,10 +1,9 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
+    <div>
+        <span class="cat-heading cat4" (click)="addRow()">Add New Exclusions <i class="fa fa-plus"></i></span>
+    </div>
     <table class="table table-bordered table-fixed">
-        <tr>
-            <td colspan="15" class="add-charges">
-                <p class="cat-heading cat4" (click)="addRow()">Add New Exclusions  <i class="fa fa-plus-circle"></i></p>
-            </td>
-        </tr>
+        
         <tr>
             <th><label>EPN *</label></th>
             <th><label>EPN Description *</label></th>
@@ -30,9 +29,9 @@
                 </p-autoComplete>
             </td>
             <td><input type="text" class="form-control" [(ngModel)]="exclusion.partDescription" value="{{exclusion.partDescription}}"></td>
-            <td><input type="text" class="form-control" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
-            <td><input type="text" class="form-control" [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
-            <td><input type="text" class="form-control" [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}"></td>
             <td>
                 <select class="form-control custom-select" id="ddlEstimatedOccurance" [(ngModel)]="exclusion.estimtPercentOccurrance">
                     <option value="">select</option>

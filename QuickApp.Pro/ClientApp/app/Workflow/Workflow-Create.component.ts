@@ -897,10 +897,15 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.workFlow = workflow;
         this.setSelectedItems(this.workFlow);
     }
-
+    AddPage() {
+        this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
+    }
+    AddPageCustomer() {
+        this.route.navigateByUrl('/customersmodule/customerpages / app-customer-general-information');
+    }
+        
     AddActionAttribute(): void {       
-            $('.custom-pill .nav-pills li:first-child a').addClass('active show');
-            $('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');        
+                   
         if (this.selectedItems.length > 0) {
 
             if (this.workFlowList != undefined && this.workFlowList.length > 0) {

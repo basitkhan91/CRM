@@ -1,16 +1,15 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
+    <div>
+        <span class="cat-heading cat4" (click)="addRow()">Add New Charges<i class="fa fa-plus"></i></span>
+    </div>
     <table class="table table-bordered table-fixed">
+        
         <tr>
-            <td colspan="15" class="add-charges">
-                <p class="cat-heading cat4" (click)="addRow()">Add New Charges<i class="fa fa-plus-circle"></i></p>
-            </td>
-        </tr>
-        <tr>
-            <th><label>Type </label></th>
+            <th><label>Type *</label></th>
             <th><label>Description</label></th>
-            <th><label>Qty</label></th>
-            <th><label>Unit Cost </label></th>
-            <th><label>Extended Cost </label></th>
+            <th><label>Qty *</label></th>
+            <th><label>Unit Cost *</label></th>
+            <th><label>Extended Cost *</label></th>
             <th><label> Unit Price</label></th>
             <th><label>Extended Price </label></th>
             <th><label>Currency </label></th>
