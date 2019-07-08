@@ -54,7 +54,7 @@ export class DashnumberComponent implements OnInit{
         //    });
         //});
 
-        this.getMessages();
+        //this.getMessages();
 
         this.currentDashNumberType = new AircraftDashNumber();
 
@@ -195,31 +195,31 @@ export class DashnumberComponent implements OnInit{
     }
 
     //pagination code start
-    getMessages(): void {
-        this.loading = true;
-        this.dashNumberService.getServerPages({ page: this.page, limit: this.limit }).subscribe(dashNumbers =>
-        {
-            this.dashNumberList = dashNumbers[0];
-            //this.total = dashNumbers.total;
-           // this.messages = dashNumbers.messages;
-            this.loading = false;
-        });
-    }
+    //getMessages(): void {
+    //    this.loading = true;
+    //    this.dashNumberService.getServerPages({ page: this.page, limit: this.limit }).subscribe(dashNumbers =>
+    //    {
+    //        this.dashNumberList = dashNumbers[0];
+    //        //this.total = dashNumbers.total;
+    //       // this.messages = dashNumbers.messages;
+    //        this.loading = false;
+    //    });
+    //}
 
 
-    goToPage(n: number): void {
-        this.page = n;
-        this.getMessages();
-    }
+    //goToPage(n: number): void {
+    //    this.page = n;
+    //    this.getMessages();
+    //}
 
-    onNext(): void {
-        this.page++;
-        this.getMessages();
-    }
+    //onNext(): void {
+    //    this.page++;
+    //    this.getMessages();
+    //}
 
-    onPrev(): void {
-        this.page--;
-        this.getMessages();
-    }
+    //onPrev(): void {
+    //    this.page--;
+    //    this.getMessages();
+    //}
     //pagination code End
 }
