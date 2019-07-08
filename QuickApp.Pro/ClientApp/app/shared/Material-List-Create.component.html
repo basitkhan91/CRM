@@ -1,18 +1,23 @@
-<div class="fixed-table-container-inner table-responsive cat4-table">
+<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
     <div>
-        <span class="cat-heading cat4" (click)="addRow()">Add New Material List<i class="fa fa-plus"></i>
-        <span class="float-right">Defereed &nbsp;<input  type="checkbox"/>
-            </span></span>
+        <span class="cat-heading cat4">
+            Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
+            <span class="float-right">
+                Defereed &nbsp;<input type="checkbox" />
+            </span>
+        </span>
+        
     </div>
+   
     <table class="table table-bordered table-fixed">
-      
+
         <tr>
             <th>PN *</th>
             <th>Description *</th>
             <th>Condition *</th>
             <th>Mandatory / Supplemental *</th>
             <th>Item Classification</th>
-            <th>Oty *</th>
+            <th>Qty *</th>
             <th>UOM *</th>
             <th>Unit Cost *</th>
             <th>Ext. Cost *</th>
@@ -31,7 +36,7 @@
                 </p-autoComplete>
             </td>
             <td>
-                <textarea rows="1" class="form-control" value="{{material.partDescription}}" [(ngModel)]="material.partDescription"></textarea>
+                <textarea rows="1"  pInputTextarea value="{{material.partDescription}}" [(ngModel)]="material.partDescription"></textarea>
             </td>
             <td>
                 <select class="form-control custom-select" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
@@ -60,8 +65,8 @@
                     </option>
                 </select>
             </td>
-            <td>
-                <input type="number" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.quantity" />
+            <td style="width: 200px">
+                <input type="text"   pInputText pKeyFilter="num" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.quantity" />
             </td>
             <td>
                 <select class="form-control custom-select" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
@@ -72,23 +77,21 @@
                 </select>
             </td>
             <td>
-                <input type="text" class="form-control" pInputText pKeyFilter="int"  value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
+                <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
             </td>
             <td>
-                <input type="text" class="form-control" pInputText pKeyFilter="int" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
+                <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
             </td>
             <td>
-                <input type="text" class="form-control" pInputText pKeyFilter="int"  value="{{material.price}}" [(ngModel)]="material.price" />
+                <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" />
             </td>
             <td>
                 <input type="text" class="form-control" value="{{material.Memo}}" [(ngModel)]="material.memo" />
             </td>
             <td style="width:30px;">
-                <div class="custom-checkbox-box">
-                    <span class="">
+                <div class="custom-checkbox-box">                    
                         <input class="filled-in" id="PMS" type="checkbox" value="{{material.isDeferred}}" [(ngModel)]="material.isDeferred">
-                        <label for="PMS"></label>
-                    </span>
+                                 
                 </div>
             </td>
             <td>
@@ -105,5 +108,8 @@
                 </td>
             </tr>
         </tfoot>
+        
     </table>
 </div>
+
+

@@ -152,12 +152,12 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.publication[index].id == "0" || this.workFlow.publication[index].id == "") {
+        //if (this.workFlow.publication[index].id == "0" || this.workFlow.publication[index].id == "") {
             this.workFlow.publication.splice(index, 1);
-        }
-        else {
-            this.workFlow.publication[index].isDeleted = true;
-        }
+        //}
+        //else {
+            //this.workFlow.publication[index].isDeleted = true;
+        //}
     
     
 }

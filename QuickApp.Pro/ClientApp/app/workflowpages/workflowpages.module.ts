@@ -57,15 +57,18 @@ import { AssetService } from "../services/asset/Assetservice";
 import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
 import { CardModule } from "primeng/card";
 import { DropdownModule } from "primeng/dropdown";
-import { TooltipModule } from 'primeng/tooltip';
+import { TooltipModule } from "primeng/tooltip";
 import { CheckboxModule } from "primeng/checkbox";
 import { SpinnerModule } from 'primeng/spinner';
 import { ToolbarModule } from 'primeng/toolbar';
 import { KeyFilterModule } from "primeng/keyfilter";
+import { InputTextareaModule } from "primeng/inputtextarea";
 @NgModule({
     imports: [
         CardModule,
+        CalendarModule,
         TableModule,
+        InputTextareaModule,
         AutoCompleteModule,
         CheckboxModule,
         DropdownModule,
