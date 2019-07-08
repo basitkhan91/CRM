@@ -40,7 +40,7 @@
                                 <label >Workflow ID <span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-8">
-                                <input class="form-control" type="text" value="{{'ACC' + sourceWorkFlow.workflowId}}" readonly>
+                                <input class="form-control" type="text" value="{{'ACC' + sourceWorkFlow.workflowId}}" [disabled]="true">
                             </div>
                         </div>                        
                         <br />
@@ -49,7 +49,7 @@
                                 <label>Workflow Description </label>
                             </div>
                             <div class="col-sm-8">
-                                <input class="form-control" type="text" [(ngModel)]="sourceWorkFlow.workflowDescription">
+                                <input class="form-control" pInputText pTooltip="Enter WorkFlow Description" tooltipPosition="bottom" type="text" [(ngModel)]="sourceWorkFlow.workflowDescription">
                             </div>
                         </div>                        
                         <br />
@@ -78,23 +78,21 @@
                             <div class="col-sm-4">
                                 <label>Part Number<span class="clr-red">*</span></label>
                             </div>
-                            <div class="col-sm-8">
-                                <div class="col-sm-10">
-                                    <p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                            <div class="col-sm-7">                                
+                                    <p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
                                                     [minLength]="1" [dropdown]="true">
                                         <ng-template let-partName pTemplate="part">
                                             <div class="ui-helper-clearfix">{{partName}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
-                                   
+                                    </p-autoComplete>                                  
                                 </div>
-                                <div class="col-sm-2 float-left" style="padding-top:6px;" >
+                                <div class="col-sm-1 float-right" style="padding-top:6px;" >
                                     <button class="btn add-btn"
                                             (click)="AddPage()">
                                         <i class="fa fa-plus"></i>
                                     </button>                                
                                 </div>                                
-                            </div>
+                            
                         </div>
                         <br />
                         <div class="col-sm-12">
@@ -119,26 +117,25 @@
                             <div class="col-sm-4">
                                 <label for="vendorName">Customer Name</label>
                             </div>
-                            <div class="col-sm-8">
-                                <div class="col-sm-10">
-                                    <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName"
-                                                    (onSelect)="onCustomerNameselected($event)"
-                                                    [suggestions]="customerNames"
-                                                    (completeMethod)="filterNames($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true">
+                            <div class="col-sm-7">
+                                <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName"
+                                                (onSelect)="onCustomerNameselected($event)"
+                                                [suggestions]="customerNames"
+                                                (completeMethod)="filterNames($event)" [size]="32"
+                                                [minLength]="1" [dropdown]="true">
 
-                                        <ng-template let-name pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{name}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <div class="col-sm-2 float-left" style="padding-top:6px;">
+                                    <ng-template let-name pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{name}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                                <div class="col-sm-1 float-right" style="padding-top:6px;">
                                     <button class="btn add-btn"
                                             (click)="AddPageCustomer()">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
-                            </div>
+                           
                         </div>
                         <br />
                         <div class="col-sm-12">

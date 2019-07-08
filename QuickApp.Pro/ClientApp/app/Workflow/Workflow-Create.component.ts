@@ -909,7 +909,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
     }
     AddPageCustomer() {
-        this.route.navigateByUrl('/customersmodule/customerpages / app-customer-general-information');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
         
     getDashNumbers(publication): void {

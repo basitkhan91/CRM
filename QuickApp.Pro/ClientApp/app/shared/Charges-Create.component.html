@@ -1,6 +1,6 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
     <div>
-        <span class="cat-heading cat4" (click)="addRow()">Add New Charges<i class="fa fa-plus"></i></span>
+        <span class="cat-heading cat4" >Add New Charges<i (click)="addRow()" class="fa fa-plus"></i></span>
     </div>
     <table class="table table-bordered table-fixed">
         
@@ -25,19 +25,19 @@
                     <option value={{ctype.id}} *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
                 </select>
             </td>
-            <td><textarea  rows="1" class="form-control" value="{{charge.description}}" [(ngModel)]="charge.description"></textarea></td>
-            <td><input type="number" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
-            <td><input type="number" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.unitCost"></td>
-            <td><input type="number" class="form-control" value="{{charge.extendedCost}}"  [(ngModel)]="charge.extendedCost"></td>
-            <td><input type="number" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice"> </td>
-            <td><input type="number" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice"></td>
+            <td><textarea  rows="1" value="{{charge.description}}" [(ngModel)]="charge.description"></textarea></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.unitCost"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedCost}}"  [(ngModel)]="charge.extendedCost"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice"> </td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice"></td>
             <td>
                 <select class="form-control custom-select" id='dllChargesCurrency' [(ngModel)]="charge.currencyId">
                     <option value="">Select</option>
                     <option value={{currency.currencyId}} *ngFor="let currency of chargesCurrency">{{currency.symbol}}</option>
                 </select>
             </td>
-            <td><input type="number" class="form-control" value="{{charge.forexRate}}" [(ngModel)]="charge.forexRate"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.forexRate}}" [(ngModel)]="charge.forexRate"></td>
             <td>
                 <p-autoComplete (onSelect)="onVendorCodeselected(charge,$event)" [(ngModel)]="charge.vendorName" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
                                 [minLength]="1" [dropdown]="true">
@@ -47,7 +47,7 @@
                 </p-autoComplete>
             </td>
 
-            <td><input type="number" class="form-control" value="{{charge.vendorUnitPrice}}" [(ngModel)]="charge.vendorUnitPrice"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.vendorUnitPrice}}" [(ngModel)]="charge.vendorUnitPrice"></td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>

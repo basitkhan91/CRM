@@ -1,6 +1,6 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
         <div>            
-                <span class="cat-heading cat4" (click)="addRow()">Add New Publications/CMM<i class="fa fa-plus"></i></span>
+                <span class="cat-heading cat4" >Add New Publications/CMM<i (click)="addRow()" class="fa fa-plus"></i></span>
         </div>
         <table class="table table-bordered table-fixed">
             <thead class="thead-light">
@@ -29,7 +29,8 @@
                         <select class="form-control custom-select"
                                 [(ngModel)]="publ.publicationId"
                                 (change)="onPublicationChange(publ)">
-                            <option *ngFor="let publication of publications" [value]="publication.publicationRecordId"> {{ publication.publicationId }}<i class="down"></i></option>
+                            <option value="">Select</option>
+                            <option *ngFor="let publication of publications" [value]="publication.publicationRecordId"> {{ publication.publicationId}}</option>
                         </select>
                     </td>
                     <td><input type="text" class="form-control" [(ngModel)]="publ.publicationDescription"></td>
@@ -90,7 +91,7 @@
                             </ng-template>
                         </p-autoComplete>
                     </td>
-                    <td><input type="date" class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></td>
+                    <td><input type="date"  class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></td>
                     <td>
                         <select class="form-control custom-select" id="ddlStatus" [(ngModel)]="publ.status">
                             <option *ngFor="let status of publicationStatuses" value="{{status.name}}">

@@ -63,7 +63,7 @@ export class WorkflowListComponent implements OnInit {
 
         this.gridColumns = [
             { field: 'partNumber', header: 'Part Number' },
-            { field: 'partDescription', header: 'PartNumber Description' },
+            { field: 'partDescription', header: 'Part Number Description' },
             { field: 'workOrderNumber', header: 'Workflow Id' },
             { field: 'description', header: 'WorkScope' },
         ];
