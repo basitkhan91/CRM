@@ -29,9 +29,9 @@
                 </p-autoComplete>
             </td>
             <td><input type="text" class="form-control" [(ngModel)]="exclusion.partDescription" value="{{exclusion.partDescription}}"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  (input)="calculateExtendedCost(exclusion)" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="money" (input)="calculateExtendedCost(exclusion)"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="money"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}"></td>
             <td>
                 <select class="form-control custom-select" id="ddlEstimatedOccurance" [(ngModel)]="exclusion.estimtPercentOccurrance">
                     <option value="">select</option>

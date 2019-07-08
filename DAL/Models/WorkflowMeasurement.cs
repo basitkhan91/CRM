@@ -33,7 +33,7 @@ namespace DAL.Models
         [ForeignKey("TaskId")]
         public long TaskId { get; set; }
 
-        [Required(ErrorMessage ="Sequence is required.")]
+        //[Required(ErrorMessage ="Sequence is required.")]
         [MaxLength(5,ErrorMessage = "Sequence can only be 5 characters long")]
         public string Sequence { get; set; }
 

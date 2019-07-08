@@ -26,7 +26,7 @@ namespace DAL.Models
         public string AssetDescription { get; set; }
 
         [Required(ErrorMessage ="Quantity is required in Equipment List")]
-        public short Quantity { get; set; }
+        public Nullable<short> Quantity { get; set; }
 
         public string PartNumber { get; set; }
 

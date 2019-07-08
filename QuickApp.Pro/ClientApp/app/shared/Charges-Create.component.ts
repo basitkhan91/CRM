@@ -6,6 +6,8 @@ import { IChargesCurrency } from "../Workflow/ChargesCurrency";
 import { IChargesType } from "../Workflow/ChargesType";
 import { CurrencyService } from "../services/currency.service";
 import { VendorService } from "../services/vendor.service";
+import { AlertService, MessageSeverity } from "../services/alert.service";
+
 @Component({
     selector: 'grd-charges',
     templateUrl: './Charges-Create.component.html',
@@ -26,7 +28,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     row: any;
 
     errorMessage: string;
-    constructor(private vendorservice: VendorService, private actionService: ActionService, private currencyService: CurrencyService) {
+    constructor(private vendorservice: VendorService, private actionService: ActionService, private currencyService: CurrencyService, private alertService: AlertService) {
     }
 
     ngOnInit(): void {
@@ -68,6 +70,13 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         }
     }
 
+    onChargeTypeChange(charge): void {
+        var isTypeExist = this.workFlow.charges.filter(x => x.workflowChargeTypeId == charge.workflowChargeTypeId && x.taskId == this.workFlow.taskId);
+        if (isTypeExist.length > 1) {
+            charge.workflowChargeTypeId = "";
+            this.alertService.showMessage("Workflow", "Type is already in use in Charges List.", MessageSeverity.error);
+        }
+    }
 
     private loadData() {
         this.vendorservice.getWorkFlows().subscribe(
@@ -80,7 +89,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.allActions = allWorkFlows;
     }
 
-    onVendorCodeselected(charge,event) {
+    onVendorCodeselected(charge, event) {
         for (let i = 0; i < this.VendorCodesColl.length; i++) {
             if (event == this.VendorCodesColl[i][0].vendorCode) {
                 charge.vendorName = this.VendorCodesColl[i][0].vendorCode;
@@ -107,6 +116,16 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         newRow.workflowChargeTypeId = "";
         newRow.isDelete = false;
         this.workFlow.charges.push(newRow);
+    }
+
+    calculateExtendedCost(charge): void {
+        var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
+        if (value > 0) {
+            charge.extendedCost = value;
+        }
+        else {
+            charge.extendedCost = "";
+        }
     }
 
     deleteRow(index): void {

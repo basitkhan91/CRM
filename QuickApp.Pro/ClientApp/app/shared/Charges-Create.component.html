@@ -6,29 +6,29 @@
         
         <tr>
             <th><label>Type *</label></th>
-            <th><label>Description</label></th>
+            <th><label>Description *</label></th>
             <th><label>Qty *</label></th>
             <th><label>Unit Cost *</label></th>
             <th><label>Extended Cost *</label></th>
-            <th><label> Unit Price</label></th>
-            <th><label>Extended Price </label></th>
-            <th><label>Currency </label></th>
-            <th><label>FX Rate </label></th>
+            <th><label> Unit Price *</label></th>
+            <th><label>Extended Price *</label></th>
+            <th><label>Currency *</label></th>
+            <th><label>FX Rate *</label></th>
             <th><label>Vendor Name</label></th>
             <th><label>Vendor Price/Unit </label></th>
             <th><label>Actions </label></th>
         </tr>
         <tr [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
             <td>
-                <select class="form-control custom-select" id='dllChargesType' [(ngModel)]="charge.workflowChargeTypeId">
+                <select class="form-control custom-select" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId">
                     <option value="">Select</option>
                     <option value={{ctype.id}} *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
                 </select>
             </td>
             <td><textarea  rows="1" class="form-control" value="{{charge.description}}" [(ngModel)]="charge.description"></textarea></td>
-            <td><input type="number" class="form-control" value="{{charge.quantity}}" [(ngModel)]="charge.quantity"></td>
-            <td><input type="number" class="form-control" value="{{charge.unitCost}}" [(ngModel)]="charge.unitCost"></td>
-            <td><input type="number" class="form-control" value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost"></td>
+            <td><input type="number" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
+            <td><input type="number" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.unitCost"></td>
+            <td><input type="number" class="form-control" value="{{charge.extendedCost}}"  [(ngModel)]="charge.extendedCost"></td>
             <td><input type="number" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice"> </td>
             <td><input type="number" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice"></td>
             <td>

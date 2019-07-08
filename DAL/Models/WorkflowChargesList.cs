@@ -34,6 +34,7 @@ namespace DAL.Models
         public Nullable<decimal> UnitCost { get; set; }
         [Required(ErrorMessage = "Charges Extended Cost is required")]
         public Nullable<decimal> ExtendedCost { get; set; }
+
         [Required(ErrorMessage = "Charges Unit Price is required")]
         public Nullable<decimal> UnitPrice { get; set; }
         [Required(ErrorMessage = "Charges Extended Price is required")]
@@ -45,7 +46,7 @@ namespace DAL.Models
 
         public Nullable<long> VendorId { get; set; }
         public string VendorName { get; set; }
-        public decimal VendorUnitPrice { get; set; }
+        public Nullable<decimal> VendorUnitPrice { get; set; }
 
         [ForeignKey("TaskId")]
         public long TaskId { get; set; }
@@ -54,7 +55,7 @@ namespace DAL.Models
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public System.DateTime UpdatedDate { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsDelete { get; set; }
     }

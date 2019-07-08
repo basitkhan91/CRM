@@ -122,7 +122,11 @@ namespace QuickApp.Pro.Controllers
                 {
                     foreach (var publication in workFlow.Publication)
                     {
-                        var ids = publication.WorkflowPublicationDashNumbers.Select(x => x.WorkflowPublicationDashNumberId);
+                        List<long> ids = new List<long>();
+
+                        if (publication.WorkflowPublicationDashNumbers != null) {
+                            ids = publication.WorkflowPublicationDashNumbers.Select(x => x.WorkflowPublicationDashNumberId).ToList();
+                        }
 
                         var itemsToDelete = UnitOfWork.Repository<WorkflowPublicationDashNumber>()
                             .Find(x =>

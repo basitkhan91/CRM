@@ -4,6 +4,7 @@ import { ActionService } from "../Workflow/ActionService";
 import { IExclusionEstimatedOccurance } from "../Workflow/ExclusionEstimatedOccurance";
 import { IExclusion } from "../Workflow/Exclusion";
 import { ItemMasterService } from "../services/itemMaster.service";
+import { AlertService, MessageSeverity } from "../services/alert.service";
 
 @Component({
     selector: 'grd-exclusions',
@@ -22,7 +23,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     partCollection: any[];
     errorMessage: string;
 
-    constructor(private actionService: ActionService, private itemser: ItemMasterService) {
+    constructor(private actionService: ActionService, private itemser: ItemMasterService, private alertService: AlertService) {
     }
 
     ngOnInit(): void {
@@ -69,15 +70,25 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     onPartSelect(event, exclusion) {
-        if (this.itemclaColl) {
-            for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName) {
-                    exclusion.itemMasterId = this.itemclaColl[i][0].partId;
-                    exclusion.partDescription = this.itemclaColl[i][0].description;
-                    exclusion.partNumber = this.itemclaColl[i][0].partName;
-                }
-            };
+        var isEpnExist = this.workFlow.exclusions.filter(x => x.partNumber == exclusion.partNumber && x.taskId == this.workFlow.taskId);
+        if (isEpnExist.length == 0) {
+            if (this.itemclaColl) {
+                for (let i = 0; i < this.itemclaColl.length; i++) {
+                    if (event == this.itemclaColl[i][0].partName) {
+                        exclusion.itemMasterId = this.itemclaColl[i][0].partId;
+                        exclusion.partDescription = this.itemclaColl[i][0].description;
+                        exclusion.partNumber = this.itemclaColl[i][0].partName;
+                    }
+                };
+            }
         }
+        else {
+            exclusion.itemMasterId = "";
+            exclusion.partDescription = "";
+            exclusion.partNumber = "";
+            this.alertService.showMessage("Workflow", "EPN is already in use in Exclusion List.", MessageSeverity.error);
+        }
+
     }
     filterpartItems(event) {
 
@@ -94,9 +105,9 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                                 "partId": this.allPartnumbersInfo[i].itemMasterId,
                                 "partName": partName,
                                 "description": this.allPartnumbersInfo[i].partDescription
-                            }]),
+                            }]);
 
-                                this.partCollection.push(partName);
+                            this.partCollection.push(partName);
                         }
                     }
                 }
@@ -105,6 +116,18 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
 
     }
+
+    calculateExtendedCost(exclusion): void {
+        var value = Number.parseInt(exclusion.quantity) * Number.parseFloat(exclusion.unitCost);
+        if (value > 0) {
+            exclusion.extendedCost = value;
+        }
+        else {
+            exclusion.extendedCost = "";
+        }
+
+    }
+
     private ptnumberlistdata() {
 
 
