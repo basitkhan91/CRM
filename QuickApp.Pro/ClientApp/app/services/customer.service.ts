@@ -234,9 +234,9 @@ export class CustomerService {
         return this.customerEndpoint.getDeletecustomerEndpoint(actionId);
 
     }
-    updateListstatus(actionId: any) {
+    updateListstatus(customerId: number) {
 
-        return this.customerEndpoint.updatelistStattus(actionId);
+        return this.customerEndpoint.removeById(customerId);
 
     }
     updateshippingViainfo(Customershipping: any) {

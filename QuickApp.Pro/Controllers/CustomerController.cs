@@ -726,23 +726,24 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        [HttpPut("updatelistStatus/{id}")]
-        public IActionResult updatelistStatus(long id, [FromBody]CustomerViewModel Customershipping)
+        [HttpGet("updatelistStatus/{id}")]
+        public IActionResult DeleteCustomer(long id)
         {
-            if (ModelState.IsValid)
-            {
-                var CustomerObj = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
-                Customershipping.MasterCompanyId = 1;
-                CustomerObj.IsDelete = Customershipping.IsDelete;
-                CustomerObj.UpdatedDate = DateTime.Now;
-                CustomerObj.UpdatedBy = Customershipping.UpdatedBy;
-                CustomerObj.CustomerId = Customershipping.CustomerId;
-                _unitOfWork.Customer.Update(CustomerObj);
-                _unitOfWork.SaveChanges();
-                return Ok(CustomerObj);
-            }
 
-            return Ok(ModelState);
+            var CustomerObj = _unitOfWork.Repository<Customer>().Find(x => x.CustomerId == id).FirstOrDefault();
+            if (CustomerObj != null)
+            {
+                CustomerObj.IsDelete = false;
+                CustomerObj.UpdatedDate = DateTime.Now;
+                _unitOfWork.Repository<Customer>().Update(CustomerObj);
+                _unitOfWork.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+              return  BadRequest();
+            }
+            
         }
         [HttpPut("customersUpdateforActive/{id}")]
         public IActionResult customersUpdateforActive(long id, [FromBody]CustomerViewModel Customershipping)
