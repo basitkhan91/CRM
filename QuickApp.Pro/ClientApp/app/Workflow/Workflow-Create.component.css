@@ -154,8 +154,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 label {
+	font-family: 'Roboto';
 	margin: 0;
-	font-weight: normal;
+	/*font-weight: normal;*/
+	text-align: left;
 }
 
 .btn.active, .btn:active {
@@ -724,7 +726,14 @@ select {border-radius: 0 !important;}
 .btn.add-btn {line-height: 20px;height: 24px;width: 24px;padding: 0;}
 .selection-box {margin-bottom:0;}
 .selection-box .form-group {margin: 0 !important;}
-.bhoechie-tab-container {background: #e6e6e6;}
+.bhoechie-tab-container {
+	background: #e6e6e6;
+	border: solid 1px;
+	background: #e6e6e6;
+	margin-top: 14px;
+	padding: 5px;
+	border-radius: 5px;
+};
 .selection-box label {text-align: left;}
 .btn.add-btn.w50 {width:50px;}
 .bhoechie-tab-menu .list-group-item {padding: 5px !important;background-color: #fff;margin: 2px 0;color:#111 !important;}
@@ -743,3 +752,44 @@ select {border-radius: 0 !important;}
 }
 .main-content{
 }
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	margin: 0;
+	
+}
+input[type="number"] {
+	border-radius: 5px !important;
+}
+.padding {
+	padding: 5px
+}
+
+.breadcrumb {
+	FONT-SIZE: medium;
+	font-weight: 900;
+	color: #295d92;
+}
+input.form-control {
+	border-radius: 5px !important;
+}
+.btn-add-success{
+	margin-left: -11px;
+}
+.btn-add-success-pro{
+	width: 24px;
+	padding: 0px;
+}
+.add-btn-text{
+	height: 27px;
+}
+.card {
+	border: solid 1px;
+}
+
+
+
