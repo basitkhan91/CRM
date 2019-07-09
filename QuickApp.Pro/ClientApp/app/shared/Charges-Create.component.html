@@ -26,7 +26,7 @@
                 </select>
             </td>
             <td><textarea  rows="1" value="{{charge.description}}" [(ngModel)]="charge.description"></textarea></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
+            <td><input type="text" pInputText pKeyFilter="int" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.unitCost"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedCost}}"  [(ngModel)]="charge.extendedCost"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice"> </td>

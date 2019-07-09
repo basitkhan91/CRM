@@ -16,7 +16,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         new EventEmitter<IWorkFlow>();
     expertiseTypes: any[] = [];
     row: any;
-
+    ccRegex: RegExp = /[0-9]+(\.[0-9]{1,2})$/; 
     errorMessage: string;
 
     constructor(private actionService: ActionService) {
