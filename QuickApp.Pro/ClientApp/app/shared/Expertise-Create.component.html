@@ -28,7 +28,7 @@
 
             </td>
             <td>
-                <input type="text" pInputText pKeyFilter="money"
+                <input type="text" pInputText [pKeyFilter]="ccRegex"
                        class="form-control"
                        value="{{expert.estimatedHours}}"
                        (input)="calculateLabourCost(expert)"

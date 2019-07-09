@@ -1,8 +1,8 @@
 ﻿import { OnInit, Component } from "@angular/core";
 import { fadeInOut } from "../../services/animations";
-import { AlertService } from "../../services/alert.service";
+import { AuthService} from "../../services/auth.service";
+import { AlertService, MessageSeverity  } from "../../services/alert.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AuthService } from "../../services/auth.service";
 import { AircraftType } from "../../models/AircraftType.model";
 import { AircraftManufacturerService } from "../../services/aircraft-manufacturer/aircraftManufacturer.service";
 import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
@@ -107,7 +107,7 @@ export class AircraftManufacturerComponent implements OnInit{
         this.currentAircraftManufacturerType.createdBy = this.userName;
         this.currentAircraftManufacturerType.updatedBy = this.userName;
         this.aircraftManufacurerService.add(this.currentAircraftManufacturerType).subscribe(aircraftManufacturer => {
-            this.alertService.showMessage('Aircraft manufacturer added successfully.');
+            this.alertService.showMessage("Success", 'Aircraft manufacturer Added successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
             this.resetAddAircraftManufacturer();
             this.dismissModel();
@@ -125,7 +125,7 @@ export class AircraftManufacturerComponent implements OnInit{
     updateAircraftManufacturer(): void {
         this.currentAircraftManufacturerType.updatedBy = this.userName;
         this.aircraftManufacurerService.update(this.aircraftManufacturerTypeToUpdate).subscribe(aircraftmanufacturer => {
-            this.alertService.showMessage('aircraftmanufacturer updated successfully.');
+            this.alertService.showMessage("Success", 'Aircraft manufacturer Updated successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
             this.resetUpdateAircraftManufacturer();
             this.dismissModel();
@@ -134,7 +134,7 @@ export class AircraftManufacturerComponent implements OnInit{
 
     removeAircraftManufacturer(): void {
         this.aircraftManufacurerService.remove(this.aircraftManufacturerTypeToRemove.aircraftTypeId).subscribe(response => {
-            this.alertService.showMessage("Aircraft manufacturer removed successfully.");
+            this.alertService.showMessage("Success", 'Aircraft manufacturer removed successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
             this.dismissModel();
         });
