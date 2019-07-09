@@ -123,6 +123,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     materialListDL: any[] = [];
     measurementsDL: any[] = [];
     publicationsDL: any[] = [];
+    selectedSideTabIndex: number;
 
     actionAttributeTabs: any[] = [
         { visible: false, selected: false, label: "Material List" },
@@ -207,6 +208,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.loadItemClassData();
         this.loadPartData();
         this.ptnumberlistdata();
+
 
         if (!this.sourceWorkFlow.workFlowId) {
             this.sourceWorkFlow.workOrderNumber = 'Creating';
@@ -865,7 +867,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     setCurrentPanel(itemName): void {
-        itemName = itemName.replace(" ", "_");
+        console.log(itemName)
+        //itemName = itemName.replace(" ", "_");
         var list = document.getElementsByClassName('pan');
         for (var i = 0; i < list.length; i++) {
             list[i].classList.add('active');
@@ -880,7 +883,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
     }
 
-    SetCurrectTab(workFlowId): void {
+    SetCurrectTab(workFlowId, index?): void {
+        console.log(workFlowId);
+        if (index !== undefined || index !== null) {
+
+        this.selectedSideTabIndex = index;
+        }
         var workflow = this.workFlowList[0];
         var list = document.getElementsByClassName('actrmv');
         for (var i = 0; i < list.length; i++) {
@@ -899,7 +907,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
         }
         this.onActionChange();
-        this.selectedItems = workflow.selectedItems;
+        this.selectedItems = workflow.selectedItems
+     
+       
         this.currenttaskId = workflow.taskId;
         this.workFlow = workflow;
         this.setSelectedItems(this.workFlow);
@@ -921,8 +931,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     AddActionAttribute(): void {
-        $('.custom-pill .nav-pills li:first-child a').addClass('active show');
-        $('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
+        this.selectedSideTabIndex  = 0;
+        //$('.custom-pill .nav-pills li:first-child a').addClass('active show');
+        //$('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
 
         if (this.selectedItems.length > 0) {
 
@@ -1231,8 +1242,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.workFlowList.splice(position, 1);
             }
 
+
         }
         this.showMainPage = true;
+
+        this.setCurrentPanel(this.workFlow.selectedItems[0].Name);
         //this.SetCurrectTab(this.workFlow.ActionId);
     }
 
