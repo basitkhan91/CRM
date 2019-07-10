@@ -28,6 +28,8 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
 import * as $ from 'jquery';
 import { forEach } from "@angular/router/src/utils/collection";
 
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 @Component({
     selector: 'wf-create',
     templateUrl: './workflow-Create.component.html',
@@ -195,7 +197,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (this.selectedItems.length > 0) {
             this.showActionAttribute = true;
         }
+
+
+
         this.workFlow.selectedItems = this.selectedItems;
+  
+     
 
     }
 
@@ -678,6 +685,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     // On Add Button Click
     addActionAttributes() {
+        
+  
         if (this.actionValue && this.actionValue != "" && this.selectedActionAttributes && this.selectedActionAttributes.length > 0) {
             let currAction = { workflowId: "", taskId: Number(this.actionValue), workflowActionAttributeIds: this.selectedActionAttributes.join(",") }
             let selAction = this.workflowActions.find(obj => obj.taskId == this.actionValue)
@@ -692,8 +701,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
             this.displaySelectedAction(selAction);
         }
-
-
+        console.log(this.currenttaskId, this.workflowActions);
+   
+ 
     }
 
     onPercentOfNew(myValue, percentValue) {
@@ -867,7 +877,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     setCurrentPanel(itemName): void {
-     
+
+        console.log(itemName)
+        // used to handle the naming convenction with space in between 
+        itemName = itemName.replace(" ", "_");
         var list = document.getElementsByClassName('pan');
         for (var i = 0; i < list.length; i++) {
             list[i].classList.add('active');
@@ -888,6 +901,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         this.selectedSideTabIndex = index;
         }
+
+        console.log(this.workFlowList);
+
         var workflow = this.workFlowList[0];
         var list = document.getElementsByClassName('actrmv');
         for (var i = 0; i < list.length; i++) {
@@ -911,7 +927,15 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
        
         this.currenttaskId = workflow.taskId;
         this.workFlow = workflow;
-        this.setSelectedItems(this.workFlow);
+        // sort by Id
+        const sortByOrder = this.workFlow.selectedItems.sort((a, b) => {
+            return (a, b) => (a.Id > b.Id) ? 1 : -1
+        })
+        console.log(sortByOrder);
+
+        this.workFlow = { ...this.workFlow, selectedItems: sortByOrder }
+   
+         this.setSelectedItems(this.workFlow);
     }
 
     AddPage() {
@@ -1241,11 +1265,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.workFlowList.splice(position, 1);
             }
 
+      
+
 
         }
         this.showMainPage = true;
+        setTimeout(() => {
+            this.setCurrentPanel(this.workFlow.selectedItems[0].Name);
+        }, 1000)
+        
+        // used to reset the values from the selected dropdown and task Id
+        this.currenttaskId = "0";
+        this.selectedItems = [];
 
-        this.setCurrentPanel(this.workFlow.selectedItems[0].Name);
         //this.SetCurrectTab(this.workFlow.ActionId);
     }
 
