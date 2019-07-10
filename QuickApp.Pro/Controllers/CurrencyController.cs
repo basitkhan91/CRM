@@ -154,17 +154,96 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
-
+        
         [HttpPost("pagination")]
-        public IActionResult GetCurrency([FromBody]PaginateViewModel paginate)
+        public IActionResult GetCurrency([FromBody]CurrencyPaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<Currency>.Create(_unitOfWork.Currencys.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            IQueryable<CurrencyPaginationViewModel> queryable = null;
+            List<CurrencyPaginationViewModel> currencyList = new List<CurrencyPaginationViewModel>();
+            CurrencyPaginationViewModel currency = null;
+            if (!string.IsNullOrEmpty(paginate.Code)
+                || !string.IsNullOrEmpty(paginate.Symbol)
+                || !string.IsNullOrEmpty(paginate.DisplayName)
+                 || !string.IsNullOrEmpty(paginate.Memo)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var currencys = _unitOfWork.currency;
+                var currencys = _unitOfWork.Currencys.GetAllCurrencyData();
+                foreach (var item in currencys)
+                {
+                    currency = new CurrencyPaginationViewModel();
+                    currency.CurrencyId = item.CurrencyId;
+                    currency.Code = item.Code;
+                    currency.Symbol = item.Symbol;
+                    currency.DisplayName = item.DisplayName;
+                    currency.Memo = item.Memo;
+                    currency.CreatedDate = item.CreatedDate;
+                    currency.CreatedBy = item.CreatedBy;
+                    currency.UpdatedDate = item.UpdatedDate;
+                    currency.UpdatedBy = item.UpdatedBy;
+                    currency.IsActive = item.IsActive;
+                    currencyList.Add(currency);
+                }
+                if (!string.IsNullOrEmpty(paginate.Code))
+                {
+                    currencyList = currencyList.Where(c => c.Code != null && c.Code.ToUpper().Contains(paginate.Code.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Symbol))
+                {
+                    currencyList = currencyList.Where(c => c.Symbol != null && c.Symbol.ToUpper().Contains(paginate.Symbol.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.DisplayName))
+                {
+                    currencyList = currencyList.Where(c => c.DisplayName != null && c.DisplayName.ToUpper().Contains(paginate.DisplayName.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Memo))
+                {
+                    currencyList = currencyList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    currencyList = currencyList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    currencyList = currencyList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var currencys = _unitOfWork.Currencys.GetAllCurrencyData();
+                foreach (var item in currencys)
+                {
+                    currency = new CurrencyPaginationViewModel();
+                    currency.CurrencyId = item.CurrencyId;
+                    currency.Code = item.Code;
+                    currency.Symbol = item.Symbol;
+                    currency.DisplayName = item.DisplayName;
+                    currency.Memo = item.Memo;
+                    currency.CreatedDate = item.CreatedDate;
+                    currency.CreatedBy = item.CreatedBy;
+                    currency.UpdatedDate = item.UpdatedDate;
+                    currency.UpdatedBy = item.UpdatedBy;
+                    currency.IsActive = item.IsActive;
+                    currencyList.Add(currency);
+                }
+                currencyList.Add(currency);
+
+            }
+            queryable = currencyList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<CurrencyPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
     }
-
-
 }
