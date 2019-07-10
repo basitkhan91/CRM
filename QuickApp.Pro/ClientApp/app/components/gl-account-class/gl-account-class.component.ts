@@ -33,6 +33,8 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** GlAccountClass component*/
 export class GlAccountClassComponent implements OnInit, AfterViewInit {
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
     glAccountClassNameInputFieldValue: any;
     glAccountClass = [];
     matvhMode: any;
