@@ -29,7 +29,7 @@
                 </p-autoComplete>
             </td>
             <td><input type="text" class="form-control" pInputText [(ngModel)]="exclusion.partDescription" value="{{exclusion.partDescription}}"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  (input)="calculateExtendedCost(exclusion)" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="pnum"  (input)="calculateExtendedCost(exclusion)" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money" (input)="calculateExtendedCost(exclusion)"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}"></td>
             <td>
