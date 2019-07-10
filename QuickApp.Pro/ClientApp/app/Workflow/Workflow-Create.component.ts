@@ -877,6 +877,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     setCurrentPanel(itemName): void {
+
         console.log(itemName)
         // used to handle the naming convenction with space in between 
         itemName = itemName.replace(" ", "_");
@@ -895,7 +896,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     SetCurrectTab(workFlowId, index?): void {
-        console.log(workFlowId);
+        
         if (index !== undefined || index !== null) {
 
         this.selectedSideTabIndex = index;
