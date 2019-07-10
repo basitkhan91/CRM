@@ -867,8 +867,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     setCurrentPanel(itemName): void {
-        console.log(itemName)
-        //itemName = itemName.replace(" ", "_");
+     
         var list = document.getElementsByClassName('pan');
         for (var i = 0; i < list.length; i++) {
             list[i].classList.add('active');
@@ -884,7 +883,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     SetCurrectTab(workFlowId, index?): void {
-        console.log(workFlowId);
+        
         if (index !== undefined || index !== null) {
 
         this.selectedSideTabIndex = index;
