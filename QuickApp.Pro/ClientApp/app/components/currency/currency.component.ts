@@ -25,6 +25,16 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Currency component*/
 export class CurrencyComponent implements OnInit, AfterViewInit {
+    event: any;
+    currency = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    memoInputFieldValue: any;
+    displayNameInputFieldValue: any;
+    symbolInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    codeInputFieldValue: any;
     currency_Name: any = "";
     symbol: any =  "";
     displayName: any = "";
@@ -450,5 +460,54 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
                 this.loading = false;
             }
         }, 1000);
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'code') {
+            this.codeInputFieldValue = event;
+        }
+        if (filed == 'symbol') {
+            this.symbolInputFieldValue = event;
+        }
+        if (filed == 'displayName') {
+            this.displayNameInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.currency.push({
+            Code: this.codeInputFieldValue,
+            Symbol: this.symbolInputFieldValue,
+            DisplayName: this.displayNameInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.currency) {
+            this.currencyService.getServerPages(this.currency[this.currency.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.currencyPagination = pages[0];
+                    }
+                });
+        }
+        else {
+        }
     }
 }

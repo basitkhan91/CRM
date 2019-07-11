@@ -135,15 +135,89 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
-
+        
         [HttpPost("pagination")]
-        public IActionResult GetItemGroup([FromBody]PaginateViewModel paginate)
+        public IActionResult GetItemGroup([FromBody]ItemGroupViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<Itemgroup>.Create(_unitOfWork.Itemgroup.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            IQueryable<ItemGroupViewModel> queryable = null;
+            List<ItemGroupViewModel> itemGroupList = new List<ItemGroupViewModel>();
+            ItemGroupViewModel itemGroup = null;
+            if (!string.IsNullOrEmpty(paginate.ItemGroupCode)
+                || !string.IsNullOrEmpty(paginate.Description)
+                || !string.IsNullOrEmpty(paginate.Memo)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var itemGroups = _unitOfWork.itemGroup;
+                var itemGroups = _unitOfWork.Itemgroup.GetItemgroups();
+                foreach (var item in itemGroups)
+                {
+                    itemGroup = new ItemGroupViewModel();
+                    itemGroup.ItemGroupId = item.ItemGroupId;
+                    itemGroup.Description = item.Description;
+                    itemGroup.ItemGroupCode = item.ItemGroupCode;
+                    itemGroup.Memo = item.Memo;
+                    itemGroup.CreatedDate = item.CreatedDate;
+                    itemGroup.CreatedBy = item.CreatedBy;
+                    itemGroup.UpdatedDate = item.UpdatedDate;
+                    itemGroup.UpdatedBy = item.UpdatedBy;
+                    itemGroup.IsActive = item.IsActive;
+                    itemGroupList.Add(itemGroup);
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    itemGroupList = itemGroupList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.ItemGroupCode))
+                {
+                    itemGroupList = itemGroupList.Where(c => c.ItemGroupCode != null && c.ItemGroupCode.ToUpper().Contains(paginate.ItemGroupCode.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Memo))
+                {
+                    itemGroupList = itemGroupList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+                }
+               
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    itemGroupList = itemGroupList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    itemGroupList = itemGroupList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var itemGroups = _unitOfWork.Itemgroup.GetItemgroups();
+                foreach (var item in itemGroups)
+                {
+                    itemGroup = new ItemGroupViewModel();
+                    itemGroup.ItemGroupId = item.ItemGroupId;
+                    itemGroup.ItemGroupCode = item.ItemGroupCode;
+                    itemGroup.Description = item.Description;
+                    itemGroup.Memo = item.Memo;
+                    itemGroup.CreatedDate = item.CreatedDate;
+                    itemGroup.CreatedBy = item.CreatedBy;
+                    itemGroup.UpdatedDate = item.UpdatedDate;
+                    itemGroup.UpdatedBy = item.UpdatedBy;
+                    itemGroup.IsActive = item.IsActive;
+                    itemGroupList.Add(itemGroup);
+                }
+                itemGroupList.Add(itemGroup);
+
+            }
+            queryable = itemGroupList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<ItemGroupViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
     }
 }
