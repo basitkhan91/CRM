@@ -21,7 +21,7 @@
                     <div class="form-group col-sm-12">
                         <div class="col-sm-7">
                             <p-autoComplete (onSelect)="onPartSelect($event,measurement)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="measurement.partDescription"
-                                            [minLength]="1" [dropdown]="true">
+                                            [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
                                 <ng-template let-partName pTemplate="part">
                                     <div class="ui-helper-clearfix">{{partName}}</div>
                                 </ng-template>
