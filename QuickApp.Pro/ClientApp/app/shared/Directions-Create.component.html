@@ -15,8 +15,9 @@
         <tr [hidden]="direction.isDelete" *ngFor="let direction of workFlow.directions; let i = index">
             <td><input type="text" value="{{direction.action}}" [(ngModel)]="direction.action" class="form-control"></td>
             <td><textarea rows="1" pInputTextarea value="{{direction.description}}" [(ngModel)]="direction.description" > </textarea></td>
-            <td><input type="text"  pInputText pKeyFilter="int" value="{{direction.sequence}}" [(ngModel)]="direction.sequence" class="form-control"></td>
-            <td><textarea rows="1" pInputTextarea value="{{direction.memo}}" [(ngModel)]="direction.memo" > </textarea></td>
+            <td><input type="text"  pInputText pKeyFilter="int" value="{{direction.sequence}}" maxlength="5" [(ngModel)]="direction.sequence" class="form-control"></td>
+            <td><textarea rows="1" pInputTextarea value="{{direction.memo}}" [(ngModel)]="direction.memo"> </textarea></td>
+           
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>
