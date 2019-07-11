@@ -5,17 +5,17 @@
         <table class="table table-bordered table-fixed">
             <thead class="thead-light">
                 <tr>
-                    <th>Pub *</th>
+                    <th>Pub ID*</th>
                     <th>Pub Desc</th>
+                    <th> Revision </th>
+                    <th> Revision Date </th>
                     <th> Pub Type *</th>
                     <th> Sequence  </th>
                     <th> Source  </th>
                     <th> Aircraft Manufacturer </th>
                     <th> Model </th>
-                    <th > Dash Number </th>
+                    <th> Dash Number </th>
                     <th> Location </th>
-                    <th> Revision </th>
-                    <th> Revision Date </th>
                     <th> Verified By </th>
                     <th> Verified Date  </th>
                     <th> Status </th>
@@ -26,27 +26,26 @@
             <tbody>
                 <tr [hidden]="publ.isDeleted" *ngFor="let publ of workFlow.publication;let i = index">
                     <td>
-                        <select class="form-control custom-select"
+                        <select class="form-control custom-select dropdown-select"
                                 [(ngModel)]="publ.publicationId"
                                 (change)="onPublicationChange(publ)">
-                            <option value="">Select</option>
                             <option *ngFor="let publication of publications" [value]="publication.publicationRecordId"> {{ publication.publicationId}}</option>
                         </select>
                     </td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.publicationDescription"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.publicationDescription" [disabled]="true"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.revision"  [disabled]="true" value="{{publ.revision}}"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.revisionDate" [disabled]="true" value="{{publ.revisionDate}}"></td>
                     <td>
-                        <select class="form-control custom-select" id="ddlPublicationTypes" [(ngModel)]="publ.publicationType">
-                            <option value="">Select</option>
+                        <select class="form-control custom-select" id="ddlPublicationTypes" [disabled]="true" [(ngModel)]="publ.publicationType">
                             <option *ngFor="let type of publicationTypes" value="{{type.name}}">
                                 {{type.name}}
                             </option>
                         </select>
                     </td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.sequence" value="{{publ.sequence}}"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.source" value="{{publ.source}}"></td>
-                    <td>
-                        <select class="form-control custom-select" id="ddlAircraftManufacturer" [(ngModel)]="publ.aircraftManufacturer" (change)="getAircraftModels(publ,publ.aircraftManufacturer)">
-                            <option value="">Select</option>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.sequence" [disabled]="true" value="{{publ.sequence}}"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.source" [disabled]="true" value="{{publ.source}}"></td>
+                    <td style="width: 20%">
+                        <select class="form-control custom-select" id="ddlAircraftManufacturer" [disabled]="true" [(ngModel)]="publ.aircraftManufacturer" (change)="getAircraftModels(publ,publ.aircraftManufacturer)">
                             <option *ngFor="let manufact of publicationAircraftManufacturers" value="{{manufact.aircraftTypeId}}">
                                 {{manufact.description}}
                             </option>
@@ -54,37 +53,36 @@
                     </td>
 
                     <td>
-                        <select class="form-control custom-select" id="ddlModel" [(ngModel)]="publ.model" (change)="getDashNumbers(publ)">
-                            <option value="">Select</option>
+                        <select class="form-control custom-select" id="ddlModel" [disabled]="true" [(ngModel)]="publ.model" (change)="getDashNumbers(publ)">
+                           
                             <option *ngFor="let model of publ.publicationModels" value="{{model.aircraftModelId}}">
                                 {{model.modelName}}
                             </option>
                         </select>
                     </td>
-                    <td style="width:200px;" >
-                            <ng-multiselect-dropdown  class="form-control multiple-custom-select"
-                                                     [placeholder]="'Select'"
-                                                     [data]="publ.allDashNumbers"
-                                                     [(ngModel)]="publ.workflowPublicationDashNumbers"
-                                                     [settings]="dropdownSettings"
-                                                     (onDeSelect)="onDeSelect(publ,$event)"
-                                                     (onSelect)="onItemSelect(publ,$event)"
-                                                     (onSelectAll)="onSelectAll(publ,$event)">
-                            </ng-multiselect-dropdown>
-                       
+
+                    <td style="width:200px;">
+                        <ng-multiselect-dropdown class="form-control multiple-custom-select" [disabled]="true"
+                                                 [placeholder]="'Select'"
+                                                 [data]="publ.allDashNumbers"
+                                                 [(ngModel)]="publ.workflowPublicationDashNumbers"
+                                                 [settings]="dropdownSettings"
+                                                 (onDeSelect)="onDeSelect(publ,$event)"
+                                                 (onSelect)="onItemSelect(publ,$event)"
+                                                 (onSelectAll)="onSelectAll(publ,$event)">
+                        </ng-multiselect-dropdown>
+
                     </td>
                     <td>
-                        <select class="form-control custom-select" value="{{publ.location}}" [(ngModel)]="publ.location">
-                            <option value="">Select</option>
-                            <option *ngFor="let obj of locations" value="{{obj.name}}">
+                        <select class="form-control custom-select" value="{{publ.location}}" [disabled]="true" [(ngModel)]="publ.location">
+                             <option *ngFor="let obj of locations" value="{{obj.name}}">
                                 {{obj.name}}
                             </option>
                         </select>
                     </td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.revision" value="{{publ.revision}}"></td>
-                    <td><input type="date" class="form-control" [(ngModel)]="publ.revisionDate" value="{{publ.revisionDate}}"></td>
+
                     <td>
-                        <p-autoComplete [(ngModel)]="publ.verifiedBy" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                        <p-autoComplete [(ngModel)]="publ.verifiedBy" [disabled]="true" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                         [dropdown]="true">
                             <ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
@@ -93,11 +91,11 @@
                     </td>
                     <td>
                         <!--<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></p-calendar>-->
-                        <input type="date" class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}">
+                        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}">
 
                     </td>
                     <td>
-                        <select class="form-control custom-select" id="ddlStatus" [(ngModel)]="publ.status">
+                        <select class="form-control custom-select" id="ddlStatus" [disabled]="true" [(ngModel)]="publ.status">
                             <option *ngFor="let status of publicationStatuses" value="{{status.name}}">
                                 {{status.name}}
                             </option>

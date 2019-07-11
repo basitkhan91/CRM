@@ -28,7 +28,7 @@
 
             </td>
             <td>
-                <input type="text" pInputText [pKeyFilter]="ccRegex"
+                <input type="text" pInputText pKeyFilter="pnum"
                        class="form-control"
                        value="{{expert.estimatedHours}}"
                        (input)="calculateLabourCost(expert)"
@@ -36,14 +36,14 @@
             </td>
             <td>
                 <input type="text" pInputText pKeyFilter="money"
-                       class="form-control"
+                       class="form-control"  
                        value="{{expert.laborDirectRate}}"
                        (input)="calculateLabourCost(expert)"
                        [(ngModel)]="expert.laborDirectRate">
             </td>
             <td>
                 <input type="text" pInputText pKeyFilter="money"
-                       class="form-control"
+                       class="form-control" [disabled]="true"
                        value="{{expert.directLaborRate}}"
                        [(ngModel)]="expert.directLaborRate">
             </td>
@@ -63,7 +63,7 @@
             </td>
             <td>
                 <input type="text" pInputText pKeyFilter="money"
-                       class="form-control"
+                       class="form-control"  [disabled]="true"
                        value="{{expert.laborOverheadCost}}"
                        [(ngModel)]="expert.laborOverheadCost">
             </td>

@@ -19,14 +19,15 @@
                     </ng-template>
                 </p-autoComplete>
             </td>
-            <td>
+            <td >
                 <select class="form-control custom-select" id='dllEquipmentAssetTypes' [(ngModel)]="eqp.assetTypeId" [disabled]="true">
                     <option value=""></option>
                     <option value={{assetType.id}} *ngFor="let assetType of equipmentAssetType">{{assetType.name}}</option>
                 </select>
+               
             </td>
             <td><input type="text" class="form-control" [disabled]="true" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="pnum"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
+            <td><input type="text" class="form-control" maxlength="10" pInputText pKeyFilter="pnum"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
 
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
