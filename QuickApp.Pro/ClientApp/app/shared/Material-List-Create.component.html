@@ -3,7 +3,7 @@
         <span class="cat-heading cat4">
             Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
             <span class="float-right">
-                Defereed &nbsp;<input type="checkbox" />
+                Deferred &nbsp;<input type="checkbox" (click)="isDeferredEnable($event)" />
             </span>
         </span>
         
@@ -86,7 +86,7 @@
                 <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" />
             </td>
             <td>
-                <input type="text" class="form-control" value="{{material.Memo}}" [(ngModel)]="material.memo" />
+                <input type="text" class="form-control" value="{{material.memo}}" [(ngModel)]="material.memo" />
             </td>
             <td style="width:30px;">
                 <div class="custom-checkbox-box">                    

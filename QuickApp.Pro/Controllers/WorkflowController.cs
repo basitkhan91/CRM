@@ -135,14 +135,9 @@ namespace QuickApp.Pro.Controllers
                             !ids.Contains(x.WorkflowPublicationDashNumberId)
                             );
 
-                        
-                       
-                        //var itemsToDelete = publication.WorkflowPublicationDashNumbers.Where(x => !ids.Contains(x.WorkflowPublicationDashNumberId));
-
                         foreach (var item in itemsToDelete)
                         {
                             UnitOfWork.Repository<WorkflowPublicationDashNumber>().Remove(item);
-                            //publication.WorkflowPublicationDashNumbers.Remove(item);
                         }
 
                         publication.CreatedDate = DateTime.Now;

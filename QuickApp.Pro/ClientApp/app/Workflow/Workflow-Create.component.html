@@ -742,13 +742,14 @@
 										<ng-multiselect-dropdown *ngIf="actionAttributes" class="form-control multiple-custom-select"
 																 [placeholder]="'Select'"
 																 [data]="actionAttributes"
-																 [(ngModel)]="selectedItems"
+                                                                 [(ngModel)]="selectedItems"
 																 [settings]="dropdownSettings"
 																 (onDeSelect)="onDeSelect($event)"
 																 (onSelect)="onItemSelect($event)"
+                                                                 (onDeSelectAll)="onDeSelectAll($event)"
 																 (onSelectAll)="onSelectAll($event)">
 										</ng-multiselect-dropdown>
-										<button class="btn btn-success w50 add-btn-text" (click)="AddActionAttribute()">Add</button>
+										<!--<button class="btn btn-success w50 add-btn-text" (click)="AddActionAttribute()">Add</button>-->
 									</div>
 								</div>
 							</div>
@@ -764,7 +765,7 @@
 								   id='tab_{{workFlow.taskId}}'
 								   (click)="SetCurrectTab(workFlow.taskId , i)"
 								   *ngFor="let workFlow of workFlowList; let i = index"
-								   [class.active]="selectedSideTabIndex === i">
+								   [class.active]="workFlow.taskId == currenttaskId">
 									{{workFlow.ActionName}}
 								</a>
 							</div>
@@ -781,35 +782,35 @@
 										</li>
 									</ul>
 									<div class="tab-content">
-										<div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication != undefined && workFlow.publication.length > 0"
+										<div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication != undefined"
 											 class="tab-pane fade pan">
 											<grd-publication [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-publication>
 										</div>
-										<div id="tab_Charges" *ngIf="workFlow != undefined && workFlow.charges != undefined && workFlow.charges.length > 0"
+										<div id="tab_Charges" *ngIf="workFlow != undefined && workFlow.charges != undefined"
 											 class="tab-pane fade in active pan">
 											<grd-charges [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-charges>
 										</div>
-										<div id="tab_Directions" *ngIf="workFlow != undefined && workFlow.directions != undefined && workFlow.directions.length > 0"
-											 class="tab-pane  pan">
+										<div id="tab_Directions" *ngIf="workFlow != undefined && workFlow.directions != undefined"
+											 class="tab-pane pan">
 											<grd-directions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-directions>
 										</div>
-										<div id="tab_Equipment" *ngIf="workFlow != undefined && workFlow.equipments != undefined && workFlow.equipments.length > 0"
+										<div id="tab_Equipment" *ngIf="workFlow != undefined && workFlow.equipments != undefined"
 											 class="tab-pane fade pan">
 											<grd-equipment [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-equipment>
 										</div>
-										<div id="tab_Exclusions" *ngIf="workFlow != undefined && workFlow.exclusions != undefined && workFlow.exclusions.length > 0"
+										<div id="tab_Exclusions" *ngIf="workFlow != undefined && workFlow.exclusions != undefined"
 											 class="tab-pane fade pan">
 											<grd-exclusions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-exclusions>
 										</div>
-										<div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined && workFlow.expertise.length > 0"
+										<div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined"
 											 class="tab-pane fade pan">
 											<grd-expertise [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-expertise>
 										</div>
-										<div id="tab_Material_List" *ngIf="workFlow != undefined && workFlow.materialList != undefined && workFlow.materialList.length > 0"
+										<div id="tab_Material_List" *ngIf="workFlow != undefined && workFlow.materialList != undefined"
 											 class="tab-pane fade pan">
 											<grd-material [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-material>
 										</div>
-										<div id="tab_Measurements" *ngIf="workFlow != undefined && workFlow.measurements != undefined && workFlow.measurements.length > 0"
+										<div id="tab_Measurements" *ngIf="workFlow != undefined && workFlow.measurements != undefined"
 											 class="tab-pane fade pan">
 											<grd-measurement [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-measurement>
 										</div>

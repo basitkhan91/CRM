@@ -189,4 +189,22 @@ export class MaterialListCreateComponent implements OnInit {
         }
     }
 
+    isDeferredEnable(e) {
+        if (e.target.checked) {
+            this.workFlow.materialList = [...this.workFlow.materialList.map(x => {
+                return {
+                    ...x,
+                    isDeferred: true
+                }
+            })]
+        } else {
+            this.workFlow.materialList = [...this.workFlow.materialList.map(x => {
+                return {
+                    ...x,
+                    isDeferred: false
+                }
+            })]
+        }
+    }
+
 }
