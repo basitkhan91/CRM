@@ -18,6 +18,7 @@
             <td>                
                       <p-autoComplete (onSelect)="onPartSelect($event,measurement)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="measurement.partDescription"
                                             [minLength]="1" [dropdown]="true"  class="autocomplete">
+
                                 <ng-template let-partName pTemplate="part">
                                     <div class="ui-helper-clearfix">{{partName}}</div>
                                 </ng-template>
