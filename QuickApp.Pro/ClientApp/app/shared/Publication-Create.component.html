@@ -91,7 +91,11 @@
                             </ng-template>
                         </p-autoComplete>
                     </td>
-                    <td><input type="date"  class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></td>
+                    <td>
+                        <!--<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></p-calendar>-->
+                        <input type="date" class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}">
+
+                    </td>
                     <td>
                         <select class="form-control custom-select" id="ddlStatus" [(ngModel)]="publ.status">
                             <option *ngFor="let status of publicationStatuses" value="{{status.name}}">

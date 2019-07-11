@@ -150,7 +150,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.cols = [
 
             //{ field: 'actionId', header: 'Action Id' },
-            { field: 'customerCode', header: 'Customer Code' },
+            { field: 'customerCode', header: 'Customers Code' },
             { field: 'name', header: 'Customer Name' },
             { field: 'customerType', header: 'Customer Type' },
             { field: 'email', header: 'Customer Email' },

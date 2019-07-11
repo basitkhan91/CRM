@@ -15,6 +15,7 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
 })
 export class ChargesCreateComponent implements OnInit, OnChanges {
     VendorCodesColl: any[] = [];
+    ccRegex: RegExp = /[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$/;
     vendorCodes: any[] = [];
     allActions: any[] = [];
     @Input() workFlow: IWorkFlow;
@@ -26,7 +27,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     chargesTypes: any[] = [];
     chargesCurrency: any[] = [];
     row: any;
-
+   
     errorMessage: string;
     constructor(private vendorservice: VendorService, private actionService: ActionService, private currencyService: CurrencyService, private alertService: AlertService) {
     }

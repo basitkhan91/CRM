@@ -66,7 +66,7 @@
                 </select>
             </td>
             <td style="width: 200px">
-                <input type="text"   pInputText pKeyFilter="num" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.quantity" />
+                <input type="text"   pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.quantity" />
             </td>
             <td>
                 <select class="form-control custom-select" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
