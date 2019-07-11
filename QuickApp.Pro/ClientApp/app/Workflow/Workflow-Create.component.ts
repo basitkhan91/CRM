@@ -551,7 +551,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         })
     }
 
-    onCustomerNameselected(event) //Customer Ship Address Data
+    onCustomerNameselected(event)
     {
         for (let i = 0; i < this.customerNamecoll.length; i++) {
             if (event == this.customerNamecoll[i][0].name) {
@@ -576,19 +576,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 "customerId": this.allCustomers[i].customerId,
                                 "name": name,
                                 "customerCode": this.allCustomers[i].customerCode
-                            }]),
-                                this.customerNames.push(name);
+                            }]);
+                            this.customerNames.push(name);
                         }
                     }
                     else {
-                        //if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                         this.customerNamecoll.push([{
                             "customerId": this.allCustomers[i].customerId,
                             "name": name,
                             "customerCode": this.allCustomers[i].customerCode
-                        }]),
-                            this.customerNames.push(name);
-                        //}
+                        }]);
+                        this.customerNames.push(name);
                     }
                 }
             }
@@ -887,7 +885,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         console.log(workFlowId);
         if (index !== undefined || index !== null) {
 
-        this.selectedSideTabIndex = index;
+            this.selectedSideTabIndex = index;
         }
         var workflow = this.workFlowList[0];
         var list = document.getElementsByClassName('actrmv');
@@ -908,8 +906,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
         this.onActionChange();
         this.selectedItems = workflow.selectedItems
-     
-       
+
+
         this.currenttaskId = workflow.taskId;
         this.workFlow = workflow;
         this.setSelectedItems(this.workFlow);
@@ -921,17 +919,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     AddPageCustomer() {
         this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
-        
+
     getDashNumbers(publication): void {
         this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
             console.log(result);
             publication.allDashNumbers = result;
-         
+
         });
     }
 
     AddActionAttribute(): void {
-        this.selectedSideTabIndex  = 0;
+        this.selectedSideTabIndex = 0;
         //$('.custom-pill .nav-pills li:first-child a').addClass('active show');
         //$('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
 
@@ -1607,7 +1605,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 dashNumber.dashNumber = dashNumber.dashNumber;
                             }
                         }
-                        
+
 
                         this.sourceWorkFlow.publication.push(publication);
 

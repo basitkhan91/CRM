@@ -35,7 +35,7 @@
             <td>
                 <select class="form-control custom-select" id="ddlEstimatedOccurance" [(ngModel)]="exclusion.estimtPercentOccurrance">
                     <option value="">select</option>
-                    <option value="{{occurance.id}}" *ngFor="let occurance of exclusionEstimatedOccurances;let i= index">{{occurance.name}}</option>
+                    <option value="{{occurance.id}}" *ngFor="let occurance of exclusionEstimatedOccurances;let i= index">{{occurance.name + '%'}}</option>
                 </select>
             </td>
             <td><input type="text" class="form-control" value="{{exclusion.memo}}" [(ngModel)]="exclusion.memo"></td>

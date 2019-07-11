@@ -59,8 +59,11 @@ namespace QuickApp.Pro.Controllers
                 workflow.WorkScope.Description,
                 workflow.WorkScopeId,
                 workflow.ItemMaster.PartNumber,
+                workflow.Customer.Name,
                 workflow.ItemMaster.PartDescription,
-                workflow.WorkOrderNumber
+                workflow.WorkOrderNumber,
+                workflow.CreatedDate,
+                workflow.WorkflowExpirationDate,
             });
         }
 
