@@ -856,3 +856,14 @@ input.form-control {
 i.fa.fa-plus-circle.fa-lg {
 	color: green !important;
 }
+/* css for alignment */
+.c-workflow label, label {
+    font-size: 12px !important;
+    width: 150px;
+}
+.c-workflow-select {
+    margin-top: -11px;
+    margin-left: -6px;
+    margin-right: -6px;
+}
+/* ./css for alignment */
