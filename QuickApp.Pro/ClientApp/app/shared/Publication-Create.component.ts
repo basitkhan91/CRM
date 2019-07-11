@@ -152,12 +152,9 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.publication[index].id == "0" || this.workFlow.publication[index].id == "") {
+       
             this.workFlow.publication.splice(index, 1);
-        }
-        else {
-            this.workFlow.publication[index].isDeleted = true;
-        }
+      
     
     
 }
@@ -202,18 +199,11 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     onDeSelect(publication,item: any) {
-        //publication.workflowPublicationDashNumbers = [];
+       
     }
 
     onItemSelect(publication, item: any) {
-        //var workflowPublicationDashNumber = {
-        //    workflowId: this.workFlow.workflowId,
-        //    aircraftDashNumberId: item.dashNumber,
-        //    taskId: this.workFlow.taskId,
-        //    publicationsId: publication.id
-        //};
-
-        //var item = publication.workflowPublicationDashNumbers.push(workflowPublicationDashNumber);
+ 
         
     }
 

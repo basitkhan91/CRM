@@ -16,8 +16,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         new EventEmitter<IWorkFlow>();
     expertiseTypes: any[] = [];
     row: any;
-
-    errorMessage: string;
+        errorMessage: string;
 
     constructor(private actionService: ActionService) {
     }

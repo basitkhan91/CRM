@@ -1,0 +1,7 @@
+select {
+    background: none;
+   
+}
+    select:disabled {
+         background-color: none !important;
+    }

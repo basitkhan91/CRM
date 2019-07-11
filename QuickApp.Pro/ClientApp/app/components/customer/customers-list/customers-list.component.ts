@@ -150,7 +150,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.cols = [
 
             //{ field: 'actionId', header: 'Action Id' },
-            { field: 'customerCode', header: 'Customer Code' },
+            { field: 'customerCode', header: 'Customers Code' },
             { field: 'name', header: 'Customer Name' },
             { field: 'customerType', header: 'Customer Type' },
             { field: 'email', header: 'Customer Email' },
@@ -356,9 +356,13 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.sourceCustomer.isdelete = false;
         //this.sourceVendor = content;
         this.sourceCustomer.updatedBy = this.userName;
-        this.workFlowtService.updateListstatus(this.sourceCustomer).subscribe(
-            response => this.saveCompleted(this.sourceCustomer),
-            error => this.saveFailedHelper(error));
+        this.workFlowtService.updateListstatus(this.sourceCustomer.customerId).subscribe(response => {
+            this.alertService.showMessage("Customer removed successfully.");
+            this.updatePaginatorState();
+            this.modal.close();
+        });
+            //response => this.saveCompleted(this.sourceCustomer),
+            //error => this.saveFailedHelper(error));
         this.modal.close();
     }
     dismissModel() {
@@ -707,21 +711,57 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allCustomer) {
-                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field) {
+            this.customers.push({
+                CustomerCode: this.customerCode,//code11
+                Name: this.name, //test Customer11
+                Email: this.email,
+                City: this.city,
+                StateOrProvince: this.stateOrProvince,
+                CustomerType: this.customerType,
+                PrimarySalesPersonFirstName: this.primarySalesPersonFirstName,  //test Sales
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+                //GlobalSearchString: ""
+            })
+            if (this.customers) {
+                this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service
                     pages => {
                         if (pages.length > 0) {
                             this.customerPagination = pages[0];
                         }
+                        else
+                        {
+                            this.alertService.showMessage("Asset Status removed successfully.");
+                        }
                     });
-                this.loading = false;
             }
-        }, 1000);
+        }
+
+        else
+        {
+            setTimeout(() => {
+                if (this.allCustomer) {
+                    this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            if (pages.length > 0) {
+                                this.customerPagination = pages[0];
+                            }
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+        this.loading = false;
     }
 
     inputGlobalFiledFilter(dataEvent, contains) {
-        if (dataEvent) {
+        
+        if (dataEvent)
+        {
             this.globalCustomers.push({
                 GlobalSearchString: dataEvent,
                 first: this.first,
@@ -816,11 +856,6 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         else {
             //this.customers = {};
         }
-
-
-        console.log(event);
-        console.log(filed);
-        console.log(matchMode);
     }
 
 }

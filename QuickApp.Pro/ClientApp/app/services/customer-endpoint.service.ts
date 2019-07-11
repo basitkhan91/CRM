@@ -21,7 +21,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _insertToaddAudit: string = "/api/Customer/insertToAuditaddress";
     private readonly _updateToaddressaudit: string = "/api/Customer/updateToAuditaddress";
     private readonly _deleteShipingData: string = "/api/Customer/deleteCustomerShipping";
-    private readonly _updateliststatus: string = "/api/Customer/updatelistStatus";
+    private readonly _updatelists: string = "/api/Customer/updatelistStatus";
     private readonly _generalurl: string = "/api/Customer/customergeneralinfo";
     private readonly _addressUrl: string = "/api/Customer/AddressGet";
     private readonly _customerBillAddressUrl = "/api/Customer/customerAddressGet";
@@ -359,12 +359,13 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
-    updatelistStattus<T>(rowData: any): Observable<T> {
-        let endpointUrl = `${this._updateliststatus}/${rowData.customerId}`;
 
-        return this.http.put<T>(endpointUrl, JSON.stringify(rowData), this.getRequestHeaders())
+    removeById<T>(customerId: number): Observable<T> {
+        let endpointUrl = `${this._updatelists}/${customerId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.updatelistStattus(rowData));
+                return this.handleError(error, () => this.removeById(customerId));
             });
     }
     getDeleteShippingEndpoint<T>(customerId: number): Observable<T> {

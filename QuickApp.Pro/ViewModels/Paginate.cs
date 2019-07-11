@@ -51,6 +51,141 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
 
+    #region unitOfMeasure
+    public class UnitOfMeasureSearchViewModel : UnitOfMeasureModel, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    public class UnitOfMeasureModel
+    {
+        public long UnitOfMeasureId { get; set; }
+        public string Description { get; set; }
+        public string ShortName { get; set; }
+        public string Memo { get; set; }
+        public string Standard { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool? IsActive { get; set; }
+    }
+    #endregion
+
+    #region unitOfMeasure
+    public class ItemGroupViewModel : Itemgroup, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region itemClassification
+    public class ItemClassificationViewModel : ItemClassfication, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region itemClassification
+    public class ManufacturerPaginationViewModel : Manufacturer, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region charge
+    public class ChargePaginationViewModel : Charge, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region Reason
+    public class ReasonPaginationViewModel : Reason, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region Currency
+    public class CurrencyPaginationViewModel : Currency, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region Currency
+    public class GlAccountClassPaginationViewModel : GLAccountClass, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+        public int totalNoRecords { get; set; }
+    }
+    #endregion
+
+    #region Currency
+    public class GlClassFlowClassificationPaginationViewModel : GlClassFlowClassification, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region Currency
+    public class TaxRatePaginationViewModel : TaxRates, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region Currency
+    public class TaxtypePaginationViewModel : TaxType, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
     #region Global Search
     public class GlobalSearchModel : IPaginateViewModel
     {

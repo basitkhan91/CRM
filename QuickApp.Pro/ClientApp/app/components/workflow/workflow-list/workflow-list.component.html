@@ -7,18 +7,19 @@
                     <ng-template pTemplate="caption">
                         <div style="text-align: right">
                             <p-multiSelect [options]="gridColumns" [(ngModel)]="selectedGridColumns" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px', paddingRight: '30px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                             <div class="inner-addon right-addon w200 inline-block">
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
                             </div>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a matTooltip="Add Work Flow" (click)="AddPage()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+
+                            <a  (click)="AddPage()" pTooltip="Create New Workflow" tooltipPosition="top" class="btn btn-success nobg"><span><i  class="fa fa-plus"></i></span></a>
                             <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                    <span  pTooltip="Upload Data (Excel)" tooltipPosition="top" ><i class="fa fa-upload"></i></span>
                                 </label>
                             </div>
                         </div>
@@ -46,22 +47,22 @@
                             </td>
 
                             <td>
-                                <p-inputSwitch *ngIf="rowData.workflow.isActive" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData.workflow.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData.workflow.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive == false"  pTooltip="In Active" tooltipPosition="bottom"  onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData.workflow.isActive == null" pTooltip="Active" tooltipPosition="bottom"  onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
 
                                 <span (click)="openEdit(rowData)" data-toggle="modal" data-target="#edit">
-                                    <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                    <a data-toggle="tooltip" pTooltip="Edit" tooltipPosition="bottom"  title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                 </span>
                                 <span data-toggle="modal" data-target="#history">
-                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                    <a data-toggle="tooltip"  pTooltip="History" tooltipPosition="bottom"  title="" class="btn btn-success nobg" data-original-title="History">
                                         <i class="fa fa-history"></i>
                                     </a>
                                 </span>
                                 <span (click)="confirmDelete(deleteConfirm,rowData)" data-toggle="modal" data-target="#data">
-                                    <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                                    <a class="btn btn-danger nobg"  pTooltip="Delete" tooltipPosition="bottom" data-toggle="tooltip" title="" data-original-title="Delete">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </span>

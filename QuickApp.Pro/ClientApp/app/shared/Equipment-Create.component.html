@@ -1,6 +1,6 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
     <div>
-        <span class="cat-heading cat4" (click)="addRow()">Add New Equipments<i class="fa fa-plus"></i></span>
+        <span class="cat-heading cat4" >Add New Equipments<i (click)="addRow()" class="fa fa-plus"></i></span>
     </div>
     <table class="table table-bordered table-fixed">
          <tr>
@@ -19,14 +19,15 @@
                     </ng-template>
                 </p-autoComplete>
             </td>
-            <td>
-                <select class="form-control custom-select" id='dllEquipmentAssetTypes' [(ngModel)]="eqp.assetTypeId" disabled="true">
-                    <option value="">select</option>
+            <td >
+                <select class="form-control custom-select" id='dllEquipmentAssetTypes' [(ngModel)]="eqp.assetTypeId" [disabled]="true">
+                    <option value=""></option>
                     <option value={{assetType.id}} *ngFor="let assetType of equipmentAssetType">{{assetType.name}}</option>
                 </select>
+               
             </td>
-            <td><input type="text" class="form-control" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
+            <td><input type="text" class="form-control" [disabled]="true" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
+            <td><input type="text" class="form-control" maxlength="10" pInputText pKeyFilter="pnum"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
 
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">

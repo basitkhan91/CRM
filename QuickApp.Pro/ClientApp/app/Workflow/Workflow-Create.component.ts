@@ -28,6 +28,8 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
 import * as $ from 'jquery';
 import { forEach } from "@angular/router/src/utils/collection";
 
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 @Component({
     selector: 'wf-create',
     templateUrl: './workflow-Create.component.html',
@@ -123,6 +125,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     materialListDL: any[] = [];
     measurementsDL: any[] = [];
     publicationsDL: any[] = [];
+    selectedSideTabIndex: number;
 
     actionAttributeTabs: any[] = [
         { visible: false, selected: false, label: "Material List" },
@@ -194,7 +197,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (this.selectedItems.length > 0) {
             this.showActionAttribute = true;
         }
+
+
+
         this.workFlow.selectedItems = this.selectedItems;
+  
+     
 
     }
 
@@ -207,6 +215,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.loadItemClassData();
         this.loadPartData();
         this.ptnumberlistdata();
+
 
         if (!this.sourceWorkFlow.workFlowId) {
             this.sourceWorkFlow.workOrderNumber = 'Creating';
@@ -549,7 +558,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         })
     }
 
-    onCustomerNameselected(event) //Customer Ship Address Data
+    onCustomerNameselected(event)
     {
         for (let i = 0; i < this.customerNamecoll.length; i++) {
             if (event == this.customerNamecoll[i][0].name) {
@@ -574,19 +583,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 "customerId": this.allCustomers[i].customerId,
                                 "name": name,
                                 "customerCode": this.allCustomers[i].customerCode
-                            }]),
-                                this.customerNames.push(name);
+                            }]);
+                            this.customerNames.push(name);
                         }
                     }
                     else {
-                        //if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                         this.customerNamecoll.push([{
                             "customerId": this.allCustomers[i].customerId,
                             "name": name,
                             "customerCode": this.allCustomers[i].customerCode
-                        }]),
-                            this.customerNames.push(name);
-                        //}
+                        }]);
+                        this.customerNames.push(name);
                     }
                 }
             }
@@ -676,6 +683,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     // On Add Button Click
     addActionAttributes() {
+        
+  
         if (this.actionValue && this.actionValue != "" && this.selectedActionAttributes && this.selectedActionAttributes.length > 0) {
             let currAction = { workflowId: "", taskId: Number(this.actionValue), workflowActionAttributeIds: this.selectedActionAttributes.join(",") }
             let selAction = this.workflowActions.find(obj => obj.taskId == this.actionValue)
@@ -690,8 +699,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
             this.displaySelectedAction(selAction);
         }
-
-
+        console.log(this.currenttaskId, this.workflowActions);
+   
+ 
     }
 
     onPercentOfNew(myValue, percentValue) {
@@ -865,6 +875,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     setCurrentPanel(itemName): void {
+
+        console.log(itemName)
+        // used to handle the naming convenction with space in between 
         itemName = itemName.replace(" ", "_");
         var list = document.getElementsByClassName('pan');
         for (var i = 0; i < list.length; i++) {
@@ -880,7 +893,15 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
     }
 
-    SetCurrectTab(workFlowId): void {
+    SetCurrectTab(workFlowId, index?): void {
+        
+        if (index !== undefined || index !== null) {
+
+            this.selectedSideTabIndex = index;
+        }
+
+        console.log(this.workFlowList);
+
         var workflow = this.workFlowList[0];
         var list = document.getElementsByClassName('actrmv');
         for (var i = 0; i < list.length; i++) {
@@ -899,30 +920,41 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
         }
         this.onActionChange();
-        this.selectedItems = workflow.selectedItems;
+        this.selectedItems = workflow.selectedItems
+
+
         this.currenttaskId = workflow.taskId;
         this.workFlow = workflow;
-        this.setSelectedItems(this.workFlow);
+        // sort by Id
+        const sortByOrder = this.workFlow.selectedItems.sort((a, b) => {
+            return (a, b) => (a.Id > b.Id) ? 1 : -1
+        })
+        console.log(sortByOrder);
+
+        this.workFlow = { ...this.workFlow, selectedItems: sortByOrder }
+   
+         this.setSelectedItems(this.workFlow);
     }
 
     AddPage() {
         this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
     }
     AddPageCustomer() {
-        this.route.navigateByUrl('/customersmodule/customerpages / app-customer-general-information');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
-        
+
     getDashNumbers(publication): void {
         this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
             console.log(result);
             publication.allDashNumbers = result;
-         
+
         });
     }
 
     AddActionAttribute(): void {
-        $('.custom-pill .nav-pills li:first-child a').addClass('active show');
-        $('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
+        this.selectedSideTabIndex = 0;
+        //$('.custom-pill .nav-pills li:first-child a').addClass('active show');
+        //$('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
 
         if (this.selectedItems.length > 0) {
 
@@ -1231,8 +1263,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.workFlowList.splice(position, 1);
             }
 
+      
+
+
         }
         this.showMainPage = true;
+        setTimeout(() => {
+            this.setCurrentPanel(this.workFlow.selectedItems[0].Name);
+        }, 1000)
+        
+        // used to reset the values from the selected dropdown and task Id
+        this.currenttaskId = "0";
+        this.selectedItems = [];
+
         //this.SetCurrectTab(this.workFlow.ActionId);
     }
 
@@ -1593,7 +1636,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 dashNumber.dashNumber = dashNumber.dashNumber;
                             }
                         }
-                        
+
 
                         this.sourceWorkFlow.publication.push(publication);
 

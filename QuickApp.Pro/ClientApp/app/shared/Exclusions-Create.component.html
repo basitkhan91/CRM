@@ -1,6 +1,6 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
     <div>
-        <span class="cat-heading cat4" (click)="addRow()">Add New Exclusions <i class="fa fa-plus"></i></span>
+        <span class="cat-heading cat4" >Add New Exclusions <i (click)="addRow()" class="fa fa-plus"></i></span>
     </div>
     <table class="table table-bordered table-fixed">
         
@@ -28,17 +28,17 @@
                     </ng-template>
                 </p-autoComplete>
             </td>
-            <td><input type="text" class="form-control" [(ngModel)]="exclusion.partDescription" value="{{exclusion.partDescription}}"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="int"  (input)="calculateExtendedCost(exclusion)" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
+            <td><input type="text" class="form-control" [(ngModel)]="exclusion.partDescription" value="{{exclusion.partDescription}}" [disabled]="true"></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="pnum" maxlength="10" (input)="calculateExtendedCost(exclusion)" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money" (input)="calculateExtendedCost(exclusion)"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}"></td>
             <td>
                 <select class="form-control custom-select" id="ddlEstimatedOccurance" [(ngModel)]="exclusion.estimtPercentOccurrance">
                     <option value="">select</option>
-                    <option value="{{occurance.id}}" *ngFor="let occurance of exclusionEstimatedOccurances;let i= index">{{occurance.name}}</option>
+                    <option value="{{occurance.id}}" *ngFor="let occurance of exclusionEstimatedOccurances;let i= index">{{occurance.name + '%'}}</option>
                 </select>
             </td>
-            <td><input type="text" class="form-control" value="{{exclusion.memo}}" [(ngModel)]="exclusion.memo"></td>
+            <td><textarea type="text" class="form-control" rows="2" cols="35" value="{{exclusion.memo}}" [(ngModel)]="exclusion.memo"></textarea></td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>

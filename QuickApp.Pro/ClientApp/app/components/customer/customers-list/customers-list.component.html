@@ -11,16 +11,7 @@
                          [pageLinks]="3" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                          [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                     <ng-template pTemplate="caption">
-                        <!--<div>
-                            <label class="radio-inline">
-                                <input type="radio" name="co" [value]="And" [ngModelOptions]="{standalone: true}" [(ngModel)]="condition">
-                                And
-                            </label>
-                            <label class="radio-inline">
-                            <input type="radio" name="optradio" [value]="Or" [ngModelOptions]="{standalone: true}" [(ngModel)]="condition">
-                            OR
-                            </label>
-                        </div>-->
+
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -63,7 +54,7 @@
 
                         <tr>
                             <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (blur)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
                             </th>
                             <th style="width:150px"></th>
                         </tr>
@@ -95,11 +86,15 @@
                                 <button class="btn-history" mat-icon-button matTooltip="History">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
-
                             </td>
                         </tr>
                     </ng-template>
-
+                    <ng-template pTemplate="summary" id="footer">                        
+                            <label id="footer" class="footer" >No'of records:</label> <input style="width: 5%;" [disabled]="true" pInputText type="text" />
+                            &nbsp;&nbsp;
+                            <label id="footer" class="footer1">Count:</label> <input style="width: 5%;"  [disabled]="true" pInputText type="text" />
+                                                
+                     </ng-template>                   
                 </p-table>
 
             </div>

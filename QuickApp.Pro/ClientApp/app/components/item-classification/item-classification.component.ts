@@ -25,6 +25,16 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class ItemClassificationComponent implements OnInit, AfterViewInit {
+    event: any;
+    itemClassification = [];
+    itemTypeInputFieldValue: any;
+    updatedByInputFieldValue: any;
+    memoInputFieldValue: any;
+    createdByInputFieldValue: any;
+    descriptionInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    itemClassificationCodeInputFieldValue: any;
     itemClassificationPagination: any;
     item_Name: any = "";
     description: any = "";
@@ -560,6 +570,55 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         }
         if (this.paginatorState) {
             this.loadItemClassification(this.paginatorState);
+        }
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'itemClassificationCode') {
+            this.itemClassificationCodeInputFieldValue = event;
+        }
+        if (filed == 'description') {
+            this.descriptionInputFieldValue = event;
+        }
+        if (filed == 'itemType') {
+            this.itemTypeInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.itemClassification.push({
+            ItemClassificationCode: this.itemClassificationCodeInputFieldValue,
+            Description: this.descriptionInputFieldValue,
+            ItemType: this.itemTypeInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.itemClassification) {
+            this.workFlowtService.getServerPages(this.itemClassification[this.itemClassification.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.itemClassificationPagination = pages[0];
+                    }
+                });
+        }
+        else {
         }
     }
 
