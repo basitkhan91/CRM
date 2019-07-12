@@ -199,38 +199,6 @@ namespace QuickApp.Pro.ViewModels
         public string GlobalSearchString { get; set; }
     }
     #endregion
-    #region GlClassFlowClassification
-    public class GlClassFlowClassificationPaginationViewModel : GlClassFlowClassification, IPaginateViewModel
-    {
-        public int first { get; set; }
-        public int page { get; set; }
-        public int pageCount { get; set; }
-        public int rows { get; set; }
-        public int limit { get; set; }
-    }
-    #endregion
-
-    
-    #region TaxRate
-    public class GlAccountClassPaginationViewModel : GLAccountClass, IPaginateViewModel
-    {
-        public int first { get; set; }
-        public int page { get; set; }
-        public int pageCount { get; set; }
-        public int rows { get; set; }
-        public int limit { get; set; }
-    }
-    #endregion
-    #region TaxRate
-    public class TaxRatePaginationViewModel : TaxRates, IPaginateViewModel
-    {
-        public int first { get; set; }
-        public int page { get; set; }
-        public int pageCount { get; set; }
-        public int rows { get; set; }
-        public int limit { get; set; }
-    }
-    #endregion
 
     #region TaxType
     public class TaxTypePaginationViewModel : TaxType, IPaginateViewModel
