@@ -84,12 +84,9 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.equipments[index].workflowEquipmentListid == "0" || this.workFlow.equipments[index].workflowEquipmentListid == "") {
+      
             this.workFlow.equipments.splice(index, 1);
-        }
-        else {
-            this.workFlow.equipments[index].isDelete = true;
-        }
+      
     }
 
     onPartSelect(event, equipment) {
