@@ -17,7 +17,7 @@
         <tr [hidden]="measurement.isDelete" *ngFor="let measurement of workFlow.measurements;let i= index">
             <td>                
                       <p-autoComplete (onSelect)="onPartSelect($event,measurement)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="measurement.partDescription"
-                                            [minLength]="1" [dropdown]="true"  class="autocomplete">
+                                            [minLength]="1" [dropdown]="true"  class="workflow-measurement-select">
 
                                 <ng-template let-partName pTemplate="part">
                                     <div class="ui-helper-clearfix">{{partName}}</div>

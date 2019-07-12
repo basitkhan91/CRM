@@ -22,7 +22,7 @@
                                 (completeMethod)="filterpartItems($event)"
                                 [size]="30"
                                 [(ngModel)]="exclusion.partNumber"
-                                [minLength]="1" [dropdown]="true">
+                                [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
                     <ng-template let-partName pTemplate="part">
                         <div class="ui-helper-clearfix">{{partName}}</div>
                     </ng-template>
