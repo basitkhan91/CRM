@@ -9,7 +9,7 @@
         
     </div>
    
-    <table class="table table-bordered table-fixed">
+    <table class="table table-bordered table-fixed workflow-table-material">
 
         <tr>
             <th>PN *</th>
@@ -82,7 +82,7 @@
                 <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" />
             </td>
             <td>
-                <textarea type="text" class="form-control" rows="2" cols="35" value="{{material.memo}}" [(ngModel)]="material.memo"></textarea>
+                <textarea type="text" class="form-control" style="width: 100px;" rows="2" cols="35" value="{{material.memo}}" [(ngModel)]="material.memo"></textarea>
                
             </td>
             <td style="width:30px;">

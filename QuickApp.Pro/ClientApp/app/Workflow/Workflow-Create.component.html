@@ -114,7 +114,7 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
-                <button class="btn btn-primary btn-md" style="margin-top: -10px;background-color:#007ad9;">WF Save</button>
+                <button class="btn btn-primary" style="margin-top: -10px;">WF Save</button>
             </div>
 
         </div>
@@ -127,6 +127,7 @@
 	</div>
     <div class="container card-body">
         <br />
+
         <div class="row">
             <div class="col-md-3">
                 <!--<div class="col">
@@ -138,29 +139,9 @@
                 <div class="col">
                     <div class="checkbox-cstm">
                         <label>
-                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-fixed" [checked]="sourceWorkFlow.isFixedAmount" (click)="isFixedcheck('fixed')" value="1">
+                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-fixed" (click)="isFixedcheck('fixed');isFixedUnchecked($event);" value="1">
                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                             Fixed Amount
-                        </label>
-                    </div>
-                </div>
-                <div class="w-100"></div>
-                <div class="col">
-                    <div class="checkbox-cstm">
-                        <label>
-                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-new" [checked]="sourceWorkFlow.isPercentageofNew" (click)="isFixedcheck('percentage')" value="2">
-                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                            Percent of New
-                        </label>
-                    </div>
-                </div>
-                <div class="w-100"></div>
-                <div class="col">
-                    <div class="checkbox-cstm">
-                        <label>
-                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-replace" [checked]="sourceWorkFlow.isPercentageOfReplacement" (click)="isFixedcheck('percentreplace')" value="3">
-                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                            Percent of Replacement
                         </label>
                     </div>
                 </div>
@@ -174,43 +155,52 @@
                         <input class="w70 amount form-control" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount">
                     </div>
                 </div>
+            </div>
+        </div>
 
-
-
-
+        <div class="row">
+            <div class="col-md-3">
+                <div class="col">
+                    <div class="checkbox-cstm">
+                        <label style="margin-top:5px;">
+                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-new" (click)="isFixedcheck('percentage');isPercentageUnchecked($event);" value="2">
+                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            Percent of New
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
                 <div class="col-sm-12 " [hidden]="!ispercent">
-
-
-
-                    <label class="w80 padding">Cost of New:</label>
+                    <label class="w90 padding">Cost of New:</label>
 
                     <input type="number" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70" style="margin-right: 20px;" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
-
-
-
-
-                    <label class="w60 padding">Percent:</label>
-
+                    <label class="w50">Percent:</label>
 
                     <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" style="margin-right: 20px;" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
                         <option value="">Select</option>
                         <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
                     </select>
 
-
-
-
-                    <label class="w130 padding">Percent Value: </label>
+                    <label class="w130">Percent Value: </label>
                     <b class="clr-red">{{sourceWorkFlow.percentOfNew}}</b>
-
-
-
                 </div>
+            </div>
+        </div>
 
-
-
-
-
+        <div class="row">
+            <div class="col-md-3">
+                <div class="col">
+                    <div class="checkbox-cstm">
+                        <label style="margin-top:5px;">
+                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace');isPercentreplcaeUnchecked($event);" value="3">
+                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            Percent of Replacement
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
                 <div class="col-sm-12" [hidden]="!percentreplcae">
                     <div style="float:left;">
 
@@ -236,25 +226,22 @@
                         <b class="clr-red">{{sourceWorkFlow.percentOfReplacement}}</b>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
 
         <hr />
 
-    <div class="card">
+        <div class="card">
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label style="width:100px;">Total Workflow Cost</label>
+                        <label style="width:120px;">Total Workflow Cost</label>
                         <input type="text" class="form-control" id="" name="" placeholder="Total Ext. Cost" disabled>
                     </div>
                 </div>
             </div>
         </div>
-        
+
 
     </div>
 </div>
@@ -770,6 +757,33 @@
 								</div>
 							</div>
 						</div>
+
+                        <div class="card-body" style="padding-top: 0;">
+                            <div class="form-group">
+                                <div class="col-md-1" style="max-width: 104px;">
+                                    <label>Material Cost:</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" class="form-control" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group" style="clear:both;margin-top:30px;">
+                                <div class="col-md-1" style="max-width: 104px;">
+                                    <label>Labor Cost:</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" class="form-control" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group" style="clear:both;margin-top:60px;">
+                                <div class="col-md-1" style="max-width: 104px;">
+                                    <label>Charges:</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" class="form-control" value="" />
+                                </div>
+                            </div>
+                        </div>
 					</div>
 
 					<div class="bhoechie-tab-container clearfix"
@@ -797,7 +811,7 @@
 											<a data-toggle="pill" href="#tab{{item.Name}}">{{item.Name}}</a>
 										</li>
 									</ul>
-									<div class="tab-content">
+									<div class="tab-content" style="position: relative;">
 										<div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication != undefined"
 											 class="tab-pane fade pan">
 											<grd-publication [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-publication>

@@ -208,7 +208,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     updateWorkFlowId: string;
 
     ngOnInit(): void {
-        this.isFixedcheck('fixed');
+        this.isFixedcheck('');
         this.loadCurrencyData();
         this.loadWorkScopedata();
         this.loadItemClassData();
@@ -524,33 +524,53 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     isFixedcheck(event) {
 
-        this.resetBERThreshold();
+        //this.resetBERThreshold();
 
         if (event == 'fixed') {
             this.isFixed = true;
-            this.ispercent = false;
-            this.percentreplcae = false;
+            //this.ispercent = false;
+            //this.percentreplcae = false;
             this.sourceWorkFlow.isFixedAmount = true;
-            this.sourceWorkFlow.isPercentageofNew = false;
-            this.sourceWorkFlow.isPercentageOfReplacement = false;
+            //this.sourceWorkFlow.isPercentageofNew = false;
+            //this.sourceWorkFlow.isPercentageOfReplacement = false;
         }
         if (event == 'percentage') {
-            this.isFixed = false;
+            //this.isFixed = false;
             this.ispercent = true;
-            this.percentreplcae = false;
-            this.sourceWorkFlow.isFixedAmount = false;
+            //this.percentreplcae = false;
+            //this.sourceWorkFlow.isFixedAmount = false;
             this.sourceWorkFlow.isPercentageofNew = true;
-            this.sourceWorkFlow.isPercentageOfReplacement = false;
+            //this.sourceWorkFlow.isPercentageOfReplacement = false;
         }
         if (event == 'percentreplace') {
-            this.isFixed = false;
-            this.ispercent = false;
+            //this.isFixed = false;
+            //this.ispercent = false;
             this.percentreplcae = true;
-            this.sourceWorkFlow.isFixedAmount = false;
-            this.sourceWorkFlow.isPercentageofNew = false;
+            //this.sourceWorkFlow.isFixedAmount = false;
+            //this.sourceWorkFlow.isPercentageofNew = false;
             this.sourceWorkFlow.isPercentageOfReplacement = true;
         }
     }
+
+    isFixedUnchecked(e) {
+        if (!e.target.checked) {
+            this.isFixed = false;
+            this.sourceWorkFlow.isFixedAmount = false;
+        }
+    }
+    isPercentageUnchecked(e) {
+        if (!e.target.checked) {
+            this.ispercent = false;
+            this.sourceWorkFlow.isPercentageofNew = false;
+        }
+    }
+    isPercentreplcaeUnchecked(e) {
+        if (!e.target.checked) {
+            this.percentreplcae = false;
+            this.sourceWorkFlow.percentreplcae = false;
+        }
+    }
+
 
     private loadWorkScopedata() {
 
