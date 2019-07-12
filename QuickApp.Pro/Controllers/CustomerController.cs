@@ -1658,31 +1658,6 @@ namespace QuickApp.Pro.Controllers
             GetData getData = new GetData();
 
             IQueryable<CustomerSearchViewModel> queryable = null;
-            #region working code with single table
-            //var query = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
-            //        .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
-            //if (!string.IsNullOrEmpty(paginate.CustomerCode) || !string.IsNullOrEmpty(paginate.Name) || !string.IsNullOrEmpty(paginate.Email) || !string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName))
-            //{
-            //    if (!string.IsNullOrEmpty(paginate.CustomerCode))
-            //    {
-            //        queryable = query.Where(c => c.CustomerCode.Contains(paginate.CustomerCode.Trim()));
-            //    }
-            //    if (!string.IsNullOrEmpty(paginate.Name))
-            //    {
-            //        queryable = query.Where(c => c.Name.Contains(paginate.Name.Trim()));
-            //    }
-            //    if (!string.IsNullOrEmpty(paginate.Email))
-            //    {
-            //        queryable = query.Where(c => c.Email.Contains(paginate.Email.Trim()));
-            //    }
-            //    if (!string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName))
-            //    {
-            //        queryable = query.Where(c => c.PrimarySalesPersonFirstName.Contains(paginate.PrimarySalesPersonFirstName.Trim()));//.AsQueryable();
-            //    }
-            //}
-            //else
-            //    queryable = query;
-            #endregion
             List<CustomerSearchViewModel> customersList = new List<CustomerSearchViewModel>();
             CustomerSearchViewModel customer = null;
             if (!string.IsNullOrEmpty(paginate.CustomerCode) || !string.IsNullOrEmpty(paginate.Name)
