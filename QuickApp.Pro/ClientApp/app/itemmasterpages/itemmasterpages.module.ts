@@ -14,7 +14,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AutoCompleteModule } from "primeng/autocomplete";
-
+import { TabMenuModule } from 'primeng/tabmenu';
 import { StepsModule } from 'primeng/steps';//Prime Ng Steps
  //Prime Ng Dailog
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -33,10 +33,13 @@ import { ItemMasterLoanComponent } from "../components/item-masters/item-master-
 import { ItemMasterCreateCapabilitiesComponent } from "../components/item-masters/Capabilities/item-master-create-capabilities/item-master-create-capabilities.component";
 import { ItemMasterCapabilitiesListComponent } from "../components/item-masters/Capabilities/item-master-capabilities-list/item-master-capabilities-list.component";
 import { AuditModule } from "../audit/audit.module";
+import { CardModule } from "primeng/card";
 
 
 @NgModule({
-	imports: [
+    imports: [
+        TabMenuModule,
+        CardModule,
 		FlexLayoutModule,
 		FormsModule, ReactiveFormsModule,
 		QuickAppProMaterialModule,

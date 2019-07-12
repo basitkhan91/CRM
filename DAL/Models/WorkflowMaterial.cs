@@ -21,6 +21,7 @@ namespace DAL.Models
     {
         [Key]
         public long WorkflowMaterialListId { get; set; }
+
         public long WorkflowId { get; set; }
 
         [Required(ErrorMessage ="Part Number is required")]
@@ -54,7 +55,7 @@ namespace DAL.Models
         [Required(ErrorMessage = "Ext. Cost is required")]
         public Nullable<decimal> ExtendedCost { get; set; }
 
-        [Required(ErrorMessage = "Price is required")]
+        //[Required(ErrorMessage = "Price is required")]
         public Nullable<decimal> Price { get; set; }
 
         [Required(ErrorMessage = "Mandatory/Supplemental is required")]

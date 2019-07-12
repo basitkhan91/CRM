@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
 using DAL.Models;
+using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,11 +21,13 @@ namespace QuickApp.Pro.Controllers
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
-        public ChargeController(IUnitOfWork unitOfWork, ILogger<ChargeController> logger, IEmailer emailer)
+        private readonly ApplicationDbContext _context;
+        public ChargeController(IUnitOfWork unitOfWork, ILogger<ChargeController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
+            _context = context;
         }
 
         [HttpGet("Get")]
@@ -251,16 +254,196 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("pagination")]
-        public IActionResult GetAircraftManufacturer([FromBody]PaginateViewModel paginate)
+        public IActionResult GetAircraftManufacturer([FromBody]ChargePaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<Charge>.Create(_unitOfWork.Charge.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            IQueryable<ChargePaginationViewModel> queryable = null;
+            List<ChargePaginationViewModel> chargeList = new List<ChargePaginationViewModel>();
+            ChargePaginationViewModel charge = null;
+            if (!string.IsNullOrEmpty(Convert.ToString(paginate.ChargeId))
+                || !string.IsNullOrEmpty(paginate.ChargeName)
+                || !string.IsNullOrEmpty(Convert.ToString(paginate.Quantity))
+                || !string.IsNullOrEmpty(paginate.Description)
+                || !string.IsNullOrEmpty(paginate.Description)
+                || !string.IsNullOrEmpty(paginate.Description)
+                || !string.IsNullOrEmpty(paginate.Memo)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var charges = _unitOfWork.charge;
+                var charges = (from ch in _context.Charge
+                               join ms in _context.ManagementStructure on ch.ManagementStructureId equals ms.ManagementStructureId
+                               join cu in _context.Currency on ch.CurrencyId equals cu.CurrencyId
+                               join ve in _context.Vendor on ch.VendorId equals ve.VendorId
+                               join po in _context.PurchaseOrder on ch.PurchaseOrderId equals po.PurchaseOrderId
+                               join ip in _context.IntegrationPortal on ch.IntegrationPortalId equals ip.IntegrationPortalId
+                               select new
+                               {
+                                   ch.ChargeId,
+                                   ch.ChargeName,
+                                   ch.Quantity,
+                                   ch.Description,
+                                   ch.CurrencyId,
+                                   ch.Cost,
+                                   ch.MarkUp,
+                                   ch.PurchaseOrderId,
+                                   ch.VendorId,
+                                   ch.IntegrationPortalId,
+                                   ch.GeneralLedgerId,
+                                   ch.Memo,
+                                   ch.IsActive,
+                                   ch.ManagementStructureId,
+                                   ch.BillableAmount,
+                                   ms.Code,
+                                   cu.Symbol,
+                                   po.PurchaseOrderNumber,
+                                   ve.VendorName,
+                                   ch.CreatedBy,
+                                   ch.CreatedDate,
+                                   ch.UpdatedBy,
+                                   ch.UpdatedDate,
+                                   
+                                   IntegrationPortalDescription = ip.Description,
+                               }).ToList();
+                foreach (var item in charges)
+                {
+                    charge = new ChargePaginationViewModel();
+                    charge.ChargeId = item.ChargeId;
+                    charge.ChargeName = item.ChargeName;
+                    charge.Description = item.Description;
+                    charge.CurrencyId = item.CurrencyId;
+                    charge.Cost = item.Cost;
+                    charge.MarkUp = item.MarkUp;
+                    charge.PurchaseOrderId = item.PurchaseOrderId;
+                    charge.VendorId = item.VendorId;
+                    charge.GeneralLedgerId = item.GeneralLedgerId;
+                    charge.Memo = item.Memo;
+                    charge.IsActive = item.IsActive;
+                    charge.BillableAmount = item.BillableAmount;
+                    charge.Quantity = item.Quantity;
+                    charge.Description = item.Description;
+                    charge.Memo = item.Memo;
+                    charge.IntegrationPortalId = item.MarkUp;
+                    charge.GeneralLedgerId = item.MarkUp;
+                    charge.CreatedDate = item.CreatedDate;
+                    charge.CreatedBy = item.CreatedBy;
+                    charge.UpdatedDate = item.UpdatedDate;
+                    charge.UpdatedBy = item.UpdatedBy;
+                    charge.IsActive = item.IsActive;
+                    chargeList.Add(charge);
+                }
+                //if (!string.IsNullOrEmpty(Convert.ToString(paginate.ChargeId)))
+                //{
+                //    chargeList = chargeList.Where(c => c.ChargeId != null && c.ChargeId.ToUpper().Contains(paginate.ChargeId.ToUpper().Trim())).ToList();
+                //}
+                if (!string.IsNullOrEmpty(paginate.ChargeName))
+                {
+                    chargeList = chargeList.Where(c => c.ChargeName != null && c.ChargeName.ToUpper().Contains(paginate.ChargeName.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    chargeList = chargeList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    chargeList = chargeList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.ChargeName))
+                {
+                    chargeList = chargeList.Where(c => c.ChargeName != null && c.ChargeName.ToUpper().Contains(paginate.ChargeName.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Memo))
+                {
+                    chargeList = chargeList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    chargeList = chargeList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    chargeList = chargeList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var charges = (from ch in _context.Charge
+                               join ms in _context.ManagementStructure on ch.ManagementStructureId equals ms.ManagementStructureId
+                               join cu in _context.Currency on ch.CurrencyId equals cu.CurrencyId
+                               join ve in _context.Vendor on ch.VendorId equals ve.VendorId
+                               join po in _context.PurchaseOrder on ch.PurchaseOrderId equals po.PurchaseOrderId
+                               join ip in _context.IntegrationPortal on ch.IntegrationPortalId equals ip.IntegrationPortalId
+                               select new
+                               {
+                                   ch.ChargeId,
+                                   ch.ChargeName,
+                                   ch.Quantity,
+                                   ch.Description,
+                                   ch.CurrencyId,
+                                   ch.Cost,
+                                   ch.MarkUp,
+                                   ch.PurchaseOrderId,
+                                   ch.VendorId,
+                                   ch.IntegrationPortalId,
+                                   ch.GeneralLedgerId,
+                                   ch.Memo,
+                                   ch.IsActive,
+                                   ch.ManagementStructureId,
+                                   ch.BillableAmount,
+                                   ms.Code,
+                                   cu.Symbol,
+                                   po.PurchaseOrderNumber,
+                                   ve.VendorName,
+                                   ch.CreatedBy,
+                                   ch.CreatedDate,
+                                   ch.UpdatedBy,
+                                   ch.UpdatedDate,
+
+                                   IntegrationPortalDescription = ip.Description,
+                               }).ToList();
+                foreach (var item in charges)
+                {
+                    charge = new ChargePaginationViewModel();
+                    charge.ChargeId = item.ChargeId;
+                    charge.ChargeName = item.ChargeName;
+                    charge.Description = item.Description;
+                    charge.CurrencyId = item.CurrencyId;
+                    charge.Cost = item.Cost;
+                    charge.MarkUp = item.MarkUp;
+                    charge.PurchaseOrderId = item.PurchaseOrderId;
+                    charge.VendorId = item.VendorId;
+                    charge.GeneralLedgerId = item.GeneralLedgerId;
+                    charge.Memo = item.Memo;
+                    charge.IsActive = item.IsActive;
+                    charge.BillableAmount = item.BillableAmount;
+                    charge.Quantity = item.Quantity;
+                    charge.Description = item.Description;
+                    charge.Memo = item.Memo;
+                    charge.IntegrationPortalId = item.MarkUp;
+                    charge.GeneralLedgerId = item.MarkUp;
+                    charge.CreatedDate = item.CreatedDate;
+                    charge.CreatedBy = item.CreatedBy;
+                    charge.UpdatedDate = item.UpdatedDate;
+                    charge.UpdatedBy = item.UpdatedBy;
+                    charge.IsActive = item.IsActive;
+                    chargeList.Add(charge);
+                }
+                chargeList.Add(charge);
+
+            }
+            queryable = chargeList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<ChargePaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
-
     }
-
 
 }

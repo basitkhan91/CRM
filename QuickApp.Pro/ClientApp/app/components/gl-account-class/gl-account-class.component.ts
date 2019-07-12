@@ -457,12 +457,11 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
                         this.glAccountData = pages;
                         this.glAccountClassPagination = this.glAccountData[0].getLAccountClasses;
                         this.totalRecords = this.glAccountData[0].totalRecordsCount;
-                        
+                
                     }
                 });
         }
         else {
         }
     }
-
 }

@@ -10904,7 +10904,7 @@ header {
 }
 
 .mat-drawer {
-	background-color: #333333 !important;
+	background-color: white !important;
 }
 
 .mat-list .mat-list-item, .mat-nav-list .mat-list-item, .mat-selection-list .mat-list-item {
@@ -12423,16 +12423,12 @@ p-multiselect .ui-multiselect-item.ui-state-highlight {
 p-multiselect label {
     margin-left: 10px !important;
 }
-p-multiselect .ui-multiselect-list label {
-    /*margin-top: 13px !important;*/
-}
 p-multiselect .ui-multiselect-filter-container {
     margin-left: 10px !important;
     margin-top: 11px !important;
     
 }
 p-multiselect .ui-multiselect-filter-container input {
-    /*border: none !important;*/
     display: block;
     height: 28px !important;
     padding: 6px 12px !important;
@@ -12465,3 +12461,81 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
 }
 
 /* ./component workflow list css */
+/* workflow create css */
+.workflow-clder .ui-calendar-button {
+    width: 8% !important;
+}
+.workflow-clder .ui-inputtext {
+    width: 92% !important;
+}
+.checkbox-cstm label {
+    width: 200px;
+    font-size: 12px !important;
+}
+.checkbox-cstm label:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+.checkbox-cstm .cr {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: .5em;
+}
+.checkbox-cstm .cr .cr-icon {
+    position: absolute;
+    font-size: 13px;
+    line-height: 0;
+    top: 50%;
+    left: 4%;
+}
+.checkbox-cstm label input[type="checkbox"] {
+    display: none;
+}
+.checkbox-cstm label input[type="checkbox"] + .cr > .cr-icon {
+    opacity: 0;
+}
+.checkbox-cstm label input[type="checkbox"]:checked + .cr > .cr-icon {
+    opacity: 1;
+}
+.workflow-measurement-select .ui-autocomplete-panel {
+    max-height: 100px !important;
+    top: 30px !important;
+}
+/* ./workflow create css */
+
+/*Jyotsna-- Style for tabs in Create-Itemmaster*/
+.panel-menu .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem.ui-state-active {
+    background-color: #007ad9 !important;
+    border: 1px solid #007ad9 !important;
+   
+}
+.panel-menu .ui-tabmenu .ui-tabmenu-nav {
+    margin-left: -6px;
+}
+.workflow-table-pub tr th {
+    font-size: 12px !important;
+    padding: 3px 20px !important;
+}
+.workflow-table-measment tr th label, .workflow-table-exclusion tr th label, .workflow-table-direc label, .workflow-table-expertise label, .workflow-table-equip label, .workflow-table-charges label, .workflow-table-material tr th {
+    font-size: 12px !important;
+    padding: 3px !important;
+}
+.wf-pub-id {
+    display: block;
+    height: 28px !important;
+    padding: 2px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}

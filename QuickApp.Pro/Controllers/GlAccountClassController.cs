@@ -137,22 +137,11 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
-        //[HttpPost("pagination")]
-        //public IActionResult GetGlAccount([FromBody]PaginateViewModel paginate)
-        //{
-        //    var pageListPerPage = paginate.rows;
-        //    var pageIndex = paginate.first;
-        //    var pageCount = (pageIndex / pageListPerPage) + 1;
-        //    var data = DAL.Common.PaginatedList<GLAccountClass>.Create(_unitOfWork.GLAccountClass.GetPaginationData(), pageCount, pageListPerPage);
-        //    return Ok(data);
-        //}
-
 
         [HttpPost("pagination")]
         public IActionResult GetGlAccount([FromBody]GlAccountClassPaginationViewModel paginate)
         {
             GetData getData = new GetData();
-
             IQueryable<GlAccountClassPaginationViewModel> queryable = null;
             List<GlAccountClassPaginationViewModel> glAccountClassList = new List<GlAccountClassPaginationViewModel>();
             GlAccountClassPaginationViewModel glAccountClass = null;
@@ -162,7 +151,6 @@ namespace QuickApp.Pro.Controllers
             {
                 //var glAccountClasss = _unitOfWork.glAccountClass;
                 var glAccountClasss = _unitOfWork.GLAccountClass.GetAllGLAccountClassData();
-
                 foreach (var item in glAccountClasss)
                 {
                     glAccountClass = new GlAccountClassPaginationViewModel();
@@ -216,8 +204,6 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-
-
                 getData.GetLAccountClasses = DAL.Common.PaginatedList<GlAccountClassPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
                 return Ok(getData);
             }

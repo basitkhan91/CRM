@@ -24,28 +24,35 @@ namespace DAL.Models
         [Required(ErrorMessage ="Charges Type is required")]
         public byte WorkflowChargeTypeId { get; set; }
 
-        [Required(ErrorMessage = "Charges Description is required")]
+        //[Required(ErrorMessage = "Charges Description is required")]
         [MaxLength(40,ErrorMessage ="Charges Description must be less than 40 characters.")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Charges Quantity is required")]
         public Nullable<short> Quantity { get; set; }
+
         [Required(ErrorMessage = "Charges Unit Cost is required")]
         public Nullable<decimal> UnitCost { get; set; }
+
         [Required(ErrorMessage = "Charges Extended Cost is required")]
         public Nullable<decimal> ExtendedCost { get; set; }
 
-        [Required(ErrorMessage = "Charges Unit Price is required")]
+        //[Required(ErrorMessage = "Charges Unit Price is required")]
         public Nullable<decimal> UnitPrice { get; set; }
-        [Required(ErrorMessage = "Charges Extended Price is required")]
+
+        //[Required(ErrorMessage = "Charges Extended Price is required")]
         public Nullable<decimal> ExtendedPrice { get; set; }
-        [Required(ErrorMessage = "Charges Currency is required")]
+
+        //[Required(ErrorMessage = "Charges Currency is required")]
         public Nullable<int> CurrencyId { get; set; }
-        [Required(ErrorMessage = "Charges FX rate is required")]
+
+        //[Required(ErrorMessage = "Charges FX rate is required")]
         public Nullable<decimal> ForexRate { get; set; }
 
         public Nullable<long> VendorId { get; set; }
+
         public string VendorName { get; set; }
+
         public Nullable<decimal> VendorUnitPrice { get; set; }
 
         [ForeignKey("TaskId")]

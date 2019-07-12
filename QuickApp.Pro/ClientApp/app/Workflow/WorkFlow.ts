@@ -30,4 +30,8 @@ export interface IWorkFlow {
     // DeletedExclusions:IExclusion[];
     // DeletedMeasurements:IMeasurement[];
 
+    totalExpertiseCost: number;
+    totalChargesCost: number;
+    totalMaterialCost: number;
+
 }

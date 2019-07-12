@@ -1,24 +1,23 @@
-<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
-    <div>
+<div class="fixed-table-container-inner table-responsive cat4-table" style="height:380px;">
+    <div style="position: absolute; width: 100%; z-index: 1;">
         <span class="cat-heading cat4" >Add New Charges<i (click)="addRow()" class="fa fa-plus"></i></span>
     </div>
-    <table class="table table-bordered table-fixed">
-        
+    <table class="table table-bordered table-fixed workflow-table-charges" style="margin-top: 31px;" *ngIf="workFlow.charges .length > 0">        
         <tr>
             <th><label>Type *</label></th>
-            <th><label>Description *</label></th>
-            <th><label>Qty *</label></th>
+            <th><label>Description</label></th>
+            <th><label>QTY *</label></th>
             <th><label>Unit Cost *</label></th>
             <th><label>Extended Cost *</label></th>
-            <th><label> Unit Price *</label></th>
-            <th><label>Extended Price *</label></th>
-            <th><label>Currency *</label></th>
-            <th><label>FX Rate *</label></th>
+            <th><label>Unit Price</label></th>
+            <th><label>Extended Price</label></th>
+            <th><label>Currency</label></th>
+            <th><label>FX Rate</label></th>
             <th><label>Vendor Name</label></th>
             <th><label>Vendor Price/Unit </label></th>
             <th><label>Actions </label></th>
         </tr>
-        <tr [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
+        <tr  *ngFor="let charge of workFlow.charges; let i = index">
             <td>
                 <select class="form-control custom-select" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId">
                     <option value="">Select</option>
@@ -26,9 +25,9 @@
                 </select>
             </td>
             <td><textarea rows="1" value="{{charge.description}}" [(ngModel)]="charge.description"></textarea></td>
-            <td><input type="text" pInputText pKeyFilter="pnum" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
+            <td><input type="text" pInputText pKeyFilter="pnum" maxlength="10" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.unitCost"></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" [disabled]="true" value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice"> </td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice"></td>
             <td>
@@ -40,7 +39,7 @@
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.forexRate}}" [(ngModel)]="charge.forexRate"></td>
             <td>
                 <p-autoComplete (onSelect)="onVendorCodeselected(charge,$event)" [(ngModel)]="charge.vendorName" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
-                                [minLength]="1" [dropdown]="true">
+                                [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
                     <ng-template let-vendorCode pTemplate="item">
                         <div class="ui-helper-clearfix">{{vendorCode}}</div>
                     </ng-template>
@@ -54,5 +53,10 @@
                 </button>
             </td>
         </tr>
+   <tr>
+       <td>
+           <b>Total Cost : {{workFlow.totalChargesCost}}</b>
+       </td>
+   </tr>
     </table>
 </div>

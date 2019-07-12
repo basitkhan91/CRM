@@ -123,9 +123,23 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
             charge.extendedCost = value;
+            this.calculateTotalCostCharges();
         }
         else {
             charge.extendedCost = "";
+        }
+    }
+
+    calculateTotalCostCharges(): void {
+        this.workFlow.totalChargesCost = 0;
+        for (let charge of this.workFlow.charges) {
+            var value = charge.extendedCost;
+            if (value > 0) {
+                this.workFlow.totalChargesCost += value;
+            }
+            else {
+                this.workFlow.totalChargesCost = 0;
+            }
         }
     }
 

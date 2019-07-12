@@ -67,7 +67,6 @@ export class WorkflowListComponent implements OnInit {
             { field: 'partDescription', header: 'PN Description' },
             { field: 'description', header: 'Work Scope' },
             { field: 'name', header: 'Customer Name' },
-            { field: 'description', header: 'Work Scope' },
             { field: 'createdDate', header: 'Created Date' },
             { field: 'workflowExpirationDate', header: 'Expiration Date' },
 

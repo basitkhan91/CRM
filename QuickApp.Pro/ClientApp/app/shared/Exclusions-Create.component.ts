@@ -61,17 +61,23 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {
+      
             this.workFlow.exclusions.splice(index, 1);
-        }
-        else {
-            this.workFlow.exclusions[index].isDelete = true;
-        }
+        
     }
 
     onPartSelect(event, exclusion) {
         var isEpnExist = this.workFlow.exclusions.filter(x => x.partNumber == exclusion.partNumber && x.taskId == this.workFlow.taskId);
-        if (isEpnExist.length == 0) {
+
+        if (isEpnExist.length > 1) {
+            exclusion.itemMasterId = "";
+            exclusion.partDescription = "";
+            exclusion.partNumber = "";
+            event = "";
+            this.alertService.showMessage("Workflow", "EPN is already in use in Exclusion List.", MessageSeverity.error);
+            return;
+        }
+        else {
             if (this.itemclaColl) {
                 for (let i = 0; i < this.itemclaColl.length; i++) {
                     if (event == this.itemclaColl[i][0].partName) {
@@ -79,14 +85,8 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                         exclusion.partDescription = this.itemclaColl[i][0].description;
                         exclusion.partNumber = this.itemclaColl[i][0].partName;
                     }
-                };
+                }
             }
-        }
-        else {
-            exclusion.itemMasterId = "";
-            exclusion.partDescription = "";
-            exclusion.partNumber = "";
-            this.alertService.showMessage("Workflow", "EPN is already in use in Exclusion List.", MessageSeverity.error);
         }
 
     }

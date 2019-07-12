@@ -33,7 +33,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     updateModeforModels: boolean = false;
     publications: Publication[];
     dropdownSettings: any;
-    constructor(private actionService: ActionService, private employeeService: EmployeeService, private publicationService: PublicationService, private alertService : AlertService) {
+    constructor(private actionService: ActionService, private employeeService: EmployeeService, private publicationService: PublicationService, private alertService: AlertService) {
 
     }
 
@@ -131,40 +131,41 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     addRow(): void {
-        var newRow = Object.assign({}, this.row);        
-            newRow.id = "0";
-            newRow.taskId = this.workFlow.taskId;
-            newRow.publicationId = "";
-            newRow.publicationDescription = "";
-            newRow.publicationType = "";
-            newRow.sequence = "";
-            newRow.source = "";
-            newRow.aircraftManufacturer = "";
-            newRow.model = "";
-            newRow.location = "";
-            newRow.revision = "";
-            newRow.revisionDate = "";
-            newRow.verifiedBy = "";
-            newRow.status = "";
-            newRow.verifiedDate = "";
-            newRow.isDeleted = false;      
-            this.workFlow.publication.push(newRow);
+        var newRow = Object.assign({}, this.row);
+        newRow.id = "0";
+        newRow.taskId = this.workFlow.taskId;
+        newRow.publicationId = "";
+        newRow.publicationDescription = "";
+        newRow.publicationType = "";
+        newRow.sequence = "";
+        newRow.source = "";
+        newRow.aircraftManufacturer = "";
+        newRow.model = "";
+        newRow.location = "";
+        newRow.revision = "";
+        newRow.revisionDate = "";
+        newRow.verifiedBy = "";
+        newRow.status = "";
+        newRow.verifiedDate = "";
+        newRow.isDeleted = false;
+        this.workFlow.publication.push(newRow);
     }
 
     deleteRow(index): void {
-       
+        if (this.workFlow.publication[index].id == "0" || this.workFlow.publication[index].id == "") {
             this.workFlow.publication.splice(index, 1);
-      
-    
-    
-}
+        }
+        else {
+            this.workFlow.publication[index].isDeleted = true;
+        }
+    }
 
     getDashNumbers(publication): void {
         publication.allDashNumbers = [];
         this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
             publication.allDashNumbers = result;
         });
-   }
+    }
 
     private getAllPublicationTypes(): void {
         this.publicationService.getAllPublications().subscribe(
@@ -182,7 +183,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             row.publicationId = "";
             row.publicationDescription = "";
             this.alertService.showMessage("Workflow", "Publication is already in use", MessageSeverity.error);
-            
+
         }
         else {
             var selectedPublication = this.publications.filter(function (publication) {
@@ -195,19 +196,19 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             else {
                 row.publicationDescription = "";
             }
-        }     
+        }
     }
 
-    onDeSelect(publication,item: any) {
-       
+    onDeSelect(publication, item: any) {
+
     }
 
     onItemSelect(publication, item: any) {
- 
-        
+
+
     }
 
-    onSelectAll(publication,items: any) {
+    onSelectAll(publication, items: any) {
 
     }
 

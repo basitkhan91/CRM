@@ -25,7 +25,7 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     row: any;
-    constructor(private actionService: ActionService, private route: ActivatedRoute, private router: Router, private expertiseService: EmployeeExpertiseService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService : AlertService) {
+    constructor(private actionService: ActionService, private route: ActivatedRoute, private router: Router, private expertiseService: EmployeeExpertiseService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService) {
     }
     ngOnInit(): void {
         this.row = this.workFlow.measurements[0];
@@ -54,7 +54,7 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-     
+
         if (this.workFlow.measurements[index].workflowMeasurementId == "0" || this.workFlow.measurements[index].workflowMeasurementId == "") {
             this.workFlow.measurements.splice(index, 1);
         }
@@ -85,7 +85,7 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
             }
         }
 
-        
+
     }
 
     filterpartItems(event) {
@@ -103,9 +103,9 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
                                 "partId": this.allPartnumbersInfo[i].itemMasterId,
                                 "partName": partName,
                                 "description": this.allPartnumbersInfo[i].partDescription
-                            }]),
+                            }]);
 
-                                this.partCollection.push(partName);
+                            this.partCollection.push(partName);
                         }
                     }
                 }

@@ -182,10 +182,42 @@ export class MaterialListCreateComponent implements OnInit {
         }
     }
 
+    calculateTotalCost(): void {
+        this.workFlow.totalMaterialCost = 0;
+        for (let material of this.workFlow.materialList) {
+            var value = material.extendedCost;
+            if (value > 0) {
+                this.workFlow.totalMaterialCost += value;
+            }
+            else {
+                this.workFlow.totalMaterialCost = 0;
+            }
+        }
+
+    }
+
     calculateExtendedCost(material): void {
         if (material.quantity != "" && material.unitCost) {
             material.extendedCost = material.quantity * material.unitCost;
             this.calculateCost()
+        }
+    }
+
+    isDeferredEnable(e) {
+        if (e.target.checked) {
+            this.workFlow.materialList = [...this.workFlow.materialList.map(x => {
+                return {
+                    ...x,
+                    isDeferred: true
+                }
+            })]
+        } else {
+            this.workFlow.materialList = [...this.workFlow.materialList.map(x => {
+                return {
+                    ...x,
+                    isDeferred: false
+                }
+            })]
         }
     }
 
