@@ -13,7 +13,7 @@
         <tr [hidden]="eqp.isDelete" *ngFor="let eqp of workFlow.equipments; let i = index">
             <td>
                 <p-autoComplete (onSelect)="onPartSelect($event,eqp)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="eqp.partNumber"
-                                [minLength]="1" [dropdown]="true">
+                                [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
                     <ng-template let-assetId pTemplate="asset">
                         <div class="ui-helper-clearfix">{{assetId}}</div>
                     </ng-template>

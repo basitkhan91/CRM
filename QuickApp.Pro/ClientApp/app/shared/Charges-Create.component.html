@@ -40,7 +40,7 @@
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.forexRate}}" [(ngModel)]="charge.forexRate"></td>
             <td>
                 <p-autoComplete (onSelect)="onVendorCodeselected(charge,$event)" [(ngModel)]="charge.vendorName" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
-                                [minLength]="1" [dropdown]="true">
+                                [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
                     <ng-template let-vendorCode pTemplate="item">
                         <div class="ui-helper-clearfix">{{vendorCode}}</div>
                     </ng-template>

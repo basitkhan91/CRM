@@ -10904,7 +10904,7 @@ header {
 }
 
 .mat-drawer {
-	background-color: #333333 !important;
+	background-color: white !important;
 }
 
 .mat-list .mat-list-item, .mat-nav-list .mat-list-item, .mat-selection-list .mat-list-item {
@@ -12508,3 +12508,13 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
     top: 30px !important;
 }
 /* ./workflow create css */
+
+/*Jyotsna-- Style for tabs in Create-Itemmaster*/
+.panel-menu .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem.ui-state-active {
+    background-color: #007ad9 !important;
+    border: 1px solid #007ad9 !important;
+   
+}
+.panel-menu .ui-tabmenu .ui-tabmenu-nav {
+    margin-left: -6px;
+}

@@ -56,6 +56,7 @@ import { GlAccountService } from '../../../services/glAccount/glAccount.service'
 import { GlAccount } from '../../../models/GlAccount.model';
 import { VendorService } from '../../../services/vendor.service';
 import { DatePipe } from '@angular/common';
+import { MenuItem } from 'primeng/api';
 
 
 @Component({
@@ -80,7 +81,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	selectdescription: any;
 	itemdescription: any[]=[];
 	showexportData: boolean;
-	showGeneralData: boolean=true;
+    showGeneralData: boolean = true;
+    showAircraftData: boolean = true;
 	showpurchaseData: boolean;
 	disableSaveglAccount: boolean;
 	glAccountCollection: any[];
@@ -161,7 +163,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	ataChapterName: string;
 	localprovision: any[] = [];
 	localgroup: any[] = [];
-	allProvisonInfo: Provision[];
+    allProvisonInfo: Provision[];
+    // New Code -- Jyotsna
+    items1: MenuItem[];
+    activeItem: MenuItem;
 	itemGroupName: string;
 	partNumber: any;
 	itemType: any;
@@ -392,6 +397,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit(): void {
+
+        // Created by Jyotsna
+
+        this.items1 = [
+            { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
+            { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
+            { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
+            { label: 'Export Information', icon: 'fa fa-fw fa-export', command: (onclick: any) => this.moveExportInformation() },            
+        ];
+
         this.loadManagementdata();
         this.manufacturerdata();
         this.aircraftManfacturerData();
@@ -3590,25 +3605,33 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showGeneralData = true;
         this.showpurchaseData = false;
         this.showexportData = false;
+        this.showAircraftData = false;
     }
-
-
+    moveAircraftInformation() {
+        this.showAircraftData = true;
+        this.showGeneralData = false;
+        this.showpurchaseData = false;
+        this.showexportData = false;
+    }
     movePurchaseInformation() {
         this.showpurchaseData = true;
         this.showGeneralData = false;
         this.showexportData = false;
+        this.showAircraftData = false;
     }
 
     moveExportInformation() {
         this.showpurchaseData = false;
         this.showGeneralData = false;
         this.showexportData = true;
+        this.showAircraftData = false;
     }
 
     moveExportInformation1() {
         this.showpurchaseData = true;
         this.showGeneralData = false;
         this.showexportData = false;
+        this.showAircraftData = false;
     }
 
 
