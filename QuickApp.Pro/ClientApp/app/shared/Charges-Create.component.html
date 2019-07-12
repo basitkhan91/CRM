@@ -1,9 +1,8 @@
-<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
-    <div>
+<div class="fixed-table-container-inner table-responsive cat4-table" style="height:380px;">
+    <div style="position: absolute; width: 100%; z-index: 1;">
         <span class="cat-heading cat4" >Add New Charges<i (click)="addRow()" class="fa fa-plus"></i></span>
     </div>
-    <table class="table table-bordered table-fixed">
-        
+    <table class="table table-bordered table-fixed workflow-table-charges" style="margin-top: 31px;" *ngIf="workFlow.charges .length > 0">        
         <tr>
             <th><label>Type *</label></th>
             <th><label>Description</label></th>
@@ -18,7 +17,7 @@
             <th><label>Vendor Price/Unit </label></th>
             <th><label>Actions </label></th>
         </tr>
-        <tr [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
+        <tr  *ngFor="let charge of workFlow.charges; let i = index">
             <td>
                 <select class="form-control custom-select" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId">
                     <option value="">Select</option>

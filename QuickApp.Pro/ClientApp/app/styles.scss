@@ -12518,3 +12518,24 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
 .panel-menu .ui-tabmenu .ui-tabmenu-nav {
     margin-left: -6px;
 }
+.workflow-table-pub tr th {
+    font-size: 12px !important;
+    padding: 3px 20px !important;
+}
+.workflow-table-measment tr th label, .workflow-table-exclusion tr th label, .workflow-table-direc label, .workflow-table-expertise label, .workflow-table-equip label, .workflow-table-charges label, .workflow-table-material tr th {
+    font-size: 12px !important;
+    padding: 3px !important;
+}
+.wf-pub-id {
+    display: block;
+    height: 28px !important;
+    padding: 2px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}
