@@ -137,14 +137,99 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        //[HttpPost("pagination")]
+        //public IActionResult GetGlAccount([FromBody]PaginateViewModel paginate)
+        //{
+        //    var pageListPerPage = paginate.rows;
+        //    var pageIndex = paginate.first;
+        //    var pageCount = (pageIndex / pageListPerPage) + 1;
+        //    var data = DAL.Common.PaginatedList<GLAccountClass>.Create(_unitOfWork.GLAccountClass.GetPaginationData(), pageCount, pageListPerPage);
+        //    return Ok(data);
+        //}
+
+
         [HttpPost("pagination")]
-        public IActionResult GetGlAccount([FromBody]PaginateViewModel paginate)
+        public IActionResult GetGlAccount([FromBody]GlAccountClassPaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<GLAccountClass>.Create(_unitOfWork.GLAccountClass.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            GetData getData = new GetData();
+
+            IQueryable<GlAccountClassPaginationViewModel> queryable = null;
+            List<GlAccountClassPaginationViewModel> glAccountClassList = new List<GlAccountClassPaginationViewModel>();
+            GlAccountClassPaginationViewModel glAccountClass = null;
+            if (!string.IsNullOrEmpty(paginate.GLAccountClassName)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var glAccountClasss = _unitOfWork.glAccountClass;
+                var glAccountClasss = _unitOfWork.GLAccountClass.GetAllGLAccountClassData();
+
+                foreach (var item in glAccountClasss)
+                {
+                    glAccountClass = new GlAccountClassPaginationViewModel();
+                    glAccountClass.GLAccountClassId = item.GLAccountClassId;
+                    glAccountClass.GLAccountClassName = item.GLAccountClassName;
+                    glAccountClass.GLCID = item.GLCID;
+                    glAccountClass.CreatedDate = item.CreatedDate;
+                    glAccountClass.CreatedBy = item.CreatedBy;
+                    glAccountClass.UpdatedDate = item.UpdatedDate;
+                    glAccountClass.UpdatedBy = item.UpdatedBy;
+                    glAccountClass.IsActive = item.IsActive;
+                    glAccountClassList.Add(glAccountClass);
+                }
+                if (!string.IsNullOrEmpty(paginate.GLAccountClassName))
+                {
+                    glAccountClassList = glAccountClassList.Where(c => c.GLAccountClassName != null && c.GLAccountClassName.ToUpper().Contains(paginate.GLAccountClassName.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    glAccountClassList = glAccountClassList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    glAccountClassList = glAccountClassList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+                getData.TotalRecordsCount = glAccountClassList.Count();
+            }
+            else
+            {
+                var glAccountClasss = _unitOfWork.GLAccountClass.GetAllGLAccountClassData();
+                foreach (var item in glAccountClasss)
+                {
+                    glAccountClass = new GlAccountClassPaginationViewModel();
+                    glAccountClass.GLAccountClassId = item.GLAccountClassId;
+                    glAccountClass.GLAccountClassName = item.GLAccountClassName;
+                    glAccountClass.GLCID = item.GLCID;
+                    glAccountClass.CreatedDate = item.CreatedDate;
+                    glAccountClass.CreatedBy = item.CreatedBy;
+                    glAccountClass.UpdatedDate = item.UpdatedDate;
+                    glAccountClass.UpdatedBy = item.UpdatedBy;
+                    glAccountClass.IsActive = item.IsActive;
+                    glAccountClassList.Add(glAccountClass);
+                }
+                //glAccountClassList.Add(glAccountClass);
+                getData.TotalRecordsCount = glAccountClassList.Count();
+            }
+            queryable = glAccountClassList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+
+
+                getData.GetLAccountClasses = DAL.Common.PaginatedList<GlAccountClassPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
     }
+
+    public class GetData
+    {
+        public int TotalRecordsCount { get; set; }
+        public List<GlAccountClassPaginationViewModel> GetLAccountClasses { get; set; }
+    }
 }
+

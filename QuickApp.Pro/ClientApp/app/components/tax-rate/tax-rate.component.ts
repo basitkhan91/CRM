@@ -32,6 +32,15 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class TaxRateComponent implements OnInit, AfterViewInit {
+    taxRatePaginationObject = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    memoFieldValue: any;
+    taxRateInputFieldValue: any;
+    taxTypeIdInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    event: any;
 	allTaxTypes: any[]=[];
     selectedActionName: any;
     disableSave: boolean=false;
@@ -510,5 +519,50 @@ export class TaxRateComponent implements OnInit, AfterViewInit {
                 this.loading = false;
             }
         }, 1000);
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'taxTypeId') {
+            this.taxTypeIdInputFieldValue = event;
+        }
+        if (filed == 'taxRate') {
+            this.taxRateInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.taxRatePaginationObject.push({
+            taxTypeId: this.taxTypeIdInputFieldValue,
+            taxRate: this.taxRateInputFieldValue,
+            memo: this.memoFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.taxRate) {
+            this.taxRateService.getServerPages(this.taxRatePaginationObject[this.taxRatePaginationObject.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.taxRatePagination = pages[0];
+                    }
+                });
+        }
+        else {
+        }
     }
 }

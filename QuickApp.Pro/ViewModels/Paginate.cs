@@ -31,6 +31,7 @@ namespace QuickApp.Pro.ViewModels
         public int pageCount { get; set; }
         public int rows { get; set; }
         public int limit { get; set; }
+        public int totalRecords { get; set; }
     }
 
     public class CustomerModel
@@ -42,7 +43,7 @@ namespace QuickApp.Pro.ViewModels
         public string City { get; set; }
         public string StateOrProvince { get; set; }
         public string CustomerType { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
@@ -61,6 +62,115 @@ namespace QuickApp.Pro.ViewModels
         public int limit { get; set; }
         //public 
         public string GlobalSearchString { get; set; }
+    }
+    #endregion
+    #region GlClassFlowClassification
+    public class GlClassFlowClassificationPaginationViewModel : GlClassFlowClassification, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    
+    #region TaxRate
+    public class GlAccountClassPaginationViewModel : GLAccountClass, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+    #region TaxRate
+    public class TaxRatePaginationViewModel : TaxRates, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region TaxType
+    public class TaxTypePaginationViewModel : TaxType, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region Document
+    public class DocumentPaginationViewModel : Document, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region DefaultMessage
+    public class DefaultMessagePaginationViewModel : DefaultMessage, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region AircraftType
+    public class AircraftTypePaginationViewModel : AircraftType, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region AircraftModel
+    public class AircraftModelPaginationViewModel : AircraftModel, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region AircraftDashNumber
+    public class AircraftDashNumberPaginationViewModel : AircraftDashNumber, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    #endregion
+
+    #region ATAChapter
+    public class ATAChapterPaginationViewModel : ATAChapter, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
     }
     #endregion
 }

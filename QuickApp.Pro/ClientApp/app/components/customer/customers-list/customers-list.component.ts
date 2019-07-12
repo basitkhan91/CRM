@@ -30,6 +30,14 @@ import { LazyLoadEvent } from 'primeng/api';
 /** CustomersList component*/
 export class CustomersListComponent implements OnInit, AfterViewInit {
 
+    totelPages: number;
+    customersList: any[] = [];
+    createdPageDate: any;
+    updatedBy: any;
+    createdBy: any;
+    createdDate: any;
+    updatedDate: any;
+    pageLinks: number = 4;
     customerType: any;
     stateOrProvince: any;
     city: any;
@@ -731,7 +739,11 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
                 this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service
                     pages => {
                         if (pages.length > 0) {
-                            this.customerPagination = pages[0];
+                            this.customersList = pages;
+                            this.customerPagination = this.customersList[0].customerList;
+                            this.totalRecords = this.customersList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                            
                         }
                         else
                         {
@@ -747,9 +759,11 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
                 if (this.allCustomer) {
                     this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
                         pages => {
-                            if (pages.length > 0) {
-                                this.customerPagination = pages[0];
-                            }
+                            this.customersList = pages;
+                            this.customerPagination = this.customersList[0].customerList;
+                            //this.totalRecordsForTable = this.customersList[0].totalRecordsCount;
+                            this.totalRecords = this.customersList[0].totalRecordsCount; 
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         });
                     this.loading = false;
                 }
@@ -772,9 +786,9 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             })
             this.workFlowtService.getGlobalSearch(this.globalCustomers[this.globalCustomers.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.customerPagination = pages[0];
-                    }
+                    this.customersList = pages;
+                    this.customerPagination = this.customersList[0].customerList;
+                    this.totalRecords = this.customersList[0].totalRecordsCount; 
                 });
         }
     }
@@ -827,6 +841,18 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         if (filed == 'customerType') {
             this.customerType = event;
         }
+        if (filed == 'updatedDate') {
+            this.updatedDate = event;
+        }
+        if (filed == 'createdDate') {
+            this.createdPageDate = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdBy = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedBy = event;
+        }
         //else {
         //    this.primarySalesPersonFirstName = '';
         //}
@@ -837,7 +863,11 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             City: this.city,
             StateOrProvince: this.stateOrProvince,
             CustomerType: this.customerType,
-            PrimarySalesPersonFirstName: this.primarySalesPersonFirstName,  //test Sales
+            UpdatedDate: this.updatedDate,
+            CreatedDate: this.createdPageDate,
+            PrimarySalesPersonFirstName: this.primarySalesPersonFirstName,
+            createdBy: this.createdBy,
+            updatedBy: this.updatedBy,
             first: this.first,
             page: 10,
             pageCount: 10,
@@ -848,9 +878,10 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         if (this.customers) {
             this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.customerPagination = pages[0];
-                    }
+                    this.customersList = pages;
+                    this.customerPagination = this.customersList[0].customerList;
+                    this.totalRecords = this.customersList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
                 });
         }
         else {

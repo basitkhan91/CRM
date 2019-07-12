@@ -31,6 +31,15 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** Actions component*/
 export class TaxTypeComponent implements OnInit, AfterViewInit {
+    updatedByInputFieldValue: any;
+    taxType = [];
+    event: any;
+    standardInputFieldValue: any;
+    createdByInputFieldValue: any;
+    descriptionInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    memoInputFieldValue: any;
     actionamecolle: any[] = [];
     disableSave: boolean = false;
     selectedActionName: any;
@@ -459,5 +468,46 @@ export class TaxTypeComponent implements OnInit, AfterViewInit {
                 this.loading = false;
             }
         }, 1000);
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'description') {
+            this.descriptionInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.taxType.push({
+            Description: this.descriptionInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.taxType) {
+            this.taxTypeService.getServerPages(this.taxType[this.taxType.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.taxRatePagination = pages[0];
+                    }
+                });
+        }
+        else {
+        }
     }
 }

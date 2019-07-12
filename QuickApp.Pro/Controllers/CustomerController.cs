@@ -1655,9 +1655,9 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetCustomer([FromBody]CustomerSearchViewModel paginate)
         {
+            GetData getData = new GetData();
 
-            IQueryable<CustomerModel> queryable = null;
-
+            IQueryable<CustomerSearchViewModel> queryable = null;
             #region working code with single table
             //var query = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
             //        .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
@@ -1683,14 +1683,18 @@ namespace QuickApp.Pro.Controllers
             //else
             //    queryable = query;
             #endregion
-            List<CustomerModel> customersList = new List<CustomerModel>();
-            CustomerModel customer = null;
+            List<CustomerSearchViewModel> customersList = new List<CustomerSearchViewModel>();
+            CustomerSearchViewModel customer = null;
             if (!string.IsNullOrEmpty(paginate.CustomerCode) || !string.IsNullOrEmpty(paginate.Name)
                 || !string.IsNullOrEmpty(paginate.Email)
                 || !string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName)
                 || !string.IsNullOrEmpty(paginate.City)
                 || !string.IsNullOrEmpty(paginate.StateOrProvince)
-                || !string.IsNullOrEmpty(paginate.CustomerType))
+                || !string.IsNullOrEmpty(paginate.CustomerType)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy)
+                || (paginate.CreatedDate != null)
+                || (paginate.UpdatedDate != null))
             {
                 var customers = (from t in _context.Customer
                                  join ad in _context.Address on t.AddressId equals ad.AddressId
@@ -1723,7 +1727,7 @@ namespace QuickApp.Pro.Controllers
                                  }).ToList();
                 foreach (var item in customers)
                 {
-                    customer = new CustomerModel();
+                    customer = new CustomerSearchViewModel();
                     customer.CustomerId = item.CustomerId;
                     customer.CustomerCode = item.CustomerCode;
                     customer.City = item.City;
@@ -1742,32 +1746,50 @@ namespace QuickApp.Pro.Controllers
                 #region Pagination for join tables
                 if (!string.IsNullOrEmpty(paginate.CustomerCode))
                 {
-                    customersList = customersList.Where(c => c.CustomerCode.ToUpper().Contains(paginate.CustomerCode.ToUpper().Trim())).ToList();
+                    customersList = customersList.Where(c => c.CustomerCode != null && c.CustomerCode.ToUpper().Contains(paginate.CustomerCode.ToUpper().Trim())).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.Name))
                 {
-                    customersList = customersList.Where(c => c.Name.ToUpper().Contains(paginate.Name.ToUpper().Trim())).ToList();
+                    customersList = customersList.Where(c => c.Name != null && c.Name.ToUpper().Contains(paginate.Name.ToUpper().Trim())).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.Email))
                 {
-                    customersList = customersList.Where(c => c.Email.ToUpper().Contains(paginate.Email.ToUpper().Trim())).ToList();
+                    customersList = customersList.Where(c => c.Email != null && c.Email.ToUpper().Contains(paginate.Email.ToUpper().Trim())).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.City))
                 {
-                    customersList = customersList.Where(c => c.City.ToUpper().Contains(paginate.City.ToUpper().Trim())).ToList();
+                    customersList = customersList.Where(c => c.City != null && c.City.ToUpper().Contains(paginate.City.ToUpper().Trim())).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.StateOrProvince))
                 {
-                    customersList = customersList.Where(c => c.StateOrProvince.ToUpper().Contains(paginate.StateOrProvince.ToUpper().Trim())).ToList();
+                    customersList = customersList.Where(c => c.StateOrProvince != null && c.StateOrProvince.ToUpper().Contains(paginate.StateOrProvince.ToUpper().Trim())).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.CustomerType))
                 {
-                    customersList = customersList.Where(c => c.CustomerType.ToUpper().Contains(paginate.CustomerType.ToUpper().Trim())).ToList();
+                    customersList = customersList.Where(c => c.CustomerType != null && c.CustomerType.ToUpper().Contains(paginate.CustomerType.ToUpper().Trim())).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.PrimarySalesPersonFirstName))
                 { 
-                    customersList = customersList.Where(c => c.PrimarySalesPersonFirstName.ToUpper().Contains(paginate.PrimarySalesPersonFirstName.ToUpper().Trim())).ToList();
+                    customersList = customersList.Where(c => c.PrimarySalesPersonFirstName != null && c.PrimarySalesPersonFirstName.ToUpper().Contains(paginate.PrimarySalesPersonFirstName.ToUpper().Trim())).ToList();
                 }
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    customersList = customersList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    customersList = customersList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+                if (paginate.CreatedDate != null)
+                {
+                    customersList = customersList.Where(c => c.CreatedDate != null && (c.CreatedDate >= paginate.CreatedDate || c.CreatedDate <= paginate.CreatedDate)).ToList();
+                }
+                if (paginate.UpdatedDate != null)
+
+                {
+                    customersList = customersList.Where(c => c.UpdatedDate != null && (c.UpdatedDate > paginate.UpdatedDate || c.UpdatedDate < paginate.UpdatedDate)).ToList();
+                }
+                getData.TotalRecordsCount = customersList.Count();
             }
             else
             {
@@ -1802,7 +1824,7 @@ namespace QuickApp.Pro.Controllers
                                  }).ToList();
                 foreach (var item in customers)
                 {
-                    customer = new CustomerModel();
+                    customer = new CustomerSearchViewModel();
                     customer.CustomerId = item.CustomerId;
                     customer.CustomerCode = item.CustomerCode;
                     customer.City = item.City;
@@ -1817,7 +1839,9 @@ namespace QuickApp.Pro.Controllers
                     customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
                     customer.IsActive = item.IsActive;
                     customersList.Add(customer);
+                    getData.TotalRecordsCount = customersList.Count();
                 }
+                
             }
             #endregion
             queryable = customersList.AsQueryable();
@@ -1827,8 +1851,8 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<CustomerModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.CustomerList = DAL.Common.PaginatedList<CustomerSearchViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
@@ -1857,6 +1881,12 @@ namespace QuickApp.Pro.Controllers
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<CustomerSearchViewModel> CustomerList { get; set; }
         }
 
     }

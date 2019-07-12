@@ -41,7 +41,13 @@
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
-                            <th></th>
+                            <th style="width:150px"></th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                                <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                            </th>
+                            <th style="width:150px"></th>
                         </tr>
                     </ng-template>
 

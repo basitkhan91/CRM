@@ -156,19 +156,92 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        //[HttpPost("pagination")]
+        //public IActionResult GetAircraftManufacturer([FromBody]PaginateViewModel paginate)
+        //{
+        //    var pageListPerPage = paginate.rows;
+        //    var pageIndex = paginate.first;
+        //    var pageCount = (pageIndex / pageListPerPage) + 1;
+        //    var data = DAL.Common.PaginatedList<TaxType>.Create(_unitOfWork.TaxType.GetPaginationData(), pageCount, pageListPerPage);
+        //    return Ok(data);
+        //}
+
         [HttpPost("pagination")]
-        public IActionResult GetAircraftManufacturer([FromBody]PaginateViewModel paginate)
+        public IActionResult GetTaxType([FromBody]TaxTypePaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<TaxType>.Create(_unitOfWork.TaxType.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            IQueryable<TaxTypePaginationViewModel> queryable = null;
+            List<TaxTypePaginationViewModel> taxTypeList = new List<TaxTypePaginationViewModel>();
+            TaxTypePaginationViewModel taxType = null;
+            if (!string.IsNullOrEmpty(paginate.Description)
+                || !string.IsNullOrEmpty(paginate.Memo)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var taxTypes = _unitOfWork.taxType;
+                var taxTypes = _unitOfWork.TaxType.GetAllTaxTypeData();
+                foreach (var item in taxTypes)
+                {
+                    taxType = new TaxTypePaginationViewModel();
+                    taxType.TaxTypeId = item.TaxTypeId;
+                    taxType.Description = item.Description;
+                    taxType.Memo = item.Memo;
+                    taxType.CreatedDate = item.CreatedDate;
+                    taxType.CreatedBy = item.CreatedBy;
+                    taxType.UpdatedDate = item.UpdatedDate;
+                    taxType.UpdatedBy = item.UpdatedBy;
+                    taxType.IsActive = item.IsActive;
+                    taxTypeList.Add(taxType);
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    taxTypeList = taxTypeList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Memo))
+                {
+                    taxTypeList = taxTypeList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    taxTypeList = taxTypeList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    taxTypeList = taxTypeList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var taxTypes = _unitOfWork.TaxType.GetAllTaxTypeData();
+                foreach (var item in taxTypes)
+                {
+                    taxType = new TaxTypePaginationViewModel();
+                    taxType.TaxTypeId = item.TaxTypeId;
+                    taxType.Description = item.Description;
+                    taxType.Memo = item.Memo;
+                    taxType.CreatedDate = item.CreatedDate;
+                    taxType.CreatedBy = item.CreatedBy;
+                    taxType.UpdatedDate = item.UpdatedDate;
+                    taxType.UpdatedBy = item.UpdatedBy;
+                    taxType.IsActive = item.IsActive;
+                    taxTypeList.Add(taxType);
+                }
+                taxTypeList.Add(taxType);
+
+            }
+            queryable = taxTypeList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<TaxTypePaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
-
     }
-
-
-
 
 }

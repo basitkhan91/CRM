@@ -8,7 +8,7 @@
                 <p-table #dt [value]="customerPagination" [rows]="10"
                          [lazy]="true" (onLazyLoad)="loadCustomerPages($event)" [paginator]="true"
                          [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [loading]="loading"
-                         [pageLinks]="3" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
+                         [pageLinks]="pageLinks" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                          [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                     <ng-template pTemplate="caption">
 
@@ -89,12 +89,12 @@
                             </td>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="summary" id="footer">                        
-                            <label id="footer" class="footer" >No'of records:</label> <input style="width: 5%;" [disabled]="true" pInputText type="text" />
-                            &nbsp;&nbsp;
-                            <label id="footer" class="footer1">Count:</label> <input style="width: 5%;"  [disabled]="true" pInputText type="text" />
-                                                
-                     </ng-template>                   
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
+                        &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+
+                    </ng-template>                   
                 </p-table>
 
             </div>
