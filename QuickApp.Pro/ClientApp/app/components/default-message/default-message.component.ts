@@ -25,6 +25,15 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** Currency component*/
 export class DefaultMessageComponent implements OnInit, AfterViewInit {
+    defaultMessage = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    event: any;
+    memoInputFieldValue: any;
+    defaultMessageCodeInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    descriptionInputFieldValue: any;
     defaultMessage_Name: any = "";
     description: any = "";
     memo: any = "";
@@ -448,5 +457,51 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
                 this.loading = false;
             }
         }, 1000);
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'defaultMessageCode') {
+            this.defaultMessageCodeInputFieldValue = event;
+        }
+        if (filed == 'description') {
+            this.descriptionInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.defaultMessage.push({
+            DefaultMessageCode: this.defaultMessageCodeInputFieldValue,
+            Description: this.descriptionInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.defaultMessage) {
+            this.defaultmessageService.getServerPages(this.defaultMessage[this.defaultMessage.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.defaultMessagePagination = pages[0];
+                    }
+                });
+        }
+        else {
+        }
     }
 }

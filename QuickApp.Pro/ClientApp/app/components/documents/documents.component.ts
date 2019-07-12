@@ -36,6 +36,22 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 /** Actions component*/
 export class DocumentsComponent implements OnInit, AfterViewInit {
 
+    document = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    vendorInputFieldValue: any;
+    workOrderInputFieldValue: any;
+    salesOrderInputFieldValue: any;
+    slInputFieldValue: any;
+    repairOrderInputFieldValue: any;
+    purchaseOrderInputFieldValue: any;
+    itemMasterInputFieldValue: any;
+    customerInputFieldValue: any;
+    descriptionInputFieldValue: any;
+    documentCodeInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    event: any;
     allreasn: any[]=[];
     disableSave: boolean=false;
     selectedreason: any;
@@ -507,4 +523,78 @@ export class DocumentsComponent implements OnInit, AfterViewInit {
             }
         }, 1000);
     }
+
+    inputFiledFilter(event, filed, matchMode) {
+
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'documentCode') {
+            this.documentCodeInputFieldValue = event;
+        }
+        if (filed == 'description') {
+            this.descriptionInputFieldValue = event;
+        }
+        if (filed == 'customer') {
+            this.customerInputFieldValue = event;
+        }
+        if (filed == 'itemMaster') {
+            this.itemMasterInputFieldValue = event;
+        }
+        if (filed == 'purchaseOrder') {
+            this.purchaseOrderInputFieldValue = event;
+        }
+        if (filed == 'repairOrder') {
+            this.repairOrderInputFieldValue = event;
+        }
+        if (filed == 'sl') {
+            this.slInputFieldValue = event;
+        }
+        if (filed == 'salesOrder') {
+            this.salesOrderInputFieldValue = event;
+        }
+        if (filed == 'workOrder') {
+            this.workOrderInputFieldValue = event;
+        }
+        if (filed == 'vendor') {
+            this.vendorInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.document.push({
+            documentCode: this.documentCodeInputFieldValue,
+            description: this.descriptionInputFieldValue,
+            customer: this.customerInputFieldValue,
+            itemMaster: this.itemMasterInputFieldValue,
+            purchaseOrder: this.purchaseOrderInputFieldValue,
+            repairOrder: this.repairOrderInputFieldValue,
+            sl: this.slInputFieldValue,
+            salesOrder: this.salesOrderInputFieldValue,
+            workOrder: this.workOrderInputFieldValue,
+            vendor: this.vendorInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.document) {
+            this.documentService.getServerPages(this.document[this.document.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.documentPagination = pages[0];
+                    }
+                });
+        }
+        else {
+        }
+    }
+
 }

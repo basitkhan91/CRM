@@ -33,13 +33,14 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** GlAccountClass component*/
 export class GlAccountClassComponent implements OnInit, AfterViewInit {
+    event: any;
+    glAccountClass = [];
     updatedByInputFieldValue: any;
     createdByInputFieldValue: any;
-    glAccountClassNameInputFieldValue: any;
-    glAccountClass = [];
     matvhMode: any;
     field: any;
-    event: any;
+    glAccountClassNameInputFieldValue: any;
+    glAccountData: any[] = [];
 	disableSave: boolean;
 	selectedGlAccountClassName: any;
 	auditHisory: any[];
@@ -403,6 +404,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
         }
     }
 
+
     loadGlAccountPage(event: LazyLoadEvent) //when page initilizes it will call this method
     {
         this.loading = true;
@@ -413,7 +415,9 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
                 this.glAccountService.getServerPages(event).subscribe( //we are sending event details to service
                     pages => {
                         if (pages.length > 0) {
-                            this.glAccountClassPagination = pages[0];
+                            this.glAccountData = pages;
+                            this.glAccountClassPagination = this.glAccountData[0].getLAccountClasses;
+                            this.totalRecords = this.glAccountData[0].totalRecordsCount
                         }
                     });
                 this.loading = false;
@@ -450,7 +454,10 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
             this.glAccountService.getServerPages(this.glAccountClass[this.glAccountClass.length - 1]).subscribe( //we are sending event details to service
                 pages => {
                     if (pages.length > 0) {
-                        this.glAccountClassPagination = pages[0];
+                        this.glAccountData = pages;
+                        this.glAccountClassPagination = this.glAccountData[0].getLAccountClasses;
+                        this.totalRecords = this.glAccountData[0].totalRecordsCount;
+                
                     }
                 });
         }

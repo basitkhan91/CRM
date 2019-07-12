@@ -27,7 +27,7 @@ namespace QuickApp.Pro.ViewModels
 
         public DateTime CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public MasterCompany MasterCompany { get; set; }
 

@@ -33,6 +33,13 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** gl-cash-flow-classification component*/
 export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit {
+    glAccountClassification = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    glClassFlowClassificationNameInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    event: any;
     paginator: MatPaginator;
     sort: MatSort;    
 	disableSave: boolean;
@@ -450,6 +457,43 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
                 this.loading = false;
             }
         }, 1000);
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'glClassFlowClassificationName') {
+            this.glClassFlowClassificationNameInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.glAccountClassification.push({
+            GlClassFlowClassificationName: this.glClassFlowClassificationNameInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.glAccountClassification) {
+            this.glCashFlowClassificationService.getServerPages(this.glAccountClassification[this.glAccountClassification.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    if (pages.length > 0) {
+                        this.glCashFlowClassificationPagination = pages[0];
+                    }
+                });
+        }
+        else {
+        }
     }
 
 }

@@ -152,13 +152,87 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("pagination")]
-        public IActionResult GetDefaultMessage([FromBody]PaginateViewModel paginate)
+        public IActionResult GetDefaultMessage([FromBody]DefaultMessagePaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<DefaultMessage>.Create(_unitOfWork.DefaultMessage.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            IQueryable<DefaultMessagePaginationViewModel> queryable = null;
+            List<DefaultMessagePaginationViewModel> defaultMessageList = new List<DefaultMessagePaginationViewModel>();
+            DefaultMessagePaginationViewModel defaultMessage = null;
+            if (!string.IsNullOrEmpty(paginate.DefaultMessageCode)
+                || !string.IsNullOrEmpty(paginate.Description)
+                || !string.IsNullOrEmpty(paginate.Memo)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var defaultMessages = _unitOfWork.defaultMessage;
+                var defaultMessages = _unitOfWork.DefaultMessage.GetAllDefaultMessageData();
+                foreach (var item in defaultMessages)
+                {
+                    defaultMessage = new DefaultMessagePaginationViewModel();
+                    defaultMessage.DefaultMessageId = item.DefaultMessageId;
+                    defaultMessage.Description = item.Description;
+                    defaultMessage.DefaultMessageCode = item.DefaultMessageCode;
+                    defaultMessage.Memo = item.Memo;
+                    defaultMessage.CreatedDate = item.CreatedDate;
+                    defaultMessage.CreatedBy = item.CreatedBy;
+                    defaultMessage.UpdatedDate = item.UpdatedDate;
+                    defaultMessage.UpdatedBy = item.UpdatedBy;
+                    defaultMessage.IsActive = item.IsActive;
+                    defaultMessageList.Add(defaultMessage);
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    defaultMessageList = defaultMessageList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.DefaultMessageCode))
+                {
+                    defaultMessageList = defaultMessageList.Where(c => c.DefaultMessageCode != null && c.DefaultMessageCode.ToUpper().Contains(paginate.DefaultMessageCode.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Memo))
+                {
+                    defaultMessageList = defaultMessageList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    defaultMessageList = defaultMessageList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    defaultMessageList = defaultMessageList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var defaultMessages = _unitOfWork.DefaultMessage.GetAllDefaultMessageData();
+                foreach (var item in defaultMessages)
+                {
+                    defaultMessage = new DefaultMessagePaginationViewModel();
+                    defaultMessage.DefaultMessageId = item.DefaultMessageId;
+                    defaultMessage.Description = item.Description;
+                    defaultMessage.DefaultMessageCode = item.DefaultMessageCode;
+                    defaultMessage.Memo = item.Memo;
+                    defaultMessage.CreatedDate = item.CreatedDate;
+                    defaultMessage.CreatedBy = item.CreatedBy;
+                    defaultMessage.UpdatedDate = item.UpdatedDate;
+                    defaultMessage.UpdatedBy = item.UpdatedBy;
+                    defaultMessage.IsActive = item.IsActive;
+                    defaultMessageList.Add(defaultMessage);
+                }
+                defaultMessageList.Add(defaultMessage);
+
+            }
+            queryable = defaultMessageList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<DefaultMessagePaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
 
     }

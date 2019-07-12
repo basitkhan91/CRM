@@ -137,11 +137,11 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
-        
 
         [HttpPost("pagination")]
         public IActionResult GetGlAccount([FromBody]GlAccountClassPaginationViewModel paginate)
         {
+            GetData getData = new GetData();
             IQueryable<GlAccountClassPaginationViewModel> queryable = null;
             List<GlAccountClassPaginationViewModel> glAccountClassList = new List<GlAccountClassPaginationViewModel>();
             GlAccountClassPaginationViewModel glAccountClass = null;
@@ -176,6 +176,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     glAccountClassList = glAccountClassList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = glAccountClassList.Count();
             }
             else
             {
@@ -191,10 +192,10 @@ namespace QuickApp.Pro.Controllers
                     glAccountClass.UpdatedDate = item.UpdatedDate;
                     glAccountClass.UpdatedBy = item.UpdatedBy;
                     glAccountClass.IsActive = item.IsActive;
-                   // glAccountClassList.Add(glAccountClass);
+                    glAccountClassList.Add(glAccountClass);
                 }
-                glAccountClassList.Add(glAccountClass);
-
+                //glAccountClassList.Add(glAccountClass);
+                getData.TotalRecordsCount = glAccountClassList.Count();
             }
             queryable = glAccountClassList.AsQueryable();
 
@@ -203,11 +204,18 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<GlAccountClassPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.GetLAccountClasses = DAL.Common.PaginatedList<GlAccountClassPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
     }
+
+    public class GetData
+    {
+        public int TotalRecordsCount { get; set; }
+        public List<GlAccountClassPaginationViewModel> GetLAccountClasses { get; set; }
+    }
 }
+
