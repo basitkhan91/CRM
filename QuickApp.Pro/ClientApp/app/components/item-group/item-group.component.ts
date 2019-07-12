@@ -25,6 +25,8 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class ItemGroupComponent implements OnInit, AfterViewInit {
+    itemGroupPaginationList: any[] = [];
+    totelPages: number;
     itemGroup = [];
     updatedByInputFieldValue: any;
     createdByInputFieldValue: any;
@@ -463,9 +465,10 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             if (this.itemGroup) {
                 this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.itemGroupPagination = pages[0];
-                        }
+                        this.itemGroupPaginationList = pages;
+                        this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+                        this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
             }
             else {
@@ -478,9 +481,10 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
                 if (this.allitemgroupobjInfo) {
                     this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
                         pages => {
-                            if (pages.length > 0) {
-                                this.itemGroupPagination = pages[0];
-                            }
+                            this.itemGroupPaginationList = pages;
+                            this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+                            this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         });
                     this.loading = false;
                 }
@@ -501,7 +505,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     }
 
     inputFiledFilter(event, filed, matchMode) {
-
+        this.first = 0;
         this.event = event;
         this.field = filed;
         this.matchMode = matchMode;
@@ -538,9 +542,10 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         if (this.itemGroup) {
             this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.itemGroupPagination = pages[0];
-                    }
+                    this.itemGroupPaginationList = pages;
+                    this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+                    this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
                 });
         }
         else {

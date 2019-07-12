@@ -209,5 +209,11 @@ namespace QuickApp.Pro.Controllers
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<GlAccountClassPaginationViewModel> GlAccountClassList { get; set; }
+        }
     }
 }

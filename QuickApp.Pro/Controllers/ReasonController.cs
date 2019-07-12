@@ -166,6 +166,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetAircraftManufacturer([FromBody]ReasonPaginationViewModel paginate)
         {
+            GetData getData = new GetData();
             IQueryable<ReasonPaginationViewModel> queryable = null;
             List<ReasonPaginationViewModel> ReasonList = new List<ReasonPaginationViewModel>();
             ReasonPaginationViewModel Reason = null;
@@ -213,6 +214,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     ReasonList = ReasonList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = ReasonList.Count();
             }
             else
             {
@@ -230,9 +232,8 @@ namespace QuickApp.Pro.Controllers
                     Reason.UpdatedBy = item.UpdatedBy;
                     Reason.IsActive = item.IsActive;
                     ReasonList.Add(Reason);
+                    getData.TotalRecordsCount = ReasonList.Count();
                 }
-                ReasonList.Add(Reason);
-
             }
             queryable = ReasonList.AsQueryable();
 
@@ -241,11 +242,17 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<ReasonPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.ReasonList = DAL.Common.PaginatedList<ReasonPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<ReasonPaginationViewModel> ReasonList { get; set; }
         }
     }
 }

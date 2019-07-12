@@ -25,6 +25,8 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Currency component*/
 export class CurrencyComponent implements OnInit, AfterViewInit {
+    curreencyPaginationList: any[] = [];
+    totelPages: number;
     event: any;
     currency = [];
     updatedByInputFieldValue: any;
@@ -449,21 +451,50 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.totalRecords) {
-                this.currencyService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.event) {
+            this.currency.push({
+                Code: this.codeInputFieldValue,
+                Symbol: this.symbolInputFieldValue,
+                DisplayName: this.displayNameInputFieldValue,
+                Memo: this.memoInputFieldValue,
+                CreatedBy: this.createdByInputFieldValue,
+                UpdatedBy: this.updatedByInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.currency) {
+                this.currencyService.getServerPages(this.currency[this.currency.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.currencyPagination = pages[0];
-                        }
+                        this.curreencyPaginationList = pages;
+                        this.currencyPagination = this.curreencyPaginationList[0].currencyList;
+                        this.totalRecords = this.curreencyPaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
-                this.loading = false;
             }
-        }, 1000);
+        }
+        else
+        {
+            setTimeout(() => {
+                if (this.totalRecords) {
+                    this.currencyService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.curreencyPaginationList = pages;
+                            this.currencyPagination = this.curreencyPaginationList[0].currencyList;
+                            this.totalRecords = this.curreencyPaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+        
     }
 
     inputFiledFilter(event, filed, matchMode) {
-
+        this.first = 0;
         this.event = event;
         this.field = filed;
         this.matvhMode = matchMode;
@@ -502,9 +533,10 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
         if (this.currency) {
             this.currencyService.getServerPages(this.currency[this.currency.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.currencyPagination = pages[0];
-                    }
+                    this.curreencyPaginationList = pages;
+                    this.currencyPagination = this.curreencyPaginationList[0].currencyList;
+                    this.totalRecords = this.curreencyPaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
                 });
         }
         else {

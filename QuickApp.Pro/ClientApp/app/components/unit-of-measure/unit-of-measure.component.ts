@@ -31,7 +31,8 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** Actions component*/
 export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
-
+    unitOfMeasurePaginationList: any[] = [];
+    totelPages: number;
     updatedByInputFieldValue: any;
     createdByInputFieldValue: any;
     unitOfMeasure = [];
@@ -482,7 +483,10 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                 this.unitofmeasureService.getServerPages(this.unitOfMeasure[this.unitOfMeasure.length - 1]).subscribe( //we are sending event details to service
                     pages => {
                         if (pages.length > 0) {
-                            this.unitOfMeasurePagination = pages[0];
+                            this.unitOfMeasurePaginationList = pages;
+                            this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
+                            this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         }
                     });
             }
@@ -494,9 +498,11 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                 if (this.allUnitOfMeasureinfo) {
                     this.unitofmeasureService.getServerPages(event).subscribe( //we are sending event details to service
                         pages => {
-                            if (pages.length > 0) {
-                                this.unitOfMeasurePagination = pages[0];
-                            }
+                            this.unitOfMeasurePaginationList = pages;
+                            this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
+                            this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                            
                         });
                     this.loading = false;
                 }
@@ -520,7 +526,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     
 
     inputFiledFilter(event, filed, matchMode) {
-
+        this.first = 0;
         this.event = event;
         this.field = filed;
         this.matvhMode = matchMode;
@@ -559,9 +565,10 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         if (this.unitOfMeasure) {
             this.unitofmeasureService.getServerPages(this.unitOfMeasure[this.unitOfMeasure.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.unitOfMeasurePagination = pages[0];
-                    }
+                    this.unitOfMeasurePaginationList = pages;
+                    this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
+                    this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
                 });
         }
         else {

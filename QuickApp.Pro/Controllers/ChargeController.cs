@@ -256,11 +256,15 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetAircraftManufacturer([FromBody]ChargePaginationViewModel paginate)
         {
+            GetData getData = new GetData();
             IQueryable<ChargePaginationViewModel> queryable = null;
             List<ChargePaginationViewModel> chargeList = new List<ChargePaginationViewModel>();
             ChargePaginationViewModel charge = null;
             if (!string.IsNullOrEmpty(Convert.ToString(paginate.ChargeId))
                 || !string.IsNullOrEmpty(paginate.ChargeName)
+                || !string.IsNullOrEmpty(Convert.ToString(paginate.Cost))
+                || !string.IsNullOrEmpty(Convert.ToString(paginate.MarkUp))
+                || !string.IsNullOrEmpty(Convert.ToString(paginate.BillableAmount))
                 || !string.IsNullOrEmpty(Convert.ToString(paginate.Quantity))
                 || !string.IsNullOrEmpty(paginate.Description)
                 || !string.IsNullOrEmpty(paginate.Description)
@@ -331,25 +335,29 @@ namespace QuickApp.Pro.Controllers
                     charge.IsActive = item.IsActive;
                     chargeList.Add(charge);
                 }
-                //if (!string.IsNullOrEmpty(Convert.ToString(paginate.ChargeId)))
-                //{
-                //    chargeList = chargeList.Where(c => c.ChargeId != null && c.ChargeId.ToUpper().Contains(paginate.ChargeId.ToUpper().Trim())).ToList();
-                //}
-                if (!string.IsNullOrEmpty(paginate.ChargeName))
+                if (paginate.ChargeId != null)
                 {
-                    chargeList = chargeList.Where(c => c.ChargeName != null && c.ChargeName.ToUpper().Contains(paginate.ChargeName.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.Description))
-                {
-                    chargeList = chargeList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.Description))
-                {
-                    chargeList = chargeList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                    chargeList = chargeList.Where(c => c.ChargeId != null && (c.ChargeId == paginate.ChargeId)).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.ChargeName))
                 {
                     chargeList = chargeList.Where(c => c.ChargeName != null && c.ChargeName.ToUpper().Contains(paginate.ChargeName.ToUpper().Trim())).ToList();
+                }
+                if (paginate.Cost != null)
+                {
+                    chargeList = chargeList.Where(c => c.Cost != null && (c.Cost == paginate.Cost)).ToList();
+                }
+                if (paginate.MarkUp != null)
+                {
+                    chargeList = chargeList.Where(c => c.MarkUp != null && (c.MarkUp == paginate.MarkUp)).ToList();
+                }
+                if (paginate.BillableAmount != null)
+                {
+                    chargeList = chargeList.Where(c => c.BillableAmount != null && (c.BillableAmount == paginate.BillableAmount)).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    chargeList = chargeList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
                 }
                 if (!string.IsNullOrEmpty(paginate.Memo))
                 {
@@ -364,6 +372,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     chargeList = chargeList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = chargeList.Count();
             }
             else
             {
@@ -427,9 +436,8 @@ namespace QuickApp.Pro.Controllers
                     charge.UpdatedBy = item.UpdatedBy;
                     charge.IsActive = item.IsActive;
                     chargeList.Add(charge);
+                    getData.TotalRecordsCount = chargeList.Count();
                 }
-                chargeList.Add(charge);
-
             }
             queryable = chargeList.AsQueryable();
 
@@ -438,11 +446,17 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<ChargePaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.ChargeList = DAL.Common.PaginatedList<ChargePaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<ChargePaginationViewModel> ChargeList { get; set; }
         }
     }
 

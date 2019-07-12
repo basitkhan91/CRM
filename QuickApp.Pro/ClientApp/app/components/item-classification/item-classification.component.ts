@@ -25,6 +25,8 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class ItemClassificationComponent implements OnInit, AfterViewInit {
+    totelPages: number;
+    itemClassificationPaginationList: any[] = [];
     event: any;
     itemClassification = [];
     itemTypeInputFieldValue: any;
@@ -549,17 +551,49 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allitemclassificationInfo) {
-                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+
+        if (this.field)
+        {
+            this.itemClassification.push({
+                ItemClassificationCode: this.itemClassificationCodeInputFieldValue,
+                Description: this.descriptionInputFieldValue,
+                ItemType: this.itemTypeInputFieldValue,
+                Memo: this.memoInputFieldValue,
+                CreatedBy: this.createdByInputFieldValue,
+                UpdatedBy: this.updatedByInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.itemClassification) {
+                this.workFlowtService.getServerPages(this.itemClassification[this.itemClassification.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.itemClassificationPagination = pages[0];
-                        }
+                        this.itemClassificationPaginationList = pages;
+                        this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
+                        this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
-                this.loading = false;
             }
-        }, 1000);
+            else {
+            }
+        }
+        else {
+            setTimeout(() => {
+                if (this.allitemclassificationInfo) {
+                    this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.itemClassificationPaginationList = pages;
+                            this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
+                            this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+        
     }
 
     updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
@@ -574,7 +608,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     }
 
     inputFiledFilter(event, filed, matchMode) {
-
+        this.first = 0;
         this.event = event;
         this.field = filed;
         this.matvhMode = matchMode;
@@ -613,9 +647,10 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         if (this.itemClassification) {
             this.workFlowtService.getServerPages(this.itemClassification[this.itemClassification.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.itemClassificationPagination = pages[0];
-                    }
+                    this.itemClassificationPaginationList = pages;
+                    this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
+                    this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
                 });
         }
         else {
