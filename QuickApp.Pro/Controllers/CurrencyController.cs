@@ -158,6 +158,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetCurrency([FromBody]CurrencyPaginationViewModel paginate)
         {
+            GetData getData = new GetData();
             IQueryable<CurrencyPaginationViewModel> queryable = null;
             List<CurrencyPaginationViewModel> currencyList = new List<CurrencyPaginationViewModel>();
             CurrencyPaginationViewModel currency = null;
@@ -210,6 +211,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     currencyList = currencyList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = currencyList.Count();
             }
             else
             {
@@ -228,9 +230,8 @@ namespace QuickApp.Pro.Controllers
                     currency.UpdatedBy = item.UpdatedBy;
                     currency.IsActive = item.IsActive;
                     currencyList.Add(currency);
+                    getData.TotalRecordsCount = currencyList.Count();
                 }
-                currencyList.Add(currency);
-
             }
             queryable = currencyList.AsQueryable();
 
@@ -239,11 +240,17 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<CurrencyPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.CurrencyList = DAL.Common.PaginatedList<CurrencyPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<CurrencyPaginationViewModel> CurrencyList { get; set; }
         }
     }
 }

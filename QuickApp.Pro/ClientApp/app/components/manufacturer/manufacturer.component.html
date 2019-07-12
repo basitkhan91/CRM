@@ -3,7 +3,7 @@
         <div class="x_panel">
             <div class="x_content">
                 <h4 class="page-heading clr-green"> Manufacturer</h4>
-                <p-table #dt [value]="manufacturerPagination" 
+                <p-table #dt [value]="manufacturerPagination"
                          [lazy]="true" (onLazyLoad)="loadManufacturer($event)" [paginator]="true"
                          [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [loading]="loading"
                          [metaKeySelection]="true" [pageLinks]="3" [columns]="selectedColumns" selectionMode="multiple"
@@ -65,6 +65,13 @@
                                 </button>
                             </td>
                         </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
+                        &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+
                     </ng-template>
                 </p-table>
             </div>

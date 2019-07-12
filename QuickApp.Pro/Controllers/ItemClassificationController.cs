@@ -143,6 +143,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetItemClassification([FromBody]ItemClassificationViewModel paginate)
         {
+            GetData getData = new GetData();
             IQueryable<ItemClassificationViewModel> queryable = null;
             List<ItemClassificationViewModel> itemClassificationList = new List<ItemClassificationViewModel>();
             ItemClassificationViewModel itemClassification = null;
@@ -195,6 +196,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemClassificationList = itemClassificationList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = itemClassificationList.Count();
             }
             else
             {
@@ -213,9 +215,8 @@ namespace QuickApp.Pro.Controllers
                     itemClassification.UpdatedBy = item.UpdatedBy;
                     itemClassification.IsActive = item.IsActive;
                     itemClassificationList.Add(itemClassification);
+                    getData.TotalRecordsCount = itemClassificationList.Count();
                 }
-                itemClassificationList.Add(itemClassification);
-
             }
             queryable = itemClassificationList.AsQueryable();
 
@@ -224,11 +225,16 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<ItemClassificationViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.ItemClassificationList = DAL.Common.PaginatedList<ItemClassificationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<ItemClassificationViewModel> ItemClassificationList { get; set; }
         }
     }
 }

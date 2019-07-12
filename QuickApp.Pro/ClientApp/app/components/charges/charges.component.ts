@@ -32,6 +32,8 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class ChargesComponent implements OnInit, AfterViewInit {
+    chargePaginationList: any[] = [];
+    totelPages: number;
     charge = [];
     updatedByInputFieldValue: any;
     createdByInputFieldValue: any;
@@ -786,21 +788,54 @@ export class ChargesComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allChargeinfo) {
-                this.chargeService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field)
+        {
+            this.charge.push({
+                ChargeId: this.chargeIdInputFieldValue,
+                ChargeName: this.chargeNameInputFieldValue,
+                Cost: this.costInputFieldValue,
+                MarkUp: this.markUpInputFieldValue,
+                BillableAmount: this.billableAmountInputFieldValue,
+                Symbol: this.symbolInputFieldValue,
+                Memo: this.memoInputFieldValue,
+                CreatedBy: this.createdByInputFieldValue,
+                UpdatedBy: this.updatedByInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.charge) {
+                this.chargeService.getServerPages(this.charge[this.charge.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.chargePagination = pages[0];
-                        }
+                        this.chargePaginationList = pages;
+                        this.chargePagination = this.chargePaginationList[0].chargeList;
+                        this.totalRecords = this.chargePaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
-                this.loading = false;
             }
-        }, 1000);
+            else {
+            }
+        }
+        else {
+            setTimeout(() => {
+                if (this.allChargeinfo) {
+                    this.chargeService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.chargePaginationList = pages;
+                            this.chargePagination = this.chargePaginationList[0].chargeList;
+                            this.totalRecords = this.chargePaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
     }
 
     inputFiledFilter(event, filed, matchMode) {
-
+        this.first = 0;
         this.event = event;
         this.field = filed;
         this.matvhMode = matchMode;
@@ -851,9 +886,10 @@ export class ChargesComponent implements OnInit, AfterViewInit {
         if (this.charge) {
             this.chargeService.getServerPages(this.charge[this.charge.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.chargePagination = pages[0];
-                    }
+                    this.chargePaginationList = pages;
+                    this.chargePagination = this.chargePaginationList[0].chargeList;
+                    this.totalRecords = this.chargePaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
                 });
         }
         else {

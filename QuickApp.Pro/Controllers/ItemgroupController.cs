@@ -139,6 +139,8 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetItemGroup([FromBody]ItemGroupViewModel paginate)
         {
+
+            GetData getData = new GetData();
             IQueryable<ItemGroupViewModel> queryable = null;
             List<ItemGroupViewModel> itemGroupList = new List<ItemGroupViewModel>();
             ItemGroupViewModel itemGroup = null;
@@ -185,6 +187,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     itemGroupList = itemGroupList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = itemGroupList.Count();
             }
             else
             {
@@ -202,8 +205,9 @@ namespace QuickApp.Pro.Controllers
                     itemGroup.UpdatedBy = item.UpdatedBy;
                     itemGroup.IsActive = item.IsActive;
                     itemGroupList.Add(itemGroup);
+                    getData.TotalRecordsCount = itemGroupList.Count();
                 }
-                itemGroupList.Add(itemGroup);
+                
 
             }
             queryable = itemGroupList.AsQueryable();
@@ -213,11 +217,17 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<ItemGroupViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.ItemGroupList = DAL.Common.PaginatedList<ItemGroupViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<ItemGroupViewModel> ItemGroupList { get; set; }
         }
     }
 }

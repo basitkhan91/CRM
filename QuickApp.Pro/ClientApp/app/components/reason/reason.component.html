@@ -14,7 +14,7 @@
 
                 <p-table #dt [value]="reasonPagination" [lazy]="true" (onLazyLoad)="loadReason($event)" [totalRecords]="totalRecords"
                          [rows]="5" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20,30]"
-                         [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedcolumn" 
+                         [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedcolumn"
                          [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
 
@@ -94,7 +94,12 @@
                         </div>
                     </ng-template>
 
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
+                        &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
 
+                    </ng-template>
 
                 </p-table>
             </div>

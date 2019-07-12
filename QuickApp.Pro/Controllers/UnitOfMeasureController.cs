@@ -156,6 +156,8 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetUnitOfMeasure([FromBody]UnitOfMeasureSearchViewModel paginate)
         {
+            GetData getData = new GetData();
+
             IQueryable<UnitOfMeasureModel> queryable = null;
             List<UnitOfMeasureModel> unitOfMeasureList = new List<UnitOfMeasureModel>();
             UnitOfMeasureModel unitOfMeasure = null;
@@ -207,6 +209,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     unitOfMeasureList = unitOfMeasureList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = unitOfMeasureList.Count();
             }
             else
             {
@@ -225,6 +228,7 @@ namespace QuickApp.Pro.Controllers
                     unitOfMeasure.UpdatedBy = item.UpdatedBy;
                     unitOfMeasure.IsActive = item.IsActive;
                     unitOfMeasureList.Add(unitOfMeasure);
+                    getData.TotalRecordsCount = unitOfMeasureList.Count();
                 }
                 unitOfMeasureList.Add(unitOfMeasure);
                 
@@ -236,17 +240,18 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<UnitOfMeasureModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.UnitOfMeasureList = DAL.Common.PaginatedList<UnitOfMeasureModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
 
-
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<UnitOfMeasureModel> UnitOfMeasureList { get; set; }
+        }
     }
-
-
-
 
 }

@@ -148,6 +148,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("pagination")]
         public IActionResult GetManufacturer([FromBody]ManufacturerPaginationViewModel paginate)
         {
+            GetData getData = new GetData();
             IQueryable<ManufacturerPaginationViewModel> queryable = null;
             List<ManufacturerPaginationViewModel> manufacturerList = new List<ManufacturerPaginationViewModel>();
             ManufacturerPaginationViewModel manufacturer = null;
@@ -187,6 +188,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     manufacturerList = manufacturerList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
                 }
+                getData.TotalRecordsCount = manufacturerList.Count();
             }
             else
             {
@@ -203,9 +205,8 @@ namespace QuickApp.Pro.Controllers
                     manufacturer.UpdatedBy = item.UpdatedBy;
                     manufacturer.IsActive = item.IsActive;
                     manufacturerList.Add(manufacturer);
+                    getData.TotalRecordsCount = manufacturerList.Count();
                 }
-                manufacturerList.Add(manufacturer);
-
             }
             queryable = manufacturerList.AsQueryable();
 
@@ -214,11 +215,17 @@ namespace QuickApp.Pro.Controllers
                 var pageListPerPage = paginate.rows;
                 var pageIndex = paginate.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                var data = DAL.Common.PaginatedList<ManufacturerPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(data);
+                getData.ManufacturerList = DAL.Common.PaginatedList<ManufacturerPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<ManufacturerPaginationViewModel> ManufacturerList { get; set; }
         }
     }
 }
