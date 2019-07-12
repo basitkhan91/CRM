@@ -61,12 +61,9 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {
+      
             this.workFlow.exclusions.splice(index, 1);
-        }
-        else {
-            this.workFlow.exclusions[index].isDelete = true;
-        }
+        
     }
 
     onPartSelect(event, exclusion) {
