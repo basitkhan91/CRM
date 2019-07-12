@@ -26,7 +26,7 @@ namespace DAL.Models
         [Required(ErrorMessage ="PN is Required.")]
         public string PartNumber { get; set; }
 
-        [Required(ErrorMessage = "PN is Required.")]
+        //[Required(ErrorMessage = "PN is Required.")]
         public string PartDescription { get; set; }
 
 
@@ -37,7 +37,7 @@ namespace DAL.Models
         [MaxLength(5,ErrorMessage = "Sequence can only be 5 characters long")]
         public string Sequence { get; set; }
 
-        [MaxLength(20, ErrorMessage = "Sequence can only be 5 characters long")]
+        [MaxLength(20, ErrorMessage = "Stage can only be 20 characters long")]
         public string Stage { get; set; }
 
         public Nullable<decimal> Min { get; set; }

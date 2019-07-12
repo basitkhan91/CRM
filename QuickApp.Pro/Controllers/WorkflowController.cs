@@ -154,7 +154,7 @@ namespace QuickApp.Pro.Controllers
                     workFlow.UpdatedDate = DateTime.Now;
                     workFlow.CreatedBy = "admin";
                     workFlow.UpdatedBy = "admin";
-
+                    workFlow.MasterCompanyId = 1;
                     UnitOfWork.Repository<Workflow>().Update(workFlow);
                     UnitOfWork.SaveChanges();
                     return Ok(workFlow);
@@ -165,6 +165,7 @@ namespace QuickApp.Pro.Controllers
                     workFlow.CreatedDate = DateTime.Now;
                     workFlow.UpdatedDate = DateTime.Now;
                     workFlow.IsActive = true;
+                    workFlow.MasterCompanyId = 1;
                     UnitOfWork.Repository<Workflow>().Add(workFlow);
                     UnitOfWork.SaveChanges();
 

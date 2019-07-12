@@ -17,10 +17,10 @@
             <th>Condition *</th>
             <th>Mandatory / Supplemental *</th>
             <th>Item Classification</th>
-            <th>Qty *</th>
+            <th>QTY *</th>
             <th>UOM *</th>
             <th>Unit Cost *</th>
-            <th>Ext. Cost *</th>
+            <th>Extended Cost *</th>
             <th>Price *</th>
             <th>Memo</th>
             <th>Deferred</th>
@@ -29,14 +29,14 @@
         <tr [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
             <td>
                 <p-autoComplete (onSelect)="onPartSelect($event,material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
-                                [minLength]="1" [dropdown]="true">
+                                [minLength]="1" [dropdown]="true" class="autocomplete">
                     <ng-template let-partName pTemplate="part">
-                        <div class="ui-helper-clearfix">{{partName}}</div>
+                        <div class="ui-helper-clearfix" >{{partName}}</div>
                     </ng-template>
                 </p-autoComplete>
             </td>
             <td>
-                <textarea rows="1"  pInputTextarea value="{{material.partDescription}}" [(ngModel)]="material.partDescription"></textarea>
+                <input rows="1"   value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
             </td>
             <td>
                 <select class="form-control custom-select" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
@@ -55,18 +55,14 @@
                 </select>
             </td>
             <td>
-                <select class="form-control custom-select" [(ngModel)]="material.itemClassificationId">
-                    <option value="">
-                        Select
-                    </option>
-
-                    <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
+                <select class="form-control custom-select dropdown-select" [(ngModel)]="material.itemClassificationId" [disabled]="true">
+                   <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
                         {{item.description}}
                     </option>
                 </select>
             </td>
             <td style="width: 200px">
-                <input type="text"   pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.quantity" />
+                <input type="text" maxlength="10"   pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.quantity" />
             </td>
             <td>
                 <select class="form-control custom-select" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
@@ -80,18 +76,18 @@
                 <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
             </td>
             <td>
-                <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
+                <input type="text" class="form-control" pInputText pKeyFilter="money" [disabled]="true" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
             </td>
             <td>
                 <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" />
             </td>
             <td>
-                <input type="text" class="form-control" value="{{material.memo}}" [(ngModel)]="material.memo" />
+                <textarea type="text" class="form-control" rows="2" cols="35" value="{{material.memo}}" [(ngModel)]="material.memo"></textarea>
+               
             </td>
             <td style="width:30px;">
                 <div class="custom-checkbox-box">                    
                         <input class="filled-in" id="PMS" type="checkbox" value="{{material.isDeferred}}" [(ngModel)]="material.isDeferred">
-                                 
                 </div>
             </td>
             <td>
@@ -104,7 +100,7 @@
             <tr>
                 <td colspan="13"
                     class="total-cost">
-                    Total Material Cost : {{ totalCost }}
+                    Total Material Cost : {{ workFlow.totalMaterialCost }}
                 </td>
             </tr>
         </tfoot>

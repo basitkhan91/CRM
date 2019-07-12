@@ -16,8 +16,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         new EventEmitter<IWorkFlow>();
     expertiseTypes: any[] = [];
     row: any;
-    ccRegex: RegExp = /[0-9]+(\.[0-9]{1,2})$/; 
-    errorMessage: string;
+        errorMessage: string;
 
     constructor(private actionService: ActionService) {
     }
@@ -31,6 +30,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
             },
             error => this.errorMessage = <any>error
         );
+        this.calculateTotalExpertiseCost();
     }
 
     ngOnChanges(): void {
@@ -67,6 +67,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate);
         if (value > 0) {
             expertise.directLaborRate = Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate);
+            this.calculateTotalExpertiseCost();
         }
         else {
             expertise.directLaborRate = "";
@@ -77,10 +78,25 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(expertise.overheadBurden) * Number.parseFloat(expertise.overheadCost);
         if (value > 0) {
             expertise.laborOverheadCost = Number.parseFloat(expertise.overheadBurden) * Number.parseFloat(expertise.overheadCost);
+            this.calculateTotalExpertiseCost();
         }
         else {
             expertise.laborOverheadCost = "";
         }
     }
 
+    calculateTotalExpertiseCost() {
+        this.workFlow.totalExpertiseCost = 0;
+        for (let expertise of this.workFlow.expertise) {
+            var value = Number.parseFloat(expertise.directLaborRate) + Number.parseFloat(expertise.laborOverheadCost);
+            if (value > 0) {
+                this.workFlow.totalExpertiseCost += value;
+            }
+            else {
+                this.workFlow.totalExpertiseCost = 0;
+            }
+            
+        }
+    }
+    
 }

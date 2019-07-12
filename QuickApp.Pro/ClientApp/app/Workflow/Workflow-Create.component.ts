@@ -392,6 +392,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                         var publication = workFlow[0].publication.filter(publication => publication.taskId == action.taskId);
                                         wf.publication = publication;
                                         for (let pub of wf.publication) {
+
+                                            this.actionService.GetPublicationModel(pub.aircraftManufacturer).subscribe(
+                                                model => {
+                                                    pub["publicationModels"] = model;
+                                                },
+                                                error => this.errorMessage = <any>error
+                                            );
+
                                             for (let dn of pub.workflowPublicationDashNumbers) {
                                                 dn.dashNumberId = dn.aircraftDashNumberId;
                                                 this.getDashNumbers(pub);
@@ -955,6 +963,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
 
         document.getElementById('tab_' + taskId).classList.add('active');
+
+        if (this.workFlow.selectedItems == undefined || this.workFlow.selectedItems.length == 0) {
+            this.setSelectedItems(this.workFlow);
+        }
 
         this.selectedItems = this.workFlow.selectedItems
 
