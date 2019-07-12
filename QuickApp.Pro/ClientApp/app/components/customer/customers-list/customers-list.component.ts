@@ -794,7 +794,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
     }
 
     inputFiledFilter(event, filed, matchMode) {
-
+        this.first = 0;
         this.event = event;
         this.field = filed;
         this.matvhMode = matchMode;
