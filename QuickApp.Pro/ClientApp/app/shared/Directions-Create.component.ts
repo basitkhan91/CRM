@@ -15,7 +15,8 @@ export class DirectionsCreateComponent implements OnInit, OnChanges {
         new EventEmitter<IWorkFlow>();
     errorMessage: string;
     row: any;
-
+    currentPage : number = 1;
+    itemsPerPage : number = 10;
 
     ngOnInit(): void {
         //debugger;

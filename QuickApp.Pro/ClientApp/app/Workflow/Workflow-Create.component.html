@@ -797,7 +797,10 @@
 								   *ngFor="let workFlow of workFlowList; let i = index"
 								   [class.active]="workFlow.taskId == currenttaskId">
 									{{workFlow.ActionName}}
+
+									<i class="fa fa-trash delete-icon" ></i>
 								</a>
+								
 							</div>
 						</div>
 						<div class="bhoechie-tab">
@@ -807,7 +810,9 @@
 								<div class="custom-pill">
 									<ul class="nav nav-pills">
 										<li *ngFor="let item of workFlow.selectedItems"
-											(click)="setCurrentPanel(item.Name)">
+											(click)="setCurrentPanel(item.Name)" 
+											[class.active]="item.Id == currentPanelId"
+											>
 											<a data-toggle="pill" href="#tab{{item.Name}}">{{item.Name}}</a>
 										</li>
 									</ul>
@@ -832,7 +837,7 @@
 											 class="tab-pane fade pan">
 											<grd-exclusions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-exclusions>
 										</div>
-										<div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined"
+										<div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined "
 											 class="tab-pane fade pan">
 											<grd-expertise [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-expertise>
 										</div>
@@ -874,13 +879,13 @@
 									data-dismiss="modal">
 								<i class="fa fa-close"></i>
 							</button>
-							<h4 class="modal-title">Add Action</h4>
+							<h4 class="modal-title">Add Task</h4>
 						</div>
 						<div class="modal-body">
 							<div class=" selection-box ">
 								<div class="row">
 									<div class="col-lg-6 col-md-2 col-sm-2 col-xs-10">
-										<label>Action Name</label>
+										<label>Action Task Name</label>
 										<input type="text" class="custom-form-control" [(ngModel)]="newAction.Description" />
 
 									</div>
