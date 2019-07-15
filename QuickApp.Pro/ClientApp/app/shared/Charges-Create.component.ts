@@ -29,6 +29,11 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     row: any;
    
     errorMessage: string;
+    qtySummation: number = 0;
+    extendedCostSummation: number = 0;
+ 
+    currentPage : number = 1;
+    itemsPerPage : number = 10;
     constructor(private vendorservice: VendorService, private actionService: ActionService, private currencyService: CurrencyService, private alertService: AlertService) {
     }
 
@@ -119,29 +124,62 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.workFlow.charges.push(newRow);
     }
 
+    // calculate row wise extended cost
     calculateExtendedCost(charge): void {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
             charge.extendedCost = value;
-            this.calculateTotalCostCharges();
+            this.calculateExtendedCostSummation();
         }
         else {
             charge.extendedCost = "";
         }
     }
-
-    calculateTotalCostCharges(): void {
-        this.workFlow.totalChargesCost = 0;
-        for (let charge of this.workFlow.charges) {
-            var value = charge.extendedCost;
-            if (value > 0) {
-                this.workFlow.totalChargesCost += value;
-            }
-            else {
-                this.workFlow.totalChargesCost = 0;
-            }
+     // calculate row wise extended price
+    calculateExtendedPrice(charge){
+        var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitPrice);
+        if (value > 0) {
+            charge.extendedPrice = value;
+            this.calculateExtendedPriceSummation()
+        }
+        else {
+            charge.extendedPrice = "";
         }
     }
+    
+    // sum of the qty
+    calculateQtySummation(){
+        this.qtySummation  =   this.workFlow.charges.reduce((acc , x ) => {
+           return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+        }, 0)
+   
+    }
+    // sum of extended cost
+    calculateExtendedCostSummation(){
+        this.extendedCostSummation = this.workFlow.charges.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+        }, 0);
+    }
+    // sum of extended price
+    calculateExtendedPriceSummation(){
+        this.workFlow.totalChargesCost = this.workFlow.charges.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
+        }, 0);
+    }
+
+ // Unused Function in both ts and html 
+    // calculateTotalCostCharges(): void {
+    //     this.workFlow.totalChargesCost = 0;
+    //     for (let charge of this.workFlow.charges) {
+    //         var value = charge.extendedCost;
+    //         if (value > 0) {
+    //             this.workFlow.totalChargesCost += value;
+    //         }
+    //         else {
+    //             this.workFlow.totalChargesCost = 0;
+    //         }
+    //     }
+    // }
 
     deleteRow(index): void {
         if (this.workFlow.charges[index].workflowChargesListId == "0" || this.workFlow.charges[index].workflowChargesListId == "") {

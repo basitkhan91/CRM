@@ -139,6 +139,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     ];
 
     totalPercent: number[];
+    currentPanelId: any;
 
     constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService) {
         this.totalPercent = [];
@@ -201,7 +202,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.workFlow.selectedItems = this.selectedItems;
 
         if (this.selectedItems != undefined && this.selectedItems.length > 0)
-            this.setCurrentPanel(this.selectedItems[0].Name);
+        this.setCurrentPanel(this.selectedItems[0].Name , this.selectedItems[0].Id);
 
     }
 
@@ -906,7 +907,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         );
     }
     currentActiveTab: string;
-    setCurrentPanel(itemName): void {
+    setCurrentPanel(itemName, id ): void {
+        this.currentPanelId = id;
         itemName = itemName.replace(" ", "_");
         //this.currentActiveTab = itemName;
         //if (itemName.Name == "Charges") {
@@ -991,7 +993,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.selectedItems = this.workFlow.selectedItems
 
         if (this.selectedItems != undefined && this.selectedItems.length > 0)
-            this.setCurrentPanel(this.selectedItems[0].Name);
+            this.setCurrentPanel(this.selectedItems[0].Name , this.selectedItems[0].Id);
 
         //if (this.workFlow.selectedItems != undefined && this.workFlow.selectedItems != undefined) {
         //    const sortByOrder = this.workFlow.selectedItems.sort((a, b) => {
@@ -1332,9 +1334,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         }
         this.showMainPage = true;
-        //setTimeout(() => {
-        //    this.setCurrentPanel(this.workFlow.selectedItems[0].Name);
-        //}, 1000);
+        setTimeout(() => {
+            this.setCurrentPanel(this.selectedItems[0].Name , this.selectedItems[0].Id);
+        }, 1000);
 
         //this.currenttaskId = "0";
         //this.selectedItems = [];
@@ -1739,7 +1741,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         var items = this.selectedItems.filter(x => x.Id != item.Id);
         this.selectedItems = items;
         this.AddActionAttribute();
-        this.setCurrentPanel(this.selectedItems[0].Name);
+        this.setCurrentPanel(this.selectedItems[0].Name , this.selectedItems[0].Id);
     }
 
     onItemSelect(item: any) {
@@ -1753,7 +1755,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     onSelectAll(items: any) {
         this.selectedItems = items;
         this.AddActionAttribute();
-        this.setCurrentPanel(this.selectedItems[this.selectedItems.length - 1].Name);
+        this.setCurrentPanel(this.selectedItems[this.selectedItems.length - 1].Name ,this.selectedItems[0].Id);
     }
 
     onDeSelectAll(items: any) {
