@@ -19,7 +19,7 @@
         </tr>
         <tr  *ngFor="let charge of workFlow.charges; let i = index">
             <td>
-                <select class="form-control custom-select" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId">
+                <select class="form-control custom-select wf-pub-id" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId" style="width: 110px;font-size:12px !important;">
                     <option value="">Select</option>
                     <option value={{ctype.id}} *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
                 </select>

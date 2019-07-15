@@ -126,6 +126,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     measurementsDL: any[] = [];
     publicationsDL: any[] = [];
     selectedSideTabIndex: number;
+    berthreshold: any;
 
     actionAttributeTabs: any[] = [
         { visible: false, selected: false, label: "Material List" },
@@ -247,8 +248,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         };
 
         this.loadWorkFlow();
+
     }
 
+    berdetermination(): any  {
+        if ((this.sourceWorkFlow.fixedAmount > 0 && this.sourceWorkFlow.fixedAmount != null) ||
+            (this.sourceWorkFlow.percentOfReplacement > 0 && this.sourceWorkFlow.percentOfReplacement != null) ||
+            (this.sourceWorkFlow.percentOfNew > 0 && this.sourceWorkFlow.percentOfNew != null)) {
+            this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
+            //let berthrld = this.sourceWorkFlow.fixedAmount < this.sourceWorkFlow.percentOfNew ? this.sourceWorkFlow.fixedAmount : this.sourceWorkFlow.percentOfNew;
+            //this.sourceWorkFlow.berThresholdAmount = berthrld < this.sourceWorkFlow.percentOfReplacement ? berthrld : this.sourceWorkFlow.percentOfReplacement;
+            console.log(this.sourceWorkFlow.berThresholdAmount);
+        }
+    }
 
     loadWorkFlow() {
         if (this._workflowService.enableUpdateMode == true && !this.UpdateMode) {
@@ -1723,9 +1735,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
         }
     }
-
-
-
 
     resetPage(): void {
         this.selectedItems = [];
