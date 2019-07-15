@@ -22,6 +22,8 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     itemclaColl: any[];
     partCollection: any[];
     errorMessage: string;
+    currentPage : number = 1;
+    itemsPerPage : number = 10;
 
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private alertService: AlertService) {
     }
@@ -60,10 +62,13 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         this.workFlow.exclusions.push(newRow);
     }
 
-    deleteRow(index): void {
-      
-            this.workFlow.exclusions.splice(index, 1);
-        
+  	    deleteRow(index): void {
+        if (this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {	
+             this.workFlow.exclusions.splice(index, 1);	           
+        }	
+         else {	
+            this.workFlow.exclusions[index].isDelete = true;	
+        }	
     }
 
     onPartSelect(event, exclusion) {

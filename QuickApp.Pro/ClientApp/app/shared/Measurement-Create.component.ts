@@ -25,6 +25,8 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     row: any;
+    currentPage : number = 1;
+    itemsPerPage : number = 10;
     constructor(private actionService: ActionService, private route: ActivatedRoute, private router: Router, private expertiseService: EmployeeExpertiseService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService) {
     }
     ngOnInit(): void {

@@ -33,6 +33,8 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     updateModeforModels: boolean = false;
     publications: Publication[];
     dropdownSettings: any;
+    currentPage : number = 1;
+    itemsPerPage : number = 10;
     constructor(private actionService: ActionService, private employeeService: EmployeeService, private publicationService: PublicationService, private alertService: AlertService) {
 
     }
