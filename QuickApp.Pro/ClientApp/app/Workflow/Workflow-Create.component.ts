@@ -126,6 +126,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     measurementsDL: any[] = [];
     publicationsDL: any[] = [];
     selectedSideTabIndex: number;
+    berthreshold: any;
+
 
     actionAttributeTabs: any[] = [
         { visible: false, selected: false, label: "Material List" },
@@ -248,6 +250,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         };
 
         this.loadWorkFlow();
+    }
+
+    berdetermination(): any {
+        if ((this.sourceWorkFlow.fixedAmount != null && this.sourceWorkFlow.fixedAmount > 0 ) ||
+            (this.sourceWorkFlow.percentOfReplacement != null && this.sourceWorkFlow.percentOfReplacement > 0 ) ||
+            (this.sourceWorkFlow.percentOfNew != null && this.sourceWorkFlow.percentOfNew > 0)) {
+            this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
+        }
     }
 
 

@@ -12526,6 +12526,9 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
     font-size: 12px !important;
     padding: 3px !important;
 }
+.workflow-table-material, .workflow-table-pub {
+    padding-bottom: 80px;
+}
 .wf-pub-id {
     display: block;
     height: 28px !important;
@@ -12538,4 +12541,22 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7 !important;
+    border-color: #2e6da4;
+    border-radius: 4px !important;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #286090 !important;
+    border-color: #204d74;
+}
+
+.wf-ber-thrld {
+    background-color: #ff949d !important;
+    color: #fff !important;
+    border-color: #ff949d !important;
 }
