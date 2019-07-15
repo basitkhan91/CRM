@@ -1230,6 +1230,7 @@ namespace QuickApp.Pro.Controllers
             address.City = vendorViewModel.City;
             address.Country = vendorViewModel.Country;
             address.MasterCompanyId = 1;
+            address.IsActive = true;
             address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = vendorViewModel.CreatedBy;
             address.UpdatedBy = vendorViewModel.UpdatedBy;

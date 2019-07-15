@@ -475,6 +475,7 @@ namespace QuickApp.Pro.Controllers
             address.City = customerViewModel.City;
             address.Country = customerViewModel.Country;
             address.MasterCompanyId = 1;
+            address.IsActive = true;
             address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = customerViewModel.CreatedBy;
             address.UpdatedBy = customerViewModel.UpdatedBy;
