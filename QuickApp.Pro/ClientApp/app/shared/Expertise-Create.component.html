@@ -15,12 +15,12 @@
             <th><label>Labour And OH Cost </label></th>
             <th><label>Action </label></th>
         </tr>
-        <tr [hidden]="expert.isDelete"  *ngFor="let expert of workFlow.expertise;let i = index">
+        <tr class="expertise-tr" [hidden]="expert.isDelete"  *ngFor="let expert of workFlow.expertise;let i = index">
                 <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
             <td>
-                <select class="form-control custom-select"
+                <select class="form-control custom-select wf-pub-id"
                         id="ddlExpertiesType"
-                        [(ngModel)]="expert.expertiseTypeId">
+                        [(ngModel)]="expert.expertiseTypeId" style="width:130px;">
                     <option value="">Select</option>
                     <option *ngFor="let type of expertiseTypes"
                             value="{{type.expertiseTypeId}}">

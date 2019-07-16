@@ -1,3 +1,9 @@
 select {
     background: url("../assets/images/ddrp-arrow.png") 98% center no-repeat;
 }
+.workflow-table-charges .charge-tr td {
+    padding: 4px;
+}
+.workflow-table-charges tr th:first-child {
+    padding: 0 10px !important;
+}

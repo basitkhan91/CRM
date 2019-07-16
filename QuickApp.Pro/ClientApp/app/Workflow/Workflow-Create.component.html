@@ -25,7 +25,7 @@
                                 PN <span class="clr-red">*</span>  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPage()"></i></span>
                             </label>
                             <p class="c-workflow-select">
-                                <p-autoComplete (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
+                                <p-autoComplete class="wf-header-select" (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
                                                 [minLength]="1" [dropdown]="true">
                                     <ng-template let-partName pTemplate="part">
                                         <div class="ui-helper-clearfix">{{partName}}</div>
@@ -76,7 +76,7 @@
                                 Customer Name  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPageCustomer()"></i></span>
                             </label>
                             <p class="c-workflow-select">
-                                <p-autoComplete [(ngModel)]="sourceWorkFlow.customerName"
+                                <p-autoComplete class="wf-header-select" [(ngModel)]="sourceWorkFlow.customerName"
                                                 (onSelect)="onCustomerNameselected($event)"
                                                 [suggestions]="customerNames"
                                                 (completeMethod)="filterNames($event)" [size]="32"
@@ -203,9 +203,6 @@
                                         <!--<b class="clr-red">{{sourceWorkFlow.percentOfNew}}</b>-->
                                         <input type="text" class="form-control w70" value="{{sourceWorkFlow.percentOfNew}}" disabled />
                                     </div>
-
-
-
                                 </div>
                             </div>
                         </div>
@@ -688,32 +685,6 @@
 							</div>
 						</div>
 
-                        <div class="card-body" style="padding-top: 0;">
-                            <div class="form-group">
-                                <div class="col-md-1" style="max-width: 104px;">
-                                    <label>Material Cost:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control" value="" />
-                                </div>
-                            </div>
-                            <div class="form-group" style="clear:both;margin-top:30px;">
-                                <div class="col-md-1" style="max-width: 104px;">
-                                    <label>Labor Cost:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control" value="" />
-                                </div>
-                            </div>
-                            <div class="form-group" style="clear:both;margin-top:60px;">
-                                <div class="col-md-1" style="max-width: 104px;">
-                                    <label>Charges:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control" value="" />
-                                </div>
-                            </div>
-                        </div>
 					</div>
 
 					<div class="bhoechie-tab-container clearfix"
