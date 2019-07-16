@@ -34,13 +34,13 @@
             <td><input type="text" class="form-control" pInputText pKeyFilter="pnum" maxlength="10" (input)="calculateExtendedCost(exclusion)" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}"></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money" (input)="calculateExtendedCost(exclusion)"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}"></td>
-            <td>
-                <select class="form-control custom-select" id="ddlEstimatedOccurance" [(ngModel)]="exclusion.estimtPercentOccurrance">
+            <td style="padding: 4px 8px;">
+                <select class="form-control custom-select wf-pub-id" id="ddlEstimatedOccurance" [(ngModel)]="exclusion.estimtPercentOccurrance">
                     <option value="">select</option>
                     <option value="{{occurance.id}}" *ngFor="let occurance of exclusionEstimatedOccurances;let i= index">{{occurance.name + '%'}}</option>
                 </select>
             </td>
-            <td><textarea type="text" class="form-control" rows="2" cols="35" value="{{exclusion.memo}}" [(ngModel)]="exclusion.memo"></textarea></td>
+            <td><input type="text" class="form-control" pInputText [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}" style="width:90px;"></td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>

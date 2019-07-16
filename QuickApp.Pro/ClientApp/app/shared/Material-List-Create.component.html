@@ -1,4 +1,4 @@
-<div class="fixed-table-container-inner table-responsive cat4-table"  style="height:380px;">
+<div class="fixed-table-container-inner table-responsive cat4-table">
     <div>
         <span class="cat-heading cat4">
             Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
@@ -27,7 +27,7 @@
             <th>Deferred</th>
             <th>Action</th>
         </tr>
-        <tr  [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
+        <tr class="material-tr"  [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
                 <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
             <td>
                 <p-autoComplete (onSelect)="onPartSelect($event,material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
@@ -41,7 +41,7 @@
                 <input rows="1"   value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
             </td>
             <td>
-                <select class="form-control custom-select" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
+                <select class="form-control custom-select wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
                     <option value="">Select</option>
                     <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
                         {{condition.description}}
@@ -49,7 +49,7 @@
                 </select>
             </td>
             <td>
-                <select class="form-control custom-select" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental">
+                <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental">
                     <option value="">Select</option>
                     <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
                         {{mandatory.name}}
@@ -57,7 +57,7 @@
                 </select>
             </td>
             <td>
-                <select class="form-control custom-select dropdown-select" [(ngModel)]="material.itemClassificationId" [disabled]="true">
+                <select class="form-control custom-select dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
                    <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
                         {{item.description}}
                     </option>
@@ -67,7 +67,7 @@
                 <input type="text" maxlength="10"   pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material);calculateQtySummation(); " [(ngModel)]="material.quantity" />
             </td>
             <td>
-                <select class="form-control custom-select" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
+                <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
                     <option value="">Select</option>
                     <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
                         {{uom.shortName}}
@@ -84,7 +84,7 @@
                 <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation()" />
             </td>
             <td>
-                    <input type="text" class="form-control" pInputText  value="{{material.memo}}" [(ngModel)]="material.memo" />
+                    <input type="text" class="form-control" pInputText  value="{{material.memo}}" [(ngModel)]="material.memo" style="width: 100px;" />
                 <!-- <textarea type="text" class="form-control" style="width: 100px;" rows="2" cols="35" value="{{material.memo}}" [(ngModel)]="material.memo"></textarea> -->
                
             </td>

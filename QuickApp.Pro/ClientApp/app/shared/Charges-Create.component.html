@@ -18,10 +18,10 @@
             <th><label>Vendor Price/Unit </label></th>
             <th><label>Actions </label></th>
         </tr>
-        <tr [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
+        <tr class="charge-tr" [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
             <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
             <td>
-                <select class="form-control custom-select wf-pub-id" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId" style="width: 110px;font-size:12px !important;">
+                <select class="form-control custom-select wf-pub-id" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId" style="width: 130px;">
                     <option value="">Select</option>
                     <option value={{ctype.id}} *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
                 </select>
@@ -35,7 +35,7 @@
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice" (input)="calculateExtendedPrice(charge)"> </td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice" disabled></td>
             <td>
-                <select class="form-control custom-select" id='dllChargesCurrency' [(ngModel)]="charge.currencyId">
+                <select class="form-control custom-select wf-pub-id" id='dllChargesCurrency' [(ngModel)]="charge.currencyId" style="width: 130px;">
                     <option value="">Select</option>
                     <option value={{currency.currencyId}} *ngFor="let currency of chargesCurrency">{{currency.symbol}}</option>
                 </select>
@@ -59,7 +59,7 @@
         </tr>
         <tr *ngIf="workFlow.charges.length > 0">
             <td>
-                <b>Total  </b>
+                <b>Total : </b>
             </td>
             <td> &nbsp;</td>
             <td> &nbsp;</td>

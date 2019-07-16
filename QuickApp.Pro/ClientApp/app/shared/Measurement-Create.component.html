@@ -32,7 +32,7 @@
             <td><input class="form-control" type="text"  pInputText pKeyFilter="num" [(ngModel)]="measurement.max" value="{{measurement.max}}"></td>
             <td><input class="form-control" type="text" [(ngModel)]="measurement.expected" value="{{measurement.expected}}"></td>
             <td><input class="form-control" type="text" [(ngModel)]="measurement.diagramURL" value="{{measurement.diagramURL}}"></td>
-            <td><textarea class="form-control" rows="2" cols="35" type="text" pInputextarea [(ngModel)]="measurement.memo" value="{{measurement.memo}}"></textarea></td>
+            <td><input type="text" class="form-control" pInputText [(ngModel)]="measurement.memo" value="{{measurement.memo}}"></td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>
