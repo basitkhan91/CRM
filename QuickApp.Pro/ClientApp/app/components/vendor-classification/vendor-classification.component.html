@@ -126,7 +126,7 @@
 			<input type="text" name="classificationName" class="form-control" #classificationName="ngModel" [(ngModel)]="sourceAction.classificationName">
 
 		</div>-->
-					<p-autoComplete [(ngModel)]="vendorName" (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterVendors($event)" [size]="30"
+					<p-autoComplete [(ngModel)]="vendorName" (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event)  [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterVendors($event)" [size]="30"
 									[minLength]="1" [dropdown]="true">
 						<ng-template let-vendorName pTemplate="item">
 							<div class="ui-helper-clearfix">{{vendorName}}</div>

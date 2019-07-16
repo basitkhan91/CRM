@@ -51,8 +51,9 @@ namespace QuickApp.Pro.Controllers
                     if (ModelState.IsValid)
                     {
                     aircraftmanufacturer.IsActive = true;
+                    aircraftmanufacturer.IsDeleted = false;
                     aircraftmanufacturer.CreatedDate = DateTime.Now;
-                    aircraftmanufacturer.UpdatedDate = null;
+                    aircraftmanufacturer.UpdatedDate = DateTime.Now;
                     aircraftmanufacturer.MasterCompanyId = 1;
                         unitOfWork.Repository<AircraftType>().Add(aircraftmanufacturer);
                         unitOfWork.SaveChanges();
