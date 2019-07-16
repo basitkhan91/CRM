@@ -199,7 +199,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (this.selectedItems.length > 0) {
             this.showActionAttribute = true;
         }
-
         this.workFlow.selectedItems = this.selectedItems;
 
         if (this.selectedItems != undefined && this.selectedItems.length > 0)
@@ -221,6 +220,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (!this.sourceWorkFlow.workFlowId) {
             this.sourceWorkFlow.workOrderNumber = 'Creating';
         }
+        
 
         this.getMaterialType();
         this.loadcustomerData();
@@ -252,12 +252,38 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     }
 
-    BERDetermination(): any {
-        if ((this.sourceWorkFlow.fixedAmount != null && this.sourceWorkFlow.fixedAmount > 0 ) ||
-            (this.sourceWorkFlow.percentOfReplacement != null && this.sourceWorkFlow.percentOfReplacement > 0 ) ||
-            (this.sourceWorkFlow.percentOfNew != null && this.sourceWorkFlow.percentOfNew > 0)) {
-            this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
+    berDetermination(): any {
+
+        // check on is fixed enable
+       if(this.sourceWorkFlow.fixedAmount !== undefined){
+           this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.fixedAmount;
+       }
+        // check on is percentOfNew enable
+        if(this.sourceWorkFlow.percentOfNew !== undefined){
+        this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfNew;
         }
+        // check on is .percentOfReplacement enable
+       if(this.sourceWorkFlow.percentOfReplacement !== undefined ){
+        this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfReplacement;
+       }
+
+
+       // 1 and 2 check box 
+       if(this.sourceWorkFlow.fixedAmount !== undefined &&  this.sourceWorkFlow.percentOfNew !== undefined){
+        this.sourceWorkFlow.berThresholdAmount = Math.min( this.sourceWorkFlow.fixedAmount , this.sourceWorkFlow.percentOfNew );     
+       }
+
+        // 1 and 2 check box 
+        if(this.sourceWorkFlow.percentOfNew !== undefined &&  this.sourceWorkFlow.percentOfNew !== undefined){
+        this.sourceWorkFlow.berThresholdAmount = Math.min( this.sourceWorkFlow.percentOfNew , this.sourceWorkFlow.percentOfNew );     
+        }
+
+
+       //1 and 3 check box
+       if(this.sourceWorkFlow.fixedAmount !== undefined &&  this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined   ){
+        this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount , this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement );
+    }
+       
     }
 
     loadWorkFlow() {
@@ -281,9 +307,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
                 if (this.sourceWorkFlow.costOfNew && this.sourceWorkFlow.percentageOfNew) {
                     this.onPercentOfNew(this.sourceWorkFlow.costOfNew, this.sourceWorkFlow.percentageOfNew);
+                   
                 }
                 if (this.sourceWorkFlow.costOfReplacement && this.sourceWorkFlow.percentageOfReplacement) {
                     this.onPercentOfReplcaement(this.sourceWorkFlow.costOfReplacement, this.sourceWorkFlow.percentageOfReplacement);
+                    
                 }
 
                 this.updateWorkFlowId = this.sourceWorkFlow.workflowId;
@@ -299,7 +327,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.actionService.getWorkFlow(this.updateWorkFlowId).subscribe(
 
             workFlow => {
-                console.log(workFlow);
+  
                 this.actionService.getActions().subscribe(
                     actions => {
                         this.actionService.getActionAttributes().subscribe(
@@ -566,18 +594,29 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (!e.target.checked) {
             this.isFixed = false;
             this.sourceWorkFlow.isFixedAmount = false;
+            this.sourceWorkFlow.fixedAmount = undefined 
+            
         }
     }
     isPercentageUnchecked(e) {
         if (!e.target.checked) {
             this.ispercent = false;
             this.sourceWorkFlow.isPercentageofNew = false;
+            // reseting the  cost of new values
+            this.sourceWorkFlow.percentOfNew = undefined
+            this.sourceWorkFlow.percentageOfNew = '';
+            this.sourceWorkFlow.costOfNew = '';
+
         }
     }
     isPercentreplcaeUnchecked(e) {
         if (!e.target.checked) {
             this.percentreplcae = false;
             this.sourceWorkFlow.percentreplcae = false;
+            // reseting the replacement cost 
+            this.sourceWorkFlow.percentOfReplacement = undefined; 
+            this.sourceWorkFlow.costOfReplacement = '';
+            this.sourceWorkFlow.percentageOfReplacement = '';
         }
     }
 
@@ -735,7 +774,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
             this.displaySelectedAction(selAction);
         }
-        console.log(this.currenttaskId, this.workflowActions);
+ 
 
 
     }
@@ -747,6 +786,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             //let afterpercent 
             //this.sourceWorkFlow.percentOfNew = afterpercent * percentValue;
         }
+        this.berDetermination();
     }
 
     onPercentOfReplcaement(myValue, percentValue) {
@@ -756,6 +796,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.sourceWorkFlow.percentOfReplacement = afterpercent * percentValue;
 
         }
+        this.berDetermination();
     }
 
     private defualtChargesListobj() {
@@ -954,7 +995,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         //    this.selectedItems.push(publicationItem);
         //}
 
-        console.log(itemName)
+  
         // used to handle the naming convenction with space in between 
 
         var list = document.getElementsByClassName('pan');
@@ -1023,7 +1064,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     getDashNumbers(publication): void {
         this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
-            console.log(result);
+           
             publication.allDashNumbers = result;
 
         });
@@ -1593,7 +1634,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     addWorkFlow(): void {
         this.sourceWorkFlow.workflowId = undefined;
-        this.sourceWorkFlow.berThresholdAmount = (Math.min((this.sourceWorkFlow.fixedAmount == undefined ? Infinity : this.sourceWorkFlow.fixedAmount), (this.sourceWorkFlow.percentOfNew == undefined ? Infinity : this.sourceWorkFlow.percentOfNew), (this.sourceWorkFlow.percentOfReplacement == undefined ? Infinity : this.sourceWorkFlow.percentOfReplaceMent)));
+        // this.sourceWorkFlow.berThresholdAmount = (Math.min((this.sourceWorkFlow.fixedAmount == undefined ? Infinity : this.sourceWorkFlow.fixedAmount), (this.sourceWorkFlow.percentOfNew == undefined ? Infinity : this.sourceWorkFlow.percentOfNew), (this.sourceWorkFlow.percentOfReplacement == undefined ? Infinity : this.sourceWorkFlow.percentOfReplaceMent)));
 
         this.SaveWorkFlow();
 
@@ -1617,7 +1658,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     title: string = "Work Flow";
 
     updateWorkFlow(): void {
-        this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
+        // this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
 
         this.SaveWorkFlow();
 

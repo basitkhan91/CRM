@@ -147,7 +147,7 @@
                                         <label class="w90">Fixed Amount:</label>
                                     </div>
                                     <div style="float:left;">
-                                        <input class="w70 amount form-control" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount" (change)="berdetermination();">
+                                        <input class="w70 amount form-control" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount" (change)="berDetermination()" >
                                     </div>
                                 </div>
                                 <div class="col-sm-6" style="float:right;">
@@ -155,7 +155,7 @@
                                         <label class="w90">BER Threshold:</label>
                                     </div>
                                     <div style="float:left;">
-                                        <input class="w70 amount form-control wf-ber-thrld" type="number" [(ngModel)]="this.sourceWorkFlow.berThresholdAmount" disabled>
+                                        <input class="w70 amount form-control wf-ber-thrld" type="number" [(ngModel)]="sourceWorkFlow.berThresholdAmount" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
                                 <div class="col">
                                     <div class="checkbox-cstm">
                                         <label style="margin-top:5px;">
-                                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-new" (click)="isFixedcheck('percentage');isPercentageUnchecked($event);" value="2">
+                                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-new" (click)="isFixedcheck('percentage');isPercentageUnchecked($event); berDetermination();" value="2">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             % of Cost of New
                                         </label>
@@ -178,13 +178,13 @@
                                     <div class="col-sm-4">
                                         <label class="w80">Cost of New:</label>
 
-                                        <input type="number" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)" (change)="berdetermination();">
+                                        <input type="number" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)" >
 
                                     </div>
                                     <div class="col-sm-4">
                                         <label class="w70">Percent:</label>
 
-                                        <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew); berdetermination();">
+                                        <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew);">
                                             <option value="">Select</option>
                                             <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
                                         </select>
@@ -206,7 +206,7 @@
                                 <div class="col">
                                     <div class="checkbox-cstm">
                                         <label style="margin-top:5px;">
-                                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace');isPercentreplcaeUnchecked($event);" value="3">
+                                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace');isPercentreplcaeUnchecked($event); berDetermination();" value="3">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             % of Replacement Cost
                                         </label>
@@ -216,9 +216,9 @@
                             <div class="col-md-12">
                                 <div [hidden]="!percentreplcae" style="padding-left: 36px;margin-top: 8px;">
                                     <div class="col-sm-4">
-                                        <div>
+                                        <div style="margin-top: -13px;">
                                             <label class="w80">Cost of Replace:</label>
-                                            <input [(ngModel)]="sourceWorkFlow.costOfReplacement" class="form-control w70 amount" type="number" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)" (change)="berdetermination();">
+                                            <input [(ngModel)]="sourceWorkFlow.costOfReplacement" class="form-control w70 amount" type="number" (input)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement)">
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
@@ -226,7 +226,7 @@
                                             <label class="w70">Percent:</label>
                                         </div>
                                         <div style="float:left;">
-                                            <select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement); berdetermination();">
+                                            <select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement); ">
                                                 <option value="">Select</option>
                                                 <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
                                             </select>
@@ -718,7 +718,8 @@
 								</a>
 								
 							</div>
-						</div>
+                        </div>
+                    
 						<div class="bhoechie-tab">
 							<!-- flight section -->
 							<div class="bhoechie-tab-content active">
