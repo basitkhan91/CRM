@@ -356,7 +356,7 @@ body {
 .custom-pill .nav-pills > li.active > a,
 .custom-pill .nav-pills > li.active > a:focus,
 .custom-pill .nav-pills > li.active > a:hover {
-	color: #363636;
+	color: white;
 	background-color: transparent;
 	border-bottom: 2px solid #c5c5c5 !important;
 }
@@ -872,8 +872,10 @@ li.active.ng-star-inserted {
     background-color: #295d92;
 }
 .delete-icon{
-	padding-right: 9px;
-    float: right;
-    color: #ff5663;
-    padding-top: 2px;
+	
+		padding-right: 9px;
+		float: right;
+		color: #dddd;
+		padding-top: 2px;
+	
 }
