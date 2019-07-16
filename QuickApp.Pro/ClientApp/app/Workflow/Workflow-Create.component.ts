@@ -128,7 +128,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     selectedSideTabIndex: number;
     berthreshold: any;
 
-
     actionAttributeTabs: any[] = [
         { visible: false, selected: false, label: "Material List" },
         { visible: false, selected: false, label: "Charges" },
@@ -250,16 +249,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         };
 
         this.loadWorkFlow();
+
     }
 
-    berdetermination(): any {
+    BERDetermination(): any {
         if ((this.sourceWorkFlow.fixedAmount != null && this.sourceWorkFlow.fixedAmount > 0 ) ||
             (this.sourceWorkFlow.percentOfReplacement != null && this.sourceWorkFlow.percentOfReplacement > 0 ) ||
             (this.sourceWorkFlow.percentOfNew != null && this.sourceWorkFlow.percentOfNew > 0)) {
             this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
         }
     }
-
 
     loadWorkFlow() {
         if (this._workflowService.enableUpdateMode == true && !this.UpdateMode) {
@@ -1735,9 +1734,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
         }
     }
-
-
-
 
     resetPage(): void {
         this.selectedItems = [];
