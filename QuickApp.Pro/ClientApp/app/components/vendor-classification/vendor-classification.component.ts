@@ -65,6 +65,7 @@ export class VendorClassificationComponent implements OnInit, AfterViewInit {
     title: string = "Create";
     id: number;
     errorMessage: any;
+    
     cols: any[];
     selectedColumns: any[];
     modal: NgbModalRef;
@@ -243,6 +244,7 @@ export class VendorClassificationComponent implements OnInit, AfterViewInit {
 
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
+        
         if (this.selectedActionName) {
             if (value == this.selectedActionName.toLowerCase()) {
                 //alert("Action Name already Exists");
@@ -281,7 +283,24 @@ export class VendorClassificationComponent implements OnInit, AfterViewInit {
             }
         }
     }
+   
+    checkduplicateVendors(event) {
 
+        this.localCollection = [];
+        for (let i = 0; i < this.allVendorClassInfo.length; i++) {
+            let vendorName = this.allVendorClassInfo[i].classificationName;
+            if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0)
+            {
+            }
+            else { 
+                alert("Action Name already Exists");
+                this.disableSave = true;
+                return;
+            }
+               
+            }
+        
+    }
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -308,6 +327,17 @@ export class VendorClassificationComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
 
         if (this.isEditMode == false) {
+            
+            this.localCollection = [];
+            for (let i = 0; i < this.allVendorClassInfo.length; i++) {
+                let vendorName = this.allVendorClassInfo[i].classificationName;
+                if (vendorName.toLowerCase().indexOf(this.vendorName.toLowerCase()) == 0) {
+                    this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                    return;
+                }
+                else {                  
+                }
+            }
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.classificationName = this.vendorName;

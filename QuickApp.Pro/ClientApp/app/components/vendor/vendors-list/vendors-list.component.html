@@ -28,8 +28,8 @@
                                 </div>
 
 
-                                <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" *ngIf="selectedColumn" (click)="dt.exportCSV()"></button>
-                                <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data"  (click)="dt.exportCSV()"></button>
+                                <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected"  (click)="dt.exportCSV({selectionOnly:true})"></button>
                                 <a matTooltip="Add Vendor" (click)="navigateTogeneralInfo()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
 
                                 <div class="excel-upload">
