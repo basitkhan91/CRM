@@ -15,7 +15,7 @@ import { EditPoComponent } from "../components/receiving/po-ro/edit-po/edit-po.c
 import { PurchaseOrderComponent } from "../components/receiving/po-ro/purchase-order/purchase-order.component";
 import { ReceivngPoComponent } from "../components/receiving/po-ro/receivng-po/receivng-po.component";
 import { RepairOrderComponent } from '../components/receiving/repair-order/repair-order.component';
-import { ShippingComponent } from '../components/receiving/shipping/shipping.component';
+//import { ShippingComponent } from '../components/receiving/shipping/shipping.component';
 
 const receivingPagesRoutes: Routes = [
 	{
@@ -31,7 +31,7 @@ const receivingPagesRoutes: Routes = [
 			{ path: "app-purchase-order", component: PurchaseOrderComponent, data: { title: "purchase Order" } },
             { path: "app-receivng-po", component : ReceivngPoComponent, data: { title: "receivng PO" } },
             { path: 'app-repair-order', component: RepairOrderComponent, data: { title: "repair order" } },
-            { path: 'app-shipping', component: ShippingComponent, data: {title: "shipping"} }
+            //{ path: 'app-shipping', component: ShippingComponent, data: {title: "shipping"} }
 			
 
 		]

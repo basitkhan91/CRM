@@ -867,3 +867,13 @@ i.fa.fa-plus-circle.fa-lg {
     margin-right: -6px;
 }
 /* ./css for alignment */
+
+li.active.ng-star-inserted {
+    background-color: #295d92;
+}
+.delete-icon{
+	padding-right: 9px;
+    float: right;
+    color: #ff5663;
+    padding-top: 2px;
+}

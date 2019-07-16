@@ -1,9 +1,10 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:380px;">
     <div style="position: absolute; width: 100%; z-index: 1;">
-        <span class="cat-heading cat4" >Add New Charges<i (click)="addRow()" class="fa fa-plus"></i></span>
+        <span class="cat-heading cat4">Add New Charges<i (click)="addRow()" class="fa fa-plus"></i></span>
     </div>
-    <table class="table table-bordered table-fixed workflow-table-charges" style="margin-top: 31px;" *ngIf="workFlow.charges .length > 0">        
+    <table class="table table-bordered table-fixed workflow-table-charges" style="margin-top: 31px;">
         <tr>
+            <th><label>S.No</label></th>
             <th><label>Type *</label></th>
             <th><label>Description</label></th>
             <th><label>QTY *</label></th>
@@ -17,19 +18,22 @@
             <th><label>Vendor Price/Unit </label></th>
             <th><label>Actions </label></th>
         </tr>
-        <tr  *ngFor="let charge of workFlow.charges; let i = index">
+        <tr [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
+            <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
             <td>
                 <select class="form-control custom-select wf-pub-id" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId" style="width: 110px;font-size:12px !important;">
                     <option value="">Select</option>
                     <option value={{ctype.id}} *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
                 </select>
             </td>
-            <td><textarea rows="1" value="{{charge.description}}" [(ngModel)]="charge.description"></textarea></td>
-            <td><input type="text" pInputText pKeyFilter="pnum" maxlength="10" class="form-control" value="{{charge.quantity}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.quantity"></td>
+            <td>
+                <input type="text" pInputText value="{{charge.description}}" [(ngModel)]="charge.description" class="form-control">
+
+            <td><input type="text" pInputText pKeyFilter="pnum" maxlength="10" class="form-control" value="{{charge.quantity}}" (input)="calculateQtySummation()" [(ngModel)]="charge.quantity"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.unitCost"></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" [disabled]="true" value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost"></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice"> </td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" [disabled]="true" value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost" (input)="calculateExtendedCostSummation()"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice" (input)="calculateExtendedPrice(charge)"> </td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice" disabled></td>
             <td>
                 <select class="form-control custom-select" id='dllChargesCurrency' [(ngModel)]="charge.currencyId">
                     <option value="">Select</option>
@@ -53,10 +57,22 @@
                 </button>
             </td>
         </tr>
-   <tr>
-       <td>
-           <b>Total Cost : {{workFlow.totalChargesCost}}</b>
-       </td>
-   </tr>
+        <tr *ngIf="workFlow.charges.length > 0">
+            <td>
+                <b>Total  </b>
+            </td>
+            <td> &nbsp;</td>
+            <td> &nbsp;</td>
+            <td>{{qtySummation}}</td>
+            <td>&nbsp;</td>
+            <td>{{extendedCostSummation}}</td>
+            <td>&nbsp;</td>
+            <td>{{workFlow.totalChargesCost}}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
     </table>
 </div>

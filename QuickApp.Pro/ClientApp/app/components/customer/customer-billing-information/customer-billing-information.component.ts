@@ -101,6 +101,7 @@ export class CustomerBillingInformationComponent
     public sourceCustomer: any = {};
 	private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    xlocation: string[];
 
 
 	constructor(private http: HttpClient, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
@@ -153,14 +154,14 @@ export class CustomerBillingInformationComponent
 
     // Get Map Data
 	getlatlng(address) {
-		this.checkAddress = true;
+        this.checkAddress = true;
 		return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
 			this.options = {
 				center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
 				zoom: 12
 			};
 			this.overlays = [
-				new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
+                new google.maps.Marker({ location: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
 				
 			];
 			return data;
