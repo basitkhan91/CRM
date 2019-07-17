@@ -26,7 +26,7 @@
                             </label>
                             <p class="c-workflow-select">
                                 <p-autoComplete class="wf-header-select" (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
-                                                [minLength]="1" [dropdown]="true">
+                                                [minLength]="1" [dropdown]="true" required>
                                     <ng-template let-partName pTemplate="part">
                                         <div class="ui-helper-clearfix">{{partName}}</div>
                                     </ng-template>
@@ -67,7 +67,23 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="createdate">Create Date <span class="clr-red">*</span></label>
-                            <p-calendar class="workflow-clder" [showIcon]="true"></p-calendar>
+                            <p-calendar [minDate]="todaydate" class="workflow-clder" [showIcon]="true" [(ngModel)]="createDate" required #createDt="ngModel"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="work scope">Work Scope</label>
+                            <select [(ngModel)]="sourceWorkFlow.workScopeId" class="form-control">
+                                <option *ngFor="let workScope of worksScopeCollection" [ngValue]="workScope.workScopeId"> {{workScope.description}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="expdate">Expiration Date</label>
+                            <p-calendar class="workflow-clder" [minDate]="createDate" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate" [disabled]="!createDt.valid"></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -87,30 +103,14 @@
                                     </ng-template>
                                 </p-autoComplete>
                             </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="expdate">Expiration Date</label>
-                            <p-calendar class="workflow-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate"></p-calendar>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="work scope">Work Scope</label>
-                            <select [(ngModel)]="sourceWorkFlow.workScopeId" class="form-control">
-                                <option *ngFor="let workScope of worksScopeCollection" [ngValue]="workScope.workScopeId"> {{workScope.description}}</option>
-                            </select>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="currency">Currency  <span class="clr-red">*</span></label>
-                            <select [(ngModel)]="sourceWorkFlow.currencyId">
+                            <select [(ngModel)]="sourceWorkFlow.currencyId" required>
                                 <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
                             </select>
                         </div>
@@ -148,7 +148,7 @@
                                     </div>
                                     <div style="float:left;">
 
-                                        <input class="w70 amount form-control" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount" (change)="berDetermination()" >
+                                        <input class="w70 amount form-control" type="number" [(ngModel)]="sourceWorkFlow.fixedAmount" (change)="berDetermination()">
 
                                     </div>
                                 </div>
@@ -181,7 +181,7 @@
                                         <label class="w80">Cost of New:</label>
 
 
-                                        <input type="number" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)" >
+                                        <input type="number" [(ngModel)]="sourceWorkFlow.costOfNew" class="form-control w70" id="" name="" (input)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew)">
 
 
 
@@ -211,7 +211,7 @@
                             <div class="col-md-4">
                                 <div class="col">
                                     <div class="checkbox-cstm">
-                                        <label style="margin-top:5px;">
+                                        <label style="margin-top:5px;margin-bottom:10px !important;">
                                             <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace');isPercentreplcaeUnchecked($event); berDetermination();" value="3">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             % of Replacement Cost
@@ -254,11 +254,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row" style="padding-left:18px;padding-right:12px;">
-                        <div class="form-group" style="width:100%;">
-                            <label for="description">Memo</label>
-                            <textarea class="form-control" [(ngModel)]="sourceWorkFlow.memo"></textarea>
-                        </div>
+                </div>
+                <div class="mar-top-10">
+                    <div class="form-group" style="width:100%;">
+                        <label for="description">Memo</label>
+                        <textarea class="form-control" [(ngModel)]="sourceWorkFlow.memo"></textarea>
                     </div>
                 </div>
             </div>
@@ -270,7 +270,7 @@
             </div>
         </div>
 
-        <h4 style="clear:both;margin-top:50px">Total Work Flow Cost</h4>
+        <h4 style="margin-top:30px">Total Workflow Cost</h4>
         <div class="form-row mar-top-10">
             <div class="col-md-2">
                 <div class="form-group">
@@ -687,6 +687,10 @@
 
 					</div>
 
+                <div *ngIf="!workFlowList">
+                    <p style="min-height: 200px;"></p>
+                </div>
+
 					<div class="bhoechie-tab-container clearfix"
 						 *ngIf="workFlowList != undefined && workFlowList.length > 0">
 						<div class="bhoechie-tab-menu">
@@ -760,10 +764,10 @@
 					</div>
 
 					<div class="text-right save-work-btn" *ngIf="(showMainPage) && (!UpdateMode) && workFlowList.length > 0">
-						<button class="btn add-btn" (click)="addWorkFlow()">Save Workflow Details</button>
+                        <button class="btn btn-primary" (click)="addWorkFlow()" style="padding: 6px 12px !important;">Save Workflow</button>
 					</div>
 					<div class="text-right save-work-btn" *ngIf="(showMainPage) && (UpdateMode) && workFlowList.length > 0">
-						<button class="btn add-btn" (click)="updateWorkFlow()">Update Workflow Details</button>
+						<button class="btn btn-primary" (click)="updateWorkFlow()" style="padding: 6px 12px !important;">Update Workflow Details</button> <!-- add-btn -->
 					</div>
 				<!--</div>-->
 

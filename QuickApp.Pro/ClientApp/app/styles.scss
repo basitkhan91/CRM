@@ -12533,7 +12533,7 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
     font-size: 12px !important;
     padding: 3px !important;
 }
-.workflow-table-material, .workflow-table-pub {
+.workflow-table-material{
     padding-bottom: 80px;
 }
 .wf-pub-id {
@@ -12570,4 +12570,7 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
 .wf-header-select .ui-autocomplete {
     padding: 0;
     margin: 6px;
+}
+body .ui-datepicker table td > a.ui-state-active {
+    color: #337ab7;
 }

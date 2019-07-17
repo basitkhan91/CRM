@@ -141,6 +141,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     totalPercent: number[];
     currentPanelId: any;
+    todaydate = new Date();
 
     constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService) {
         this.totalPercent = [];
