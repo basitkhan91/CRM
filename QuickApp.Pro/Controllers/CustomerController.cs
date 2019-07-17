@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System.Linq.Dynamic.Core;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -1656,6 +1657,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetCustomer([FromBody]CustomerSearchViewModel paginate)
         {
             GetData getData = new GetData();
+           
 
             IQueryable<CustomerSearchViewModel> queryable = null;
             List<CustomerSearchViewModel> customersList = new List<CustomerSearchViewModel>();
@@ -1768,6 +1770,7 @@ namespace QuickApp.Pro.Controllers
             }
             else
             {
+                var sortedField = paginate.sortField;
                 var customers = (from t in _context.Customer
                                  join ad in _context.Address on t.AddressId equals ad.AddressId
                                  join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
@@ -1819,7 +1822,15 @@ namespace QuickApp.Pro.Controllers
                 
             }
             #endregion
-            queryable = customersList.AsQueryable();
+            if (paginate.sortField != null)
+            {
+                queryable = customersList.AsQueryable().OrderBy(paginate.sortField);
+            }
+            else
+            {
+                queryable = customersList.AsQueryable();//.OrderBy("Email");
+            }
+            
 
             if (paginate != null)
             {
