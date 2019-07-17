@@ -16,7 +16,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() UpdateMode: boolean;
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
-    exclusionEstimatedOccurances: IExclusionEstimatedOccurance[];
+    exclusionEstimatedOccurances: any = [];
     row: any;
     allPartnumbersInfo: any[] = [];
     itemclaColl: any[];
@@ -24,19 +24,25 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     errorMessage: string;
     currentPage : number = 1;
     itemsPerPage : number = 10;
+    sumofExtendedCost : number = 0;
+    sumofQty: number = 0;
 
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private alertService: AlertService) {
+        for (var i = 0; i <= 100; i++) {
+            this.exclusionEstimatedOccurances.push( { id: i , name: String(i) });
+        }
     }
 
     ngOnInit(): void {
         this.row = this.workFlow.exclusions[0];
-        this.actionService.GetExclusionEstimatedOccurance().subscribe(
-            type => {
-                this.exclusionEstimatedOccurances = type;
-                console.log(type);
-            },
-            error => this.errorMessage = <any>error
-        );
+        // this.actionService.GetExclusionEstimatedOccurance().subscribe(
+        //     type => {
+        //         this.exclusionEstimatedOccurances = type;
+        //         console.log(type);
+        //     },
+        //     error => this.errorMessage = <any>error
+        // );
+
         this.ptnumberlistdata();
     }
 
@@ -123,9 +129,10 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     calculateExtendedCost(exclusion): void {
-        var value = Number.parseInt(exclusion.quantity) * Number.parseFloat(exclusion.unitCost);
+        var value = parseFloat((Number.parseInt(exclusion.quantity) * Number.parseFloat(exclusion.unitCost)).toFixed(2));
         if (value > 0) {
             exclusion.extendedCost = value;
+            this.calculateExtendedCostSummation()
         }
         else {
             exclusion.extendedCost = "";
@@ -133,6 +140,20 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
     }
 
+
+        // sum of the qty
+        calculateQtySummation(){
+            this.sumofQty  =   this.workFlow.exclusions.reduce((acc , x ) => {
+               return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+            }, 0)
+       
+        }
+    // sum of extended cost
+    calculateExtendedCostSummation(){
+        this.sumofExtendedCost = this.workFlow.exclusions.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+        }, 0);
+    }
     private ptnumberlistdata() {
 
 

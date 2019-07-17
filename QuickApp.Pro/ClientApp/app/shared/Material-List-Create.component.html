@@ -15,7 +15,7 @@
             <th>S.No</th>
             <th>PN *</th>
             <th>Description *</th>
-            <th>Condition *</th>
+            <th>Cond *</th>
             <th>Mandatory / Supplemental *</th>
             <th>Item Classification</th>
             <th>QTY *</th>
@@ -41,7 +41,7 @@
                 <input rows="1"   value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
             </td>
             <td>
-                <select class="form-control custom-select wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
+                <select class="form-control custom-select wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId" (change)="test()">
                     <option value="">Select</option>
                     <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
                         {{condition.description}}

@@ -42,6 +42,7 @@ export class MaterialListCreateComponent implements OnInit {
     itemsPerPage : number = 10;
     qtySummation: number = 0;
     extendedCostSummation: number = 0;
+    variableIdOfNew: any[];
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService) {
 
     }
@@ -58,8 +59,11 @@ export class MaterialListCreateComponent implements OnInit {
     //     }
         
     // }
-
+    
     ngOnInit(): void {
+     
+
+
         this.row = this.workFlow.materialList[0];
 
         this.actionService.GetMaterialMandatory().subscribe(
@@ -68,12 +72,16 @@ export class MaterialListCreateComponent implements OnInit {
             },
             error => this.errorMessage = <any>error
         );
+        
         this.loadConditionData();
         this.loadItemClassData();
         this.loadPartData();
         this.loadUOMData();
         this.ptnumberlistdata();
         // this.calculateCost();
+    }
+    test(){
+        console.log(this.workFlow.materialList);
     }
 
     filterpartItems(event) {
@@ -138,9 +146,9 @@ export class MaterialListCreateComponent implements OnInit {
             })
     }
 
-    private loadConditionData() {
-        this.conditionService.getConditionList().subscribe(data => {
-            this.materialCondition = data[0];
+  private loadConditionData() {
+    this.conditionService.getConditionList().subscribe(data => {
+           this.materialCondition = data[0];
         })
     }
 

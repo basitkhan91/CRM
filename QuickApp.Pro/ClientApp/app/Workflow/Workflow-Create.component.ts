@@ -273,16 +273,26 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.sourceWorkFlow.berThresholdAmount = Math.min( this.sourceWorkFlow.fixedAmount , this.sourceWorkFlow.percentOfNew );     
        }
 
-        // 1 and 2 check box 
-        if(this.sourceWorkFlow.percentOfNew !== undefined &&  this.sourceWorkFlow.percentOfNew !== undefined){
-        this.sourceWorkFlow.berThresholdAmount = Math.min( this.sourceWorkFlow.percentOfNew , this.sourceWorkFlow.percentOfNew );     
+        // 2 and 3  check box 
+        if(this.sourceWorkFlow.percentOfNew !== undefined &&  this.sourceWorkFlow.percentOfReplacement !== undefined ){
+        this.sourceWorkFlow.berThresholdAmount = Math.min( this.sourceWorkFlow.percentOfNew , this.sourceWorkFlow.percentOfReplacement );     
         }
+                // 1 and 3  check box 
+                if(this.sourceWorkFlow.fixedAmount !== undefined  &&  this.sourceWorkFlow.percentOfReplacement !== undefined ){
+                    this.sourceWorkFlow.berThresholdAmount = Math.min( this.sourceWorkFlow.fixedAmount , this.sourceWorkFlow.percentOfReplacement );     
+                    }
 
 
-       //1 and 3 check box
+       //1 and 2 and 3 check box
        if(this.sourceWorkFlow.fixedAmount !== undefined &&  this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined   ){
         this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount , this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement );
-    }
+       }
+              //1 and 2 and 3 check box all uncheck 
+              if(this.sourceWorkFlow.fixedAmount == undefined &&  this.sourceWorkFlow.percentOfNew == undefined && this.sourceWorkFlow.percentOfReplacement == undefined   ){
+                this.sourceWorkFlow.berThresholdAmount = 0;
+               }
+
+       
        
     }
 

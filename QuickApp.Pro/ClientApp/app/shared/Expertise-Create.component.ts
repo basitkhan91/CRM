@@ -76,7 +76,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
     calculateLabourCost(expertise): void {
         var value = Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate);
         if (value > 0) {
-            expertise.directLaborRate = Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate);
+            expertise.directLaborRate = parseFloat((Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate)).toFixed(2));
             // this.calculateTotalExpertiseCost();
         }
         else {
@@ -98,10 +98,11 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         this.sumofLabourDirectCost = this.workFlow.expertise.reduce((acc , x) => {
             return acc + parseFloat(x.directLaborRate === undefined || x.directLaborRate === '' ? 0 : x.directLaborRate)
         }, 0)
+        
     }
 
     calculateOHCost(expertise):void{
-        const percentageCal =  ((expertise.directLaborRate)*(expertise.overheadBurden))/100;  
+        const percentageCal =  parseFloat((((expertise.directLaborRate)*(expertise.overheadBurden))/100).toFixed(2));  
         if(percentageCal > 0){
             expertise.overheadCost = percentageCal;
             
@@ -116,10 +117,12 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         this.sumOfOHCost = this.workFlow.expertise.reduce((acc , x) => {
             return acc + parseFloat(x.overheadCost === undefined || x.overheadCost === '' ? 0 : x.overheadCost)  
         }, 0)
+        this.sumOfOHCost = parseFloat((this.sumOfOHCost).toFixed(2));
     }
     // used to calculate the LabourOH cost 
     calculateLabourOHCost(expertise): void {
-        const sumOfLabourOHCost = expertise.directLaborRate + expertise.overheadCost;
+        console.log(expertise);
+        const sumOfLabourOHCost = parseFloat( (expertise.directLaborRate + Number(expertise.overheadCost)).toFixed(2) );
         if(sumOfLabourOHCost > 0){
             expertise.laborOverheadCost = sumOfLabourOHCost;
             this.calculateLabourOHCostSummation();
@@ -131,6 +134,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
          this.workFlow.totalExpertiseCost = this.workFlow.expertise.reduce(  (acc ,x) => {
             return acc + parseFloat(x.laborOverheadCost === undefined || x.laborOverheadCost === '' ? 0 : x.laborOverheadCost)
          }, 0 )
+         this.workFlow.totalExpertiseCost = parseFloat((this.workFlow.totalExpertiseCost).toFixed(2));
      }
 
 

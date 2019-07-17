@@ -115,12 +115,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="form-group">
                             <label for="customercode">Customer Code</label>
                             <input type="text" class="form-control" id="customercode" readonly [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.customerCode">
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col-md-6">
@@ -134,7 +134,7 @@
                                 <div class="col">
                                     <div class="checkbox-cstm">
                                         <label>
-                                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-fixed" (click)="isFixedcheck('fixed');isFixedUnchecked($event);" value="1">
+                                            <input type="checkbox" name="ber-type" class="trigger2" data-rel="ber-fixed" (click)="isFixedcheck('fixed');isFixedUnchecked($event);berDetermination();" value="1">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             Fixed Amount
                                         </label>
@@ -266,7 +266,7 @@
 
         <div class="form-row pull-right">
             <div class="form-group col-md-4">
-                <button class="btn btn-primary" style="padding: 6px 12px;">Workflow Save</button>
+                <button class="btn btn-primary" style="padding: 6px 12px;">Save</button>
             </div>
         </div>
 
@@ -292,7 +292,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <label>Other Cost</label>
+                    <label>Other</label>
                     <input type="number" class="form-control" value="" />
                 </div>
             </div>
