@@ -70,3 +70,6 @@ select:disabled {
 .workflow-table-pub tr th:first-child {
     padding: 0 10px !important;
 }
+.workflow-table-pub {
+    height: 350px;
+}

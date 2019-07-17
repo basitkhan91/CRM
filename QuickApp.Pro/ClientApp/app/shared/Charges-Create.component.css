@@ -7,3 +7,8 @@ select {
 .workflow-table-charges tr th:first-child {
     padding: 0 10px !important;
 }
+@media only screen and (min-width: 1370px) {
+    .table-responsive {
+        overflow-x: hidden;
+    }
+}
