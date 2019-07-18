@@ -53,11 +53,22 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             error => this.errorMessage = <any>error
         );
         this.loadData();
+
+         // summation of all values in edit mode 
+        if(this.UpdateMode){
+            this.reCalculate();
+
+        }
     }
 
     ngOnChanges(): void {
 
     }
+   reCalculate(){
+    this.calculateQtySummation();
+    this.calculateExtendedCostSummation();
+    this.calculateExtendedPriceSummation();
+   }
 
     filterVendorCodes(event) {
 
@@ -134,6 +145,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         else {
             charge.extendedCost = "";
         }
+
     }
      // calculate row wise extended price
     calculateExtendedPrice(charge){
@@ -188,6 +200,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         else {
             this.workFlow.charges[index].isDelete = true;
         }
+        this.reCalculate();
     }
 
 }

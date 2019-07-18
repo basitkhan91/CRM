@@ -80,9 +80,16 @@ export class MaterialListCreateComponent implements OnInit {
         this.loadUOMData();
         this.ptnumberlistdata();
         // this.calculateCost();
+
+        if(this.UpdateMode){
+            this.reCalculate();
+
+        }
     }
-    test(){
-        console.log(this.workFlow.materialList);
+    reCalculate(){
+        this.calculateExtendedCostSummation();
+        this.calculateQtySummation();
+        this.calculatePriceSummation();
     }
 
     filterpartItems(event) {
@@ -196,6 +203,7 @@ export class MaterialListCreateComponent implements OnInit {
         else {
             this.workFlow.materialList[index].isDelete = true;
         }
+        this.reCalculate();
     }
 
     // Unused Function in both ts and html

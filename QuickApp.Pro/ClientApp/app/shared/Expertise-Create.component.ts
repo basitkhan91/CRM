@@ -37,16 +37,25 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         );
         // this.calculateTotalExpertiseCost();
         // for edit workflow to add the sum of amount 
-        this.calculateEstimatedHoursSummation();
-        this.calculateLabourDirectCost();
-        this.calculateOHCostSummation();
-        this.calculateLabourOHCostSummation();
+
+
+    // summation of all values in edit mode 
+        if(this.UpdateMode){
+this.reCalculate();
+        }
+
     }
+
 
     ngOnChanges(): void {
 
     }
-
+  reCalculate(){
+    this.calculateEstimatedHoursSummation();
+    this.calculateLabourDirectCost();
+    this.calculateOHCostSummation();
+    this.calculateLabourOHCostSummation();
+  }
     addRow(): void {
         var newRow = Object.assign({}, this.row);
         newRow.workflowExpertiseListId = "0";
@@ -71,6 +80,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         else {
             this.workFlow.expertise[index].isDelete = true;
         }
+        this.reCalculate();
     }
 
     calculateLabourCost(expertise): void {

@@ -47,7 +47,8 @@
                 </button>
             </td>
         </tr>
-        <tr>
+    
+        <tr *ngIf="workFlow.exclusions.length > 0">
             <td>Total</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
