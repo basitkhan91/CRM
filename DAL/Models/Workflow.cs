@@ -38,7 +38,7 @@ namespace DAL.Models
 
         public string Version { get; set; }
 
-        //[Required(ErrorMessage = "Work Scope is required")]
+        [Required(ErrorMessage = "Work Scope is required")]
         [ForeignKey("WorkScopeId")]
         public Nullable<long> WorkScopeId { get; set; }
 
@@ -60,6 +60,9 @@ namespace DAL.Models
 
         [Required(ErrorMessage = "Currency is required")]
         public Nullable<int> CurrencyId { get; set; }
+
+        [Required(ErrorMessage = "Work Flow Create Date is required")]
+        public Nullable<System.DateTime> WorkflowCreateDate { get; set; }
 
         public Nullable<System.DateTime> WorkflowExpirationDate { get; set; }
 
@@ -86,6 +89,8 @@ namespace DAL.Models
         public Nullable<decimal> CostOfReplacement { get; set; }
 
         public Nullable<byte> PercentageOfReplacement { get; set; }
+
+        public Nullable<decimal> OtherCost { get; set; }
 
         public string Memo { get; set; }
 

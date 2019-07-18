@@ -43,6 +43,7 @@ export class MaterialListCreateComponent implements OnInit {
     qtySummation: number = 0;
     extendedCostSummation: number = 0;
     variableIdOfNew: any[];
+    defaultUOMId: number;
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService) {
 
     }
@@ -159,8 +160,7 @@ export class MaterialListCreateComponent implements OnInit {
     private loadUOMData() {
         this.unitofmeasureService.getUnitOfMeasureList().subscribe(uomdata => {
             this.materialUOM = uomdata[0];
-         
-
+            this.defaultUOMId = this.materialUOM.filter(x => x.shortName == "Ea")[0].unitOfMeasureId;
         })
     }
 

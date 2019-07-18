@@ -18,7 +18,7 @@ namespace DAL.Models
         [Required(ErrorMessage = "Publication Description is required")]
         public string PublicationDescription { get; set; }
 
-        [Required(ErrorMessage = "Publication Type is required")]
+        //[Required(ErrorMessage = "Publication Type is required")]
         public string PublicationType { get; set; }
 
         [MaxLength(5,ErrorMessage ="Sequence maximum length 5 characters")]

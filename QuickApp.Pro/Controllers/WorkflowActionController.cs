@@ -36,7 +36,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         #endregion Constructor
-        
+
         #region Public Members
 
         [HttpGet("Get")]
@@ -52,30 +52,23 @@ namespace QuickApp.Pro.Controllers
         public object GetWorkFlows()
         {
             var workflows = _unitOfWork.workFlowRepositoryTest.getAllWorkFlow(); //_unitOfWork.Repository<Workflow>().Find(workflow => workflow.IsDelete == null || workflow.IsDelete != true);
-            return workflows.Select(workflow => 
-                new {
+            return workflows.Select(workflow =>
+                new
+                {
                     workflow = workflow,
                     WorkflowId = workflow.WorkflowId,
-                    Description = workflow.WorkScope != null ? workflow.WorkScope.Description  : "",
+                    Description = workflow.WorkScope != null ? workflow.WorkScope.Description : "",
                     WorkScopeId = workflow.WorkScopeId,
                     PartNumber = workflow.ItemMaster.PartNumber,
                     Name = workflow.Customer.Name,
                     PartDescription = workflow.ItemMaster.PartDescription,
                     WorkOrderNumber = workflow.WorkOrderNumber,
                     CreatedDate = workflow.CreatedDate,
-                    WorkflowExpirationDate = workflow.WorkflowExpirationDate
-                }
-                //workflow,
-                //workflow.WorkflowId,
-                //workflow.WorkScope != null  .Description,
-                //workflow.WorkScopeId,
-                //workflow.ItemMaster.PartNumber,
-                //workflow.Customer.Name,
-                //workflow.ItemMaster.PartDescription,
-                //workflow.WorkOrderNumber,
-                //workflow.CreatedDate,
-                //workflow.WorkflowExpirationDate,
-            );
+                    WorkflowExpirationDate = workflow.WorkflowExpirationDate,
+                    WorkflowCreateDate = workflow.WorkflowCreateDate,
+                    Version  = workflow.Version,
+                    OtherCost = workflow
+                });
         }
 
         [HttpGet("GetActionAttributes")]
