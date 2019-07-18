@@ -16,7 +16,7 @@
                     <ng-template pTemplate="caption">
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left" class="m-item-classification-select"></p-multiSelect>
                             <div class="inner-addon right-addon w200 inline-block">
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
