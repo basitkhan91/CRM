@@ -246,5 +246,9 @@ export class ItemMasterService {
     updateNonstockClass(action: any) {
         return this.itemMasterEndpoint.getUpdateActionEndpoint(action, action.itemNonClassificationId);
     }
+     // get all aircraft models
+    getAllAirCraftModels(){
+        return this.itemMasterEndpoint.getAllAircraftList();
+    }
 }
 

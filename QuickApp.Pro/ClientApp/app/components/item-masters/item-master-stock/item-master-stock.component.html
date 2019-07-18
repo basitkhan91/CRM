@@ -516,42 +516,42 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Core Value</label>
+                                        <label class="control-label col-sm-4">Core Price</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.coreValue">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Exchange List price</label>
+                                        <label class="control-label col-sm-4">Exchange Fee</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.exchangeListPrice">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">OVH Cost</label>
+                                        <label class="control-label col-sm-4">Overhaul Price</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.overheadCost">
                                         </div>
                                     </div>
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Part List Price</label>
+                                        <label class="control-label col-sm-4">Outright Amount</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.partListPrice">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">PO Core Charge</label>
+                                        <label class="control-label col-sm-4">PO Core Cost</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.poCoreCharge">
                                         </div>
                                     </div>
-                                    <div class="form-group col-sm-12">
+                                    <!-- <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">SO Core Charge</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.soCoreCharge">
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1 ">
@@ -623,12 +623,13 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="col-sm-3 inline-block display-flex">
-                                        <select  class="select-option">
-                                            <option>--Select--</option>
-                                            <option>Air Bus</option>
-                                            <option>Air Bus</option>
-                                            <option>Air Bus</option>
-                                        </select>
+                                            <select  class="select-option">
+                                                    <option>--Select--</option>
+                                                    <option>Air Bus</option>
+                                                    <option>Air Bus</option>
+                                                    <option>Air Bus</option>
+                                                </select>
+                                        <!-- <p-dropdown [options]="aircraftManfactures" ></p-dropdown> -->
                                         <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
                                     </div>
                                     <div class="col-sm-7 inline-block display-flex">

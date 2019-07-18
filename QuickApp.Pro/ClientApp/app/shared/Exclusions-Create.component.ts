@@ -44,10 +44,21 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         // );
 
         this.ptnumberlistdata();
+            // summation of all values in edit mode 
+        if(this.UpdateMode){
+            this.reCalculate();
+
+
+        }
+ 
     }
 
     ngOnChanges(): void {
 
+    }
+    reCalculate(){
+        this.calculateQtySummation();
+        this.calculateExtendedCostSummation();
     }
 
     addRow(): void {
@@ -75,6 +86,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
          else {	
             this.workFlow.exclusions[index].isDelete = true;	
         }	
+        this.reCalculate();
     }
 
     onPartSelect(event, exclusion) {

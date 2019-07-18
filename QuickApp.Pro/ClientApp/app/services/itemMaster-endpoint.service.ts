@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
-
+import {Url} from '../app.settings';
 @Injectable()
 export class ItemMasterEndpoint extends EndpointFactory {
 
@@ -706,5 +706,10 @@ export class ItemMasterEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getUpdateActionEndpoint(roleObject, actionId));
             });
+    }
+    // get all aircraft models
+    getAllAircraftList():any{
+      const getaircraftUrl = `${Url}AircraftManufacturer/getAll`;
+      return this.http.get(getaircraftUrl , this.getRequestHeaders() );
     }
 }

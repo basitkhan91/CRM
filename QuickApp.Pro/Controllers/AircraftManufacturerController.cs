@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
             [HttpGet("getAll")]
             public IActionResult getAllAircraftManufacturer()
             {
-                var aircraftManufacturer = unitOfWork.Repository<AircraftType>().GetAll().Where(x => (x.IsDeleted != true && x.IsDeleted == null )).OrderBy(x => x.AircraftTypeId);
+                var aircraftManufacturer = unitOfWork.Repository<AircraftType>().GetAll().Where(x => (x.IsDeleted != false)).OrderBy(x => x.AircraftTypeId);
                 return Ok(aircraftManufacturer);
             }
 

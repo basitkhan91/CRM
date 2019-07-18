@@ -57,6 +57,7 @@ import { GlAccount } from '../../../models/GlAccount.model';
 import { VendorService } from '../../../services/vendor.service';
 import { DatePipe } from '@angular/common';
 import { MenuItem } from 'primeng/api';
+import {DropdownModule} from 'primeng/dropdown';
 
 
 @Component({
@@ -253,6 +254,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     portalURL: any = "";
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
+    aircraftManfactures: any = [];
 
 
     constructor(public integrationService: IntegrationService,private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -264,6 +266,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
+
+        
         //Adding Below Code for By Default Date Should be current Date while Creation
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
@@ -397,6 +401,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit(): void {
+ 
 
         // Created by Jyotsna
 
@@ -433,6 +438,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getCpaesData();
         this.activeIndex = 0;
         this.Integration();
+        this.getAllAirCraft();
         this.sourceItemMaster.salesIsFixedPrice = true;
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([]),
@@ -444,6 +450,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
     }
 
+
+     // get aircraft all manfactures
+    getAllAirCraft(){
+        this.itemser.getAllAirCraftModels().subscribe(res => {
+            this.aircraftManfactures = res.map(x => {
+                return {
+                    label: x.description, value: x.aircraftTypeId
+                }
+            });
+        
+        })
+    }
 
     // Form array for capability//
     get mfgFormArray(): FormArray {
@@ -470,6 +488,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     get exchangeFormArray(): FormArray {
         return this.capabilitiesForm.get('exchangeForm') as FormArray;
     }
+
 
     //loading aircraftmanufacturer data//
     private aircraftManfacturerData() {
