@@ -42,6 +42,7 @@ namespace DAL.Models
         [ForeignKey("WorkScopeId")]
         public Nullable<long> WorkScopeId { get; set; }
 
+        [Required(ErrorMessage = "Part Number is required")]
         [ForeignKey("ItemMasterId")]
         public Nullable<long> ItemMasterId { get; set; }
 

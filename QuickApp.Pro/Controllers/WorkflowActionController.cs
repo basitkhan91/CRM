@@ -60,14 +60,14 @@ namespace QuickApp.Pro.Controllers
                     Description = workflow.WorkScope != null ? workflow.WorkScope.Description : "",
                     WorkScopeId = workflow.WorkScopeId,
                     PartNumber = workflow.ItemMaster.PartNumber,
-                    Name = workflow.Customer.Name,
+                    Name = workflow.Customer != null ? workflow.Customer.Name : "",
                     PartDescription = workflow.ItemMaster.PartDescription,
                     WorkOrderNumber = workflow.WorkOrderNumber,
                     CreatedDate = workflow.CreatedDate,
                     WorkflowExpirationDate = workflow.WorkflowExpirationDate,
-                    WorkflowCreateDate = workflow.WorkflowCreateDate,
+                    WorkflowCreateDate = workflow.WorkflowCreateDate != null ? workflow.WorkflowCreateDate.Value.ToShortDateString() : "",
                     Version  = workflow.Version,
-                    OtherCost = workflow
+                    OtherCost = workflow.OtherCost
                 });
         }
 

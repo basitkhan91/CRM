@@ -275,6 +275,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (this._workflowService.enableUpdateMode == true && !this.UpdateMode) {
             if (this._workflowService.listCollection) {
                 this.sourceWorkFlow = this._workflowService.listCollection.workflow;
+                this.sourceWorkFlow.workflowCreateDate = new Date(this.sourceWorkFlow.workflowCreateDate);
+                this.sourceWorkFlow.workflowExpirationDate = new Date(this.sourceWorkFlow.workflowExpirationDate);
+
                 if (this.sourceWorkFlow.isFixedAmount == true) {
                     this.isFixedcheck('fixed');
                 }

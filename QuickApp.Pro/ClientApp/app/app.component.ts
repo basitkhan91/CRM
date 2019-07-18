@@ -383,8 +383,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                 label: 'Work Flow',
                 icon: 'fa fa-fw fa-id-card-o',
                 items: [
-                    { label: 'Workflow List', routerLink: '/workflowmodule/workflowpages/app-workflow-list' },
-                    { label: 'Create Workflow', routerLink: '/workflowmodule/workflowpages/wf-create' },
+                    { label: 'Work Flow List', routerLink: '/workflowmodule/workflowpages/app-workflow-list' },
+                    { label: 'Create Work Flow', routerLink: '/workflowmodule/workflowpages/wf-create' },
                     { label: 'Task', routerLink: '/singlepages/singlepages/app-tasks' },
                     { label: 'Task Attribute', routerLink: '/singlepages/singlepages/app-task-attributes' },
                    
