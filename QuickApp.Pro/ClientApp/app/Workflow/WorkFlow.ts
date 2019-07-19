@@ -33,5 +33,6 @@ export interface IWorkFlow {
     totalExpertiseCost: number;
     totalChargesCost: number;
     totalMaterialCost: number;
+    totalMaterialCostValue: number;
 
 }
