@@ -63,7 +63,7 @@
                             <div class="form-group">
                                 <label for="changepn">Changed PN</label>
                                 <p class="c-workflow-select">
-                                    <p-autoComplete class="wf-header-select" (onSelect)="onPartSelect($event)" [(ngModel)]="sourceWorkFlow.changedPartNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
+                                    <p-autoComplete class="wf-header-select" (onSelect)="onChangePartSelect($event)" [(ngModel)]="sourceWorkFlow.changedPartNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
                                                     [minLength]="1" [dropdown]="true" required>
                                         <ng-template let-partName pTemplate="part">
                                             <div class="ui-helper-clearfix">{{partName}}</div>

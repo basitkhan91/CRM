@@ -142,7 +142,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     totalPercent: number[];
     currentPanelId: any;
     todaydate = new Date();
-    toggle_wf_header: boolean = false;
+    toggle_wf_header: boolean = true;
 
     MaterialCost: number;
     TotalCharges: number;
@@ -703,6 +703,15 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             })[0];
             this.sourceWorkFlow.itemMasterId = part.partId;
             this.sourceWorkFlow.partNumberDescription = part.description;
+        }
+    }
+
+    onChangePartSelect(event) {
+        if (this.filteredItems != undefined) {
+            var part = this.filteredItems.filter(function (eachPart) {
+                return event == eachPart.partName;
+            })[0];
+            this.sourceWorkFlow.changedPartNumber = part.partName;
         }
     }
 
