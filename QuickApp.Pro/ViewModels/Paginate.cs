@@ -23,14 +23,22 @@ namespace QuickApp.Pro.ViewModels
         int limit { get; set; }
     }
 
+    public interface ISortedViewModel
+    {
+        int sortOrder { get; set; }
+        string sortField { get; set;}
+    }
+
     #region Customer List
-    public class CustomerSearchViewModel : CustomerModel, IPaginateViewModel
+    public class CustomerSearchViewModel : CustomerModel, IPaginateViewModel,ISortedViewModel
     {
         public int first { get; set; }
         public int page { get; set; }
         public int pageCount { get; set; }
         public int rows { get; set; }
         public int limit { get; set; }
+        public string sortField { get; set; }
+        public int sortOrder { get; set; }
         public int totalRecords { get; set; }
     }
 

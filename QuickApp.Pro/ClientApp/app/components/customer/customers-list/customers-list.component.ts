@@ -19,7 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Router } from '@angular/router';
 import { Globals } from '../../../globals'
-import { LazyLoadEvent } from 'primeng/api';
+import { LazyLoadEvent, SortEvent } from 'primeng/api';
 
 @Component({
     selector: 'app-customers-list',
@@ -30,6 +30,8 @@ import { LazyLoadEvent } from 'primeng/api';
 /** CustomersList component*/
 export class CustomersListComponent implements OnInit, AfterViewInit {
 
+    property: string;
+    showPaginator = true;
     totelPages: number;
     customersList: any[] = [];
     createdPageDate: any;
@@ -207,7 +209,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.dataSource.data = allWorkFlows;
         this.totalRecords = allWorkFlows.length;
         this.allCustomer = allWorkFlows;
-        console.log(allWorkFlows);
+        //console.log(allWorkFlows);
     }
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
@@ -716,10 +718,12 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 
     loadCustomerPages(event: LazyLoadEvent) //when page initilizes it will call this method
     {
+        this.showPaginator = true;
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        if (this.field) {
+        if (this.field) //if search field is exist
+        {
             this.customers.push({
                 CustomerCode: this.customerCode,//code11
                 Name: this.name, //test Customer11
@@ -753,7 +757,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             }
         }
 
-        else
+        else // if search field value is not there then it will fire for pagination
         {
             setTimeout(() => {
                 if (this.allCustomer) {
@@ -761,7 +765,6 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
                         pages => {
                             this.customersList = pages;
                             this.customerPagination = this.customersList[0].customerList;
-                            //this.totalRecordsForTable = this.customersList[0].totalRecordsCount;
                             this.totalRecords = this.customersList[0].totalRecordsCount; 
                             this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         });
@@ -773,7 +776,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
     }
 
     inputGlobalFiledFilter(dataEvent, contains) {
-        
+        this.showPaginator = true;
         if (dataEvent)
         {
             this.globalCustomers.push({
@@ -793,7 +796,9 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         }
     }
 
-    inputFiledFilter(event, filed, matchMode) {
+    inputFiledFilter(event, filed, matchMode)
+    {
+        this.showPaginator = true;
         this.first = 0;
         this.event = event;
         this.field = filed;
@@ -876,12 +881,16 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             //GlobalSearchString: ""
         })
         if (this.customers) {
-            this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service
+            this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service with pagination details and field Search data
                 pages => {
                     this.customersList = pages;
                     this.customerPagination = this.customersList[0].customerList;
                     this.totalRecords = this.customersList[0].totalRecordsCount;
                     this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                    if (this.totalRecords == 0)
+                    {
+                        this.showPaginator = false;
+                    }
                 });
         }
         else {
@@ -889,5 +898,29 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         }
     }
 
+
+    eventPage(data)
+    {
+        this.property = data.field;
+        this.customerPagination = this.sortData(this.customerPagination, this.property, false);
+       
+        console.log(this.property);
+        console.log(data);
+    }
+
+    sortData(array: any[], property: string, isNumber: boolean)
+    {
+        var collection;
+        if (isNumber) {
+            return array.sort((item1, item2) => {
+                return (item1[property] > item2[property]) ? 1 : -1;
+            });
+        } else {
+            return array.sort((item1, item2) => {
+                 return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
+            });
+        }
+    }
+   
 }
 
