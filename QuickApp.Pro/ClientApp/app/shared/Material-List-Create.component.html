@@ -49,7 +49,7 @@
                 </select>
             </td>
             <td>
-                <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental">
+                <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" style="margin:auto;">
                     <option value="">Select</option>
                     <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
                         {{mandatory.name}}
@@ -84,9 +84,9 @@
                 <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation()" />
             </td>
             <td>
-                    <input type="text" class="form-control" pInputText  value="{{material.memo}}" [(ngModel)]="material.memo" style="width: 100px;" />
-                <!-- <textarea type="text" class="form-control" style="width: 100px;" rows="2" cols="35" value="{{material.memo}}" [(ngModel)]="material.memo"></textarea> -->
-               
+                <!--<input type="text" class="form-control" pInputText value="{{material.memo}}" [(ngModel)]="material.memo" style="width: 100px;" />-->
+                <textarea style="height: 25px;margin-top: 5px;min-width: 130px !important;" class="form-control" [(ngModel)]="material.memo" value="{{material.memo}}"></textarea>
+
             </td>
             <td style="width:30px;">
                 <div class="custom-checkbox-box">                    

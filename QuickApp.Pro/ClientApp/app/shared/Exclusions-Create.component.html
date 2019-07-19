@@ -40,7 +40,10 @@
                     <option value="{{occurance.id}}" *ngFor="let occurance of exclusionEstimatedOccurances;let i= index">{{occurance.name + '%'}}</option>
                 </select>
             </td>
-            <td><input type="text" class="form-control" pInputText [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}" style="width:90px;"></td>
+            <td>
+                <!--<input type="text" class="form-control" pInputText [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}" style="width:90px;">-->
+                <textarea style="height: 25px; margin-top: 5px;width: 130px;" class="form-control" [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}"></textarea>
+            </td>
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                     <i class="fa fa-trash"></i>
