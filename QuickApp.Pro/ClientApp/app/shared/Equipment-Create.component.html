@@ -29,7 +29,7 @@
                
             </td>
             <td><input type="text" class="form-control" [disabled]="true" value="{{eqp.assetDescription}}" [(ngModel)]="eqp.assetDescription" /></td>
-            <td><input type="text" class="form-control" maxlength="10" pInputText pKeyFilter="pnum"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
+            <td class="text-center"><input type="text" style="width: 75px;" class="form-control" maxlength="10" pInputText pKeyFilter="pnum"  value="{{eqp.quantity}}" [(ngModel)]="eqp.quantity"></td>
 
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">

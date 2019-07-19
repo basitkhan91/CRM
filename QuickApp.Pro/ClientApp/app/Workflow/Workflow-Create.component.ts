@@ -142,6 +142,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     totalPercent: number[];
     currentPanelId: any;
     todaydate = new Date();
+    toggle_wf_header: boolean = false;
 
     MaterialCost: number;
     TotalCharges: number;

@@ -22,8 +22,8 @@
             </td>
             <td><input type="text"  pInputText pKeyFilter="int" value="{{direction.sequence}}" maxlength="5" [(ngModel)]="direction.sequence" class="form-control"></td>
             <td>
-                    <input type="text" pInputText value="{{direction.memo}}" [(ngModel)]="direction.memo" class="form-control">
-               </td>
+                <textarea style="height: 25px; margin-top: 5px;" class="form-control" [(ngModel)]="direction.memo" value="{{direction.memo}}"></textarea>
+            </td>
            
             <td>
                 <button class="btn btn-danger nobg" (click)="deleteRow(i)">
