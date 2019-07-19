@@ -258,21 +258,45 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     berDetermination(): any {
-        var minBERThresholdAmount = 0;
-
         if (this.sourceWorkFlow.fixedAmount !== undefined) {
-            minBERThresholdAmount = this.sourceWorkFlow.fixedAmount;
+            this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.fixedAmount;
         }
-
+        // check on is percentOfNew enable
         if (this.sourceWorkFlow.percentOfNew !== undefined) {
-            minBERThresholdAmount = minBERThresholdAmount > this.sourceWorkFlow.percentOfNew ? this.sourceWorkFlow.percentOfNew : minBERThresholdAmount;
+            this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfNew;
         }
-
+        // check on is .percentOfReplacement enable
         if (this.sourceWorkFlow.percentOfReplacement !== undefined) {
-            minBERThresholdAmount = minBERThresholdAmount > this.sourceWorkFlow.percentOfReplacement ? this.sourceWorkFlow.percentOfReplacement : minBERThresholdAmount;
+            this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfReplacement;
         }
 
-        this.sourceWorkFlow.berThresholdAmount = minBERThresholdAmount;
+
+        // 1 and 2 check box 
+        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfNew !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfNew);
+        }
+
+        // 2 and 3  check box 
+        if (this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement);
+        }
+        // 1 and 3  check box 
+        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement);
+        }
+
+
+        //1 and 2 and 3 check box
+        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement);
+        }
+        //1 and 2 and 3 check box all uncheck 
+        if (this.sourceWorkFlow.fixedAmount == undefined && this.sourceWorkFlow.percentOfNew == undefined && this.sourceWorkFlow.percentOfReplacement == undefined) {
+            this.sourceWorkFlow.berThresholdAmount = 0;
+        }
+
+
+
     }
 
     loadWorkFlow() {
@@ -1889,7 +1913,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.TotalExpertiseCost = 0;
 
         for (let wf of this.workFlowList) {
-            this.MaterialCost += wf.totalMaterialCost != undefined ? wf.totalMaterialCost : 0;
+            this.MaterialCost += wf.totalMaterialCostValue != undefined ? wf.totalMaterialCostValue : 0;
             this.TotalCharges += wf.totalChargesCost != undefined ? wf.totalChargesCost : 0;
             this.TotalExpertiseCost += wf.totalExpertiseCost != undefined ? wf.totalExpertiseCost : 0;
         }
@@ -1897,7 +1921,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
         this.TotalCharges = parseFloat((this.TotalCharges).toFixed(2));
         this.TotalExpertiseCost = parseFloat((this.TotalExpertiseCost).toFixed(2));
-        this.Total = this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + ((this.sourceWorkFlow.OtherCost == undefined || this.sourceWorkFlow.OtherCost == '') ? 0 : this.sourceWorkFlow.OtherCost);
-        this.PercentBERThreshold = this.Total / this.sourceWorkFlow.berThresholdAmount;
+        this.Total = parseFloat(this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + ((this.sourceWorkFlow.OtherCost == undefined || this.sourceWorkFlow.OtherCost == '') ? 0 : this.sourceWorkFlow.OtherCost).toFixed(2));
+        this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
     }
 }

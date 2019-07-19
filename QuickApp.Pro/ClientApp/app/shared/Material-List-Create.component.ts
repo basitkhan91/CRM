@@ -241,8 +241,8 @@ export class MaterialListCreateComponent implements OnInit {
 
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
-        this.workFlow.totalMaterialCost = this.extendedCostSummation;
-        this.workFlowChange.emit(this.workFlow);
+        this.workFlow.totalMaterialCostValue = this.extendedCostSummation;
+       
     }
 
     // sum of the qty
