@@ -8,18 +8,18 @@ namespace DAL.Models
     public class AircraftDashNumber : BaseEntity, IAudit
     {
         [Key]
-        public long  DashNumberId { get; set; }
+        public int  DashNumberId { get; set; }
 
         [Required(ErrorMessage ="Aircraft Id is required.")]
         [ForeignKey("AircraftTypeId")]
-        public Int32  AircraftTypeId { get; set; }
+        public int  AircraftTypeId { get; set; }
 
         [ForeignKey("AircraftModelId")]
         [Required(ErrorMessage = "Aircraft Model Id is required.")]
         public long   AircraftModelId { get; set; }
 
         [Required(ErrorMessage = "Dash Number is required.")]
-        public Int32  DashNumber { get; set; }
+        public int  DashNumber { get; set; }
         
         public Int32 MasterCompanyId { get; set; }
 
