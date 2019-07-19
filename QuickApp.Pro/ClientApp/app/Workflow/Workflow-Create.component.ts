@@ -27,7 +27,7 @@ import { ItemMasterService } from "../services/itemMaster.service";
 import { AlertService, MessageSeverity } from "../services/alert.service";
 import * as $ from 'jquery';
 import { forEach } from "@angular/router/src/utils/collection";
-
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
@@ -127,7 +127,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     publicationsDL: any[] = [];
     selectedSideTabIndex: number;
     berthreshold: any;
-
+    modal: any;
     actionAttributeTabs: any[] = [
         { visible: false, selected: false, label: "Material List" },
         { visible: false, selected: false, label: "Charges" },
@@ -143,7 +143,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     currentPanelId: any;
     todaydate = new Date();
 
-    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService) {
+    MaterialCost: number;
+    TotalCharges: number;
+    TotalExpertiseCost: number;
+
+    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal) {
         this.totalPercent = [];
         for (var i = 0; i <= 100; i++) {
             this.totalPercent.push(i);
@@ -1822,6 +1826,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.resetWorkflowGrid();
     }
 
+    taskDeleteConfirmation(confirmDeleteTemplate: any, task : any) : void {
+       // this.modal = this.modalService.open(confirmDeleteTemplate, { size: 'sm' });
+    }
+
+    dismissModel() {
+        this.modal.close();
+    }
+
+
+
     private resetWorkflowGrid(): void {
         for (let wf of this.workFlowList) {
             var chargesItem = wf.selectedItems.filter(x => x.Name == "Charges");
@@ -1866,5 +1880,24 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
         
     }
-    
+
+    Total: number;
+    PercentBERThreshold: number;
+    calculateTotalWorkFlowCost(): void {
+        this.MaterialCost = 0;
+        this.TotalCharges = 0;
+        this.TotalExpertiseCost = 0;
+
+        for (let wf of this.workFlowList) {
+            this.MaterialCost += wf.totalMaterialCost != undefined ? wf.totalMaterialCost : 0;
+            this.TotalCharges += wf.totalChargesCost != undefined ? wf.totalChargesCost : 0;
+            this.TotalExpertiseCost += wf.totalExpertiseCost != undefined ? wf.totalExpertiseCost : 0;
+        }
+
+        this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
+        this.TotalCharges = parseFloat((this.TotalCharges).toFixed(2));
+        this.TotalExpertiseCost = parseFloat((this.TotalExpertiseCost).toFixed(2));
+        this.Total = this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + ((this.sourceWorkFlow.OtherCost == undefined || this.sourceWorkFlow.OtherCost == '') ? 0 : this.sourceWorkFlow.OtherCost);
+        this.PercentBERThreshold = this.Total / this.sourceWorkFlow.berThresholdAmount;
+    }
 }

@@ -161,16 +161,18 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     
     // sum of the qty
     calculateQtySummation(){
-        this.qtySummation  =   this.workFlow.charges.reduce((acc , x ) => {
-           return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
-        }, 0)
-   
+        this.qtySummation = this.workFlow.charges.reduce((acc, x) => {
+            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+        }, 0);
+
     }
-    // sum of extended cost
+
+    // sum of extended cost 
     calculateExtendedCostSummation(){
         this.extendedCostSummation = this.workFlow.charges.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
+        this.workFlow.totalChargesCost = this.extendedCostSummation;
     }
     // sum of extended price
     calculateExtendedPriceSummation(){

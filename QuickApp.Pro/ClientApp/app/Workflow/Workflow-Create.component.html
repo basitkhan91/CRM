@@ -66,7 +66,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="createdate">Create Date <span class="clr-red">*</span></label>
-                            <p-calendar  class="workflow-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowCreateDate" required></p-calendar>
+                            <p-calendar class="workflow-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowCreateDate" required></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -82,7 +82,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="expdate">Expiration Date</label>
-                            <p-calendar class="workflow-clder" [minDate]="sourceWorkFlow.workflowCreateDate" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate" ></p-calendar>
+                            <p-calendar class="workflow-clder" [minDate]="sourceWorkFlow.workflowCreateDate" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWorkFlow.workflowExpirationDate"></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -127,7 +127,7 @@
                                 <div class="col">
                                     <div class="checkbox-cstm">
                                         <label>
-                                            <input type="checkbox" [checked]="sourceWorkFlow.isFixedAmount"  name="ber-type" class="trigger2" data-rel="ber-fixed" (click)="isFixedcheck('fixed');isFixedUnchecked($event);berDetermination();" value="1">
+                                            <input type="checkbox" [checked]="sourceWorkFlow.isFixedAmount" name="ber-type" class="trigger2" data-rel="ber-fixed" (click)="isFixedcheck('fixed');isFixedUnchecked($event);berDetermination();" value="1">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             Fixed Amount
                                         </label>
@@ -192,7 +192,7 @@
                                 <div class="col">
                                     <div class="checkbox-cstm">
                                         <label style="margin-top:5px;margin-bottom:10px !important;">
-                                            <input type="checkbox" [checked]="sourceWorkFlow.isPercentageOfReplacement"  name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace');isPercentreplcaeUnchecked($event); berDetermination();" value="3">
+                                            <input type="checkbox" [checked]="sourceWorkFlow.isPercentageOfReplacement" name="ber-type" class="trigger2" data-rel="ber-replace" (click)="isFixedcheck('percentreplace');isPercentreplcaeUnchecked($event); berDetermination();" value="3">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             % of Replacement Cost
                                         </label>
@@ -250,19 +250,19 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Material Cost</label>
-                    <input type="number" class="form-control" value="" disabled />
+                    <input type="number" class="form-control" [(ngModel)]="MaterialCost" disabled />
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Expertise Cost</label>
-                    <input type="number" class="form-control" value="" disabled />
+                    <input type="number" class="form-control" [(ngModel)]="TotalExpertiseCost" disabled />
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Charges</label>
-                    <input type="number" class="form-control" value="" disabled />
+                    <input type="number" class="form-control" [(ngModel)]="TotalCharges" disabled />
                 </div>
             </div>
             <div class="col-md-2">
@@ -274,17 +274,30 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Total</label>
-                    <input type="number" class="form-control" value="" disabled />
+                    <input type="number" class="form-control" [(ngModel)]="Total" value="" disabled />
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label>% of BER Threshold</label>
-                    <input type="number" class="form-control" value="" disabled />
+                    <input type="number" class="form-control" [(ngModel)]="PercentBERThreshold"   value="" disabled />
                 </div>
             </div>
         </div>
+        <div class="form-row mar-top-10">
+            <div class="col-md-2">
+                <div class="form-row pull-right">
+                    <div class="form-group col-md-4">
+                        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px;" (click)="calculateTotalWorkFlowCost()">Calcualte Total WF Cost</button>
+                    </div>
+                </div>
 
+                <!--<div class="form-group">
+                    <label>Material Cost</label>
+                    <input type="number" class="form-control" [(ngModel)]="sourceWorkFlow.totalMaterialCost" disabled />
+                </div>-->
+            </div>
+        </div>
     </div>
 </div>
 
@@ -385,7 +398,7 @@
                                [class.active]="workFlow.taskId == currenttaskId">
                                 {{workFlow.ActionName}}
 
-                                <i class="fa fa-trash delete-icon"></i>
+                                <i class="fa fa-trash delete-icon" (click)="taskDeleteConfirmation()"></i>
                             </a>
 
                         </div>
@@ -396,6 +409,7 @@
                         <div class="bhoechie-tab-content active">
                             <!--<h1 class="heading">{{workFlow.ActionName}}</h1>-->
                             <div class="custom-pill">
+                                
                                 <ul class="nav nav-pills">
                                     <li *ngFor="let item of workFlow.selectedItems"
                                         (click)="setCurrentPanel(item.Name)"
@@ -502,5 +516,17 @@
         </div>
         <div class="clear"></div>
     </div>
+    <ng-template #deleteConfirm let-c="close" let-d="dismiss">
+        <div class="modal-title">
+            <h4>Confirm workflow delete</h4>
+        </div>
+        <div>
+            <p> Are you sure you want to delete Worklflow Task?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="removeTask()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        </div>
+    </ng-template>
 
 
