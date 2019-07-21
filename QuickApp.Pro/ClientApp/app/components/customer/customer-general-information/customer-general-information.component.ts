@@ -677,6 +677,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // save Customer Info//
     editItemCloseModel() {
+        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
+            let description = this.allcustomerclassificationInfo[i].description;
+            if (description.toLowerCase().indexOf(this.classificationName.toLowerCase()) == 0) {
+                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                return;
+            }
+            else {
+            }
+        }
         if (!(this.classificationName))
         {
             this.displayCustomerClassification = true;

@@ -156,7 +156,11 @@ export class CreateRoComponent implements OnInit {
 		//this.alertService.stopLoadingMessage();
 		//this.loadingIndicator = false;
 
-	}
+    }
+    openHist() {
+        alert("Functionality Not Yet Developed");
+        return;
+    }
 	onVendorselected(event) {
 		//debugger;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
