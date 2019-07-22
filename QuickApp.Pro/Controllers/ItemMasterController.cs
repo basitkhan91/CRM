@@ -6,10 +6,7 @@ using AutoMapper;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using System.Net.Http.Headers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
@@ -1167,46 +1164,6 @@ namespace QuickApp.Pro.Controllers
                 .ToList();
             return Ok(itemMasters);
         }
-
-        // [Produces("application/json")]
-        // [Route("api/[controller]")]
-        //[HttpPost("itemNonStockclasspost")]
-        //private IHostingEnvironment _hostingEnvironment;
-
-        //    public ItemMasterController(IHostingEnvironment hostingEnvironment)
-        //    {
-        //        _hostingEnvironment = hostingEnvironment;
-        //    }
-
-        //    [HttpPost, DisableRequestSizeLimit]
-        //    public ActionResult UploadFile()
-        //    {
-        //        try
-        //        {
-        //            var file = Request.Form.Files[0];
-        //            string folderName = "Upload";
-        //            string webRootPath = _hostingEnvironment.WebRootPath;
-        //            string newPath = Path.Combine(webRootPath, folderName);
-        //            if (!Directory.Exists(newPath))
-        //            {
-        //                Directory.CreateDirectory(newPath);
-        //            }
-        //            if (file.Length > 0)
-        //            {
-        //                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-        //                string fullPath = Path.Combine(newPath, fileName);
-        //                using (var stream = new FileStream(fullPath, FileMode.Create))
-        //                {
-        //                    file.CopyTo(stream);
-        //                }
-        //            }
-        //            return Json("Upload Successful.");
-        //        }
-        //        catch (System.Exception ex)
-        //        {
-        //            return Json("Upload Failed: " + ex.Message);
-        //        }
-        //    }
-        }
+    }
 
 }
