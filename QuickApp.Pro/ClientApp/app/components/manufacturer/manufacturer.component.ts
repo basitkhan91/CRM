@@ -1,17 +1,4 @@
-﻿//import { Component, ViewChild } from '@angular/core';
-//import { SingleScreenBreadcrumbService } from '../../services/single-screens-breadcrumb.service';
-//import { AuthService } from '../../services/auth.service';
-//import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-//import { FormBuilder } from '@angular/forms';
-//import { AlertService, MessageSeverity } from '../../services/alert.service';
-//import { ManufacturerService } from '../../services/manufacturer.service';
-//import { MatDialog, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-//import { MasterComapnyService } from '../../services/mastercompany.service';
-//import { MasterCompany } from '../../models/mastercompany.model';
-//import { AuditHistory } from '../../models/audithistory.model';
-//import { fadeInOut } from '../../services/animations';
-//import { Manufacturer } from '../../models/manufacturer.model';
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { fadeInOut } from '../../services/animations';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import * as $ from 'jquery';
@@ -48,8 +35,16 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** manufacturer1 component*/
 export class ManufacturerComponent implements OnInit, AfterViewInit {
-
-
+    manufacturerPaginationList: any[] = [];
+    totelPages: number;
+    manufacturer = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    nameInputFieldValue: any;
+    commentsInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    event: any;
     auditHisory: any[];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -472,16 +467,87 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allManufacturerInfo) {
-                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field)
+        {
+            this.manufacturer.push({
+                Name: this.nameInputFieldValue,
+                Comments: this.commentsInputFieldValue,
+                CreatedBy: this.createdByInputFieldValue,
+                UpdatedBy: this.updatedByInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.manufacturer) {
+                this.workFlowtService.getServerPages(this.manufacturer[this.manufacturer.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.manufacturerPagination = pages[0];
-                        }
+                        this.manufacturerPaginationList = pages;
+                        this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
+                        this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
-                this.loading = false;
             }
-        }, 1000);
+            else {
+            }
+        }
+        else {
+            setTimeout(() => {
+                if (this.allManufacturerInfo) {
+                    this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.manufacturerPaginationList = pages;
+                            this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
+                            this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+        
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+        this.first = 0;
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'name') {
+            this.nameInputFieldValue = event;
+        }
+        if (filed == 'comments') {
+            this.commentsInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.manufacturer.push({
+            Name: this.nameInputFieldValue,
+            Comments: this.commentsInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.manufacturer) {
+            this.workFlowtService.getServerPages(this.manufacturer[this.manufacturer.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    this.manufacturerPaginationList = pages;
+                    this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
+                    this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                });
+        }
+        else {
+        }
     }
 }

@@ -15,6 +15,7 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
 })
 export class ChargesCreateComponent implements OnInit, OnChanges {
     VendorCodesColl: any[] = [];
+    ccRegex: RegExp = /[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$/;
     vendorCodes: any[] = [];
     allActions: any[] = [];
     @Input() workFlow: IWorkFlow;
@@ -28,6 +29,10 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     row: any;
 
     errorMessage: string;
+
+
+    currentPage: number = 1;
+    itemsPerPage: number = 10;
     constructor(private vendorservice: VendorService, private actionService: ActionService, private currencyService: CurrencyService, private alertService: AlertService) {
     }
 
@@ -47,10 +52,22 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             error => this.errorMessage = <any>error
         );
         this.loadData();
+
+        // summation of all values in edit mode 
+        if (this.UpdateMode) {
+            this.reCalculate();
+
+        }
     }
 
     ngOnChanges(): void {
 
+    }
+
+    reCalculate() {
+        this.calculateQtySummation();
+        this.calculateExtendedCostSummation();
+        this.calculateExtendedPriceSummation();
     }
 
     filterVendorCodes(event) {
@@ -118,15 +135,52 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.workFlow.charges.push(newRow);
     }
 
+    // calculate row wise extended cost
     calculateExtendedCost(charge): void {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
             charge.extendedCost = value;
+            this.calculateExtendedCostSummation();
         }
         else {
             charge.extendedCost = "";
         }
+
     }
+    // calculate row wise extended price
+    calculateExtendedPrice(charge) {
+        var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitPrice);
+        if (value > 0) {
+            charge.extendedPrice = value;
+            this.calculateExtendedPriceSummation()
+        }
+        else {
+            charge.extendedPrice = "";
+        }
+    }
+
+    // sum of the qty
+    calculateQtySummation() {
+        this.workFlow.qtySummation = this.workFlow.charges.reduce((acc, x) => {
+            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+        }, 0);
+
+    }
+
+    // sum of extended cost 
+    calculateExtendedCostSummation() {
+        this.workFlow.extendedCostSummation = this.workFlow.charges.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+        }, 0);
+        //this.workFlow.totalChargesCost = this.workFlow.extendedCostSummation;
+    }
+    // sum of extended price
+    calculateExtendedPriceSummation() {
+        this.workFlow.totalChargesCost = this.workFlow.charges.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
+        }, 0);
+    }
+
 
     deleteRow(index): void {
         if (this.workFlow.charges[index].workflowChargesListId == "0" || this.workFlow.charges[index].workflowChargesListId == "") {
@@ -135,6 +189,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         else {
             this.workFlow.charges[index].isDelete = true;
         }
+        this.reCalculate();
     }
 
 }

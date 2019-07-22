@@ -212,7 +212,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
 
                     { label: 'Bulk Emails', routerLink: '/#' },
-                    { label: 'code Prefixes', routerLink: '/#' },
+                    { label: 'Code Prefixes', routerLink: '/#' },
                     { label: 'Customer CRM', routerLink: '/#' },
                     { label: 'Email Config', routerLink: '/#' },
                     {
@@ -236,7 +236,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Customers List', routerLink: '/customersmodule/customerpages/app-customers-list' },
                     { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-general-information' },
-                    { label: 'Clasification', routerLink: '/singlepages/singlepages/app-customer-classification' },
+                    { label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                     {
                         label: 'Invoice', items: [
                             { label: 'Invoice List', routerLink: '/#' },
@@ -283,11 +283,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Disposal Sale', routerLink: '/#'
                     },
-                    { label: 'Periodic Depression', routerLink: '/#' },
+                    { label: 'Periodic Depreciation', routerLink: '/#' },
                     { label: 'Asset Adjustment', routerLink: '/#' },
                     { label: 'Calibration Management', routerLink: '/#' },
-                    { label: 'Leases & Insuarance', routerLink: '/#' },
-                    { label: 'Asset Maintainence', routerLink: '/#' },
+                    { label: 'Leases & Insurance', routerLink: '/#' },
+                    { label: 'Asset Maintenance', routerLink: '/#' },
                     { label: 'Depreciation Forecast', routerLink: '/#' },
                     {
                         label: 'Repeat and Forms', items: [{ label: 'List Report', routerLink: '/#' },
@@ -297,7 +297,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         ]
                     },
                     {
-                        label: 'Asset Maintanence', items: [
+                        label: 'Asset Maintenance', items: [
                             { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
                             { label: 'Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
@@ -383,8 +383,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                 label: 'Work Flow',
                 icon: 'fa fa-fw fa-id-card-o',
                 items: [
-                    { label: 'Workflow List', routerLink: '/workflowmodule/workflowpages/app-workflow-list' },
-                    { label: 'Create Workflow', routerLink: '/workflowmodule/workflowpages/wf-create' },
+                    { label: 'Work Flow List', routerLink: '/workflowmodule/workflowpages/app-workflow-list' },
+                    { label: 'Create Work Flow', routerLink: '/workflowmodule/workflowpages/wf-create' },
                     { label: 'Task', routerLink: '/singlepages/singlepages/app-tasks' },
                     { label: 'Task Attribute', routerLink: '/singlepages/singlepages/app-task-attributes' },
                    
@@ -734,6 +734,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: 'Employees', items: [
                             { label: 'Job Titles', routerLink: '/singlepages/singlepages/app-job-title' },
                             { label: 'Employee Expertise', routerLink: '/singlepages/singlepages/app-employee-expertise' },
+                            { label: 'Certification Type', routerLink: '/singlepages/singlepages/app-certification-type' },
                         ]
                     },
                 ]

@@ -94,7 +94,7 @@ export class ActionEndpoint extends EndpointFactory {
     }
 
     getNewWorkFlow<T>(workflowData: any): Observable<T> {
-        debugger;
+        
         let obj = {
             'charges': workflowData.charges,
             'directions': workflowData.directions,
@@ -135,7 +135,10 @@ export class ActionEndpoint extends EndpointFactory {
             'workflowId': workflowData.workflowId,
             'workScopeId': workflowData.workScopeId,
             'customerCode': workflowData.customerCode,
-            'isActive' : workflowData.isActive,
+            'isActive': workflowData.isActive,
+            'workflowCreateDate': workflowData.workflowCreateDate,
+            'otherCost': workflowData.otherCost,
+
         };
 		return this.http.post<T>(this.AddWorkFlowURL, JSON.parse(JSON.stringify(obj)), this.getRequestHeaders())
 			.catch(error => {

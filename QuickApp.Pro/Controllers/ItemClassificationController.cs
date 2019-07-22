@@ -141,13 +141,100 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("pagination")]
-        public IActionResult GetItemClassification([FromBody]PaginateViewModel paginate)
+        public IActionResult GetItemClassification([FromBody]ItemClassificationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<ItemClassfication>.Create(_unitOfWork.ItemClassification.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            GetData getData = new GetData();
+            IQueryable<ItemClassificationViewModel> queryable = null;
+            List<ItemClassificationViewModel> itemClassificationList = new List<ItemClassificationViewModel>();
+            ItemClassificationViewModel itemClassification = null;
+            if (!string.IsNullOrEmpty(paginate.ItemClassificationCode)
+                || !string.IsNullOrEmpty(paginate.Description)
+                 || !string.IsNullOrEmpty(paginate.ItemType)
+                || !string.IsNullOrEmpty(paginate.Memo)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var itemClassifications = _unitOfWork.itemClassification;
+                var itemClassifications = _unitOfWork.ItemClassification.getItemClassification();
+                foreach (var item in itemClassifications)
+                {
+                    itemClassification = new ItemClassificationViewModel();
+                    itemClassification.ItemClassificationId = item.ItemClassificationId;
+                    itemClassification.ItemClassificationCode = item.ItemClassificationCode;
+                    itemClassification.Description = item.Description;
+                    itemClassification.ItemType = item.ItemType;
+                    itemClassification.Memo = item.Memo;
+                    itemClassification.CreatedDate = item.CreatedDate;
+                    itemClassification.CreatedBy = item.CreatedBy;
+                    itemClassification.UpdatedDate = item.UpdatedDate;
+                    itemClassification.UpdatedBy = item.UpdatedBy;
+                    itemClassification.IsActive = item.IsActive;
+                    itemClassificationList.Add(itemClassification);
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    itemClassificationList = itemClassificationList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.ItemClassificationCode))
+                {
+                    itemClassificationList = itemClassificationList.Where(c => c.ItemClassificationCode != null && c.ItemClassificationCode.ToUpper().Contains(paginate.ItemClassificationCode.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.ItemType))
+                {
+                    itemClassificationList = itemClassificationList.Where(c => c.ItemType != null && c.ItemType.ToUpper().Contains(paginate.ItemType.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Memo))
+                {
+                    itemClassificationList = itemClassificationList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    itemClassificationList = itemClassificationList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    itemClassificationList = itemClassificationList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+                getData.TotalRecordsCount = itemClassificationList.Count();
+            }
+            else
+            {
+                var itemClassifications = _unitOfWork.ItemClassification.getItemClassification();
+                foreach (var item in itemClassifications)
+                {
+                    itemClassification = new ItemClassificationViewModel();
+                    itemClassification.ItemClassificationId = item.ItemClassificationId;
+                    itemClassification.ItemClassificationCode = item.ItemClassificationCode;
+                    itemClassification.Description = item.Description;
+                    itemClassification.ItemType = item.ItemType;
+                    itemClassification.Memo = item.Memo;
+                    itemClassification.CreatedDate = item.CreatedDate;
+                    itemClassification.CreatedBy = item.CreatedBy;
+                    itemClassification.UpdatedDate = item.UpdatedDate;
+                    itemClassification.UpdatedBy = item.UpdatedBy;
+                    itemClassification.IsActive = item.IsActive;
+                    itemClassificationList.Add(itemClassification);
+                    getData.TotalRecordsCount = itemClassificationList.Count();
+                }
+            }
+            queryable = itemClassificationList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                getData.ItemClassificationList = DAL.Common.PaginatedList<ItemClassificationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<ItemClassificationViewModel> ItemClassificationList { get; set; }
         }
     }
 }

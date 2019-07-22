@@ -19,7 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Router } from '@angular/router';
 import { Globals } from '../../../globals'
-import { LazyLoadEvent } from 'primeng/api';
+import { LazyLoadEvent, SortEvent } from 'primeng/api';
 
 @Component({
     selector: 'app-customers-list',
@@ -30,6 +30,16 @@ import { LazyLoadEvent } from 'primeng/api';
 /** CustomersList component*/
 export class CustomersListComponent implements OnInit, AfterViewInit {
 
+    property: string;
+    showPaginator = true;
+    totelPages: number;
+    customersList: any[] = [];
+    createdPageDate: any;
+    updatedBy: any;
+    createdBy: any;
+    createdDate: any;
+    updatedDate: any;
+    pageLinks: number = 4;
     customerType: any;
     stateOrProvince: any;
     city: any;
@@ -150,7 +160,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.cols = [
 
             //{ field: 'actionId', header: 'Action Id' },
-            { field: 'customerCode', header: 'Customer Code' },
+            { field: 'customerCode', header: 'Customers Code' },
             { field: 'name', header: 'Customer Name' },
             { field: 'customerType', header: 'Customer Type' },
             { field: 'email', header: 'Customer Email' },
@@ -199,7 +209,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.dataSource.data = allWorkFlows;
         this.totalRecords = allWorkFlows.length;
         this.allCustomer = allWorkFlows;
-        console.log(allWorkFlows);
+        //console.log(allWorkFlows);
     }
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
@@ -708,10 +718,12 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 
     loadCustomerPages(event: LazyLoadEvent) //when page initilizes it will call this method
     {
+        this.showPaginator = true;
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        if (this.field) {
+        if (this.field) //if search field is exist
+        {
             this.customers.push({
                 CustomerCode: this.customerCode,//code11
                 Name: this.name, //test Customer11
@@ -731,7 +743,11 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
                 this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service
                     pages => {
                         if (pages.length > 0) {
-                            this.customerPagination = pages[0];
+                            this.customersList = pages;
+                            this.customerPagination = this.customersList[0].customerList;
+                            this.totalRecords = this.customersList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                            
                         }
                         else
                         {
@@ -741,15 +757,16 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             }
         }
 
-        else
+        else // if search field value is not there then it will fire for pagination
         {
             setTimeout(() => {
                 if (this.allCustomer) {
                     this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
                         pages => {
-                            if (pages.length > 0) {
-                                this.customerPagination = pages[0];
-                            }
+                            this.customersList = pages;
+                            this.customerPagination = this.customersList[0].customerList;
+                            this.totalRecords = this.customersList[0].totalRecordsCount; 
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         });
                     this.loading = false;
                 }
@@ -759,7 +776,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
     }
 
     inputGlobalFiledFilter(dataEvent, contains) {
-        
+        this.showPaginator = true;
         if (dataEvent)
         {
             this.globalCustomers.push({
@@ -772,15 +789,17 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             })
             this.workFlowtService.getGlobalSearch(this.globalCustomers[this.globalCustomers.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-                    if (pages.length > 0) {
-                        this.customerPagination = pages[0];
-                    }
+                    this.customersList = pages;
+                    this.customerPagination = this.customersList[0].customerList;
+                    this.totalRecords = this.customersList[0].totalRecordsCount; 
                 });
         }
     }
 
-    inputFiledFilter(event, filed, matchMode) {
-
+    inputFiledFilter(event, filed, matchMode)
+    {
+        this.showPaginator = true;
+        this.first = 0;
         this.event = event;
         this.field = filed;
         this.matvhMode = matchMode;
@@ -827,6 +846,18 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         if (filed == 'customerType') {
             this.customerType = event;
         }
+        if (filed == 'updatedDate') {
+            this.updatedDate = event;
+        }
+        if (filed == 'createdDate') {
+            this.createdPageDate = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdBy = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedBy = event;
+        }
         //else {
         //    this.primarySalesPersonFirstName = '';
         //}
@@ -837,7 +868,11 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             City: this.city,
             StateOrProvince: this.stateOrProvince,
             CustomerType: this.customerType,
-            PrimarySalesPersonFirstName: this.primarySalesPersonFirstName,  //test Sales
+            UpdatedDate: this.updatedDate,
+            CreatedDate: this.createdPageDate,
+            PrimarySalesPersonFirstName: this.primarySalesPersonFirstName,
+            createdBy: this.createdBy,
+            updatedBy: this.updatedBy,
             first: this.first,
             page: 10,
             pageCount: 10,
@@ -846,10 +881,15 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             //GlobalSearchString: ""
         })
         if (this.customers) {
-            this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service
+            this.workFlowtService.getServerPages(this.customers[this.customers.length - 1]).subscribe( //we are sending event details to service with pagination details and field Search data
                 pages => {
-                    if (pages.length > 0) {
-                        this.customerPagination = pages[0];
+                    this.customersList = pages;
+                    this.customerPagination = this.customersList[0].customerList;
+                    this.totalRecords = this.customersList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                    if (this.totalRecords == 0)
+                    {
+                        this.showPaginator = false;
                     }
                 });
         }
@@ -858,5 +898,29 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         }
     }
 
+
+    eventPage(data)
+    {
+        this.property = data.field;
+        this.customerPagination = this.sortData(this.customerPagination, this.property, false);
+       
+        console.log(this.property);
+        console.log(data);
+    }
+
+    sortData(array: any[], property: string, isNumber: boolean)
+    {
+        var collection;
+        if (isNumber) {
+            return array.sort((item1, item2) => {
+                return (item1[property] > item2[property]) ? 1 : -1;
+            });
+        } else {
+            return array.sort((item1, item2) => {
+                 return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
+            });
+        }
+    }
+   
 }
 

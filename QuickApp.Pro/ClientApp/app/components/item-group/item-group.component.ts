@@ -25,6 +25,17 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class ItemGroupComponent implements OnInit, AfterViewInit {
+    itemGroupPaginationList: any[] = [];
+    totelPages: number;
+    itemGroup = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    memoInputFieldValue: any;
+    descriptionInputFieldValue: any;
+    itemGroupCodeInputFieldValue: any;
+    matchMode: any;
+    field: any;
+    event: any;
     selectedreason: any;
     allreasn: any[]=[];
     itemGroup_Name: any = "";
@@ -437,18 +448,49 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allitemgroupobjInfo)
-            {
-                this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field) {
+            this.itemGroup.push({
+                ItemGroupCode: this.itemGroupCodeInputFieldValue,
+                description: this.descriptionInputFieldValue,
+                memo: this.memoInputFieldValue,
+                Memo: this.memoInputFieldValue,
+                CreatedBy: this.createdByInputFieldValue,
+                UpdatedBy: this.updatedByInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.itemGroup) {
+                this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.itemGroupPagination = pages[0];
-                        }
+                        this.itemGroupPaginationList = pages;
+                        this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+                        this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
-                this.loading = false;
             }
-        }, 1000);
+            else {
+            }
+        }
+
+        else
+        {
+            setTimeout(() => {
+                if (this.allitemgroupobjInfo) {
+                    this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.itemGroupPaginationList = pages;
+                            this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+                            this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+        
     }
 
     updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
@@ -459,6 +501,54 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         }
         if (this.paginatorState) {
             this.loadItemGroup(this.paginatorState);
+        }
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+        this.first = 0;
+        this.event = event;
+        this.field = filed;
+        this.matchMode = matchMode;
+
+        if (filed == 'itemGroupCode') {
+            this.itemGroupCodeInputFieldValue = event;
+        }
+        if (filed == 'description') {
+            this.descriptionInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+       
+        this.itemGroup.push({
+            ItemGroupCode: this.itemGroupCodeInputFieldValue,
+            description: this.descriptionInputFieldValue,
+            memo: this.memoInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.itemGroup) {
+            this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    this.itemGroupPaginationList = pages;
+                    this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+                    this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                });
+        }
+        else {
         }
     }
 }

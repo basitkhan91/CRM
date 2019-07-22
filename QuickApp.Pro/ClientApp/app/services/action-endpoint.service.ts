@@ -69,7 +69,7 @@ export class ActionEndpoint extends EndpointFactory {
     }
 
     getDeleteActionEndpoint<T>(actionId: number): Observable<T> {
-        let endpointUrl = `${this._actionsUrlNew}/${actionId}`;
+        let endpointUrl = `${this._actionUpdateURL}/${actionId}`;
 
         return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {

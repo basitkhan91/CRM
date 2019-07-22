@@ -33,7 +33,7 @@ namespace DAL.Models
         [Key]
         public long WorkflowId { get; set; }
 
-        [Required(ErrorMessage = "Workflow Description is required")]
+        //[Required(ErrorMessage = "Workflow Description is required")]
         public string WorkflowDescription { get; set; }
 
         public string Version { get; set; }
@@ -42,22 +42,28 @@ namespace DAL.Models
         [ForeignKey("WorkScopeId")]
         public Nullable<long> WorkScopeId { get; set; }
 
+        [Required(ErrorMessage = "Part Number is required")]
         [ForeignKey("ItemMasterId")]
         public Nullable<long> ItemMasterId { get; set; }
 
-        [Required(ErrorMessage = "Part Number Descrption is required")]
+        //[Required(ErrorMessage = "Part Number Descrption is required")]
         public string PartNumberDescription { get; set; }
 
-        [Required(ErrorMessage = "Changed Part Number is required")]
+        //[Required(ErrorMessage = "Changed Part Number is required")]
         public string ChangedPartNumber { get; set; }
 
         //[Required(ErrorMessage = "Changed Part Number Description is required")]
         public string ChangedPartNumberDescription { get; set; }
 
+        //[Required(ErrorMessage = "Customer Name is required")]
         [ForeignKey("CustomerId")]
         public Nullable<long> CustomerId { get; set; }
 
+        [Required(ErrorMessage = "Currency is required")]
         public Nullable<int> CurrencyId { get; set; }
+
+        [Required(ErrorMessage = "Work Flow Create Date is required")]
+        public Nullable<System.DateTime> WorkflowCreateDate { get; set; }
 
         public Nullable<System.DateTime> WorkflowExpirationDate { get; set; }
 
@@ -85,11 +91,13 @@ namespace DAL.Models
 
         public Nullable<byte> PercentageOfReplacement { get; set; }
 
+        public Nullable<decimal> OtherCost { get; set; }
+
         public string Memo { get; set; }
 
         public Nullable<long> ManagementStructureId { get; set; }
 
-        public int MasterCompanyId { get; set; }
+        public int? MasterCompanyId { get; set; }
 
         public string CreatedBy { get; set; }
 

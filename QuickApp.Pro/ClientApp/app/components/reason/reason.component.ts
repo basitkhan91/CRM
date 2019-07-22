@@ -25,6 +25,18 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Reason component*/
 export class ReasonComponent {
+    reasonPaginationList: any[] = [];
+    totelPages: number;
+    reason = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    memoInputFieldValue: any;
+    reasonForRemovalInputFieldValue: any;
+    reasonCodeInputFieldValue: any;
+    event: any;
+    matvhMode: any;
+    field: any;
+    shortNameInputFieldValue: any;
     selectedreason: any;
     allreasn: any[]=[];
     disableSave: boolean = false;
@@ -452,18 +464,94 @@ export class ReasonComponent {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allReasonsInfo)
-            {
-                this.reasonService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field)
+        {
+            this.reason.push({
+                ReasonCode: this.reasonCodeInputFieldValue,
+                ReasonForRemoval: this.reasonForRemovalInputFieldValue,
+                Memo: this.memoInputFieldValue,
+                CreatedBy: this.createdByInputFieldValue,
+                UpdatedBy: this.updatedByInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.reason) {
+                this.reasonService.getServerPages(this.reason[this.reason.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.reasonPagination = pages[0];
-                        }
+                        this.reasonPaginationList = pages;
+                        this.reasonPagination = this.reasonPaginationList[0].reasonList;
+                        this.totalRecords = this.reasonPaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
-                this.loading = false;
             }
-        }, 1000);
+            else {
+            }
+        }
+        else
+        {
+            setTimeout(() => {
+                if (this.allReasonsInfo) {
+                    this.reasonService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.reasonPaginationList = pages;
+                            this.reasonPagination = this.reasonPaginationList[0].reasonList;
+                            this.totalRecords = this.reasonPaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+        
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+        this.first = 0;
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'reasonCode') {
+            this.reasonCodeInputFieldValue = event;
+        }
+        if (filed == 'reasonForRemoval') {
+            this.reasonForRemovalInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.reason.push({
+            ReasonCode: this.reasonCodeInputFieldValue,
+            ReasonForRemoval: this.reasonForRemovalInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.reason) {
+            this.reasonService.getServerPages(this.reason[this.reason.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    this.reasonPaginationList = pages;
+                    this.reasonPagination = this.reasonPaginationList[0].reasonList;
+                    this.totalRecords = this.reasonPaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                });
+        }
+        else {
+        }
     }
 
 }

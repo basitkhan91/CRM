@@ -1,1 +1,187 @@
-﻿<div style="border: 1px solid red">Create-publication Component</div>
+﻿<!-- <div style="border: 1px solid red">Create-publication Component</div> -->
+
+<div class="md-stepper-horizontal orange">
+  <div
+    class="md-step "
+    [ngClass]="{ active: activeMenuItem >= 1 }"
+    (click)="changeOfTab('General')"
+  >
+    <div class="md-step-circle"><span>1</span></div>
+    <div class="md-step-title">General Information</div>
+    <div class="md-step-bar-left"></div>
+    <div class="md-step-bar-right"></div>
+  </div>
+  <div class="md-step   " [ngClass]="{ active: activeMenuItem >= 2 }">
+    <div class="md-step-circle"><span>2</span></div>
+    <div class="md-step-title">Aircraft Information</div>
+
+    <div class="md-step-bar-left"></div>
+    <div class="md-step-bar-right"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div [ngSwitch]="currentTab">
+    <div *ngSwitchCase="'General'">
+      <div class="card-header header-text ">
+        General Information
+      </div>
+      <div class="card-body">
+        <div class="ui-g">
+          <!-- first    -->
+          <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-4">
+              Entry Date
+            </div>
+            <div class="ui-g-8">
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+          </div>
+
+          <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-4">
+              Revision
+            </div>
+            <div class="ui-g-8">
+              <p-checkbox
+                class="checkbox-blue"
+                name="groupname"
+                value="val1"
+              ></p-checkbox>
+            </div>
+          </div>
+          <!-- second    -->
+          <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-4">
+              Publication ID
+            </div>
+            <div class="ui-g-8">
+              <input pInputText type="text" />
+            </div>
+          </div>
+          <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-4">
+              Next Review Date
+            </div>
+            <div class="ui-g-8">
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+          </div>
+          <!-- third -->
+          <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-4">
+              Publication Description
+            </div>
+            <div class="ui-g-8">
+              <textarea pInputTextarea type="text"></textarea>
+            </div>
+          </div>
+
+          <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-4">
+              Employee
+            </div>
+            <div class="ui-g-8">
+              <input pInputText type="text" />
+            </div>
+          </div>
+        </div>
+
+        <!-- fourth -->
+
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-4">
+            Publication Type
+          </div>
+          <div class="ui-g-8">
+            <p-dropdown [options]="types" class="pub-type-select"></p-dropdown>
+          </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-4">
+            Revision Date
+          </div>
+          <div class="ui-g-8">
+            <p-calendar [showIcon]="true"></p-calendar>
+          </div>
+        </div>
+
+        <!-- fifth -->
+
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-2">File</div>
+          <div class="ui-g-10">
+            <p-fileUpload
+              name="myfile[]"
+              url="./upload.php"
+              multiple="multiple"
+              [showCancelButton]="false"
+            ></p-fileUpload>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-4">
+            Author/Source/Directive
+          </div>
+          <div class="ui-g-8">
+            <input pInputText type="text" />
+          </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-4">
+            Sequence
+          </div>
+          <div class="ui-g-8">
+            <input pInputText type="text" />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-4">
+            Published By
+          </div>
+          <div class="ui-g-8">
+            <input pInputText type="text" />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-4">
+            Location
+          </div>
+          <div class="ui-g-8">
+            <input pInputText type="text" />
+          </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-4">
+            Status
+          </div>
+          <div class="ui-g-8">
+            <p-dropdown [options]="status" class="pub-type-select"></p-dropdown>
+          </div>
+        </div>
+
+        <button
+          class="btn btn-primary-cstm pull-right button-save"
+          type="submit"
+          (click)="changeOfTab('Aircraft')"
+        >
+          Save & Next
+        </button>
+      </div>
+    </div>
+
+    <!-- Aircraft Information  -->
+
+    <div *ngSwitchCase="'Aircraft'">
+      <div class="card-header header-text ">
+        Aircraft Information
+      </div>
+      <div class="card-body">
+        <h3>Aircraft Information</h3>
+      </div>
+    </div>
+  </div>
+</div>

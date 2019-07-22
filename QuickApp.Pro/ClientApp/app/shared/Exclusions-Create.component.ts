@@ -16,30 +16,48 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() UpdateMode: boolean;
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
-    exclusionEstimatedOccurances: IExclusionEstimatedOccurance[];
+    exclusionEstimatedOccurances: any = [];
     row: any;
     allPartnumbersInfo: any[] = [];
     itemclaColl: any[];
     partCollection: any[];
     errorMessage: string;
+    currentPage: number = 1;
+    itemsPerPage: number = 10;
+
 
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private alertService: AlertService) {
+        for (var i = 0; i <= 100; i++) {
+            this.exclusionEstimatedOccurances.push({ id: i, name: String(i) });
+        }
     }
 
     ngOnInit(): void {
         this.row = this.workFlow.exclusions[0];
-        this.actionService.GetExclusionEstimatedOccurance().subscribe(
-            type => {
-                this.exclusionEstimatedOccurances = type;
-                console.log(type);
-            },
-            error => this.errorMessage = <any>error
-        );
+        // this.actionService.GetExclusionEstimatedOccurance().subscribe(
+        //     type => {
+        //         this.exclusionEstimatedOccurances = type;
+        //         console.log(type);
+        //     },
+        //     error => this.errorMessage = <any>error
+        // );
+
         this.ptnumberlistdata();
+        // summation of all values in edit mode 
+        if (this.UpdateMode) {
+            this.reCalculate();
+
+
+        }
+
     }
 
     ngOnChanges(): void {
 
+    }
+    reCalculate() {
+        this.calculateQtySummation();
+        this.calculateExtendedCostSummation();
     }
 
     addRow(): void {
@@ -61,17 +79,27 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {
+        if (this.workFlow.exclusions[index].workflowExclusionId == undefined || this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {
             this.workFlow.exclusions.splice(index, 1);
         }
         else {
             this.workFlow.exclusions[index].isDelete = true;
         }
+        this.reCalculate();
     }
 
     onPartSelect(event, exclusion) {
         var isEpnExist = this.workFlow.exclusions.filter(x => x.partNumber == exclusion.partNumber && x.taskId == this.workFlow.taskId);
-        if (isEpnExist.length == 0) {
+
+        if (isEpnExist.length > 1) {
+            exclusion.itemMasterId = "";
+            exclusion.partDescription = "";
+            exclusion.partNumber = "";
+            event = "";
+            this.alertService.showMessage("Workflow", "EPN is already in use in Exclusion List.", MessageSeverity.error);
+            return;
+        }
+        else {
             if (this.itemclaColl) {
                 for (let i = 0; i < this.itemclaColl.length; i++) {
                     if (event == this.itemclaColl[i][0].partName) {
@@ -79,14 +107,8 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                         exclusion.partDescription = this.itemclaColl[i][0].description;
                         exclusion.partNumber = this.itemclaColl[i][0].partName;
                     }
-                };
+                }
             }
-        }
-        else {
-            exclusion.itemMasterId = "";
-            exclusion.partDescription = "";
-            exclusion.partNumber = "";
-            this.alertService.showMessage("Workflow", "EPN is already in use in Exclusion List.", MessageSeverity.error);
         }
 
     }
@@ -118,9 +140,10 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     calculateExtendedCost(exclusion): void {
-        var value = Number.parseInt(exclusion.quantity) * Number.parseFloat(exclusion.unitCost);
+        var value = parseFloat((Number.parseInt(exclusion.quantity) * Number.parseFloat(exclusion.unitCost)).toFixed(2));
         if (value > 0) {
             exclusion.extendedCost = value;
+            this.calculateExtendedCostSummation()
         }
         else {
             exclusion.extendedCost = "";
@@ -128,6 +151,20 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
     }
 
+
+    // sum of the qty
+    calculateQtySummation() {
+        this.workFlow.sumofQty = this.workFlow.exclusions.reduce((acc, x) => {
+            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+        }, 0);
+
+    }
+    // sum of extended cost
+    calculateExtendedCostSummation() {
+        this.workFlow.sumofExtendedCost = this.workFlow.exclusions.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+        }, 0);
+    }
     private ptnumberlistdata() {
 
 

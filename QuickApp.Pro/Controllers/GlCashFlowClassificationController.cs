@@ -162,7 +162,76 @@ namespace QuickApp.Pro.Controllers
             var data = DAL.Common.PaginatedList<GlClassFlowClassification>.Create(_unitOfWork.GlClassFlowClassification.GetPaginationData(), pageCount, pageListPerPage);
             return Ok(data);
         }
-    }
 
+        [HttpPost("pagination")]
+        public IActionResult GetGlCashFlowClassification([FromBody]GlClassFlowClassificationPaginationViewModel paginate)
+        {
+            IQueryable<GlClassFlowClassificationPaginationViewModel> queryable = null;
+            List<GlClassFlowClassificationPaginationViewModel> glClasssFlowClassificationList = new List<GlClassFlowClassificationPaginationViewModel>();
+            GlClassFlowClassificationPaginationViewModel glClasssFlowClassification = null;
+            if (!string.IsNullOrEmpty(paginate.GLClassFlowClassificationName)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var glClasssFlowClassifications = _unitOfWork.glClasssFlowClassification;
+                var glClasssFlowClassifications = _context.GlClassFlowClassification.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.GlClassFlowClassificationId).ToList();
+                foreach (var item in glClasssFlowClassifications)
+                {
+                    glClasssFlowClassification = new GlClassFlowClassificationPaginationViewModel();
+                    glClasssFlowClassification.GlClassFlowClassificationId = item.GlClassFlowClassificationId;
+                    glClasssFlowClassification.GLClassFlowClassificationName = item.GLClassFlowClassificationName;
+                    glClasssFlowClassification.GLCID = item.GLCID;
+                    glClasssFlowClassification.CreatedDate = item.CreatedDate;
+                    glClasssFlowClassification.CreatedBy = item.CreatedBy;
+                    glClasssFlowClassification.UpdatedDate = item.UpdatedDate;
+                    glClasssFlowClassification.UpdatedBy = item.UpdatedBy;
+                    glClasssFlowClassification.IsActive = item.IsActive;
+                    glClasssFlowClassificationList.Add(glClasssFlowClassification);
+                }
+                if (!string.IsNullOrEmpty(paginate.GLClassFlowClassificationName))
+                {
+                    glClasssFlowClassificationList = glClasssFlowClassificationList.Where(c => c.GLClassFlowClassificationName != null && c.GLClassFlowClassificationName.ToUpper().Contains(paginate.GLClassFlowClassificationName.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    glClasssFlowClassificationList = glClasssFlowClassificationList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    glClasssFlowClassificationList = glClasssFlowClassificationList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var glClasssFlowClassifications = _context.GlClassFlowClassification.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.GlClassFlowClassificationId).ToList();
+                foreach (var item in glClasssFlowClassifications)
+                {
+                    glClasssFlowClassification = new GlClassFlowClassificationPaginationViewModel();
+                    glClasssFlowClassification.GlClassFlowClassificationId = item.GlClassFlowClassificationId;
+                    glClasssFlowClassification.GLClassFlowClassificationName = item.GLClassFlowClassificationName;
+                    glClasssFlowClassification.GLCID = item.GLCID;
+                    glClasssFlowClassification.CreatedDate = item.CreatedDate;
+                    glClasssFlowClassification.CreatedBy = item.CreatedBy;
+                    glClasssFlowClassification.UpdatedDate = item.UpdatedDate;
+                    glClasssFlowClassification.UpdatedBy = item.UpdatedBy;
+                    glClasssFlowClassification.IsActive = item.IsActive;
+                    glClasssFlowClassificationList.Add(glClasssFlowClassification);
+                }
+            }
+            queryable = glClasssFlowClassificationList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<GlClassFlowClassificationPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+    }
 }
+
 

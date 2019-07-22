@@ -24,8 +24,7 @@ table {
     }
 
 input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-   
+input[type=number]::-webkit-outer-spin-button {   
     margin: 0;
 }
 
@@ -54,7 +53,23 @@ input[type=number]::-webkit-outer-spin-button {
     margin-left: 6px;
 }
 select {
+    background: none;
+}
+td{
+    width: 10%
+}
+select:disabled {
+   background-color: none !important; 
+}
+.dropdown-select {
     background: url("../assets/images/ddrp-arrow.png") 98% center no-repeat;
 }
-
-    
+.workflow-table-pub tr td {
+    padding: 4px;
+}
+.workflow-table-pub tr th:first-child {
+    padding: 0 10px !important;
+}
+.workflow-table-pub {
+    height: 350px;
+}

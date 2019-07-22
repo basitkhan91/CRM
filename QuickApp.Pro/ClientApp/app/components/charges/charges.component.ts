@@ -31,7 +31,22 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
     animations: [fadeInOut]
 })
 /** Actions component*/
-export class ChargesComponent  implements OnInit, AfterViewInit {
+export class ChargesComponent implements OnInit, AfterViewInit {
+    chargePaginationList: any[] = [];
+    totelPages: number;
+    charge = [];
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    memoInputFieldValue: any;
+    symbolInputFieldValue: any;
+    billableAmountInputFieldValue: any;
+    markUpInputFieldValue: any;
+    costInputFieldValue: any;
+    chargeNameInputFieldValue: any;
+    chargeIdInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    event: any;
     selectedActionName: any;
     disableSave: boolean;
     actionamecolle: any[]=[];
@@ -773,16 +788,111 @@ export class ChargesComponent  implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allChargeinfo) {
-                this.chargeService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field)
+        {
+            this.charge.push({
+                ChargeId: this.chargeIdInputFieldValue,
+                ChargeName: this.chargeNameInputFieldValue,
+                Cost: this.costInputFieldValue,
+                MarkUp: this.markUpInputFieldValue,
+                BillableAmount: this.billableAmountInputFieldValue,
+                Symbol: this.symbolInputFieldValue,
+                Memo: this.memoInputFieldValue,
+                CreatedBy: this.createdByInputFieldValue,
+                UpdatedBy: this.updatedByInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.charge) {
+                this.chargeService.getServerPages(this.charge[this.charge.length - 1]).subscribe( //we are sending event details to service
                     pages => {
-                        if (pages.length > 0) {
-                            this.chargePagination = pages[0];
-                        }
+                        this.chargePaginationList = pages;
+                        this.chargePagination = this.chargePaginationList[0].chargeList;
+                        this.totalRecords = this.chargePaginationList[0].totalRecordsCount;
+                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
                     });
-                this.loading = false;
             }
-        }, 1000);
+            else {
+            }
+        }
+        else {
+            setTimeout(() => {
+                if (this.allChargeinfo) {
+                    this.chargeService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.chargePaginationList = pages;
+                            this.chargePagination = this.chargePaginationList[0].chargeList;
+                            this.totalRecords = this.chargePaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+    }
+
+    inputFiledFilter(event, filed, matchMode) {
+        this.first = 0;
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'chargeId') {
+            this.chargeIdInputFieldValue = event;
+        }
+        if (filed == 'chargeName') {
+            this.chargeNameInputFieldValue = event;
+        }
+        if (filed == 'cost') {
+            this.costInputFieldValue = event;
+        }
+        if (filed == 'markUp') {
+            this.markUpInputFieldValue = event;
+        }
+        if (filed == 'billableAmount') {
+            this.billableAmountInputFieldValue = event;
+        }
+        if (filed == 'symbol') {
+            this.symbolInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.charge.push({
+            ChargeId: this.chargeIdInputFieldValue,
+            ChargeName: this.chargeNameInputFieldValue,
+            Cost: this.costInputFieldValue,
+            MarkUp: this.markUpInputFieldValue,
+            BillableAmount: this.billableAmountInputFieldValue,
+            Symbol: this.symbolInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.charge) {
+            this.chargeService.getServerPages(this.charge[this.charge.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    this.chargePaginationList = pages;
+                    this.chargePagination = this.chargePaginationList[0].chargeList;
+                    this.totalRecords = this.chargePaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                });
+        }
+        else {
+        }
     }
 }

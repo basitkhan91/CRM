@@ -29,22 +29,8 @@
         <div class="tab-content form-bg margin0 padding0">
             <div class="" id="menu3">
                 <div class="clear"></div>
-                <div class="row">
-
-                    <button (click)="moveGeneralInfromation()" [ngStyle]="showGeneralData && {'background-color':'#3498db'} || {'background-color': null}">General Information</button>
-
-
-
-                    <button (click)="movePurchaseInformation()" [ngStyle]="showpurchaseData && {'background-color':'#3498db'} || {'background-color': null}">Purchase and Sales</button>
-
-
-                    <button (click)="moveExportInformation()" [ngStyle]="showexportData && {'background-color':'#3498db'} || {'background-color': null}">Export Information</button>
-
-                </div>
-
-
+                <p-tabMenu [model]="items1" [activeItem]="items1[0]" class="panel-menu"></p-tabMenu>
                 <div *ngIf="showGeneralData">
-
                     <div class="tab-pane active">
                         <div class="col-sm-12">
                             <div class="col-sm-4">
@@ -522,6 +508,7 @@
                                                     [(ngModel)]="sourceItemMaster.currencyId">
                                                 <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                         [ngValue]="currencyName.currencyId">
+
                                                     <!--{{currencyName.code}}-->
                                                     {{currencyName.symbol}}
                                                 </option>
@@ -529,42 +516,42 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Core Value</label>
+                                        <label class="control-label col-sm-4">Core Price</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.coreValue">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Exchange List price</label>
+                                        <label class="control-label col-sm-4">Exchange Fee</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.exchangeListPrice">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">OVH Cost</label>
+                                        <label class="control-label col-sm-4">Overhaul Price</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.overheadCost">
                                         </div>
                                     </div>
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Part List Price</label>
+                                        <label class="control-label col-sm-4">Outright Amount</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.partListPrice">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">PO Core Charge</label>
+                                        <label class="control-label col-sm-4">PO Core Cost</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.poCoreCharge">
                                         </div>
                                     </div>
-                                    <div class="form-group col-sm-12">
+                                    <!-- <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">SO Core Charge</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.soCoreCharge">
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1 ">
@@ -600,7 +587,93 @@
                     <button class="btn btn-success pull-right submit-btn" (click)="movePurchaseInformation()">Next</button>
                 </div>
 
-
+                <div *ngIf="showAircraftData">
+                    <div class="card">
+                        <div class="col-sm-12 font-padding">
+                            <div class="col-sm-2">
+                                PN:
+                            </div>
+                            <div class="col-sm-3">
+                                PN Description:
+                            </div>
+                            <div class="col-sm-3">
+                                Alternate PN:
+                            </div>
+                            <div class="col-sm-2">
+                                Manufacturer:
+                            </div>
+                        </div>
+                        <div class="col-sm-12 font">
+                            <div class="col-sm-7 add-color1">
+                                <div class="col-sm-12">
+                                    <br />
+                                    <span class="add-name">Add Dash Numbers</span>
+                                    <br />
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="col-sm-3 add-margin">
+                                        <label>Aircraft</label>
+                                        <br />
+                                    </div>
+                                    <div class="col-sm-7 add-margin1">
+                                        <label>Model</label>                                                                            
+                                        <label><input type="checkbox" />Unknown</label>
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="col-sm-3 inline-block display-flex">
+                                            <select  class="select-option">
+                                                    <option>--Select--</option>
+                                                    <option>Air Bus</option>
+                                                    <option>Air Bus</option>
+                                                    <option>Air Bus</option>
+                                                </select>
+                                        <!--<p-dropdown [options]="aircraftManfactures" ></p-dropdown>-->
+                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                    <div class="col-sm-7 inline-block display-flex">
+                                        <select  class="select-option">
+                                            <option>--Select--</option>
+                                            <option>Air Bus</option>
+                                            <option>Air Bus</option>
+                                            <option>Air Bus</option>
+                                        </select>
+                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5 add-color" style="margin-left: 2px;">
+                                <div class="add-color">
+                                    <div class="col-sm-12">
+                                        <br />
+                                        <span class="add-name">Add ATA Chapters</span>
+                                        <br />
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3 add-margin2">
+                                            <label>ATA Chapter</label>
+                                            <br />
+                                        </div>
+                                        <div class="col-sm-9 add-margin1">
+                                            <label>Model</label>                                            
+                                            <label><input type="checkbox" />Unknown</label>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3">
+                                            
+                                        </div>
+                                        <div class="col-sm-7">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
                 <div *ngIf="showpurchaseData">
                     <div class="tab-pane">
                         <div class="col-sm-6 purchase-sales-blocks">
@@ -617,7 +690,8 @@
                                                     <select [ngModelOptions]="{standalone: true}"
                                                             [(ngModel)]="sourceItemMaster.purchaseCurrencyId" style="width:125px" (change)="currencySymbolSelection(sourceItemMaster.purchaseCurrencyId)">
                                                         <option *ngFor="let currencyName of allCurrencyInfo"
-                                                                [ngValue]="currencyName.currencyId" >
+                                                                [ngValue]="currencyName.currencyId">
+
                                                             <!--{{currencyName.code}}-->
                                                             {{currencyName.symbol}}
                                                         </option>
@@ -629,8 +703,8 @@
                                                 <label class="control-label col-sm-6">List Price</label> <div class="col-sm-5">
                                                     <input type="number" style="width:60px"
                                                            [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceItemMaster.listPrice"/>
-                                                    <!--<input style="width:65px" type="text" [(ngModel)]="currencySymbol" [ngModelOptions]="{standalone: true}"/>--> 
+                                                           [(ngModel)]="sourceItemMaster.listPrice" />
+                                                    <!--<input style="width:65px" type="text" [(ngModel)]="currencySymbol" [ngModelOptions]="{standalone: true}"/>-->
                                                     <span style="width:65px">{{currencySymbol}}</span>
                                                 </div>
                                             </div> <div class="form-group col-sm-12">

@@ -30,4 +30,24 @@ export interface IWorkFlow {
     // DeletedExclusions:IExclusion[];
     // DeletedMeasurements:IMeasurement[];
 
+    totalExpertiseCost: number;
+    totalChargesCost: number;
+    totalMaterialCost: number;
+    totalMaterialCostValue: number;
+
+    qtySummation: number;
+    extendedCostSummation: number;
+
+    sumofExtendedCost: number;
+    sumofQty: number;
+
+    sumofestimatedhrs: number;
+    sumofLabourDirectCost: number;
+    sumOfOHCost: number;
+
+    materialQtySummation: number;
+    materialExtendedCostSummation: number;
+
+
+
 }

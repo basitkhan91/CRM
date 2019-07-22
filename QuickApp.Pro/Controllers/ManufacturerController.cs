@@ -143,17 +143,92 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
+        
 
         [HttpPost("pagination")]
-        public IActionResult GetManufacturer([FromBody]PaginateViewModel paginate)
+        public IActionResult GetManufacturer([FromBody]ManufacturerPaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<Manufacturer>.Create(_unitOfWork.Manufacturer.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            GetData getData = new GetData();
+            IQueryable<ManufacturerPaginationViewModel> queryable = null;
+            List<ManufacturerPaginationViewModel> manufacturerList = new List<ManufacturerPaginationViewModel>();
+            ManufacturerPaginationViewModel manufacturer = null;
+            if (!string.IsNullOrEmpty(paginate.Name)
+                || !string.IsNullOrEmpty(paginate.Comments)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var manufacturers = _unitOfWork.manufacturer;
+                var manufacturers = _unitOfWork.Manufacturer.GetAllManufacturerData();
+                foreach (var item in manufacturers)
+                {
+                    manufacturer = new ManufacturerPaginationViewModel();
+                    manufacturer.ManufacturerId = item.ManufacturerId;
+                    manufacturer.Name = item.Name;
+                    manufacturer.Comments = item.Comments;
+                    manufacturer.CreatedDate = item.CreatedDate;
+                    manufacturer.CreatedBy = item.CreatedBy;
+                    manufacturer.UpdatedDate = item.UpdatedDate;
+                    manufacturer.UpdatedBy = item.UpdatedBy;
+                    manufacturer.IsActive = item.IsActive;
+                    manufacturerList.Add(manufacturer);
+                }
+                if (!string.IsNullOrEmpty(paginate.Name))
+                {
+                    manufacturerList = manufacturerList.Where(c => c.Name != null && c.Name.ToUpper().Contains(paginate.Name.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.Comments))
+                {
+                    manufacturerList = manufacturerList.Where(c => c.Comments != null && c.Comments.ToUpper().Contains(paginate.Comments.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    manufacturerList = manufacturerList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    manufacturerList = manufacturerList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+                getData.TotalRecordsCount = manufacturerList.Count();
+            }
+            else
+            {
+                var manufacturers = _unitOfWork.Manufacturer.GetAllManufacturerData();
+                foreach (var item in manufacturers)
+                {
+                    manufacturer = new ManufacturerPaginationViewModel();
+                    manufacturer.ManufacturerId = item.ManufacturerId;
+                    manufacturer.Name = item.Name;
+                    manufacturer.Comments = item.Comments;
+                    manufacturer.CreatedDate = item.CreatedDate;
+                    manufacturer.CreatedBy = item.CreatedBy;
+                    manufacturer.UpdatedDate = item.UpdatedDate;
+                    manufacturer.UpdatedBy = item.UpdatedBy;
+                    manufacturer.IsActive = item.IsActive;
+                    manufacturerList.Add(manufacturer);
+                    getData.TotalRecordsCount = manufacturerList.Count();
+                }
+            }
+            queryable = manufacturerList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                getData.ManufacturerList = DAL.Common.PaginatedList<ManufacturerPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<ManufacturerPaginationViewModel> ManufacturerList { get; set; }
         }
     }
-
 }
+
+
 

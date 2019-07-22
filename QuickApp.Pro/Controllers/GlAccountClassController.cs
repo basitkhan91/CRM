@@ -137,8 +137,9 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+
         [HttpPost("pagination")]
-        public IActionResult GetGlAccount([FromBody]PaginateViewModel paginate)
+        public IActionResult GetAircraftManufacturer([FromBody]PaginateViewModel paginate)
         {
             var pageListPerPage = paginate.rows;
             var pageIndex = paginate.first;
@@ -148,3 +149,4 @@ namespace QuickApp.Pro.Controllers
         }
     }
 }
+

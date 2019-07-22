@@ -1,21 +1,22 @@
-<div class="fixed-table-container-inner table-responsive cat4-table" style="height:200px;">
+<div class="fixed-table-container-inner table-responsive cat4-table">
         <div>            
                 <span class="cat-heading cat4" >Add New Publications/CMM<i (click)="addRow()" class="fa fa-plus"></i></span>
         </div>
-        <table class="table table-bordered table-fixed">
+        <table class="table table-bordered table-fixed workflow-table-pub">
             <thead class="thead-light">
                 <tr>
-                    <th>Pub *</th>
+                    <th>S.No</th>
+                    <th>Pub ID*</th>
                     <th>Pub Desc</th>
+                    <th> Revision </th>
+                    <th> Revision Date </th>
                     <th> Pub Type *</th>
                     <th> Sequence  </th>
                     <th> Source  </th>
                     <th> Aircraft Manufacturer </th>
                     <th> Model </th>
-                    <th > Dash Number </th>
+                    <th> Dash Number </th>
                     <th> Location </th>
-                    <th> Revision </th>
-                    <th> Revision Date </th>
                     <th> Verified By </th>
                     <th> Verified Date  </th>
                     <th> Status </th>
@@ -25,81 +26,92 @@
             </thead>
             <tbody>
                 <tr [hidden]="publ.isDeleted" *ngFor="let publ of workFlow.publication;let i = index">
+                    <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
                     <td>
-                        <select class="form-control custom-select"
+                        <select class="form-control custom-select dropdown-select wf-pub-id"
                                 [(ngModel)]="publ.publicationId"
                                 (change)="onPublicationChange(publ)">
-                            <option value="">Select</option>
                             <option *ngFor="let publication of publications" [value]="publication.publicationRecordId"> {{ publication.publicationId}}</option>
                         </select>
                     </td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.publicationDescription"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.publicationDescription" [disabled]="true"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.revision"  value="{{publ.revision}}" [disabled]="true"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.revisionDate" value="{{publ.revisionDate}}" [disabled]="true"></td>
                     <td>
-                        <select class="form-control custom-select" id="ddlPublicationTypes" [(ngModel)]="publ.publicationType">
-                            <option value="">Select</option>
+                        <!--<select class="form-control custom-select" id="ddlPublicationTypes" [(ngModel)]="publ.publicationType">
                             <option *ngFor="let type of publicationTypes" value="{{type.name}}">
                                 {{type.name}}
                             </option>
-                        </select>
+                        </select>-->
+                        <input type="text" class="form-control" [(ngModel)]="publ.publicationType" value="{{publ.publicationType}}" >
+
                     </td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.sequence" value="{{publ.sequence}}"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.source" value="{{publ.source}}"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.sequence" value="{{publ.sequence}}" [disabled]="true"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="publ.source" value="{{publ.source}}" [disabled]="true"></td>
                     <td>
-                        <select class="form-control custom-select" id="ddlAircraftManufacturer" [(ngModel)]="publ.aircraftManufacturer" (change)="getAircraftModels(publ,publ.aircraftManufacturer)">
-                            <option value="">Select</option>
+                        <!--<select class="form-control custom-select" id="ddlAircraftManufacturer" [(ngModel)]="publ.aircraftManufacturer" (change)="getAircraftModels(publ,publ.aircraftManufacturer)">
                             <option *ngFor="let manufact of publicationAircraftManufacturers" value="{{manufact.aircraftTypeId}}">
                                 {{manufact.description}}
                             </option>
-                        </select>
+                        </select>-->
+                        <input type="text" class="form-control" [disabled]="true">
                     </td>
 
                     <td>
-                        <select class="form-control custom-select" id="ddlModel" [(ngModel)]="publ.model" (change)="getDashNumbers(publ)">
-                            <option value="">Select</option>
+                        <!--<select class="form-control custom-select" id="ddlModel" [(ngModel)]="publ.model" (change)="getDashNumbers(publ)">
+
                             <option *ngFor="let model of publ.publicationModels" value="{{model.aircraftModelId}}">
                                 {{model.modelName}}
                             </option>
-                        </select>
+                        </select>-->
+                        <input type="text" class="form-control" [disabled]="true">
                     </td>
-                    <td style="width:200px;" >
-                            <ng-multiselect-dropdown  class="form-control multiple-custom-select"
-                                                     [placeholder]="'Select'"
-                                                     [data]="publ.allDashNumbers"
-                                                     [(ngModel)]="publ.workflowPublicationDashNumbers"
-                                                     [settings]="dropdownSettings"
-                                                     (onDeSelect)="onDeSelect(publ,$event)"
-                                                     (onSelect)="onItemSelect(publ,$event)"
-                                                     (onSelectAll)="onSelectAll(publ,$event)">
-                            </ng-multiselect-dropdown>
-                       
+
+                    <td style="width:200px;">
+                        <!--<ng-multiselect-dropdown class="form-control multiple-custom-select" 
+                                                 [placeholder]="'Select'"
+                                                 [data]="publ.allDashNumbers"
+                                                 [(ngModel)]="publ.workflowPublicationDashNumbers"
+                                                 [settings]="dropdownSettings"
+                                                 (onDeSelect)="onDeSelect(publ,$event)"
+                                                 (onSelect)="onItemSelect(publ,$event)"
+                                                 (onSelectAll)="onSelectAll(publ,$event)">
+                        </ng-multiselect-dropdown>-->
+                        <input type="text" class="form-control" [disabled]="true">
+
                     </td>
                     <td>
-                        <select class="form-control custom-select" value="{{publ.location}}" [(ngModel)]="publ.location">
-                            <option value="">Select</option>
+                        <!--<select class="form-control custom-select" value="{{publ.location}}" [(ngModel)]="publ.location"
                             <option *ngFor="let obj of locations" value="{{obj.name}}">
                                 {{obj.name}}
                             </option>
-                        </select>
+                        </select>-->
+                        <input type="text" class="form-control" [disabled]="true">
                     </td>
-                    <td><input type="text" class="form-control" [(ngModel)]="publ.revision" value="{{publ.revision}}"></td>
-                    <td><input type="date" class="form-control" [(ngModel)]="publ.revisionDate" value="{{publ.revisionDate}}"></td>
+
                     <td>
-                        <p-autoComplete [(ngModel)]="publ.verifiedBy" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
-                                        [dropdown]="true">
+                        <!--<p-autoComplete [(ngModel)]="publ.verifiedBy" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                        [dropdown]="true" [disabled]="true">
                             <ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
                             </ng-template>
-                        </p-autoComplete>
+                        </p-autoComplete>-->
+                        <input type="text" class="form-control" [disabled]="true">
                     </td>
-                    <td><input type="date"  class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></td>
                     <td>
-                        <select class="form-control custom-select" id="ddlStatus" [(ngModel)]="publ.status">
+                        <!--<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}"></p-calendar>-->
+                        <input type="text"  class="form-control" [(ngModel)]="publ.verifiedDate" value="{{publ.verifiedDate}}" [disabled]="true">
+
+                    </td>
+                    <td>
+                        <!--<select class="form-control custom-select" id="ddlStatus" [(ngModel)]="publ.status">
                             <option *ngFor="let status of publicationStatuses" value="{{status.name}}">
                                 {{status.name}}
                             </option>
-                        </select>
+                        </select>-->
+                        <input type="text" class="form-control" [disabled]="true">
                     </td>
-                    <td><input type="file" id="myFile" value="{{publ.image}}" [(ngModel)]="publ.image"></td>
+                    <td><!--<input type="file" id="myFile" value="{{publ.image}}" [(ngModel)]="publ.image">--></td>
                     <td>
                         <button class="btn btn-danger nobg" (click)="deleteRow(i)">
                             <i class="fa fa-trash"></i>

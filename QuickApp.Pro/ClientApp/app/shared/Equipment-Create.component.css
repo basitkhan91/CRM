@@ -1,3 +1,13 @@
 select {
-    background: url("../assets/images/ddrp-arrow.png") 98% center no-repeat;
+    background: none;
+   
+}
+    select:disabled {
+         background-color: none !important;
+    }
+.workflow-table-equip tr td {
+    padding: 4px;
+}
+.workflow-table-equip tr th:first-child {
+    padding: 0 10px !important;
 }

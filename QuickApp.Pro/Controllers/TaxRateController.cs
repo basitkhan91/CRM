@@ -170,19 +170,86 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        
         [HttpPost("pagination")]
-        public IActionResult GetTaxRate([FromBody]PaginateViewModel paginate)
+        public IActionResult GetTaxRate([FromBody]TaxRatePaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<TaxRates>.Create(_unitOfWork.TaxRate.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            IQueryable<TaxRatePaginationViewModel> queryable = null;
+            List<TaxRatePaginationViewModel> taxRateList = new List<TaxRatePaginationViewModel>();
+            TaxRatePaginationViewModel taxRate = null;
+            if (!string.IsNullOrEmpty(paginate.Memo)
+                || !string.IsNullOrEmpty(paginate.TaxTypeId)
+                || !string.IsNullOrEmpty(Convert.ToString(paginate.TaxRateId))
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var taxRates = _unitOfWork.taxRate;
+                var taxRates = _unitOfWork.TaxRate.GetAllTaxRateData();
+                foreach (var item in taxRates)
+                {
+                    taxRate = new TaxRatePaginationViewModel();
+                    taxRate.TaxRateId = item.TaxRateId;
+                    taxRate.TaxRate = item.TaxRate;
+                    taxRate.TaxTypeId = item.TaxTypeId;
+                    taxRate.Memo = item.Memo;
+                    taxRate.Memo = item.Memo;
+                    taxRate.CreatedDate = item.CreatedDate;
+                    taxRate.CreatedBy = item.CreatedBy;
+                    taxRate.UpdatedDate = item.UpdatedDate;
+                    taxRate.UpdatedBy = item.UpdatedBy;
+                    taxRate.IsActive = item.IsActive;
+                    taxRateList.Add(taxRate);
+                }
+                if (!string.IsNullOrEmpty(paginate.Memo))
+                {
+                    taxRateList = taxRateList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.TaxTypeId))
+                {
+                    taxRateList = taxRateList.Where(c => c.TaxTypeId != null && c.TaxTypeId.ToUpper().Contains(paginate.TaxTypeId.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    taxRateList = taxRateList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    taxRateList = taxRateList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var taxRates = _unitOfWork.TaxRate.GetAllTaxRateData();
+                foreach (var item in taxRates)
+                {
+                    taxRate = new TaxRatePaginationViewModel();
+                    taxRate.TaxRateId = item.TaxRateId;
+                    taxRate.TaxTypeId = item.TaxTypeId;
+                    taxRate.TaxRate = item.TaxRate;
+                    taxRate.Memo = item.Memo;
+                    taxRate.Memo = item.Memo;
+                    taxRate.CreatedDate = item.CreatedDate;
+                    taxRate.CreatedBy = item.CreatedBy;
+                    taxRate.UpdatedDate = item.UpdatedDate;
+                    taxRate.UpdatedBy = item.UpdatedBy;
+                    taxRate.IsActive = item.IsActive;
+                    taxRateList.Add(taxRate);
+                }
+
+            }
+            queryable = taxRateList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<TaxRatePaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
-
     }
-
-
-
 
 }

@@ -164,13 +164,95 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("pagination")]
-        public IActionResult GetDocumentRecords([FromBody]PaginateViewModel paginate)
+        public IActionResult GetDocumentRecords([FromBody]DocumentPaginationViewModel paginate)
         {
-            var pageListPerPage = paginate.rows;
-            var pageIndex = paginate.first;
-            var pageCount = (pageIndex / pageListPerPage) + 1;
-            var data = DAL.Common.PaginatedList<Document>.Create(_unitOfWork.Document.GetPaginationData(), pageCount, pageListPerPage);
-            return Ok(data);
+            IQueryable<DocumentPaginationViewModel> queryable = null;
+            List<DocumentPaginationViewModel> documentList = new List<DocumentPaginationViewModel>();
+            DocumentPaginationViewModel document = null;
+            if (!string.IsNullOrEmpty(paginate.DocumentCode)
+                || !string.IsNullOrEmpty(paginate.Description)
+                || !string.IsNullOrEmpty(paginate.CreatedBy)
+                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            {
+                //var documents = _unitOfWork.document;
+                var documents = _unitOfWork.Document.GetDocuments();
+                foreach (var item in documents)
+                {
+                    document = new DocumentPaginationViewModel();
+                    document.DocumentId = item.DocumentId;
+                    document.DocumentCode = item.DocumentCode;
+                    document.Description = item.Description;
+                    document.Customer = item.Customer;
+                    document.ItemMaster = item.ItemMaster;
+                    document.PurchaseOrder = item.PurchaseOrder;
+                    document.RepairOrder = item.RepairOrder;
+                    document.SL = item.SL;
+                    document.SalesOrder = item.SalesOrder;
+                    document.WorkOrder = item.WorkOrder;
+                    document.Vendor = item.Vendor;
+                    document.CreatedDate = item.CreatedDate;
+                    document.CreatedBy = item.CreatedBy;
+                    document.UpdatedDate = item.UpdatedDate;
+                    document.UpdatedBy = item.UpdatedBy;
+                    document.IsActive = item.IsActive;
+                    documentList.Add(document);
+                }
+                if (!string.IsNullOrEmpty(paginate.Description))
+                {
+                    documentList = documentList.Where(c => c.Description != null && c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.DocumentCode))
+                {
+                    documentList = documentList.Where(c => c.DocumentCode != null && c.DocumentCode.ToUpper().Contains(paginate.DocumentCode.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.CreatedBy))
+                {
+                    documentList = documentList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+                }
+                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+                {
+                    documentList = documentList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+                }
+            }
+            else
+            {
+                var documents = _unitOfWork.Document.GetDocuments();
+                foreach (var item in documents)
+                {
+                    document = new DocumentPaginationViewModel();
+                    document.DocumentId = item.DocumentId;
+                    document.DocumentCode = item.DocumentCode;
+                    document.Description = item.Description;
+                    document.Customer = item.Customer;
+                    document.ItemMaster = item.ItemMaster;
+                    document.PurchaseOrder = item.PurchaseOrder;
+                    document.RepairOrder = item.RepairOrder;
+                    document.SL = item.SL;
+                    document.SalesOrder = item.SalesOrder;
+                    document.WorkOrder = item.WorkOrder;
+                    document.Vendor = item.Vendor;
+                    document.CreatedDate = item.CreatedDate;
+                    document.CreatedBy = item.CreatedBy;
+                    document.UpdatedDate = item.UpdatedDate;
+                    document.UpdatedBy = item.UpdatedBy;
+                    document.IsActive = item.IsActive;
+                    documentList.Add(document);
+                }
+                documentList.Add(document);
+
+            }
+            queryable = documentList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                var data = DAL.Common.PaginatedList<DocumentPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(data);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
     }
 }

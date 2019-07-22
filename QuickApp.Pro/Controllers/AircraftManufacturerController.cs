@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
             [HttpGet("getAll")]
             public IActionResult getAllAircraftManufacturer()
             {
-                var aircraftManufacturer = unitOfWork.Repository<AircraftType>().GetAll().Where(x => (x.IsDeleted != true && x.IsDeleted == null )).OrderBy(x => x.AircraftTypeId);
+                var aircraftManufacturer = unitOfWork.Repository<AircraftType>().GetAll().Where(x => (x.IsDeleted != false)).OrderBy(x => x.AircraftTypeId);
                 return Ok(aircraftManufacturer);
             }
 
@@ -51,8 +51,9 @@ namespace QuickApp.Pro.Controllers
                     if (ModelState.IsValid)
                     {
                     aircraftmanufacturer.IsActive = true;
+                    aircraftmanufacturer.IsDeleted = false;
                     aircraftmanufacturer.CreatedDate = DateTime.Now;
-                    aircraftmanufacturer.UpdatedDate = null;
+                    aircraftmanufacturer.UpdatedDate = DateTime.Now;
                     aircraftmanufacturer.MasterCompanyId = 1;
                         unitOfWork.Repository<AircraftType>().Add(aircraftmanufacturer);
                         unitOfWork.SaveChanges();

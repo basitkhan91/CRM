@@ -31,7 +31,18 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 })
 /** Actions component*/
 export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
-
+    unitOfMeasurePaginationList: any[] = [];
+    totelPages: number;
+    updatedByInputFieldValue: any;
+    createdByInputFieldValue: any;
+    unitOfMeasure = [];
+    memoInputFieldValue: any;
+    standardInputFieldValue: any;
+    shortNameInputFieldValue: any;
+    descriptionInputFieldValue: any;
+    matvhMode: any;
+    field: any;
+    event: any;
     paginatorState: { rows: number; first: number; };
     totalRecords: number;
     first: number;
@@ -454,17 +465,52 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.allUnitOfMeasureinfo) {
-                this.unitofmeasureService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field)
+        {
+            this.unitOfMeasure.push({
+                Description: this.descriptionInputFieldValue,
+                ShortName: this.shortNameInputFieldValue,
+                Standard: this.standardInputFieldValue,
+                Memo: this.memoInputFieldValue,
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.unitOfMeasure)
+            {
+                this.unitofmeasureService.getServerPages(this.unitOfMeasure[this.unitOfMeasure.length - 1]).subscribe( //we are sending event details to service
                     pages => {
                         if (pages.length > 0) {
-                            this.unitOfMeasurePagination = pages[0];
+                            this.unitOfMeasurePaginationList = pages;
+                            this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
+                            this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         }
                     });
-                this.loading = false;
             }
-        }, 1000);
+        }
+
+        else
+        {
+            setTimeout(() => {
+                if (this.allUnitOfMeasureinfo) {
+                    this.unitofmeasureService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            this.unitOfMeasurePaginationList = pages;
+                            this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
+                            this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                            
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+            this.loading = false;
+        }
+
+       
     }
 
     updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
@@ -475,6 +521,57 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         }
         if (this.paginatorState) {
             this.loadUnitOfMeasure(this.paginatorState);
+        }
+    }
+    
+
+    inputFiledFilter(event, filed, matchMode) {
+        this.first = 0;
+        this.event = event;
+        this.field = filed;
+        this.matvhMode = matchMode;
+
+        if (filed == 'description') {
+            this.descriptionInputFieldValue = event;
+        }
+        if (filed == 'shortName') {
+            this.shortNameInputFieldValue = event;
+        }
+        if (filed == 'standard') {
+            this.standardInputFieldValue = event;
+        }
+        if (filed == 'memo') {
+            this.memoInputFieldValue = event;
+        }
+        if (filed == 'createdBy') {
+            this.createdByInputFieldValue = event;
+        }
+        if (filed == 'updatedBy') {
+            this.updatedByInputFieldValue = event;
+        }
+        this.unitOfMeasure.push({
+            Description: this.descriptionInputFieldValue,
+            ShortName: this.shortNameInputFieldValue, 
+            Standard: this.standardInputFieldValue,
+            Memo: this.memoInputFieldValue,
+            CreatedBy: this.createdByInputFieldValue,
+            UpdatedBy: this.updatedByInputFieldValue,
+            first: this.first,
+            page: 10,
+            pageCount: 10,
+            rows: this.rows,
+            limit: 5
+        })
+        if (this.unitOfMeasure) {
+            this.unitofmeasureService.getServerPages(this.unitOfMeasure[this.unitOfMeasure.length - 1]).subscribe( //we are sending event details to service
+                pages => {
+                    this.unitOfMeasurePaginationList = pages;
+                    this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
+                    this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
+                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
+                });
+        }
+        else {
         }
     }
 }

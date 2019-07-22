@@ -27,6 +27,9 @@ import { ItemMasterService } from "../services/itemMaster.service";
 import { AlertService, MessageSeverity } from "../services/alert.service";
 import * as $ from 'jquery';
 import { forEach } from "@angular/router/src/utils/collection";
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ChargesCreateComponent } from "../shared/Charges-Create.component";
 
 @Component({
     selector: 'wf-create',
@@ -77,6 +80,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     workflowExpertise: any[][];
     itemClassInfo: any[][];
     allUomdata: any[] = [];
+    materialMandatory: any[] = [];
+
     allconditioninfo: any[] = [];
     allPartDetails: any[] = [];
     allPartnumbersInfo: any[] = [];
@@ -124,7 +129,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     measurementsDL: any[] = [];
     publicationsDL: any[] = [];
     selectedSideTabIndex: number;
-
+    berthreshold: any;
+    modal: any;
     actionAttributeTabs: any[] = [
         { visible: false, selected: false, label: "Material List" },
         { visible: false, selected: false, label: "Charges" },
@@ -137,8 +143,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     ];
 
     totalPercent: number[];
+    currentPanelId: any;
+    todaydate = new Date();
+    toggle_wf_header: boolean = true;
 
-    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService) {
+    MaterialCost: number;
+    TotalCharges: number;
+    TotalExpertiseCost: number;
+
+    @ViewChild(ChargesCreateComponent) chargesCreateComponent: ChargesCreateComponent;
+
+    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal) {
         this.totalPercent = [];
         for (var i = 0; i <= 100; i++) {
             this.totalPercent.push(i);
@@ -197,22 +212,27 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
         this.workFlow.selectedItems = this.selectedItems;
 
+        if (this.selectedItems != undefined && this.selectedItems.length > 0)
+            this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
+
     }
 
     updateWorkFlowId: string;
 
     ngOnInit(): void {
-        this.isFixedcheck('fixed');
+        this.isFixedcheck('');
         this.loadCurrencyData();
         this.loadWorkScopedata();
         this.loadItemClassData();
         this.loadPartData();
         this.ptnumberlistdata();
-
-
+        this.getMaterialMandatory();
+        this.loadUOMData();
+        this.sourceWorkFlow.version = "V-1";
         if (!this.sourceWorkFlow.workFlowId) {
             this.sourceWorkFlow.workOrderNumber = 'Creating';
         }
+
 
         this.getMaterialType();
         this.loadcustomerData();
@@ -241,13 +261,58 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         };
 
         this.loadWorkFlow();
+
     }
 
+    berDetermination(): any {
+        if (this.sourceWorkFlow.fixedAmount !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.fixedAmount;
+        }
+        // check on is percentOfNew enable
+        if (this.sourceWorkFlow.percentOfNew !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfNew;
+        }
+        // check on is .percentOfReplacement enable
+        if (this.sourceWorkFlow.percentOfReplacement !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfReplacement;
+        }
+
+
+        // 1 and 2 check box 
+        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfNew !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfNew);
+        }
+
+        // 2 and 3  check box 
+        if (this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement);
+        }
+        // 1 and 3  check box 
+        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement);
+        }
+
+
+        //1 and 2 and 3 check box
+        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+            this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement);
+        }
+        //1 and 2 and 3 check box all uncheck 
+        if (this.sourceWorkFlow.fixedAmount == undefined && this.sourceWorkFlow.percentOfNew == undefined && this.sourceWorkFlow.percentOfReplacement == undefined) {
+            this.sourceWorkFlow.berThresholdAmount = 0;
+        }
+
+
+
+    }
 
     loadWorkFlow() {
         if (this._workflowService.enableUpdateMode == true && !this.UpdateMode) {
             if (this._workflowService.listCollection) {
                 this.sourceWorkFlow = this._workflowService.listCollection.workflow;
+                this.sourceWorkFlow.workflowCreateDate = new Date(this.sourceWorkFlow.workflowCreateDate);
+                this.sourceWorkFlow.workflowExpirationDate = new Date(this.sourceWorkFlow.workflowExpirationDate);
+
                 if (this.sourceWorkFlow.isFixedAmount == true) {
                     this.isFixedcheck('fixed');
                 }
@@ -260,14 +325,23 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
                 this.sourceWorkFlow.workflowExpirationDate = new Date(this.sourceWorkFlow.workflowExpirationDate);
                 this.sourceWorkFlow.partNumber = this._workflowService.listCollection.partNumber;
-                this.sourceWorkFlow.customerName = this.sourceWorkFlow.customer.name;
-                this.sourceWorkFlow.customerCode = this.sourceWorkFlow.customer.customerCode;
 
+                if (this.sourceWorkFlow.customer != undefined || this.sourceWorkFlow.customer != null) {
+                    this.sourceWorkFlow.customerName = this.sourceWorkFlow.customer.name;
+                    this.sourceWorkFlow.customerCode = this.sourceWorkFlow.customer.customerCode;
+                }
+                else {
+                    this.sourceWorkFlow.customerName = "";
+                    this.sourceWorkFlow.customerCode = "";
+                }
+                
                 if (this.sourceWorkFlow.costOfNew && this.sourceWorkFlow.percentageOfNew) {
                     this.onPercentOfNew(this.sourceWorkFlow.costOfNew, this.sourceWorkFlow.percentageOfNew);
+
                 }
                 if (this.sourceWorkFlow.costOfReplacement && this.sourceWorkFlow.percentageOfReplacement) {
                     this.onPercentOfReplcaement(this.sourceWorkFlow.costOfReplacement, this.sourceWorkFlow.percentageOfReplacement);
+
                 }
 
                 this.updateWorkFlowId = this.sourceWorkFlow.workflowId;
@@ -283,7 +357,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.actionService.getWorkFlow(this.updateWorkFlowId).subscribe(
 
             workFlow => {
-                console.log(workFlow);
+
                 this.actionService.getActions().subscribe(
                     actions => {
                         this.actionService.getActionAttributes().subscribe(
@@ -357,6 +431,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     if (workFlow[0].charges != undefined && workFlow[0].charges.length > 0) {
                                         var charges = workFlow[0].charges.filter(charge => charge.taskId == action.taskId);
                                         wf.charges = charges;
+
+                                        wf.qtySummation = wf.charges.reduce((acc, x) => {
+                                            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+                                        }, 0);
+                                        wf.extendedCostSummation = wf.charges.reduce((acc, x) => {
+                                            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+                                        }, 0);
+                                        wf.totalChargesCost = wf.charges.reduce((acc, x) => {
+                                            return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
+                                        }, 0);
                                     }
                                     if (workFlow[0].directions != undefined && workFlow[0].directions.length > 0) {
                                         var direction = workFlow[0].directions.filter(direction => direction.taskId == action.taskId);
@@ -369,14 +453,57 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     if (workFlow[0].exclusions != undefined && workFlow[0].exclusions.length > 0) {
                                         var exclusion = workFlow[0].exclusions.filter(exclusion => exclusion.taskId == action.taskId);
                                         wf.exclusions = exclusion;
+                                        wf.sumofQty = wf.exclusions.reduce((acc, x) => {
+                                            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+                                        }, 0);
+
+                                        wf.sumofExtendedCost = wf.exclusions.reduce((acc, x) => {
+                                            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+                                        }, 0);
+
                                     }
                                     if (workFlow[0].expertise != undefined && workFlow[0].expertise.length > 0) {
                                         var expertise = workFlow[0].expertise.filter(expertise => expertise.taskId == action.taskId);
                                         wf.expertise = expertise;
+
+                                        wf.sumofestimatedhrs = wf.expertise.reduce((acc, x) => {
+                                            return acc + parseFloat(x.estimatedHours === undefined || x.estimatedHours === '' ? 0 : x.estimatedHours)
+                                        }, 0);
+
+                                        wf.sumofLabourDirectCost = wf.expertise.reduce((acc, x) => {
+                                            return acc + parseFloat(x.directLaborRate === undefined || x.directLaborRate === '' ? 0 : x.directLaborRate)
+                                        }, 0);
+
+                                        wf.sumOfOHCost = wf.expertise.reduce((acc, x) => {
+                                            return acc + parseFloat(x.overheadCost === undefined || x.overheadCost === '' ? 0 : x.overheadCost)
+                                        }, 0);
+
+                                        wf.sumOfOHCost = parseFloat((wf.sumOfOHCost).toFixed(2));
+
+                                        wf.totalExpertiseCost = wf.expertise.reduce((acc, x) => {
+                                            return acc + parseFloat(x.laborOverheadCost === undefined || x.laborOverheadCost === '' ? 0 : x.laborOverheadCost)
+                                        }, 0);
+
+                                        wf.totalExpertiseCost = parseFloat((wf.totalExpertiseCost).toFixed(2));
                                     }
                                     if (workFlow[0].materialList != undefined && workFlow[0].materialList.length > 0) {
                                         var material = workFlow[0].materialList.filter(material => material.taskId == action.taskId);
                                         wf.materialList = material;
+
+                                        wf.materialQtySummation = wf.materialList.reduce((acc, x) => {
+                                            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+                                        }, 0);
+
+                                        wf.materialExtendedCostSummation = wf.materialList.reduce((acc, x) => {
+                                            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+                                        }, 0);
+
+                                        wf.totalMaterialCostValue = wf.materialExtendedCostSummation;
+
+                                        wf.totalMaterialCost = wf.materialList.reduce((acc, x) => {
+                                            return acc + parseFloat(x.price == undefined || x.price === '' ? 0 : x.price)
+                                        }, 0);
+
                                     }
                                     if (workFlow[0].measurements != undefined && workFlow[0].measurements.length > 0) {
                                         var measurement = workFlow[0].measurements.filter(measurement => measurement.taskId == action.taskId);
@@ -386,6 +513,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                         var publication = workFlow[0].publication.filter(publication => publication.taskId == action.taskId);
                                         wf.publication = publication;
                                         for (let pub of wf.publication) {
+
+                                            this.actionService.GetPublicationModel(pub.aircraftManufacturer).subscribe(
+                                                model => {
+                                                    pub["publicationModels"] = model;
+                                                },
+                                                error => this.errorMessage = <any>error
+                                            );
+
                                             for (let dn of pub.workflowPublicationDashNumbers) {
                                                 dn.dashNumberId = dn.aircraftDashNumberId;
                                                 this.getDashNumbers(pub);
@@ -401,6 +536,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     this.setSelectedItems(this.workFlow);
                                     this.showMainPage = true;
                                 }
+                                setTimeout(() => {
+                                    if (this.selectedItems.length > 0) {
+                                        this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
+                                    }
+                                }, 1000);
                             },
                             error => this.errorMessage = <any>error
                         );
@@ -510,33 +650,64 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     isFixedcheck(event) {
 
-        this.resetBERThreshold();
+        //this.resetBERThreshold();
 
         if (event == 'fixed') {
             this.isFixed = true;
-            this.ispercent = false;
-            this.percentreplcae = false;
+            //this.ispercent = false;
+            //this.percentreplcae = false;
             this.sourceWorkFlow.isFixedAmount = true;
-            this.sourceWorkFlow.isPercentageofNew = false;
-            this.sourceWorkFlow.isPercentageOfReplacement = false;
+            //this.sourceWorkFlow.isPercentageofNew = false;
+            //this.sourceWorkFlow.isPercentageOfReplacement = false;
         }
         if (event == 'percentage') {
-            this.isFixed = false;
+            //this.isFixed = false;
             this.ispercent = true;
-            this.percentreplcae = false;
-            this.sourceWorkFlow.isFixedAmount = false;
+            //this.percentreplcae = false;
+            //this.sourceWorkFlow.isFixedAmount = false;
             this.sourceWorkFlow.isPercentageofNew = true;
-            this.sourceWorkFlow.isPercentageOfReplacement = false;
+            //this.sourceWorkFlow.isPercentageOfReplacement = false;
         }
         if (event == 'percentreplace') {
-            this.isFixed = false;
-            this.ispercent = false;
+            //this.isFixed = false;
+            //this.ispercent = false;
             this.percentreplcae = true;
-            this.sourceWorkFlow.isFixedAmount = false;
-            this.sourceWorkFlow.isPercentageofNew = false;
+            //this.sourceWorkFlow.isFixedAmount = false;
+            //this.sourceWorkFlow.isPercentageofNew = false;
             this.sourceWorkFlow.isPercentageOfReplacement = true;
         }
     }
+
+    isFixedUnchecked(e) {
+        if (!e.target.checked) {
+            this.isFixed = false;
+            this.sourceWorkFlow.isFixedAmount = false;
+            this.sourceWorkFlow.fixedAmount = undefined
+
+        }
+    }
+    isPercentageUnchecked(e) {
+        if (!e.target.checked) {
+            this.ispercent = false;
+            this.sourceWorkFlow.isPercentageofNew = false;
+            // reseting the  cost of new values
+            this.sourceWorkFlow.percentOfNew = undefined
+            this.sourceWorkFlow.percentageOfNew = '';
+            this.sourceWorkFlow.costOfNew = '';
+
+        }
+    }
+    isPercentreplcaeUnchecked(e) {
+        if (!e.target.checked) {
+            this.percentreplcae = false;
+            this.sourceWorkFlow.percentreplcae = false;
+            // reseting the replacement cost 
+            this.sourceWorkFlow.percentOfReplacement = undefined;
+            this.sourceWorkFlow.costOfReplacement = '';
+            this.sourceWorkFlow.percentageOfReplacement = '';
+        }
+    }
+
 
     private loadWorkScopedata() {
 
@@ -551,8 +722,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         })
     }
 
-    onCustomerNameselected(event) //Customer Ship Address Data
-    {
+    onCustomerNameselected(event) {
         for (let i = 0; i < this.customerNamecoll.length; i++) {
             if (event == this.customerNamecoll[i][0].name) {
 
@@ -576,19 +746,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 "customerId": this.allCustomers[i].customerId,
                                 "name": name,
                                 "customerCode": this.allCustomers[i].customerCode
-                            }]),
-                                this.customerNames.push(name);
+                            }]);
+                            this.customerNames.push(name);
                         }
                     }
                     else {
-                        //if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                         this.customerNamecoll.push([{
                             "customerId": this.allCustomers[i].customerId,
                             "name": name,
                             "customerCode": this.allCustomers[i].customerCode
-                        }]),
-                            this.customerNames.push(name);
-                        //}
+                        }]);
+                        this.customerNames.push(name);
                     }
                 }
             }
@@ -606,6 +774,15 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             })[0];
             this.sourceWorkFlow.itemMasterId = part.partId;
             this.sourceWorkFlow.partNumberDescription = part.description;
+        }
+    }
+
+    onChangePartSelect(event) {
+        if (this.filteredItems != undefined) {
+            var part = this.filteredItems.filter(function (eachPart) {
+                return event == eachPart.partName;
+            })[0];
+            this.sourceWorkFlow.changedPartNumber = part.partName;
         }
     }
 
@@ -678,6 +855,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     // On Add Button Click
     addActionAttributes() {
+
+
         if (this.actionValue && this.actionValue != "" && this.selectedActionAttributes && this.selectedActionAttributes.length > 0) {
             let currAction = { workflowId: "", taskId: Number(this.actionValue), workflowActionAttributeIds: this.selectedActionAttributes.join(",") }
             let selAction = this.workflowActions.find(obj => obj.taskId == this.actionValue)
@@ -694,6 +873,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
 
 
+
     }
 
     onPercentOfNew(myValue, percentValue) {
@@ -703,6 +883,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             //let afterpercent 
             //this.sourceWorkFlow.percentOfNew = afterpercent * percentValue;
         }
+        this.berDetermination();
     }
 
     onPercentOfReplcaement(myValue, percentValue) {
@@ -712,6 +893,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.sourceWorkFlow.percentOfReplacement = afterpercent * percentValue;
 
         }
+        this.berDetermination();
     }
 
     private defualtChargesListobj() {
@@ -807,9 +989,15 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     private onptnmbersSuccessful(allWorkFlows: any[]) {
 
+        // TODO : New Change test this
+        const filterByIsActive = allWorkFlows.filter(x => {
+            if (x.isActive) {
+                return x;
+            }
+        })
+        this.allPartnumbersInfo = filterByIsActive;
 
-
-        this.allPartnumbersInfo = allWorkFlows;
+        //this.allPartnumbersInfo = allWorkFlows;
 
 
 
@@ -829,16 +1017,63 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             })
     }
 
+    private getDefaultConditionId(name: string): string {
+
+        if (this.allconditioninfo != undefined && this.allconditioninfo.length > 0) {
+            let defaultConditionId: any = this.allconditioninfo.filter(x => x.description.trim() == name)[0].conditionId;
+            //this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
+            return defaultConditionId;
+        }
+        else {
+            this.conditionService.getConditionList().subscribe(data => {
+                this.allconditioninfo = data[0];
+                let defaultConditionId: any = this.allconditioninfo.filter(x => x.description.trim() == name)[0].conditionId;
+                return defaultConditionId;
+                //this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
+                 
+            })
+        }
+
+       
+    }
+
     private loadConditionData() {
         this.conditionService.getConditionList().subscribe(data => {
             this.allconditioninfo = data[0];
         })
+    }
+   
+    private getDefaultUOMId(name: string): string {
+        let defaultUOM: any = this.allUomdata.filter(x => x.shortName == name);
+
+        if (defaultUOM.length > 0) {
+            return defaultUOM[0].unitOfMeasureId;
+        }
+        return "";
     }
 
     private loadUOMData() {
         this.unitofmeasureService.getUnitOfMeasureList().subscribe(uomdata => {
             this.allUomdata = uomdata[0];
         })
+    }
+
+    private getDefaultMaterialMandatoryId(name: string): string {
+        let defaultMaterialMandatory: any = this.materialMandatory.filter(x => x.name == name);
+
+        if (defaultMaterialMandatory.length > 0) {
+            return defaultMaterialMandatory.id;
+        }
+        return "";
+    }
+
+    private getMaterialMandatory(): void {
+        this.actionService.GetMaterialMandatory().subscribe(
+            mandatory => {
+                this.materialMandatory = mandatory;
+            },
+            error => this.errorMessage = <any>error
+        );
     }
 
     private loadItemClassData() {
@@ -865,16 +1100,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             error => this.errorMessage = <any>error
         );
     }
+    currentActiveTab: string;
+    setCurrentPanel(itemName, id): void {
+        this.currentPanelId = id;
+        itemName = itemName.replace(" ", "_");
 
-    setCurrentPanel(itemName): void {
-        console.log(itemName)
-        //itemName = itemName.replace(" ", "_");
         var list = document.getElementsByClassName('pan');
         for (var i = 0; i < list.length; i++) {
-            list[i].classList.add('active');
             list[i].classList.remove('active');
             list[i].classList.remove('in');
         }
+
         var elem = document.getElementById('tab_' + itemName);
         if (elem != null) {
             document.getElementById('tab_' + itemName).classList.remove('fade');
@@ -883,36 +1119,47 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
     }
 
-    SetCurrectTab(workFlowId, index?): void {
-        console.log(workFlowId);
+    SetCurrectTab(taskId, index?): void {
+        this.currenttaskId = taskId;
+
         if (index !== undefined || index !== null) {
 
-        this.selectedSideTabIndex = index;
+            this.selectedSideTabIndex = index;
         }
-        var workflow = this.workFlowList[0];
+
+
+        this.workFlow = this.workFlowList.filter(x => x.taskId == this.currenttaskId)[0];
+        //var workflow = this.workFlow;
+
         var list = document.getElementsByClassName('actrmv');
+
         for (var i = 0; i < list.length; i++) {
             list[i].classList.add('active');
         }
-        document.getElementById('tab_' + workFlowId).classList.add('active');
-        this.workFlowList.forEach(function (value, index) {
-            if (value.taskId == workFlowId) {
-                workflow = value;
-            }
-        });
 
         for (var i = 0; i < this.workFlowList.length; i++) {
-            if (workflow.taskId == this.workFlowList[i].taskId) {
-                this.workFlowList[i] = workflow;
-            }
+            document.getElementById('tab_' + this.workFlowList[i].taskId).classList.remove('active');
         }
-        this.onActionChange();
-        this.selectedItems = workflow.selectedItems
-     
-       
-        this.currenttaskId = workflow.taskId;
-        this.workFlow = workflow;
-        this.setSelectedItems(this.workFlow);
+
+        document.getElementById('tab_' + taskId).classList.add('active');
+
+        if (this.workFlow.selectedItems == undefined || this.workFlow.selectedItems.length == 0) {
+            this.setSelectedItems(this.workFlow);
+        }
+
+        this.selectedItems = this.workFlow.selectedItems
+
+        if (this.selectedItems != undefined && this.selectedItems.length > 0)
+            this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
+
+        //if (this.workFlow.selectedItems != undefined && this.workFlow.selectedItems != undefined) {
+        //    const sortByOrder = this.workFlow.selectedItems.sort((a, b) => {
+        //        return (a, b) => (a.Id > b.Id) ? 1 : -1
+        //    });
+        //    this.workFlow = { ...this.workFlow, selectedItems: sortByOrder };
+        //}
+
+        //this.setSelectedItems(this.workFlow);
     }
 
     AddPage() {
@@ -921,17 +1168,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     AddPageCustomer() {
         this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
-        
+
     getDashNumbers(publication): void {
         this.actionService.GetDashNumbersByModelId(publication.model).subscribe(result => {
-            console.log(result);
+
             publication.allDashNumbers = result;
-         
+
         });
     }
 
     AddActionAttribute(): void {
-        this.selectedSideTabIndex  = 0;
+        this.selectedSideTabIndex = 0;
         //$('.custom-pill .nav-pills li:first-child a').addClass('active show');
         //$('.custom-pill .tab-content .tab-pane:first-child').addClass('in active').removeClass('fade');
 
@@ -952,11 +1199,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     charge[0].taskId = this.currenttaskId;
                                     charge[0].workflowId = this.updateWorkFlowId;
                                 }
+                                this.workFlowList[i].qtySummation = 0;
+                                this.workFlowList[i].extendedCostSummation = 0;
+                                this.workFlowList[i].totalChargesCost = 0;
+
                                 this.workFlowList[i].charges = charge;
                             }
-                            else {
-                                this.workFlowList[i].charges = undefined;
-                            }
+
                             if (this.selectedItems[j].Name == 'Directions' && (this.workFlowList[i].directions == undefined || (this.workFlowList[i].directions != undefined && this.workFlowList[i].directions.length == 0))) {
                                 var direction: any[];
                                 direction = this.GetDirections();
@@ -966,21 +1215,18 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 }
                                 this.workFlowList[i].directions = direction;
                             }
-                            else {
-                                this.workFlowList[i].directions = undefined;
-                            }
+
                             if (this.selectedItems[j].Name == 'Equipment' && (this.workFlowList[i].equipments == undefined || (this.workFlowList[i].equipments != undefined && this.workFlowList[i].equipments.length == 0))) {
                                 var equipment: any[];
                                 equipment = this.GetEquipmentList();
                                 if (this.UpdateMode) {
                                     equipment[0].taskId = this.currenttaskId;
                                     equipment[0].workflowId = this.updateWorkFlowId;
+                                    equipment[0].taskId = this.currenttaskId;
                                 }
                                 this.workFlowList[i].equipments = equipment;
                             }
-                            else {
-                                this.workFlowList[i].equipments = undefined;
-                            }
+
                             if (this.selectedItems[j].Name == 'Expertise' && (this.workFlowList[i].expertise == undefined || (this.workFlowList[i].expertise != undefined && this.workFlowList[i].expertise.length == 0))) {
                                 var expertise: any[];
                                 expertise = this.GetExpertise();
@@ -988,11 +1234,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     expertise[0].taskId = this.currenttaskId;
                                     expertise[0].workflowId = this.updateWorkFlowId;
                                 }
+
+                                this.workFlowList[i].sumofestimatedhrs = 0;
+                                this.workFlowList[i].sumofLabourDirectCost = 0;
+                                this.workFlowList[i].sumOfOHCost = 0;
+                                this.workFlowList[i].totalExpertiseCost = 0;
                                 this.workFlowList[i].expertise = expertise;
                             }
-                            else {
-                                this.workFlowList[i].expertise = undefined;
-                            }
+
                             if (this.selectedItems[j].Name == 'Material List' && (this.workFlowList[i].materialList == undefined || (this.workFlowList[i].materialList != undefined && this.workFlowList[i].materialList.length == 0))) {
                                 var material: any[];
                                 material = this.GetMaterialList();
@@ -1000,11 +1249,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     material[0].taskId = this.currenttaskId;
                                     material[0].workflowId = this.updateWorkFlowId;
                                 }
+
+                                this.workFlowList[i].materialQtySummation = 0;
+                                this.workFlowList[i].materialExtendedCostSummation = 0;
+                                this.workFlowList[i].totalMaterialCost = 0;
                                 this.workFlowList[i].materialList = material;
                             }
-                            else {
-                                this.workFlowList[i].materialList = undefined;
-                            }
+
                             if (this.selectedItems[j].Name == 'Publications' && (this.workFlowList[i].publication == undefined || (this.workFlowList[i].publication != undefined && this.workFlowList[i].publication.length == 0))) {
                                 var publication: any[];
                                 publication = this.GetPublication();
@@ -1015,9 +1266,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 this.workFlowList[i].publication = publication;
 
                             }
-                            else {
-                                this.workFlowList[i].publication = undefined;
-                            }
+
                             if (this.selectedItems[j].Name == 'Exclusions' && (this.workFlowList[i].exclusions == undefined || (this.workFlowList[i].exclusions != undefined && this.workFlowList[i].exclusions.length == 0))) {
                                 var exclusion: any[];
                                 exclusion = this.GetExclusions();
@@ -1025,12 +1274,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     exclusion[0].taskId = this.currenttaskId;
                                     exclusion[0].workflowId = this.updateWorkFlowId;
                                 }
-                                this.workFlowList[i].exclusions = exclusion;
 
+                                this.workFlowList[i].sumofQty = 0;
+                                this.workFlowList[i].sumofExtendedCost = 0;
+                                this.workFlowList[i].exclusions = exclusion;
                             }
-                            else {
-                                this.workFlowList[i].exclusions = undefined;
-                            }
+
                             if (this.selectedItems[j].Name == 'Measurements' && (this.workFlowList[i].measurements == undefined || (this.workFlowList[i].measurements != undefined && this.workFlowList[i].measurements.length == 0))) {
                                 var measurement: any[];
                                 measurement = this.GetMeasurements();
@@ -1040,17 +1289,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 }
                                 this.workFlowList[i].measurements = measurement;
                             }
-                            else {
-                                this.workFlowList[i].measurements = undefined;
-                            }
                         }
-
                         // TODO :  need to write delete action code here
-
-
-
                         this.workFlowList[i].selectedItems = this.selectedItems;
-                        //this.workFlowList[i] = currentWorkFlow;
+                        this.workFlow = this.workFlowList[i];
                     }
                 }
 
@@ -1063,6 +1305,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 charge[0].taskId = this.currenttaskId;
                                 charge[0].workflowId = this.updateWorkFlowId;
                             }
+
+                            currentWorkFlow.qtySummation = 0;
+                            currentWorkFlow.extendedCostSummation = 0;
+                            currentWorkFlow.totalChargesCost = 0;
                             currentWorkFlow.charges = charge;
                         }
                         if (this.selectedItems[i].Name == 'Directions') {
@@ -1090,6 +1336,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 expertise[0].taskId = this.currenttaskId;
                                 expertise[0].workflowId = this.updateWorkFlowId;
                             }
+                            currentWorkFlow.sumofestimatedhrs = 0;
+                            currentWorkFlow.sumofLabourDirectCost = 0;
+                            currentWorkFlow.sumOfOHCost = 0;
+                            currentWorkFlow.totalExpertiseCost = 0;
                             currentWorkFlow.expertise = expertise;
                         }
                         if (this.selectedItems[i].Name == 'Material List') {
@@ -1099,6 +1349,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 material[0].taskId = this.currenttaskId;
                                 material[0].workflowId = this.updateWorkFlowId;
                             }
+                            currentWorkFlow.materialQtySummation = 0;
+                            currentWorkFlow.materialExtendedCostSummation = 0;
+                            currentWorkFlow.totalMaterialCost = 0;
                             currentWorkFlow.materialList = material;
                         }
                         if (this.selectedItems[i].Name == 'Publications') {
@@ -1118,6 +1371,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 exclusion[0].taskId = this.currenttaskId;
                                 exclusion[0].workflowId = this.updateWorkFlowId;
                             }
+                            currentWorkFlow.sumofQty = 0;
+                            currentWorkFlow.sumofExtendedCost = 0;
                             currentWorkFlow.exclusions = exclusion;
                         }
                         if (this.selectedItems[i].Name == 'Measurements') {
@@ -1133,9 +1388,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                     }
                     currentWorkFlow.selectedItems = this.selectedItems;
                     this.workFlowList.push(currentWorkFlow);
+                    this.workFlow = currentWorkFlow;
                 }
             }
             else {
+                // I think this else part is not really required as it was added previously when der was a add button.
                 this.workFlowList = [];
                 var currentWorkFlow = this.GetWorkFlow();
                 currentWorkFlow.selectedItems = this.selectedItems;
@@ -1148,7 +1405,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             charge[0].taskId = this.currenttaskId;
                             charge[0].workflowId = this.updateWorkFlowId;
+                            charge[0].taskId = this.currenttaskId;
                         }
+                        this.workFlowList[0].qtySummation = 0;
+                        this.workFlowList[0].extendedCostSummation = 0;
+                        this.workFlowList[0].totalChargesCost = 0;
                         this.workFlowList[0].charges = charge;
                         //this.workFlowList[0].charges = this.GetCharges();
                     }
@@ -1158,6 +1419,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             direction[0].taskId = this.currenttaskId;
                             direction[0].workflowId = this.updateWorkFlowId;
+                            direction[0].taskId = this.currenttaskId;
                         }
                         this.workFlowList[0].directions = direction;
                         //this.workFlowList[0].directions = this.GetDirections();
@@ -1168,6 +1430,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             equipment[0].taskId = this.currenttaskId;
                             equipment[0].workflowId = this.updateWorkFlowId;
+                            equipment[0].taskId = this.currenttaskId;
                         }
                         this.workFlowList[0].equipments = equipment;
 
@@ -1179,7 +1442,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             expertise[0].taskId = this.currenttaskId;
                             expertise[0].workflowId = this.updateWorkFlowId;
+                            expertise[0].taskId = this.currenttaskId;
                         }
+                        this.workFlowList[0].sumofestimatedhrs = 0;
+                        this.workFlowList[0].sumofLabourDirectCost = 0;
+                        this.workFlowList[0].sumOfOHCost = 0;
+                        this.workFlowList[0].totalExpertiseCost = 0;
                         this.workFlowList[0].expertise = expertise;
 
                     }
@@ -1189,7 +1457,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             material[0].taskId = this.currenttaskId;
                             material[0].workflowId = this.updateWorkFlowId;
+                            material[0].taskId = this.currenttaskId;
                         }
+                        this.workFlowList[0].materialQtySummation = 0;
+                        this.workFlowList[0].materialExtendedCostSummation = 0;
+                        this.workFlowList[0].totalMaterialCost = 0;
+                        this.workFlowList[0].materialList = material;
                         this.workFlowList[0].materialList = material;
 
                     }
@@ -1199,6 +1472,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             publication[0].taskId = this.currenttaskId;
                             publication[0].workflowId = this.updateWorkFlowId;
+                            publication[0].taskId = this.currenttaskId;
+                        }
+                        else {
+                            this.workFlowList[0].materialQtySummation = 0;
+                            this.workFlowList[0].materialExtendedCostSummation = 0;
+                            this.workFlowList[0].totalMaterialCost = 0;
                         }
                         this.workFlowList[0].publication = publication;
 
@@ -1210,6 +1489,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             exclusion[0].taskId = this.currenttaskId;
                             exclusion[0].workflowId = this.updateWorkFlowId;
+                            charge[0].taskId = this.currenttaskId;
+                        }
+                        else {
+                            this.workFlowList[0].sumofQty = 0;
+                            this.workFlowList[0].sumofExtendedCost = 0;
                         }
                         this.workFlowList[0].exclusions = exclusion;
 
@@ -1221,33 +1505,47 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         if (this.UpdateMode) {
                             measurement[0].taskId = this.currenttaskId;
                             measurement[0].workflowId = this.updateWorkFlowId;
+                            measurement[0].taskId = this.currenttaskId;
                         }
                         this.workFlowList[0].measurements = measurement;
 
 
                     }
                 }
+                this.workFlow = this.workFlowList[0];
             }
-            this.workFlow = this.workFlowList[this.workFlowList.length - 1];
+
         }
         else {
             var wf = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
             if (wf != undefined && wf.length > 0) {
-                var position = 0;
-                this.workFlowList.forEach(function (value, index) {
-                    if (value.workflowId == wf[0].workflowId) {
-                        position = index;
-                    }
-                });
-                this.workFlowList.splice(position, 1);
+                wf[0].charges = [];
+                wf[0].directions = [];
+                wf[0].equipments = [];
+                wf[0].exclusions = [];
+                wf[0].expertise = [];
+                wf[0].materialList = [];
+                wf[0].measurements = [];
+                wf[0].publication = [];
+                wf[0].selectedItems = [];
+                this.workFlow = wf;
             }
-
-
         }
         this.showMainPage = true;
 
-        this.setCurrentPanel(this.workFlow.selectedItems[0].Name);
-        //this.SetCurrectTab(this.workFlow.ActionId);
+        if (this.selectedItems.length > 0) {
+            setTimeout(() => {
+                this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
+            }, 1000);
+        }
+        else {
+            setTimeout(() => {
+                this.setCurrentPanel("", this.currentPanelId);
+            }, 1000);
+        }
+
+        //this.currenttaskId = "0";
+        //this.selectedItems = [];
     }
 
     GetWorkFlow(): any {
@@ -1415,15 +1713,17 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         return expertise;
     }
 
+
+
     GetMaterialList(): any[] {
         var material = [{
             workflowMaterialListId: "0",
             itemMasterId: '',
-            conditionCodeId: "",
-            mandatoryOrSupplemental: "",
-            itemClassificationId: "",
+            conditionCodeId: this.getDefaultConditionId('NEW'),
+            mandatoryOrSupplemental: 'Mandatory',
+            itemClassificationId: '',
             quantity: "",
-            unitOfMeasureId: "",
+            unitOfMeasureId: this.getDefaultUOMId('Ea'),
             unitCost: "",
             extendedCost: "",
             price: "",
@@ -1459,8 +1759,25 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     onActionChange(): void {
-        this.selectedItems = [];
+        var currentWF = undefined;
+        if (this.workFlowList != undefined) {
+            currentWF = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
+        }
+
         this.showActionAttribute = this.currenttaskId != "0";
+
+        if (currentWF == undefined || currentWF.length == 0) {
+            if (this.workFlowList == undefined) {
+                this.workFlowList = [];
+            }
+            var currentWorkFlow = this.GetWorkFlow();
+            currentWorkFlow.selectedItems = [];
+            this.workFlowList.push(currentWorkFlow);
+            currentWF = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
+        }
+
+        this.workFlow = currentWF[0];
+        this.selectedItems = currentWF[0].selectedItems;
     }
 
     addAction(): void {
@@ -1473,16 +1790,39 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         );
     }
 
-    addWorkFlow(): void {
+    addWorkFlow(isHeaderUpdate: boolean): void {
         this.sourceWorkFlow.workflowId = undefined;
-        this.sourceWorkFlow.berThresholdAmount = (Math.min((this.sourceWorkFlow.fixedAmount == undefined ? Infinity : this.sourceWorkFlow.fixedAmount), (this.sourceWorkFlow.percentOfNew == undefined ? Infinity : this.sourceWorkFlow.percentOfNew), (this.sourceWorkFlow.percentOfReplacement == undefined ? Infinity : this.sourceWorkFlow.percentOfReplaceMent)));
+        // this.sourceWorkFlow.berThresholdAmount = (Math.min((this.sourceWorkFlow.fixedAmount == undefined ? Infinity : this.sourceWorkFlow.fixedAmount), (this.sourceWorkFlow.percentOfNew == undefined ? Infinity : this.sourceWorkFlow.percentOfNew), (this.sourceWorkFlow.percentOfReplacement == undefined ? Infinity : this.sourceWorkFlow.percentOfReplaceMent)));
 
         this.SaveWorkFlow();
+        if (isHeaderUpdate) {
+            this.sourceWorkFlow.charges = [];
+            this.sourceWorkFlow.directions = [];
+            this.sourceWorkFlow.equipments = [];
+            this.sourceWorkFlow.exclusions = [];
+            this.sourceWorkFlow.expertise = [];
+            this.sourceWorkFlow.materialList = [];
+            this.sourceWorkFlow.measurements = [];
+            this.sourceWorkFlow.publication = [];
+        }
+        else {
+            var tasks = this.workFlowList.filter(x => x.selectedItems.length > 0);
+            if (tasks.length == 0) {
+                this.alertService.showMessage(this.title, "Atleast one Work Flow Task Attribute is needed", MessageSeverity.error);
+            }
+        }
 
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
-                this.alertService.showMessage(this.title, "Workflow added successfully.", MessageSeverity.success);
-                this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
+                if (isHeaderUpdate) {
+                    this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
+                    this.sourceWorkFlow.workflowId = data.workflowId;
+                    this.UpdateMode = true;
+                }
+                else {
+                    this.alertService.showMessage(this.title, "Work Flow added successfully.", MessageSeverity.success);
+                    this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
+                }
             },
             error => {
                 var message = '';
@@ -1498,15 +1838,32 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
     title: string = "Work Flow";
 
-    updateWorkFlow(): void {
-        this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
+    updateWorkFlow(isHeaderUpdate: boolean): void {
+        // this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
 
         this.SaveWorkFlow();
+        if (isHeaderUpdate) {
+            this.sourceWorkFlow.charges = [];
+            this.sourceWorkFlow.directions = [];
+            this.sourceWorkFlow.equipments = [];
+            this.sourceWorkFlow.exclusions = [];
+            this.sourceWorkFlow.expertise = [];
+            this.sourceWorkFlow.materialList = [];
+            this.sourceWorkFlow.measurements = [];
+            this.sourceWorkFlow.publication = [];
+        }
 
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             result => {
-                this.alertService.showMessage(this.title, "Workflow updated successfully.", MessageSeverity.success);
-                this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
+                if (isHeaderUpdate) {
+                    this.alertService.showMessage(this.title, "Work Flow header updated successfully.", MessageSeverity.success);
+                    this.sourceWorkFlow.workflowId = result.workflowId;
+                    this.UpdateMode = true;
+                }
+                else {
+                    this.alertService.showMessage(this.title, "Work Flow updated successfully.", MessageSeverity.success);
+                    this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
+                }
             },
             error => {
                 var message = '';
@@ -1607,7 +1964,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                 dashNumber.dashNumber = dashNumber.dashNumber;
                             }
                         }
-                        
+
 
                         this.sourceWorkFlow.publication.push(publication);
 
@@ -1616,9 +1973,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             }
         }
     }
-
-
-
 
     resetPage(): void {
         this.selectedItems = [];
@@ -1629,15 +1983,113 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     onDeSelect(item: any) {
-
+        var items = this.selectedItems.filter(x => x.Id != item.Id);
+        if (items != undefined && items.length > 0) {
+            this.selectedItems = items;
+            this.AddActionAttribute();
+            this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
+        }
+        else {
+            this.selectedItems = [];
+            this.AddActionAttribute();
+        }
+        this.workFlow.selectedItems = this.selectedItems;
+        this.resetWorkflowGrid();
     }
 
     onItemSelect(item: any) {
-
+        this.AddActionAttribute();
     }
 
     onSelectAll(items: any) {
+        this.selectedItems = items;
+        this.AddActionAttribute();
+        this.setCurrentPanel(this.selectedItems[this.selectedItems.length - 1].Name, this.selectedItems[this.selectedItems.length - 1].Id);
+        this.resetWorkflowGrid();
+    }
+
+    onDeSelectAll(items: any) {
+        this.selectedItems = [];
+        this.AddActionAttribute();
+        this.workFlow.selectedItems = [];
+        this.resetWorkflowGrid();
+    }
+
+    taskDeleteConfirmation(confirmDeleteTemplate: any, task: any): void {
+        // this.modal = this.modalService.open(confirmDeleteTemplate, { size: 'sm' });
+    }
+
+    dismissModel() {
+        this.modal.close();
+    }
+
+
+
+    private resetWorkflowGrid(): void {
+        for (let wf of this.workFlowList) {
+            if (wf.taskId == this.currenttaskId) {
+                var chargesItem = wf.selectedItems.filter(x => x.Name == "Charges");
+                if (chargesItem.length == 0) {
+                    wf.charges = [];
+                }
+
+                var directionsItem = wf.selectedItems.filter(x => x.Name == "Directions");
+                if (directionsItem.length == 0) {
+                    wf.directions = [];
+                }
+
+                var equipmentItem = wf.selectedItems.filter(x => x.Name == "Equipment");
+                if (equipmentItem.length == 0) {
+                    wf.equipments = [];
+                }
+
+                var exclusionItem = wf.selectedItems.filter(x => x.Name == "Exclusions");
+                if (exclusionItem.length == 0) {
+                    wf.exclusions = [];
+                }
+
+                var expertiseItem = wf.selectedItems.filter(x => x.Name == "Expertise");
+                if (expertiseItem.length == 0) {
+                    wf.expertise = [];
+                }
+
+                var materialItem = wf.selectedItems.filter(x => x.Name == "Material List");
+                if (materialItem.length == 0) {
+                    wf.materialList = [];
+                }
+
+                var measurementItem = wf.selectedItems.filter(x => x.Name == "Measurements");
+                if (measurementItem.length == 0) {
+                    wf.measurements = [];
+                }
+
+                var measurementItem = wf.selectedItems.filter(x => x.Name == "Publications");
+                if (measurementItem.length == 0) {
+                    wf.publication = [];
+                }
+            }
+
+        }
 
     }
 
+    Total: number;
+    PercentBERThreshold: number;
+    calculateTotalWorkFlowCost(): void {
+        this.MaterialCost = 0;
+        this.TotalCharges = 0;
+        this.TotalExpertiseCost = 0;
+
+        for (let wf of this.workFlowList) {
+            this.MaterialCost += wf.totalMaterialCostValue != undefined ? wf.totalMaterialCostValue : 0;
+            this.TotalCharges += wf.extendedCostSummation != undefined ? wf.extendedCostSummation : 0;
+            this.TotalExpertiseCost += wf.totalExpertiseCost != undefined ? wf.totalExpertiseCost : 0;
+        }
+
+        this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
+        this.TotalCharges = parseFloat((this.TotalCharges).toFixed(2));
+        this.TotalExpertiseCost = parseFloat((this.TotalExpertiseCost).toFixed(2));
+        this.Total = this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + parseFloat(((this.sourceWorkFlow.otherCost == undefined || this.sourceWorkFlow.otherCost == '') ? 0 : this.sourceWorkFlow.otherCost).toFixed(2));
+        this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
+    }
 }
