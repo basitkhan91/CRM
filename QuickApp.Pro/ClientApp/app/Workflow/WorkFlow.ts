@@ -35,4 +35,19 @@ export interface IWorkFlow {
     totalMaterialCost: number;
     totalMaterialCostValue: number;
 
+    qtySummation: number;
+    extendedCostSummation: number;
+
+    sumofExtendedCost: number;
+    sumofQty: number;
+
+    sumofestimatedhrs: number;
+    sumofLabourDirectCost: number;
+    sumOfOHCost: number;
+
+    materialQtySummation: number;
+    materialExtendedCostSummation: number;
+
+
+
 }

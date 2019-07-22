@@ -22,14 +22,13 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     itemclaColl: any[];
     partCollection: any[];
     errorMessage: string;
-    currentPage : number = 1;
-    itemsPerPage : number = 10;
-    sumofExtendedCost : number = 0;
-    sumofQty: number = 0;
+    currentPage: number = 1;
+    itemsPerPage: number = 10;
+
 
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private alertService: AlertService) {
         for (var i = 0; i <= 100; i++) {
-            this.exclusionEstimatedOccurances.push( { id: i , name: String(i) });
+            this.exclusionEstimatedOccurances.push({ id: i, name: String(i) });
         }
     }
 
@@ -44,19 +43,19 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         // );
 
         this.ptnumberlistdata();
-            // summation of all values in edit mode 
-        if(this.UpdateMode){
+        // summation of all values in edit mode 
+        if (this.UpdateMode) {
             this.reCalculate();
 
 
         }
- 
+
     }
 
     ngOnChanges(): void {
 
     }
-    reCalculate(){
+    reCalculate() {
         this.calculateQtySummation();
         this.calculateExtendedCostSummation();
     }
@@ -79,13 +78,13 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         this.workFlow.exclusions.push(newRow);
     }
 
-  	    deleteRow(index): void {
-        if (this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {	
-             this.workFlow.exclusions.splice(index, 1);	           
-        }	
-         else {	
-            this.workFlow.exclusions[index].isDelete = true;	
-        }	
+    deleteRow(index): void {
+        if (this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {
+            this.workFlow.exclusions.splice(index, 1);
+        }
+        else {
+            this.workFlow.exclusions[index].isDelete = true;
+        }
         this.reCalculate();
     }
 
@@ -153,16 +152,16 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
 
-        // sum of the qty
-        calculateQtySummation(){
-            this.sumofQty  =   this.workFlow.exclusions.reduce((acc , x ) => {
-               return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
-            }, 0)
-       
-        }
+    // sum of the qty
+    calculateQtySummation() {
+        this.workFlow.sumofQty = this.workFlow.exclusions.reduce((acc, x) => {
+            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+        }, 0);
+
+    }
     // sum of extended cost
-    calculateExtendedCostSummation(){
-        this.sumofExtendedCost = this.workFlow.exclusions.reduce((acc, x) => {
+    calculateExtendedCostSummation() {
+        this.workFlow.sumofExtendedCost = this.workFlow.exclusions.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
     }

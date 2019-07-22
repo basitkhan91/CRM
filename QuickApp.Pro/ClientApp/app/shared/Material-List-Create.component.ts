@@ -41,10 +41,9 @@ export class MaterialListCreateComponent implements OnInit {
     isDeferredBoolean: any = false;
     currentPage: number = 1;
     itemsPerPage: number = 10;
-    qtySummation: number = 0;
-    extendedCostSummation: number = 0;
     variableIdOfNew: any[];
     defaultUOMId: number;
+    defaultConditionId: number;
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService) {
 
     }
@@ -160,6 +159,10 @@ export class MaterialListCreateComponent implements OnInit {
     private loadConditionData() {
         this.conditionService.getConditionList().subscribe(data => {
             this.materialCondition = data[0];
+            this.defaultConditionId = this.materialCondition.filter(x => x.description.trim() == "NEW")[0].conditionId;
+            if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                this.workFlow.materialList[0].conditionCodeId = this.defaultConditionId;
+            }
         })
     }
 
@@ -170,7 +173,7 @@ export class MaterialListCreateComponent implements OnInit {
     private loadUOMData() {
         this.unitofmeasureService.getUnitOfMeasureList().subscribe(uomdata => {
             this.materialUOM = uomdata[0];
-            this.defaultUOMId = this.materialUOM.filter(x => x.shortName == "Ea")[0].unitOfMeasureId;
+            this.defaultUOMId = this.materialUOM.filter(x => x.shortName.trim() == "Ea")[0].unitOfMeasureId;
             if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
                 this.workFlow.materialList[0].unitOfMeasureId = this.defaultUOMId;
             }
@@ -182,12 +185,12 @@ export class MaterialListCreateComponent implements OnInit {
 
         newRow.workflowMaterialListId = "0";
         newRow.taskId = this.workFlow.taskId;
-        newRow.conditionCodeId = "";
+        newRow.conditionCodeId = this.defaultConditionId;
         newRow.extendedCost = "";
         newRow.extraCost = "";
         newRow.itemClassificationId = "";
         newRow.itemMasterId = "";
-        newRow.mandatoryOrSupplemental = this.defaultMaterialMandatory;
+        newRow.mandatoryOrSupplemental = 'Mandatory';
         newRow.partDescription = "";
         newRow.partNumber = "";
         newRow.isDeferred = this.isDeferredBoolean;
@@ -237,28 +240,25 @@ export class MaterialListCreateComponent implements OnInit {
     }
     // sum of extended cost
     calculateExtendedCostSummation() {
-        this.extendedCostSummation = this.workFlow.materialList.reduce((acc, x) => {
-
+        this.workFlow.materialExtendedCostSummation = this.workFlow.materialList.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
-        this.workFlow.totalMaterialCostValue = this.extendedCostSummation;
-       
+        this.workFlow.totalMaterialCostValue = this.workFlow.materialExtendedCostSummation;
+
     }
 
     // sum of the qty
     calculateQtySummation() {
-        this.qtySummation = this.workFlow.materialList.reduce((acc, x) => {
+        this.workFlow.materialQtySummation = this.workFlow.materialList.reduce((acc, x) => {
             return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
-        }, 0)
+        }, 0);
 
     }
     // calculate the price summation 
     calculatePriceSummation() {
         this.workFlow.totalMaterialCost = this.workFlow.materialList.reduce((acc, x) => {
-
             return acc + parseFloat(x.price == undefined || x.price === '' ? 0 : x.price)
-
-        }, 0)
+        }, 0);
     }
 
     isDeferredEnable(e) {

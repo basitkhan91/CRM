@@ -19,9 +19,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
     errorMessage: string;
     currentPage: number = 1;
     itemsPerPage: number = 10;
-    sumofestimatedhrs: number = 0;
-    sumofLabourDirectCost: number = 0;
-    sumOfOHCost: number = 0;
+   
 
     constructor(private actionService: ActionService) {
     }
@@ -98,16 +96,15 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
     }
     // sum of the estimated Hrs
     calculateEstimatedHoursSummation() {
-        this.sumofestimatedhrs = this.workFlow.expertise.reduce((acc, x) => {
+        this.workFlow.sumofestimatedhrs = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.estimatedHours === undefined || x.estimatedHours === '' ? 0 : x.estimatedHours)
-
-        }, 0)
+        }, 0);
     }
     // sum of labour direct cost 
     calculateLabourDirectCost() {
-        this.sumofLabourDirectCost = this.workFlow.expertise.reduce((acc, x) => {
+        this.workFlow.sumofLabourDirectCost = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.directLaborRate === undefined || x.directLaborRate === '' ? 0 : x.directLaborRate)
-        }, 0)
+        }, 0);
 
     }
 
@@ -124,10 +121,10 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
 
     }
     calculateOHCostSummation() {
-        this.sumOfOHCost = this.workFlow.expertise.reduce((acc, x) => {
+        this.workFlow.sumOfOHCost = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.overheadCost === undefined || x.overheadCost === '' ? 0 : x.overheadCost)
         }, 0)
-        this.sumOfOHCost = parseFloat((this.sumOfOHCost).toFixed(2));
+        this.workFlow.sumOfOHCost = parseFloat((this.workFlow.sumOfOHCost).toFixed(2));
     }
     // used to calculate the LabourOH cost 
     calculateLabourOHCost(expertise): void {

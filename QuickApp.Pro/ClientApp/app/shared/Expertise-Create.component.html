@@ -8,11 +8,11 @@
                 <th><label>S.No</label></th>
             <th><label> Expertise Type *</label></th>
             <th><label>Estimated Hours </label></th>
-            <th><label>Labour Direct Rate</label></th>
+            <th><label>Labor Direct Rate</label></th>
             <th><label>Direct Labor Cost</label></th>
             <th><label>OHead Burden(%)</label></th>
             <th><label>OH Cost</label></th>
-            <th><label>Labor and OH Cost </label></th>
+            <th><label>Direct Labor and OH Cost</label></th>
             <th><label>Action </label></th>
         </tr>
         <tr class="expertise-tr" [hidden]="expert.isDelete"  *ngFor="let expert of workFlow.expertise;let i = index">
@@ -87,11 +87,11 @@
            <b>Total </b>
        </td>
        <td>&nbsp;</td>
-       <td> {{sumofestimatedhrs }}</td>
+       <td> {{workFlow.sumofestimatedhrs }}</td>
        <td>&nbsp;</td>
-       <td>{{sumofLabourDirectCost}}</td>
+       <td>{{workFlow.sumofLabourDirectCost}}</td>
        <td>&nbsp;</td>
-       <td>{{sumOfOHCost}}</td>
+       <td>{{workFlow.sumOfOHCost}}</td>
        <td> {{workFlow.totalExpertiseCost}}</td>
        <td>&nbsp;</td>
 

@@ -155,6 +155,7 @@ namespace QuickApp.Pro.Controllers
                     workFlow.CreatedBy = "admin";
                     workFlow.UpdatedBy = "admin";
                     workFlow.MasterCompanyId = 1;
+                    workFlow.IsActive = true;
                     UnitOfWork.Repository<Workflow>().Update(workFlow);
                     UnitOfWork.SaveChanges();
                     return Ok(workFlow);

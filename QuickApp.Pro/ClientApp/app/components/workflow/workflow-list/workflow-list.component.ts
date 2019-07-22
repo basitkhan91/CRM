@@ -97,7 +97,8 @@ export class WorkflowListComponent implements OnInit {
     removeWorkFlow(): void {
         this.actionService.RemoveWorkFlow(this.currentWorkflow.workflowId).subscribe(
             result => {
-                this.alertService.showMessage(this.title, this.currentWorkflow.workOrderNumber + ' deleted successfully.', MessageSeverity.success);
+                this.alertService.showMessage(this.title, "ACC" + this.currentWorkflow.workflowId + ' deleted successfully.', MessageSeverity.success);
+                this.getAllWorkflows();
             },
             error => {
                 var message = '';

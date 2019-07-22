@@ -26,8 +26,8 @@
             <td>
                 <input type="text" pInputText value="{{charge.description}}" [(ngModel)]="charge.description" class="form-control">
 
-            <td><input type="text" pInputText pKeyFilter="pnum" maxlength="10" class="form-control" value="{{charge.quantity}}" (input)="calculateQtySummation()" [(ngModel)]="charge.quantity"></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge)" [(ngModel)]="charge.unitCost"></td>
+            <td><input type="text" pInputText pKeyFilter="pnum" maxlength="10" class="form-control" value="{{charge.quantity}}" (input)="calculateQtySummation();calculateExtendedCost(charge);" [(ngModel)]="charge.quantity"></td>
+            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge);" [(ngModel)]="charge.unitCost"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" [disabled]="true" value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost" (input)="calculateExtendedCostSummation()"></td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice" (input)="calculateExtendedPrice(charge)"> </td>
             <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice" disabled></td>
@@ -51,9 +51,9 @@
             </td>
             <td> &nbsp;</td>
             <td> &nbsp;</td>
-            <td>{{qtySummation}}</td>
+            <td>{{workFlow.qtySummation}}</td>
             <td>&nbsp;</td>
-            <td>{{extendedCostSummation}}</td>
+            <td>{{workFlow.extendedCostSummation}}</td>
             <td>&nbsp;</td>
             <td>{{workFlow.totalChargesCost}}</td>
             <td>&nbsp;</td>
