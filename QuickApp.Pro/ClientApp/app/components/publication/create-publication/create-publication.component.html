@@ -46,10 +46,30 @@
               <p-checkbox
                 class="checkbox-blue"
                 name="groupname"
-                value="val1"
+                [(ngModel)]="revision"
+                binary="true"
               ></p-checkbox>
             </div>
           </div>
+
+          <div class="ui-g-12 ui-md-6" *ngIf="revision">
+            <div class="ui-g-4">
+              Verified By
+            </div>
+            <div class="ui-g-8">
+              <input pInputText type="text" />
+            </div>
+          </div>
+
+          <div class="ui-g-12 ui-md-6" *ngIf="revision">
+            <div class="ui-g-4">
+              Expiration Date
+            </div>
+            <div class="ui-g-8">
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+          </div>
+
           <!-- second    -->
           <div class="ui-g-12 ui-md-6">
             <div class="ui-g-4">
@@ -110,17 +130,6 @@
         <!-- fifth -->
 
         <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-2">File</div>
-          <div class="ui-g-10">
-            <p-fileUpload
-              name="myfile[]"
-              url="./upload.php"
-              multiple="multiple"
-              [showCancelButton]="false"
-            ></p-fileUpload>
-          </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
           <div class="ui-g-4">
             Author/Source/Directive
           </div>
@@ -163,6 +172,18 @@
           </div>
         </div>
 
+        <div class="ui-g-12 ui-md-12">
+          <div class="ui-g-2">File</div>
+          <div class="ui-g-10">
+            <p-fileUpload
+              name="myfile[]"
+              url="./upload.php"
+              multiple="multiple"
+              [showCancelButton]="false"
+            ></p-fileUpload>
+          </div>
+        </div>
+
         <button
           class="btn btn-primary-cstm pull-right button-save"
           type="submit"
@@ -179,8 +200,143 @@
       <div class="card-header header-text ">
         Aircraft Information
       </div>
+
       <div class="card-body">
-        <h3>Aircraft Information</h3>
+        <div class="row">
+          <div class="col-md-7">
+            <div class="col-md-12">
+              <div class="dashNumber">
+                <h4>Add Dash Numbers</h4>
+                <div class="col-md-3">
+                  <div class="form-group ">
+                    <label class="fs12">Aircraft</label>
+                    <p-dropdown
+                      [options]="status"
+                      class="pub-type-select pub-border input-sm"
+                    ></p-dropdown>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="fs12 inline-block">Model</label>
+                    <label class="fs12 inline-block"
+                      ><input type="checkbox" /> Unknown</label
+                    >
+                    <p-multiSelect
+                      [options]="types"
+                      class="pub-multi align-x"
+                    ></p-multiSelect>
+                  </div>
+                </div>
+                <!-- 
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Model</label>
+              <input type="checkbox" />Unknown
+            </div>
+          </div> -->
+                <div class="clear"></div>
+              </div>
+            </div>
+            <div class="col-md-12 ">
+              <div class="dashNumber">
+                <h4>Search Dash Numbers</h4>
+                <div class="col-md-4">
+                  <div class="form-group ">
+                    <label class="fs12">Aircraft</label>
+                    <p-multiSelect
+                      [options]="types"
+                      class="pub-multi"
+                    ></p-multiSelect>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="fs12">
+                      Model
+
+                      <input type="checkbox" />
+                    </label>
+                    <p-multiSelect
+                      [options]="types"
+                      class="pub-multi"
+                    ></p-multiSelect>
+                  </div>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ATA Chapter  -->
+
+          <div class="col-md-5">
+            <h4 style="margin-left: 34px !important">Add ATA Chapters</h4>
+
+            <div class="col-md-12">
+              <div class="dashNumber">
+                <div class="col-md-4">
+                  <div class="form-group ">
+                    <label class="label-ataChapter">ATA Chapter</label>
+                    <p-dropdown
+                      [options]="status"
+                      class="pub-type-select pub-border"
+                    ></p-dropdown>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label class="label-atasubchapter"> ATA SubChapter</label>
+                    <p-multiSelect
+                      [options]="types"
+                      class="pub-multi align-x"
+                    ></p-multiSelect>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <button class="btn btn-primary mtop20">
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="dashNumber">
+                <div class="col-md-4">
+                  <div class="form-group ">
+                    <label class="label-atachapter">ATA Chapter</label>
+                    <p-multiSelect
+                      [options]="types"
+                      class="pub-multi"
+                    ></p-multiSelect>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-atasubchapter">ATA SubChapter</label>
+                    <p-multiSelect
+                      [options]="types"
+                      class="pub-multi"
+                    ></p-multiSelect>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <button class="btn btn-primary mtop20">Add</button>
+                  </div>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -7,8 +7,9 @@ import { CalendarModule } from "primeng/calendar";
 })
 /** Create-publication component*/
 export class CreatePublicationComponent {
-  activeMenuItem: number = 1;
-  currentTab: string = "General";
+  activeMenuItem: number = 2;
+  revision: boolean = false;
+  currentTab: string = "Aircraft";
   types = [
     { label: "SelectPublication ", value: "Select publication" },
     { label: "CMM", value: "CMM" },
