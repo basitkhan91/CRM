@@ -8,5 +8,6 @@ namespace DAL.Repositories.Interfaces
     public interface IVendorClassificationRepository : IRepository<VendorClassification>
     {
         IEnumerable<VendorClassification> GetAllVendorClassificationData();
+        IEnumerable<VendorClassification> GetAllActiveVendorClassificationData();
     }
 }

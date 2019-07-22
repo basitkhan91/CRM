@@ -34,8 +34,6 @@ namespace QuickApp.Pro.Controllers
         public IActionResult Get()
         {
             var result = _unitOfWork.VendorClassifications.GetAllVendorClassificationData(); //.GetAllCustomersData();
-
-
             try
             {
                 var resul1 = Mapper.Map<IEnumerable<VendorClassificationViewModel>>(result);
@@ -51,7 +49,26 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+        [HttpGet("GetActive")]
+        [Produces(typeof(List<VendorClassificationViewModel>))]
+        public IActionResult GetActive()
+        {
+            var result = _unitOfWork.VendorClassifications.GetAllActiveVendorClassificationData(); //.GetAllCustomersData();
+            try
+            {
+                var resul1 = Mapper.Map<IEnumerable<VendorClassificationViewModel>>(result);
 
+                return Ok(resul1);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
+
+        }
 
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]

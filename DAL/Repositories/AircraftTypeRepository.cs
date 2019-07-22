@@ -13,7 +13,7 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.AircraftType> getAircraftTypeData()
         {
-            return _appContext.AircraftType.OrderBy(c => c.AircraftTypeId).ToList();
+            return _appContext.AircraftType.Where(c => (c.IsDeleted == false || c.IsDeleted == null)).OrderBy(c => c.AircraftTypeId).ToList();
 
 
         }
