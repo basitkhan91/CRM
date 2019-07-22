@@ -17,7 +17,7 @@ import { ItemMasterService } from '../../../services/itemMaster.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { CustomerClassification } from '../../../models/customer-classification.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { GMapModule } from 'primeng/gmap';
 import { AddActionsDialogComponent } from '../../dialogs/add-actions-dialog/add-actions-dialog.component';
@@ -247,7 +247,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     disableSaveAlterumber: boolean;
     portalURL: any = "";
     public sourceIntegration: any = {};
+    public message: string;
     integrationNamecolle: any[] = [];
+    http: any;
+    progress: number;
 
 
     constructor(public integrationService: IntegrationService,private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -4213,4 +4216,27 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
+    // add upload
+    //upload(files) {
+    //    if (files.length === 0)
+    //        return;
+
+    //    const formData = new FormData();
+
+    //    for (let file of files)
+    //        formData.append(file.name, file);
+
+    //    const uploadReq = new HttpRequest('POST', `api/ItemMaster`, formData, {
+    //        reportProgress: true,
+    //    });
+
+    //    this.http.request(uploadReq).subscribe(event => {
+    //        if (event.type === HttpEventType.UploadProgress)
+    //            this.progress = Math.round(100 * event.loaded / event.total);
+    //        else if (event.type === HttpEventType.Response)
+    //            this.message = event.body.toString();
+    //    });
+    //}
 }
+

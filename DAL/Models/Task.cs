@@ -22,6 +22,8 @@ namespace DAL.Models
 
         public bool? IsDelete { get; set; }
 
+        public string SequenceId { get; set; }
+
         public virtual MasterCompany MasterCompany { get; set; }
     }
 }
