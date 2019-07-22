@@ -55,9 +55,6 @@ namespace QuickApp.Pro.Controllers
 
                 throw;
             }
-
-
-
         }
 
         [HttpPost("add")]
@@ -79,6 +76,7 @@ namespace QuickApp.Pro.Controllers
                 DAL.Models.Task actionobject = new DAL.Models.Task();
                 actionobject.Description = actionViewModel.Description;
                 actionobject.Memo = actionViewModel.Memo;
+                actionobject.SequenceId = actionViewModel.SequenceId;
                 actionobject.MasterCompanyId = 1;
                 actionobject.IsActive = true;
                 actionobject.IsDelete = false;
@@ -86,6 +84,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = actionViewModel.CreatedBy;
                 actionobject.UpdatedBy = actionViewModel.UpdatedBy;
+                updateRanking(Convert.ToInt32(actionViewModel.SequenceId));
                 _unitOfWork.Actions.Add(actionobject);
                 _unitOfWork.SaveChanges();
 
@@ -105,16 +104,22 @@ namespace QuickApp.Pro.Controllers
 
                 var existingResult = _unitOfWork.Actions.GetSingleOrDefault(c => c.TaskId == id);
                 // DAL.Models.Action updateObject = new DAL.Models.Action();
+                if (Convert.ToInt32(existingResult.SequenceId) != Convert.ToInt32(existingResult.SequenceId))
+                {
+                    updateRanking(Convert.ToInt32(existingResult.SequenceId));
+                }
 
 
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = actionViewModel.UpdatedBy;
                 existingResult.Memo = actionViewModel.Memo;
+                existingResult.SequenceId = actionViewModel.SequenceId;
                 existingResult.Description = actionViewModel.Description;
                 existingResult.IsActive = actionViewModel.IsActive;
                 existingResult.MasterCompanyId = actionViewModel.MasterCompanyId;
 
-                _unitOfWork.Actions.Update(existingResult);
+               // _unitOfWork.Actions.Update(existingResult);
+                _unitOfWork.Repository<Model.Task>().Update(existingResult);
                 _unitOfWork.SaveChanges();
 
             }
@@ -154,6 +159,64 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResults);
 
         }
+
+
+        #region Private Methods
+
+        private void updateRanking(int rankId)
+        {
+
+            var sequinceList = _unitOfWork.Repository<Model.Task>().GetAll().Where(x => Convert.ToInt32(x.SequenceId) >= rankId).OrderBy(x => Convert.ToInt32(x.SequenceId)).ToList();
+
+            if (sequinceList != null && sequinceList.Count > 0)
+            {
+                var sequenceExists = sequinceList.Any(X => Convert.ToInt32(X.SequenceId) == rankId);
+                if (sequenceExists)
+                {
+                    var currentRank = 0;
+                    var index = 0;
+                    var nextRank = 0;
+                    foreach (var sequid in sequinceList)
+                    {
+                        if (index < sequinceList.Count)
+                        {
+                            currentRank = Convert.ToInt32(sequinceList[0].SequenceId);
+                            try
+                            {
+                                nextRank = (index + 1) <= sequinceList.Count ? Convert.ToInt32(sequinceList[index + 1].SequenceId) : 0;
+                            }
+                            catch (Exception ee)
+                            {
+                               nextRank = 1;
+                            }
+
+                            if ((nextRank - currentRank) == 1)
+                            {
+                                    sequid.SequenceId = (Convert.ToInt32(sequid.SequenceId) + 1).ToString();
+                                    _unitOfWork.Repository<Model.Task>().Update(sequid);
+                            }
+                            //if ((nextRank - currentRank) != 1)
+                            //{
+                            //    sequid.SequenceId = (Convert.ToInt32(sequid.SequenceId + 1)).ToString();
+                            //    _unitOfWork.Repository<Model.Task>().Update(sequid);
+                            //}
+                            else
+                            {
+                                //sequid.SequenceId = (Convert.ToInt32(sequid.SequenceId) + 1).ToString();
+                                //_unitOfWork.Repository<Model.Task>().Update(sequid);
+                                //break;
+                            }
+                            index++;
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+        #endregion Private Methods
+
 
     }
 
