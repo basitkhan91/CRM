@@ -38,10 +38,26 @@ namespace QuickApp.Pro.ViewModels
 
         public DateTime UpdatedDate { get; set; }
 
+        public DateTime EntryDate { get; set; }
+
         public bool? IsActive { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
 
         public bool? IsDelete { get; set; }
+
+
+        public string revisionDate { get; set; }
+        public string nextreviewDate { get; set; }
+
+        public string ASD { get; set; }
+        public string publishby { get; set; }
+        public string location { get; set; }
+        public string revision { get; set; }
+
+        public string verifiedby { get; set; }
+        public string verifieddate { get; set; }
+        public string employee { get; set; }
+        public string docpath { get; set; }
     }
 }
