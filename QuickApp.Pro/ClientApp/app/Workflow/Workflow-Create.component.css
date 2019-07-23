@@ -890,6 +890,10 @@ li.active.ng-star-inserted {
 .c-wf-bcrumb li {
     font-family: 'Roboto';
 }
+.wf-h-col .col-md-6 {
+    max-width: 44%;
+    margin-right: 15px;
+}
 
 @media (min-width: 1240px) {
     .total-wf-cost-form .col-md-2 {
