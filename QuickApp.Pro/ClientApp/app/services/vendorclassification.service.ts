@@ -40,6 +40,10 @@ export class VendorClassificationService {
         return Observable.forkJoin(
             this.vendorclassificationEndpoint.getVendorClassificationEndpoint<VendorClassification[]>());
     }
+    getActiveVendorClassificationEndpointList() {
+        return Observable.forkJoin(
+            this.vendorclassificationEndpoint.getActiveVendorClassificationEndpoint<VendorClassification[]>());
+    }
     newVendorClassification(vendorclassification: VendorClassification) {
         return this.vendorclassificationEndpoint.getNewVendorClassificationEndpoint<VendorClassification>(vendorclassification);
     }

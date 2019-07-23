@@ -1021,17 +1021,20 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         if (this.allconditioninfo != undefined && this.allconditioninfo.length > 0) {
             let defaultConditionId: any = this.allconditioninfo.filter(x => x.description.trim() == name)[0].conditionId;
+            //this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
+            return defaultConditionId;
         }
         else {
             this.conditionService.getConditionList().subscribe(data => {
                 this.allconditioninfo = data[0];
                 let defaultConditionId: any = this.allconditioninfo.filter(x => x.description.trim() == name)[0].conditionId;
-                this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
-
+                return defaultConditionId;
+                //this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
+                 
             })
         }
 
-        return "";
+       
     }
 
     private loadConditionData() {
@@ -1644,7 +1647,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             taskId: "",
             workflowId: "",
             AllowEdit: true,
-            IsDeleted: false,
+            isDeleted: false,
         }];
         return publication;
     }
@@ -1667,7 +1670,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             taskId: "",
             workflowId: "",
             AllowEdit: true,
-            IsDelete: false,
+            isDelete: false,
 
         }];
         return charges;
@@ -1713,7 +1716,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
 
     GetMaterialList(): any[] {
-        debugger;
         var material = [{
             workflowMaterialListId: "0",
             itemMasterId: '',
@@ -1733,7 +1735,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             workflowId: "",
             masterCompanyId: '',
             AllowEdit: true,
-            IsDelete: false,
+            isDelete: false,
         }];
 
         return material;

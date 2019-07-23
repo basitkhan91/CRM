@@ -56,8 +56,7 @@ import { GlAccountService } from '../../../services/glAccount/glAccount.service'
 import { GlAccount } from '../../../models/GlAccount.model';
 import { VendorService } from '../../../services/vendor.service';
 import { DatePipe } from '@angular/common';
-import { MenuItem } from 'primeng/api';
-import {DropdownModule} from 'primeng/dropdown';
+import { MenuItem, SelectItem } from 'primeng/api';
 
 
 @Component({
@@ -68,7 +67,11 @@ import {DropdownModule} from 'primeng/dropdown';
 
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
-
+    disables: boolean = false;
+    disable: boolean = false;
+    disabled: boolean = false;
+    view: boolean = false;
+    viewed: boolean = false;
   disableIntegrationSave: boolean;
   currencySymbol: any;
 	bulist: any[] = [];
@@ -83,7 +86,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	itemdescription: any[]=[];
 	showexportData: boolean;
     showGeneralData: boolean = true;
-    showAircraftData: boolean = true;
+    showAircraftData: boolean = false;
 	showpurchaseData: boolean;
 	disableSaveglAccount: boolean;
 	glAccountCollection: any[];
@@ -144,7 +147,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	allManufacturerInfo: any[];
 	allActions: any[];
 	provisionName: string;
-	shiftValues: any[] = [];
+    shiftValues: any[] = [];
+    modelValues: any[] = [];
+    selectedModelValues: any;
 	allaircraftInfo: any[];
 	allAircraftinfo: any[];
 	selectedAircraftTypes: any;
@@ -166,6 +171,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	localgroup: any[] = [];
     allProvisonInfo: Provision[];
     // New Code -- Jyotsna
+    itemQuantity = []; 
     items1: MenuItem[];
     activeItem: MenuItem;
 	itemGroupName: string;
@@ -254,20 +260,22 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     portalURL: any = "";
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
-    aircraftManfactures: any = [];
-
+    cols1: any[];
+  
 
     constructor(public integrationService: IntegrationService,private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
-        public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public currency: CurrencyService,
+      public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+
+     
+
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
-
-        
         //Adding Below Code for By Default Date Should be current Date while Creation
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
@@ -401,16 +409,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit(): void {
- 
-
         // Created by Jyotsna
-
+        this.itemQuantity = Array(10).fill(1).map((x, i) => i + 1);
         this.items1 = [
             { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
             { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
             { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
-            { label: 'Export Information', icon: 'fa fa-fw fa-export', command: (onclick: any) => this.moveExportInformation() },            
+            { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },            
         ];
+
+
 
         this.loadManagementdata();
         this.manufacturerdata();
@@ -438,7 +446,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getCpaesData();
         this.activeIndex = 0;
         this.Integration();
-        this.getAllAirCraft();
         this.sourceItemMaster.salesIsFixedPrice = true;
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([]),
@@ -451,17 +458,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-     // get aircraft all manfactures
-    getAllAirCraft(){
-        this.itemser.getAllAirCraftModels().subscribe(res => {
-            this.aircraftManfactures = res.map(x => {
-                return {
-                    label: x.description, value: x.aircraftTypeId
-                }
-            });
-        
-        })
-    }
+
+ 
 
     // Form array for capability//
     get mfgFormArray(): FormArray {
@@ -488,7 +486,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     get exchangeFormArray(): FormArray {
         return this.capabilitiesForm.get('exchangeForm') as FormArray;
     }
-
 
     //loading aircraftmanufacturer data//
     private aircraftManfacturerData() {
@@ -1318,13 +1315,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 for (let i = 0; i < this.allaircraftInfo.length; i++)
                     this.shiftValues.push(
                         { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
-
                     );
-            }
+            }          
 
             //Adding
-
-            let valAirCraft = [];
+               let valAirCraft = [];
             //we are Passing Customer Id for getting Edit Data and make it check 
             this.itemser.getAircaftManafacturerList(this.sourceItemMaster.itemMasterId)
                 .subscribe(results => {
@@ -3499,8 +3494,28 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
+  
+    fieldArray: Array<any> = [];
+    newAttribute: any = {};
+    Delete = true;
+    addFieldValue(index) {
+        if (this.fieldArray.length <= 5) {
+            this.fieldArray.push(this.newAttribute);
+            this.newAttribute = {};
+        }
+        else {
+           
+        }
+    }
+    delete(index) {
+        if (this.fieldArray.length > 0) {
+            this.fieldArray.splice(index, 1);
+        }
+        else {
+            this.Delete = false;
+        }
 
-
+    }
     saveovhinfo(partid, itemid, data) {
 
         for (let i = 0; i < data.length; i++) {
@@ -4193,7 +4208,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
     createIntegration() {
         this.isSaving = true;
         if (this.isEditMode == false) {
@@ -4239,8 +4253,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
     filterIntegrationsSelect(event) {
 
         this.localCollection = [];
@@ -4255,4 +4267,22 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    check($event) {
+        this.disables = true;
+        this.disable = true;
+        this.view = false;
+    }
+    Adddash($event) {
+        this.disabled = true;
+    }
+    onToggle(e) {
+        this.disables = true;
+        this.disable = true;
+        this.view = e.target.checked;
+    }
+    onToggled($event) {
+        this.disable = false;
+        this.viewed = true;
+    }
+
 }
