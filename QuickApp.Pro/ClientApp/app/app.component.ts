@@ -32,7 +32,7 @@ import { MenuItem } from "primeng/components/common/menuitem"; //Bread crumb
 @Component({
     selector: "quickapp-pro-app",
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, AfterViewInit {

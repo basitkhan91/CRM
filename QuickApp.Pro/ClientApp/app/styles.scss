@@ -1,8 +1,8 @@
 ﻿@import '../../node_modules/@angular/material/theming';
 @import '../../node_modules/bootstrap/dist/css/bootstrap';
-@import '../../node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css';
-@import '../../node_modules/bootstrap-table/dist/bootstrap-table.min.css';
-$fa-font-path: "../../node_modules/font-awesome/fonts";
+//@import '../../node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css';
+//@import '../../node_modules/bootstrap-table/dist/bootstrap-table.min.css';
+//$fa-font-path: "../../node_modules/font-awesome/fonts";
 
 @import '../../node_modules/font-awesome/css/font-awesome.css';
 @import'../../node_modules/primeicons/primeicons.css';
@@ -17,6 +17,318 @@ $theme: mat-light-theme($primary, $accent);
 @include quickapp-pro-app-theme($theme);
 //@import './mycustom-style.css';
 
+
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/*.app-toolbar {
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+    z-index: 2
+}*/
+
+.is-mobile .app-toolbar {
+    position: fixed;
+    z-index: 2;
+}
+
+.title-name {
+    padding-left: 45px;
+    font: 20px Verdana;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.app-toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.app-name {
+    margin-left: 8px;
+}
+
+.app-name > a {
+    color: inherit;
+    cursor: default;
+    text-decoration: inherit;
+}
+
+.app-sidenav-nav {
+    min-width: 150px;
+
+
+    .mat-nav-list {
+        padding-top: 0;
+    }
+
+    .mat-icon {
+        margin-left: 0px;
+        margin-right: 16px;
+    }
+
+    .mat-expansion-panel-header {
+        padding-left: 16px;
+    }
+
+    .mat-expansion-panel-header-title {
+        line-height: 24px;
+    }
+
+    .mat-expansion-panel-body {
+        padding: 0;
+
+        .mat-list-item .mat-list-item-content {
+            padding-left: 32px;
+        }
+    }
+}
+
+.app-sidenav-container {
+    /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+    flex: 1;
+}
+
+.sidenav-content {
+    margin-left: 20px;
+}
+
+.is-mobile .app-sidenav-container {
+    /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+    flex: 1 0 auto;
+}
+
+.mat-expansion-panel-body a.active {
+    color: aqua !important;
+}
+
+.mat-nav-list .mat-list-item.active {
+    background-color: transparent !important;
+}
+
+.mat-drawer {
+    /*background-color: white !important;*/
+    // background: linear-gradient(to right, #66ccff 0%, #66ffff 100%);
+    background: linear-gradient(to right, white 0%, white 100%);
+}
+
+.ui-panelmenu .ui-panelmenu-content {
+    background: none;
+}
+
+.ui-panelmenu .ui-panelmenu-header .ui-state-active {
+    border: none;
+    background: none !important;
+}
+
+.pi-fw {
+    width: 1.285714em;
+    text-align: center;
+}
+
+.ui-panelmenu {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.ui-panelmenu-header {
+    padding: 5px;
+}
+
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem-link:hover {
+    background: none;
+    color: rgb(217, 217, 235);
+}
+
+.ui-state-active {
+    background: none;
+}
+
+.ui-panelmenu-icon {
+    float: right;
+}
+
+.ui-menuitem-text {
+    background: none !important;
+}
+
+
+
+.ui-panelmenu-content {
+    border: none;
+}
+
+.ui-panelmenu {
+    background: none !important
+}
+
+.ui-panelmenu-content .ui-menuitem-text {
+    padding-left: 30px;
+}
+
+.ui-menuitem-icon {
+    padding-right: 40px;
+    padding-left: 15px
+}
+
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.ui-widget {
+    padding: 6px;
+}
+
+.ui-panelmenu .ui-panelmenu-header {
+    border: none;
+    padding: 0px;
+}
+
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link {
+    padding: 4px !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a {
+    border: none !important;
+    background-color: transparent !important;
+    color: black;
+}
+
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a {
+    color: black !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header > a {
+    border: none !important;
+    background-color: white !important;
+    padding: 5px !important;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active {
+    background: none;
+    border: none;
+}
+
+.ui-panelmenu .ui-panelmenu-content {
+    margin-top: 2px;
+    padding: 3px;
+    background-color: none;
+    border: none;
+    margin-top: 6px;
+    position: static;
+    border-top: 0 none;
+}
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a:hover .ui-panelmenu-icon {
+    color: black !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header.ui-state-active > a .ui-panelmenu-icon {
+    color: black !important;
+}
+
+.ui-panelmenu .ui-panelmenu-content {
+    border: none !important;
+    color: white !important;
+}
+
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem-link:hover {
+    background: none !important;
+    color: rgb(217, 217, 235);
+}
+.ui-state-active, .ui-widget-content .ui-state-active,{
+    background: none !important;
+}
+.ui-panelmenu .ui-panelmenu-header.ui-state-active a {
+    color: rgb(0, 204, 255);
+    background: linear-gradient(to left, #66ffff 0%, #ccccff 100%);
+}
+
+.ui-menuitem-icon {
+    padding-left: 0px !important;
+}
+
+.ui-panelmenu .ui-menuitem-icon {
+    margin-right: -0.75em;
+}
+
+.ui-panelmenu .ui-panelmenu-header > a:hover {
+    background-color: antiquewhite !important;
+    color: white;
+    border-radius: 1px;
+}
+
+.ui-panelmenu .ui-panelmenu-header > a {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+.ui-state-default {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+.ui-panelmenu .ui-menuitem-text {
+    font-family: Roboto,"Trebuchet MS",Arial,Helvetica,sans-serif;
+    font-size: 1em;
+}
+
+.ui-panelmenu .ui-panelmenu-header > a {
+    font-weight: 600
+}
+
+.title-logo {
+    width: 240px;
+    height: 40px;
+    background-color: white;
+}
+
+p {
+    padding-top: 6px;
+}
+
+#logo {
+    height: 30px;
+    padding-left: 80px;
+}
+.fixed {
+    position: fixed;
+    margin: 0;
+    top: 0;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+.btn-group,
+textarea {
+  border-radius: 5px !important;
+}
 .x_title h2, table.tile_info td p {
 	white-space: nowrap;
 	text-overflow: ellipsis
@@ -2876,7 +3188,7 @@ span.tag {
 	display: block;
 	float: left;
 	padding: 5px 9px;
-	background: #3498db;
+	background: #337ab7;
 	color: #F1F6F7;
 	margin-right: 5px;
 	font-weight: 500;
@@ -2979,7 +3291,7 @@ ul.timeline li {
 
 .timeline .block {
 	margin: 0 0 0 105px;
-	border-left: 3px solid #3498db;
+	border-left: 3px solid #337ab7;
 	overflow: visible;
 	padding: 10px 15px
 }
@@ -3017,7 +3329,7 @@ ul.timeline li {
 
 .tag {
 	line-height: 1;
-	background: #3498db;
+	background: #337ab7;
 	color: #fff
 }
 
@@ -3047,7 +3359,7 @@ ul.timeline li {
 .byline {
 	font-size: .9375em;
 	line-height: 1.3;
-	color: #3498db
+	color: #337ab7
 }
 
 ul.social li {
@@ -4531,7 +4843,7 @@ fieldset {
 }
 
 .progress-bar-info {
-	background-color: #3498db
+	background-color: #337ab7
 }
 
 .alert-success, .progress-bar-success {
@@ -4608,7 +4920,7 @@ ul.verticle_bars li {
 
 .alert-info {
 	color: #fff;
-	background-color: #3498db;
+	background-color: #337ab7;
 	border-color: rgba(52, 152, 219, .88)
 }
 
@@ -5846,7 +6158,7 @@ div.dt-button-info h2 {
 }
 
 .task_name {
-	color: #3498db;
+	color: #337ab7;
 	font-weight: 700
 }
 
@@ -5867,7 +6179,7 @@ div.dt-button-info h2 {
 }
 
 .btn-primary {
-	background-color: #3498db
+	background-color: #337ab7
 }
 
 .border-top-none {
@@ -5889,7 +6201,7 @@ div.dt-button-info h2 {
 
 a:hover {
 	cursor: pointer;
-	color: #3498db
+	color: #337ab7
 }
 
 .attache_files_right_side_hint {
@@ -6387,7 +6699,7 @@ select {
 }
 
 .right_col .x_panel .x_content form .btn-default {
-	background-color: #3498db;
+	background-color: #337ab7;
 	color: #fff;
 }
 
@@ -6910,7 +7222,7 @@ span.info {
 }
 
 .add-icon {
-	background: #3498db;
+	background: #337ab7;
 	height: 24px;
 	display: inline-block;
 	width: 25px;
@@ -6918,7 +7230,7 @@ span.info {
 
 
 #workflow-attributes-block .add-icon2 {
-	background: #3498db;
+	background: #337ab7;
 	height: 20px;
 	display: inline-block;
 	width: 20px;
@@ -7384,7 +7696,7 @@ hr {
 }
 
 #accordion h4 a {
-	background: #3498db;
+	background: #337ab7;
 	color: #fff;
 }
 
@@ -8312,7 +8624,7 @@ ul.multiselect-container {
 }
 
 .add-row-btn i {
-	background: #3498db;
+	background: #337ab7;
 	padding: 5px;
 	width: 20px;
 	height: 20px;
@@ -8325,7 +8637,7 @@ ul.multiselect-container {
 }
 
 .add-row-btn {
-	background: #3498db;
+	background: #337ab7;
 	padding: 5px;
 	text-align: center;
 	color: #fff;
@@ -12389,6 +12701,7 @@ mat-sidenav-content {display:block !important;}
 .bhoechie-tab-menu {width:15%;}
 
 /* component workflow list css */
+
 p-multiselect {
     display: block;
     height: 32px;
@@ -12596,6 +12909,14 @@ body .ui-datepicker table td > a.ui-state-active {
 .pub-type-select .ui-dropdown {
 	width: 100% !important;
   }
+
+  .pub-border .ui-dropdown {
+	border-radius: 5px;
+  }
+  .pub-multi{
+	 padding-right: 2px;
+	  
+  }
   .pub-type-select .ui-dropdown-trigger .ui-dropdown-trigger-icon {
 	left: 33% !important;
   }
@@ -12616,6 +12937,188 @@ body .ui-datepicker table td > a.ui-state-active {
     font-weight: normal;
     color: #ffff;
 }
+
+.ui-g-4 {
+	font-size: 12px !important;
+  }
+  .fs12 {
+	font-size: 12px !important;
+  }
+  .header-text {
+	font-weight: bold;
+	color: #116fbf;
+  }
+  .md-stepper-horizontal {
+	display: table;
+	width: 100%;
+	margin: 0 auto;
+	background-color: #ffffff;
+	box-shadow: 0 3px 8px -6px rgba(0, 0, 0, 0.5);
+  }
+  .md-stepper-horizontal .md-step {
+	display: table-cell;
+	position: relative;
+	padding: 10px;
+  }
+  .md-stepper-horizontal .md-step:hover,
+  .md-stepper-horizontal .md-step:active {
+	background-color: rgba(0, 0, 0, 0.04);
+  }
+  .md-stepper-horizontal .md-step:active {
+	border-radius: 15% / 75%;
+  }
+  .md-stepper-horizontal .md-step:first-child:active {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+  }
+  .md-stepper-horizontal .md-step:last-child:active {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+  }
+  .md-stepper-horizontal .md-step:hover .md-step-circle {
+	background-color: #757575;
+  }
+  .md-stepper-horizontal .md-step:first-child .md-step-bar-left,
+  .md-stepper-horizontal .md-step:last-child .md-step-bar-right {
+	display: none;
+  }
+  .md-stepper-horizontal .md-step .md-step-circle {
+	width: 30px;
+	height: 30px;
+	margin: 0 auto;
+	background-color: #999999;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 30px;
+	font-size: 16px;
+	font-weight: 600;
+	color: #ffffff;
+  }
+  .md-stepper-horizontal.green .md-step.active .md-step-circle {
+	background-color: #00ae4d;
+  }
+  .md-stepper-horizontal.orange .md-step.active .md-step-circle {
+	background-color: #116fbf;
+  }
+  .md-stepper-horizontal .md-step.active .md-step-circle {
+	background-color: #116fbf;
+  }
+  .md-stepper-horizontal .md-step.done .md-step-circle:before {
+	font-family: "FontAwesome";
+	font-weight: 100;
+	content: "\f00c";
+  }
+  .md-stepper-horizontal .md-step.done .md-step-circle *,
+  .md-stepper-horizontal .md-step.editable .md-step-circle * {
+	display: none;
+  }
+  .md-stepper-horizontal .md-step.editable .md-step-circle {
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+  }
+  .md-stepper-horizontal .md-step.editable .md-step-circle:before {
+	font-family: "FontAwesome";
+	font-weight: 100;
+	content: "\f040";
+  }
+  .md-stepper-horizontal .md-step .md-step-title {
+	margin-top: 16px;
+	font-size: 16px;
+	font-weight: 600;
+  }
+  .md-stepper-horizontal .md-step .md-step-title,
+  .md-stepper-horizontal .md-step .md-step-optional {
+	text-align: center;
+	color: rgba(0, 0, 0, 0.26);
+  }
+  .md-stepper-horizontal .md-step.active .md-step-title {
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.87);
+  }
+  .md-stepper-horizontal .md-step.active.done .md-step-title,
+  .md-stepper-horizontal .md-step.active.editable .md-step-title {
+	font-weight: 600;
+  }
+  .md-stepper-horizontal .md-step .md-step-optional {
+	font-size: 12px;
+  }
+  .md-stepper-horizontal .md-step.active .md-step-optional {
+	color: rgba(0, 0, 0, 0.54);
+  }
+  .md-stepper-horizontal .md-step .md-step-bar-left,
+  .md-stepper-horizontal .md-step .md-step-bar-right {
+	position: absolute;
+	top: 36px;
+	height: 1px;
+	border-top: 1px solid #dddddd;
+  }
+  .md-stepper-horizontal .md-step .md-step-bar-right {
+	right: 0;
+	left: 50%;
+	margin-left: 20px;
+  }
+  .md-stepper-horizontal .md-step .md-step-bar-left {
+	left: 0;
+	right: 50%;
+	margin-right: 20px;
+  }
+  .button-save {
+	margin-top: 61px;
+	padding: 6px 12px;
+	margin-bottom: 100px;
+	margin-right: 15px;
+  }
+  .shadow-Box {
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin: 5px 0;
+  }
+  .shadow-Box label {text-align: left;width: 100%;}
+  .mtop20 {margin-top: 20px;}
+  .inline-block {    display: inline-block;    width: auto !important;}
+  .ui-multiselect-item .ui-widget {    padding: 2px 3px 0px 2px;}
+  p-multiselect {
+    display: block;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+}
+p-multiselect .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {
+    overflow: initial !important;
+    margin: -3px 0 0 -3px;
+    color: #007ad9;
+}
+p-multiselect .ui-multiselect-item.ui-state-highlight {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+p-multiselect .ui-multiselect-filter-container input {
+    display: block;
+    height: 28px !important;
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;    
+}
+p-multiselect .ui-chkbox .ui-chkbox-box.ui-state-active {
+    background-color: #fff !important;
+    border: 1px solid #007ad9 !important;
+}
+
+p-dropdown .ui-widget {padding: 0px;}
+p-dropdown .ui-dropdown-label {padding: 5px;margin-bottom: 0 !important;}
+p-multiselect {padding: 0px;height: 26px !important;}
+p-multiselect .ui-multiselect {margin-top:0;padding:0;}
+p-multiselect .ui-multiselect .ui-multiselect-label {padding: 5px;margin:0 !important;}
+.ui-multiselect-close span.pi-times {float: right; }
 .wf-search-form input {
     padding: 2px 2px 2px 6px !important;
     font-size: 13px !important;
@@ -12644,7 +13147,7 @@ body .ui-panelmenu .ui-panelmenu-header > a {
     font-size: 0.9em !important;
 }
 .ui-panelmenu .ui-menuitem-icon {
-    padding-right: 20px !important;
+    padding-right: 30px !important;
 }
 .app-sidenav-nav .title-logo {
     width: 220px;
@@ -12653,6 +13156,7 @@ p-panelmenu .ui-panelmenu {
     width: 220px !important;
 }
 /* ./css for sidenav */
+
 .add-details-dialog .ui-widget.ui-widget-content {
     left: 0% !important;
 }
@@ -12677,3 +13181,36 @@ p-panelmenu .ui-panelmenu {
 .pas-tabview .ui-tabview .ui-tabview-nav > li.ui-state-active:hover .fa {
     color: #000 !important;
 }
+
+/*Css form multiselect input itemmaster*/
+
+.panel-style .p-multiselect .ui-multiselect-close {
+    margin-left: -9px;
+    margin-top: -7px !important;
+}
+
+.panel-style .p-multiselect .ui-multiselect-filter-container {
+    margin-left: 0px !important;
+    margin-top: 3px !important;
+}
+
+.panel-style .ui-multiselect .ui-multiselect-panel {
+    min-width: 100%;
+    margin-left: -15px;
+}
+
+.panel-style .ui-multiselect .ui-multiselect-trigger {
+    border: none !important;
+}
+
+.panel-style p-multiselect .ui-multiselect-filter-container {
+    margin-left: 6px !important;
+    margin-top: 5px !important;
+}
+
+
+.panel-style .pi {
+    margin-left: 10px;
+    margin-top: -16px;
+}
+

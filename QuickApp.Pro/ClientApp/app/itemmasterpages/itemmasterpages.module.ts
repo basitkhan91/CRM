@@ -34,10 +34,11 @@ import { ItemMasterCreateCapabilitiesComponent } from "../components/item-master
 import { ItemMasterCapabilitiesListComponent } from "../components/item-masters/Capabilities/item-master-capabilities-list/item-master-capabilities-list.component";
 import { AuditModule } from "../audit/audit.module";
 import { CardModule } from "primeng/card";
-
+import { KeyFilterModule } from "primeng/keyfilter";
 
 @NgModule({
     imports: [
+        KeyFilterModule,
         TabMenuModule,
         CardModule,
 		FlexLayoutModule,
