@@ -161,7 +161,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     // sum of the qty
     calculateQtySummation() {
-        this.workFlow.qtySummation = this.workFlow.charges.reduce((acc, x) => {
+        var charges = this.workFlow.charges.filter(x => x.isDelete != true);
+        this.workFlow.qtySummation = charges.reduce((acc, x) => {
             return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
         }, 0);
 
@@ -169,21 +170,23 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     // sum of extended cost 
     calculateExtendedCostSummation() {
-        this.workFlow.extendedCostSummation = this.workFlow.charges.reduce((acc, x) => {
+        var charges = this.workFlow.charges.filter(x => x.isDelete != true);
+        this.workFlow.extendedCostSummation = charges.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
         //this.workFlow.totalChargesCost = this.workFlow.extendedCostSummation;
     }
     // sum of extended price
     calculateExtendedPriceSummation() {
-        this.workFlow.totalChargesCost = this.workFlow.charges.reduce((acc, x) => {
+        var charges = this.workFlow.charges.filter(x => x.isDelete != true);
+        this.workFlow.totalChargesCost = charges.reduce((acc, x) => {
             return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
         }, 0);
     }
 
 
     deleteRow(index): void {
-        if (this.workFlow.charges[index].workflowChargesListId == "0" || this.workFlow.charges[index].workflowChargesListId == "") {
+        if (this.workFlow.charges[index].workflowChargesListId == undefined || this.workFlow.charges[index].workflowChargesListId == "0" || this.workFlow.charges[index].workflowChargesListId == "") {
             this.workFlow.charges.splice(index, 1);
         }
         else {

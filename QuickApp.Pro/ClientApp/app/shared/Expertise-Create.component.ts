@@ -72,7 +72,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.expertise[index].workflowExpertiseListId == "0" || this.workFlow.expertise[index].workflowExpertiseListId == "") {
+        if (this.workFlow.expertise[index].workflowExpertiseListId != undefined  || this.workFlow.expertise[index].workflowExpertiseListId == "0" || this.workFlow.expertise[index].workflowExpertiseListId == "") {
             this.workFlow.expertise.splice(index, 1);
         }
         else {
