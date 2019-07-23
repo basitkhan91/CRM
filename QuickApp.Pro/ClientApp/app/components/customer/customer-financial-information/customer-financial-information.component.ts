@@ -512,8 +512,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 		this.loadMasterCompanies();
 		this.sourceAction = new CreditTerms();
         this.sourceAction.isActive = true;
-        this.creditTermName = "";
-        this.creditTermsId = "";
+		this.creditTermName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -624,7 +623,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     saveCurrecy() {
         this.isSaving = true;
         for (let i = 0; i < this.allCurrencyInfo.length; i++) {
-            if (this.allCurrencyInfo[i].code.toLowerCase().localeCompare(this.currencyName.toLowerCase()) == 0) {
+            if (this.allCurrencyInfo[i].code.toLowerCase().indexOf(this.currencyName.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
                 return;
             }
@@ -661,7 +660,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 		if (this.allCurrencyInfo) {
 			for (let i = 0; i < this.allCurrencyInfo.length; i++) {
 				let currencyName = this.allCurrencyInfo[i].code;
-                if (currencyName.toLowerCase().localeCompare(event.query.toLowerCase()) == 0) {
+				if (currencyName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 					this.currencyCollection.push(currencyName);
 				}
 			}
@@ -691,7 +690,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     saveCreditTermsdata() {
         this.isSaving = true;
         for (let i = 0; i < this.allcreditTermInfo.length; i++) {
-            if (this.allcreditTermInfo[i].name.toLowerCase().localeCompare(this.creditTermsId.toLowerCase()) == 0) {
+            if (this.allcreditTermInfo[i].name.toLowerCase().indexOf(this.creditTermsId.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
                 return;
             }
@@ -983,7 +982,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 	editItemCloseModel() {
         this.isSaving = true;
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-            if (this.alldiscountvalueInfo[i].discontValue.toLowerCase().localeCompare(this.discontValue.toLowerCase()) == 0) {
+            if (this.alldiscountvalueInfo[i].discontValue.toLowerCase().indexOf(this.discontValue.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
                 return;
             }
