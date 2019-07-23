@@ -261,7 +261,29 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
     cols1: any[];
-  
+  //new code-- for purchase and sales calculation
+    vendorPrice: any;
+    purchaseDiscount: any;
+    newFields = {
+        fxrate : "",
+        vendorPrice : "",
+        purchaseDiscount : "",
+        purchaseAmount : "",
+        lastDate : "",
+        DiscountAmount : "",
+        fxrate1 : "",
+        fpa : "",
+        lastflat: "",
+        Markuppercent : "",
+        markup : "",
+        lastmarkup : "",
+        baseSaleprice : "",
+        saleDiscount: "",
+        sda: "",
+        lastsales : "",
+        unitPrice : "",        
+
+    }
 
     constructor(public integrationService: IntegrationService,private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
@@ -407,17 +429,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
     }];
 
-
+    itemQuantitys = [];
     ngOnInit(): void {
+
         // Created by Jyotsna
         this.itemQuantity = Array(10).fill(1).map((x, i) => i + 1);
+        this.itemQuantitys = Array(6).fill(1).map((x, i) => i + 1);
         this.items1 = [
             { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
             { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
+            { label: 'ATA Chapter', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
             { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
             { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },            
         ];
-
+        this.addFieldValue();
+        
 
 
         this.loadManagementdata();
@@ -3495,27 +3521,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
   
-    fieldArray: Array<any> = [];
-    newAttribute: any = {};
-    Delete = true;
-    addFieldValue(index) {
-        if (this.fieldArray.length <= 5) {
-            this.fieldArray.push(this.newAttribute);
-            this.newAttribute = {};
-        }
-        else {
-           
-        }
-    }
-    delete(index) {
-        if (this.fieldArray.length > 0) {
-            this.fieldArray.splice(index, 1);
-        }
-        else {
-            this.Delete = false;
-        }
 
-    }
     saveovhinfo(partid, itemid, data) {
 
         for (let i = 0; i < data.length; i++) {
@@ -4284,5 +4290,64 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.disable = false;
         this.viewed = true;
     }
+    //new code for calculation in purchase and sales
+    fieldArray: any = [];
+    row: any;
+    Delete = true;
+    addFieldValue(): void {
+        if (this.fieldArray.length <= 5) {
+            this.fieldArray = [...this.fieldArray, { ...this.newFields }]
+            console.log(this.fieldArray);
+        }
 
+
+    }
+    delete(index) {
+        if (this.fieldArray.length > 0) {
+            this.fieldArray.splice(index, 1);
+        }
+        else {
+            this.Delete = false;
+        }
+
+    }
+    purchaseAmount: number;
+    purchaseDiscountAmount: number;
+    Markuppercent: number;
+    markupAmount: number;
+    baseSaleprice: number;
+    saleDiscount: number;
+    saleDiscountAmount: number;
+    unitSalePrice: number;
+    percentValue(field) {
+        if (field.vendorPrice && field.purchaseDiscount && !field.Markuppercent) {
+            const cal = field.vendorPrice * field.purchaseDiscount            
+            field.purchaseAmount = cal;
+        }
+        if (field.purchaseAmount) {          
+            const disc = field.purchaseAmount - field.vendorPrice
+            field.purchaseDiscountAmount = disc;
+        }
+    }
+        
+       
+        //if (this.vendorPrice && this.purchaseDiscount && !this.Markuppercent) {
+        //    this.purchaseAmount = vendor * pd;    
+        //}
+        //if (this.purchaseAmount) {
+        //    this.purchaseDiscountAmount = this.purchaseAmount - vendor ;            
+        //}
+        //if (this.Markuppercent && this.vendorPrice) {
+        //    this.markupAmount = vendor * this.Markuppercent;           
+        //}
+    
+    //salePercent(sale, sd) {
+    //    if (this.baseSaleprice && this.saleDiscount) {
+    //        this.saleDiscountAmount = sale * sd;           
+    //    }
+    //    if (this.saleDiscountAmount && this.baseSaleprice) {
+    //        this.unitSalePrice = this.saleDiscountAmount - sale;            
+    //    }
+    //}
 }
+

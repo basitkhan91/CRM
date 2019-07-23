@@ -133,3 +133,7 @@ lbl {
 .lbl1 {
     width: 94px;
 }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;   
+}
