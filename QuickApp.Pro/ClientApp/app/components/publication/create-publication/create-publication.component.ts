@@ -7,9 +7,9 @@ import { CalendarModule } from "primeng/calendar";
 })
 /** Create-publication component*/
 export class CreatePublicationComponent implements OnInit {
-  activeMenuItem: number = 3;
+  activeMenuItem: number = 1;
   revision: boolean = false;
-  currentTab: string = "Atachapter";
+  currentTab: string = "General";
   types = [
     { label: "SelectPublication ", value: "Select publication" },
     { label: "CMM", value: "CMM" },
