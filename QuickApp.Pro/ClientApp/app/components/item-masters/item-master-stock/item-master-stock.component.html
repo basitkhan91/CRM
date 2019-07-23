@@ -1060,266 +1060,212 @@
 								<button type="button" (click)="addFieldValue()" class="btn btn-primary">Add</button>
 							</span>
 						</div>
-					</div>
+					</div>					   
 					<div class="table-responsive">
-						<table class="table table-bordered table-striped table-sorting mpn-list-table" id="mpn-list-table">
-							<thead>
-								<tr>
-									<th colspan="10">Unit Purchase Price</th>
-									<th colspan="16" class="bg1">Unit Sale Price</th>
-								</tr>
-								<tr>
-									<th colspan="10"></th>
-									<th colspan="2" class="bg2">Use Flat Sale Price</th>
-									<th colspan="9" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
-								</tr>
-								<tr>
-									<th>Cond</th>
-									<th>UOM</th>
-									<th>Currency</th>
-									<th>FX Rate</th>
-									<th>Vendor List Price</th>
-									<th>Last List Price Date</th>
-									<th>Purchase Disc %</th>
-									<th>Purchase Disc Amount</th>
-									<th>Last Purchase Disc Date</th>
-									<th>Unit Purchase Price *</th>
-									<th class="bg2">Flat Price Amount</th>
-									<th class="bg2">Last Flat Price Date</th>
-									<th class="bg3">Mark % on List Price</th>
-									<th class="bg3">Mark Up Amount</th>
-									<th class="bg3">Last Mark Up Date</th>
-									<th class="bg3">Base Sale Price</th>
-									<th class="bg3">Sale Disc %</th>
-									<th class="bg3">Sale Disc Amount</th>
-									<th class="bg3">Last Sales Disc Date</th>
-									<th class="bg3">Unit Sale Price</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngIf="Delete">
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="NEW" selected="1">NEW</option>
-											<option value="AS-IS">AS-IS</option>
-											<option value="REPAIR">REPAIR</option>
-											<option value="SRV">SRV</option>
-											<option value="OVERHAUL">OVERHAUL</option>
-											<option value="AR">AR</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="Gals" selected="1">Gals</option>
-											<option value="Each">Each</option>
-											<option value="Inch">Inch</option>
-											<option value="Lbs">Lbs</option>
-											<option value="Ozs">Ozs</option>
-											<option value="Feet">Feet</option>
-											<option value="Yards">Yards</option>
-											<option value="Litre">Litre</option>
-											<option value="Meter">Meter</option>
-											<option value="Kilograms">Kilograms</option>
-											<option value="Grams">Grams</option>
-											<option value="Centimeters">Centimeters</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="usd" selected="1">$</option>
-											<option value="inr">₹</option>
-											<option value="pound">£</option>
-											<option value="euro">€</option>
-											<option value="yen">¥</option>
-										</select>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="money" maxlength="7" />
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select> %
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="money" maxlength="15" />
-									</td>
-									<td>
-										<select class="form-control w50" id="" name="">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select> %
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="money" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [(ngModel)]="date3" [ngModelOptions]="{standalone: true}" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<input type="text" [disabled]="true" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<button class="btn btn-danger nobg" (click)="delete(index)">
-											<i class="fa fa-trash"></i>
-										</button>
-									</td>
-								<tr *ngFor="let field of fieldArray; let i = index">
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="NEW" selected="1">NEW</option>
-											<option value="AS-IS">AS-IS</option>
-											<option value="REPAIR">REPAIR</option>
-											<option value="SRV">SRV</option>
-											<option value="OVERHAUL">OVERHAUL</option>
-											<option value="AR">AR</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="Gals" selected="1">Gals</option>
-											<option value="Each">Each</option>
-											<option value="Inch">Inch</option>
-											<option value="Lbs">Lbs</option>
-											<option value="Ozs">Ozs</option>
-											<option value="Feet">Feet</option>
-											<option value="Yards">Yards</option>
-											<option value="Litre">Litre</option>
-											<option value="Meter">Meter</option>
-											<option value="Kilograms">Kilograms</option>
-											<option value="Grams">Grams</option>
-											<option value="Centimeters">Centimeters</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="usd" selected="1">$</option>
-											<option value="inr">₹</option>
-											<option value="pound">£</option>
-											<option value="euro">€</option>
-											<option value="yen">¥</option>
-										</select>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="money" maxlength="7" />
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select> %
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="money" maxlength="15" />
-									</td>
-									<td>
-										<select class="form-control w50" id="" name="">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select> %
-									</td>
-									<td>
-										<input type="text" pInputText pKeyFilter="money" maxlength="15" />
-									</td>
-									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="date3" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
-									<td>
-										<input type="text" [disabled]="true" pInputText pKeyFilter="num" maxlength="15" />
-									</td>
-									<td>
-										<button class="btn btn-danger nobg" (click)="delete(index)">
-											<i class="fa fa-trash"></i>
-										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+							<table class="table table-bordered table-striped table-sorting mpn-list-table" id="mpn-list-table">
+								<thead>
+									<tr>
+										<th colspan="10">Unit Purchase Price</th>
+										<th colspan="16" class="bg1">Unit Sale Price</th>
+									</tr>
+									<tr>
+										<th colspan="10"></th>
+										<th colspan="6" class="bg2">Use Flat Sale Price</th>
+										<th colspan="9" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
+									</tr>
+									<tr>
+										<th>Cond</th>
+										<th>UOM</th>
+										<th>Currency</th>
+										<th>FX Rate</th>
+										<th>Vendor List Price</th>
+										<th>Last List Price Date</th>
+										<th>Purchase Disc %</th>
+										<th>Purchase Disc Amount</th>
+										<th>Last Purchase Disc Date</th>
+										<th>Unit Purchase Price *</th>
+										<th class="bg2">Cond</th>
+										<th class="bg2">UOM</th>
+										<th class="bg2">Currency</th>
+										<th class="bg2">FX Rate</th>
+										<th class="bg2">Flat Price Amount</th>
+										<th class="bg2">Last Flat Price Date</th>
+										<th class="bg3">Mark % on List Price</th>
+										<th class="bg3">Mark Up Amount</th>
+										<th class="bg3">Last Mark Up Date</th>
+										<th class="bg3">Base Sale Price</th>
+										<th class="bg3">Sale Disc %</th>
+										<th class="bg3">Sale Disc Amount</th>
+										<th class="bg3">Last Sales Disc Date</th>
+										<th class="bg3">Unit Sale Price</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<tr *ngFor="let field of fieldArray; let i = index">
+										<td>
+											<select class="form-control w80" id="" name="">
+												<option value="NEW" selected="1">NEW</option>
+												<option value="AS-IS">AS-IS</option>
+												<option value="REPAIR">REPAIR</option>
+												<option value="SRV">SRV</option>
+												<option value="OVERHAUL">OVERHAUL</option>
+												<option value="AR">AR</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control w80" id="" name="">
+												<option value="Gals" selected="1">Gals</option>
+												<option value="Each">Each</option>
+												<option value="Inch">Inch</option>
+												<option value="Lbs">Lbs</option>
+												<option value="Ozs">Ozs</option>
+												<option value="Feet">Feet</option>
+												<option value="Yards">Yards</option>
+												<option value="Litre">Litre</option>
+												<option value="Meter">Meter</option>
+												<option value="Kilograms">Kilograms</option>
+												<option value="Grams">Grams</option>
+												<option value="Centimeters">Centimeters</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control w80" id="" name="">
+												<option value="usd" selected="1">$</option>
+												<option value="inr">₹</option>
+												<option value="pound">£</option>
+												<option value="euro">€</option>
+												<option value="yen">¥</option>
+											</select>
+										</td>
+										<td>
+											<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate" />
+										</td>
+										<td>
+											<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.vendorPrice" (input)="percentValue(field)" />
+										</td>
+										<td>
+											<input type="date">
+										</td>
+										<td>
+											<select class="form-control w80" id="" name="" [(ngModel)]="field.purchaseDiscount" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+												<option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
+											</select>
+										</td>
+										<td>
+											<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseAmount}}"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.purchaseAmount" [disabled]="true" />
+										</td>
+										<td>
+											<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastDate" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+										</td>
+										<td>
+											<input type="text" pKeyFilter="num" maxlength="15" value="{{purchaseDiscountAmount}}"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.DiscountAmount" [disabled]="true" />
+										</td>
+										<td>
+											<select class="form-control w80" id="" name="">
+												<option value="NEW" selected="1">NEW</option>
+												<option value="AS-IS">AS-IS</option>
+												<option value="REPAIR">REPAIR</option>
+												<option value="SRV">SRV</option>
+												<option value="OVERHAUL">OVERHAUL</option>
+												<option value="AR">AR</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control w80" id="" name="">
+												<option value="Gals" selected="1">Gals</option>
+												<option value="Each">Each</option>
+												<option value="Inch">Inch</option>
+												<option value="Lbs">Lbs</option>
+												<option value="Ozs">Ozs</option>
+												<option value="Feet">Feet</option>
+												<option value="Yards">Yards</option>
+												<option value="Litre">Litre</option>
+												<option value="Meter">Meter</option>
+												<option value="Kilograms">Kilograms</option>
+												<option value="Grams">Grams</option>
+												<option value="Centimeters">Centimeters</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control w80" id="" name="">
+												<option value="usd" selected="1">$</option>
+												<option value="inr">₹</option>
+												<option value="pound">£</option>
+												<option value="euro">€</option>
+												<option value="yen">¥</option>
+											</select>
+										</td>
+										<td>
+											<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate1" />
+										</td>
+										<td>
+											<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fpa" />
+										</td>
+										<td>
+											<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastflat" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+										</td>
+										<td>
+											<select class="form-control w80" id="" name="" [(ngModel)]="field.Markuppercent" [ngModelOptions]="{standalone: true}" (change)="percentValue(field.vendorPrice,field.Markuppercent)">
+												<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+											</select> %
+										</td>
+										<td>
+											<input type="text" pKeyFilter="num" maxlength="15" [disabled]="true"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.markup" value="{{markupAmount}}" />
+										</td>
+										<td>
+											<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastmarkup" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+										</td>
+										<td>
+											<input type="text" pKeyFilter="money" maxlength="15" [(ngModel)]="field.baseSaleprice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field.baseSaleprice,field.saleDiscount)" />
+										</td>
+										<td>
+											<select class="form-control w50" id="" name="" [(ngModel)]="field.saleDiscount" [ngModelOptions]="{standalone: true}" (change)="salePercent(field.baseSaleprice,field.saleDiscount)">
+												<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+											</select> %
+										</td>
+										<td>
+											<input type="text" pKeyFilter="money" maxlength="15" [disabled]="true"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.sda" value="{{saleDiscountAmount}}" />
+										</td>
+										<td>
+											<p-calendar class="cal1" [(ngModel)]="field.lastsales" [ngModelOptions]="{standalone: true}" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+										</td>
+										<td>
+											<input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.unitPrice"  [ngModelOptions]="{standalone: true}" maxlength="15" value="{{unitSalePrice}}" />
+										</td>
+										<td>
+											<button class="btn btn-danger nobg" (click)="delete(index)">
+												<i class="fa fa-trash"></i>
+											</button>
+										</td>
 
-					<div class="col-sm-12">
-						<!--<div class="clear"></div>-->
-						<!--<button type="button" class="btn btn-success pull-right submit-btn"
-								(click)="moveExportInformation1()">
+									</tr>
+								</tbody>
+							</table>
+						</div>
 
-						</button>-->
+						<div class="col-sm-12">
+							<!--<div class="clear"></div>-->
+							<!--<button type="button" class="btn btn-success pull-right submit-btn"
+					(click)="moveExportInformation1()">
 
-						<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-						<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
-					</div>
+			</button>-->
 
-					<!--<div class="clear"></div>
-					<hr />
-					<button type="button" class="btn btn-success pull-right submit-btn"
-							(click)="moveExportInformation()">
-						Nextfa
-					</button>
-					<button type="button" class="btn btn-success pull-right submit-btn"
-							(click)="moveGeneralInfromation()">
-						Previous
-					</button>-->
+							<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+							<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+						</div>
+
+						<!--<div class="clear"></div>
+		<hr />
+		<button type="button" class="btn btn-success pull-right submit-btn"
+				(click)="moveExportInformation()">
+			Nextfa
+		</button>
+		<button type="button" class="btn btn-success pull-right submit-btn"
+				(click)="moveGeneralInfromation()">
+			Previous
+		</button>-->
 				</div>
 
 
@@ -1352,7 +1298,7 @@
 									<label class="lbl">ECCN</label>
 								</div>
 								<div class="col-sm-6 float-left">
-									<input type="text" pInputText pKeyFilter="alphanum" />
+									<input type="text"  pKeyFilter="alphanum" />
 								</div>
 							</div>
 						</div>
@@ -1363,7 +1309,7 @@
 									<label class="lbl">ITAR Num</label>
 								</div>
 								<div class="col-sm-6 float-left">
-									<input type="text" pInputText pKeyFilter="alphanum" />
+									<input type="text"  pKeyFilter="alphanum" />
 								</div>
 							</div>
 						</div>
@@ -1391,7 +1337,7 @@
 									<label class="lbl">Value</label><span style="color: red">*</span>
 								</div>
 								<div class="col-sm-6 float-left">
-									<input type="text" pInputText pKeyFilter="num" />
+									<input type="text"  pKeyFilter="num" />
 								</div>
 							</div>
 						</div>
@@ -1402,7 +1348,7 @@
 									<label class="lbl">Weight</label><span style="color: red">*</span>
 								</div>
 								<div class="col-sm-3 float-left">
-									<input type="text" pInputText pKeyFilter="num" />
+									<input type="text"  pKeyFilter="num" />
 								</div>
 								<div class="col-sm-3 float-left">
 									<select class="form-control w84" id="" name="">
@@ -1446,13 +1392,13 @@
 									<label class="lbl">Size (L,W,H)</label>
 								</div>
 								<div class="col-sm-2">
-									<input type="text" pInputText pKeyFilter="num" />
+									<input type="text"  pKeyFilter="num" />
 								</div>
 								<div class="col-sm-2">
-									<input type="text" pInputText pKeyFilter="num" />
+									<input type="text"  pKeyFilter="num" />
 								</div>
 								<div class="col-sm-2">
-									<input type="text" pInputText pKeyFilter="num" />
+									<input type="text"  pKeyFilter="num" />
 								</div>
 							</div>
 						</div>
