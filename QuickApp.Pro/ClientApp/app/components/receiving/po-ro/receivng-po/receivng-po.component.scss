@@ -1,1 +1,21 @@
-﻿
+﻿.receiving-po label {
+    font-size: 12px !important;
+    text-align: left;
+    width: 110px;
+    margin-right: 0;
+    font-weight: normal;
+}
+.rpo-bcrumb {
+    background-color: transparent;
+}
+.rpo-bcrumb li {
+    font-family: 'Roboto';
+    font-weight: bold;
+}
+input[type="text"], input[type="number"], select, textarea {
+    height: 24px !important;
+    border-radius: 5px;
+}
+select:disabled {
+    background-color: #e9ecef !important;
+}

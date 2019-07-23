@@ -12391,8 +12391,8 @@ mat-sidenav-content {display:block !important;}
 /* component workflow list css */
 p-multiselect {
     display: block;
-    height: 34px;
-    padding: 6px 12px;
+    height: 32px;
+    padding: 5px 12px;
     font-size: 14px;
     line-height: 1.42857143;
     color: #555;
@@ -12465,10 +12465,10 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
 
 /* ./component workflow list css */
 /* workflow create css */
-.workflow-clder .ui-calendar-button {
+.workflow-clder .ui-calendar-button, .pas-clder .ui-calendar-button {
     width: 8% !important;
 }
-.workflow-clder .ui-inputtext {
+.workflow-clder .ui-inputtext, .pas-clder .ui-inputtext {
     width: 92% !important;
 }
 .checkbox-cstm label {
@@ -12553,17 +12553,33 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
 }
+.btn-cstm {
+    color: #fff;
+    border-radius: 4px !important;
+    padding: 7px 12px !important;
+}
 .btn-primary-cstm {
     color: #fff;
     background-color: #337ab7 !important;
     border-color: #2e6da4;
     border-radius: 4px !important;
+    padding: 6px 12px !important;
 }
-
+.btn-primary-cstm .ui-button-icon-left {
+    left: 9%;
+    top: 46%;
+}
 .btn-primary-cstm:hover {
     color: #fff;
     background-color: #286090 !important;
     border-color: #204d74;
+}
+.excel-upload-cstm label span {
+    height: 31px;
+    padding: 6px 0px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    border-radius: 4px !important;
 }
 .wf-ber-thrld {
     background-color: #ff949d !important;
@@ -12600,3 +12616,73 @@ body .ui-datepicker table td > a.ui-state-active {
     font-weight: normal;
     color: #ffff;
 }
+.wf-search-form input {
+    padding: 2px 2px 2px 6px !important;
+    font-size: 13px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}
+.wf-search-form .fa.fa-search:before {
+    font-size: 15px;
+}
+.wf-search-form .fa.fa-search {
+    margin-top: 3px;
+}
+/* css for sidenav */
+body .ui-panelmenu .ui-panelmenu-header > a {
+    padding: 4px !important;
+}
+mat-sidenav-content {
+    margin-left: 210px !important;
+}
+.ui-panelmenu .ui-menuitem-text {
+    font-size: 0.9em !important;
+}
+.ui-panelmenu .ui-menuitem-icon {
+    padding-right: 20px !important;
+}
+.app-sidenav-nav .title-logo {
+    width: 220px;
+}
+p-panelmenu .ui-panelmenu {
+    width: 220px !important;
+}
+/* ./css for sidenav */
+
+/*Css form multiselect input itemmaster*/
+
+.panel-style .p-multiselect .ui-multiselect-close {
+    margin-left: -9px;
+    margin-top: -7px !important;
+}
+
+.panel-style .p-multiselect .ui-multiselect-filter-container {
+    margin-left: 0px !important;
+    margin-top: 3px !important;
+}
+
+.panel-style .ui-multiselect .ui-multiselect-panel {
+    min-width: 100%;
+    margin-left: -15px;
+}
+
+.panel-style .ui-multiselect .ui-multiselect-trigger {
+    border: none !important;
+}
+
+.panel-style p-multiselect .ui-multiselect-filter-container {
+    margin-left: 6px !important;
+    margin-top: 5px !important;
+}
+
+
+.panel-style .pi {
+    margin-left: 10px;
+    margin-top: -16px;
+}
+
