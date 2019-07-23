@@ -642,6 +642,15 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     saveCurrecy() {
         this.isSaving = true;
+        for (let i = 0; i < this.allCurrencyInfo.length; i++) {
+            if (this.allCurrencyInfo[i].code.toLowerCase().indexOf(this.currencyName.toLowerCase()) == 0) {
+                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                return;
+            }
+            else {
+            }
+        }
+
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -720,6 +729,14 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     saveCreditTermsdata() {
         this.isSaving = true;
+        for (let i = 0; i < this.allcreditTermInfo.length; i++) {
+            if (this.allcreditTermInfo[i].name.toLowerCase().indexOf(this.creditTermsId.toLowerCase()) == 0) {
+                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                return;
+            }
+            else {
+            }
+        }
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -807,6 +824,14 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     editItemCloseModel() {
         this.isSaving = true;
+        for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
+            if (this.alldiscountvalueInfo[i].discontValue.toString().indexOf(this.discontValue.toLowerCase()) == 0) {
+                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                return;
+            }
+            else {
+            }
+        }
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;

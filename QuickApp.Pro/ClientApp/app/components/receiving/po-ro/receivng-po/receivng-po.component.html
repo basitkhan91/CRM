@@ -16,893 +16,940 @@
 </style>
 <div class="x_content" *ngIf="purchaseOrderData">
 
-    <h4 class="page-heading">Receiving PO</h4>
-
-    <div class="clear"></div>
-    <form id="" class="form-horizontal ro-grid-form mtop10" name="" action="#" method="post" onsubmit="return false;">
-        <div class="col-sm-3">
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">PO Num</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Open Date</label>
-                <div class="col-sm-7">
-                    <p-calendar disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Need By</label>
-                <div class="col-sm-7">
-                    <p-calendar disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate"></p-calendar>
-                </div>
-            </div>
-            <div class="form-group col-sm-12 input-icon1 ">
-                <label class="control-label col-sm-4">Priority </label>
-                <div class="inner-addon right-addon inline-block col-sm-7">
-                    <select class="form-control" disabled="disabled" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.priorityId">
-                        <option *ngFor="let priority of poPriorityInfo" [value]="priority.Key">{{priority.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Deferred Receiver</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon">
-                        <input class="form-control" type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Resale</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon">
-                        <input class="form-control" type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
-                    </div>
-                </div>
-            </div>
+    <div class="card receiving-po">
+        <div class="card-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+                    <li class="breadcrumb-item active" aria-current="page">Receiving PO</li>
+                    <!--<li class="breadcrumb-item " aria-current="page">Create Work Flow</li>-->
+                </ol>
+            </nav>
         </div>
 
-        <div class="col-sm-3">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Vendor Num</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <input class="form-control" type="text" disabled="disabled" [value]="purchaseOrderData.vendor.vendorCode">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12 input-icon1">
-                <label for="vendorName" class="control-label col-sm-4">Vendor Name <span class="clr-red">*</span></label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <input type="text" disabled="disabled" class="form-control" [value]="purchaseOrderData.vendor.vendorName">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Vendor Contact</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <i class="fa fa-search"></i>
-                        <input type="text" disabled="disabled" class="form-control" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Contact Phone</label>
-                <div class="col-sm-7">
-                    <input class="form-control" disabled="disabled" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Credit Limit &amp; Terms</label>
-                <div class="col-sm-3">
-                    <input class="form-control" disabled="disabled" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms">
-                </div>
-                <div class="col-sm-4">
-                    <select class="form-control" #selects="ngModel" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit">
-                        <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="form-group col-sm-12 input-icon1">
-                <label class="control-label col-sm-4">Requisitioner</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <div class="inner-addon right-addon inline-block">
-                            <input type="text" class="form-control" disabled="disabled" [value]="purchaseOrderData.requestedBy">
-
+        <div class="card-body">
+            <form id="" class="ro-grid-form" name="">
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>PO Num</label>
+                            <input class="form-control" type="text" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber">
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Approver</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon ">
-                        <input type="text" class="form-control" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Num</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <input class="form-control" type="text" disabled="disabled" [value]="purchaseOrderData.vendor.vendorCode">
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Approved Date</label>
-                <div class="col-sm-7">
-                    <p-calendar [showIcon]="true" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied"></p-calendar>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Status</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="purchaseOrderData.statusId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let status of poStatus" [value]="status.Key">{{status.Value}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Company</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">BU</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Dept</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Division</label>
-                <div class="col-sm-7">
-                    <div>
-                        <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Memo</label>
-                <div class="col-sm-7">
-                    <textarea class="form-control h100 scroll-x" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
-                </div>
-            </div>
-        </div>
-
-        <div class="clear"></div>
-        <hr>
-    </form>
-</div>
-
-<div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
-    <div class="x_panel">
-        <div class="tab-content">
-            <div id="tab1" class="tab-pane  active">
-                <div id="adminsearchlocationajax">
-                    <div class="table-responsive">
-                        <div class="clear"></div>
-                        <table *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined" class="table table-bordered table-striped table-wrap">
-                            <thead>
-                                <tr>
-                                    <th class="eachcol"></th>
-                                    <th class="eachcol">Line no</th>
-                                    <th class="eachcol">PN</th>
-                                    <th class="eachcol">Qty Ordered</th>
-                                    <th class="eachcol">Qty Received</th>
-                                    <th class="eachcol">Qty Approved</th>
-                                    <th class="eachcol">Qty Backordered</th>
-                                    <th class="eachcol">Status</th>
-                                    <th class="eachcol">User Name</th>
-                                    <th class="eachcol" colspan="3"></th>
-                                    <th class="eachcol">Company</th>
-                                    <th class="eachcol">BU</th>
-                                    <th class="eachcol">Division</th>
-                                    <th class="eachcol">Dep.</th>
-                                    <th class="eachcol"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
-                                    <tr class="basic-info" *ngIf="part.isParent">
-                                        <td class="details-control eachcol">
-                                            <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-xs margin0" (click)="showSplitShipmentParts(part.itemMasterId)"></i>
-                                        </td>
-                                        <td class="eachcol">{{row_index + 1}}</td>
-                                        <td class="eachcol">
-                                            {{part.itemMaster.partNumber}}
-                                        </td>
-                                        <td class="eachcol">
-                                            {{part.quantityOrdered}}
-                                        </td>
-                                        <td class="eachcol">
-                                            {{part.quantityReceived}}
-                                        </td>
-                                        <td class="eachcol">
-                                            {{part.approver}}
-                                        </td>
-                                        <td class="eachcol">
-                                            {{part.quantityBackOrdered}}
-                                        </td>
-                                        <td class="eachcol">{{part.statusText}}</td>
-                                        <td class="eachcol">{{part.requestedBy}}</td>
-                                        <td class="eachcol" colspan="3"></td>
-                                        <td class="eachcol">
-                                            {{part.managementStructureName[0]}}
-                                        </td>
-                                        <td class="eachcol">
-                                            {{part.managementStructureName[1]}}
-                                        </td>
-                                        <td class="eachcol">
-                                            {{part.managementStructureName[2]}}
-                                        </td>
-                                        <td class="eachcol">
-                                            {{part.managementStructureName[3]}}
-                                        </td>
-                                        <td class="eachcol">
-                                            <a *ngIf="part.quantityBackOrdered" (click)="addDetailsClick(part)" style="color:red">Add Details</a>
-                                        </td>
-                                    </tr>
-
-                                    <tr class="basic-info splitshipment" [hidden]="purchaseOrderData.purchaseOderPart[row_index+1] != undefined && !purchaseOrderData.purchaseOderPart[row_index+1].visible" *ngIf="part.isParent && purchaseOrderData.purchaseOderPart[row_index+1] != undefined && (!purchaseOrderData.purchaseOderPart[row_index+1].isParent)">
-                                        <th class="eachcol6"></th>
-                                        <th class="eachcol6"></th>
-                                        <th class="eachcol6">PN</th>
-                                        <th class="eachcol6">Qty Ordered</th>
-                                        <th class="eachcol6">Qty Received</th>
-                                        <th class="eachcol6">Qty Approved</th>
-                                        <th class="eachcol6">Qty Rejected</th>
-                                        <th class="eachcol6">Qty Backordered</th>
-                                        <th class="eachcol6">Status</th>
-                                        <th class="eachcol6">User Type</th>
-                                        <th class="eachcol6">User Name</th>
-                                        <th class="eachcol6">Address</th>
-                                        <th class="eachcol6">Company</th>
-                                        <th class="eachcol6">BU</th>
-                                        <th class="eachcol6">Division</th>
-                                        <th class="eachcol6">Dep.</th>
-                                        <th class="eachcol6"> </th>
-                                    </tr>
-
-                                    <tr class="basic-info splitshipment" [hidden]="!part.visible" *ngIf="!part.isParent">
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>{{part?.itemMaster?.partNumber}}</td>
-                                        <td>{{part?.quantityOrdered}}</td>
-                                        <td>{{part?.stockline?.quantityReceived}}</td>
-                                        <td>{{'NA'}}</td>
-                                        <td>{{'NA'}}</td>
-                                        <td>{{'NA'}}</td>
-                                        <td class="eachcol">
-                                            {{part.statusText}}
-                                        </td>
-                                        <td>{{'NA'}}</td>
-                                        <td class="eachcol">{{part?.userName}}</td>
-                                        <td>{{part.addressText }}</td>
-                                        <td>{{part.managementStructureName[0]}}</td>
-                                        <td>{{part.managementStructureName[1]}}</td>
-                                        <td>{{part.managementStructureName[2]}}</td>
-                                        <td>{{part.managementStructureName[3]}}</td>
-                                        <td><a (click)="addStockLine(part)" style="color:red">Add Details</a></td>
-                                    </tr>
-
-                                    <tr class="more-info" *ngIf="!part.isParent && part.showStockLineGrid">
-                                        <td colspan="16">
-                                            <div class="col-sm-12">
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">Sequence</label>
-                                                    <div class="col-sm-7 wauto">
-                                                        $$$
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        PN
-                                                    </label>
-                                                    <div class="col-sm-7 wauto">
-                                                        {{part.itemMaster?.partNumber}}
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        Qty to receive
-                                                    </label>
-                                                    <div class="col-sm-7">
-                                                        <input class="form-control w70" type="number" (keyup)="partQuantityChange($event, part)" [(ngModel)]="part.quantityToReceive" value="5">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        Qty Approved
-                                                    </label>
-                                                    <div class="col-sm-7">
-                                                        <input class="form-control w70" type="number" value="NA">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        Qty Rejected
-                                                    </label>
-                                                    <div class="col-sm-7">
-                                                        <input class="form-control w70" type="number" value="NA">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">Cond</label>
-                                                    <div class="col-sm-7 cust-name wauto">
-                                                        <select class="w90">
-                                                            <option value="NEW">NEW</option>
-                                                            <option value="AS-IS">AS-IS</option>
-                                                            <option value="REP">REP</option>
-                                                            <option value="SRV">SRV</option>
-                                                            <option value="OVH">OVH</option>
-                                                            <option value="AR">AR</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!--this will be repeating for each Stock Line-->
-                                            <div class="col-sm-12 padding5 bglight" *ngIf="part.stocklineListObj != undefined && part.stocklineListObj.length > 0">
-                                                <div class="slider-btns">
-                                                    <span class="slider-num">
-                                                        <span>{{ currentSLIndex + 1 }}</span> / <span>{{ part.stocklineListObj.length }}</span>
-                                                    </span>
-                                                    <a class="btn btn-success" href="#" (click)="moveStockLinePage(-1)">&#60;</a>
-                                                    <input type="number" (keyup)="gotoStockLinePage($event, part)" class="w50" />
-                                                    <a class="btn btn-success" (click)="moveStockLinePage(1)">&#62;</a>
-                                                </div>
-                                                <!--<div class="buttons" >
-        <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
-            <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
-        </a>
-        <span class="num">1/5</span>
-        <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
-            <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
-        </a>
-    </div>
-    <div class="clear"></div>-->
-
-                                                <div class="col-sm-12">
-                                                    <h4 class="text-center">Receiving Qty-1 of part {{part.itemMaster?.partNumber}} </h4>
-                                                </div>
-
-                                                <div class="form-group col-sm-10">
-                                                    <label class="control-label col-sm-4">Same Details for all Parts</label>
-                                                    <div class="col-sm-7">
-                                                        <input class="form-control same-details" type="checkbox">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-sm-4">
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Company</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].companyId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineBusinessUnitList(part.stocklineListObj[currentSLIndex])">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let company of part.stocklineListObj[currentSLIndex].CompanyList" [value]="company.Key">{{company.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">BU</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].businessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineDivision(part.stocklineListObj[currentSLIndex])">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let businessUnit of part.stocklineListObj[currentSLIndex].BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Division</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].divisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineDepartment(part.stocklineListObj[currentSLIndex])">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let division of part.stocklineListObj[currentSLIndex].DivisionList" [value]="division.Key">{{division.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Department</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].departmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let department of part.stocklineListObj[currentSLIndex].DepartmentList" [value]="department.Key">{{department.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Site</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].siteId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineWareHouse(part.stocklineListObj[currentSLIndex])">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let site of part.stocklineListObj[currentSLIndex].SiteList" [value]="site.Key">{{site.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Warehouse</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].warehouseId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineLocation(part.stocklineListObj[currentSLIndex])">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let warehouse of part.stocklineListObj[currentSLIndex].WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Location</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].locationId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineShelf(part.stocklineListObj[currentSLIndex])">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let loc of part.stocklineListObj[currentSLIndex].LocationList" [ngValue]="loc.Key">{{loc.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Shelf</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].shelfId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineBin(part.stocklineListObj[currentSLIndex])">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let shelf of part.stocklineListObj[currentSLIndex].ShelfList" [ngValue]="shelf.Key">{{shelf.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Bin</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].binId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let bin of part.stocklineListObj[currentSLIndex].BinList" [ngValue]="bin.Key">{{bin.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Obtain From</label>
-                                                        <div class="col-sm-7">
-                                                            <select class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFromType" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option value="1">Customer</option>
-                                                                <option value="2">Other </option>
-                                                                <option value="3">Vendor</option>
-                                                            </select>
-                                                        </div>
-                                                        <label class="control-label col-sm-4"></label>
-                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 1">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let customer of CustomerList" [value]="customer.Key">{{customer.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-sm-7" *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 2">
-                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom">
-                                                        </div>
-                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 3">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let vendor of VendorList" [value]="vendor.Key">{{vendor.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Owner</label>
-                                                        <div class="col-sm-7">
-                                                            <select class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].ownerType" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option value="1">Customer</option>
-                                                                <option value="2">Other </option>
-                                                                <option value="3">Vendor</option>
-                                                            </select>
-                                                        </div>
-                                                        <label class="control-label col-sm-4"></label>
-                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 1">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].owner" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let customer of CustomerList" [value]="customer.Key">{{customer.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-sm-7" *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 2">
-                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].owner">
-                                                        </div>
-                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 3">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].owner" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let vendor of VendorList" [value]="vendor.Key">{{vendor.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Traceable To</label>
-                                                        <div class="col-sm-7">
-                                                            <select class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableToType" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option value="1">Customer</option>
-                                                                <option value="2">Other </option>
-                                                                <option value="3">Vendor</option>
-                                                            </select>
-                                                        </div>
-                                                        <label class="control-label col-sm-4"></label>
-                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 1">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let customer of CustomerList" [value]="customer.Key">{{customer.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-sm-7" *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 2">
-                                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo">
-                                                        </div>
-                                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 3">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let vendor of VendorList" [value]="vendor.Key">{{vendor.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">MFG</label>
-                                                        <div class="col-sm-7">
-                                                            <select [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo" [ngModelOptions]="{standalone: true}">
-                                                                <option value="0">Select</option>
-                                                                <option *ngFor="let manufacturer of ManufacturerList" [value]="manufacturer.Key">{{manufacturer.Value}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">MFG Lot Num</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturerLotNumber">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">MFG Date</label>
-                                                        <div class="col-sm-7">
-                                                            <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturingDate"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">MFG Trace</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text" value="Map pending">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">MFG Batch Num</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturingBatchNumber">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Expiration Date</label>
-                                                        <div class="col-sm-7">
-                                                            <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].shelfLifeExpirationDate"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Unit Cost</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text" value="map Pending">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Extended Cost</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Parts Cert Num</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].partCertificationNumber">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Cert By</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].PendingcertifiedBy">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Certified Date</label>
-                                                        <div class="col-sm-7">
-                                                            <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedDate"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Tag Date</label>
-                                                        <div class="col-sm-7">
-                                                            <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].tagDate"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Tag Type</label>
-                                                        <div class="col-sm-7">
-                                                            <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].tagType">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Certified Due Date</label>
-                                                        <div class="col-sm-7">
-                                                            <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedDueDate"></p-calendar>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                    <!--
-        <div class="col-sm-4">
-            
-           
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Shipping Ref</label>
-                <div class="col-sm-7">
-                    <select class="form-control">
-                        <option>Hyderabad Location</option>
-                        <option>Newyork Location</option>
-                        <option>Chicago Location</option>
-                    </select> <span class="comments-show-btn" data-toggle="tooltip"
-                                    title="On PO if available and know before item arrives… need ability to update the PO tables"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Ship Via</label>
-                <div class="col-sm-7">
-                    <select class="form-control">
-                        <option>fedex</option>
-                        <option>Blue Dart</option>
-                        <option>Bombino Express</option>
-                    </select>
-                    <span class="comments-show-btn" data-toggle="tooltip" title="In PO if known. In Receiving should default to whats on PO but can add, or update in receiving"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Shipping Account</label>
-                <div class="col-sm-7">
-                    <select class="form-control">
-                        <option>12345678</option>
-                        <option>58698745</option>
-                        <option>BB2568AHJ</option>
-                    </select> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">ESN</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">ECCN</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text">
-                    <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">ITAR Num</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">NHA</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon autosuggesions-add inline-block">
-                        <i class="fa fa-search"></i>
-                        <input type="text" class="form-control numberids" id="" name="">
-                    </div> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">TLA</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">NSN</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Aircraft Tail Num</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-        </div>-->
-
-                                                </div>
-
-                                                <!--<div id="pn-other-details" class="banner banner-slider carousel slide carousel-fade bglight carousel-sync">
-        <div class="carousel-inner ptop10">
-            <div class="item active carousel-item">
-                <div class="fill">
-                    <div class="banner-content">
-                        <div class="container">
-                            <div class="">
-                                <div class="col-sm-12">
-                                    <div class="col-sm-12">
-                                        <h4 class="text-center">Details of Part{{index}} </h4>
-                                    </div>
-                                    <div class="col-sm-12 clr-red">
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <h4>Is Serialized</h4>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Serial Num</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-sm-12">
-
-                                    <div class="form-group col-sm-12">
-                                        <h4>Time Life</h4>
-                                    </div>
-                                    <div class="time-remaining">
-                                        <input type="checkbox" class="wauto timelife-update-later-checkbox"> Time Life Details Update Later <div class="table-responsive form-group col-sm-12">
-                                            <table class="table table-bordered table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="2" class="text-center">Cycles</th>
-                                                        <th colspan="2" class="text-center">Time</th>
-                                                        <th colspan="2" class="text-center">Last</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Remaining</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleRemaining" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Remaining</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeRemaining" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since New</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since New</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since New</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Ovh</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceOVH" [ngModelOptions]="{standalone: true}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Ovh</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceOvh" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Ovh</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeSinceOvh" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Insp</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Insp</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceInsp" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Insp</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Repair</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceRepair" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Repair</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-
-                                    <div class="form-group col-sm-12">
-                                        <h4>Calibrated Equipment</h4>
-                                    </div>
-                                    <div class="form-group col-sm-5">
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Inspection Date</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control datepicker" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Frequency</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Requisitioner</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <div class="inner-addon right-addon inline-block">
+                                    <input type="text" class="form-control" disabled="disabled" [value]="purchaseOrderData.requestedBy">
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Company</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Open Date</label>
+                            <p-calendar class="pas-clder" disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <input type="text" disabled="disabled" class="form-control" [value]="purchaseOrderData.vendor.vendorName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Approver</label>
+                            <div class="inner-addon ">
+                                <input type="text" class="form-control" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>BU</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-        </div>
-        <div class="buttons" style="display: none;">
-            <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
-                <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
-            </a>
-            <span class="num">1/5</span>
-            <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
-                <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
-            </a>
-        </div>
-        <div class="clear"></div>
-    </div>-->
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Need By</label>
+                            <p-calendar class="pas-clder" disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Contact</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" disabled="disabled" class="form-control" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Approved Date</label>
+                            <p-calendar class="pas-clder" [showIcon]="true" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Dept</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-</td>
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <select class="form-control" disabled="disabled" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.priorityId">
+                                    <option *ngFor="let priority of poPriorityInfo" [value]="priority.Key">{{priority.Value}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Contact Phone</label>
+                            <input class="form-control" disabled="disabled" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="purchaseOrderData.statusId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let status of poStatus" [value]="status.Key">{{status.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Division</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Deferred Receiver</label>
+                            <div class="checkbox-cstm" style="margin-top: 4px">
+                                <label>
+                                    <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Resale</label>
+                            <div class="checkbox-cstm" style="margin-top: 4px">
+                                <label>
+                                    <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Credit Limit &amp; Terms</label>
+                            <div class="form-row">
+                                <div class="col-sm-5">
+                                    <input class="form-control" disabled="disabled" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms">
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" #selects="ngModel" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit">
+                                        <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Memo</label>
+                            <textarea class="form-control h100 scroll-x" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>        
+    </div>        
+    </div>
+
+<!--<p-table [rows]="10"
+                         [lazy]="true" [paginator]="true"
+                         [rowsPerPageOptions]="[10,20,30]" [loading]="loading"
+                         [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
+                         [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+    <ng-template pTemplate="header">
+        <tr>
+
+            <th>Vin <p-sortIcon></p-sortIcon></th>
+            <th>Vin <p-sortIcon></p-sortIcon></th>
+            <th>Vin <p-sortIcon></p-sortIcon></th>
+            <th>Vin <p-sortIcon></p-sortIcon></th>
+
+            <th style="width:150px"></th>
+
+        </tr>
+
+        <tr>
+            <th>
+                <input style="width:100%;" pInputText type="text">
+            </th>
+            <th style="width:150px"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-car>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </ng-template>
+</p-table>-->
+
+    <div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
+        <div class="x_panel">
+            <div class="tab-content">
+                <div id="tab1" class="tab-pane  active">
+                    <div id="adminsearchlocationajax">
+                        <div class="table-responsive">
+                            <div class="clear"></div>
+                            <table *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined" class="table table-bordered table-striped table-wrap">
+                                <thead>
+                                    <tr>
+                                        <th class="eachcol"></th>
+                                        <th class="eachcol">Line no</th>
+                                        <th class="eachcol">PN</th>
+                                        <th class="eachcol">Qty Ordered</th>
+                                        <th class="eachcol">Qty Received</th>
+                                        <th class="eachcol">Qty Approved</th>
+                                        <th class="eachcol">Qty Backordered</th>
+                                        <th class="eachcol">Status</th>
+                                        <th class="eachcol">User Name</th>
+                                        <th class="eachcol" colspan="3"></th>
+                                        <th class="eachcol">Company</th>
+                                        <th class="eachcol">BU</th>
+                                        <th class="eachcol">Division</th>
+                                        <th class="eachcol">Dep.</th>
+                                        <th class="eachcol"></th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
+                                        <tr class="basic-info" *ngIf="part.isParent">
+                                            <td class="details-control eachcol">
+                                                <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-xs margin0" (click)="showSplitShipmentParts(part.itemMasterId)"></i>
+                                            </td>
+                                            <td class="eachcol">{{row_index + 1}}</td>
+                                            <td class="eachcol">
+                                                {{part.itemMaster.partNumber}}
+                                            </td>
+                                            <td class="eachcol">
+                                                {{part.quantityOrdered}}
+                                            </td>
+                                            <td class="eachcol">
+                                                {{part.quantityReceived}}
+                                            </td>
+                                            <td class="eachcol">
+                                                {{part.approver}}
+                                            </td>
+                                            <td class="eachcol">
+                                                {{part.quantityBackOrdered}}
+                                            </td>
+                                            <td class="eachcol">{{part.statusText}}</td>
+                                            <td class="eachcol">{{part.requestedBy}}</td>
+                                            <td class="eachcol" colspan="3"></td>
+                                            <td class="eachcol">
+                                                {{part.managementStructureName[0]}}
+                                            </td>
+                                            <td class="eachcol">
+                                                {{part.managementStructureName[1]}}
+                                            </td>
+                                            <td class="eachcol">
+                                                {{part.managementStructureName[2]}}
+                                            </td>
+                                            <td class="eachcol">
+                                                {{part.managementStructureName[3]}}
+                                            </td>
+                                            <td class="eachcol">
+                                                <a *ngIf="part.quantityBackOrdered" (click)="addDetailsClick(part)" style="color:red">Add Details</a>
+                                            </td>
+                                        </tr>
 
-                                </ng-container>
-                            </tbody>
-                        </table>
+                                        <tr class="basic-info splitshipment" [hidden]="purchaseOrderData.purchaseOderPart[row_index+1] != undefined && !purchaseOrderData.purchaseOderPart[row_index+1].visible" *ngIf="part.isParent && purchaseOrderData.purchaseOderPart[row_index+1] != undefined && (!purchaseOrderData.purchaseOderPart[row_index+1].isParent)">
+                                            <th class="eachcol6"></th>
+                                            <th class="eachcol6"></th>
+                                            <th class="eachcol6">PN</th>
+                                            <th class="eachcol6">Qty Ordered</th>
+                                            <th class="eachcol6">Qty Received</th>
+                                            <th class="eachcol6">Qty Approved</th>
+                                            <th class="eachcol6">Qty Rejected</th>
+                                            <th class="eachcol6">Qty Backordered</th>
+                                            <th class="eachcol6">Status</th>
+                                            <th class="eachcol6">User Type</th>
+                                            <th class="eachcol6">User Name</th>
+                                            <th class="eachcol6">Address</th>
+                                            <th class="eachcol6">Company</th>
+                                            <th class="eachcol6">BU</th>
+                                            <th class="eachcol6">Division</th>
+                                            <th class="eachcol6">Dep.</th>
+                                            <th class="eachcol6"> </th>
+                                        </tr>
+
+                                        <tr class="basic-info splitshipment" [hidden]="!part.visible" *ngIf="!part.isParent">
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>{{part?.itemMaster?.partNumber}}</td>
+                                            <td>{{part?.quantityOrdered}}</td>
+                                            <td>{{part?.stockline?.quantityReceived}}</td>
+                                            <td>{{'NA'}}</td>
+                                            <td>{{'NA'}}</td>
+                                            <td>{{'NA'}}</td>
+                                            <td class="eachcol">
+                                                {{part.statusText}}
+                                            </td>
+                                            <td>{{'NA'}}</td>
+                                            <td class="eachcol">{{part?.userName}}</td>
+                                            <td>{{part.addressText }}</td>
+                                            <td>{{part.managementStructureName[0]}}</td>
+                                            <td>{{part.managementStructureName[1]}}</td>
+                                            <td>{{part.managementStructureName[2]}}</td>
+                                            <td>{{part.managementStructureName[3]}}</td>
+                                            <td><a (click)="addStockLine(part)" style="color:red">Add Details</a></td>
+                                        </tr>
+
+                                        <tr class="more-info" *ngIf="!part.isParent && part.showStockLineGrid">
+                                            <td colspan="16">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group col-sm-3 wauto">
+                                                        <label class="control-label col-sm-4 wauto">Sequence</label>
+                                                        <div class="col-sm-7 wauto">
+                                                            $$$
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-3 wauto">
+                                                        <label class="control-label col-sm-4 wauto">
+                                                            PN
+                                                        </label>
+                                                        <div class="col-sm-7 wauto">
+                                                            {{part.itemMaster?.partNumber}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-3 wauto">
+                                                        <label class="control-label col-sm-4 wauto">
+                                                            Qty to receive
+                                                        </label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control w70" type="number" (keyup)="partQuantityChange($event, part)" [(ngModel)]="part.quantityToReceive" value="5">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-3 wauto">
+                                                        <label class="control-label col-sm-4 wauto">
+                                                            Qty Approved
+                                                        </label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control w70" type="number" value="NA">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-3 wauto">
+                                                        <label class="control-label col-sm-4 wauto">
+                                                            Qty Rejected
+                                                        </label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control w70" type="number" value="NA">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-3 wauto">
+                                                        <label class="control-label col-sm-4 wauto">Cond</label>
+                                                        <div class="col-sm-7 cust-name wauto">
+                                                            <select class="w90">
+                                                                <option value="NEW">NEW</option>
+                                                                <option value="AS-IS">AS-IS</option>
+                                                                <option value="REP">REP</option>
+                                                                <option value="SRV">SRV</option>
+                                                                <option value="OVH">OVH</option>
+                                                                <option value="AR">AR</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--this will be repeating for each Stock Line-->
+                                                <div class="col-sm-12 padding5 bglight" *ngIf="part.stocklineListObj != undefined && part.stocklineListObj.length > 0">
+                                                    <div class="slider-btns">
+                                                        <span class="slider-num">
+                                                            <span>{{ currentSLIndex + 1 }}</span> / <span>{{ part.stocklineListObj.length }}</span>
+                                                        </span>
+                                                        <a class="btn btn-success" href="#" (click)="moveStockLinePage(-1)">&#60;</a>
+                                                        <input type="number" (keyup)="gotoStockLinePage($event, part)" class="w50" />
+                                                        <a class="btn btn-success" (click)="moveStockLinePage(1)">&#62;</a>
+                                                    </div>
+                                                    <!--<div class="buttons" >
+                                                        <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
+                                                            <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
+                                                        </a>
+                                                        <span class="num">1/5</span>
+                                                        <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
+                                                            <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="clear"></div>-->
+
+                                                    <div class="col-sm-12">
+                                                        <h4 class="text-center">Receiving Qty-1 of part {{part.itemMaster?.partNumber}} </h4>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-10">
+                                                        <label class="control-label col-sm-4">Same Details for all Parts</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control same-details" type="checkbox">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Company</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].companyId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineBusinessUnitList(part.stocklineListObj[currentSLIndex])">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let company of part.stocklineListObj[currentSLIndex].CompanyList" [value]="company.Key">{{company.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">BU</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].businessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineDivision(part.stocklineListObj[currentSLIndex])">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let businessUnit of part.stocklineListObj[currentSLIndex].BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Division</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].divisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineDepartment(part.stocklineListObj[currentSLIndex])">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let division of part.stocklineListObj[currentSLIndex].DivisionList" [value]="division.Key">{{division.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Department</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].departmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let department of part.stocklineListObj[currentSLIndex].DepartmentList" [value]="department.Key">{{department.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Site</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].siteId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineWareHouse(part.stocklineListObj[currentSLIndex])">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let site of part.stocklineListObj[currentSLIndex].SiteList" [value]="site.Key">{{site.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Warehouse</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].warehouseId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineLocation(part.stocklineListObj[currentSLIndex])">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let warehouse of part.stocklineListObj[currentSLIndex].WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Location</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].locationId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineShelf(part.stocklineListObj[currentSLIndex])">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let loc of part.stocklineListObj[currentSLIndex].LocationList" [ngValue]="loc.Key">{{loc.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Shelf</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].shelfId" #selects="ngModel" [ngModelOptions]="{standalone: true}" (change)="getStockLineBin(part.stocklineListObj[currentSLIndex])">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let shelf of part.stocklineListObj[currentSLIndex].ShelfList" [ngValue]="shelf.Key">{{shelf.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Bin</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].binId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let bin of part.stocklineListObj[currentSLIndex].BinList" [ngValue]="bin.Key">{{bin.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Obtain From</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFromType" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option value="1">Customer</option>
+                                                                    <option value="2">Other </option>
+                                                                    <option value="3">Vendor</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="control-label col-sm-4"></label>
+                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 1">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let customer of CustomerList" [value]="customer.Key">{{customer.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-7" *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 2">
+                                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom">
+                                                            </div>
+                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 3">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let vendor of VendorList" [value]="vendor.Key">{{vendor.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Owner</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].ownerType" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option value="1">Customer</option>
+                                                                    <option value="2">Other </option>
+                                                                    <option value="3">Vendor</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="control-label col-sm-4"></label>
+                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 1">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].owner" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let customer of CustomerList" [value]="customer.Key">{{customer.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-7" *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 2">
+                                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].owner">
+                                                            </div>
+                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 3">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].owner" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let vendor of VendorList" [value]="vendor.Key">{{vendor.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Traceable To</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableToType" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option value="1">Customer</option>
+                                                                    <option value="2">Other </option>
+                                                                    <option value="3">Vendor</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="control-label col-sm-4"></label>
+                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 1">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let customer of CustomerList" [value]="customer.Key">{{customer.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-7" *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 2">
+                                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo">
+                                                            </div>
+                                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 3">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let vendor of VendorList" [value]="vendor.Key">{{vendor.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">MFG</label>
+                                                            <div class="col-sm-7">
+                                                                <select [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let manufacturer of ManufacturerList" [value]="manufacturer.Key">{{manufacturer.Value}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">MFG Lot Num</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturerLotNumber">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">MFG Date</label>
+                                                            <div class="col-sm-7">
+                                                                <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturingDate"></p-calendar>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">MFG Trace</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text" value="Map pending">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">MFG Batch Num</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturingBatchNumber">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Expiration Date</label>
+                                                            <div class="col-sm-7">
+                                                                <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].shelfLifeExpirationDate"></p-calendar>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Unit Cost</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text" value="map Pending">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Extended Cost</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Parts Cert Num</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].partCertificationNumber">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Cert By</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].PendingcertifiedBy">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Certified Date</label>
+                                                            <div class="col-sm-7">
+                                                                <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedDate"></p-calendar>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Tag Date</label>
+                                                            <div class="col-sm-7">
+                                                                <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].tagDate"></p-calendar>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Tag Type</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].tagType">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Certified Due Date</label>
+                                                            <div class="col-sm-7">
+                                                                <p-calendar [showIcon]="true" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedDueDate"></p-calendar>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <!--
+                                                    <div class="col-sm-4">
+
+
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Shipping Ref</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control">
+                                                                    <option>Hyderabad Location</option>
+                                                                    <option>Newyork Location</option>
+                                                                    <option>Chicago Location</option>
+                                                                </select> <span class="comments-show-btn" data-toggle="tooltip"
+                                                                                title="On PO if available and know before item arrives… need ability to update the PO tables"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Ship Via</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control">
+                                                                    <option>fedex</option>
+                                                                    <option>Blue Dart</option>
+                                                                    <option>Bombino Express</option>
+                                                                </select>
+                                                                <span class="comments-show-btn" data-toggle="tooltip" title="In PO if known. In Receiving should default to whats on PO but can add, or update in receiving"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Shipping Account</label>
+                                                            <div class="col-sm-7">
+                                                                <select class="form-control">
+                                                                    <option>12345678</option>
+                                                                    <option>58698745</option>
+                                                                    <option>BB2568AHJ</option>
+                                                                </select> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">ESN</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">ECCN</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text">
+                                                                <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">ITAR Num</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">NHA</label>
+                                                            <div class="col-sm-7">
+                                                                <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                                    <i class="fa fa-search"></i>
+                                                                    <input type="text" class="form-control numberids" id="" name="">
+                                                                </div> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">TLA</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">NSN</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <label class="control-label col-sm-4">Aircraft Tail Num</label>
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>-->
+
+                                                </div>
+
+                                                <!--<div id="pn-other-details" class="banner banner-slider carousel slide carousel-fade bglight carousel-sync">
+                                                    <div class="carousel-inner ptop10">
+                                                        <div class="item active carousel-item">
+                                                            <div class="fill">
+                                                                <div class="banner-content">
+                                                                    <div class="container">
+                                                                        <div class="">
+                                                                            <div class="col-sm-12">
+                                                                                <div class="col-sm-12">
+                                                                                    <h4 class="text-center">Details of Part{{index}} </h4>
+                                                                                </div>
+                                                                                <div class="col-sm-12 clr-red">
+                                                                                </div>
+                                                                                <div class="form-group col-sm-12">
+                                                                                    <h4>Is Serialized</h4>
+                                                                                </div>
+                                                                                <div class="col-sm-4">
+                                                                                    <div class="form-group col-sm-12">
+                                                                                        <label class="control-label col-sm-4">Serial Num</label>
+                                                                                        <div class="col-sm-7">
+                                                                                            <input class="form-control" type="text">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col-sm-12">
+
+                                                                                <div class="form-group col-sm-12">
+                                                                                    <h4>Time Life</h4>
+                                                                                </div>
+                                                                                <div class="time-remaining">
+                                                                                    <input type="checkbox" class="wauto timelife-update-later-checkbox"> Time Life Details Update Later <div class="table-responsive form-group col-sm-12">
+                                                                                        <table class="table table-bordered table-striped">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th colspan="2" class="text-center">Cycles</th>
+                                                                                                    <th colspan="2" class="text-center">Time</th>
+                                                                                                    <th colspan="2" class="text-center">Last</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>Remaining</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="cycleRemaining" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Remaining</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="timeRemaining" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Since New</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="lastSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td>Since New</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="cycleSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Since New</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Since Ovh</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="lastSinceOVH" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td>Since Ovh</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="cycleSinceOvh" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Since Ovh</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="timeSinceOvh" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Since Insp</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td>Since Insp</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="cycleSinceInsp" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Since Insp</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td></td>
+                                                                                                    <td></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td>Since Repair</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="cycleSinceRepair" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td>Since Repair</td>
+                                                                                                    <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                                                    <td></td>
+                                                                                                    <td></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-12">
+
+                                                                                <div class="form-group col-sm-12">
+                                                                                    <h4>Calibrated Equipment</h4>
+                                                                                </div>
+                                                                                <div class="form-group col-sm-5">
+                                                                                    <div class="form-group col-sm-12">
+                                                                                        <label class="control-label col-sm-4">Inspection Date</label>
+                                                                                        <div class="col-sm-7">
+                                                                                            <input class="form-control datepicker" type="text">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-sm-12">
+                                                                                        <label class="control-label col-sm-4">Frequency</label>
+                                                                                        <div class="col-sm-7">
+                                                                                            <input class="form-control" type="text">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="buttons" style="display: none;">
+                                                        <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
+                                                            <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
+                                                        </a>
+                                                        <span class="num">1/5</span>
+                                                        <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
+                                                            <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                </div>-->
+
+                                            </td>
+                                        </tr>
+
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="clear"></div>
+            <hr>
+            <a class="btn btn-success pull-right">Save</a>
+            <div class="clear"></div>
+            <br>
+            <br>
+            <br>
+            <br>
         </div>
-        <div class="clear"></div>
-        <hr>
-        <a class="btn btn-success pull-right">Save</a>
-        <div class="clear"></div>
-        <br>
-        <br>
-        <br>
-        <br>
     </div>
-</div>
 
-<style>
-    .disabled {
-        cursor: not-allowed;
-    }
+    <style>
+        .disabled {
+            cursor: not-allowed;
+        }
 
-    .eachcol {
-        width: 7%;
-    }
+        .eachcol {
+            width: 7%;
+        }
 
-    .eachcol6 {
-        width: 6%;
-    }
-</style>
+        .eachcol6 {
+            width: 6%;
+        }
+    </style>

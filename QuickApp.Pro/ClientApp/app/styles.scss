@@ -12702,6 +12702,70 @@ mat-sidenav-content {display:block !important;}
 
 /* component workflow list css */
 
+p-multiselect {
+    display: block;
+    height: 32px;
+    padding: 5px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+}
+p-multiselect .ui-multiselect {
+    border: none !important;
+    margin-top: -6px;
+}
+p-multiselect .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {
+    overflow: initial !important;
+    margin: -6px 0 0 -6px;
+    color: #007ad9;
+}
+p-multiselect .ui-multiselect-item.ui-state-highlight {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+p-multiselect label {
+    margin-left: 10px !important;
+}
+p-multiselect .ui-multiselect-filter-container {
+    margin-left: 10px !important;
+    margin-top: 11px !important;
+    width: 66% !important;
+}
+p-multiselect .ui-multiselect-filter-container input {
+    display: block;
+    height: 28px !important;
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}
+p-multiselect .ui-multiselect-close {
+    margin-top: 0 !important;
+    top: 45% !important;
+    left: 80%;
+}
+p-multiselect .ui-chkbox .ui-chkbox-box.ui-state-active {
+    background-color: #fff !important;
+    border: 1px solid #007ad9 !important;
+}
+p-multiselect .ui-multiselect-item label {
+    margin-top: 13px;
+}
+p-multiselect .ui-multiselect-item {
+    padding-top: 0 !important;
+}
 body .ui-paginator .ui-dropdown {
     min-width: 42px;
     height: 24px;
@@ -12714,10 +12778,10 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
 
 /* ./component workflow list css */
 /* workflow create css */
-.workflow-clder .ui-calendar-button {
+.workflow-clder .ui-calendar-button, .pas-clder .ui-calendar-button {
     width: 8% !important;
 }
-.workflow-clder .ui-inputtext {
+.workflow-clder .ui-inputtext, .pas-clder .ui-inputtext {
     width: 92% !important;
 }
 .checkbox-cstm label {
@@ -12802,17 +12866,33 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
 }
+.btn-cstm {
+    color: #fff;
+    border-radius: 4px !important;
+    padding: 7px 12px !important;
+}
 .btn-primary-cstm {
     color: #fff;
     background-color: #337ab7 !important;
     border-color: #2e6da4;
     border-radius: 4px !important;
+    padding: 6px 12px !important;
 }
-
+.btn-primary-cstm .ui-button-icon-left {
+    left: 9%;
+    top: 46%;
+}
 .btn-primary-cstm:hover {
     color: #fff;
     background-color: #286090 !important;
     border-color: #204d74;
+}
+.excel-upload-cstm label span {
+    height: 31px;
+    padding: 6px 0px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    border-radius: 4px !important;
 }
 .wf-ber-thrld {
     background-color: #ff949d !important;
@@ -12990,13 +13070,13 @@ body .ui-datepicker table td > a.ui-state-active {
 	margin-bottom: 100px;
 	margin-right: 15px;
   }
-  .dashNumber {
+  .shadow-Box {
 	border-radius: 5px;
 	border: 1px solid #ddd;
 	padding: 10px;
 	margin: 5px 0;
   }
-  .dashNumber label {text-align: left;width: 100%;}
+  .shadow-Box label {text-align: left;width: 100%;}
   .mtop20 {margin-top: 20px;}
   .inline-block {    display: inline-block;    width: auto !important;}
   .ui-multiselect-item .ui-widget {    padding: 2px 3px 0px 2px;}
@@ -13039,4 +13119,73 @@ p-multiselect {padding: 0px;height: 26px !important;}
 p-multiselect .ui-multiselect {margin-top:0;padding:0;}
 p-multiselect .ui-multiselect .ui-multiselect-label {padding: 5px;margin:0 !important;}
 .ui-multiselect-close span.pi-times {float: right; }
+.wf-search-form input {
+    padding: 2px 2px 2px 6px !important;
+    font-size: 13px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}
+.wf-search-form .fa.fa-search:before {
+    font-size: 15px;
+}
+.wf-search-form .fa.fa-search {
+    margin-top: 3px;
+}
+/* css for sidenav */
+body .ui-panelmenu .ui-panelmenu-header > a {
+    padding: 4px !important;
+}
+mat-sidenav-content {
+    margin-left: 210px !important;
+}
+.ui-panelmenu .ui-menuitem-text {
+    font-size: 0.9em !important;
+}
+.ui-panelmenu .ui-menuitem-icon {
+    padding-right: 20px !important;
+}
+.app-sidenav-nav .title-logo {
+    width: 220px;
+}
+p-panelmenu .ui-panelmenu {
+    width: 220px !important;
+}
+/* ./css for sidenav */
+
+/*Css form multiselect input itemmaster*/
+
+.panel-style .p-multiselect .ui-multiselect-close {
+    margin-left: -9px;
+    margin-top: -7px !important;
+}
+
+.panel-style .p-multiselect .ui-multiselect-filter-container {
+    margin-left: 0px !important;
+    margin-top: 3px !important;
+}
+
+.panel-style .ui-multiselect .ui-multiselect-panel {
+    min-width: 100%;
+    margin-left: -15px;
+}
+
+.panel-style .ui-multiselect .ui-multiselect-trigger {
+    border: none !important;
+}
+
+.panel-style p-multiselect .ui-multiselect-filter-container {
+    margin-left: 6px !important;
+    margin-top: 5px !important;
+}
+
+
+.panel-style .pi {
+    margin-left: 10px;
+    margin-top: -16px;
+}
 

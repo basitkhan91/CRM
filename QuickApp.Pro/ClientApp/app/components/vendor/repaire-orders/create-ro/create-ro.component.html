@@ -152,15 +152,16 @@
 							<td>{{object?.email}}</td>
 							<td>{{object?.city}}</td>
 							<td>{{object?.stateOrProvince}}</td>
-							<td>
-								<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,object)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-								<!--<span data-toggle="modal" data-target="#viewvendor"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" (click)="openView(view,object)"><i class="fa fa-eye"></i></a> </span>-->
-								<!--<span data-toggle="modal" ><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="Contacts" (click)="openContactList(object)"><i class="fa fa-users"></i></a></span>-->
-								<i class="fa fa-users" mat-icon-button matTooltip="Contacts" (click)="openContactList(content,object)"></i>
-								<span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>
-								<span data-toggle="modal" data-target="#po-list"> <a href="#" class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="PO's"><i class="fa fa-list"></i></a> </span>
-								<button data-toggle="tooltip" (click)="gotoCreatePO(object)" class="btn btn-primary boxed-float-btn nobg" data-original-title="Create RO" matTooltip="Create RO"><i class="fa fa-plus clr-green"></i></button>
-							</td>
+                            <td>
+                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,object)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                <!--<span data-toggle="modal" data-target="#viewvendor"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" (click)="openView(view,object)"><i class="fa fa-eye"></i></a> </span>-->
+                                <!--<span data-toggle="modal" ><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="Contacts" (click)="openContactList(object)"><i class="fa fa-users"></i></a></span>-->
+                                <i class="fa fa-users" mat-icon-button matTooltip="Contacts" (click)="openContactList(content,object)"></i>
+                                <!--<span data-toggle="modal" data-target="#history"><a href="#" class="btn btn-success nobg" data-toggle="tooltip" title="" data-original-title="History"><i class="fa fa-history"></i></a></span>-->
+                                <button data-toggle="modal" (click)="openHist()" class="btn btn-primary nobg" data-original-title="History"><i class="fa fa-history"></i></button>
+                                <button data-toggle="modal" (click)="openHist()" class="btn btn-primary nobg" data-original-title="po-list"><i class="fa fa-list"></i></button>
+                                <button data-toggle="tooltip" (click)="gotoCreatePO(object)" class="btn btn-primary boxed-float-btn nobg" data-original-title="Create RO" matTooltip="Create RO"><i class="fa fa-plus clr-green"></i></button>
+                            </td>
 						</tr>
 
 
