@@ -33,6 +33,13 @@ export class VendorClassificationEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getVendorClassificationEndpoint());
             });
     }
+    getActiveVendorClassificationEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.actionsUrl+"Active", this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getActiveVendorClassificationEndpoint());
+            });
+    }
 
     getNewVendorClassificationEndpoint<T>(userObject: any): Observable<T> {
 

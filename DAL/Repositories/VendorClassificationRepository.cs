@@ -37,7 +37,21 @@ namespace DAL.Repositories
 
 
         }
+        public IEnumerable<VendorClassification> GetAllActiveVendorClassificationData()
+        {
+            try
+            {
+                var result = _appContext.VendorClassification.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null && c.IsActive==true).OrderBy(c => c.ClassificationName).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
 
+                return null;
+            }
+
+
+        }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

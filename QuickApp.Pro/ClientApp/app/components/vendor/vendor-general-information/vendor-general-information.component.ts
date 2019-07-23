@@ -314,6 +314,15 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     saveVendorClassificationDetails() {
         this.isSaving = true;
+        for (let i = 0; i < this.allVendorClassInfo.length; i++) {
+            let vendorName = this.allVendorClassInfo[i].classificationName;
+            if (vendorName.toLowerCase().localeCompare(this.vendorClassName.toLowerCase()) == 0) {
+                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                return;
+            }
+            else {
+            }
+        }
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -339,16 +348,16 @@ export class VendorGeneralInformationComponent implements OnInit {
     private loadDataVendorData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vendorclassificationService.getVendorClassificationEndpointList().subscribe(
+        this.vendorclassificationService.getActiveVendorClassificationEndpointList().subscribe(
             results => this.onVendorDataLoad(results[0]),
             error => this.onDataLoadFailed(error)
         );
     }
-    private onVendorDataLoad(getVendorClassificationList: VendorClassification[]) {
+    private onVendorDataLoad(getActiveVendorClassificationList: VendorClassification[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = getVendorClassificationList;
-        this.allVendorClassInfo = getVendorClassificationList;
+        this.dataSource.data = getActiveVendorClassificationList;
+        this.allVendorClassInfo = getActiveVendorClassificationList;
     }
     filterVendors(event) {
         this.vendorCollection = [];
