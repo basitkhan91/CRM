@@ -48,7 +48,11 @@
               Entry Date
             </div>
             <div class="ui-g-8">
-              <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.entryDate"></p-calendar>
+              <p-calendar
+                [showIcon]="true"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="sourcePublication.entryDate"
+              ></p-calendar>
             </div>
           </div>
 
@@ -90,8 +94,13 @@
               Publication ID
             </div>
             <div class="ui-g-8">
-                <input class="form-control"  #pubID="ngModel"  type="text"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.PublicationId">
-                
+              <input
+                class="form-control"
+                #pubID="ngModel"
+                type="text"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="sourcePublication.PublicationId"
+              />
             </div>
           </div>
           <div class="ui-g-12 ui-md-6">
@@ -99,7 +108,11 @@
               Next Review Date
             </div>
             <div class="ui-g-8">
-                <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.nextreviewDate"></p-calendar>
+              <p-calendar
+                [showIcon]="true"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="sourcePublication.nextreviewDate"
+              ></p-calendar>
             </div>
           </div>
           <!-- third -->
@@ -108,8 +121,14 @@
               Publication Description
             </div>
             <div class="ui-g-8">
-                <textarea pInputTextarea  class="form-control" #pubDescription="ngModel" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.description"></textarea>
-                
+              <textarea
+                pInputTextarea
+                class="form-control"
+                #pubDescription="ngModel"
+                type="text"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="sourcePublication.description"
+              ></textarea>
             </div>
           </div>
 
@@ -118,7 +137,13 @@
               Employee
             </div>
             <div class="ui-g-8">
-                <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.employee">
+              <input
+                class="form-control"
+                #pubID="ngModel"
+                type="text"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="sourcePublication.employee"
+              />
             </div>
           </div>
         </div>
@@ -130,7 +155,12 @@
             Publication Type
           </div>
           <div class="ui-g-8">
-            <p-dropdown [options]="types" class="pub-type-select" #pubType="ngModel" [(ngModel)]="sourcePublication.pubType"></p-dropdown>
+            <p-dropdown
+              [options]="types"
+              class="pub-type-select"
+              #pubType="ngModel"
+              [(ngModel)]="sourcePublication.pubType"
+            ></p-dropdown>
           </div>
         </div>
 
@@ -139,29 +169,28 @@
             Revision Date
           </div>
           <div class="ui-g-8">
-              <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.revisionDate"></p-calendar>
+            <p-calendar
+              [showIcon]="true"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.revisionDate"
+            ></p-calendar>
           </div>
         </div>
 
         <!-- fifth -->
 
         <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-2">File</div>
-          <div class="ui-g-10">
-            <p-fileUpload
-              name="myfile[]"
-              url="./upload.php"
-              multiple="multiple"
-              [showCancelButton]="false"
-            ></p-fileUpload>
-          </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
           <div class="ui-g-4">
             Author/Source/Directive
           </div>
           <div class="ui-g-8">
-              <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.ASD">
+            <input
+              class="form-control"
+              #pubID="ngModel"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.ASD"
+            />
           </div>
         </div>
 
@@ -170,7 +199,13 @@
             Sequence
           </div>
           <div class="ui-g-8">
-              <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.sequence">
+            <input
+              class="form-control"
+              #pubID="ngModel"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.sequence"
+            />
           </div>
         </div>
         <div class="ui-g-12 ui-md-6">
@@ -178,7 +213,13 @@
             Published By
           </div>
           <div class="ui-g-8">
-              <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.publishby">
+            <input
+              class="form-control"
+              #pubID="ngModel"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.publishby"
+            />
           </div>
         </div>
         <div class="ui-g-12 ui-md-6">
@@ -186,7 +227,13 @@
             Location
           </div>
           <div class="ui-g-8">
-              <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePublication.location">
+            <input
+              class="form-control"
+              #pubID="ngModel"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.location"
+            />
           </div>
         </div>
 
@@ -201,6 +248,7 @@
 
         <div class="ui-g-12 ui-md-12">
           <div class="ui-g-2">File</div>
+
           <div class="ui-g-10">
             <p-fileUpload
               name="myfile[]"
@@ -214,7 +262,8 @@
         <button
           class="btn btn-primary-cstm pull-right button-save"
           type="submit"
-                (click)="editItemCloseModel()" >
+          (click)="editItemCloseModel()"
+        >
           Save & Next
         </button>
       </div>
@@ -357,6 +406,23 @@
               </p-table>
             </div>
           </div>
+          <div class="col-md-12">
+            <button
+              class="btn btn-primary-cstm pull-left button-save"
+              type="submit"
+              (click)="changeOfTab('General')"
+            >
+              Previous
+            </button>
+
+            <button
+              class="btn btn-primary-cstm pull-right button-save"
+              type="submit"
+              (click)="changeOfTab('Atachapter')"
+            >
+              Save & Next
+            </button>
+          </div>
 
           <!-- ATA Chapter  -->
         </div>
@@ -476,6 +542,24 @@
               </p-table>
             </div>
           </div>
+        </div>
+
+        <div class="col-md-12">
+          <button
+            class="btn btn-primary-cstm pull-left button-save"
+            type="submit"
+            (click)="changeOfTab('AircraftInformation')"
+          >
+            Previous
+          </button>
+
+          <button
+            class="btn btn-primary-cstm pull-right button-save"
+            type="submit"
+            (click)="changeOfTab('Atachapter')"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
