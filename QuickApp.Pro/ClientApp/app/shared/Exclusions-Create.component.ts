@@ -166,8 +166,6 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         }, 0);
     }
     private ptnumberlistdata() {
-
-
         this.itemser.getPrtnumberslistList().subscribe(
             results => this.onptnmbersSuccessful(results[0])
             //error => this.onDataLoadFailed(error)

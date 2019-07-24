@@ -22,7 +22,7 @@ namespace DAL.Models
         public long WorkflowId { get; set; }
 
         [Required(ErrorMessage ="Charges Type is required")]
-        public byte WorkflowChargeTypeId { get; set; }
+        public Nullable<byte> WorkflowChargeTypeId { get; set; }
 
         //[Required(ErrorMessage = "Charges Description is required")]
         [MaxLength(40,ErrorMessage ="Charges Description must be less than 40 characters.")]

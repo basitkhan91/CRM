@@ -49,6 +49,21 @@ namespace QuickApp.Pro.Controllers
 
                 if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                 {
+                    var currentids = workFlow.Charges.Select(x => x.WorkflowChargesListId).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<WorkflowChargesList>()
+                        .Find(x => x.WorkflowId == workFlow.Charges.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.Charges.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.WorkflowChargesListId)
+                        );
+
+                    foreach (var charges in itemsToRemove)
+                    {
+                        charges.IsDelete = true;
+                    }
+
+                    workFlow.Charges.AddRange(itemsToRemove);
+
                     foreach (var charge in workFlow.Charges)
                     {
                         charge.CreatedDate = DateTime.Now;
@@ -56,9 +71,36 @@ namespace QuickApp.Pro.Controllers
                         charge.MasterCompanyId = 1;
                     }
                 }
+                else
+                {
+                    workFlow.Charges = UnitOfWork.Repository<WorkflowChargesList>()
+                                            .Find(x => x.WorkflowId == workFlow.WorkflowId &&
+                                                x.TaskId == workFlow.Charges.FirstOrDefault().TaskId
+                                            ).ToList();
+
+                    foreach (var charge in workFlow.Charges)
+                    {
+                        charge.IsDelete = true;
+                    }
+                }
 
                 if (workFlow.Directions != null && workFlow.Directions.Count > 0)
                 {
+                    var currentids = workFlow.Directions.Select(x => x.WorkflowDirectionId).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<WorkFlowDirection>()
+                        .Find(x => x.WorkflowId == workFlow.Directions.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.Directions.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.WorkflowDirectionId)
+                        );
+
+                    foreach (var direction in itemsToRemove)
+                    {
+                        direction.IsDelete = true;
+                    }
+
+                    workFlow.Directions.AddRange(itemsToRemove);
+
                     foreach (var direction in workFlow.Directions)
                     {
                         direction.CreatedDate = DateTime.Now;
@@ -66,9 +108,36 @@ namespace QuickApp.Pro.Controllers
                         direction.MasterCompanyId = 1;
                     }
                 }
+                else
+                {
+                    workFlow.Directions = UnitOfWork.Repository<WorkFlowDirection>()
+                                            .Find(x => x.WorkflowId == workFlow.Directions.FirstOrDefault().WorkflowId &&
+                                                x.TaskId == workFlow.Directions.FirstOrDefault().TaskId
+                                            ).ToList();
+
+                    foreach (var direction in workFlow.Directions)
+                    {
+                        direction.IsDelete = true;
+                    }
+                }
 
                 if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
                 {
+                    var currentids = workFlow.Equipments.Select(x => x.WorkflowEquipmentListId).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<WorkflowEquipmentList>()
+                        .Find(x => x.WorkflowId == workFlow.Equipments.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.Equipments.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.WorkflowEquipmentListId)
+                        );
+
+                    foreach (var equipment in itemsToRemove)
+                    {
+                        equipment.IsDelete = true;
+                    }
+
+                    workFlow.Equipments.AddRange(itemsToRemove);
+
                     foreach (var equipment in workFlow.Equipments)
                     {
                         equipment.CreatedDate = DateTime.Now;
@@ -76,9 +145,36 @@ namespace QuickApp.Pro.Controllers
                         equipment.MasterCompanyId = 1;
                     }
                 }
-                
+                else
+                {
+                    workFlow.Equipments = UnitOfWork.Repository<WorkflowEquipmentList>()
+                       .Find(x => x.WorkflowId == workFlow.Equipments.FirstOrDefault().WorkflowId &&
+                           x.TaskId == workFlow.Equipments.FirstOrDefault().TaskId
+                       ).ToList();
+
+                    foreach (var equipment in workFlow.Equipments)
+                    {
+                        equipment.IsDelete = true;
+                    }
+                }
+
                 if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
                 {
+                    var currentids = workFlow.Exclusions.Select(x => x.WorkflowExclusionId).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<WorkFlowExclusion>()
+                        .Find(x => x.WorkflowId == workFlow.Exclusions.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.Exclusions.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.WorkflowExclusionId)
+                        );
+
+                    foreach (var exclusion in itemsToRemove)
+                    {
+                        exclusion.IsDelete = true;
+                    }
+
+                    workFlow.Exclusions.AddRange(itemsToRemove);
+
                     foreach (var exclusion in workFlow.Exclusions)
                     {
                         exclusion.CreatedDate = DateTime.Now;
@@ -86,9 +182,36 @@ namespace QuickApp.Pro.Controllers
                         exclusion.MasterCompanyId = 1;
                     }
                 }
+                else
+                {
+                    workFlow.Exclusions = UnitOfWork.Repository<WorkFlowExclusion>()
+                     .Find(x => x.WorkflowId == workFlow.Exclusions.FirstOrDefault().WorkflowId &&
+                         x.TaskId == workFlow.Exclusions.FirstOrDefault().TaskId
+                     ).ToList();
+
+                    foreach (var exclusion in workFlow.Exclusions)
+                    {
+                        exclusion.IsDelete = true;
+                    }
+                }
 
                 if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                 {
+                    var currentids = workFlow.Expertise.Select(x => x.WorkflowExpertiseListId).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<WorkflowExpertiseList>()
+                        .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.Expertise.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.WorkflowExpertiseListId)
+                        );
+
+                    foreach (var expertise in itemsToRemove)
+                    {
+                        expertise.IsDelete = true;
+                    }
+
+                    workFlow.Expertise.AddRange(itemsToRemove);
+
                     foreach (var expert in workFlow.Expertise)
                     {
                         expert.CreatedDate = DateTime.Now;
@@ -96,10 +219,36 @@ namespace QuickApp.Pro.Controllers
                         expert.MasterCompanyId = 1;
                     }
                 }
+                else
+                {
+                    workFlow.Expertise = UnitOfWork.Repository<WorkflowExpertiseList>()
+                         .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId &&
+                             x.TaskId == workFlow.Expertise.FirstOrDefault().TaskId
+                         ).ToList();
 
+                    foreach (var expertise in workFlow.Expertise)
+                    {
+                        expertise.IsDelete = true;
+                    }
+                }
 
                 if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
                 {
+                    var currentids = workFlow.MaterialList.Select(x => x.WorkflowMaterialListId).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<WorkflowMaterial>()
+                        .Find(x => x.WorkflowId == workFlow.MaterialList.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.MaterialList.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.WorkflowMaterialListId)
+                        );
+
+                    foreach (var material in itemsToRemove)
+                    {
+                        material.IsDelete = true;
+                    }
+
+                    workFlow.MaterialList.AddRange(itemsToRemove);
+
                     foreach (var material in workFlow.MaterialList)
                     {
                         material.CreatedDate = DateTime.Now;
@@ -107,9 +256,36 @@ namespace QuickApp.Pro.Controllers
                         material.MasterCompanyId = 1;
                     }
                 }
+                else
+                {
+                    workFlow.MaterialList = UnitOfWork.Repository<WorkflowMaterial>()
+                         .Find(x => x.WorkflowId == workFlow.MaterialList.FirstOrDefault().WorkflowId &&
+                             x.TaskId == workFlow.MaterialList.FirstOrDefault().TaskId
+                         ).ToList();
+
+                    foreach (var material in workFlow.MaterialList)
+                    {
+                        material.IsDelete = true;
+                    }
+                }
 
                 if (workFlow.Measurements != null && workFlow.Measurements.Count > 0)
                 {
+                    var currentids = workFlow.Measurements.Select(x => x.WorkflowMeasurementId).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<WorkflowMeasurement>()
+                        .Find(x => x.WorkflowId == workFlow.Measurements.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.Measurements.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.WorkflowMeasurementId)
+                        );
+
+                    foreach (var measurement in itemsToRemove)
+                    {
+                        measurement.IsDelete = true;
+                    }
+
+                    workFlow.Measurements.AddRange(itemsToRemove);
+
                     foreach (var measurement in workFlow.Measurements)
                     {
                         measurement.CreatedDate = DateTime.Now;
@@ -117,14 +293,44 @@ namespace QuickApp.Pro.Controllers
                         measurement.MasterCompanyId = 1;
                     }
                 }
-                
+                else
+                {
+                    workFlow.Measurements = UnitOfWork.Repository<WorkflowMeasurement>()
+                         .Find(x => x.WorkflowId == workFlow.Measurements.FirstOrDefault().WorkflowId &&
+                             x.TaskId == workFlow.Measurements.FirstOrDefault().TaskId
+                         ).ToList();
+
+                    foreach (var measurement in workFlow.Measurements)
+                    {
+                        measurement.IsDelete = true;
+                    }
+                }
+
+
                 if (workFlow.Publication != null && workFlow.Publication.Count > 0)
                 {
+                    var currentids = workFlow.Publication.Select(x => x.Id).ToList();
+
+                    var itemsToRemove = UnitOfWork.Repository<Publications>()
+                        .Find(x => x.WorkflowId == workFlow.Publication.FirstOrDefault().WorkflowId &&
+                            x.TaskId == workFlow.Publication.FirstOrDefault().TaskId &&
+                            !currentids.Contains(x.Id)
+                        );
+
+                    foreach (var publication in itemsToRemove)
+                    {
+                        publication.IsDeleted = true;
+                    }
+
+                    workFlow.Publication.AddRange(itemsToRemove);
+
+
                     foreach (var publication in workFlow.Publication)
                     {
                         List<long> ids = new List<long>();
 
-                        if (publication.WorkflowPublicationDashNumbers != null) {
+                        if (publication.WorkflowPublicationDashNumbers != null)
+                        {
                             ids = publication.WorkflowPublicationDashNumbers.Select(x => x.WorkflowPublicationDashNumberId).ToList();
                         }
 
@@ -145,7 +351,18 @@ namespace QuickApp.Pro.Controllers
                         publication.MasterCompanyId = 1;
                     }
                 }
-                
+                else
+                {
+                    workFlow.Publication = UnitOfWork.Repository<Publications>()
+                         .Find(x => x.WorkflowId == workFlow.Publication.FirstOrDefault().WorkflowId &&
+                             x.TaskId == workFlow.Publication.FirstOrDefault().TaskId
+                         ).ToList();
+
+                    foreach (var publication in workFlow.Publication)
+                    {
+                        publication.IsDeleted = true;
+                    }
+                }
                 //var existingWorkflow = UnitOfWork.Repository<Workflow>().Find(workflow => workflow.WorkflowId == workFlow.WorkflowId).FirstOrDefault();
 
                 if (workFlow != null && workFlow.WorkflowId > 0)
@@ -183,7 +400,8 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpDelete("toggleState/{workFlowId}")]
-        public IActionResult toggleState(long workFlowId) {
+        public IActionResult toggleState(long workFlowId)
+        {
             var workFlow = UnitOfWork.Repository<Workflow>().Get(workFlowId);
             if (workFlow != null)
             {
@@ -469,5 +687,48 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+
+        #region Private Methods
+
+        private List<long> getAllTaskIds(Workflow workflow)
+        {
+            var ids = new List<long>();
+
+            if (workflow.Charges != null && workflow.Charges.Count > 0)
+            {
+                ids.AddRange(workflow.Charges.ToList().Select(x => x.TaskId).ToList());
+            }
+            if (workflow.Directions != null && workflow.Directions.Count > 0)
+            {
+                ids.AddRange(workflow.Directions.ToList().Select(x => x.TaskId.Value).ToList());
+            }
+            if (workflow.Equipments != null && workflow.Equipments.Count > 0)
+            {
+                ids.AddRange(workflow.Equipments.ToList().Select(x => x.TaskId).ToList());
+            }
+            if (workflow.Exclusions != null && workflow.Exclusions.Count > 0)
+            {
+                ids.AddRange(workflow.Exclusions.ToList().Select(x => x.TaskId.Value).ToList());
+            }
+            if (workflow.Expertise != null && workflow.Expertise.Count > 0)
+            {
+                ids.AddRange(workflow.Expertise.ToList().Select(x => x.TaskId).ToList());
+            }
+            if (workflow.MaterialList != null && workflow.MaterialList.Count > 0)
+            {
+                ids.AddRange(workflow.MaterialList.ToList().Select(x => x.TaskId.Value).ToList());
+            }
+            if (workflow.Measurements != null && workflow.Measurements.Count > 0)
+            {
+                ids.AddRange(workflow.Measurements.ToList().Select(x => x.TaskId).ToList());
+            }
+            if (workflow.Publication != null && workflow.Publication.Count > 0)
+            {
+                ids.AddRange(workflow.Publication.ToList().Select(x => x.TaskId).ToList());
+            }
+            return ids;
+        }
+
+        #endregion Private Methods
     }
 }
