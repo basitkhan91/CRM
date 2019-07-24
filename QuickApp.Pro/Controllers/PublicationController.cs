@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using AutoMapper;
 using DAL;
 using DAL.Models;
@@ -38,7 +39,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-
+       
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
@@ -83,6 +84,17 @@ namespace QuickApp.Pro.Controllers
                 publicationobject.ATAPositionZone = publicationViewModel.ATAPositionZone;
                 publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
                 publicationobject.IsActive = publicationViewModel.IsActive;
+                publicationobject.EntryDate = publicationViewModel.EntryDate;
+                publicationobject.revisionDate = publicationViewModel.revisionDate;
+                publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
+                publicationobject.ASD = publicationViewModel.ASD;
+                publicationobject.publishby = publicationViewModel.publishby;
+                publicationobject.location = publicationViewModel.location;
+                publicationobject.revision = publicationViewModel.revision;
+                publicationobject.verifiedby = publicationViewModel.verifiedby;
+                publicationobject.verifieddate = publicationViewModel.verifieddate;
+                publicationobject.employee = publicationViewModel.employee;
+                publicationobject.docpath = publicationViewModel.docpath;
                 publicationobject.CreatedDate = DateTime.Now;
                 publicationobject.UpdatedDate = DateTime.Now;
                 publicationobject.CreatedBy = publicationViewModel.CreatedBy;
@@ -150,5 +162,6 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
+
     }
 }

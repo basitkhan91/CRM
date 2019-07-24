@@ -120,10 +120,10 @@ export class CreateRoComponent implements OnInit {
 	}
 	getListByDetails() {
 		//debugger;
-		this.vendorList = [];
 		this.workFlowtService.getVendordataForPo(this.sourcePo).subscribe(data => {
 			let getlist = data[0];
-			if (getlist.length >= 0) {
+            if (getlist.length >= 0) {
+                this.vendorList = [];
 				for (let i = 0; i < getlist.length; i++) {
 					this.vendorList.push(getlist[i])
 				}
