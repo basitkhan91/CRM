@@ -117,6 +117,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     addRow(): void {
         var newRow = Object.assign({}, this.row);
+        var newRow = Object.assign({}, this.row);
         newRow.workflowChargesListId = "0";
         newRow.taskId = this.workFlow.taskId;
         newRow.currencyId = "0";
@@ -161,7 +162,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     // sum of the qty
     calculateQtySummation() {
-        var charges = this.workFlow.charges.filter(x => x.isDelete != true);
+        var charges = this.workFlow.charges.filter(x => x.isDelete != true );
         this.workFlow.qtySummation = charges.reduce((acc, x) => {
             return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
         }, 0);

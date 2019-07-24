@@ -618,12 +618,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.loadMasterCompanies();
         this.sourceClassification = new CustomerClassification();
         this.sourceClassification.isActive = true;
-        this.customerName = "";
+        this.classificationName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-
+        
     }
 
 
@@ -679,7 +679,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     editItemCloseModel() {
         for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
             let description = this.allcustomerclassificationInfo[i].description;
-            if (description.toLowerCase().indexOf(this.classificationName.toLowerCase()) == 0) {
+            if (description.toLowerCase().localeCompare(this.classificationName.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
                 return;
             }

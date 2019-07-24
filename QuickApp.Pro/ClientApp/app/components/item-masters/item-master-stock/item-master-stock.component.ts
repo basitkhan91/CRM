@@ -260,6 +260,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     portalURL: any = "";
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
+    selected: any[] = [];
     cols1: any[];
   //new code-- for purchase and sales calculation
     vendorPrice: any;
