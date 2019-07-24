@@ -345,6 +345,23 @@
               </p-table>
             </div>
           </div>
+          <div class="col-md-12">
+            <button
+              class="btn btn-primary-cstm pull-left button-save"
+              type="submit"
+              (click)="changeOfTab('General')"
+            >
+              Previous
+            </button>
+
+            <button
+              class="btn btn-primary-cstm pull-right button-save"
+              type="submit"
+              (click)="changeOfTab('Atachapter')"
+            >
+              Save & Next
+            </button>
+          </div>
 
           <!-- ATA Chapter  -->
         </div>
@@ -464,6 +481,24 @@
               </p-table>
             </div>
           </div>
+        </div>
+
+        <div class="col-md-12">
+          <button
+            class="btn btn-primary-cstm pull-left button-save"
+            type="submit"
+            (click)="changeOfTab('AircraftInformation')"
+          >
+            Previous
+          </button>
+
+          <button
+            class="btn btn-primary-cstm pull-right button-save"
+            type="submit"
+            (click)="changeOfTab('Atachapter')"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
