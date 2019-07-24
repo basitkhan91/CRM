@@ -107,8 +107,6 @@ export class CreatePublicationComponent implements OnInit {
 
   cols: any[];
   first: number = 0;
-  /** Create-publication ctor */
-  constructor() {}
   ngOnInit() {
     this.cols = [
       // { field: "id", header: "ID" },
