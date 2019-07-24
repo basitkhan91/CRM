@@ -16,7 +16,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TabMenuModule } from 'primeng/tabmenu';
 import { StepsModule } from 'primeng/steps';//Prime Ng Steps
- //Prime Ng Dailog
+//Prime Ng Dailog
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 import { GMapModule } from 'primeng/gmap';
@@ -35,55 +35,59 @@ import { ItemMasterCapabilitiesListComponent } from "../components/item-masters/
 import { AuditModule } from "../audit/audit.module";
 import { CardModule } from "primeng/card";
 import { KeyFilterModule } from "primeng/keyfilter";
+import { AircraftModelService } from "../services/aircraft-model/aircraft-model.service";
+import { AircraftModelEndpointService } from "../services/aircraft-model/aircraft-model-endpoint.service";
+import { AircraftManufacturerEndpointService } from "../services/aircraft-manufacturer/aircraftManufacturer-endpoint.service";
+import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
 
 @NgModule({
     imports: [
         KeyFilterModule,
         TabMenuModule,
         CardModule,
-		FlexLayoutModule,
-		FormsModule, ReactiveFormsModule,
-		QuickAppProMaterialModule,
-		TranslateModule,
-		CommonModule,
-		TableModule,
-		ButtonModule,
-		SelectButtonModule,
-		InputTextModule,
-		MultiSelectModule,
-		ItemmasterpagesRoutingModule,
-		InputSwitchModule,
-		CheckboxModule,
-		AutoCompleteModule,
-		GMapModule
-		, RadioButtonModule,
-		CalendarModule, StepsModule, BreadcrumbModule,
+        FlexLayoutModule,
+        FormsModule, ReactiveFormsModule,
+        QuickAppProMaterialModule,
+        TranslateModule,
+        CommonModule,
+        TableModule,
+        ButtonModule,
+        SelectButtonModule,
+        InputTextModule,
+        MultiSelectModule,
+        ItemmasterpagesRoutingModule,
+        InputSwitchModule,
+        CheckboxModule,
+        AutoCompleteModule,
+        GMapModule
+        , RadioButtonModule,
+        CalendarModule, StepsModule, BreadcrumbModule,
         DialogModule,
         AuditModule
-	],
-	declarations: [
-		ItemmasterPagesComponent,
-		ItemMasterListComponent, 
-		ItemMasterSetupComponent,
-		ItemMasterStockComponent,
-		ItemMasterNonStockComponent,
-		ItemMasterEquipmentComponent,
-		ItemMasterExchangeComponent,
-		ItemMasterLoanComponent,
-		ItemMasterCreateCapabilitiesComponent,
-		ItemMasterCapabilitiesListComponent
-
-		
-	],
-	providers: [
-
-	],
-	entryComponents: [
-
-	],
+    ],
+    declarations: [
+        ItemmasterPagesComponent,
+        ItemMasterListComponent,
+        ItemMasterSetupComponent,
+        ItemMasterStockComponent,
+        ItemMasterNonStockComponent,
+        ItemMasterEquipmentComponent,
+        ItemMasterExchangeComponent,
+        ItemMasterLoanComponent,
+        ItemMasterCreateCapabilitiesComponent,
+        ItemMasterCapabilitiesListComponent
 
 
+    ],
+    providers: [
+        AircraftModelService,
+        AircraftModelEndpointService,
+        AircraftManufacturerEndpointService,
+        AircraftManufacturerService
+    ],
+    entryComponents: [
+
+    ],
 })
 export class ItemmasterpagesModule {
-
 }

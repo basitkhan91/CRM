@@ -4,7 +4,6 @@
 
 .font {
     font-weight: 600;
-    background-color: white;
 }
 
 .add-color {
@@ -36,7 +35,7 @@
 }
 
 .add-margin2 {
-    margin-left: -15px;
+    margin-left: -6px;
     padding-top: 10px;
 }
 
@@ -61,6 +60,7 @@
 }
 
 p-multiselect {
+    width: 118px;
     height: 25px !important;
     padding: 1px 12px !important;
     font-size: 14px !important;
@@ -75,7 +75,7 @@ p-multiselect .ui-multiselect-filter-container {
 
 .add-margin6 {
     margin-top: 10px;
-    margin-left: 30px;
+    margin-left: 21px;
 }
 /*.panel-style .ui-multiselect-trigger-icon .ui-clickable .pi pi-caret-down .ui-state-default {
     border: none !important;
@@ -133,7 +133,42 @@ lbl {
 .lbl1 {
     width: 94px;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;   
+
+input[type=date]::-webkit-inner-spin-button,
+input[type=date]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0px;
+}
+
+.btn-search-new {
+    width: 34px;
+    height: 23px;
+    margin-left: -4px;
+    margin-top: 1px;
+}
+
+td {
+    text-align: center;
+}
+
+.upload {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
+.upload .fa {
+    margin-left: -2px;
+    margin-top: -2px;
+}
+
+.margin10 {
+    margin-left: -10px;
+}
+
+.dash-num {
+    padding-top: 10px;
 }
