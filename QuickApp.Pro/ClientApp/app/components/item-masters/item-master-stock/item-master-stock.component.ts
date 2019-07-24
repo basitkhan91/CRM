@@ -57,6 +57,11 @@ import { GlAccount } from '../../../models/GlAccount.model';
 import { VendorService } from '../../../services/vendor.service';
 import { DatePipe } from '@angular/common';
 import { MenuItem, SelectItem } from 'primeng/api';
+import { AircraftDashNumber } from '../../../models/dashnumber.model';
+import { AircraftType } from '../../../models/AircraftType.model';
+import { AircraftModel } from '../../../models/aircraft-model.model';
+import { AircraftModelService } from '../../../services/aircraft-model/aircraft-model.service';
+import { AircraftManufacturerService } from '../../../services/aircraft-manufacturer/aircraftManufacturer.service';
 
 
 @Component({
@@ -72,165 +77,165 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     disabled: boolean = false;
     view: boolean = false;
     viewed: boolean = false;
-  disableIntegrationSave: boolean;
-  currencySymbol: any;
-	bulist: any[] = [];
-	bulistovh: any[] = [];
-	departmentList: any[] = [];
-	departmentListovh: any[] = [];
-	divisionlist: any[] = [];
-	divisionlistovh: any[] = [];
-	maincompanylist: any[]=[];
-	allManagemtninfo: any[]=[];
-	selectdescription: any;
-	itemdescription: any[]=[];
-	showexportData: boolean;
+    disableIntegrationSave: boolean;
+    currencySymbol: any;
+    bulist: any[] = [];
+    bulistovh: any[] = [];
+    departmentList: any[] = [];
+    departmentListovh: any[] = [];
+    divisionlist: any[] = [];
+    divisionlistovh: any[] = [];
+    maincompanylist: any[] = [];
+    allManagemtninfo: any[] = [];
+    selectdescription: any;
+    itemdescription: any[] = [];
+    showexportData: boolean;
     showGeneralData: boolean = true;
-    showAircraftData: boolean = false;
-	showpurchaseData: boolean;
-	disableSaveglAccount: boolean;
-	glAccountCollection: any[];
-	enablePopupData: boolean = false;
-	display: boolean = false;
-	modelValue: boolean = false;
-	allCapesData: any[]=[];
-	enablePlus: boolean=false;
-	allAircraftsGet: any[]=[];
-	manfacturerAircraftmodelsarray: any[] = [];
-	overhaulAircraftmodelsarray: any[] = [];
-	distributionAircraftmodelsarray: any[] = [];
-	repairAircraftmodelsarray: any[] = [];
-	certificationarrayAircraftmodelsarray: any[] = [];
-	exchangeAircraftmodelsarray: any[] = [];
-	capesCollection: any[] = [];
-	selectedModels: any[] = [];
-	sourceUOM: UnitOfMeasure;
-	disableSavepartNumber: boolean;
-	disableSaveItemClassficationCode: boolean;
-	disableSaveItemGroup: boolean;
-	selectedItemGroup: any;
-	disableSavePurchaseUOM: boolean;
-	selectedPurchaseUOM: any;
-	disableSaveProvision: boolean;
-	selectedProvision: any;
-	disableSaveManufacturer: boolean;
-	selectedManufacturer: any;
-	disableSaveATAChapter: boolean;
-	selectedATAChapter: any;
-	disableSavePriority: boolean;
-	selectedPriority: any;
-	disableSaveStockUOM: boolean;
-	selectedStockUOM: any;
-	disableSaveConsume: boolean;
-	selectedConsume: any;
-	disableSaveSOLD: boolean;
-	selectedSOLD: any;
-	disableSaveIntegration: boolean;
-	selectedIntegration: any;
-	selectedItemCode: any;
-	descriptionCollection: any[];
-	selectedActionName: any;
-	showLable: boolean;
-	markUpListPriceAfterDiskValue: boolean;
-	markupListPriceValue: boolean = true;
-	calculateUsingPurchasePrice: any;
-	fixedSalesPriceValue: boolean = true;
-	collectionofItemMaster: any;
-	value: number;
-	partCollection: any[];
-	allPartnumbersInfo: any[];
-	name: string;
-	allglAccountInfo: any[];
-	glAccountcla: any[];
-	localmanufacturer: any[];
-	sourcemanufacturer: any = {};
-	allManufacturerInfo: any[];
-	allActions: any[];
-	provisionName: string;
+    showpurchaseData: boolean;
+    disableSaveglAccount: boolean;
+    glAccountCollection: any[];
+    enablePopupData: boolean = false;
+    display: boolean = false;
+    modelValue: boolean = false;
+    allCapesData: any[] = [];
+    enablePlus: boolean = false;
+    allAircraftsGet: any[] = [];
+    manfacturerAircraftmodelsarray: any[] = [];
+    overhaulAircraftmodelsarray: any[] = [];
+    distributionAircraftmodelsarray: any[] = [];
+    repairAircraftmodelsarray: any[] = [];
+    certificationarrayAircraftmodelsarray: any[] = [];
+    exchangeAircraftmodelsarray: any[] = [];
+    capesCollection: any[] = [];
+    selectedModels: any[] = [];
+    sourceUOM: UnitOfMeasure;
+    disableSavepartNumber: boolean;
+    disableSaveItemClassficationCode: boolean;
+    disableSaveItemGroup: boolean;
+    selectedItemGroup: any;
+    disableSavePurchaseUOM: boolean;
+    selectedPurchaseUOM: any;
+    disableSaveProvision: boolean;
+    selectedProvision: any;
+    disableSaveManufacturer: boolean;
+    selectedManufacturer: any;
+    disableSaveATAChapter: boolean;
+    selectedATAChapter: any;
+    disableSavePriority: boolean;
+    selectedPriority: any;
+    disableSaveStockUOM: boolean;
+    selectedStockUOM: any;
+    disableSaveConsume: boolean;
+    selectedConsume: any;
+    disableSaveSOLD: boolean;
+    selectedSOLD: any;
+    disableSaveIntegration: boolean;
+    selectedIntegration: any;
+    selectedItemCode: any;
+    descriptionCollection: any[];
+    selectedActionName: any;
+    showLable: boolean;
+    markUpListPriceAfterDiskValue: boolean;
+    markupListPriceValue: boolean = true;
+    calculateUsingPurchasePrice: any;
+    fixedSalesPriceValue: boolean = true;
+    collectionofItemMaster: any;
+    value: number;
+    partCollection: any[];
+    allPartnumbersInfo: any[];
+    name: string;
+    allglAccountInfo: any[];
+    glAccountcla: any[];
+    localmanufacturer: any[];
+    sourcemanufacturer: any = {};
+    allManufacturerInfo: any[];
+    allActions: any[];
+    provisionName: string;
     shiftValues: any[] = [];
     modelValues: any[] = [];
     selectedModelValues: any;
-	allaircraftInfo: any[];
-	allAircraftinfo: any[];
-	selectedAircraftTypes: any;
-	allWarninginfo: any[];
-	localunit: any[];
-	unitName: string;
-	none: any;
-	allCountryInfo: any[];
-	allCurrencyInfo: any[];
-	localpriority: any[];
-	priorityName: string;
-	itemclaColl: any[];
-	integrationName: string;
-	localintegration: any[];
-	allIntegrationInfo: Integration[];
-	localatamain: any[];
-	ataChapterName: string;
-	localprovision: any[] = [];
-	localgroup: any[] = [];
+    allaircraftInfo: any[];
+    allAircraftinfo: any[];
+    selectedAircraftTypes: any;
+    allWarninginfo: any[];
+    localunit: any[];
+    unitName: string;
+    none: any;
+    allCountryInfo: any[];
+    allCurrencyInfo: any[];
+    localpriority: any[];
+    priorityName: string;
+    itemclaColl: any[];
+    integrationName: string;
+    localintegration: any[];
+    allIntegrationInfo: Integration[];
+    localatamain: any[];
+    ataChapterName: string;
+    localprovision: any[] = [];
+    localgroup: any[] = [];
     allProvisonInfo: Provision[];
     // New Code -- Jyotsna
-    itemQuantity = []; 
+    itemQuantity = [];
+    // 
     items1: MenuItem[];
     activeItem: MenuItem;
-	itemGroupName: string;
-	partNumber: any;
-	itemType: any;
-	description: any;
-	item_Name: any;
-	memo: any = "";
-	createdBy: any = "";
-	updatedBy: any = "";
-	createdDate: any = "";
-	updatedDate: any = "";
-	auditHisory: AuditHistory[];
-	@ViewChild(MatPaginator) paginator: MatPaginator;
-	@ViewChild(MatSort) sort: MatSort;
-	cols: any[];
-	selectedColumns: any[];
-	localNameCollection: any[] = [];
-	localtypeCollection: any[] = [];
-	selectedAircraftDataModels: any[] = [];
-	Weight: any;
-	classnamecolle: any[] = [];
-	classificationtypecolle: any[] = [];
-	displayedColumns = ['itemclassificationId', 'itemclassificationCode', 'description', 'memo'];
-	dataSource: MatTableDataSource<ItemClassificationModel>;
-	allitemclassificationInfo: ItemClassificationModel[];
-	allComapnies: MasterCompany[] = [];
-	allitemgroupobjInfo: Itemgroup[];
-	private isSaving: boolean;
-	public sourceAction: any = {};
-	public sourceActions: any = {};
-	allATAMaininfo: ATAChapter[];
-	allPriorityInfo: Priority[];
-	allUnitOfMeasureinfo: any[];
-	allPurchaseUnitOfMeasureinfo: any[];
-	allStockUnitOfMeasureinfo: any[];
-	allConsumeUnitOfMeasureinfo: any[];
-	allSOLDUnitOfMeasureinfo: any[];
-	private bodyText: string;
-	loadingIndicator: boolean;
-	closeResult: string;
-	selectedColumn: ItemClassificationModel[];
-	data: boolean;
-	title: string = "Create";
-	id: number;
-	errorMessage: any;
-	Active: string = "Active";
-	modal: NgbModalRef;
-	itemName: string;
-	className: any;
-	itemTypeName: any;
-	filteredBrands: any[];
-	localCollection: any[] = [];
-	sourceItemMaster: any = {};
-	isEnabeCapes: boolean = false;
-	private isEditMode: boolean = false;
-	private isDeleteMode: boolean = false;	
-	purchaseData: boolean = false;
-	exportData: boolean = false;
+    itemGroupName: string;
+    partNumber: any;
+    itemType: any;
+    description: any;
+    item_Name: any;
+    memo: any = "";
+    createdBy: any = "";
+    updatedBy: any = "";
+    createdDate: any = "";
+    updatedDate: any = "";
+    auditHisory: AuditHistory[];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    cols: any[];
+    selectedColumns: any[];
+    localNameCollection: any[] = [];
+    localtypeCollection: any[] = [];
+    selectedAircraftDataModels: any[] = [];
+    Weight: any;
+    classnamecolle: any[] = [];
+    classificationtypecolle: any[] = [];
+    displayedColumns = ['itemclassificationId', 'itemclassificationCode', 'description', 'memo'];
+    dataSource: MatTableDataSource<ItemClassificationModel>;
+    allitemclassificationInfo: ItemClassificationModel[];
+    allComapnies: MasterCompany[] = [];
+    allitemgroupobjInfo: Itemgroup[];
+    private isSaving: boolean;
+    public sourceAction: any = {};
+    public sourceActions: any = {};
+    allATAMaininfo: ATAChapter[];
+    allPriorityInfo: Priority[];
+    allUnitOfMeasureinfo: any[];
+    allPurchaseUnitOfMeasureinfo: any[];
+    allStockUnitOfMeasureinfo: any[];
+    allConsumeUnitOfMeasureinfo: any[];
+    allSOLDUnitOfMeasureinfo: any[];
+    private bodyText: string;
+    loadingIndicator: boolean;
+    closeResult: string;
+    selectedColumn: ItemClassificationModel[];
+    data: boolean;
+    title: string = "Create";
+    id: number;
+    errorMessage: any;
+    Active: string = "Active";
+    modal: NgbModalRef;
+    itemName: string;
+    className: any;
+    itemTypeName: any;
+    filteredBrands: any[];
+    localCollection: any[] = [];
+    sourceItemMaster: any = {};
+    isEnabeCapes: boolean = false;
+    private isEditMode: boolean = false;
+    private isDeleteMode: boolean = false;
+    purchaseData: boolean = false;
+    exportData: boolean = false;
     showInput: boolean;
     activeIndex: number;
     descriptionbyPart: any[] = [];
@@ -260,39 +265,42 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     portalURL: any = "";
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
-    selected: any[] = [];
     cols1: any[];
-  //new code-- for purchase and sales calculation
+    ataMainchapter: ATAChapter[]
+    showAircraftData: boolean = false;
+    showAtachapter: boolean = false;
+    //new code-- for purchase and sales calculation
+
     vendorPrice: any;
     purchaseDiscount: any;
     newFields = {
-        fxrate : "",
-        vendorPrice : "",
-        purchaseDiscount : "",
-        purchaseAmount : "",
-        lastDate : "",
-        DiscountAmount : "",
-        fxrate1 : "",
-        fpa : "",
+        fxrate: "",
+        vendorPrice: "",
+        purchaseDiscount: "",
+        purchaseAmount: "",
+        lastDate: "",
+        DiscountAmount: "",
+        fxrate1: "",
+        fpa: "",
         lastflat: "",
-        Markuppercent : "",
-        markup : "",
-        lastmarkup : "",
-        baseSaleprice : "",
+        Markuppercent: "",
+        markupAmount: "",
+        lastmarkup: "",
+        baseSaleprice: "",
         saleDiscount: "",
         sda: "",
-        lastsales : "",
-        unitPrice : "",        
+        lastsales: "",
+        unitPrice: "",
 
     }
 
-    constructor(public integrationService: IntegrationService,private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+    constructor(private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
         public currency: CurrencyService,
-      public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
-     
+
 
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
@@ -314,92 +322,91 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             if (this.sourceItemMaster.ataChapterId) {
                 this.getATASubChapterData(this.sourceItemMaster.ataChapterId);
             }
-			this.sourceItemMaster.expirationDate = this.itemser.listCollection.expirationDate;
-			if (this.sourceItemMaster.manufacturer) {
-				this.sourceItemMaster.manufacturerId = this.itemser.listCollection.manufacturer.manufacturerId;
-			}
-			if (this.sourceItemMaster.salesMarkUpOnPurchaseListPriceActive == true) {
+            this.sourceItemMaster.expirationDate = this.itemser.listCollection.expirationDate;
+            if (this.sourceItemMaster.manufacturer) {
+                this.sourceItemMaster.manufacturerId = this.itemser.listCollection.manufacturer.manufacturerId;
+            }
+            if (this.sourceItemMaster.salesMarkUpOnPurchaseListPriceActive == true) {
 
-				this.markupListPrice();
-			}
-			else {
-				this.markUpListPriceAfterDisk();
-			}			
+                this.markupListPrice();
+            }
+            else {
+                this.markUpListPriceAfterDisk();
+            }
 
-			if (this.sourceItemMaster.salesIsFixedPrice == true) {
-				this.onFixedSalesPrice()
-			}
-			else { this.onCalculatedUsingPurchasePrice() }
-			if (this.sourceItemMaster.purchaseLastListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceDate == undefined || this.sourceItemMaster.purchaseLastListPriceDate == "undefined") {
-				this.sourceItemMaster.purchaseLastListPriceDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.purchaseLastListPriceDate = new Date(this.sourceItemMaster.purchaseLastListPriceDate);
-			}
-			if (this.sourceItemMaster.purchaseLastDiscountPercentDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastDiscountPercentDate == undefined || this.sourceItemMaster.purchaseLastDiscountPercentDate == "undefined") {
-				this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date(this.sourceItemMaster.purchaseLastDiscountPercentDate);
-			}
-			if (this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == undefined || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "undefined") {
-				this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date(this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate);
-			}
-			if (this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == undefined || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "undefined") {
-				this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date(this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate);
-			}
-			if (this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == undefined || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "undefined") {
-				this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date(this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate);
-			}
-			if (this.sourceItemMaster.salesLastBaselineSalesPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastBaselineSalesPriceDate == undefined || this.sourceItemMaster.salesLastBaselineSalesPriceDate == "undefined") {
-				this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date(this.sourceItemMaster.salesLastBaselineSalesPriceDate);
-			}
-			if (this.sourceItemMaster.salesLastSalesDiscountPercentDate == "0001-01-01T00:00:00") {
-				this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date(this.sourceItemMaster.salesLastSalesDiscountPercentDate);
-			}
-			if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
-				this.sourceItemMaster.expirationDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-			}
-			if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
-				this.sourceItemMaster.expirationDate = new Date();
-			}
-			else {
-				this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-			}
-			if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
+            if (this.sourceItemMaster.salesIsFixedPrice == true) {
+                this.onFixedSalesPrice()
+            }
+            else { this.onCalculatedUsingPurchasePrice() }
+            if (this.sourceItemMaster.purchaseLastListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceDate == undefined || this.sourceItemMaster.purchaseLastListPriceDate == "undefined") {
+                this.sourceItemMaster.purchaseLastListPriceDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.purchaseLastListPriceDate = new Date(this.sourceItemMaster.purchaseLastListPriceDate);
+            }
+            if (this.sourceItemMaster.purchaseLastDiscountPercentDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastDiscountPercentDate == undefined || this.sourceItemMaster.purchaseLastDiscountPercentDate == "undefined") {
+                this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date(this.sourceItemMaster.purchaseLastDiscountPercentDate);
+            }
+            if (this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == undefined || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "undefined") {
+                this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date(this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate);
+            }
+            if (this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == undefined || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "undefined") {
+                this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date(this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate);
+            }
+            if (this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == undefined || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "undefined") {
+                this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date(this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate);
+            }
+            if (this.sourceItemMaster.salesLastBaselineSalesPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastBaselineSalesPriceDate == undefined || this.sourceItemMaster.salesLastBaselineSalesPriceDate == "undefined") {
+                this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date(this.sourceItemMaster.salesLastBaselineSalesPriceDate);
+            }
+            if (this.sourceItemMaster.salesLastSalesDiscountPercentDate == "0001-01-01T00:00:00") {
+                this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date(this.sourceItemMaster.salesLastSalesDiscountPercentDate);
+            }
+            if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
+                this.sourceItemMaster.expirationDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
+            }
+            if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
+                this.sourceItemMaster.expirationDate = new Date();
+            }
+            else {
+                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
+            }
+            if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
                 this.sourceItemMaster.salesLastSalePriceDate = new Date();
                 this.sourceItemMaster.salesLastSalePriceDate = Date.now();
                 //this.sourceItemMaster.salesLastSalePriceDate.setValue(new Date().toISOString());
-			}
-			else {
-				this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
+            }
+            else {
+                this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
             }
 
             //adding for Currency
-            if (this.sourceItemMaster.purchaseCurrencyId)
-            {
+            if (this.sourceItemMaster.purchaseCurrencyId) {
                 this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
             }
 
-		}
+        }
 
 
     }
@@ -431,20 +438,67 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }];
 
     itemQuantitys = [];
+    colst: any[];
+    sales: any[];
+    atasub: any[];
+    sales2: any[];
+    salesDash: any[];
+    modalDash: any[];
+    currentDashNumberType: AircraftDashNumber;
+    aircraftManufacturerList: AircraftType[];
+    aircraftModelsList: AircraftModel[];
+    LoadAircraftmanufacturer: any[] = [];
     ngOnInit(): void {
+        this.modalDash = [
+            { field: 'aircraft', header: 'Aircraft' },
+            { field: 'model', header: 'Model' },
+        ];
+        this.colst = [
+            { field: 'aircraft', header: 'Aircraft' },
+            { field: 'model', header: 'Model' },
+            { field: 'dashnumber', header: 'DashNumber' },
+            { field: 'memo', header: 'Memo' },
+
+        ];
+        this.salesDash = [
+            { aircraft: '51%', model: '40%', dashnumber: '$54,406.00' },
+            { aircraft: '51%', model: '40%', dashnumber: '$54,406.00' },
+        ];
+        this.sales = [
+            { aircraft: '51%', model: '40%', dashnumber: '$54,406.00', memo: 'memo' },
+        ];
+        this.atasub = [
+            { field: 'atachapter', header: 'ATA Chapter' },
+            { field: 'atasubchapter', header: 'ATA Sub-Chapter' }
+        ];
+        this.sales2 = [
+            { atachapter: 'new', atasubchapter: 'new' }
+        ];
 
         // Created by Jyotsna
+        this.atamain.getATAMain().subscribe(Atachaptername => {
+            this.ataMainchapter = Atachaptername[0];
+            console.log(this.ataMainchapter);
+        })
+        this.currentDashNumberType = new AircraftDashNumber();
+        this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
+            this.aircraftManufacturerList = aircraftManufacturer[0];
+            for (let i = 0; i < this.aircraftManufacturerList.length; i++) {
+                this.LoadAircraftmanufacturer.push(
+                    { value: this.aircraftManufacturerList[i].aircraftTypeId, label: this.aircraftManufacturerList[i].description },
+                );
+            }
+        });
         this.itemQuantity = Array(10).fill(1).map((x, i) => i + 1);
         this.itemQuantitys = Array(6).fill(1).map((x, i) => i + 1);
         this.items1 = [
             { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
             { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
-            { label: 'ATA Chapter', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
+            { label: 'ATA Chapter', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAtachapter() },
             { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
-            { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },            
+            { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },
         ];
         this.addFieldValue();
-        
 
 
         this.loadManagementdata();
@@ -485,8 +539,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-
- 
 
     // Form array for capability//
     get mfgFormArray(): FormArray {
@@ -1187,8 +1239,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.allCurrencyInfo = getCreditTermsList;
 
-        if (this.itemser.listCollection != null && this.itemser.isEditMode == true)
-        {
+        if (this.itemser.listCollection != null && this.itemser.isEditMode == true) {
             //adding for Currency
             if (this.sourceItemMaster.purchaseCurrencyId) {
                 this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
@@ -1343,10 +1394,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.shiftValues.push(
                         { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
                     );
-            }          
+            }
 
             //Adding
-               let valAirCraft = [];
+            let valAirCraft = [];
             //we are Passing Customer Id for getting Edit Data and make it check 
             this.itemser.getAircaftManafacturerList(this.sourceItemMaster.itemMasterId)
                 .subscribe(results => {
@@ -1424,7 +1475,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             var manufacturer = this.shiftValues.filter(function (manufacturerParam) {
                 return manufacturerParam.value == models.aircraftTypeId;
             })[0].label;
-            
+
             this.allAircraftinfo.push({ value: models.aircraftModelId, label: models.modelName, aircraftManufacturer: manufacturer });
         }
 
@@ -2618,14 +2669,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.itemClassificationCode = this.itemName;
-            this.sourceAction.description = this.sourceItemMaster.itemClassificationId;
             this.sourceAction.masterCompanyId = 1;
 
             if (this.selectedAircraftTypes != null) //separting Array which is having ","
             {
                 this.sourceAction.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
             }
-            this.itemser.newItemMaster(this.sourceAction).subscribe(
+            this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
             this.activeIndex = 0;
@@ -2803,7 +2853,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //    });
         //}
         //if (!ischange) {
-            
+
         //}
         //console.log(this.selectedModels);
 
@@ -3522,7 +3572,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
-  
+
 
     saveovhinfo(partid, itemid, data) {
 
@@ -3642,15 +3692,24 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
-
+    // Tabs content display logic -- jyotsna
     moveGeneralInfromation() {
         this.showGeneralData = true;
         this.showpurchaseData = false;
         this.showexportData = false;
         this.showAircraftData = false;
+        this.showAtachapter = false;
     }
     moveAircraftInformation() {
         this.showAircraftData = true;
+        this.showGeneralData = false;
+        this.showpurchaseData = false;
+        this.showexportData = false;
+        this.showAtachapter = false;
+    }
+    moveAtachapter() {
+        this.showAtachapter = true;
+        this.showAircraftData = false;
         this.showGeneralData = false;
         this.showpurchaseData = false;
         this.showexportData = false;
@@ -3660,6 +3719,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showGeneralData = false;
         this.showexportData = false;
         this.showAircraftData = false;
+        this.showAtachapter = false;
     }
 
     moveExportInformation() {
@@ -3667,6 +3727,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showGeneralData = false;
         this.showexportData = true;
         this.showAircraftData = false;
+        this.showAtachapter = false;
     }
 
     moveExportInformation1() {
@@ -3827,8 +3888,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.description = this.integrationName;
             this.sourceAction.masterCompanyId = 1;
             this.itemser.savemanufacutrer(this.sourcemanufacturer).subscribe(
-                data =>
-                {
+                data => {
                     this.sourceItemMaster.manufacturerId = data.manufacturerId;
                     this.manufacturerdata()
                 })
@@ -3861,8 +3921,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    Manufacturer(content)
-    {
+    Manufacturer(content) {
         this.sourcemanufacturer.name = '';
         this.isEditMode = false;
         this.isDeleteMode = false;
@@ -4185,25 +4244,20 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
     //adding for 
-    currencySymbolSelection(currencyid)
-    {
-        if (currencyid)
-        {
-            for (let i = 0; i < this.allCurrencyInfo.length;i++)
-            {
-                if (currencyid == this.allCurrencyInfo[i].currencyId)
-                {
+    currencySymbolSelection(currencyid) {
+        if (currencyid) {
+            for (let i = 0; i < this.allCurrencyInfo.length; i++) {
+                if (currencyid == this.allCurrencyInfo[i].currencyId) {
                     this.currencySymbol = this.allCurrencyInfo[i].symbol;
                 }
             }
-            
+
         }
     }
 
     //Add Intehration Model for Add Multi
 
-    addIntegrationModelSingle(integration)
-    {
+    addIntegrationModelSingle(integration) {
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -4275,22 +4329,59 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    // New code for loading dropdown
+    LoadValues: any[] = [];
+    aircraftManufacturerChange(aircraftManufacturerId) {
+        this.aircraftModelService.getAircraftModelListByManufactureId(aircraftManufacturerId).subscribe(dashNumbers => {
+            this.aircraftModelsList = dashNumbers[0];
+            for (let i = 0; i < this.aircraftModelsList.length; i++) {
+                this.LoadValues.push(
+                    { value: this.aircraftModelsList[i].aircraftModelId, label: this.aircraftModelsList[i].modelName },
+                );
+            }
+        });
+        this.disables = true;
+        this.disable = true;
+        this.view = false;
+    }
+    addDashnumber() {
+        this.viewCheck = false;
+        if (this.aircraftModelsList.length > 0) {
+            this.disabled = true;
+        }
+        else {
+            this.disabled = false;
+        }
+    }
     check($event) {
         this.disables = true;
         this.disable = true;
         this.view = false;
     }
     Adddash($event) {
-        this.disabled = true;
+        this.disabled = false;
     }
     onToggle(e) {
         this.disables = true;
         this.disable = true;
         this.view = e.target.checked;
     }
+    dashdisable: boolean = false;
+    viewDash: boolean = true;
+    viewCheck: boolean = true;
+
+    onDashToggle(e) {
+        this.disabled = false;
+        this.dashdisable = true;
+
+    }
     onToggled($event) {
         this.disable = false;
         this.viewed = true;
+    }
+    schematic = false;
+    onSchematic(e) {
+        this.schematic = e.target.checked;
     }
     //new code for calculation in purchase and sales
     fieldArray: any = [];
@@ -4323,33 +4414,25 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     unitSalePrice: number;
     percentValue(field) {
         if (field.vendorPrice && field.purchaseDiscount && !field.Markuppercent) {
-            const cal = field.vendorPrice * field.purchaseDiscount            
-            field.purchaseAmount = cal;
+            field.purchaseAmount = field.vendorPrice * field.purchaseDiscount
         }
-        if (field.purchaseAmount) {          
-            const disc = field.purchaseAmount - field.vendorPrice
-            field.purchaseDiscountAmount = disc;
+        if (field.purchaseAmount) {
+            field.purchaseDiscountAmount = field.purchaseAmount - field.vendorPrice
+        }
+        if (field.Markuppercent && field.vendorPrice) {
+            field.markupAmount = field.vendorPrice * field.Markuppercent;
         }
     }
-        
-       
-        //if (this.vendorPrice && this.purchaseDiscount && !this.Markuppercent) {
-        //    this.purchaseAmount = vendor * pd;    
-        //}
-        //if (this.purchaseAmount) {
-        //    this.purchaseDiscountAmount = this.purchaseAmount - vendor ;            
-        //}
-        //if (this.Markuppercent && this.vendorPrice) {
-        //    this.markupAmount = vendor * this.Markuppercent;           
-        //}
-    
-    //salePercent(sale, sd) {
-    //    if (this.baseSaleprice && this.saleDiscount) {
-    //        this.saleDiscountAmount = sale * sd;           
-    //    }
-    //    if (this.saleDiscountAmount && this.baseSaleprice) {
-    //        this.unitSalePrice = this.saleDiscountAmount - sale;            
-    //    }
-    //}
+    salePercent(field) {
+        if (field.baseSaleprice && field.saleDiscount) {
+            field.saleDiscountAmount = field.baseSaleprice * field.saleDiscount
+        }
+        if (field.saleDiscountAmount && field.baseSaleprice) {
+            field.unitSalePrice = field.saleDiscountAmount - field.baseSaleprice
+        }
+    }
+
+
+
 }
 

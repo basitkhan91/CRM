@@ -1,5 +1,4 @@
 ﻿<div class="x_content add-customer-work">
-
 	<div class="form-group row form-bg">
 		<label class="control-label col-sm-2">Item Type </label>
 		<div class="col-sm-8 mleft25">
@@ -823,217 +822,319 @@
 					<div class="card">
 						<div class="col-sm-12 font-padding">
 							<div class="col-sm-2">
-								PN: <span style="color:red">PN12345</span>
+								PN: <span style="color:red"></span>
 							</div>
 							<div class="col-sm-3">
-								PN Description: <span style="color:red">AirBustype</span>
+								PN Description: <span style="color:red"></span>
 							</div>
 							<div class="col-sm-3">
-								Alternate PN: <span style="color:red">PN12345</span>
+								Alternate PN: <span style="color:red"></span>
 							</div>
 							<div class="col-sm-3">
-								Manufacturer: <span style="color:red">Aeroexchange</span>
+								Manufacturer: <span style="color:red"></span>
 							</div>
 						</div>
-						<div class="col-sm-12 font">
-							<div class="col-sm-7 add-color1">
-								<div class="col-sm-12">
+						<div class="col-sm-12">
+							<div class="col-sm-6 ">
+								<div class="col-sm-12 add-color1">
+									<b class="add-name font">Add Dash Number</b>
 									<br />
-									<span class="add-name">Add Dash Numbers</span>
-									<br />
-								</div>
-								<div class="col-sm-12">
-									<div class="col-sm-3 add-margin">
-										<label>Aircraft</label>
-										<br />
-									</div>
-									<div class="col-sm-4 add-margin1" *ngIf="disable">
-										<label *ngIf="!view">Model</label>
-										<label *ngIf="view">Memo</label>
-										<label>
-											<input type="checkbox" data-md-icheck
-												   (change)="onToggle($event)" />Unknown
-										</label>
-										<br />
-									</div>
-									<div class="col-sm-5 add-margin3" *ngIf="disabled">
-										<label>DashNumber</label>
-										<label>
-											<input type="checkbox" data-md-icheck
-												   (change)="onToggled($event)" />Unknown
-										</label>
-										<br />
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<div class="col-sm-3 inline-block display-flex">
-										<select class="select-option" (change)="check($event)">
-											<option>--Select--</option>
-											<option>Air Bus</option>
-											<option>Boeing</option>
-											<option>Air Bus</option>
-										</select>
-										<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
-										   (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
-									</div>
-									<div class="col-sm-3 inline-block display-flex" *ngIf="disable">
-										<p-multiSelect *ngIf="!view" class="panel-style" [options]="models"
-													   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels"
-													   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-										<a href="#" *ngIf="!view" data-toggle="modal" data-target="#addCustomerClass"
-										   class="add-icon" (click)="provisionope(contents)">
-											<i class="fa fa-plus"></i>
-										</a>
-										<textarea *ngIf="view" rows="1" cols="6"></textarea>
-									</div>
-
-									<div class="col-sm-3 inline-block display-flex" *ngIf="viewed">
-										<textarea rows="1" cols="6"></textarea>
-									</div>
-									<div class="col-sm-3" *ngIf="view">
-										<button type="button" class="btn btn-primary">
-											<i class="pi pi-plus">Add</i>
-										</button>
-									</div>
-									<div class="col-sm-3" *ngIf="viewed">
-										<button type="button" class="btn btn-primary">
-											<i class="pi pi-plus">Add</i>
-										</button>
-									</div>
-									<div class="col-sm-3" *ngIf="disabled">
-										<button type="button" class="btn btn-primary">Add Dash Number</button>
-									</div>
-								</div>
-								<br />
-							</div>
-							<div class="col-sm-5 add-color" style="margin-left: 2px;">
-								<div class="add-color">
 									<div class="col-sm-12">
-										<br />
-										<span class="add-name">Add ATA Chapters</span>
-										<br />
-									</div>
-									<div class="col-sm-12">
-										<div class="col-sm-3 add-margin2">
-											<label>ATA Chapter</label>
+										<div class="col-sm-3 add-margin">
+											<label>Aircraft</label>
 											<br />
 										</div>
-										<div class="col-sm-9 add-margin4">
-											<label style="width:80px;">ATA Subchapter</label>
+										<div class="col-sm-4 add-margin2" *ngIf="disable">
+											<label *ngIf="!view">Model</label>
+											<label *ngIf="view">Memo</label>
+											<label *ngIf="viewCheck">
+												<input type="checkbox" data-md-icheck
+													   (change)="onToggle($event)" />Unknown
+											</label>
+											<br />
+										</div>
+										<div class="col-sm-4 dash-num" *ngIf="disabled">
+											<label *ngIf="!viewDash">Dash Number</label>
+											<label *ngIf="viewCheck2">
+												<input type="checkbox" data-md-icheck
+													   (change)="onDashToggle($event)" />Unknown
+											</label>
 											<br />
 										</div>
 									</div>
 									<div class="col-sm-12">
-										<div class="col-sm-3  inline-block display-flex">
-											<select class="select-option">
-												<option>--Select--</option>
-												<option>General</option>
-												<option>x</option>
-												<option>y</option>
+										<div class="col-sm-3 inline-block display-flex">
+											<select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+												<option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
 											</select>
-											<a href="#" data-toggle="modal" data-target="#addCustomerClass"
-											   class="add-icon" (click)="provisionope(contents)">
+											<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
+											   (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
+										</div>
+										<div class="col-sm-5 inline-block display-flex" *ngIf="disable">
+											<p-multiSelect *ngIf="!view" class="panel-style" [options]="LoadValues"
+														   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels"
+														   [panelStyle]="{minWidth:'12em'}" (onChange)="addDashnumber(e)"></p-multiSelect>
+											<a href="#" *ngIf="!view" data-toggle="modal" data-target="#addCustomerClass"
+											   class="add-icon">
 												<i class="fa fa-plus"></i>
 											</a>
+											<textarea *ngIf="view" rows="1" cols="12"></textarea>
+										</div>
+
+										<!--<div class="col-sm-3 inline-block display-flex" *ngIf="viewed">
+											<textarea rows="1" cols="6"></textarea>
+										</div>
+										<div class="col-sm-3" *ngIf="view">
+											<button type="button" class="btn btn-primary">
+												<i class="pi pi-plus">Add</i>
+											</button>
+										</div>
+										<div class="col-sm-3" *ngIf="viewed">
+											<button type="button" class="btn btn-primary">
+												<i class="pi pi-plus">Add</i>
+											</button>
+										</div>-->
+										<div class="col-sm-3 " *ngIf="disabled">
+											<button type="button" data-toggle="modal"
+													data-target="#ModalDashNumber" class="btn btn-primary">
+												Add Dash Number
+											</button>
+										</div>
+										<div class="col-sm-3" *ngIf="dashdisable">
+											<textarea rows="1" cols="6"></textarea>
+										</div>
+										<div class="col-sm-3" *ngIf="dashdisable">
+											<button type="button" class="btn btn-primary">
+												<i class="pi pi-plus">Add</i>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="col-sm-12 add-color">
+									<b class="add-name font">Search Dash Number</b>
+									<br />
+									<div class="col-sm-12">
+										<div class="col-sm-3 add-margin">
+											<label>Aircraft</label>
+											<br />
+										</div>
+										<div class="col-sm-4 add-margin6">
+											<label>Aircraft Model</label>
+											<br />
+										</div>
+
+									</div>
+									<div class="col-sm-12">
+										<div class="col-sm-3 inline-block display-flex">
+											<p-multiSelect *ngIf="!view" class="panel-style" [options]="LoadAircraftmanufacturer"
+														   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftmanufacturer"
+														   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 										</div>
 										<div class="col-sm-3 inline-block display-flex">
-											<select class="select-option">
+											<p-multiSelect [options]="LoadValues" [ngModelOptions]="{standalone: true}"
+														   [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
+														   class="panel-style"></p-multiSelect>
+										</div>
+										<div class="col-sm-3">
+											<button type="button" class="btn btn-primary btn-search-new">
+												<i class="pi pi-search"></i>
+											</button>
+										</div>
+									</div>
+									<br />
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="col-sm-12">
+							<p-table [value]="sales" [rows]="6" [columns]="colst" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+								<ng-template pTemplate="header" let-columns>
+									<tr>
+										<th>Id</th>
+										<th *ngFor="let col of colst">
+											{{col.header}}
+										</th>
+										<th>Action</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+									<tr>
+										<td>{{i+1}}</td>
+										<td *ngFor="let col of colst">
+											{{rowData[col.field]}}
+										</td>
+										<td>
+											<button class="btn btn-primary nobg">
+												<i class="fa fa-edit"></i>
+											</button>
+											<button class="btn btn-danger nobg">
+												<i class="fa fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+								</ng-template>
+							</p-table>
+							<br />
+							<div class="col-sm-12">
+								<div class="col-sm-3 font">
+									Schematic: <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
+								</div>
+								<div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
+									Attach Drawing..
+									<div class="upload">
+										<input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple="">
+										<label>
+											<figure><i class="fa fa-upload"></i></figure>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<br />
+						<br />
+					</div>
+					<div class="col-sm-12">
+						<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+						<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+					</div>
+				</div>
+				<div *ngIf="showAtachapter">
+					<div class="card">
+						<div class="col-sm-12 font-padding">
+							<div class="col-sm-2">
+								PN: <span style="color:red"></span>
+							</div>
+							<div class="col-sm-3">
+								PN Description: <span style="color:red"></span>
+							</div>
+							<div class="col-sm-3">
+								Alternate PN: <span style="color:red"></span>
+							</div>
+							<div class="col-sm-3">
+								Manufacturer: <span style="color:red"></span>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="col-sm-6 ">
+								<div class="col-sm-12 add-color1">
+									<b class="add-name font">Add ATA Chapter</b>
+									<br />
+									<div class="col-sm-12">
+										<div class="col-sm-3 add-margin10">
+											<label>ATA chapter</label>
+											<br />
+										</div>
+										<div class="col-sm-4 add-margin2">
+											<label>ATA Sub-chapter</label>
+											<br />
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<div class="col-sm-3 inline-block display-flex">
+											<select class="select-option" (change)="check($event)">
 												<option>--Select--</option>
 												<option>Air Bus</option>
 												<option>Boeing</option>
 												<option>Air Bus</option>
 											</select>
-											<a href="#" data-toggle="modal" data-target="#addCustomerClass"
+											<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
+											   (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
+										</div>
+										<div class="col-sm-3 inline-block display-flex">
+											<p-multiSelect *ngIf="!view" class="panel-style" [options]="models"
+														   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels"
+														   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+											<a href="#" *ngIf="!view" data-toggle="modal" data-target="#addCustomerClass"
 											   class="add-icon" (click)="provisionope(contents)">
 												<i class="fa fa-plus"></i>
 											</a>
 										</div>
 										<div class="col-sm-3">
-											<button type="button" class="btn btn-primary">Add</button>
+											<button type="button" class="btn btn-primary">
+												<i class="pi pi-plus">Add</i>
+											</button>
 										</div>
+
 									</div>
 								</div>
-								<br />
+							</div>
+							<div class="col-sm-6">
+								<div class="col-sm-12 add-color">
+									<b class="add-name font">Search ATA chapters</b>
+									<br />
+									<div class="col-sm-12">
+										<div class="col-sm-3 add-margin">
+											<label>ATA Chapter</label>
+											<br />
+										</div>
+										<div class="col-sm-4 add-margin6">
+											<label>ATA Subchapter</label>
+											<br />
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<div class="col-sm-3 inline-block display-flex">
+											<select class="select-option" (change)="check($event)">
+												<option>--Select--</option>
+												<option>Air Bus</option>
+												<option>Boeing</option>
+												<option>Air Bus</option>
+											</select>
+										</div>
+										<div class="col-sm-3 inline-block display-flex">
+											<p-multiSelect [options]="modelValues" [ngModelOptions]="{standalone: true}"
+														   [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
+														   class="panel-style"></p-multiSelect>
+										</div>
+										<div class="col-sm-3">
+											<button type="button" class="btn btn-primary btn-search-new">
+												<i class="pi pi-search"></i>
+											</button>
+										</div>
+									</div>
+									<br />
+								</div>
 							</div>
 						</div>
 						<br />
-						<div class="col-sm-12 font">
-							<div class="col-sm-7">
-								<div class="col-sm-12">
-									<span class="add-name">Search Dash Numbers</span>
-								</div>
-								<br />
-								<div class="col-sm-12">
-									<div class="col-sm-3 add-margin">
-										<label>Aircraft</label>
-										<br />
-									</div>
-									<div class="col-sm-4 add-margin6">
-										<label>Aircraft Model</label>
-										<br />
-									</div>
-									<div class="col-sm-4 add-margin1" *ngIf="viewed">
-										<label>Memo</label>
-										<br />
-									</div>
-									<div class="col-sm-5 add-margin3" *ngIf="disabled">
-										<label>DashNumber</label>
-										<label><input type="checkbox" (change)="onToggled($event)" />Unknown</label>
-										<br />
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<div class="col-sm-3 inline-block display-flex">
-										<select class="select-option" (change)="check($event)">
-											<option>--Select--</option>
-											<option>Air Bus</option>
-											<option>Boeing</option>
-											<option>Air Bus</option>
-										</select>
-									</div>
-									<div class="col-sm-3 inline-block display-flex">
-										<p-multiSelect [options]="modelValues" [ngModelOptions]="{standalone: true}"
-													   [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
-													   class="panel-style"></p-multiSelect>
-									</div>
-									<div class="col-sm-3">
-										<button type="button" class="btn btn-primary">
-											<i class="pi pi-search"></i>
-										</button>
-									</div>
-								</div>
-								<br />
-								<p-table [columns]="cols" [value]="cars" [paginator]="true" [rows]="10">
-									<ng-template pTemplate="header" let-columns>
-										<tr></tr>
-									</ng-template>
-									<ng-template pTemplate="body" let-rowData let-columns="columns">
-										<tr></tr>
-									</ng-template>
-								</p-table>
-
-							</div>
-							<div class="col-sm-5">
-								<div class="col-sm-12">
-									<span class="add-name">Search ATA Chapters</span>
-								</div>
-								<br />
-								<div class="col-sm-12">
-									<div class="col-sm-3 add-margin2">
-										<label>ATA Chapter</label>
-										<br />
-									</div>
-									<div class="col-sm-9 add-margin4">
-										<label style="width:80px;">ATA Subchapter</label>
-										<br />
-									</div>
-								</div>
-							</div>
+						<div class="col-sm-12">
+							<p-table [value]="sales2" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+								<ng-template pTemplate="header" let-columns>
+									<tr>
+										<th>Id</th>
+										<th *ngFor="let col of atasub">
+											{{col.header}}
+										</th>
+										<th>Action</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+									<tr>
+										<td>{{i+1}}</td>
+										<td *ngFor="let col of atasub">
+											{{rowData[col.field]}}
+										</td>
+										<td>
+											<button class="btn btn-danger nobg">
+												<i class="fa fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+								</ng-template>
+							</p-table>
+							<br />
 						</div>
-
-
-
+						<br />
+						<br />
 					</div>
+					<div class="col-sm-12">
+						<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+						<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+					</div>
+
 				</div>
 
 				<div *ngIf="showpurchaseData">
@@ -1061,217 +1162,197 @@
 								<button type="button" (click)="addFieldValue()" class="btn btn-primary">Add</button>
 							</span>
 						</div>
-					</div>					   
+					</div>
 					<div class="table-responsive">
-							<table class="table table-bordered table-striped table-sorting mpn-list-table" id="mpn-list-table">
-								<thead>
-									<tr>
-										<th colspan="10">Unit Purchase Price</th>
-										<th colspan="16" class="bg1">Unit Sale Price</th>
-									</tr>
-									<tr>
-										<th colspan="10"></th>
-										<th colspan="6" class="bg2">Use Flat Sale Price</th>
-										<th colspan="9" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
-									</tr>
-									<tr>
-										<th>Cond</th>
-										<th>UOM</th>
-										<th>Currency</th>
-										<th>FX Rate</th>
-										<th>Vendor List Price</th>
-										<th>Last List Price Date</th>
-										<th>Purchase Disc %</th>
-										<th>Purchase Disc Amount</th>
-										<th>Last Purchase Disc Date</th>
-										<th>Unit Purchase Price *</th>
-										<th class="bg2">Cond</th>
-										<th class="bg2">UOM</th>
-										<th class="bg2">Currency</th>
-										<th class="bg2">FX Rate</th>
-										<th class="bg2">Flat Price Amount</th>
-										<th class="bg2">Last Flat Price Date</th>
-										<th class="bg3">Mark % on List Price</th>
-										<th class="bg3">Mark Up Amount</th>
-										<th class="bg3">Last Mark Up Date</th>
-										<th class="bg3">Base Sale Price</th>
-										<th class="bg3">Sale Disc %</th>
-										<th class="bg3">Sale Disc Amount</th>
-										<th class="bg3">Last Sales Disc Date</th>
-										<th class="bg3">Unit Sale Price</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									
-									<tr *ngFor="let field of fieldArray; let i = index">
-										<td>
-											<select class="form-control w80" id="" name="">
-												<option value="NEW" selected="1">NEW</option>
-												<option value="AS-IS">AS-IS</option>
-												<option value="REPAIR">REPAIR</option>
-												<option value="SRV">SRV</option>
-												<option value="OVERHAUL">OVERHAUL</option>
-												<option value="AR">AR</option>
-											</select>
-										</td>
-										<td>
-											<select class="form-control w80" id="" name="">
-												<option value="Gals" selected="1">Gals</option>
-												<option value="Each">Each</option>
-												<option value="Inch">Inch</option>
-												<option value="Lbs">Lbs</option>
-												<option value="Ozs">Ozs</option>
-												<option value="Feet">Feet</option>
-												<option value="Yards">Yards</option>
-												<option value="Litre">Litre</option>
-												<option value="Meter">Meter</option>
-												<option value="Kilograms">Kilograms</option>
-												<option value="Grams">Grams</option>
-												<option value="Centimeters">Centimeters</option>
-											</select>
-										</td>
-										<td>
-											<select class="form-control w80" id="" name="">
-												<option value="usd" selected="1">$</option>
-												<option value="inr">₹</option>
-												<option value="pound">£</option>
-												<option value="euro">€</option>
-												<option value="yen">¥</option>
-											</select>
-										</td>
-										<td>
-											<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate" />
-										</td>
-										<td>
-											<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.vendorPrice" (input)="percentValue(field)" />
-										</td>
-										<td>
-											<input type="date">
-										</td>
-										<td>
-											<select class="form-control w80" id="" name="" [(ngModel)]="field.purchaseDiscount" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
-												<option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
-											</select>
-										</td>
-										<td>
-											<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseAmount}}"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.purchaseAmount" [disabled]="true" />
-										</td>
-										<td>
-											<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastDate" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-										</td>
-										<td>
-											<input type="text" pKeyFilter="num" maxlength="15" value="{{purchaseDiscountAmount}}"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.DiscountAmount" [disabled]="true" />
-										</td>
-										<td>
-											<select class="form-control w80" id="" name="">
-												<option value="NEW" selected="1">NEW</option>
-												<option value="AS-IS">AS-IS</option>
-												<option value="REPAIR">REPAIR</option>
-												<option value="SRV">SRV</option>
-												<option value="OVERHAUL">OVERHAUL</option>
-												<option value="AR">AR</option>
-											</select>
-										</td>
-										<td>
-											<select class="form-control w80" id="" name="">
-												<option value="Gals" selected="1">Gals</option>
-												<option value="Each">Each</option>
-												<option value="Inch">Inch</option>
-												<option value="Lbs">Lbs</option>
-												<option value="Ozs">Ozs</option>
-												<option value="Feet">Feet</option>
-												<option value="Yards">Yards</option>
-												<option value="Litre">Litre</option>
-												<option value="Meter">Meter</option>
-												<option value="Kilograms">Kilograms</option>
-												<option value="Grams">Grams</option>
-												<option value="Centimeters">Centimeters</option>
-											</select>
-										</td>
-										<td>
-											<select class="form-control w80" id="" name="">
-												<option value="usd" selected="1">$</option>
-												<option value="inr">₹</option>
-												<option value="pound">£</option>
-												<option value="euro">€</option>
-												<option value="yen">¥</option>
-											</select>
-										</td>
-										<td>
-											<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate1" />
-										</td>
-										<td>
-											<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fpa" />
-										</td>
-										<td>
-											<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastflat" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-										</td>
-										<td>
-											<select class="form-control w80" id="" name="" [(ngModel)]="field.Markuppercent" [ngModelOptions]="{standalone: true}" (change)="percentValue(field.vendorPrice,field.Markuppercent)">
-												<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-											</select> %
-										</td>
-										<td>
-											<input type="text" pKeyFilter="num" maxlength="15" [disabled]="true"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.markup" value="{{markupAmount}}" />
-										</td>
-										<td>
-											<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastmarkup" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-										</td>
-										<td>
-											<input type="text" pKeyFilter="money" maxlength="15" [(ngModel)]="field.baseSaleprice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field.baseSaleprice,field.saleDiscount)" />
-										</td>
-										<td>
-											<select class="form-control w50" id="" name="" [(ngModel)]="field.saleDiscount" [ngModelOptions]="{standalone: true}" (change)="salePercent(field.baseSaleprice,field.saleDiscount)">
-												<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-											</select> %
-										</td>
-										<td>
-											<input type="text" pKeyFilter="money" maxlength="15" [disabled]="true"  [ngModelOptions]="{standalone: true}" [(ngModel)]="field.sda" value="{{saleDiscountAmount}}" />
-										</td>
-										<td>
-											<p-calendar class="cal1" [(ngModel)]="field.lastsales" [ngModelOptions]="{standalone: true}" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-										</td>
-										<td>
-											<input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.unitPrice"  [ngModelOptions]="{standalone: true}" maxlength="15" value="{{unitSalePrice}}" />
-										</td>
-										<td>
-											<button class="btn btn-danger nobg" (click)="delete(index)">
-												<i class="fa fa-trash"></i>
-											</button>
-										</td>
+						<table class="table table-bordered table-striped table-sorting mpn-list-table" id="mpn-list-table">
+							<thead>
+								<tr>
+									<th colspan="10">Unit Purchase Price</th>
+									<th colspan="16" class="bg1">Unit Sale Price</th>
+								</tr>
+								<tr>
+									<th colspan="10"></th>
+									<th colspan="6" class="bg2">Use Flat Sale Price</th>
+									<th colspan="9" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
+								</tr>
+								<tr>
+									<th>Cond</th>
+									<th>UOM</th>
+									<th>Currency</th>
+									<th>FX Rate</th>
+									<th>Vendor List Price</th>
+									<th>Last List Price Date</th>
+									<th>Purchase Disc %</th>
+									<th>Purchase Disc Amount</th>
+									<th>Last Purchase Disc Date</th>
+									<th>Unit Purchase Price *</th>
+									<th class="bg2">Cond</th>
+									<th class="bg2">UOM</th>
+									<th class="bg2">Currency</th>
+									<th class="bg2">FX Rate</th>
+									<th class="bg2">Flat Price Amount</th>
+									<th class="bg2">Last Flat Price Date</th>
+									<th class="bg3">Mark % on List Price</th>
+									<th class="bg3">Mark Up Amount</th>
+									<th class="bg3">Last Mark Up Date</th>
+									<th class="bg3">Base Sale Price</th>
+									<th class="bg3">Sale Disc %</th>
+									<th class="bg3">Sale Disc Amount</th>
+									<th class="bg3">Last Sales Disc Date</th>
+									<th class="bg3">Unit Sale Price</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
 
-									</tr>
-								</tbody>
-							</table>
-						</div>
+								<tr *ngFor="let field of fieldArray; let i = index">
+									<td>
+										<select class="form-control w80" id="" name="">
+											<option value="NEW" selected="1">NEW</option>
+											<option value="AS-IS">AS-IS</option>
+											<option value="REPAIR">REPAIR</option>
+											<option value="SRV">SRV</option>
+											<option value="OVERHAUL">OVERHAUL</option>
+											<option value="AR">AR</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control w80" id="" name="">
+											<option value="Gals" selected="1">Gals</option>
+											<option value="Each">Each</option>
+											<option value="Inch">Inch</option>
+											<option value="Lbs">Lbs</option>
+											<option value="Ozs">Ozs</option>
+											<option value="Feet">Feet</option>
+											<option value="Yards">Yards</option>
+											<option value="Litre">Litre</option>
+											<option value="Meter">Meter</option>
+											<option value="Kilograms">Kilograms</option>
+											<option value="Grams">Grams</option>
+											<option value="Centimeters">Centimeters</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control w80" id="" name="">
+											<option value="usd" selected="1">$</option>
+											<option value="inr">₹</option>
+											<option value="pound">£</option>
+											<option value="euro">€</option>
+											<option value="yen">¥</option>
+										</select>
+									</td>
+									<td>
+										<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate" />
+									</td>
+									<td>
+										<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.vendorPrice" (input)="percentValue(field)" />
+									</td>
+									<td>
+										<input type="date">
+									</td>
+									<td>
+										<select class="form-control w80" id="" name="" [(ngModel)]="field.purchaseDiscount" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+											<option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
+										</select>
+									</td>
+									<td>
+										<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.purchaseAmount" [disabled]="true" />
+									</td>
+									<td>
+										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastDate" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+									</td>
+									<td>
+										<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseDiscountAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.DiscountAmount" [disabled]="true" />
+									</td>
+									<td>
+										<select class="form-control w80" id="" name="">
+											<option value="NEW" selected="1">NEW</option>
+											<option value="AS-IS">AS-IS</option>
+											<option value="REPAIR">REPAIR</option>
+											<option value="SRV">SRV</option>
+											<option value="OVERHAUL">OVERHAUL</option>
+											<option value="AR">AR</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control w80" id="" name="">
+											<option value="Gals" selected="1">Gals</option>
+											<option value="Each">Each</option>
+											<option value="Inch">Inch</option>
+											<option value="Lbs">Lbs</option>
+											<option value="Ozs">Ozs</option>
+											<option value="Feet">Feet</option>
+											<option value="Yards">Yards</option>
+											<option value="Litre">Litre</option>
+											<option value="Meter">Meter</option>
+											<option value="Kilograms">Kilograms</option>
+											<option value="Grams">Grams</option>
+											<option value="Centimeters">Centimeters</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control w80" id="" name="">
+											<option value="usd" selected="1">$</option>
+											<option value="inr">₹</option>
+											<option value="pound">£</option>
+											<option value="euro">€</option>
+											<option value="yen">¥</option>
+										</select>
+									</td>
+									<td>
+										<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate1" />
+									</td>
+									<td>
+										<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fpa" />
+									</td>
+									<td>
+										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastflat" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+									</td>
+									<td>
+										<select class="form-control w80" id="" name="" [(ngModel)]="field.Markuppercent" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+										</select> %
+									</td>
+									<td>
+										<input type="text" pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.markupAmount" value="{{field.markupAmount}}" />
+									</td>
+									<td>
+										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastmarkup" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+									</td>
+									<td>
+										<input type="text" pKeyFilter="money" maxlength="15" [(ngModel)]="field.baseSaleprice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
+									</td>
+									<td>
+										<select class="form-control w50" id="" name="" [(ngModel)]="field.saleDiscount" [ngModelOptions]="{standalone: true}" (change)="salePercent(field)">
+											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+										</select> %
+									</td>
+									<td>
+										<input type="text" pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.sda" value="{{field.saleDiscountAmount}}" />
+									</td>
+									<td>
+										<p-calendar class="cal1" [(ngModel)]="field.lastsales" [ngModelOptions]="{standalone: true}" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+									</td>
+									<td>
+										<input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.unitPrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.unitSalePrice}}" />
+									</td>
+									<td>
+										<button class="btn btn-danger nobg" (click)="delete(index)">
+											<i class="fa fa-trash"></i>
+										</button>
+									</td>
 
-						<div class="col-sm-12">
-							<!--<div class="clear"></div>-->
-							<!--<button type="button" class="btn btn-success pull-right submit-btn"
-					(click)="moveExportInformation1()">
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-			</button>-->
-
-							<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-							<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
-						</div>
-
-						<!--<div class="clear"></div>
-		<hr />
-		<button type="button" class="btn btn-success pull-right submit-btn"
-				(click)="moveExportInformation()">
-			Nextfa
-		</button>
-		<button type="button" class="btn btn-success pull-right submit-btn"
-				(click)="moveGeneralInfromation()">
-			Previous
-		</button>-->
+					<div class="col-sm-12">
+						<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+						<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+					</div>
 				</div>
-
-
 				<div *ngIf="showexportData">
-
 					<div class="card">
 						<div class="col-sm-12 font-padding">
 							<div class="col-sm-2">
@@ -1299,7 +1380,7 @@
 									<label class="lbl">ECCN</label>
 								</div>
 								<div class="col-sm-6 float-left">
-									<input type="text"  pKeyFilter="alphanum" />
+									<input type="text" pKeyFilter="alphanum" />
 								</div>
 							</div>
 						</div>
@@ -1310,7 +1391,7 @@
 									<label class="lbl">ITAR Num</label>
 								</div>
 								<div class="col-sm-6 float-left">
-									<input type="text"  pKeyFilter="alphanum" />
+									<input type="text" pKeyFilter="alphanum" />
 								</div>
 							</div>
 						</div>
@@ -1338,7 +1419,7 @@
 									<label class="lbl">Value</label><span style="color: red">*</span>
 								</div>
 								<div class="col-sm-6 float-left">
-									<input type="text"  pKeyFilter="num" />
+									<input type="text" pKeyFilter="num" />
 								</div>
 							</div>
 						</div>
@@ -1349,14 +1430,14 @@
 									<label class="lbl">Weight</label><span style="color: red">*</span>
 								</div>
 								<div class="col-sm-3 float-left">
-									<input type="text"  pKeyFilter="num" />
+									<input type="text" pKeyFilter="num" />
 								</div>
 								<div class="col-sm-3 float-left">
 									<select class="form-control w84" id="" name="">
 										<option value="Gals">Gals</option>
 										<option value="Each">Each</option>
 										<option value="Inch">Inch</option>
-										<option value="Lbs">Lbs</option>
+										<option value="Lbs" selected="1">Lbs</option>
 										<option value="Kilograms">Kilograms</option>
 										<option value="Grams">Grams</option>
 										<option value="Centimeters">Centimeters</option>
@@ -1393,13 +1474,13 @@
 									<label class="lbl">Size (L,W,H)</label>
 								</div>
 								<div class="col-sm-2">
-									<input type="text"  pKeyFilter="num" />
+									<input type="text" placeholder="L" pKeyFilter="num" />
 								</div>
 								<div class="col-sm-2">
-									<input type="text"  pKeyFilter="num" />
+									<input type="text" placeholder="W" pKeyFilter="num" />
 								</div>
 								<div class="col-sm-2">
-									<input type="text"  pKeyFilter="num" />
+									<input type="text" placeholder="H" pKeyFilter="num" />
 								</div>
 							</div>
 						</div>
@@ -1436,138 +1517,7 @@
 					</div>
 					<br />
 					<br />
-					<!--<div class="tab-pane ">
-						<div class="col-sm-12">
 
-						</div>
-						<div class="col-sm-12" style="margin-bottom: 10px;">
-							<h5 class="heading">Create Export Information</h5>
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Country</label>
-								<div class="col-sm-7">
-									<select [ngModelOptions]="{standalone: true}"
-											[(ngModel)]="sourceItemMaster.exportCountryId">
-										<option *ngFor="let countryName of allCountryInfo"
-												[ngValue]="countryName.countries_id">
-											{{countryName.countries_name}}
-										</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Value</label>
-								<div class="col-sm-7">
-									<input class="form-control" type="number" placeholder=""
-										   [ngModelOptions]="{standalone: true}"
-										   [(ngModel)]="sourceItemMaster.exportValue">
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Currency</label>
-								<div class="col-sm-7">
-									<select [ngModelOptions]="{standalone: true}"
-											[(ngModel)]="sourceItemMaster.exportCurrencyId">
-										<option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-												[ngValue]="currencyName.currencyId">
-											{{currencyName.symbol}}
-										</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Weight (W, Kg)</label>
-								<div class="col-sm-4">
-
-									<input placeholder="W" type="text" [ngModelOptions]="{standalone: true}"
-										   [(ngModel)]="sourceItemMaster.exportWeight">
-								</div>
-
-								<div class="col-sm-3">
-									<select type="text" [ngModelOptions]="{standalone: true}"
-											[(ngModel)]="sourceItemMaster.exportWeightUnit">
-
-										<option value="1">Weight in</option>
-										<option value="2">Ibs</option>
-										<option value="3">Kg</option>
-										<option value="4">g</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Export UOM</label>
-								<div class="col-sm-3">
-
-									<select [ngModelOptions]="{standalone: true}"
-											[(ngModel)]="sourceItemMaster.exportUomId">
-										<option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-												[ngValue]="unitName.unitOfMeasureId">
-											{{unitName.shortName}}
-										</option>
-									</select>
-								</div>
-								<div class="col-sm-4">
-									<input type="text" [ngModelOptions]="{standalone: true}"
-										   [(ngModel)]="sourceItemMaster.exportSizeUnit">
-								</div>
-
-							</div>
-
-
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Size (L, W, H)</label>
-								<div class="col-sm-3">
-									<input type="text" placeholder="L" [ngModelOptions]="{standalone: true}"
-										   [(ngModel)]="sourceItemMaster.exportSizeLength">
-								</div>
-								<div class="col-sm-2">
-									<input type="text" placeholder="W" [ngModelOptions]="{standalone: true}"
-										   [(ngModel)]="sourceItemMaster.exportSizeWidth">
-								</div>
-								<div class="col-sm-2">
-									<input type="text" placeholder="H" [ngModelOptions]="{standalone: true}"
-										   [(ngModel)]="sourceItemMaster.exportSizeHeight">
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Classification</label>
-								<div class="col-sm-7">
-									<label class="radio-inline">
-										<input type="radio" name="optradio" [value]="1"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.exportClassificationId">
-										Unspecified
-									</label>
-									<label class="radio-inline">
-										<input type="radio" name="optradio" [value]="2"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.exportClassificationId">
-										Non-Military
-									</label>
-									<label class="radio-inline">
-										<input type="radio" name="optradio" [value]="3"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.exportClassificationId">
-										Military
-									</label>
-									<label class="radio-inline">
-										<input type="radio" name="optradio" [value]="4"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.exportClassificationId">
-										Dual
-									</label>
-								</div>
-							</div>
-						</div>
-						<div class="clear"></div>
-						<button type="submit" class="btn btn-success pull-right submit-btn"
-								[disabled]="disableSavepartNumber || disableSaveNHANumber || disableSaveAlterumber"
-								(click)="saveitemMasterclose()">
-							Save
-						</button>
-					</div>-->
 					<div class="col-sm-12">
 						<div class="col-sm-12">
 							<div class="col-sm-6">
@@ -1589,7 +1539,70 @@
 		</div>
 	</form>
 	<!--New code for dialogue-->
+	<div id="ModalDashNumber"
+		 class="modal fade custom-popup"
+		 role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button"
+							class="close"
+							data-dismiss="modal">
+						<i class="fa fa-close add"></i>
+					</button>
+					<h4 class="modal-title">Add Dash Numbers</h4>
+				</div>
+				<div class="modal-body">
+					<div class="selection-box ">
+						<p-table [value]="salesDash" [rows]="6" [columns]="modalDash" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+							<ng-template pTemplate="header" let-columns>
+								<tr>
+									<th>Id</th>
+									<th *ngFor="let col of modalDash">
+										{{col.header}}
+									</th>
+									<th>Memo</th>
+									<th>Action</th>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+								<tr>
+									<td><input type="checkbox" /></td>
+									<td *ngFor="let col of modalDash">
+										{{rowData[col.field]}}
+									</td>
+									<td>
+										<textarea cols="12" rows="2"></textarea>
+									</td>
+									<td>
+										<button class="btn btn-danger nobg">
+											<i class="fa fa-trash"></i>
+										</button>
+									</td>
+								</tr>
+							</ng-template>
+						</p-table>
+						<div class="col-sm-12">
+							<div class="col-sm-6">
+								<button class="btn btn-success"
+										data-dismiss="modal">
+									SAVE
+								</button>
+							</div>
+							<div class="col-sm-6 inline-block display-flex">
+								<button class="btn btn-danger" style="margin-left: 172px"
+										data-dismiss="modal">
+									Close
+								</button>
+							</div>
+						</div>
 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="ModalUnit"
 		 class="modal fade custom-popup"
 		 role="dialog">
@@ -3022,402 +3035,6 @@
 						<!-- distributionForm End -->
 					</tbody>
 
-					<!-- <tr style="background: #a5a5a5;">
-						<td style="color: #fff; font-weight: bold;">Overhaul</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" multiple="" style="display: none;">
-									<option value="AirBus">AirBus</option>
-									<option value="Boeing">Boeing</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="AirBus">
-													AirBus</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing">
-													Boeing</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" id="" name="catadd" multiple=""
-									style="display: none;">
-									<option value="Airbus-B767">AirBus - B767</option>
-									<option value="Airbus-A320">AirBus - A320</option>
-									<option value="Boeing-B767">Boeing - B767</option>
-									<option value="Boeing-A320">Boeing - A320</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-B767"> AirBus - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-A320"> AirBus - A320</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-B767"> Boeing - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-A320"> Boeing - A320</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-								data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr> -->
-					<!-- <tr style="background: #a5a5a5;">
-						<td style="color: #fff; font-weight: bold;">Distribution</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" multiple="" style="display: none;">
-									<option value="AirBus">AirBus</option>
-									<option value="Boeing">Boeing</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="AirBus">
-													AirBus</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing">
-													Boeing</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" id="" name="catadd" multiple=""
-									style="display: none;">
-									<option value="Airbus-B767">AirBus - B767</option>
-									<option value="Airbus-A320">AirBus - A320</option>
-									<option value="Boeing-B767">Boeing - B767</option>
-									<option value="Boeing-A320">Boeing - A320</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-B767"> AirBus - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-A320"> AirBus - A320</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-B767"> Boeing - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-A320"> Boeing - A320</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-								data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr> -->
-					<!-- <tr style="background: #a5a5a5;">
-						<td style="color: #fff; font-weight: bold;">Certification</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" multiple="" style="display: none;">
-									<option value="AirBus">AirBus</option>
-									<option value="Boeing">Boeing</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="AirBus">
-													AirBus</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing">
-													Boeing</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" id="" name="catadd" multiple=""
-									style="display: none;">
-									<option value="Airbus-B767">AirBus - B767</option>
-									<option value="Airbus-A320">AirBus - A320</option>
-									<option value="Boeing-B767">Boeing - B767</option>
-									<option value="Boeing-A320">Boeing - A320</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-B767"> AirBus - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-A320"> AirBus - A320</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-B767"> Boeing - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-A320"> Boeing - A320</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-								data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr> -->
-					<!-- <tr style="background: #a5a5a5;">
-						<td style="color: #fff; font-weight: bold;">Repair</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" multiple="" style="display: none;">
-									<option value="AirBus">AirBus</option>
-									<option value="Boeing">Boeing</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="AirBus">
-													AirBus</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing">
-													Boeing</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" id="" name="catadd" multiple=""
-									style="display: none;">
-									<option value="Airbus-B767">AirBus - B767</option>
-									<option value="Airbus-A320">AirBus - A320</option>
-									<option value="Boeing-B767">Boeing - B767</option>
-									<option value="Boeing-A320">Boeing - A320</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-B767"> AirBus - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-A320"> AirBus - A320</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-B767"> Boeing - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-A320"> Boeing - A320</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-								data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr> -->
-					<!-- <tr style="background: #a5a5a5;">
-						<td style="color: #fff; font-weight: bold;">Exchange</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" multiple="" style="display: none;">
-									<option value="AirBus">AirBus</option>
-									<option value="Boeing">Boeing</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="AirBus">
-													AirBus</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing">
-													Boeing</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td>
-							<div class="input-group">
-								<select class="multiselect" id="" name="catadd" multiple=""
-									style="display: none;">
-									<option value="Airbus-B767">AirBus - B767</option>
-									<option value="Airbus-A320">AirBus - A320</option>
-									<option value="Boeing-B767">Boeing - B767</option>
-									<option value="Boeing-A320">Boeing - A320</option>
-								</select>
-								<div class="btn-group"><button type="button"
-										class="multiselect dropdown-toggle btn btn-default"
-										data-toggle="dropdown" title="None selected"><span
-											class="multiselect-selected-text">None
-											selected</span> <b class="caret"></b></button>
-									<ul class="multiselect-container dropdown-menu">
-										<li class="multiselect-item multiselect-all"><a tabindex="0"
-												class="multiselect-all"><label class="checkbox"><input
-														type="checkbox" value="multiselect-all"> Select
-													all</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-B767"> AirBus - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Airbus-A320"> AirBus - A320</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-B767"> Boeing - B767</label></a></li>
-										<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-														value="Boeing-A320"> Boeing - A320</label></a></li>
-									</ul>
-								</div>
-								<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-										class="fa fa-plus"></i></a>
-							</div>
-						</td>
-						<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-								data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr> -->
-					<!-- </tbody> -->
 				</table>
 			</form>
 			<div class="clear"></div>
@@ -3431,522 +3048,7 @@
 	</div>
 
 </ng-template>
-<!--<ng-template #contentCapes let-c="close" let-d="dismiss" style="width:auto">
 
-
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" (click)="dismissCapesModel()">×</button>
-		<h4 class="modal-title"> Capes</h4>
-	</div>
-	<div class="modal-body">
-		<form method="post" id="" name="">
-
-			<div id="" class="table-responsive default-bg clear">
-				<table class="table table-bordered table-striped table-sorting">
-					<thead>
-						<tr>
-							<th>Capability Types</th>
-							<th>Comapny</th>
-							<th>BU</th>
-							<th>Department</th>
-							<th>Divison</th>
-							<th>Manufacturer</th>
-							<th>Aircraft Manufacturer</th>
-							<th>Model</th>
-							<th>Description</th>
-							<th>ATA Chapter</th>
-							<th>Entry Date</th>
-							<th>CMM Exist</th>
-							<th>Verified</th>
-							<th>Verified By</th>
-							<th>Date Verified</th>
-							<th>Memo</th>
-							<th></th>
-
-						</tr>
-					</thead>
-					<tbody>
-						<tr style="background: #a5a5a5;">
-							<td>MFG</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-
-
-						</tr>
-						<tr *ngFor="let item6 of manfacturerAircraftmodelsarray;let homeFormIndex=index">
-							<td></td>
-							<td>
-								<select class="w70" [(ngModel)]="item6.masterComapnyId1" [ngModelOptions]="{standalone: true}" (change)="getBUList(item6, item6.masterComapnyId1)">
-									<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item6.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(item6 ,item6.buid1)">
-									<option *ngFor="let ataName of item6.bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item6.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(item6, item6.depid1)">
-									<option *ngFor="let ataName of item6.departmentList" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item6.divid1" [ngModelOptions]="{standalone: true}">
-									<option *ngFor="let ataName of item6.divisionlist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<div class="input-group">
-									<select [ngModelOptions]="{standalone: true}" [(ngModel)]="item6.manufacturerId">
-										<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
-									</select>
-									<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
-								</div>
-							</td>
-							<td>{{item6.description}}</td>
-							<td>{{item6.modelName}}</td>
-							<td><input class="w80" type="text" [(ngModel)]="item6.modelname1" [ngModelOptions]="{standalone: true}" /></td>
-							<td>
-								<div class="input-group">
-									<select class="w70" [(ngModel)]="item6.atcChapterId1" [ngModelOptions]="{standalone: true}">
-										<option *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-									</select>
-									<a (click)="atamai(contentEditforAtaMain1)" matTooltip="Add ATA Main" class="add-icon"><span><i class="fa fa-plus"></i></span></a>
-								</div>
-							</td>
-							<td><input class="w80" type="date" [(ngModel)]="item6.entrydate1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item6.isCMMExist1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item6.isVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item6.verifiedBy1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="date" [(ngModel)]="item6.dateVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item6.memo1" [ngModelOptions]="{standalone: true}" /></td>
-							<td *ngIf="this.itemser.isEditMode == false">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-							</td>
-							<td *ngIf="this.itemser.isEditMode == true">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-								<button type="button" class="close" data-dismiss="modal" (click)="deletehomeFormIndex(homeFormIndex)">×</button>
-							</td>
-						</tr>
-						<tr style="background: #a5a5a5;">
-							<td>Overhaul</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr *ngFor="let item5 of overhaulAircraftmodelsarray;let ovhindex=index">
-							<td></td>
-							<td>
-								<select class="w70" [(ngModel)]="item5.masterComapnyId1" [ngModelOptions]="{standalone: true}" (change)="getBUListovh(item5,item5.masterComapnyId1)">
-									<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item5.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlistovh(item5,item5.buid1)">
-									<option *ngFor="let ataName of item5.bulistovh" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item5.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlistovh(item5,item5.depid1)">
-									<option *ngFor="let ataName of item5.departmentListovh" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item5.divid1" [ngModelOptions]="{standalone: true}">
-									<option *ngFor="let ataName of item5.divisionlistovh" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<div class="input-group">
-									<select [ngModelOptions]="{standalone: true}" [(ngModel)]="item5.manufacturerId">
-										<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
-									</select>
-									<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
-								</div>
-							</td>
-							<td>{{item5.description}}</td>
-							<td>{{item5.modelName}}</td>
-							<td><input class="w80" type="text" [(ngModel)]="item5.modelname1" [ngModelOptions]="{standalone: true}" /></td>
-							<td>
-								<div class="input-group">
-									<select class="w70" [(ngModel)]="item5.atcChapterId1" [ngModelOptions]="{standalone: true}">
-										<option *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-									</select>
-									<a (click)="atamai(contentEditforAtaMain2)" matTooltip="Add ATA Main" class="add-icon"><span><i class="fa fa-plus"></i></span></a>
-								</div>
-
-
-
-							</td>
-							<td><input class="w80" type="date" [(ngModel)]="item5.entrydate1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item5.isCMMExist1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item5.isVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item5.verifiedBy1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="date" [(ngModel)]="item5.dateVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item5.memo1" [ngModelOptions]="{standalone: true}" /></td>
-							<td *ngIf="this.itemser.isEditMode == false">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-							</td>
-							<td *ngIf="this.itemser.isEditMode == true">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-								<button type="button" class="close" data-dismiss="modal" (click)="deleteovhindex(ovhindex)">×</button>
-							</td>
-						</tr>
-						<tr style="background: #a5a5a5;">
-							<td>Distribution</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr *ngFor="let item4 of distributionAircraftmodelsarray;let disindex=index">
-							<td></td>
-							<td>
-								<select class="w70" [(ngModel)]="item4.masterComapnyId1" [ngModelOptions]="{standalone: true}" (change)="getBUListDistribution(item4,item4.masterComapnyId1)">
-									<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item4.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlistdistribution(item4,item4.buid1)">
-									<option *ngFor="let ataName of item4.bulistdistribution" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item4.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlistdistrubution(item4,item4.depid1)">
-									<option *ngFor="let ataName of item4.departmentListdistribution" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item4.divid1" [ngModelOptions]="{standalone: true}">
-									<option *ngFor="let ataName of item4.divisionlistdistribution" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<div class="input-group">
-									<select [ngModelOptions]="{standalone: true}" [(ngModel)]="item4.manufacturerId">
-										<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
-									</select>
-									<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
-								</div>
-							</td>
-							<td>{{item4.description}}</td>
-							<td>{{item4.modelName}}</td>
-							<td><input class="w80" type="text" [(ngModel)]="item4.modelname1" [ngModelOptions]="{standalone: true}" /></td>
-							<td>
-								<div class="input-group">
-									<select class="w70" [(ngModel)]="item4.atcChapterId1" [ngModelOptions]="{standalone: true}">
-										<option *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-									</select>
-									<a (click)="atamai(contentEditforAtaMain)" matTooltip="Add ATA Main" class="add-icon"><span><i class="fa fa-plus"></i></span></a>
-								</div>
-
-
-
-							</td>
-							<td><input class="w80" type="date" [(ngModel)]="item4.entrydate1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item4.isCMMExist1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item4.isVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item4.verifiedBy1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="date" [(ngModel)]="item4.dateVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item4.memo1" [ngModelOptions]="{standalone: true}" /></td>
-							<td *ngIf="this.itemser.isEditMode == false">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-							</td>
-							<td *ngIf="this.itemser.isEditMode == true">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-								<button type="button" class="close" data-dismiss="modal" (click)="deletedisindex(disindex)">×</button>
-							</td>
-						</tr>
-						<tr style="background: #a5a5a5;">
-							<td>Certification</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr *ngFor="let item3 of certificationarrayAircraftmodelsarray;let certificateindex=index">
-							<td></td>
-							<td>
-								<select class="w70" [(ngModel)]="item3.masterComapnyId1" [ngModelOptions]="{standalone: true}" (change)="getBUListcertificate(item3,item3.masterComapnyId1)">
-									<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item3.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlistcertificate(item3,item3.buid1)">
-									<option *ngFor="let ataName of item3.bulistcertificate" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item3.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlistcertificate(item3,item3.depid1)">
-									<option *ngFor="let ataName of item3.departmentListcertificate" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item3.divid1" [ngModelOptions]="{standalone: true}">
-									<option *ngFor="let ataName of item3.divisionlistcertificate" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<div class="input-group">
-									<select [ngModelOptions]="{standalone: true}" [(ngModel)]="item3.manufacturerId">
-										<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
-									</select>
-									<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
-								</div>
-							</td>
-							<td>{{item3.description}}</td>
-							<td>{{item3.modelName}}</td>
-							<td><input class="w80" type="text" [(ngModel)]="item3.modelname1" [ngModelOptions]="{standalone: true}" /></td>
-							<td>
-								<div class="input-group">
-									<select class="w70" [(ngModel)]="item3.atcChapterId1" [ngModelOptions]="{standalone: true}">
-										<option *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-									</select>
-									<a (click)="atamai(contentEditforAtaMain)" matTooltip="Add ATA Main" class="add-icon"><span><i class="fa fa-plus"></i></span></a>
-								</div>
-
-
-
-							</td>
-							<td><input class="w80" type="date" [(ngModel)]="item3.entrydate1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item3.isCMMExist1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item3.isVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item3.verifiedBy1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="date" [(ngModel)]="item3.dateVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item3.memo1" [ngModelOptions]="{standalone: true}" /></td>
-							<td *ngIf="this.itemser.isEditMode == false">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-							</td>
-							<td *ngIf="this.itemser.isEditMode == true">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-								<button type="button" class="close" data-dismiss="modal" (click)="deletecertificateindex(certificateindex)">×</button>
-							</td>
-						</tr>
-
-						<tr style="background: #a5a5a5;">
-							<td>Repair</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr *ngFor="let item2 of repairAircraftmodelsarray;let repairindex=index">
-							<td></td>
-							<td>
-								<select class="w70" [(ngModel)]="item2.masterComapnyId1" [ngModelOptions]="{standalone: true}" (change)="getBUListrepair(item2,item2.masterComapnyId1)">
-									<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item2.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlistrepair(item2,item2.buid1)">
-									<option *ngFor="let ataName of item2.bulistrepair" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item2.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlistrepair(item2,item2.depid1)">
-									<option *ngFor="let ataName of item2.departmentListrepair" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item2.divid1" [ngModelOptions]="{standalone: true}">
-									<option *ngFor="let ataName of item2.divisionlistrepair" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<div class="input-group">
-									<select [ngModelOptions]="{standalone: true}" [(ngModel)]="item2.manufacturerId">
-										<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
-									</select>
-									<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
-								</div>
-							</td>
-							<td>{{item2.description}}</td>
-							<td>{{item2.modelName}}</td>
-							<td><input class="w80" type="text" [(ngModel)]="item2.modelname1" [ngModelOptions]="{standalone: true}" /></td>
-							<td>
-								<div class="input-group">
-									<select class="w70" [(ngModel)]="item2.atcChapterId1" [ngModelOptions]="{standalone: true}">
-										<option *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-									</select>
-									<a (click)="atamai(contentEditforAtaMain)" matTooltip="Add ATA Main" class="add-icon"><span><i class="fa fa-plus"></i></span></a>
-								</div>
-
-
-
-							</td>
-							<td><input class="w80" type="date" [(ngModel)]="item2.entrydate1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item2.isCMMExist1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item2.isVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item2.verifiedBy1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="date" [(ngModel)]="item2.dateVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item2.memo1" [ngModelOptions]="{standalone: true}" /></td>
-							<td *ngIf="this.itemser.isEditMode == false">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-							</td>
-							<td *ngIf="this.itemser.isEditMode == true">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-								<button type="button" class="close" data-dismiss="modal" (click)="deleterepairindex(repairindex)">×</button>
-							</td>
-						</tr>
-
-						<tr style="background: #a5a5a5;">
-							<td>Exchange</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-
-						<tr *ngFor="let item1 of exchangeAircraftmodelsarray;let excahngeindex=index">
-							<td></td>
-							<td>
-								<select class="w70" [(ngModel)]="item1.masterComapnyId1" [ngModelOptions]="{standalone: true}" (change)="getBUListexcahnge(item1,item1.masterComapnyId1)">
-									<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item1.buid1" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlistexcahnge(item1,item1.buid1)">
-									<option *ngFor="let ataName of item1.bulistexcahnge" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item1.depid1" [ngModelOptions]="{standalone: true}" (change)="getDivisionlistexcahnge(item1,item1.depid1)">
-									<option *ngFor="let ataName of item1.departmentListexcahnge" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<select class="w70" [(ngModel)]="item1.divid1" [ngModelOptions]="{standalone: true}">
-									<option *ngFor="let ataName of item1.divisionlistexcahnge" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-								</select>
-							</td>
-							<td>
-								<div class="input-group">
-									<select [ngModelOptions]="{standalone: true}" [(ngModel)]="item1.manufacturerId">
-										<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
-									</select>
-									<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="Mfacturer(modeledt)"><i class="fa fa-plus"></i></a>
-								</div>
-							</td>
-							<td>{{item1.description}}</td>
-							<td>{{item1.modelName}}</td>
-							<td><input class="w80" type="text" [(ngModel)]="item1.modelname1" [ngModelOptions]="{standalone: true}" /></td>
-							<td>
-								<div class="input-group">
-									<select class="w70" [(ngModel)]="item1.atcChapterId1" [ngModelOptions]="{standalone: true}">
-										<option *ngFor="let ataName of allATAMaininfo" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-									</select>
-									<a (click)="atamai(contentEditforAtaMain)" class="add-icon" matTooltip="Add ATA Main"><span><i class="fa fa-plus"></i></span></a>
-								</div>
-
-
-
-							</td>
-							<td><input class="w80" type="date" [(ngModel)]="item1.entrydate1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item1.isCMMExist1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input type="checkbox" class="w80" [(ngModel)]="item1.isVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item1.verifiedBy1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="date" [(ngModel)]="item1.dateVerified1" [ngModelOptions]="{standalone: true}" /></td>
-							<td><input class="w80" type="text" [(ngModel)]="item1.memo1" [ngModelOptions]="{standalone: true}" /></td>
-							<td *ngIf="this.itemser.isEditMode == false">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-							</td>
-							<td *ngIf="this.itemser.isEditMode == true">
-								<p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off"></p-inputSwitch>
-								<button type="button" class="close" data-dismiss="modal" (click)="deleteexcahngeindex(excahngeindex)">×</button>
-							</td>
-						</tr>
-
-					</tbody>
-
-				</table>
-
-				<div class="clear"></div>
-				<br>
-			</div>
-		</form>
-	</div>
-	<div class="modal-footer">
-
-
-		<button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissCapesModel()">Save</button>
-	</div>
-
-</ng-template>-->
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px"
 		  maximizedTop="140px" [width]="350" [minWidth]="200" [responsive]="true" [minY]="1050" [baseZIndex]="1100000">
 
