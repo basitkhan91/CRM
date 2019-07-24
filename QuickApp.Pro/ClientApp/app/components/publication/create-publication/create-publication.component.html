@@ -144,6 +144,17 @@
         <!-- fifth -->
 
         <div class="ui-g-12 ui-md-6">
+          <div class="ui-g-2">File</div>
+          <div class="ui-g-10">
+            <p-fileUpload
+              name="myfile[]"
+              url="./upload.php"
+              multiple="multiple"
+              [showCancelButton]="false"
+            ></p-fileUpload>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
           <div class="ui-g-4">
             Author/Source/Directive
           </div>

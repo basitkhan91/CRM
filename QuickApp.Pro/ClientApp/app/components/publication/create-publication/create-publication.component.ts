@@ -21,6 +21,8 @@ export class CreatePublicationComponent implements OnInit {
     { label: "Active", value: "Active" },
     { label: "In-Active", value: "In-Active" }
   ];
+  /** Create-publication ctor */
+  constructor() {}
 
   cars = [
     { aircraft: "a1653d4d", model: "VW", dashNumber: "1998", memo: "White" }
