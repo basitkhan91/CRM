@@ -68,6 +68,7 @@ export class ReceivngPoComponent implements OnInit {
     toggleIcon: boolean = false;
     currentSLIndex: number = 0;
     pageTitle: string = "Receive PO";
+    po_add_details_box: boolean = false;
     //showGrid: boolean;
     //userName: any;
     //collectionofstockLine: any;
@@ -143,7 +144,7 @@ export class ReceivngPoComponent implements OnInit {
         public creditTermsService: CreditTermsService,
         public employeeService: EmployeeService,
         private alertService: AlertService,
-        private accountService: AccountService,) {
+        private accountService: AccountService) {
         //this.loadPurchaseOrderData();
         this.getManagementStructure();
         this.getAllSite();
@@ -173,6 +174,10 @@ export class ReceivngPoComponent implements OnInit {
         //this.customerListForStockline();
         //this.vendorListForStockline();
 
+    }
+
+    showPOAddDetailsBox() {
+        this.po_add_details_box = true;
     }
 
     private getStatus() {

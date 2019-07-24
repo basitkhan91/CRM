@@ -1,5 +1,5 @@
 .add-icon {
-	background: #3498db;
+	background: #337ab7;
 	height: 24px;
 	display: inline-block;
 	width: 25px;
@@ -889,6 +889,10 @@ li.active.ng-star-inserted {
 }
 .c-wf-bcrumb li {
     font-family: 'Roboto';
+}
+.wf-h-col .col-md-6 {
+    max-width: 44%;
+    margin-right: 15px;
 }
 
 @media (min-width: 1240px) {

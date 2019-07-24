@@ -56,8 +56,7 @@ import { GlAccountService } from '../../../services/glAccount/glAccount.service'
 import { GlAccount } from '../../../models/GlAccount.model';
 import { VendorService } from '../../../services/vendor.service';
 import { DatePipe } from '@angular/common';
-import { MenuItem } from 'primeng/api';
-import {DropdownModule} from 'primeng/dropdown';
+import { MenuItem, SelectItem } from 'primeng/api';
 
 
 @Component({
@@ -68,7 +67,11 @@ import {DropdownModule} from 'primeng/dropdown';
 
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
-
+    disables: boolean = false;
+    disable: boolean = false;
+    disabled: boolean = false;
+    view: boolean = false;
+    viewed: boolean = false;
   disableIntegrationSave: boolean;
   currencySymbol: any;
 	bulist: any[] = [];
@@ -83,7 +86,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	itemdescription: any[]=[];
 	showexportData: boolean;
     showGeneralData: boolean = true;
-    showAircraftData: boolean = true;
+    showAircraftData: boolean = false;
 	showpurchaseData: boolean;
 	disableSaveglAccount: boolean;
 	glAccountCollection: any[];
@@ -144,7 +147,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	allManufacturerInfo: any[];
 	allActions: any[];
 	provisionName: string;
-	shiftValues: any[] = [];
+    shiftValues: any[] = [];
+    modelValues: any[] = [];
+    selectedModelValues: any;
 	allaircraftInfo: any[];
 	allAircraftinfo: any[];
 	selectedAircraftTypes: any;
@@ -166,6 +171,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 	localgroup: any[] = [];
     allProvisonInfo: Provision[];
     // New Code -- Jyotsna
+    itemQuantity = []; 
     items1: MenuItem[];
     activeItem: MenuItem;
 	itemGroupName: string;
@@ -254,20 +260,44 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     portalURL: any = "";
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
-    aircraftManfactures: any = [];
+    cols1: any[];
+  //new code-- for purchase and sales calculation
+    vendorPrice: any;
+    purchaseDiscount: any;
+    newFields = {
+        fxrate : "",
+        vendorPrice : "",
+        purchaseDiscount : "",
+        purchaseAmount : "",
+        lastDate : "",
+        DiscountAmount : "",
+        fxrate1 : "",
+        fpa : "",
+        lastflat: "",
+        Markuppercent : "",
+        markup : "",
+        lastmarkup : "",
+        baseSaleprice : "",
+        saleDiscount: "",
+        sda: "",
+        lastsales : "",
+        unitPrice : "",        
 
+    }
 
     constructor(public integrationService: IntegrationService,private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
-        public currency: CurrencyService, public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public currency: CurrencyService,
+      public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+
+     
+
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
-
-        
         //Adding Below Code for By Default Date Should be current Date while Creation
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
@@ -399,18 +429,22 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
     }];
 
-
+    itemQuantitys = [];
     ngOnInit(): void {
- 
 
         // Created by Jyotsna
-
+        this.itemQuantity = Array(10).fill(1).map((x, i) => i + 1);
+        this.itemQuantitys = Array(6).fill(1).map((x, i) => i + 1);
         this.items1 = [
             { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
             { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
+            { label: 'ATA Chapter', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
             { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
-            { label: 'Export Information', icon: 'fa fa-fw fa-export', command: (onclick: any) => this.moveExportInformation() },            
+            { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },            
         ];
+        this.addFieldValue();
+        
+
 
         this.loadManagementdata();
         this.manufacturerdata();
@@ -438,7 +472,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getCpaesData();
         this.activeIndex = 0;
         this.Integration();
-        this.getAllAirCraft();
         this.sourceItemMaster.salesIsFixedPrice = true;
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([]),
@@ -451,17 +484,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-     // get aircraft all manfactures
-    getAllAirCraft(){
-        this.itemser.getAllAirCraftModels().subscribe(res => {
-            this.aircraftManfactures = res.map(x => {
-                return {
-                    label: x.description, value: x.aircraftTypeId
-                }
-            });
-        
-        })
-    }
+
+ 
 
     // Form array for capability//
     get mfgFormArray(): FormArray {
@@ -488,7 +512,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     get exchangeFormArray(): FormArray {
         return this.capabilitiesForm.get('exchangeForm') as FormArray;
     }
-
 
     //loading aircraftmanufacturer data//
     private aircraftManfacturerData() {
@@ -1318,13 +1341,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 for (let i = 0; i < this.allaircraftInfo.length; i++)
                     this.shiftValues.push(
                         { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
-
                     );
-            }
+            }          
 
             //Adding
-
-            let valAirCraft = [];
+               let valAirCraft = [];
             //we are Passing Customer Id for getting Edit Data and make it check 
             this.itemser.getAircaftManafacturerList(this.sourceItemMaster.itemMasterId)
                 .subscribe(results => {
@@ -2596,13 +2617,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.itemClassificationCode = this.itemName;
+            this.sourceAction.description = this.sourceItemMaster.itemClassificationId;
             this.sourceAction.masterCompanyId = 1;
 
             if (this.selectedAircraftTypes != null) //separting Array which is having ","
             {
                 this.sourceAction.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
             }
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
+            this.itemser.newItemMaster(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
             this.activeIndex = 0;
@@ -3499,7 +3521,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
-
+  
 
     saveovhinfo(partid, itemid, data) {
 
@@ -4193,7 +4215,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
     createIntegration() {
         this.isSaving = true;
         if (this.isEditMode == false) {
@@ -4239,8 +4260,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
     filterIntegrationsSelect(event) {
 
         this.localCollection = [];
@@ -4255,4 +4274,81 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    check($event) {
+        this.disables = true;
+        this.disable = true;
+        this.view = false;
+    }
+    Adddash($event) {
+        this.disabled = true;
+    }
+    onToggle(e) {
+        this.disables = true;
+        this.disable = true;
+        this.view = e.target.checked;
+    }
+    onToggled($event) {
+        this.disable = false;
+        this.viewed = true;
+    }
+    //new code for calculation in purchase and sales
+    fieldArray: any = [];
+    row: any;
+    Delete = true;
+    addFieldValue(): void {
+        if (this.fieldArray.length <= 5) {
+            this.fieldArray = [...this.fieldArray, { ...this.newFields }]
+            console.log(this.fieldArray);
+        }
+
+
+    }
+    delete(index) {
+        if (this.fieldArray.length > 0) {
+            this.fieldArray.splice(index, 1);
+        }
+        else {
+            this.Delete = false;
+        }
+
+    }
+    purchaseAmount: number;
+    purchaseDiscountAmount: number;
+    Markuppercent: number;
+    markupAmount: number;
+    baseSaleprice: number;
+    saleDiscount: number;
+    saleDiscountAmount: number;
+    unitSalePrice: number;
+    percentValue(field) {
+        if (field.vendorPrice && field.purchaseDiscount && !field.Markuppercent) {
+            const cal = field.vendorPrice * field.purchaseDiscount            
+            field.purchaseAmount = cal;
+        }
+        if (field.purchaseAmount) {          
+            const disc = field.purchaseAmount - field.vendorPrice
+            field.purchaseDiscountAmount = disc;
+        }
+    }
+        
+       
+        //if (this.vendorPrice && this.purchaseDiscount && !this.Markuppercent) {
+        //    this.purchaseAmount = vendor * pd;    
+        //}
+        //if (this.purchaseAmount) {
+        //    this.purchaseDiscountAmount = this.purchaseAmount - vendor ;            
+        //}
+        //if (this.Markuppercent && this.vendorPrice) {
+        //    this.markupAmount = vendor * this.Markuppercent;           
+        //}
+    
+    //salePercent(sale, sd) {
+    //    if (this.baseSaleprice && this.saleDiscount) {
+    //        this.saleDiscountAmount = sale * sd;           
+    //    }
+    //    if (this.saleDiscountAmount && this.baseSaleprice) {
+    //        this.unitSalePrice = this.saleDiscountAmount - sale;            
+    //    }
+    //}
 }
+
