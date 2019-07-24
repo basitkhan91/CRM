@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { PriorityService } from '../../../../services/priority.service';
 import { AlertService } from '../../../../services/alert.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Button } from 'primeng/button';
 //import { PoApprovalComponent } from '../po-approval/po-approval.component';
 
 @Component({
@@ -87,8 +86,7 @@ export class CreateRoComponent implements OnInit {
 	allShippings: any[] = [];
 	paymentcols: any[];
 	shippingCol: any[];
-    contactcols: any[];
-    
+	contactcols: any[];
 	selectedShippingColumns: any[];
 	selectedContactColumns: any[];
 	selectedPaymentColumns: any[];
@@ -121,18 +119,17 @@ export class CreateRoComponent implements OnInit {
 
 	}
 	getListByDetails() {
-        //debugger;
-		
+		//debugger;
+		this.vendorList = [];
 		this.workFlowtService.getVendordataForPo(this.sourcePo).subscribe(data => {
 			let getlist = data[0];
-            if (getlist.length >= 0) {
-                this.vendorList = [];
+			if (getlist.length >= 0) {
 				for (let i = 0; i < getlist.length; i++) {
 					this.vendorList.push(getlist[i])
 				}
 			}
 			console.log(this.vendorList)
-        });
+		});
 
 
 	}
@@ -278,7 +275,7 @@ export class CreateRoComponent implements OnInit {
 		this.vendorCodes = [];
 		for (let i = 0; i < this.allActions.length; i++) {
 			let vendorCode = this.allActions[i].vendorCode;
-            
+
 			if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 				//this.vendorCodes.push(vendorCode);
 				this.VendorCodesColl.push([{

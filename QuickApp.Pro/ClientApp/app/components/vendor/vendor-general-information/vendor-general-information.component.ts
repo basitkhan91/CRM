@@ -306,7 +306,6 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.sourceAction = new VendorClassification();
         this.sourceAction.isActive = true;
         this.vendorName = "";
-        this.vendorClassName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');

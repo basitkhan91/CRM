@@ -2596,13 +2596,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.itemClassificationCode = this.itemName;
+            this.sourceAction.description = this.sourceItemMaster.itemClassificationId;
             this.sourceAction.masterCompanyId = 1;
 
             if (this.selectedAircraftTypes != null) //separting Array which is having ","
             {
                 this.sourceAction.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
             }
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
+            this.itemser.newItemMaster(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
             this.activeIndex = 0;

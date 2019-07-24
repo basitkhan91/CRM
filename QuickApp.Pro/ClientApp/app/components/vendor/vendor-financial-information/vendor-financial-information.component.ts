@@ -619,7 +619,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new CreditTerms();
         this.sourceAction.isActive = true;
         this.creditTermName = "";
-        this.creditTermsId = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -644,7 +643,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     saveCurrecy() {
         this.isSaving = true;
         for (let i = 0; i < this.allCurrencyInfo.length; i++) {
-            if (this.allCurrencyInfo[i].code.toLowerCase().localeCompare(this.currencyName.toLowerCase()) == 0) {
+            if (this.allCurrencyInfo[i].code.toLowerCase().indexOf(this.currencyName.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
                 return;
             }
@@ -731,7 +730,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     saveCreditTermsdata() {
         this.isSaving = true;
         for (let i = 0; i < this.allcreditTermInfo.length; i++) {
-            if (this.allcreditTermInfo[i].name.toLowerCase().localeCompare(this.creditTermsId.toLowerCase()) == 0) {
+            if (this.allcreditTermInfo[i].name.toLowerCase().indexOf(this.creditTermsId.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
                 return;
             }
@@ -826,7 +825,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     editItemCloseModel() {
         this.isSaving = true;
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-            if (this.alldiscountvalueInfo[i].discontValue.toString().localeCompare(this.discontValue.toLowerCase()) == 0) {
+            if (this.alldiscountvalueInfo[i].discontValue.toString().indexOf(this.discontValue.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
                 return;
             }
