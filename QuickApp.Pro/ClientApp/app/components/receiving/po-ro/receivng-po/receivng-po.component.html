@@ -16,189 +16,203 @@
 </style>
 <div class="x_content" *ngIf="purchaseOrderData">
 
-    <h4 class="page-heading">Receiving PO</h4>
-
-    <div class="clear"></div>
-    <form id="" class="form-horizontal ro-grid-form mtop10" name="" action="#" method="post" onsubmit="return false;">
-        <div class="col-sm-3">
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">PO Num</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Open Date</label>
-                <div class="col-sm-7">
-                    <p-calendar disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Need By</label>
-                <div class="col-sm-7">
-                    <p-calendar disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate"></p-calendar>
-                </div>
-            </div>
-            <div class="form-group col-sm-12 input-icon1 ">
-                <label class="control-label col-sm-4">Priority </label>
-                <div class="inner-addon right-addon inline-block col-sm-7">
-                    <select class="form-control" disabled="disabled" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.priorityId">
-                        <option *ngFor="let priority of poPriorityInfo" [value]="priority.Key">{{priority.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Deferred Receiver</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon">
-                        <input class="form-control" type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Resale</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon">
-                        <input class="form-control" type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
-                    </div>
-                </div>
-            </div>
+    <div class="card receiving-po">
+        <div class="card-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+                    <li class="breadcrumb-item active" aria-current="page">Receiving PO</li>
+                    <!--<li class="breadcrumb-item " aria-current="page">Create Work Flow</li>-->
+                </ol>
+            </nav>
         </div>
 
-        <div class="col-sm-3">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Vendor Num</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <input class="form-control" type="text" disabled="disabled" [value]="purchaseOrderData.vendor.vendorCode">
+        <div class="card-body">
+            <form id="" class="ro-grid-form" name="">
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>PO Num</label>
+                            <input class="form-control" type="text" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber">
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12 input-icon1">
-                <label for="vendorName" class="control-label col-sm-4">Vendor Name <span class="clr-red">*</span></label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <input type="text" disabled="disabled" class="form-control" [value]="purchaseOrderData.vendor.vendorName">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Num</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <input class="form-control" type="text" disabled="disabled" [value]="purchaseOrderData.vendor.vendorCode">
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Vendor Contact</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <i class="fa fa-search"></i>
-                        <input type="text" disabled="disabled" class="form-control" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Requisitioner</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <div class="inner-addon right-addon inline-block">
+                                    <input type="text" class="form-control" disabled="disabled" [value]="purchaseOrderData.requestedBy">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Contact Phone</label>
-                <div class="col-sm-7">
-                    <input class="form-control" disabled="disabled" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
-                </div>
-            </div>
-
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Credit Limit &amp; Terms</label>
-                <div class="col-sm-3">
-                    <input class="form-control" disabled="disabled" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms">
-                </div>
-                <div class="col-sm-4">
-                    <select class="form-control" #selects="ngModel" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit">
-                        <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="form-group col-sm-12 input-icon1">
-                <label class="control-label col-sm-4">Requisitioner</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-                        <div class="inner-addon right-addon inline-block">
-                            <input type="text" class="form-control" disabled="disabled" [value]="purchaseOrderData.requestedBy">
-
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Company</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Approver</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon ">
-                        <input type="text" class="form-control" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver">
+
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Open Date</label>
+                            <p-calendar class="pas-clder" disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <input type="text" disabled="disabled" class="form-control" [value]="purchaseOrderData.vendor.vendorName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Approver</label>
+                            <div class="inner-addon ">
+                                <input type="text" class="form-control" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>BU</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Approved Date</label>
-                <div class="col-sm-7">
-                    <p-calendar [showIcon]="true" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied"></p-calendar>
-                </div>
-            </div>
 
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Status</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="purchaseOrderData.statusId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let status of poStatus" [value]="status.Key">{{status.Value}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Company</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">BU</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Dept</label>
-                <div class="col-sm-7">
-                    <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Division</label>
-                <div class="col-sm-7">
-                    <div>
-                        <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
-                        </select>
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Need By</label>
+                            <p-calendar class="pas-clder" disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Contact</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" disabled="disabled" class="form-control" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Approved Date</label>
+                            <p-calendar class="pas-clder" [showIcon]="true" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Dept</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Memo</label>
-                <div class="col-sm-7">
-                    <textarea class="form-control h100 scroll-x" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
-                </div>
-            </div>
-        </div>
 
-        <div class="clear"></div>
-        <hr>
-    </form>
-</div>
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <select class="form-control" disabled="disabled" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.priorityId">
+                                    <option *ngFor="let priority of poPriorityInfo" [value]="priority.Key">{{priority.Value}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Contact Phone</label>
+                            <input class="form-control" disabled="disabled" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="purchaseOrderData.statusId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let status of poStatus" [value]="status.Key">{{status.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Division</label>
+                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Deferred Receiver</label>
+                            <div class="checkbox-cstm" style="margin-top: 4px">
+                                <label>
+                                    <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Resale</label>
+                            <div class="checkbox-cstm" style="margin-top: 4px">
+                                <label>
+                                    <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Credit Limit &amp; Terms</label>
+                            <div class="form-row">
+                                <div class="col-sm-5">
+                                    <input class="form-control" disabled="disabled" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms">
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" #selects="ngModel" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit">
+                                        <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Memo</label>
+                            <textarea class="form-control h100 scroll-x" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>        
+    </div>        
+    </div>
+
 
 <div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
     <div class="x_panel">
@@ -209,7 +223,7 @@
                         <div class="clear"></div>
                         <table *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined" class="table table-bordered table-striped table-wrap">
                             <thead>
-                                <tr>
+                                <tr class="po-table-tr">
                                     <th class="eachcol"></th>
                                     <th class="eachcol">Line no</th>
                                     <th class="eachcol">PN</th>
@@ -230,8 +244,8 @@
                             <tbody>
                                 <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
                                     <tr class="basic-info" *ngIf="part.isParent">
-                                        <td class="details-control eachcol">
-                                            <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-xs margin0" (click)="showSplitShipmentParts(part.itemMasterId)"></i>
+                                        <td class="details-control eachcol" style="padding: 4px 6px;">
+                                            <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0" (click)="showSplitShipmentParts(part.itemMasterId)"></i>
                                         </td>
                                         <td class="eachcol">{{row_index + 1}}</td>
                                         <td class="eachcol">
@@ -308,7 +322,9 @@
                                         <td>{{part.managementStructureName[1]}}</td>
                                         <td>{{part.managementStructureName[2]}}</td>
                                         <td>{{part.managementStructureName[3]}}</td>
-                                        <td><a (click)="addStockLine(part)" style="color:red">Add Details</a></td>
+                                        <td><a class="btn btn-primary-cstm btn-po-details" (click)="showPOAddDetailsBox()">Add Details</a></td>
+                                        <!--<td><a (click)="addStockLine(part)" class="btn btn-primary-cstm btn-po-details">Add Details</a></td>-->
+                                        <!--<button type="button" (click)="showDialog()" pButton icon="fa-external-link-square" label="Show"></button>-->
                                     </tr>
 
                                     <tr class="more-info" *ngIf="!part.isParent && part.showStockLineGrid">
@@ -377,15 +393,15 @@
                                                     <a class="btn btn-success" (click)="moveStockLinePage(1)">&#62;</a>
                                                 </div>
                                                 <!--<div class="buttons" >
-        <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
-            <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
-        </a>
-        <span class="num">1/5</span>
-        <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
-            <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
-        </a>
-    </div>
-    <div class="clear"></div>-->
+                                <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
+                                    <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
+                                </a>
+                                <span class="num">1/5</span>
+                                <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
+                                    <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                            <div class="clear"></div>-->
 
                                                 <div class="col-sm-12">
                                                     <h4 class="text-center">Receiving Qty-1 of part {{part.itemMaster?.partNumber}} </h4>
@@ -659,220 +675,220 @@
                                                     </div>
 
                                                 </div>
-                                                    <!--
-        <div class="col-sm-4">
-            
-           
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Shipping Ref</label>
-                <div class="col-sm-7">
-                    <select class="form-control">
-                        <option>Hyderabad Location</option>
-                        <option>Newyork Location</option>
-                        <option>Chicago Location</option>
-                    </select> <span class="comments-show-btn" data-toggle="tooltip"
-                                    title="On PO if available and know before item arrives… need ability to update the PO tables"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Ship Via</label>
-                <div class="col-sm-7">
-                    <select class="form-control">
-                        <option>fedex</option>
-                        <option>Blue Dart</option>
-                        <option>Bombino Express</option>
-                    </select>
-                    <span class="comments-show-btn" data-toggle="tooltip" title="In PO if known. In Receiving should default to whats on PO but can add, or update in receiving"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Shipping Account</label>
-                <div class="col-sm-7">
-                    <select class="form-control">
-                        <option>12345678</option>
-                        <option>58698745</option>
-                        <option>BB2568AHJ</option>
-                    </select> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">ESN</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">ECCN</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text">
-                    <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">ITAR Num</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">NHA</label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon autosuggesions-add inline-block">
-                        <i class="fa fa-search"></i>
-                        <input type="text" class="form-control numberids" id="" name="">
-                    </div> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">TLA</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">NSN</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Aircraft Tail Num</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
-                </div>
-            </div>
-        </div>-->
+                                                <!--
+                            <div class="col-sm-4">
 
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Shipping Ref</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control">
+                                            <option>Hyderabad Location</option>
+                                            <option>Newyork Location</option>
+                                            <option>Chicago Location</option>
+                                        </select> <span class="comments-show-btn" data-toggle="tooltip"
+                                                        title="On PO if available and know before item arrives… need ability to update the PO tables"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Ship Via</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control">
+                                            <option>fedex</option>
+                                            <option>Blue Dart</option>
+                                            <option>Bombino Express</option>
+                                        </select>
+                                        <span class="comments-show-btn" data-toggle="tooltip" title="In PO if known. In Receiving should default to whats on PO but can add, or update in receiving"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Shipping Account</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control">
+                                            <option>12345678</option>
+                                            <option>58698745</option>
+                                            <option>BB2568AHJ</option>
+                                        </select> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">ESN</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Engine Serial Number. Please add to receiving UI and Stock line. Non mandatory and editable in receiving UI and Stockline via the edit stockline functionality"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">ECCN</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text">
+                                        <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">ITAR Num</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">NHA</label>
+                                    <div class="col-sm-7">
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control numberids" id="" name="">
+                                        </div> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">TLA</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">NSN</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Depending on Item master setup, Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Aircraft Tail Num</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text"> <span class="comments-show-btn" data-toggle="tooltip" title="Needed to be added to the receiving UI and stock line - non mandatory and editable in receiving and stock line"><i class="fa fa-info"></i></span>
+                                    </div>
+                                </div>
+                            </div>-->
+
+                                            </div>
+
+                                            <!--<div id="pn-other-details" class="banner banner-slider carousel slide carousel-fade bglight carousel-sync">
+                            <div class="carousel-inner ptop10">
+                                <div class="item active carousel-item">
+                                    <div class="fill">
+                                        <div class="banner-content">
+                                            <div class="container">
+                                                <div class="">
+                                                    <div class="col-sm-12">
+                                                        <div class="col-sm-12">
+                                                            <h4 class="text-center">Details of Part{{index}} </h4>
+                                                        </div>
+                                                        <div class="col-sm-12 clr-red">
+                                                        </div>
+                                                        <div class="form-group col-sm-12">
+                                                            <h4>Is Serialized</h4>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Serial Num</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-sm-12">
+
+                                                        <div class="form-group col-sm-12">
+                                                            <h4>Time Life</h4>
+                                                        </div>
+                                                        <div class="time-remaining">
+                                                            <input type="checkbox" class="wauto timelife-update-later-checkbox"> Time Life Details Update Later <div class="table-responsive form-group col-sm-12">
+                                                                <table class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th colspan="2" class="text-center">Cycles</th>
+                                                                            <th colspan="2" class="text-center">Time</th>
+                                                                            <th colspan="2" class="text-center">Last</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Remaining</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="cycleRemaining" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Remaining</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="timeRemaining" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Since New</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="lastSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Since New</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="cycleSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Since New</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Since Ovh</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="lastSinceOVH" [ngModelOptions]="{standalone: true}"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Since Ovh</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="cycleSinceOvh" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Since Ovh</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="timeSinceOvh" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Since Insp</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Since Insp</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="cycleSinceInsp" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Since Insp</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Since Repair</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="cycleSinceRepair" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td>Since Repair</td>
+                                                                            <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12">
+
+                                                        <div class="form-group col-sm-12">
+                                                            <h4>Calibrated Equipment</h4>
+                                                        </div>
+                                                        <div class="form-group col-sm-5">
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Inspection Date</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control datepicker" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Frequency</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-
-                                                <!--<div id="pn-other-details" class="banner banner-slider carousel slide carousel-fade bglight carousel-sync">
-        <div class="carousel-inner ptop10">
-            <div class="item active carousel-item">
-                <div class="fill">
-                    <div class="banner-content">
-                        <div class="container">
-                            <div class="">
-                                <div class="col-sm-12">
-                                    <div class="col-sm-12">
-                                        <h4 class="text-center">Details of Part{{index}} </h4>
-                                    </div>
-                                    <div class="col-sm-12 clr-red">
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <h4>Is Serialized</h4>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Serial Num</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-sm-12">
-
-                                    <div class="form-group col-sm-12">
-                                        <h4>Time Life</h4>
-                                    </div>
-                                    <div class="time-remaining">
-                                        <input type="checkbox" class="wauto timelife-update-later-checkbox"> Time Life Details Update Later <div class="table-responsive form-group col-sm-12">
-                                            <table class="table table-bordered table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="2" class="text-center">Cycles</th>
-                                                        <th colspan="2" class="text-center">Time</th>
-                                                        <th colspan="2" class="text-center">Last</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Remaining</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleRemaining" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Remaining</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeRemaining" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since New</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since New</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since New</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Ovh</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceOVH" [ngModelOptions]="{standalone: true}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Ovh</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceOvh" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Ovh</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeSinceOvh" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Insp</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Insp</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceInsp" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Insp</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Since Repair</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="cycleSinceRepair" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td>Since Repair</td>
-                                                        <td><input type="text" class="w50" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-
-                                    <div class="form-group col-sm-12">
-                                        <h4>Calibrated Equipment</h4>
-                                    </div>
-                                    <div class="form-group col-sm-5">
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Inspection Date</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control datepicker" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Frequency</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <div class="buttons" style="display: none;">
+                                <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
+                                    <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
+                                </a>
+                                <span class="num">1/5</span>
+                                <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
+                                    <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                            <div class="clear"></div>
+                        </div>-->
 
-
-        </div>
-        <div class="buttons" style="display: none;">
-            <a class="left carousel-control" href="#pn-other-details" role="button" data-slide="prev">
-                <span class="fa fa-angle-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
-            </a>
-            <span class="num">1/5</span>
-            <a class="right carousel-control" href="#pn-other-details" role="button" data-slide="next">
-                <span class="fa fa-angle-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
-            </a>
-        </div>
-        <div class="clear"></div>
-    </div>-->
-
-</td>
+                                        </td>
                                     </tr>
 
                                 </ng-container>
@@ -884,25 +900,91 @@
         </div>
         <div class="clear"></div>
         <hr>
-        <a class="btn btn-success pull-right">Save</a>
+        <a class="btn btn-primary-cstm pull-right">Save</a>
         <div class="clear"></div>
         <br>
         <br>
         <br>
         <br>
     </div>
+
 </div>
+    <p-dialog class="add-details-dialog" header="PAS Popup" [(visible)]="po_add_details_box" [modal]="true" [responsive]="true" [width]="1000" [minWidth]="200">
+        <div style="min-height: 400px">
+                <div class="form-row mar-top-10">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Sequence</label>
+                            <input type="text" pInputText pKeyFilter="pnum" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>PN</label>
+                            <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="" disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>QTY to Receive</label>
+                            <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="5" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>QTY Approved</label>
+                            <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="NA" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>QTY Rejected</label>
+                            <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="NA" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Cond</label>
+                            <select class="w90">
+                                <option value="NEW">NEW</option>
+                                <option value="AS-IS">AS-IS</option>
+                                <option value="REP">REP</option>
+                                <option value="SRV">SRV</option>
+                                <option value="OVH">OVH</option>
+                                <option value="AR">AR</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <p-tabView class="pas-tabview">
+                    <p-tabPanel header="Receiving Qty-1" leftIcon="fa fa-calendar">
+                        Receiving Qty-1 of part "124562"
+                    </p-tabPanel>
+                    <p-tabPanel header="Receiving Qty-2" leftIcon="fa fa-print">
+                        Receiving Qty-2 of part "124562"
+                    </p-tabPanel>
+                    <p-tabPanel header="Receiving Qty-3" leftIcon="fa fa-bell-o">
+                        Receiving Qty-3 of part "124562"
+                    </p-tabPanel>
+                </p-tabView>
+        </div>
+        <p-footer>
+            <button type="button" pButton icon="fa-floppy-o" (click)="po_add_details_box=false" label="Save"></button>
+            <button type="button" pButton icon="fa-close" (click)="po_add_details_box=false" label="Close"></button>
+        </p-footer>
+    </p-dialog>
 
-<style>
-    .disabled {
-        cursor: not-allowed;
-    }
 
-    .eachcol {
-        width: 7%;
-    }
+    <style>
+        .disabled {
+            cursor: not-allowed;
+        }
 
-    .eachcol6 {
-        width: 6%;
-    }
-</style>
+        .eachcol {
+            width: 7%;
+        }
+
+        .eachcol6 {
+            width: 6%;
+        }
+    </style>

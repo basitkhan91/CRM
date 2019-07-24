@@ -206,7 +206,7 @@ export class MaterialListCreateComponent implements OnInit {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.materialList[index].workflowMaterialListId == "0" || this.workFlow.materialList[index].workflowMaterialListId == "") {
+        if (this.workFlow.materialList[index].workflowMaterialListId == undefined || this.workFlow.materialList[index].workflowMaterialListId == "0" || this.workFlow.materialList[index].workflowMaterialListId == "") {
             this.workFlow.materialList.splice(index, 1);
         }
         else {
@@ -241,7 +241,7 @@ export class MaterialListCreateComponent implements OnInit {
     // sum of extended cost
     calculateExtendedCostSummation() {
         this.workFlow.materialExtendedCostSummation = this.workFlow.materialList.reduce((acc, x) => {
-            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+            return acc +  parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
         this.workFlow.totalMaterialCostValue = this.workFlow.materialExtendedCostSummation;
 

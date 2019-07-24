@@ -1647,7 +1647,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             taskId: "",
             workflowId: "",
             AllowEdit: true,
-            IsDeleted: false,
+            isDeleted: false,
         }];
         return publication;
     }
@@ -1670,7 +1670,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             taskId: "",
             workflowId: "",
             AllowEdit: true,
-            IsDelete: false,
+            isDelete: false,
 
         }];
         return charges;
@@ -1735,7 +1735,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             workflowId: "",
             masterCompanyId: '',
             AllowEdit: true,
-            IsDelete: false,
+            isDelete: false,
         }];
 
         return material;
