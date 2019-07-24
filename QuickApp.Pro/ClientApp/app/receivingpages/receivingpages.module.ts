@@ -35,6 +35,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TreeModule } from 'primeng/tree';
 import { TreeTableModule } from 'primeng/treetable';
 import { TabViewModule } from 'primeng/tabview';
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 import { ReceivingPagesRoutingModule } from "./receivingpages-routing.module";
 import { CustomerWorksListComponent } from "../components/receiving/customer-work/customer-works-list/customer-works-list.component";
@@ -63,7 +64,7 @@ import { RepairOrderComponent } from "../components/receiving/repair-order/repai
 		MultiSelectModule,
 		ReceivingPagesRoutingModule,
 		AutoCompleteModule,
-        GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule, InputSwitchModule, CheckboxModule, TreeModule, TreeTableModule, TabViewModule
+        GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule, InputSwitchModule, CheckboxModule, TreeModule, TreeTableModule, TabViewModule, KeyFilterModule
 	],
 	declarations: [
 		CustomerWorksListComponent,
