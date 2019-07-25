@@ -1,6 +1,9 @@
 ﻿import { Router } from "@angular/router";
 import { PublicationService } from "../../../services/publication.service";
-import { MatDialog } from "@angular/material";
+import {
+  MatDialog,
+  throwMatDialogContentAlreadyAttachedError
+} from "@angular/material";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal, NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -16,7 +19,8 @@ import { IntegrationService } from "../../../services/integration-service";
 import { OnInit, Component } from "@angular/core";
 
 import { AtaMainService } from "../../../services/atamain.service";
-
+import { AircraftModelService } from "../../../services/aircraft-model/aircraft-model.service";
+import { AircraftManufacturerService } from "../../../services/aircraft-manufacturer/aircraftManufacturer.service";
 @Component({
   selector: "app-create-publication",
   templateUrl: "./create-publication.component.html",
@@ -36,18 +40,22 @@ export class CreatePublicationComponent implements OnInit {
   private isEditMode: boolean;
   selectedFile: File = null;
   public sourcePublication: any = {};
+  airCraftTypes = [];
+  airCraftModels = [];
+  aircraftList: any = [];
+  showModelAircraftModel: boolean = false;
 
   onFileChanged(event) {
     this.selectedFile = event.target.files[0];
   }
 
-  onUpload() {
-    const uploadData = new FormData();
-    uploadData.append("image", this.selectedFile, this.selectedFile.name);
-    this.http.post("/upload", uploadData).subscribe(event => {
-      console.log(event); // handle event here
-    });
-  }
+  // onUpload() {
+  //   const uploadData = new FormData();
+  //   uploadData.append("image", this.selectedFile, this.selectedFile.name);
+  //   this.http.post("/upload", uploadData).subscribe(event => {
+  //     console.log(event); // handle event here
+  //   });
+  // }
   types = [
     { label: "SelectPublication ", value: "Select publication" },
     { label: "CMM", value: "CMM" },
@@ -65,12 +73,11 @@ export class CreatePublicationComponent implements OnInit {
     private alertService: AlertService,
     public ataMainSer: AtaMainService,
     public inteService: IntegrationService,
-    private http: HttpClient
+    private http: HttpClient,
+    private aircraftManufacturerService: AircraftManufacturerService,
+    private aircraftModelService: AircraftModelService,
+    private route: Router
   ) {}
-
-  cars = [
-    { aircraft: "a1653d4d", model: "VW", dashNumber: "1998", memo: "White" }
-  ];
 
   cols: any[];
   first: number = 0;
@@ -92,6 +99,8 @@ export class CreatePublicationComponent implements OnInit {
     } else if (value === "Aircraft") {
       this.currentTab = "Aircraft";
       this.activeMenuItem = 2;
+      this.getAllAircraftTypes();
+      this.getAircraftAllList();
     } else if (value === "Atachapter") {
       this.currentTab = "Atachapter";
       this.activeMenuItem = 3;
@@ -128,7 +137,14 @@ export class CreatePublicationComponent implements OnInit {
     //this.hasFile = true;
   }
 
+  onUpload(event) {
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+  }
+
   postMethod(event) {
+    console.log(event);
     if (this.sourcePublication.docpath != "") {
       let formData = new FormData();
       formData.append("image", this.selectedFile, event.files.name);
@@ -197,5 +213,58 @@ export class CreatePublicationComponent implements OnInit {
     //this.loadingIndicator = false;
     //this.dataSource.data = getCustomerClassificationList;
     //this.allcustomerclassificationInfo = getCustomerClassificationList;
+  }
+
+  // get All
+  getAllAircraftTypes() {
+    this.aircraftManufacturerService
+      .getAll()
+      .subscribe(aircraftManufacturer => {
+        this.showModelAircraftModel = false;
+        const responseData = aircraftManufacturer[0];
+        const typesOfAircraft = responseData.map(x => {
+          return {
+            value: x.aircraftTypeId,
+            label: x.description
+          };
+        });
+        this.airCraftTypes = [
+          { label: "Select Aircraft", value: null },
+          ...typesOfAircraft
+        ];
+      });
+  }
+  // get Aircraft Model By Type
+  getAircraftModelByType(aircraftTypeId) {
+    this.aircraftModelService
+      .getAircraftModelListByManufactureId(aircraftTypeId)
+      .subscribe(res => {
+        this.showModelAircraftModel = true;
+        const responseData = res[0];
+
+        this.airCraftModels = responseData.map(x => {
+          return {
+            value: x.aircraftTypeId,
+            label: x.modelName
+          };
+        });
+      });
+  }
+
+  getAircraftAllList() {
+    this.aircraftModelService.getAll().subscribe(details => {
+      console.log(details);
+      const responseData = details[0].map(x => {
+        return {
+          aircraft: x.aircraftType.description,
+          model: x.modelName,
+          dashNumber: "",
+          memo: x.memo
+        };
+      });
+      this.aircraftList = responseData;
+      console.log(this.aircraftList);
+      console.log(responseData);
+    });
   }
 }
