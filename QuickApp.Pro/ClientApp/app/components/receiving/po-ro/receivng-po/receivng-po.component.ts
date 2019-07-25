@@ -1126,6 +1126,7 @@ export class ReceivngPoComponent implements OnInit {
         part.showStockLineGrid = !part.showStockLineGrid;
     }
 
+
     //addDetailsClick(part:PurchaseOrderPart):void
     //{
     //    part.showStockLineGrid = !part.showStockLineGrid;
@@ -1536,7 +1537,10 @@ export class ReceivngPoComponent implements OnInit {
 
     //}
 
-
+    isDisabledTLboxes: boolean = false;
+    onChangeTimeLife() {
+        this.isDisabledTLboxes = !this.isDisabledTLboxes;
+    }
 
 
 

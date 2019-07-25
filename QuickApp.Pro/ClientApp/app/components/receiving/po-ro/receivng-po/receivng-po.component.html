@@ -170,7 +170,7 @@
                             <div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
                                     <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                    <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span>
                                 </label>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                             <div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
                                     <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                    <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span>
                                 </label>
                             </div>
                         </div>
@@ -321,7 +321,7 @@
                                         <td>{{part.managementStructureName[1]}}</td>
                                         <td>{{part.managementStructureName[2]}}</td>
                                         <td>{{part.managementStructureName[3]}}</td>
-                                        <td><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">Add Details</a></td>
+                                        <td><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Add Details'}}</a></td>
                                         <!--<td><a (click)="addStockLine(part)" class="btn btn-primary-cstm btn-po-details">Add Details</a></td>-->
                                         <!--<button type="button" (click)="showDialog()" pButton icon="fa-external-link-square" label="Show"></button>-->
                                     </tr>
@@ -374,476 +374,485 @@
                                                 </div>
                                             </div>
 
+                                            <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label matTooltip="Export Control Classification Number">ECCN</label>
+                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label matTooltip="International Traffic in Arms Regulations Number">ITAR Num</label>
+                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label matTooltip="National Highways Authority">NHA</label>
+                                                        <input class="form-control" type="text" pInputText>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label matTooltip="Thrust Lever Angle">TLA</label>
+                                                        <input class="form-control" type="text" pInputText>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label matTooltip="National Stock Number">NSN</label>
+                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
 
                                             <!--<div class="col-sm-12">
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">Sequence</label>
-                                                    <div class="col-sm-7 wauto">
-                                                        $$$
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        PN
-                                                    </label>
-                                                    <div class="col-sm-7 wauto">
-                                                        {{part.itemMaster?.partNumber}}
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        Qty to receive
-                                                    </label>
-                                                    <div class="col-sm-7">
-                                                        <input class="form-control w70" type="number" (keyup)="partQuantityChange($event, part)" [(ngModel)]="part.quantityToReceive" value="5">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        Qty Approved
-                                                    </label>
-                                                    <div class="col-sm-7">
-                                                        <input class="form-control w70" type="number" value="NA">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">
-                                                        Qty Rejected
-                                                    </label>
-                                                    <div class="col-sm-7">
-                                                        <input class="form-control w70" type="number" value="NA">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-3 wauto">
-                                                    <label class="control-label col-sm-4 wauto">Cond</label>
-                                                    <div class="col-sm-7 cust-name wauto">
-                                                        <select class="w90">
-                                                            <option value="NEW">NEW</option>
-                                                            <option value="AS-IS">AS-IS</option>
-                                                            <option value="REP">REP</option>
-                                                            <option value="SRV">SRV</option>
-                                                            <option value="OVH">OVH</option>
-                                                            <option value="AR">AR</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>-->
+        <div class="form-group col-sm-3 wauto">
+            <label class="control-label col-sm-4 wauto">Sequence</label>
+            <div class="col-sm-7 wauto">
+                $$$
+            </div>
+        </div>
+        <div class="form-group col-sm-3 wauto">
+            <label class="control-label col-sm-4 wauto">
+                PN
+            </label>
+            <div class="col-sm-7 wauto">
+                {{part.itemMaster?.partNumber}}
+            </div>
+        </div>
+        <div class="form-group col-sm-3 wauto">
+            <label class="control-label col-sm-4 wauto">
+                Qty to receive
+            </label>
+            <div class="col-sm-7">
+                <input class="form-control w70" type="number" (keyup)="partQuantityChange($event, part)" [(ngModel)]="part.quantityToReceive" value="5">
+            </div>
+        </div>
+        <div class="form-group col-sm-3 wauto">
+            <label class="control-label col-sm-4 wauto">
+                Qty Approved
+            </label>
+            <div class="col-sm-7">
+                <input class="form-control w70" type="number" value="NA">
+            </div>
+        </div>
+        <div class="form-group col-sm-3 wauto">
+            <label class="control-label col-sm-4 wauto">
+                Qty Rejected
+            </label>
+            <div class="col-sm-7">
+                <input class="form-control w70" type="number" value="NA">
+            </div>
+        </div>
+        <div class="form-group col-sm-3 wauto">
+            <label class="control-label col-sm-4 wauto">Cond</label>
+            <div class="col-sm-7 cust-name wauto">
+                <select class="w90">
+                    <option value="NEW">NEW</option>
+                    <option value="AS-IS">AS-IS</option>
+                    <option value="REP">REP</option>
+                    <option value="SRV">SRV</option>
+                    <option value="OVH">OVH</option>
+                    <option value="AR">AR</option>
+                </select>
+            </div>
+        </div>
+    </div>-->
 
-                                        <div style="margin-left: 6px;">
-                                            <h3 class="add-details-heading">Receiving Qty-1 of part {{part.itemMaster?.partNumber}}</h3>
-                                            <div class="pull-right" style="margin-top: -37px;margin-right: 85px;">
-                                                <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons"></i>
-                                                <input type="text" pInputText pKeyFilter="pnum" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons"></i>
-                                            </div>
+                                            <div style="margin-left: 6px;">
+                                                <h3 class="add-details-heading">Receiving Qty-1 of part {{part.itemMaster?.partNumber}}</h3>
+                                                <div class="pull-right" style="margin-top: -37px;margin-right: 85px;">
+                                                    <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons"></i>
+                                                    <input type="text" pInputText pKeyFilter="pnum" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                    <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons"></i>
+                                                </div>
 
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <div class="checkbox-cstm" style="margin-top: 4px">
-                                                            <label style="width: 200px;">
-                                                                <input type="checkbox" class="form-control">
-                                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span> Same Details For All Parts
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Company</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Obtain From</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                            <option value="1">Customer</option>
-                                                            <option value="2">Other </option>
-                                                            <option value="3">Vendor</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Unit Cost</label>
-                                                        <input class="form-control" pInputText pKeyFilter="pnum" type="text" value="map Pending">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Ship Via</label>
-                                                        <select class="form-control">
-                                                            <option>fedex</option>
-                                                            <option>Blue Dart</option>
-                                                            <option>Bombino Express</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>BU</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Owner</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                            <option value="1">Customer</option>
-                                                            <option value="2">Other </option>
-                                                            <option value="3">Vendor</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Extended Cost</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Shipping Account</label>
-                                                        <select class="form-control">
-                                                            <option>12345678</option>
-                                                            <option>58698745</option>
-                                                            <option>BB2568AHJ</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Division</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Traceable To</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                            <option value="1">Customer</option>
-                                                            <option value="2">Other </option>
-                                                            <option value="3">Vendor</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Parts Cert Num</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>ESN</label>
-                                                        <input class="form-control" type="text" pInputText>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Department</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>MFG</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Cert By</label>
-                                                        <input class="form-control" type="text" pInputText>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>ECCN</label>
-                                                        <input class="form-control" type="text" pInputText>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Site</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>MFG Lot Num</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Certified Date</label>
-                                                        <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>ITAR Num</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Warehouse</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>MFG Date</label>
-                                                        <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Tag Date</label>
-                                                        <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>NHA</label>
-                                                        <input class="form-control" type="text" pInputText>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Location</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>MFG Trace</label>
-                                                        <input class="form-control" type="text" pInputText value="Map pending">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Tag Type</label>
-                                                        <input class="form-control" type="text" pInputText>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>TLA</label>
-                                                        <input class="form-control" type="text" pInputText>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Shelf</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>MFG Batch Num</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Certified Due Date</label>
-                                                        <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>NSN</label>
-                                                        <input class="form-control" type="text" pInputText>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Bin</label>
-                                                        <select class="form-control">
-                                                            <option value="0">Select</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Expiration Date</label>
-                                                        <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Shipping Ref</label>
-                                                        <select class="form-control">
-                                                            <option>Hyderabad Location</option>
-                                                            <option>Newyork Location</option>
-                                                            <option>Chicago Location</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Aircraft Tail Num</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <h3 class="add-details-heading" style="text-align: left;">Is Serialized</h3>
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Serial Num</label>
-                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <h3 class="add-details-heading" style="text-align: left;">Time Life</h3>
                                                 <div class="form-row">
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <div class="checkbox-cstm" style="margin-top: 4px">
                                                                 <label style="width: 200px;">
                                                                     <input type="checkbox" class="form-control">
-                                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span> Time Life Details Update Later
+                                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span> Same Details For All Parts
                                                                 </label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="time-remaining">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr class="po-table-tr">
-                                                                <th colspan="2" class="text-center">Cycles (in hours)</th>
-                                                                <th colspan="2" class="text-center">Time (in hours)</th>
-                                                                <th colspan="2" class="text-center">Last (in hours)</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Remaining</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Remaining</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Since New</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Since New</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Since New</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Since Ovh</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Since Ovh</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Since Ovh</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Since Insp</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Since Insp</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Since Insp</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Since Repair</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td>Since Repair</td>
-                                                                <td><input class="form-control" type="text" pInputText pKeyFilter="pnum"></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
 
-                                            <div>
-                                                <h3 class="add-details-heading" style="text-align: left;">Calibrated Equipment</h3>
                                                 <div class="form-row">
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label>Inspection Date</label>
+                                                            <label>Company</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Bin</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>MFG Batch Num</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Tag Type</label>
+                                                            <input class="form-control" type="text" pInputText>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>BU</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Obtain From</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                                <option value="1">Customer</option>
+                                                                <option value="2">Other </option>
+                                                                <option value="3">Vendor</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Expiration Date</label>
                                                             <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label>Frequency</label>
-                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                            <label>Certified Due Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+
+                                                <div class="form-row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Division</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Owner</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                                <option value="1">Customer</option>
+                                                                <option value="2">Other </option>
+                                                                <option value="3">Vendor</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Unit Cost</label>
+                                                            <input class="form-control" pInputText pKeyFilter="pnum" type="text" value="map Pending">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Shipping Ref</label>
+                                                            <select class="form-control">
+                                                                <option>Hyderabad Location</option>
+                                                                <option>Newyork Location</option>
+                                                                <option>Chicago Location</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
 
 
-                                            <div class="form-row">
-                                                <a class="btn btn-primary-cstm pull-right" style="width: 58px; height: 28px; margin-bottom: 10px;">Save</a>
+
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Department</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Traceable To</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                                <option value="1">Customer</option>
+                                                                <option value="2">Other </option>
+                                                                <option value="3">Vendor</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Extended Cost</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Ship Via</label>
+                                                            <select class="form-control">
+                                                                <option>fedex</option>
+                                                                <option>Blue Dart</option>
+                                                                <option>Bombino Express</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Site</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>MFG</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Parts Cert Num</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Shipping Account</label>
+                                                            <select class="form-control">
+                                                                <option>12345678</option>
+                                                                <option>58698745</option>
+                                                                <option>BB2568AHJ</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Warehouse</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>MFG Lot Num</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Cert By</label>
+                                                            <input class="form-control" type="text" pInputText>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label matTooltip="Engine Serial Number">ESN</label>
+                                                            <input class="form-control" type="text" pInputText>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Location</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>MFG Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Certified Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Aircraft Tail Num</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                    </div>    
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Shelf</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>MFG Trace</label>
+                                                            <input class="form-control" type="text" pInputText value="Map pending">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Tag Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h3 class="add-details-heading" style="text-align: left;">Is Serialized</h3>
+                                                    <div class="form-row">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label>Serial Num</label>
+                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h3 class="add-details-heading" style="text-align: left;">Time Life</h3>
+                                                    <div class="form-row">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <div class="checkbox-cstm" style="margin-top: 4px">
+                                                                    <label style="width: 200px;">
+                                                                        <input type="checkbox" class="form-control" (click)="onChangeTimeLife()">
+                                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span> Time Life Details Update Later
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="time-remaining">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr class="po-table-tr">
+                                                                    <th colspan="2" class="text-center">Cycles (in hours)</th>
+                                                                    <th colspan="2" class="text-center">Time (in hours)</th>
+                                                                    <th colspan="2" class="text-center">Last (in hours)</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Remaining</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Remaining</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Since New</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Since New</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Since New</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Since Ovh</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Since Ovh</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Since Ovh</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Since Insp</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Since Insp</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Since Insp</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Since Repair</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td>Since Repair</td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h3 class="add-details-heading" style="text-align: left;">Calibrated Equipment</h3>
+                                                    <div class="form-row">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label>Inspection Date</label>
+                                                                <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label>Frequency</label>
+                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-row">
+                                                    <div class="col-md-12">
+                                                        <a class="btn btn-primary-cstm" style="width: 58px; height: 28px; margin-bottom: 10px;">Save</a>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
 
 
 
@@ -1353,7 +1362,7 @@
         <div class="clear"></div>
     </div>-->
 
-</td>
+                                        </td>
                                     </tr>
 
                                 </ng-container>
