@@ -12790,6 +12790,19 @@ body .ui-paginator .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item {
 .pas-clder-po-table tr td a {
     font-size: 14px !important;
 }
+.pas-clder-po-table .ui-datepicker-group {
+    padding: 0.857em;
+}
+.pas-clder-po-table .ui-datepicker thead {
+    background: none;
+}
+.pas-clder-po-table .ui-datepicker th {
+    color: #222;
+    padding: .7em .3em !important;
+    font-weight: bold;
+    border: 0;
+    font-size: 14px;
+}
 .checkbox-cstm label {
     width: 200px;
     font-size: 12px !important;
@@ -13218,5 +13231,9 @@ p-panelmenu .ui-panelmenu {
     margin-left: 10px;
     margin-top: 0px;
 }
-
-
+.wf-task-pautocomp .ui-inputtext {
+    height: 22px !important;
+}
+.wf-task-pautocomp .ui-autocomplete {
+    padding: 0;
+}
