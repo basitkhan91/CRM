@@ -249,6 +249,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     completeAircraftModelData: any[] = [];
     currentItemMasterModels: any[] = [];
     selectedIntegrationTypes: any[];
+    selected: any[] = [];
     selectedPartId: any;
     manufacturerData: any[] = [];
     capabilitiesForm: FormGroup;

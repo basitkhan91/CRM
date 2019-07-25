@@ -53,6 +53,7 @@ export class WorkOrderAddComponent implements OnInit {
   contactInfo: any;
   mpnFlag: boolean;
   isDetailedView: boolean;
+  selectedRadioButtonValue: boolean;
   moduleName: string;
 
   woDealerType: String = "customer";
