@@ -10,6 +10,7 @@ namespace DAL.Models
         [Key]
         public int AircraftTypeId { get; set; }
         public string Description { get; set; }
-        public Int32? MasterCompanyId { get; set; }
+		public string Memo { get; set; }
+		public Int32? MasterCompanyId { get; set; }
     }
 }

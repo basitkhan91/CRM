@@ -253,7 +253,6 @@ export class CreatePublicationComponent implements OnInit {
 
   getAircraftAllList() {
     this.aircraftModelService.getAll().subscribe(details => {
-      console.log(details);
       const responseData = details[0].map(x => {
         return {
           aircraft: x.aircraftType.description,
@@ -263,8 +262,6 @@ export class CreatePublicationComponent implements OnInit {
         };
       });
       this.aircraftList = responseData;
-      console.log(this.aircraftList);
-      console.log(responseData);
     });
   }
 }

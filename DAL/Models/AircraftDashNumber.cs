@@ -26,5 +26,6 @@ namespace DAL.Models
         public virtual AircraftType AircraftType { get; set; }
 
         public virtual AircraftModel AircraftModel { get; set; }
-    }
+		public string Memo { get; set; }
+	}
 }
