@@ -35,51 +35,144 @@
 </div>
 
 <div class="card">
-  <div [ngSwitch]="currentTab">
-    <div *ngSwitchCase="'General'">
+
+    <div  [ngClass]="{hideTab : currentTab !== 'General'}">
       <div class="card-header header-text ">
         General Information
       </div>
       <div class="card-body">
         <div class="ui-g">
-          <!-- first    -->
-          <div class="ui-g-12 ui-md-6">
-            <div class="ui-g-4">
-              Entry Date
-            </div>
-            <div class="ui-g-8">
-              <p-calendar
-                [showIcon]="true"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="sourcePublication.entryDate"
-              ></p-calendar>
-            </div>
+      <div class="ui-g-12 ">
+                    <div class="ui-g-6 ui-sm-12">
+    <div class="ui-g-4">
+        Entry Date
+      </div>
+      <div class="ui-g-8">
+        <p-calendar
+          [showIcon]="true"
+          [ngModelOptions]="{ standalone: true }"
+          [(ngModel)]="sourcePublication.entryDate"
+        ></p-calendar>
+      </div>
+      <div class="ui-g-4">
+          Publication ID
+        </div>
+        <div class="ui-g-8">
+          <input
+            class="form-control"
+            #pubID="ngModel"
+            type="text"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="sourcePublication.PublicationId"
+          />
+        </div>
+
+
+        <div class="ui-g-4">
+            Publication Description
+          </div>
+          <div class="ui-g-8">
+            <textarea
+              pInputTextarea
+              class="form-control"
+              #pubDescription="ngModel"
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.description"
+            ></textarea>
           </div>
 
-          <div class="ui-g-12 ui-md-6">
-            <div class="ui-g-4">
-              Revision
-            </div>
-            <div class="ui-g-8">
-              <p-checkbox
-                class="checkbox-blue"
-                name="groupname"
-                [(ngModel)]="revision"
-                binary="true"
-              ></p-checkbox>
-            </div>
-          </div>
 
-          <div class="ui-g-12 ui-md-6" *ngIf="revision">
+              <div class="ui-g-4">
+                Publication Type
+              </div>
+              <div class="ui-g-8">
+                <p-dropdown
+                  [options]="types"
+                  class="pub-type-select"
+                  #pubType="ngModel"
+                  [(ngModel)]="sourcePublication.pubType"
+                ></p-dropdown>
+              </div>
+     
+
+          
+                <div class="ui-g-4">
+                  Author/Source/Directive
+                </div>
+                <div class="ui-g-8">
+                  <input
+                    class="form-control"
+                    #pubID="ngModel"
+                    type="text"
+                    [ngModelOptions]="{ standalone: true }"
+                    [(ngModel)]="sourcePublication.ASD"
+                  />
+                </div>
+
+             
+                    <div class="ui-g-4">
+                      Sequence
+                    </div>
+                    <div class="ui-g-8">
+                      <input
+                        class="form-control"
+                        #pubID="ngModel"
+                        type="text"
+                        [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="sourcePublication.sequence"
+                      />
+                    </div>
+
+
+         
+                        <div class="ui-g-4">
+                          Published By
+                        </div>
+                        <div class="ui-g-8">
+                          <input
+                            class="form-control"
+                            #pubID="ngModel"
+                            type="text"
+                            [ngModelOptions]="{ standalone: true }"
+                            [(ngModel)]="sourcePublication.publishby"
+                          />
+                        </div>
+
+                     
+                            <div class="ui-g-4">
+                              Location
+                            </div>
+                            <div class="ui-g-8">
+                              <input
+                                class="form-control"
+                                #pubID="ngModel"
+                                type="text"
+                                [ngModelOptions]="{ standalone: true }"
+                                [(ngModel)]="sourcePublication.location"
+                              />
+                            </div>
+                        </div>
+                    <div class="ui-g-6 ui-sm-12">
+        <div class="ui-g-4">
+          Revision
+        </div>
+        <div class="ui-g-8">
+          <p-checkbox
+            class="checkbox-blue"
+            name="groupname"
+            [(ngModel)]="revision"
+            binary="true"
+          ></p-checkbox>
+        </div>
+
+        <div  *ngIf="revision">
             <div class="ui-g-4">
               Verified By
             </div>
             <div class="ui-g-8">
               <input pInputText type="text" />
             </div>
-          </div>
-
-          <div class="ui-g-12 ui-md-6" *ngIf="revision">
             <div class="ui-g-4">
               Expiration Date
             </div>
@@ -87,191 +180,78 @@
               <p-calendar [showIcon]="true"></p-calendar>
             </div>
           </div>
+              <div class="ui-g-4">
+                Next Review Date
+              </div>
+              <div class="ui-g-8">
+                <p-calendar
+                  [showIcon]="true"
+                  [ngModelOptions]="{ standalone: true }"
+                  [(ngModel)]="sourcePublication.nextreviewDate"
+                ></p-calendar>
+              </div>
+            
+                  <div class="ui-g-4">
+                    Employee
+                  </div>
+                  <div class="ui-g-8">
+                    <input
+                      class="form-control"
+                      #pubID="ngModel"
+                      type="text"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="sourcePublication.employee"
+                    />
+                  </div>
 
-          <!-- second    -->
-          <div class="ui-g-12 ui-md-6">
-            <div class="ui-g-4">
-              Publication ID
-            </div>
-            <div class="ui-g-8">
-              <input
-                class="form-control"
-                #pubID="ngModel"
-                type="text"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="sourcePublication.PublicationId"
-              />
-            </div>
-          </div>
-          <div class="ui-g-12 ui-md-6">
-            <div class="ui-g-4">
-              Next Review Date
-            </div>
-            <div class="ui-g-8">
-              <p-calendar
-                [showIcon]="true"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="sourcePublication.nextreviewDate"
-              ></p-calendar>
-            </div>
-          </div>
-          <!-- third -->
-          <div class="ui-g-12 ui-md-6">
-            <div class="ui-g-4">
-              Publication Description
-            </div>
-            <div class="ui-g-8">
-              <textarea
-                pInputTextarea
-                class="form-control"
-                #pubDescription="ngModel"
-                type="text"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="sourcePublication.description"
-              ></textarea>
-            </div>
-          </div>
+                  <div class="ui-g-4">
+                      Revision Date
+                    </div>
+                    <div class="ui-g-8">
+                      <p-calendar
+                        [showIcon]="true"
+                        [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="sourcePublication.revisionDate"
+                      ></p-calendar>
+                    </div>
+             
 
-          <div class="ui-g-12 ui-md-6">
-            <div class="ui-g-4">
-              Employee
-            </div>
-            <div class="ui-g-8">
-              <input
-                class="form-control"
-                #pubID="ngModel"
-                type="text"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="sourcePublication.employee"
-              />
-            </div>
-          </div>
-        </div>
+                    <div class="ui-g-4">
+                        Status
+                      </div>
+                      <div class="ui-g-8">
+                        <p-dropdown [options]="status" class="pub-type-select"></p-dropdown>
+                      </div>
+                      </div>
+                      <div class="ui-g-12 ui-sm-12">
+                          <div class="ui-g-2">File</div>
+                
+                          <div class="ui-g-10">
+                            <p-fileUpload
+                              name="myfile[]"
+                              customUpload="true"
+                              (uploadHandler)="onUpload($event)"
+                              multiple="multiple"
+                              [showCancelButton]="false"
+                            ></p-fileUpload>
+                          </div>
+                        </div>
 
-        <!-- fourth -->
-
-        <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-4">
-            Publication Type
-          </div>
-          <div class="ui-g-8">
-            <p-dropdown
-              [options]="types"
-              class="pub-type-select"
-              #pubType="ngModel"
-              [(ngModel)]="sourcePublication.pubType"
-            ></p-dropdown>
-          </div>
-        </div>
-
-        <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-4">
-            Revision Date
-          </div>
-          <div class="ui-g-8">
-            <p-calendar
-              [showIcon]="true"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.revisionDate"
-            ></p-calendar>
-          </div>
-        </div>
-
-        <!-- fifth -->
-
-        <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-4">
-            Author/Source/Directive
-          </div>
-          <div class="ui-g-8">
-            <input
-              class="form-control"
-              #pubID="ngModel"
-              type="text"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.ASD"
-            />
-          </div>
-        </div>
-
-        <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-4">
-            Sequence
-          </div>
-          <div class="ui-g-8">
-            <input
-              class="form-control"
-              #pubID="ngModel"
-              type="text"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.sequence"
-            />
-          </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-4">
-            Published By
-          </div>
-          <div class="ui-g-8">
-            <input
-              class="form-control"
-              #pubID="ngModel"
-              type="text"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.publishby"
-            />
-          </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-4">
-            Location
-          </div>
-          <div class="ui-g-8">
-            <input
-              class="form-control"
-              #pubID="ngModel"
-              type="text"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.location"
-            />
-          </div>
-        </div>
-
-        <div class="ui-g-12 ui-md-6">
-          <div class="ui-g-4">
-            Status
-          </div>
-          <div class="ui-g-8">
-            <p-dropdown [options]="status" class="pub-type-select"></p-dropdown>
-          </div>
-        </div>
-
-        <div class="ui-g-12 ui-md-12">
-          <div class="ui-g-2">File</div>
-
-          <div class="ui-g-10">
-            <p-fileUpload
-              name="myfile[]"
-              url="./upload.php"
-              multiple="multiple"
-              [showCancelButton]="false"
-            ></p-fileUpload>
-          </div>
-        </div>
-
-        <button
-          class="btn btn-primary-cstm pull-right button-save"
-          type="submit"
-          (click)="editItemCloseModel()"
-        >
-          Save & Next
-        </button>
+                        <button
+                        class="btn btn-primary-cstm pull-right button-save"
+                        type="submit"
+                        (click)="editItemCloseModel()"
+                      >
+                        Save & Next
+                      </button>
+                  </div>
       </div>
+    </div>
     </div>
 
     <!-- Aircraft Information  -->
 
-    <div *ngSwitchCase="'Aircraft'">
+    <div  [ngClass]="{hideTab : currentTab !== 'Aircraft'}">
       <div class="card-header header-text ">
         Aircraft Information
       </div>
@@ -281,24 +261,32 @@
           <div class="col-md-7">
             <div class="shadow-Box">
               <h4>Add Dash Numbers</h4>
+
               <div class="col-md-3">
                 <div class="form-group ">
-                  <label class="fs12">Aircraft</label>
+                  <label class="fs12"
+                    >Aircraft
+                    <i class="fa fa-plus-circle fa-lg" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"></i>
+                  </label>
                   <p-dropdown
-                    [options]="status"
+                    [options]="airCraftTypes"
+                    (onChange)="getAircraftModelByType($event.value)"
                     class="pub-type-select pub-border input-sm"
                   ></p-dropdown>
                 </div>
               </div>
 
-              <div class="col-md-3">
+              <div class="col-md-3" *ngIf="showModelAircraftModel">
                 <div class="form-group">
-                  <label class="fs12 inline-block">Model</label>
+                  <label class="fs12 inline-block"
+                    >Model
+                    <i class="fa fa-plus-circle fa-lg"></i>
+                  </label>
                   <label class="fs12 inline-block"
                     ><input type="checkbox" /> Unknown</label
                   >
                   <p-multiSelect
-                    [options]="types"
+                    [options]="airCraftModels"
                     class="pub-multi align-x"
                   ></p-multiSelect>
                 </div>
@@ -317,7 +305,7 @@
               </div>
               <div class="col-md-3">
                 <div class="form-group">
-                  <button class="btn btn-primary mtop20">
+                  <button class="btn btn-primary mtop20" data-toggle="modal" data-target="#addDashNumber">
                     Add
                   </button>
                 </div>
@@ -331,7 +319,7 @@
               <h4>Search Dash Numbers</h4>
               <div class="col-md-4">
                 <div class="form-group ">
-                  <label class="fs12">Aircraft</label>
+                  <label class="fs12">Aircraft </label>
                   <p-multiSelect
                     [options]="types"
                     class="pub-multi"
@@ -368,7 +356,7 @@
             <div class="shadow-Box">
               <p-table
                 [columns]="cols"
-                [value]="cars"
+                [value]="aircraftList"
                 [paginator]="true"
                 [rows]="10"
                 [first]="first"
@@ -429,7 +417,7 @@
       </div>
     </div>
 
-    <div *ngSwitchCase="'Atachapter'">
+    <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}" >
       <div class="card-header header-text ">
         ATA Information
       </div>
@@ -440,7 +428,9 @@
               <h4>Add ATA Chapters</h4>
               <div class="col-md-3">
                 <div class="form-group ">
-                  <label class="label-ataChapter">ATA Chapter</label>
+                  <label class="label-ataChapter">ATA Chapter 
+                    <i class="fa fa-plus-circle fa-lg"></i>
+                  </label>
                   <p-dropdown
                     [options]="status"
                     class="pub-type-select pub-border"
@@ -450,7 +440,9 @@
 
               <div class="col-md-3">
                 <div class="form-group">
-                  <label class="label-atasubchapter"> ATA SubChapter</label>
+                  <label class="label-atasubchapter"> ATA SubChapter 
+                    <i class="fa fa-plus-circle fa-lg"></i>
+                  </label>
                   <p-multiSelect
                     [options]="types"
                     class="pub-multi align-x"
@@ -563,5 +555,108 @@
         </div>
       </div>
     </div>
+  
+</div>
+
+ <!-- Add DashNumber Popup -->
+
+ <div id="addDashNumber" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Dash Numbers</h4>
+      </div>
+      <div class="modal-body">
+
+
+         
+              <form method="post" id="" name="">
+                  <div class="col-sm-12">
+                    <div class="form-group marginr50" style="display: inline-block;">
+                      <p class="fs10">
+                        <label class="control-label" style="width: auto;">PN</label>
+                        PN123 </p>
+                    </div>
+                    <div class="form-group marginr50" style="display: inline-block;">
+                      <p class="fs10">
+                        <label class="control-label" style="width: auto;">Aircraft</label>
+                        Airbus </p>
+                    </div>  
+                    <div class="form-group marginr50" style="display: inline-block;">
+                      <p class="fs10">
+                        <label class="control-label" style="width: auto;">Model</label>
+                        A767, A768</p>
+                    </div>                                 
+                  </div>
+                <div id="" class="table-responsive default-bg clear">
+                  <table class="table table-bordered table-striped table-sorting dashnumbers-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Aircraft</th>
+                        <th>Model</th>
+                        <th>Dash Number</th>
+                        <th>Memo</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><input type="checkbox" class="form-control"></td>
+                        <td>Airbus</td>
+                        <td>A767</td>
+                        <td>333</td>
+                        <td><textarea class="form-control"></textarea></td>
+                      </tr>
+                      <tr>
+                        <td><input type="checkbox" class="form-control"></td>
+                        <td>Airbus</td>
+                        <td>A767</td>
+                        <td>444</td>
+                        <td><textarea class="form-control"></textarea></td>
+                      </tr> 
+                      <tr>
+                        <td><input type="checkbox" class="form-control"></td>
+                        <td>Airbus</td>
+                        <td>A767</td>
+                        <td>555</td>
+                        <td><textarea class="form-control" disabled=""></textarea></td>
+                      </tr>
+                      <tr>
+                        <td><input type="checkbox" class="form-control"></td>
+                        <td>Airbus</td>
+                        <td>A320</td>
+                        <td>222</td>
+                        <td><textarea class="form-control" disabled=""></textarea></td>
+                      </tr>                 
+                                     
+                    </tbody>
+                  </table>
+                  <div class="clear"></div>
+                  <br>
+                </div>
+              </form>
+      
+        
+   <!-- <div class="col-md-12">
+     
+     <label > PN</label>
+     PN123
+     <label > PN</label>
+     PN123
+     <label > PN</label>
+     PN123
+
+
+
+   </div> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
   </div>
 </div>
