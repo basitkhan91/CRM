@@ -35,6 +35,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { TabViewModule } from 'primeng/tabview';
 
 
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -93,7 +94,8 @@ import { ValidateAccessModule } from "../validateaccess/validateaccess.module";
 		BreadcrumbModule, DialogModule, CalendarModule,
 		TreeModule,
         TreeTableModule,
-        ValidateAccessModule
+        ValidateAccessModule,
+        TabViewModule
 
 	],
 	declarations: [

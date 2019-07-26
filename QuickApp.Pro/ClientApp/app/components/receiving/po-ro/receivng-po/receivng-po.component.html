@@ -31,32 +31,32 @@
                 <div class="form-row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>PO Num</label>
-                            <input class="form-control" type="text" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber">
+                            <label>PO Num <span class="clr-red">*</span></label>
+                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber" disabled="disabled">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Vendor Num</label>
+                            <label>Vendor Num <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
-                                <input class="form-control" type="text" disabled="disabled" [value]="purchaseOrderData.vendor.vendorCode">
+                                <input class="form-control" type="text" [value]="purchaseOrderData.vendor.vendorCode" disabled="disabled">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Requisitioner</label>
+                            <label>Requisitioner <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
                                 <div class="inner-addon right-addon inline-block">
-                                    <input type="text" class="form-control" disabled="disabled" [value]="purchaseOrderData.requestedBy">
+                                    <input type="text" class="form-control" [value]="purchaseOrderData.requestedBy">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Company</label>
-                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                            <label>Company <span class="clr-red">*</span></label>
+                            <select class="form-control" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}" required>
                                 <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
                             </select>
                         </div>
@@ -67,29 +67,29 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Open Date</label>
-                            <p-calendar class="pas-clder" disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
+                            <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Vendor Name</label>
+                            <label>Vendor Name <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
-                                <input type="text" disabled="disabled" class="form-control" [value]="purchaseOrderData.vendor.vendorName">
+                                <input type="text" class="form-control" [value]="purchaseOrderData.vendor.vendorName" disabled="disabled">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Approver</label>
-                            <div class="inner-addon ">
-                                <input type="text" class="form-control" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver">
+                            <label>Approver <span class="clr-red">*</span></label>
+                            <div class="inner-addon">
+                                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver" required>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>BU</label>
-                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                            <select class="form-control" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
                             </select>
                         </div>
@@ -100,7 +100,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Need By</label>
-                            <p-calendar class="pas-clder" disabled="disabled" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate"></p-calendar>
+                            <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate" [minDate]="purchaseOrderData.dateRequested"></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -108,20 +108,20 @@
                             <label>Vendor Contact</label>
                             <div class="inner-addon right-addon inline-block">
                                 <i class="fa fa-search"></i>
-                                <input type="text" disabled="disabled" class="form-control" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
+                                <input type="text" class="form-control" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Approved Date</label>
-                            <p-calendar class="pas-clder" [showIcon]="true" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied"></p-calendar>
+                            <label>Approved Date <span class="clr-red">*</span></label>
+                            <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied" required></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Dept</label>
-                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                            <select class="form-control" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
                             </select>
                         </div>
@@ -133,7 +133,7 @@
                         <div class="form-group">
                             <label>Priority</label>
                             <div class="inner-addon right-addon inline-block">
-                                <select class="form-control" disabled="disabled" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.priorityId">
+                                <select class="form-control" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.priorityId">
                                     <option *ngFor="let priority of poPriorityInfo" [value]="priority.Key">{{priority.Value}}</option>
                                 </select>
                             </div>
@@ -142,13 +142,13 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Contact Phone</label>
-                            <input class="form-control" disabled="disabled" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
+                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Status</label>
-                            <select class="form-control" disabled="disabled" [(ngModel)]="purchaseOrderData.statusId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                            <select class="form-control" [(ngModel)]="purchaseOrderData.statusId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let status of poStatus" [value]="status.Key">{{status.Value}}</option>
                             </select>
                         </div>
@@ -156,7 +156,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Division</label>
-                            <select class="form-control" disabled="disabled" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                            <select class="form-control" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
                             </select>
                         </div>
@@ -169,8 +169,8 @@
                             <label>Deferred Receiver</label>
                             <div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
-                                    <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
-                                    <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span>
+                                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 </label>
                             </div>
                         </div>
@@ -180,21 +180,21 @@
                             <label>Resale</label>
                             <div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
-                                    <input type="checkbox" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
-                                    <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span>
+                                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Credit Limit &amp; Terms</label>
+                            <label>Credit Limit &amp; Terms <span class="clr-red">*</span></label>
                             <div class="form-row">
                                 <div class="col-sm-5">
-                                    <input class="form-control" disabled="disabled" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms">
+                                    <input class="form-control" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms" required>
                                 </div>
                                 <div class="col-sm-7">
-                                    <select class="form-control" #selects="ngModel" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit">
+                                    <select class="form-control" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit" required>
                                         <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
                                     </select>
                                 </div>
@@ -204,7 +204,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Memo</label>
-                            <textarea class="form-control h100 scroll-x" disabled="disabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
+                            <textarea class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
                         </div>
                     </div>
                 </div>
@@ -228,11 +228,11 @@
                                     <th>PN</th>
                                     <th>Qty Ordered</th>
                                     <th>Qty Received</th>
-                                    <th>Qty Approved</th>
+                                    <th>Qty Actually Received</th>
+                                    <th>Qty Rejected</th>
                                     <th>Qty Backordered</th>
                                     <th>Status</th>
-                                    <th>User Name</th>
-                                    <th colspan="3"></th>
+                                    <th colspan="3" class="text-center">User Name</th>
                                     <th>Company</th>
                                     <th>BU</th>
                                     <th>Division</th>
@@ -259,11 +259,12 @@
                                         <td>
                                             {{part.approver}}
                                         </td>
+                                        <td></td>
                                         <td>
                                             {{part.quantityBackOrdered}}
                                         </td>
                                         <td>{{part.statusText}}</td>
-                                        <td>{{part.requestedBy}}</td>
+                                        <!--<td>{{part.requestedBy}}</td>-->
                                         <td colspan="3"></td>
                                         <td>
                                             {{part.managementStructureName[0]}}
@@ -332,37 +333,25 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>Sequence</label>
-                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" disabled />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label>PN</label>
                                                         <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="" disabled />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <label>QTY to Receive</label>
-                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="5" />
+                                                        <label>PN</label>
+                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="{{part.itemMaster?.partNumber}}" disabled />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <label>QTY Approved</label>
-                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="NA" />
+                                                        <label>PN Description</label>
+                                                        <input type="text" pInputText class="form-control" value="" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <label>QTY Rejected</label>
-                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="NA" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label>Cond</label>
-                                                        <select>
+                                                        <label>Cond <span class="clr-red">*</span></label>
+                                                        <select class="form-control" required>
                                                             <option value="NEW">NEW</option>
                                                             <option value="AS-IS">AS-IS</option>
                                                             <option value="REP">REP</option>
@@ -372,40 +361,67 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>QTY To Receive</label>
+                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="5" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>QTY Actually Received <span class="clr-red">*</span></label>
+                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="NA" required />
+                                                    </div>
+                                                </div>
+                                                
                                             </div>
 
                                             <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
+                                                        <label>QTY Rejected <span class="clr-red">*</span></label>
+                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="NA" required />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>GL Account <span class="clr-red">*</span></label>
+                                                        <input type="text" pInputText class="form-control" value="" required />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
                                                         <label matTooltip="Export Control Classification Number">ECCN</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="International Traffic in Arms Regulations Number">ITAR Num</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label matTooltip="National Highways Authority">NHA</label>
-                                                        <input class="form-control" type="text" pInputText>
+                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Thrust Lever Angle">TLA</label>
-                                                        <input class="form-control" type="text" pInputText>
+                                                        <input class="form-control" type="text" pInputText [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="National Stock Number">NSN</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
+                                            </div>
 
+                                            <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label matTooltip="Next Hire Assembly">NHA</label>
+                                                        <input class="form-control" type="text" pInputText>
+                                                    </div>
+                                                </div>
                                             </div>
 
 
@@ -487,7 +503,49 @@
                                                 <div class="form-row">
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label>Company</label>
+                                                            <label>Company <span class="clr-red">*</span></label>
+                                                            <select class="form-control" required>
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>BU</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Division</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Dept</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Site <span class="clr-red">*</span></label>
+                                                            <select class="form-control" required>
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Warehouse</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Location</label>
+                                                            <select class="form-control">
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Shelf</label>
                                                             <select class="form-control">
                                                                 <option value="0">Select</option>
                                                             </select>
@@ -500,31 +558,6 @@
                                                                 <option value="0">Select</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>MFG Batch Num</label>
-                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Tag Type</label>
-                                                            <input class="form-control" type="text" pInputText>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>BU</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label>Obtain From</label>
                                                             <select class="form-control">
@@ -534,31 +567,6 @@
                                                                 <option value="3">Vendor</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Expiration Date</label>
-                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Certified Due Date</label>
-                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Division</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label>Owner</label>
                                                             <select class="form-control">
@@ -568,38 +576,6 @@
                                                                 <option value="3">Vendor</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Unit Cost</label>
-                                                            <input class="form-control" pInputText pKeyFilter="pnum" type="text" value="map Pending">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Shipping Ref</label>
-                                                            <select class="form-control">
-                                                                <option>Hyderabad Location</option>
-                                                                <option>Newyork Location</option>
-                                                                <option>Chicago Location</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-
-
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Department</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label>Traceable To</label>
                                                             <select class="form-control">
@@ -609,14 +585,85 @@
                                                                 <option value="3">Vendor</option>
                                                             </select>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label>MFG <span class="clr-red">*</span></label>
+                                                            <select class="form-control" required>
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>MFG Lot Num</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>MFG Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>MFG Trace</label>
+                                                            <input class="form-control" type="text" pInputText value="Map pending">
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>MFG Batch Num</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Expiration Date</label>
+                                                            <div class="form-group">
+                                                                <div class="checkbox-cstm" style="margin-top: 4px">
+                                                                    <label>
+                                                                        <input type="checkbox" class="form-control">
+                                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Unit Cost</label>
+                                                            <input class="form-control" pInputText pKeyFilter="pnum" type="text" value="map Pending">
+                                                        </div>
                                                         <div class="form-group">
                                                             <label>Extended Cost</label>
                                                             <input class="form-control" type="text" pInputText pKeyFilter="pnum">
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label>Parts Cert Num</label>
+                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Cert By</label>
+                                                            <input class="form-control" type="text" pInputText>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Certified Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Certified Due Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Tag Type</label>
+                                                            <select class="form-control" required>
+                                                                <option value="0">Select</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Tag Date</label>
+                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Shipping Ref</label>
+                                                            <select class="form-control">
+                                                                <option>Hyderabad Location</option>
+                                                                <option>Newyork Location</option>
+                                                                <option>Chicago Location</option>
+                                                            </select>
+                                                        </div>
                                                         <div class="form-group">
                                                             <label>Ship Via</label>
                                                             <select class="form-control">
@@ -625,36 +672,6 @@
                                                                 <option>Bombino Express</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-
-
-                                                    
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Site</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>MFG</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Parts Cert Num</label>
-                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label>Shipping Account</label>
                                                             <select class="form-control">
@@ -663,86 +680,13 @@
                                                                 <option>BB2568AHJ</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Warehouse</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>MFG Lot Num</label>
-                                                            <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Cert By</label>
-                                                            <input class="form-control" type="text" pInputText>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label matTooltip="Engine Serial Number">ESN</label>
-                                                            <input class="form-control" type="text" pInputText>
+                                                            <input class="form-control" type="text" pInputText [maxLength]="25">
                                                         </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Location</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>MFG Date</label>
-                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Certified Date</label>
-                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label>Aircraft Tail Num</label>
                                                             <input class="form-control" type="text" pInputText pKeyFilter="pnum">
-                                                        </div>
-                                                    </div>    
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Shelf</label>
-                                                            <select class="form-control">
-                                                                <option value="0">Select</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>MFG Trace</label>
-                                                            <input class="form-control" type="text" pInputText value="Map pending">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label>Tag Date</label>
-                                                            <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -785,41 +729,41 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td>Remaining</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="cycleRemaining" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Remaining</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="timeRemaining" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="lastSinceNew" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="cycleSinceNew" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="lastSinceOVH" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="cycleSinceOvh" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="timeSinceOvh" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="cycleSinceInsp" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="lastSinceInsp" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Repair</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="cycleSinceRepair" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td>Since Repair</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [disabled]="isDisabledTLboxes"></td>
+                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="timeSinceNew" [ngModelOptions]="{standalone: true}" [disabled]="isDisabledTLboxes"></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>
