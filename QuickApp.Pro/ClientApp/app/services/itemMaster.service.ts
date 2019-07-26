@@ -123,7 +123,7 @@ export class ItemMasterService {
 
     getPrtnumberslistList () {
         return Observable.forkJoin(
-            this.itemMasterEndpoint.getPartnumbersEndpoint<any[]>());
+            this.itemMasterEndpoint.getPartnumbersEndpoint<any>());
     }
 
     geteuipmentList() {
