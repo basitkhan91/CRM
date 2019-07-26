@@ -73,6 +73,10 @@ export class PublicationService {
     getPublicationAudit(publicationId: number) {
         return this.publicationEndpoint.getPublincationAuditById<any>(publicationId);
     }
-
-
+    getDashNumber(Mid: string, Tid: number) {
+        return this.publicationEndpoint.getDashNumberById<any>(Mid, Tid);
+    }
+    getATASubDesc(Mid: number, Tid: number) {
+        return this.publicationEndpoint.getATASubByID<any>(Mid, Tid);
+    }
 }

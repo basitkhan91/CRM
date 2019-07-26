@@ -15,7 +15,9 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _publicationUrlNew: string = "/api/Publication/publicationpost";
     private readonly _actionsUrlAuditHistory: string = "/api/Publication/auditHistoryById";
     private readonly getPublicationAuditById: string = "/api/Publication/audits";
-
+    private readonly getDash: string = "/api/Publication/GetDashNoByID";
+    private readonly getATAUrl: string = "/api/Publication/GetATASUBS";
+    
     get getCodeUrl() { return this.configurations.baseUrl + this._publicationGetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -80,6 +82,20 @@ export class PublicationEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getPublincationAuditById(publicationId));
+            });
+    }
+    getDashNumberById<T>(Mid: string, Tid: number): Observable<T> {
+        let endpointUrl = `${this.getDash}/${Mid}/${Tid}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDashNumberById(Mid,Tid));
+            });
+    }
+    getATASubByID<T>(Mid: number, Tid: number): Observable<T> {
+        let endpointUrl = `${this.getATAUrl}/${Mid}/${Tid}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATASubByID(Mid, Tid));
             });
     }
 }
