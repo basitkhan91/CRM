@@ -35,7 +35,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult Get()
         {
             //var result = _unitOfWork.ATASubChapter1s.GetAllATAMainnData(); //.GetAllCustomersData();
-            var result = _context.ATASubChapter.Where(a=>a.IsDelete==false || a.IsDelete == null).OrderByDescending(c => c.ATASubChapterId).ToList();
+            var result = _context.ATASubChapter.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(c => c.ATASubChapterId).ToList();
             return Ok(result);
 
             //try
@@ -161,6 +161,14 @@ namespace QuickApp.Pro.Controllers
             auditResult.Add(new AuditResult<ATASubChapterAudit> { AreaName = "ATA Sub Chapter", Result = audits.ToList() });
 
             return Ok(auditResult);
+        }
+
+
+        [HttpGet("ATASubChapterByATAChapterId/{id}")]
+        public IActionResult getATASubChapterListByATAChapterId(long id)
+        {
+            var ataSubChapter = _unitOfWork.Repository<ATASubChapter>().Find(x => x.ATAChapterId == id && x.IsDelete != true);
+            return Ok(ataSubChapter);
         }
 
 
