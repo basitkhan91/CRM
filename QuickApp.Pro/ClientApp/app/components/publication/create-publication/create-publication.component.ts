@@ -55,16 +55,6 @@ export class CreatePublicationComponent implements OnInit {
   ];
   generalInformationDetails: any = {};
 
-  // return {
-  //   PublicationId: this.sourcePublication.PublicationId,
-  //   PartNumber: obj.partNumber,
-  //   PartNumberDescription: obj.partDescription,
-  //   ItemMasterId: obj.itemMasterId,
-  //   ItemClassification: obj.itemClassification,
-  //   ItemClassificationId: obj.itemClassificationId,
-  //   ItemGroupId: obj.itemGroupId
-  // };
-
   onFileChanged(event) {
     this.selectedFile = event.target.files[0];
   }
