@@ -100,18 +100,7 @@
 						<p class="lead" style="font-size:medium">Add Billing Information</p>
 						<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
 							<div class="form-group row form-bg" style="padding:8px 5px 5px 5px;border: 1px solid #ccc;">
-								<!--<div class="form-group col-sm-4 Customer-details-heading">
-						<p class="fs10">
-							<label class="control-label w100">Customer Name:</label>
-							{{local?.name}}
-						</p>
-					</div>
-					<div class="form-group col-sm-4 Customer-details-heading">
-						<p class="fs10">
-							<label class="control-label w100">Customer Code:</label>
-							{{local?.customerCode}}
-						</p>
-					</div>-->
+						
 							</div>
 							<div class="col-md-12 col-sm-12 col-12">
 								
@@ -172,7 +161,7 @@
 												<label class="control-label col-sm-4">Bill To Country <strong class="clr-red">*</strong></label>
 												<div class="col-sm-7">
 													<div class="inner-addon right-addon inline-block">
-														<p-autoComplete (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+														<p-autoComplete class="autocomplete-customer" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
 																		[minLength]="1" [dropdown]="true">
 															<ng-template let-countryName pTemplate="item">
 																<div class="ui-helper-clearfix">{{countryName}}</div>
