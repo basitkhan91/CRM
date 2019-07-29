@@ -1,1 +1,41 @@
-﻿
+﻿.grey-card {
+  background-color: #e7e7e7;
+}
+.wo-multiple-pn-details {
+  background: #fff;
+  padding: 8px;
+  border: 5px solid #e7e7e7;
+}
+.nav-pills-cstm {
+  margin-top: 10px;
+}
+.nav-pills-cstm li {
+  float: left;
+}
+.nav-pills-cstm li a {
+  background-color: #4298ffb0;
+  color: white;
+  margin-right: 2px;
+}
+li.nav-item {
+  margin-right: 1px;
+  border-radius: 4px;
+}
+.nav-pills .nav-link,
+.nav-pills .show > .nav-link {
+  color: black;
+  background-color: #ddd;
+}
+.nav-pills > li > a.active,
+.nav-pills > li > a.active:focus,
+.nav-pills > li > a.active:hover {
+  color: #fff;
+  background-color: #337ab7 !important;
+}
+.dropdown-menu.show > a {
+  background-color: white !important;
+  color: black !important;
+}
+.hidedata {
+  display: none;
+}

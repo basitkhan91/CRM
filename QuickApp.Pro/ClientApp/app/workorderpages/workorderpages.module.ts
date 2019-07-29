@@ -1,12 +1,11 @@
-﻿
-import { NgModule } from "@angular/core";
-import { FlexLayoutModule } from '@angular/flex-layout'
+﻿import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from "@angular/flex-layout";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { QuickAppProMaterialModule } from "../modules/material.module";
-import { CommonModule } from '@angular/common'; //<-- This one
-import { RouterModule, Routes } from '@angular/router';
-import { GroupByPipe } from '../pipes/group-by.pipe';
+import { CommonModule } from "@angular/common"; //<-- This one
+import { RouterModule, Routes } from "@angular/router";
+import { GroupByPipe } from "../pipes/group-by.pipe";
 
 import { WorkOrdersPagesRoutingModule } from "./workorderpages-routing.module";
 
@@ -30,61 +29,60 @@ import { WorkOrderQuoteComponent } from "../components/work-order/work-order-set
 import { WorkOrderShippingComponent } from "../components/work-order/work-order-setup/work-order-shipping/work-order-shipping.component";
 import { WorkOrderListComponent } from "../components/work-order/work-order-list/work-order-list.component";
 
-import { TableModule } from 'primeng/table'
-import { ButtonModule } from 'primeng/button'
-import { SelectButtonModule } from 'primeng/selectbutton'
-import { InputTextModule } from 'primeng/inputtext'
-import { MultiSelectModule } from 'primeng/multiselect'
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import { TableModule } from "primeng/table";
+import { ButtonModule } from "primeng/button";
+import { SelectButtonModule } from "primeng/selectbutton";
+import { InputTextModule } from "primeng/inputtext";
+import { MultiSelectModule } from "primeng/multiselect";
+import { AutoCompleteModule } from "primeng/autocomplete";
 import { WorkOrderService } from "../services/work-order/work-order.service";
 import { WorkOrderEndpointService } from "../services/work-order/work-order-endpoint.service";
 import { WorkOrderPartNumberService } from "../services/work-order/work-order-part-number.service";
 import { WorkOrderPartNumberEndpointService } from "../services/work-order/work-order-part-number-endpoint.service";
 import { DirectLabourComponent } from "../components/work-order/direct-labour/direct-labour.component";
-
+import { WorkFlowPagesModule } from "../workflowpages/workflowpages.module";
 @NgModule({
-    imports: [
-        FormsModule,
-        CommonModule,
-        WorkOrdersPagesRoutingModule,
-        TableModule,
-        ButtonModule,
-        SelectButtonModule,
-        InputTextModule,
-        MultiSelectModule,
-        AutoCompleteModule
-    ],
-    declarations: [
-        WorkOrderPagesComponent,
-        WorkOrderAddComponent,
-        ManualEntryLaborHoursComponent,
-        SystemGeneratedLaborHoursComponent,
-        BarCodeScannedLaborHoursComponent,
-        WorkOrderEquipmentListComponent,
-        WorkOrderEquipmentCheckInOutComponent,
-        WorkOrderEquipmentCheckInOutComponent,
-        WorkOrderCompleteMaterialListComponent,
-        WorkOrderReserveIssueComponent,
-        WorkOrderMainComponentComponent,
-        SubWorkOrderListComponent,
-        SubWorkOrderSetupComponent,
-        WorkOrderMemoComponent,
-        WorkOrderDocumentsComponent,
-        WorkOrderAnalysisComponent,
-        WorkOrderBillingComponent,
-        WorkOrderQuoteComponent,
-        WorkOrderShippingComponent,
-        WorkOrderListComponent,
-        DirectLabourComponent
-
-    ],
-    entryComponents: [
-    ],
-    providers: [WorkOrderService,
-        WorkOrderEndpointService,
-        WorkOrderPartNumberService,
-        WorkOrderPartNumberEndpointService]
+  imports: [
+    FormsModule,
+    CommonModule,
+    WorkOrdersPagesRoutingModule,
+    TableModule,
+    ButtonModule,
+    SelectButtonModule,
+    InputTextModule,
+    MultiSelectModule,
+    AutoCompleteModule,
+    WorkFlowPagesModule
+  ],
+  declarations: [
+    WorkOrderPagesComponent,
+    WorkOrderAddComponent,
+    ManualEntryLaborHoursComponent,
+    SystemGeneratedLaborHoursComponent,
+    BarCodeScannedLaborHoursComponent,
+    WorkOrderEquipmentListComponent,
+    WorkOrderEquipmentCheckInOutComponent,
+    WorkOrderEquipmentCheckInOutComponent,
+    WorkOrderCompleteMaterialListComponent,
+    WorkOrderReserveIssueComponent,
+    WorkOrderMainComponentComponent,
+    SubWorkOrderListComponent,
+    SubWorkOrderSetupComponent,
+    WorkOrderMemoComponent,
+    WorkOrderDocumentsComponent,
+    WorkOrderAnalysisComponent,
+    WorkOrderBillingComponent,
+    WorkOrderQuoteComponent,
+    WorkOrderShippingComponent,
+    WorkOrderListComponent,
+    DirectLabourComponent
+  ],
+  entryComponents: [],
+  providers: [
+    WorkOrderService,
+    WorkOrderEndpointService,
+    WorkOrderPartNumberService,
+    WorkOrderPartNumberEndpointService
+  ]
 })
-export class WorkOrderPagesModule {
-
-}
+export class WorkOrderPagesModule {}
