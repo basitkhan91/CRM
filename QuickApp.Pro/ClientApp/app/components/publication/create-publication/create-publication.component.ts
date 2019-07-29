@@ -50,7 +50,6 @@ export class CreatePublicationComponent implements OnInit {
     { field: "ItemClassification", header: "Item Classification" }
   ];
   generalInformationDetails: any = {};
-
   onFileChanged(event) {
     this.selectedFile = event.target.files[0];
   }
@@ -93,7 +92,6 @@ export class CreatePublicationComponent implements OnInit {
   first: number = 0;
   ngOnInit() {}
   changeOfTab(value) {
-    console.log(value);
     if (value === "General") {
       this.currentTab = "General";
       this.activeMenuItem = 1;
@@ -149,17 +147,14 @@ export class CreatePublicationComponent implements OnInit {
   }
 
   postMethod(event) {
-    console.log(event);
     if (this.sourcePublication.docpath != "") {
       let formData = new FormData();
       formData.append("image", this.selectedFile, event.files.name);
       this.http.post("~/upload", formData).subscribe(val => {
-        console.log(val);
       });
     }
   }
   editItemCloseModel() {
-    console.log();
     if (this.sourcePublication.PublicationId != "") {
       this.generalInformationDetails = this.sourcePublication;
       //this.isSaving = true;
@@ -245,7 +240,6 @@ export class CreatePublicationComponent implements OnInit {
   // get PartNumbers
   async getPartNumberList() {
     await this.itemMasterService.getPrtnumberslistList().subscribe(list => {
-      console.log(list);
       const responseData = list[0];
 
       this.partNumberList = responseData.map(x => {
@@ -256,7 +250,7 @@ export class CreatePublicationComponent implements OnInit {
       });
     });
   }
-
+ //  its a new Functionality which need to to added in future
   // updateDropdown(partList, selectedParts) {
   //   console.log(partList[0].label, selectedParts);
   //   // const data = selectedParts.reduce((acc, x) => {
@@ -271,7 +265,6 @@ export class CreatePublicationComponent implements OnInit {
   // }
 
   mapPartNumbers() {
-    // this.updateDropdown(this.partNumberList, this.selectedPartNumbers);
     this.pnMapping = this.selectedPartNumbers.map(obj => {
       return {
         PublicationId: this.generalInformationDetails.PublicationId,
@@ -285,7 +278,6 @@ export class CreatePublicationComponent implements OnInit {
       };
     });
     this.selectedPartNumbers = [];
-    console.log(this.pnMapping);
   }
   // get Aircraft Model By Type
   getAircraftModelByType(aircraftTypeId) {
