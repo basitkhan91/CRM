@@ -54,7 +54,6 @@ export class CreatePublicationComponent implements OnInit {
   onFileChanged(event) {
     this.selectedFile = event.target.files[0];
   }
-
   // onUpload() {
   //   const uploadData = new FormData();
   //   uploadData.append("image", this.selectedFile, this.selectedFile.name);
@@ -85,7 +84,6 @@ export class CreatePublicationComponent implements OnInit {
     private itemMasterService: ItemMasterService,
     private route: Router
   ) {}
-
   cols: any[] = [
     { field: "aircraft", header: "Aircraft" },
     { field: "model", header: "Model" },
@@ -94,7 +92,6 @@ export class CreatePublicationComponent implements OnInit {
   ];
   first: number = 0;
   ngOnInit() {}
-
   changeOfTab(value) {
     console.log(value);
     if (value === "General") {
