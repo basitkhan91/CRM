@@ -178,9 +178,10 @@ export class ReceivngPoComponent implements OnInit {
     private getStatus() {
         this.poStatus = [];
         this.poStatus.push(<DropDownData>{ Key: '1', Value: 'Open' });
-        this.poStatus.push(<DropDownData>{ Key: '2', Value: 'Closed' });
-        this.poStatus.push(<DropDownData>{ Key: '3', Value: 'Pending' });
-        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Fulfilling' });
+        this.poStatus.push(<DropDownData>{ Key: '2', Value: 'Pending Approval' });
+        this.poStatus.push(<DropDownData>{ Key: '3', Value: 'Approved' });
+        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Rejected' });
+        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Fulfilled' });
 
         this.poUserType = [];
         this.poUserType.push(<DropDownData>{ Key: '1', Value: 'Customer' });
@@ -266,9 +267,9 @@ export class ReceivngPoComponent implements OnInit {
 
         }
         console.log(this.purchaseOrderData);
-        this.purchaseOrderData.dateRequested = new Date(this.purchaseOrderData.dateRequested);
+        this.purchaseOrderData.dateRequested = new Date(); //new Date(this.purchaseOrderData.dateRequested);
         this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
-        this.purchaseOrderData.needByDate = new Date(this.purchaseOrderData.needByDate);
+        this.purchaseOrderData.needByDate = new Date(); //new Date(this.purchaseOrderData.needByDate);
         //}
     }
 

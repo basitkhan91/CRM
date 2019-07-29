@@ -12529,6 +12529,114 @@ table thead tr th:first-child input, table tr td:first-child input {
         margin-left: 3px;
     }
 
+/*Jyotsna-- Style for tabs in Create-Itemmaster*/
+.panel-menu .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem.ui-state-active {
+    background-color: #007ad9 !important;
+    border: 1px solid #007ad9 !important;
+   
+}
+.panel-menu .ui-tabmenu .ui-tabmenu-nav {
+    margin-left: -6px;
+}
+.workflow-table-pub tr th {
+    font-size: 12px !important;
+    padding: 3px 20px !important;
+}
+.workflow-table-measment tr th label, .workflow-table-exclusion tr th label, .workflow-table-direc label, .workflow-table-expertise label, .workflow-table-equip label, .workflow-table-charges label, .workflow-table-material tr th {
+    font-size: 12px !important;
+    padding: 3px !important;
+}
+.workflow-table-material{
+    padding-bottom: 80px;
+}
+.wf-pub-id {
+    display: block;
+    width: 130px !important;
+    height: 28px !important;
+    padding: 2px !important;
+    font-size: 13px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}
+.btn-cstm {
+    color: #fff;
+    border-radius: 4px !important;
+    padding: 7px 12px !important;
+}
+.btn-primary-cstm {
+    color: #fff !important;
+    background-color: #337ab7 !important;
+    border-color: #2e6da4;
+    border-radius: 4px !important;
+    padding: 6px 12px !important;
+}
+.btn-primary-cstm .ui-button-icon-left {
+    left: 9%;
+    top: 46%;
+}
+.btn-primary-cstm:hover {
+    color: #fff;
+    background-color: #286090 !important;
+    border-color: #204d74;
+}
+.excel-upload-cstm label span {
+    height: 31px;
+    padding: 6px 0px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    border-radius: 4px !important;
+}
+.wf-ber-thrld {
+    background-color: #ff949d !important;
+    color: #fff !important;
+    border-color: #ff949d !important;
+}
+.wf-header-select .ui-autocomplete {
+    padding: 0;
+    margin: 6px;
+}
+.pautocomp-cstm .ui-autocomplete {
+    padding: 0;
+}
+body .ui-datepicker table td > a.ui-state-active {
+    color: #337ab7;
+}
+.pub-type-select .ui-dropdown {
+	width: 100% !important;
+  }
+
+  .pub-border .ui-dropdown {
+	border-radius: 5px;
+  }
+  .pub-multi{
+	 padding-right: 2px;
+	  
+  }
+  .pub-type-select .ui-dropdown-trigger .ui-dropdown-trigger-icon {
+	left: 33% !important;
+  }
+  .pub-type-select .ui-dropdown-label  {
+	text-align: left;
+  }
+
+  .checkbox-blue .ui-chkbox-box.ui-state-active {
+	border-color: #005b9f !important;
+	background-color: #005b9f !important;
+	color: #ffffff;
+	padding: 1px;
+  }
+  .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    margin-left: -1px;
+    border: 1px solid #c5c5c5;
+    /* background: white; */
+    font-weight: normal;
+    color: #ffff;
+}
     body .ui-table .ui-sortable-column:not(.ui-state-highlight):hover {
         background-color: #4298ff;
     }
