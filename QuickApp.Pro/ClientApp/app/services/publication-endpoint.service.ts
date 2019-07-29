@@ -17,6 +17,8 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly getPublicationAuditById: string = "/api/Publication/audits";
     private readonly getDash: string = "/api/Publication/GetDashNoByID";
     private readonly getATAUrl: string = "/api/Publication/GetATASUBS";
+    private readonly _publicationPNACNEW: string = "/api/Publication/PubPNACMappingPost";
+    private readonly _publicationPNATANEW: string = "/api/Publication/PubPNATAMappingPost";
     
     get getCodeUrl() { return this.configurations.baseUrl + this._publicationGetUrl; }
 
@@ -98,4 +100,22 @@ export class PublicationEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getATASubByID(Mid, Tid));
             });
     }
+    
+    postPNACMapping<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._publicationPNACNEW, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postPNACMapping(userObject));
+            });
+
+    }
+    postPNATAMapping<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._publicationPNATANEW, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postPNATAMapping(userObject));
+            });
+
+    }
+
 }
