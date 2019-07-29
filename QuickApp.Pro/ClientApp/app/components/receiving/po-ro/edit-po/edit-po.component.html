@@ -1,607 +1,622 @@
-﻿<div style="border: 1px solid red">edit-po Component</div>
-<div class="x_panel" style="">
+﻿<div class="x_panel" style="">
     <div class="x_content">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item" aria-current="page">Receiving</li>
-                <li class="breadcrumb-item" aria-current="page">PO-RO</li>
-                <li class="breadcrumb-item active" aria-current="page">Receiving PO Grid</li>
-            </ol>
-        </nav>
-        <h4 class="page-heading">Receiving - PO Grid <span class="clr-red">(Single PO )</span> </h4>
-        <div class="clear"></div>
-        <form id="" class="form-horizontal ro-grid-form" name="" action="#" method="post" onsubmit="return false;">
-            <div class="col-sm-5">
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Status</label>
-                    <div class="col-sm-7">
-                        <label class="wauto">
-                            <input type="checkbox" name="open" value="open" class="hauto" disabled="" checked="">
-                            Open
-                        </label>
-                        <label class="wauto">
-                            <input type="checkbox" name="close" value="close" class="hauto" disabled="">
-                            Closed
-                        </label>
-                        <label class="wauto">
-                            <input type="checkbox" name="close" value="close" class="hauto" disabled="">
-                            Pending
-                        </label>
-                        <label class="wauto">
-                            <input type="checkbox" name="close" value="close" class="hauto" disabled="">
-                            Fulfilling
-                        </label>
+        <div class="card">
+            <div class="card-header">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+                        <li class="breadcrumb-item active" aria-current="page">Receiving</li>
+                        <li class="breadcrumb-item " aria-current="page">PO-RO</li>
+                        <li class="breadcrumb-item " aria-current="page">Receiving PO Grid</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="card-body">
+                <h4 class="po-head">Receiving - PO Grid (Single PO)</h4>
+                <form id="" class="ro-grid-form" name="">
+                    <div class="form-row">
+                        <div class="col-sm-6">
+                            <div class="form-group col-sm-12">
+                                <label style="float: left; margin-top: 6px; width: 70px;">Status</label>
+                                <div class="col-sm-7">
+                                    <div class="checkbox-cstm pull-left" style="margin-top: 4px; margin-right: 15px;">
+                                        <label class="wauto">
+                                            <input type="checkbox" class="form-control" disabled checked>
+                                            <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span> Open
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-cstm pull-left" style="margin-top: 4px; margin-right: 15px;">
+                                        <label class="wauto">
+                                            <input type="checkbox" class="form-control" disabled>
+                                            <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span> Closed
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-cstm pull-left" style="margin-top: 4px; margin-right: 15px;">
+                                        <label class="wauto">
+                                            <input type="checkbox" class="form-control" disabled>
+                                            <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span> Pending
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-cstm pull-left" style="margin-top: 4px; margin-right: 15px;">
+                                        <label class="wauto">
+                                            <input type="checkbox" class="form-control" disabled>
+                                            <span class="cr" style="opacity: 0.5;"><i class="cr-icon pi pi-check"></i></span> Fulfilling
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <hr>
-            <div class="col-sm-3">
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">PO Number :</label>
-                    <!--<div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>-->
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Priority :</label>
-                    <div class="col-sm-7">
-                        <!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="editPoData.priorityId">
-                            <option *ngFor="let priorityName of allPriorityInfo" [ngValue]="priorityName.priorityId">{{priorityName.description}}</option>
-                        </select>-->
-                   </div>
-                </div>  
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Requisitioner :</label>
-                    <div class="col-sm-7">{{editPoData.requestedBy}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Date Requisitioned :</label>
-                    <div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Approver :</label>
-                    <div class="col-sm-7">{{editPoData.approver}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Date Approved :</label>
-                    <div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Vendor Code :</label>
-                    <div class="col-sm-7">{{editPoData.vendorCode}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Vendor Name :</label>
-                    <div class="col-sm-7">{{editPoData.vendorName}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Vendor Contact :</label>
-                    <div class="col-sm-7">{{editPoData.vendorContact}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Contact Phone :</label>
-                    <div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Terms :</label>
-                    <div class="col-sm-7">{{editPoData.terms}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Credit Limit :</label>
-                    <div class="col-sm-7">{{editPoData.creditLimit}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Currency :</label>
-                    <div class="col-sm-7"></div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Company :</label>
-                    <div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Business Unit :</label>
-                    <div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Division :</label>
-                    <div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Department :</label>
-                    <div class="col-sm-7">{{editPoData.purchaseOrderNumber}}</div>
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Memo :</label>
-                    <div class="col-sm-7">{{editPoData.memo}}</div>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <hr>
-            <!--<a href="#" class="btn btn-success pull-right" data-toggle="modal" data-target="#createwo">Save</a>-->
-        </form>
-        <div class="table-responsive default-bg clear ro-grid-table">
-            <table class="table table-bordered table-striped" id="po-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>PN</th>
-                        <th>Alt PN</th>
-                        <th>PN Description</th>
-                        <th>Item Category</th>
-                        <th>Manufacturer</th>
-                        <th>Cond</th>
-                        <th>UOM</th>
-                        <th>OEM, DER,PMA Flag</th>
-                        <th>Qty Ordered	</th>
-                        <th>Unit COst</th>
-                        <th>Discount</th>
-                        <th>Extended Cost</th>
-                        <th>CO</th>
-                        <th>BU</th>
-                        <th>Div</th>
-                        <th>Dep</th>
-                        <th>Site</th>
-                        <th>Warehouse</th>
-                        <th>Location</th>
-                        <th>Shelf</th>
-                        <th>Bin</th>
-                        <th colspan="51"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let obj of localData" class="parent-data">
-                        <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
-                        <td></td>
-                        <td>{{obj.partNumber}}</td>
-                        <td>{{obj.partNumber}}</td>
-                        <td>{{obj.partDescription}}</td>
-                        <td>{{obj.ItemTypeId}}</td>
-                        <td>{{obj.manufacturer}}</td>
-                        <td>
-                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId">
-                                <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-                            </select>
-                        </td>
-                        <td>UOM</td>
-                        <td>{{obj.oem}}{{obj.pma}}{{obj.der}}</td>
-                        <td>{{obj.quantityOrdered}}</td>
-                        <td>{{obj.unitCost}}</td>
-                        <td>discount</td>
-                        <td>extended cost</td>
-                        <!--<td>
-                    <select disabled="">
-                        <option value="">SO-45450</option>
-                        <option value="">SO-45451</option>
-                        <option value="">SO-45452</option>
-                        <option value="">SO-45453</option>
-                        <option value="">SO-45454</option>
-                        <option value="">SO-45455</option>
-                    </select>
-                </td>
-                <td>
-                    <select disabled="">
-                        <option value="">SWO-45450</option>
-                        <option value="">SWO-45451</option>
-                        <option value="">SWO-45452</option>
-                        <option value="">SWO-45453</option>
-                        <option value="">SWO-45454</option>
-                        <option value="">SWO-45455</option>
-                    </select>
-                </td>-->
-                        <td>
-                            <select disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Designing</option>
-                                <option value="">Development</option>
-                                <option value="">Repear</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">.net</option>
-                                <option value="">HTML</option>
-                                <option value="">Java</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)">
-                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)">
-                                <option *ngFor="let warehouse of obj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)">
-                                <option *ngFor="let location of obj.allLocations" [ngValue]="location.locationId">{{location.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)">
-                                <option *ngFor="let shelf of obj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)">
-                                <option *ngFor="let bin of obj.allBins" [ngValue]="bin.binId">{{bin.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td colspan="51"></td>
-                    </tr>
-                    <tr class="child-header">
-                        <th></th>
-                        <th></th>
-                        <th>stockline</th>
-                        <th>PN</th>
-                        <th>Alt PN</th>
-                        <th>PN Description</th>
-                        <th>Control Num</th>
-                        <th>ID</th>
-                        <th>Cond</th>
-                        <th>Item category</th>
-                        <th>Serial Num</th>
-                        <th>Qty Ordered</th>
-                        <th>Qty Received</th>
-                        <th>QTY Back Order</th>
-                        <th>Unit Cost</th>
-                        <th>Extended Cost</th>
-                        <th>Receiver no.</th>
-                        <th>WO </th>
-                        <th>SO </th>
-                        <th>Sub-WO </th>
-                        <th>Owner</th>
-                        <th>Name</th>
-                        <th>Obtain From</th>
-                        <th>Name</th>
-                        <th>Traceble to</th>
-                        <th>Name</th>
-                        <th>Trace</th>
-                        <th>Mfg</th>
-                        <th>Mfg Lot Num</th>
-                        <th>Mfg Date</th>
-                        <th>Mfg Batch Num</th>
-                        <th>Part Cert Num </th>
-                        <th>Certified Date</th>
-                        <th>Tagged By </th>
-                        <th class="date">Date Tagged </th>
-                        <th class="date">Tag Exp Date </th>
-                        <th class="date">Core Due Date</th>
-                        <th class="date">Core Returned Date</th>
-                        <th>Core SO</th>
-                        <th>GL Account</th>
-                        <th>Time Life</th>
-                        <th>CO</th>
-                        <th>BU</th>
-                        <th>Div</th>
-                        <th>Dep</th>
-                        <th>Site</th>
-                        <th>Warehouse</th>
-                        <th>Location</th>
-                        <th>Shelf</th>
-                        <th>Bin</th>
-                    </tr>
-                    <tr class="child-data splitship-child">
-                        <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
-                        <td></td>
-                        <td>SL-33653</td>
-                        <td>AA-10024000</td>
-                        <td></td>
-                        <td>Motor</td>
-                        <td>CN-100557</td>
-                        <td>7</td>
-                        <td>
-                            <select disabled="">
-                                <option>AR</option>
-                                <option>AS-IS</option>
-                                <option>NEW</option>
-                                <option>OVH</option>
-                                <option>REP</option>
-                                <option>SRV</option>
-                            </select>
-                        </td>
-                        <td>Stock</td>
-                        <td>SN-10006</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td> - </td>
-                        <td>$<input type="text" class="amount disabled2" disabled="" value="100.00"></td>
-                        <td> $100.00 </td>
-                        <td>RO-55577</td>
-                        <td>
-                            <select disabled="">
-                                <option value="">WO-45450</option>
-                                <option value="">WO-45451</option>
-                                <option value="">WO-45452</option>
-                                <option value="">WO-45453</option>
-                                <option value="">WO-45454</option>
-                                <option value="">WO-45455</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">SO-45450</option>
-                                <option value="">SO-45451</option>
-                                <option value="">SO-45452</option>
-                                <option value="">SO-45453</option>
-                                <option value="">SO-45454</option>
-                                <option value="">SO-45455</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">SWO-45450</option>
-                                <option value="">SWO-45451</option>
-                                <option value="">SWO-45452</option>
-                                <option value="">SWO-45453</option>
-                                <option value="">SWO-45454</option>
-                                <option value="">SWO-45455</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select id="" name="" class="form-control disabled2 owner-selection" disabled="">
-                                <option value="Customer">Customer</option>
-                                <option value="Other">Other </option>
-                                <option value="Vendor">Vendor</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class=" col-sm-12 owner-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 owner-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 owner-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
+                    <hr />
 
-                        </td>
-                        <td>
-                            <select id="" name="" class="form-control obtain-selection disabled2" disabled="">
-                                <option value="Customer">Customer</option>
-                                <option value="Other">Other </option>
-                                <option value="Vendor">Vendor</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class=" col-sm-12 obtain-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>PO Num</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
                             </div>
-                            <div class=" col-sm-12 obtain-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
-                            <div class=" col-sm-12 obtain-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label>Requistioner</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.requestedBy}}-->
                             </div>
-                        </td>
-                        <td>
-                            <select id="" name="" class="form-control traceable-selection disabled2" disabled="">
-                                <option value="Customer">Customer</option>
-                                <option value="Other">Other </option>
-                                <option value="Vendor">Vendor</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class=" col-sm-12 traceable-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label>Date Requisitioned</label>
+                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar> <!--{{editPoData.purchaseOrderNumber}}-->
                             </div>
-                            <div class=" col-sm-12 traceable-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label>Approver</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.approver}}-->
                             </div>
-                            <div class=" col-sm-12 traceable-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option>MFG 1</option>
-                                <option>MFG 2</option>
-                                <option>MFG 3</option>
-                            </select>
-                        </td>
-                        <td><input type="text" disabled="" value="12345"></td>
-                        <td><input type="text" class="disabled2 datepicker hasDatepicker" disabled="" id="dp1554182157761"></td>
-                        <td><input type="text" disabled="" value="12345"></td>
-                        <td><input type="text" disabled="" value="12345"></td>
-                        <td><input type="text" class="disabled2 datepicker hasDatepicker" disabled="" id="dp1554182157762"></td>
-                        <td><input type="text" disabled="" value="Shabbir Ahmad"></td>
-                        <td><input type="text" class="disabled2 datepicker hasDatepicker" disabled="" id="dp1554182157763"></td>
-                        <td><input type="text" class="disabled2 datepicker hasDatepicker" disabled="" id="dp1554182157764"></td>
-                        <td><input type="text" class="disabled2 datepicker hasDatepicker" disabled="" id="dp1554182157765"></td>
-                        <td><input type="text" class="disabled2 datepicker hasDatepicker" disabled="" id="dp1554182157766"></td>
-                        <td>
-                            <select disabled="">
-                                <option value="">123</option>
-                                <option value="">456</option>
-                                <option value="">789</option>
-                            </select>
-                        </td>
-                        <td></td>
-                        <td>GL12345(Description)</td>
-                        <td><input type="checkbox" disabled=""></td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Designing</option>
-                                <option value="">Development</option>
-                                <option value="">Repear</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">.net</option>
-                                <option value="">HTML</option>
-                                <option value="">Java</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Site 1</option>
-                                <option value="">Site 2</option>
-                                <option value="">Site 3</option>
-                                <option value="">Site 4</option>
-                                <option value="">Site 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Warehouse 1</option>
-                                <option value="">Warehouse 2</option>
-                                <option value="">Warehouse 3</option>
-                                <option value="">Warehouse 4</option>
-                                <option value="">Warehouse 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Location 1</option>
-                                <option value="">Location 2</option>
-                                <option value="">Location 3</option>
-                                <option value="">Location 4</option>
-                                <option value="">Location 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Shelf 1</option>
-                                <option value="">Shelf 2</option>
-                                <option value="">Shelf 3</option>
-                                <option value="">Shelf 4</option>
-                                <option value="">Shelf 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select disabled="">
-                                <option value="">Bin 1</option>
-                                <option value="">Bin 2</option>
-                                <option value="">Bin 3</option>
-                                <option value="">Bin 4</option>
-                                <option value="">Bin 5</option>
-                            </select>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Date Approved</label>
+                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar> <!--{{editPoData.purchaseOrderNumber}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Vendor Code</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorCode}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Vendor Name</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorName}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Vendor Contact</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorContact}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Phone</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Terms</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.terms}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Credit Limit</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.creditLimit}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Currency</label>
+                                <input class="form-control" type="text" value="" disabled="disabled">
+                            </div>
+                            <div class="form-group">
+                                <label>Company</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Business Unit</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Division</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Department</label>
+                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                            </div>
+                            <div class="form-group">
+                                <label>Memo</label>
+                                <textarea class="form-control" disabled="disabled"></textarea> <!--{{editPoData.memo}}-->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+               </div>
+                  
+                    <div class="table-responsive pas-table-cstm">
+                        <table class="table table-bordered " id="po-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th>PN</th>
+                                    <th>Alt PN</th>
+                                    <th>PN Description</th>
+                                    <th>Item Category</th>
+                                    <th>Manufacturer</th>
+                                    <th>Cond</th>
+                                    <th>UOM</th>
+                                    <th>OEM, DER,PMA Flag</th>
+                                    <th>Qty Ordered	</th>
+                                    <th>Unit COst</th>
+                                    <th>Discount</th>
+                                    <th>Extended Cost</th>
+                                    <th>CO</th>
+                                    <th>BU</th>
+                                    <th>Div</th>
+                                    <th>Dep</th>
+                                    <th>Site</th>
+                                    <th>Warehouse</th>
+                                    <th>Location</th>
+                                    <th>Shelf</th>
+                                    <th>Bin</th>
+                                    <th colspan="51"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let obj of localData" class="parent-data">
+                                    <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
+                                    <td></td>
+                                    <td>{{obj.partNumber}}</td>
+                                    <td>{{obj.partNumber}}</td>
+                                    <td>{{obj.partDescription}}</td>
+                                    <td>{{obj.ItemTypeId}}</td>
+                                    <td>{{obj.manufacturer}}</td>
+                                    <td>
+                                        <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId">
+                                            <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
+                                        </select>
+                                    </td>
+                                    <td>UOM</td>
+                                    <td>{{obj.oem}}{{obj.pma}}{{obj.der}}</td>
+                                    <td>{{obj.quantityOrdered}}</td>
+                                    <td>{{obj.unitCost}}</td>
+                                    <td>discount</td>
+                                    <td>extended cost</td>
+                                    <!--<td>
+                                <select disabled="">
+                                    <option value="">SO-45450</option>
+                                    <option value="">SO-45451</option>
+                                    <option value="">SO-45452</option>
+                                    <option value="">SO-45453</option>
+                                    <option value="">SO-45454</option>
+                                    <option value="">SO-45455</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select disabled="">
+                                    <option value="">SWO-45450</option>
+                                    <option value="">SWO-45451</option>
+                                    <option value="">SWO-45452</option>
+                                    <option value="">SWO-45453</option>
+                                    <option value="">SWO-45454</option>
+                                    <option value="">SWO-45455</option>
+                                </select>
+                            </td>-->
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Adso</option>
+                                            <option value="">Aerospace</option>
+                                            <option value="">ILS</option>
+                                            <option value="">PArts Base</option>
+                                            <option value="">PAS</option>
+                                            <option value="">Silverxis</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Adso</option>
+                                            <option value="">Aerospace</option>
+                                            <option value="">ILS</option>
+                                            <option value="">PArts Base</option>
+                                            <option value="">PAS</option>
+                                            <option value="">Silverxis</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Designing</option>
+                                            <option value="">Development</option>
+                                            <option value="">Repear</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">.net</option>
+                                            <option value="">HTML</option>
+                                            <option value="">Java</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)">
+                                            <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)">
+                                            <option *ngFor="let warehouse of obj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)">
+                                            <option *ngFor="let location of obj.allLocations" [ngValue]="location.locationId">{{location.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)">
+                                            <option *ngFor="let shelf of obj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)">
+                                            <option *ngFor="let bin of obj.allBins" [ngValue]="bin.binId">{{bin.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                        </select>
+                                    </td>
+                                    <td colspan="51"></td>
+                                </tr>
+                                <tr class="child-header">
+                                    <th></th>
+                                    <th></th>
+                                    <th>stockline</th>
+                                    <th>PN</th>
+                                    <th>Alt PN</th>
+                                    <th>PN Description</th>
+                                    <th>Control Num</th>
+                                    <th>ID</th>
+                                    <th>Cond</th>
+                                    <th>Item category</th>
+                                    <th>Serial Num</th>
+                                    <th>Qty Ordered</th>
+                                    <th>Qty Received</th>
+                                    <th>QTY Back Order</th>
+                                    <th>Unit Cost</th>
+                                    <th>Extended Cost</th>
+                                    <th>Receiver no.</th>
+                                    <th>WO </th>
+                                    <th>SO </th>
+                                    <th>Sub-WO </th>
+                                    <th>Owner</th>
+                                    <th>Name</th>
+                                    <th>Obtain From</th>
+                                    <th>Name</th>
+                                    <th>Traceble to</th>
+                                    <th>Name</th>
+                                    <th>Trace</th>
+                                    <th>Mfg</th>
+                                    <th>Mfg Lot Num</th>
+                                    <th>Mfg Date</th>
+                                    <th>Mfg Batch Num</th>
+                                    <th>Part Cert Num </th>
+                                    <th>Certified Date</th>
+                                    <th>Tagged By </th>
+                                    <th class="date">Date Tagged </th>
+                                    <th class="date">Tag Exp Date </th>
+                                    <th class="date">Core Due Date</th>
+                                    <th class="date">Core Returned Date</th>
+                                    <th>Core SO</th>
+                                    <th>GL Account</th>
+                                    <th>Time Life</th>
+                                    <th>CO</th>
+                                    <th>BU</th>
+                                    <th>Div</th>
+                                    <th>Dep</th>
+                                    <th>Site</th>
+                                    <th>Warehouse</th>
+                                    <th>Location</th>
+                                    <th>Shelf</th>
+                                    <th>Bin</th>
+                                </tr>
+                                <tr class="child-data splitship-child">
+                                    <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
+                                    <td></td>
+                                    <td>SL-33653</td>
+                                    <td>AA-10024000</td>
+                                    <td></td>
+                                    <td>Motor</td>
+                                    <td>CN-100557</td>
+                                    <td>7</td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option>AR</option>
+                                            <option>AS-IS</option>
+                                            <option>NEW</option>
+                                            <option>OVH</option>
+                                            <option>REP</option>
+                                            <option>SRV</option>
+                                        </select>
+                                    </td>
+                                    <td>Stock</td>
+                                    <td>SN-10006</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td> - </td>
+                                    <td>$<input type="text" class="form-control amount disabled2" disabled="" value="100.00"></td>
+                                    <td> $100.00 </td>
+                                    <td>RO-55577</td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">WO-45450</option>
+                                            <option value="">WO-45451</option>
+                                            <option value="">WO-45452</option>
+                                            <option value="">WO-45453</option>
+                                            <option value="">WO-45454</option>
+                                            <option value="">WO-45455</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">SO-45450</option>
+                                            <option value="">SO-45451</option>
+                                            <option value="">SO-45452</option>
+                                            <option value="">SO-45453</option>
+                                            <option value="">SO-45454</option>
+                                            <option value="">SO-45455</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">SWO-45450</option>
+                                            <option value="">SWO-45451</option>
+                                            <option value="">SWO-45452</option>
+                                            <option value="">SWO-45453</option>
+                                            <option value="">SWO-45454</option>
+                                            <option value="">SWO-45455</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id="" name="" class="form-control disabled2 owner-selection" disabled="">
+                                            <option value="Customer">Customer</option>
+                                            <option value="Other">Other </option>
+                                            <option value="Vendor">Vendor</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class=" col-sm-12 owner-inputs-customer" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <i class="fa fa-search"></i>
+                                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                                    </div>
+                                                    <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" col-sm-12 owner-inputs-other" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <input type="text" class="form-control" id="" name="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" col-sm-12 owner-inputs-vendor" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <i class="fa fa-search"></i>
+                                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                                    </div>
+                                                    <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <select id="" name="" class="form-control obtain-selection disabled2" disabled="">
+                                            <option value="Customer">Customer</option>
+                                            <option value="Other">Other </option>
+                                            <option value="Vendor">Vendor</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class=" col-sm-12 obtain-inputs-customer" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <i class="fa fa-search"></i>
+                                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                                    </div>
+                                                    <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" col-sm-12 obtain-inputs-other" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <input type="text" class="form-control" id="" name="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" col-sm-12 obtain-inputs-vendor" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <i class="fa fa-search"></i>
+                                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                                    </div>
+                                                    <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select id="" name="" class="form-control traceable-selection disabled2" disabled="">
+                                            <option value="Customer">Customer</option>
+                                            <option value="Other">Other </option>
+                                            <option value="Vendor">Vendor</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class=" col-sm-12 traceable-inputs-customer" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <i class="fa fa-search"></i>
+                                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                                    </div>
+                                                    <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" col-sm-12 traceable-inputs-other" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <input type="text" class="form-control" id="" name="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" col-sm-12 traceable-inputs-vendor" style="display: none;">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4"></label>
+                                                <div class="col-sm-7">
+                                                    <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                                        <i class="fa fa-search"></i>
+                                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
+                                                    </div>
+                                                    <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option>MFG 1</option>
+                                            <option>MFG 2</option>
+                                            <option>MFG 3</option>
+                                        </select>
+                                    </td>
+                                    <td><input class="form-control" type="text" disabled="" value="12345"></td>
+                                    <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
+                                    <td><input class="form-control" type="text" disabled="" value="12345"></td>
+                                    <td><input class="form-control" type="text" disabled="" value="12345"></td>
+                                    <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
+                                    <td><input class="form-control" type="text" disabled="" value="Shabbir Ahmad"></td>
+                                    <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
+                                    <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
+                                    <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
+                                    <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">123</option>
+                                            <option value="">456</option>
+                                            <option value="">789</option>
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                    <td>GL12345(Description)</td>
+                                    <td><input type="checkbox" disabled=""></td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Adso</option>
+                                            <option value="">Aerospace</option>
+                                            <option value="">ILS</option>
+                                            <option value="">PArts Base</option>
+                                            <option value="">PAS</option>
+                                            <option value="">Silverxis</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Adso</option>
+                                            <option value="">Aerospace</option>
+                                            <option value="">ILS</option>
+                                            <option value="">PArts Base</option>
+                                            <option value="">PAS</option>
+                                            <option value="">Silverxis</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Designing</option>
+                                            <option value="">Development</option>
+                                            <option value="">Repear</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">.net</option>
+                                            <option value="">HTML</option>
+                                            <option value="">Java</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Site 1</option>
+                                            <option value="">Site 2</option>
+                                            <option value="">Site 3</option>
+                                            <option value="">Site 4</option>
+                                            <option value="">Site 5</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Warehouse 1</option>
+                                            <option value="">Warehouse 2</option>
+                                            <option value="">Warehouse 3</option>
+                                            <option value="">Warehouse 4</option>
+                                            <option value="">Warehouse 5</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Location 1</option>
+                                            <option value="">Location 2</option>
+                                            <option value="">Location 3</option>
+                                            <option value="">Location 4</option>
+                                            <option value="">Location 5</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Shelf 1</option>
+                                            <option value="">Shelf 2</option>
+                                            <option value="">Shelf 3</option>
+                                            <option value="">Shelf 4</option>
+                                            <option value="">Shelf 5</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled="">
+                                            <option value="">Bin 1</option>
+                                            <option value="">Bin 2</option>
+                                            <option value="">Bin 3</option>
+                                            <option value="">Bin 4</option>
+                                            <option value="">Bin 5</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+            </div>
         </div>
-    </div>
-</div>

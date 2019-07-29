@@ -34,6 +34,7 @@ export class EditPoComponent implements OnInit {
        // this.localData = this.receivingService.selectedPurchaseorderCollection;
         this.localPoData = this.vendorService.selectedPoCollection;
         this.editPoData = this.localData[0];
+        console.log(this.vendorService.selectedPoCollection);
 
     }
     ngOnInit(): void
