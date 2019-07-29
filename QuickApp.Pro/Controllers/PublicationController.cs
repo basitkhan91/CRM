@@ -21,6 +21,8 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
+        ApplicationDbContext db;
+
 
         public PublicationController(IUnitOfWork unitOfWork, ILogger<PublicationController> logger, IEmailer emailer)
         {
@@ -39,7 +41,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-       
+
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
@@ -58,8 +60,6 @@ namespace QuickApp.Pro.Controllers
 
                 throw;
             }
-
-
 
         }
         [HttpPost("publicationpost")]
@@ -163,5 +163,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpGet("GetDashNoByID/{Mid}/{Tid}")]
+        public IActionResult GetDashNumb(string Mid,long Tid)
+        {
+            var result = _unitOfWork.Publication.GetDashNoByID(Mid,Tid);
+            return Ok(result);
+        }
+
+        [HttpGet("GetATASUBS/{ChID}")]
+        public IActionResult GetATASub(long ChID)
+        {
+            var result = _unitOfWork.Publication.GetATASUBS(ChID);
+            return Ok(result);
+        }
+        
     }
 }
