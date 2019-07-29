@@ -31,7 +31,6 @@
     <div class="md-step-bar-left"></div>
     <div class="md-step-bar-right"></div>
   </div>
-
   <div
     class="md-step "
     [ngClass]="{ active: activeMenuItem >= 4 }"
@@ -44,9 +43,7 @@
     <div class="md-step-bar-right"></div>
   </div>
 </div>
-
 <div class="card">
-
     <div  [ngClass]="{hideTab : currentTab !== 'General'}">
       <div class="card-header header-text ">
         General Information
@@ -77,8 +74,6 @@
             [(ngModel)]="sourcePublication.PublicationId"
           />
         </div>
-
-
         <div class="ui-g-4">
             Publication Description
           </div>
@@ -92,8 +87,6 @@
               [(ngModel)]="sourcePublication.description"
             ></textarea>
           </div>
-
-
               <div class="ui-g-4">
                 Publication Type
               </div>
@@ -117,8 +110,6 @@
                     [(ngModel)]="sourcePublication.ASD"
                   />
                 </div>
-
-             
                     <div class="ui-g-4">
                       Sequence
                     </div>
@@ -143,8 +134,6 @@
                             [(ngModel)]="sourcePublication.publishby"
                           />
                         </div>
-
-                     
                             <div class="ui-g-4">
                               Location
                             </div>
@@ -157,8 +146,8 @@
                                 [(ngModel)]="sourcePublication.location"
                               />
                             </div>
-      </div>
-    <div class="ui-g-6 ui-sm-12">
+                          </div>
+                        <div class="ui-g-6 ui-sm-12">
                         <div class="ui-g-4">
                             Revision Date
                           </div>
@@ -218,7 +207,6 @@
           ></p-fileUpload>
         </div>
       </div>
-
       <button
       class="btn btn-primary-cstm pull-right button-save"
       type="submit"
@@ -231,13 +219,11 @@
       </div>
     </div>
     </div>
-
   </div>
      <div  [ngClass]="{hideTab : currentTab !== 'PnMap'}">
       <div class="card-header header-text ">
         PN Mapping
       </div>
-
       <div class="card-body">
         <div class="col-md-12">
 
@@ -257,8 +243,7 @@
                   <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto; ">Publication Type</label>
                     <span class="span-header-red"> {{this.generalInformationDetails.pubType}} </span></p>
-                </div>   
-                                         
+                </div>                              
               </div>
           <div class="col-md-12">
             <div class="shadow-Box">
@@ -281,12 +266,9 @@
                   </button>
                 </div>
               </div>
-
               <div class="clear"></div>
             </div>
           </div>
-
-
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
@@ -346,8 +328,6 @@
               Save & Next
             </button>
           </div>
-
-   
         </div>
       </div>
     </div> 
@@ -359,7 +339,6 @@
       <div class="card-header header-text ">
         Aircraft Information
       </div>
-
       <div class="card-body">
         <div class="col-md-12">
 
@@ -375,7 +354,6 @@
                   ></p-multiSelect>
                 </div>
               </div>
-
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="fs12">
@@ -389,7 +367,6 @@
                   ></p-multiSelect>
                 </div>
               </div>
-
               <div class="col-md-3">
                 <div class="form-group">
                   <button class="btn btn-primary mtop20">
@@ -400,7 +377,6 @@
               <div class="clear"></div>
             </div>
           </div>
-
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
@@ -460,8 +436,6 @@
               Save & Next
             </button>
           </div>
-
-          <!-- ATA Chapter  -->
         </div>
       </div>
     </div>
@@ -484,7 +458,6 @@
                   ></p-multiSelect>
                 </div>
               </div>
-
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="fs12">ATA SubChapter</label>
@@ -504,7 +477,6 @@
               <div class="clear"></div>
             </div>
           </div>
-
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
@@ -548,7 +520,6 @@
             </div>
           </div>
         </div>
-
         <div class="col-md-12">
           <button
             class="btn btn-primary-cstm pull-left button-save"
@@ -568,7 +539,6 @@
         </div>
       </div>
     </div>
-  
  <!-- Add DashNumber Popup -->
  <div id="addDashNumber" class="modal fade" role="dialog">
   <div class="modal-dialog">
