@@ -6,21 +6,18 @@ import {
 } from "@angular/material";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal, NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-
 import { AuthService } from "../../../services/auth.service";
 import { MessageSeverity, AlertService } from "../../../services/alert.service";
-
 import { MasterComapnyService } from "../../../services/mastercompany.service";
 import { CustomerClassification } from "../../../models/customer-classification.model";
 import { HttpClient } from "@angular/common/http";
-
 import { IntegrationService } from "../../../services/integration-service";
-
 import { OnInit, Component } from "@angular/core";
-
+import { ItemMasterService } from "../../../services/itemMaster.service";
 import { AtaMainService } from "../../../services/atamain.service";
 import { AircraftModelService } from "../../../services/aircraft-model/aircraft-model.service";
 import { AircraftManufacturerService } from "../../../services/aircraft-manufacturer/aircraftManufacturer.service";
+import { map } from "rxjs/operator/map";
 @Component({
   selector: "app-create-publication",
   templateUrl: "./create-publication.component.html",
@@ -44,11 +41,18 @@ export class CreatePublicationComponent implements OnInit {
   airCraftModels = [];
   aircraftList: any = [];
   showModelAircraftModel: boolean = false;
-
+  partNumberList = [];
+  selectedPartNumbers = [];
+  pnMapping = [];
+  headersforPNMapping = [
+    { field: "PartNumber", header: "PN ID/Code" },
+    { field: "PartNumberDescription", header: "PN Description" },
+    { field: "ItemClassification", header: "Item Classification" }
+  ];
+  generalInformationDetails: any = {};
   onFileChanged(event) {
     this.selectedFile = event.target.files[0];
   }
-
   // onUpload() {
   //   const uploadData = new FormData();
   //   uploadData.append("image", this.selectedFile, this.selectedFile.name);
@@ -76,34 +80,33 @@ export class CreatePublicationComponent implements OnInit {
     private http: HttpClient,
     private aircraftManufacturerService: AircraftManufacturerService,
     private aircraftModelService: AircraftModelService,
+    private itemMasterService: ItemMasterService,
     private route: Router
   ) {}
-
-  cols: any[];
+  cols: any[] = [
+    { field: "aircraft", header: "Aircraft" },
+    { field: "model", header: "Model" },
+    { field: "dashNumber", header: "Dash Numbers" },
+    { field: "memo", header: "Memo" }
+  ];
   first: number = 0;
-  ngOnInit() {
-    this.cols = [
-      // { field: "id", header: "ID" },
-      { field: "aircraft", header: "Aircraft" },
-      { field: "model", header: "Model" },
-      { field: "dashNumber", header: "Dash Numbers" },
-      { field: "memo", header: "Memo" }
-      // { field: "actions", header: "Actions" }
-    ];
-  }
-
+  ngOnInit() {}
   changeOfTab(value) {
     if (value === "General") {
       this.currentTab = "General";
       this.activeMenuItem = 1;
+    } else if (value === "PnMap") {
+      this.currentTab = "PnMap";
+      this.activeMenuItem = 2;
+      this.getPartNumberList();
     } else if (value === "Aircraft") {
       this.currentTab = "Aircraft";
-      this.activeMenuItem = 2;
+      this.activeMenuItem = 3;
       this.getAllAircraftTypes();
       this.getAircraftAllList();
     } else if (value === "Atachapter") {
       this.currentTab = "Atachapter";
-      this.activeMenuItem = 3;
+      this.activeMenuItem = 4;
     }
   }
   private saveSuccessHelper(role?: any) {
@@ -144,17 +147,16 @@ export class CreatePublicationComponent implements OnInit {
   }
 
   postMethod(event) {
-    console.log(event);
     if (this.sourcePublication.docpath != "") {
       let formData = new FormData();
       formData.append("image", this.selectedFile, event.files.name);
       this.http.post("~/upload", formData).subscribe(val => {
-        console.log(val);
       });
     }
   }
   editItemCloseModel() {
     if (this.sourcePublication.PublicationId != "") {
+      this.generalInformationDetails = this.sourcePublication;
       //this.isSaving = true;
       //if (this.isEditMode == false)
       {
@@ -164,10 +166,11 @@ export class CreatePublicationComponent implements OnInit {
         this.sourcePublication.masterCompanyId = 1;
         this.publicationService
           .newAction(this.sourcePublication)
-          .subscribe(
-            role => this.saveSuccessHelper(role),
-            error => this.saveFailedHelper(error)
-          );
+          .subscribe(res => {
+            this.changeOfTab("PnMap"),
+              role => this.saveSuccessHelper(role),
+              error => this.saveFailedHelper(error);
+          });
       }
       //this.publicationService.newAction(this.sourcePublication).subscribe(data => {
       //    if (data)
@@ -233,6 +236,48 @@ export class CreatePublicationComponent implements OnInit {
           ...typesOfAircraft
         ];
       });
+  }
+  // get PartNumbers
+  async getPartNumberList() {
+    await this.itemMasterService.getPrtnumberslistList().subscribe(list => {
+      const responseData = list[0];
+
+      this.partNumberList = responseData.map(x => {
+        return {
+          label: x.partNumber,
+          value: x
+        };
+      });
+    });
+  }
+ //  its a new Functionality which need to to added in future
+  // updateDropdown(partList, selectedParts) {
+  //   console.log(partList[0].label, selectedParts);
+  //   // const data = selectedParts.reduce((acc, x) => {
+  //   //   console.log(acc);
+  //   // }, partList);
+  //   // return x.filter(item => item[y.key].toString().includes(y.value));
+  //   const data = selectedParts.reduce((x, y) => {
+  //     console.log(x.label);
+  //   }, partList);
+
+  //   // console.log(data);
+  // }
+
+  mapPartNumbers() {
+    this.pnMapping = this.selectedPartNumbers.map(obj => {
+      return {
+        PublicationId: this.generalInformationDetails.PublicationId,
+        PartNumber: obj.partNumber,
+        PartNumberDescription: obj.partDescription,
+        ItemMasterId: obj.itemMasterId,
+        ItemClassification:
+          obj.itemClassification === null ? "-" : obj.itemClassification,
+        ItemClassificationId: obj.itemClassificationId,
+        ItemGroupId: obj.itemGroupId
+      };
+    });
+    this.selectedPartNumbers = [];
   }
   // get Aircraft Model By Type
   getAircraftModelByType(aircraftTypeId) {
