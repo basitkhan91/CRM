@@ -48,10 +48,12 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { InputSwitchModule } from "primeng/inputswitch";
 import { CalendarModule } from "primeng/calendar";
 import { DropdownModule } from 'primeng/dropdown';
+import { KeyFilterModule } from "primeng/keyfilter";
 
 
 @NgModule({
     imports: [
+        KeyFilterModule,
         FlexLayoutModule,
         FormsModule, ReactiveFormsModule,
         QuickAppProMaterialModule,

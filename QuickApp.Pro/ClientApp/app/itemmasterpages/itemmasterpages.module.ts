@@ -39,9 +39,12 @@ import { AircraftModelService } from "../services/aircraft-model/aircraft-model.
 import { AircraftModelEndpointService } from "../services/aircraft-model/aircraft-model-endpoint.service";
 import { AircraftManufacturerEndpointService } from "../services/aircraft-manufacturer/aircraftManufacturer-endpoint.service";
 import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
+import { RouterModule } from "@angular/router";
+
 
 @NgModule({
     imports: [
+        RouterModule,
         KeyFilterModule,
         TabMenuModule,
         CardModule,
@@ -83,7 +86,8 @@ import { AircraftManufacturerService } from "../services/aircraft-manufacturer/a
         AircraftModelService,
         AircraftModelEndpointService,
         AircraftManufacturerEndpointService,
-        AircraftManufacturerService
+        AircraftManufacturerService,
+      
     ],
     entryComponents: [
 

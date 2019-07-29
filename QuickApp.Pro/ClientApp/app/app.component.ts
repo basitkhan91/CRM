@@ -380,7 +380,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 ]
             },
             {
-                label: 'Work Flow',
+                label: 'Workflow',
                 icon: 'fa fa-fw fa-id-card-o',
                 items: [
                     { label: 'Work Flow List', routerLink: '/workflowmodule/workflowpages/app-workflow-list' },
@@ -395,7 +395,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 icon: 'fa fa-fw fa-clone',
                 items: [
                     { label: 'Workorder List', routerLink: '/workordersmodule/workorderspages/app-work-order-list' },
-                    { label: 'Create Workorder', routerLink: '/workordersmodule/workorderspages/app-work-order-add' },
+                    { label: 'Create Work Order', routerLink: '/workordersmodule/workorderspages/app-work-order-add' },
                     { label: 'WO Shipping', routerLink: '/#' },
                     { label: 'WO Billing', routerLink: '/#' },
                     {
@@ -626,7 +626,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 icon: 'fa fa-fw fa-newspaper-o',
                 items: [
                     { label: 'List of Publications', routerLink: '/singlepages/singlepages/app-publication' },
-                    { label: 'Create New', routerLink: '/singlepages/singlepages/app-create-publication' },
+                    { label: 'Create New Publications', routerLink: '/singlepages/singlepages/app-create-publication' },
                     {
                         label: 'Reports and Forms', items: [
                             { label: 'CMM by PIN', routerLink: '/#' },
