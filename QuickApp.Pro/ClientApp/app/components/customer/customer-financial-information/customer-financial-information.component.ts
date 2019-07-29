@@ -41,7 +41,7 @@ import { MarkUpPercentage } from '../../../models/markUpPercentage.model';
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
-    // styleUrls: ['./customers-financial-information.component.scss'],
+    styleUrls: ['./customers-financial-information.component.scss'],
     animations: [fadeInOut]
 })
 /** anys component*/
@@ -136,7 +136,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     public allWorkFlows: any[] = [];
     markUpValue: any;
     markUpPercentageId: any;
-
+    itemQuantity = [];
+    itemQuantity1 = [];
+    itemQuantity2 = [];
 	constructor(public taxtypeser: TaxTypeService, private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, public customerClassificationService: CustomerClassificationService, private router: ActivatedRoute, public inteservice: IntegrationService, public taxRateService: TaxRateService, public itemser: ItemMasterService, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
@@ -150,8 +152,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
 
-
+   
     ngOnInit(): void {
+        this.itemQuantity = Array(100).fill(1).map((x, i) => i + 1);
+        this.itemQuantity1 = Array(30).fill(1).map((x, i) => i + 1);
+        this.itemQuantity2 = Array(366).fill(1).map((x, i) => i + 1);
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-financial-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         this.workFlowtService.ShowPtab = true;

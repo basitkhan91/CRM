@@ -818,335 +818,334 @@
 
 				<!--Jyotsna Code-->
 
-				<div *ngIf="showAircraftData">
-					<div class="card">
-						<div class="col-sm-12 font-padding">
-							<div class="col-sm-2">
-								PN: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								PN Description: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								Alternate PN: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								Manufacturer: <span style="color:red"></span>
-							</div>
-						</div>
-						<div class="col-sm-12">
-							<div class="col-sm-6 ">
-								<div class="col-sm-12 add-color1">
-									<b class="add-name font">Add Dash Number</b>
-									<br />
-									<div class="col-sm-12">
-										<div class="col-sm-3 add-margin">
-											<label>Aircraft</label>
-											<br />
-										</div>
-										<div class="col-sm-4 add-margin2" *ngIf="disable">
-											<label *ngIf="!view">Model</label>
-											<label *ngIf="view">Memo</label>
-											<label *ngIf="viewCheck">
-												<input type="checkbox" data-md-icheck
-													   (change)="onToggle($event)" />Unknown
-											</label>
-											<br />
-										</div>
-										<div class="col-sm-4 dash-num" *ngIf="disable1">
-											<label *ngIf="!view1">Dash Number</label>
-                                            <label *ngIf="view1"> Memo</label>
-											<label *ngIf="viewcheck1">
-												<input type="checkbox" data-md-icheck
-													   (change)="onDashToggle($event)" />Unknown
-											</label>
-											<br />
-										</div>
-									</div>
-									<div class="col-sm-12">
-										<div class="col-sm-3 inline-block display-flex">
-											<select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
-												<option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
-											</select>
-											<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
-											   (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
-										</div>
-										<div class="col-sm-4 inline-block display-flex" *ngIf="disable">
-											<p-multiSelect *ngIf="!view" class="panel-style" [options]="LoadValues"
-														   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels"
-														   [panelStyle]="{minWidth:'12em'}" (onChange)="addDashnumber(e)"></p-multiSelect>
-											<a href="#" *ngIf="!view" data-toggle="modal" data-target="#addCustomerClass"
-											   class="add-icon">
-												<i class="fa fa-plus"></i>
-											</a>
-											<textarea *ngIf="view" rows="1" cols="12"></textarea>
-										</div>
+                <div *ngIf="showAircraftData">
+                    <div class="card">
+                        <div class="col-sm-12 font-padding">
+                            <div class="col-sm-2">
+                                PN: <span style="color:red"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                PN Description: <span style="color:red"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                Alternate PN: <span style="color:red"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                Manufacturer: <span style="color:red"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-6 ">
+                                <div class="col-sm-12 add-color1">
+                                    <b class="add-name font">Add Dash Number</b>
+                                    <br />
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3 add-margin">
+                                            <label>Aircraft</label>
+                                            <br />
+                                        </div>
+                                        <div class="col-sm-4 add-margin2" *ngIf="disable">
+                                            <label *ngIf="!view">Model</label>
+                                            <label *ngIf="view">Memo</label>
+                                            <label *ngIf="viewCheck">
+                                                <input type="checkbox" data-md-icheck
+                                                       (change)="onToggle($event)" />Unknown
+                                            </label>
+                                            <br />
+                                        </div>
+                                        <div class="col-sm-4 dash-num" *ngIf="disable1">
+                                            <label *ngIf="!view1">Dash Number</label>
+                                            <label *ngIf="view1" class="memo-style"> Memo</label>
+                                            <label *ngIf="viewcheck1">
+                                                <input type="checkbox" data-md-icheck
+                                                       (change)="onDashToggle($event)" />Unknown
+                                            </label>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+                                                <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+                                            </select>
+                                            <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon"><i class="fa fa-plus"></i></a>
+                                        </div>
+                                        <div class="col-sm-4 inline-block display-flex" *ngIf="disable">
+                                            <p-multiSelect *ngIf="!view" class="panel-style" [options]="LoadValues"
+                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels1"
+                                                           [panelStyle]="{minWidth:'12em'}" (onChange)="addDashnumber(e)"></p-multiSelect>
+                                            <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" *ngIf="!view"
+                                               class="add-icon">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                            <textarea *ngIf="view" class="form-control text-area"></textarea>
+                                        </div>
 
-										<div class="col-sm-3 inline-block display-flex" *ngIf="viewed">
-											<textarea rows="1" cols="6"></textarea>
-										</div>
-										<div class="col-sm-3" *ngIf="view">
-											<button type="button" class="btn btn-primary">
-												<i class="pi pi-plus">Add</i>
-											</button>
-										</div>
-										<div class="col-sm-3" *ngIf="viewed">
-											<button type="button" class="btn btn-primary">
-												<i class="pi pi-plus">Add</i>
-											</button>
-										</div>
-										<div class="col-sm-3" *ngIf="disabled">
-											<button type="button" data-toggle="modal"
-													data-target="#ModalDashNumber" class="btn btn-primary">
-												Add Dash Number
-											</button>
-										</div>
-										<div class="col-sm-3" *ngIf="dashdisable">
-											<textarea rows="1" cols="6"></textarea>
-										</div>
-										<div class="col-sm-2" *ngIf="dashdisable">
-											<button type="button" class="btn btn-primary">
-												<i class="pi pi-plus">Add</i>
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="col-sm-12 add-color">
-									<b class="add-name font">Search Dash Number</b>
-									<br />
-									<div class="col-sm-12">
-										<div class="col-sm-3 add-margin">
-											<label>Aircraft</label>
-											<br />
-										</div>
-										<div class="col-sm-4 add-margin6">
-											<label>Aircraft Model</label>
-											<br />
-										</div>
+                                        <div class="col-sm-3" *ngIf="view">
+                                            <button type="button" class="btn btn-primary btn-add">
+                                                <i class="pi pi-plus">Add</i>
+                                            </button>
+                                        </div>
 
-									</div>
-									<div class="col-sm-12">
-										<div class="col-sm-3 inline-block display-flex">
-											<p-multiSelect class="panel-style" [options]="LoadAircraftmanufacturer"
-														   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftmanufacturer" (onChange)="selectedAircrafttype()"
-														   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-										</div>
-										<div class="col-sm-3 inline-block display-flex">
-											<p-multiSelect [options]="LoadValues" [ngModelOptions]="{standalone: true}"
-														   [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
-														   class="panel-style"></p-multiSelect>
-										</div>
-										<div class="col-sm-3">
-											<button type="button" class="btn btn-primary btn-search-new">
-												<i class="pi pi-search"></i>
-											</button>
-										</div>
-									</div>
-									<br />
-								</div>
-							</div>
-						</div>
-						<br />
-						<div class="col-sm-12">
-							<p-table [value]="aircraftList" [rows]="6" [columns]="colst" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-								<ng-template pTemplate="header" let-columns>
-									<tr>
-										<th>Id</th>
-										<th *ngFor="let col of colst">
-											{{col.header}}
-										</th>
-										<th>Action</th>
-									</tr>
-								</ng-template>
-								<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-									<tr>
-										<td>{{i+1}}</td>
-										<td *ngFor="let col of colst">
-											{{rowData[col.field]}}
-										</td>
-										<td>
-											<button class="btn btn-primary nobg">
-												<i class="fa fa-edit"></i>
-											</button>
-											<button class="btn btn-danger nobg">
-												<i class="fa fa-trash"></i>
-											</button>
-										</td>
-									</tr>
-								</ng-template>
-							</p-table>
-							<br />
-							<div class="col-sm-12">
-								<div class="col-sm-3 font">
-									Schematic: <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
-								</div>
-								<div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
-									Attach Drawing..
-									<div class="upload">
-										<input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple="">
-										<label>
-											<figure><i class="fa fa-upload"></i></figure>
-										</label>
-									</div>
-								</div>
-							</div>
-						</div>
+                                        <div class="col-sm-3" *ngIf="disable1">
+                                            <button type="button" *ngIf="!view1" data-toggle="modal"
+                                                    data-target="#ModalDashNumber" class="btn btn-primary">
+                                                Add Dash Number
+                                            </button>
+                                            <textarea class="form-control text-area" *ngIf="view1"></textarea>
+                                        </div>
+                                        <div class="col-sm-2" *ngIf="view1">
+                                            <button type="button" class="btn btn-primary btn-add">
+                                                <i class="pi pi-plus">Add</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" style="margin-bottom:10px;"></div>
 
-						<br />
-						<br />
-					</div>
-					<div class="col-sm-12">
-						<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-						<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
-					</div>
-				</div>
-				<div *ngIf="showAtachapter">
-					<div class="card">
-						<div class="col-sm-12 font-padding">
-							<div class="col-sm-2">
-								PN: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								PN Description: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								Alternate PN: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								Manufacturer: <span style="color:red"></span>
-							</div>
-						</div>
-						<div class="col-sm-12">
-							<div class="col-sm-6 ">
-								<div class="col-sm-12 add-color1">
-									<b class="add-name font">Add ATA Chapter</b>
-									<br />
-									<div class="col-sm-12">
-										<div class="col-sm-4">
-											<label class="lab1">ATA chapter</label>
-											<br />
-										</div>
-										<div class="col-sm-4">
-											<label class="lab1">ATA Sub-chapter</label>
-											<br />
-										</div>
-									</div>
-									<div class="col-sm-12">
-										<div class="col-sm-3 inline-block display-flex">
-											<select class="select-option" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAtaNumber.ataChapterId" (change)="atasubchapterChange(currentAtaNumber.ataChapterId)">
-                                                <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
-											</select>
-											<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
-											   (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
-										</div>
-										<div class="col-sm-3 inline-block display-flex">
-											<p-multiSelect  class="panel-style" [options]="atasubchapter"
-														   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels"
-														   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-											<a href="#"  data-toggle="modal" data-target="#addCustomerClass"
-											   class="add-icon" (click)="provisionope(contents)">
-												<i class="fa fa-plus"></i>
-											</a>
-										</div>
-										<div class="col-sm-3">
-											<button type="button" class="btn btn-primary">
-												<i class="pi pi-plus">Add</i>
-											</button>
-										</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="col-sm-12 add-color">
+                                    <b class="add-name font">Search Dash Number</b>
+                                    <br />
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3 add-margin">
+                                            <label>Aircraft</label>
+                                            <br />
+                                        </div>
+                                        <div class="col-sm-4 add-margin6">
+                                            <label>Aircraft Model</label>
+                                            <br />
+                                        </div>
+                                        <div class="col-sm-4 add-margin7">
+                                            <label>Dash Number</label>
+                                            <br />
+                                        </div>
 
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="col-sm-12 add-color">
-									<b class="add-name font">Search ATA chapters</b>
-									<br />
-									<div class="col-sm-12">
-										<div class="col-sm-3">
-											<label class="lab1">ATA Chapter</label>
-											<br />
-										</div>
-										<div class="col-sm-4">
-											<label class="lab1">ATA Subchapter</label>
-											<br />
-										</div>
-									</div>
-									<div class="col-sm-12">
-										<div class="col-sm-3 inline-block display-flex">
-                                            <p-multiSelect class="panel-style" [options]="LoadAtachapter"
-                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedATachapter" 
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <p-multiSelect class="panel-style" [options]="LoadAircraftmanufacturer"
+                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftmanufacturer" (onChange)="selectedAircrafttype()"
                                                            [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-										</div>
-										<div class="col-sm-3 inline-block display-flex">
-											<p-multiSelect [options]="modelValues" [ngModelOptions]="{standalone: true}"
-														   [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
-														   class="panel-style"></p-multiSelect>
-										</div>
-										<div class="col-sm-3">
-											<button type="button" class="btn btn-primary btn-search-new">
-												<i class="pi pi-search"></i>
-											</button>
-										</div>
-									</div>
-									<br />
-								</div>
-							</div>
-						</div>
-						<br />
-						<div class="col-sm-12">
-							<p-table [value]="atachapterList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-								<ng-template pTemplate="header" let-columns>
-									<tr>
-										<th>Id</th>
-										<th *ngFor="let col of atasub">
-											{{col.header}}
-										</th>
-										<th>Action</th>
-									</tr>
-								</ng-template>
-								<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-									<tr>
-										<td>{{i+1}}</td>
-										<td *ngFor="let col of atasub">
-											{{rowData[col.field]}}
-										</td>
-										<td>
-											<button class="btn btn-danger nobg">
-												<i class="fa fa-trash"></i>
-											</button>
-										</td>
-									</tr>
-								</ng-template>
-							</p-table>
-							<br />
-						</div>
-						<br />
-						<br />
-					</div>
-					<div class="col-sm-12">
-						<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-						<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
-					</div>
+                                        </div>
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <p-multiSelect [options]="LoadValues" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
+                                                           class="panel-style"></p-multiSelect>
+                                        </div>
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <p-multiSelect [options]="LoadValues" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
+                                                           class="panel-style"></p-multiSelect>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-primary btn-search-new">
+                                                <i class="pi pi-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" style="margin-bottom:10px;"></div>
 
-				</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    
+                        <div class="col-sm-12">
+                            <p-table [value]="aircraftList" [rows]="6" [columns]="colst" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th *ngFor="let col of colst">
+                                            {{col.header}}
+                                        </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                    <tr>
+                                        <td>{{i+1}}</td>
+                                        <td *ngFor="let col of colst">
+                                            {{rowData[col.field]}}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary nobg" data-toggle="modal"
+                                                    data-target="#EditMemo">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger nobg">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <br />
+                            <div class="col-sm-12">
+                                <div class="col-sm-3 font">
+                                    Schematic: <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
+                                </div>
+                                <div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
+                                    Attach Drawing..
+                                    <div class="upload">
+                                        <input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple="">
+                                        <label>
+                                            <figure><i class="fa fa-upload"></i></figure>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+                        <button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+                    </div>
+                </div>
+                <div *ngIf="showAtachapter">
+                    <div class="card">
+                        <div class="col-sm-12 font-padding">
+                            <div class="col-sm-2">
+                                PN: <span style="color:red"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                PN Description: <span style="color:red"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                Alternate PN: <span style="color:red"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                Manufacturer: <span style="color:red"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-6 ">
+                                <div class="col-sm-12 add-color1">
+                                    <b class="add-name font">Add ATA Chapter</b>
+                                    <br />
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-4">
+                                            <label class="lab1">ATA chapter</label>
+                                            <br />
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="lab1">ATA Sub-chapter</label>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <select class="select-option" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAtaNumber.ataChapterId" (change)="atasubchapterChange(currentAtaNumber.ataChapterId)">
+                                                <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
+                                            </select>
+                                            <a [routerLink]="['/singlepages/singlepages/app-ata-main']" class="add-icon"><i class="fa fa-plus"></i></a>
+
+                                        </div>
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <p-multiSelect class="panel-style" [options]="atasubchapter"
+                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels"
+                                                           [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                                            <a [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']" class="add-icon"><i class="fa fa-plus"></i></a>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-primary btn-add">
+                                                <i class="pi pi-plus">Add</i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-12" style="margin-bottom:10px;"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="col-sm-12 add-color">
+                                    <b class="add-name font">Search ATA chapters</b>
+                                    <br />
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3">
+                                            <label class="lab1">ATA Chapter</label>
+                                            <br />
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="lab1">ATA Subchapter</label>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <p-multiSelect class="panel-style" [options]="LoadAtachapter"
+                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedATachapter"
+                                                           [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                                        </div>
+                                        <div class="col-sm-3 inline-block display-flex">
+                                            <p-multiSelect [options]="modelValues" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
+                                                           class="panel-style"></p-multiSelect>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-primary btn-search-new">
+                                                <i class="pi pi-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" style="margin-bottom:10px;"></div>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                       <br/>
+                    </div>
+                    <div class="col-sm-12">
+                        <p-table [value]="atachapterList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th>Id</th>
+                                    <th *ngFor="let col of atasub">
+                                        {{col.header}}
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                <tr>
+                                    <td>{{i+1}}</td>
+                                    <td *ngFor="let col of atasub">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger nobg">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <br />
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+                        <button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+                    </div>
+
+                </div>
 
 				<div *ngIf="showpurchaseData">
 					<!--New Changes in Purchase and Sales page--Jyotsna-->
 					<div class="card">
 						<div class="col-sm-12 font-padding">
 							<div class="col-sm-2">
-								PN: <span style="color:red">PN12345</span>
+								PN: <span style="color:red"></span>
 							</div>
 							<div class="col-sm-3">
-								PN Description: <span style="color:red">AirBustype</span>
+								PN Description: <span style="color:red"></span>
 							</div>
 							<div class="col-sm-3">
-								Alternate PN: <span style="color:red">PN12345</span>
+								Alternate PN: <span style="color:red"></span>
 							</div>
 							<div class="col-sm-3">
-								Manufacturer: <span style="color:red">Aeroexchange</span>
+								Manufacturer: <span style="color:red"></span>
 							</div>
 						</div>
 						<div class="col-sm-12 add-colors font">
@@ -1160,43 +1159,44 @@
 					</div>
 					<div class="table-responsive ">
 						<table class="table table-bordered table-striped table-sorting mpn-list-table fixed-column-table column-r1-fixed" id="mpn-list-table">
-							<thead>
-								<tr>
-									<th colspan="10">Unit Purchase Price</th>
-									<th colspan="16" class="bg1">Unit Sale Price</th>
-								</tr>
-								<tr>
-									<th colspan="10"></th>
-									<th colspan="5" class="bg2">Use Flat Sale Price</th>
-									<th colspan="9" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
-								</tr>
-								<tr>
-									<th>Cond</th>
-									<th>UOM</th>
-									<th>Currency</th>
-									<th>FX Rate</th>
-									<th>Vendor List Price</th>
-									<th>Last List Price Date</th>
-									<th>Purchase Disc %</th>
-									<th>Purchase Disc Amount</th>
-									<th>Last Purchase Disc Date</th>
-									<th>Unit Purchase Price *</th>									
-									<th class="bg2">UOM</th>
-									<th class="bg2">Currency</th>
-									<th class="bg2">FX Rate</th>
-									<th class="bg2">Flat Price Amount</th>
-									<th class="bg2">Last Flat Price Date</th>
-									<th class="bg3">Mark % on List Price</th>
-									<th class="bg3">Mark Up Amount</th>
-									<th class="bg3">Last Mark Up Date</th>
-									<th class="bg3">Base Sale Price</th>
-									<th class="bg3">Sale Disc %</th>
-									<th class="bg3">Sale Disc Amount</th>
-									<th class="bg3">Last Sales Disc Date</th>
-									<th class="bg3">Unit Sale Price</th>
-									<th>Action</th>
-								</tr>
-							</thead>
+                            <thead>
+                                <tr>
+                                    <th colspan="10">Unit Purchase Price</th>
+                                    <th colspan="19" class="bg1">Unit Sale Price</th>                                    
+                                </tr>
+                                <tr>
+                                    <th colspan="10"></th>
+                                    <th colspan="5" class="bg2">Use Flat Sale Price</th>
+                                    <th colspan="13" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
+                                  
+                                </tr>
+                                <tr>
+                                    <th>Cond</th>
+                                    <th>UOM</th>
+                                    <th>Currency</th>
+                                    <th>FX Rate</th>
+                                    <th>Vendor List Price</th>
+                                    <th>Last List Price Date</th>
+                                    <th>Purchase Disc %</th>
+                                    <th>Purchase Disc Amount</th>
+                                    <th>Last Purchase Disc Date</th>
+                                    <th>Unit Purchase Price *</th>
+                                    <th class="bg2">UOM</th>
+                                    <th class="bg2">Currency</th>
+                                    <th class="bg2">FX Rate</th>
+                                    <th class="bg2">Flat Price Amount</th>
+                                    <th class="bg2">Last Flat Price Date</th>
+                                    <th class="bg3">Mark % on List Price</th>
+                                    <th class="bg3">Mark Up Amount</th>
+                                    <th class="bg3">Last Mark Up Date</th>
+                                    <th class="bg3">Base Sale Price</th>
+                                    <th class="bg3">Sale Disc %</th>
+                                    <th class="bg3">Sale Disc Amount</th>
+                                    <th class="bg3">Last Sales Disc Date</th>
+                                    <th class="bg3">Unit Sale Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
 							<tbody>
 
 								<tr *ngFor="let field of fieldArray; let i = index">
@@ -1253,7 +1253,7 @@
 										<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.purchaseAmount" [disabled]="true" />
 									</td>
 									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastDate" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+                                        <input type="date">
 									</td>
 									<td>
 										<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseDiscountAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.DiscountAmount" [disabled]="true" />
@@ -1291,7 +1291,7 @@
 										<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fpa" />
 									</td>
 									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastflat" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+                                        <input type="date">
 									</td>
 									<td>
 										<select class="form-control w80" id="" name="" [(ngModel)]="field.Markuppercent" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
@@ -1302,7 +1302,7 @@
 										<input type="text" pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.markupAmount" value="{{field.markupAmount}}" />
 									</td>
 									<td>
-										<p-calendar class="cal1" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.lastmarkup" [showIcon]="true" [readonlyInput]="true"></p-calendar>
+                                        <input type="date">
 									</td>
 									<td>
 										<input type="text" pKeyFilter="money" maxlength="15" [(ngModel)]="field.baseSaleprice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
@@ -1315,9 +1315,9 @@
 									<td>
 										<input type="text" pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.sda" value="{{field.saleDiscountAmount}}" />
 									</td>
-									<td>
-										<p-calendar class="cal1" [(ngModel)]="field.lastsales" [ngModelOptions]="{standalone: true}" [showIcon]="true" [readonlyInput]="true"></p-calendar>
-									</td>
+                                    <td>
+                                        <input type="date">
+                                    </td>
 									<td>
 										<input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.unitPrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.unitSalePrice}}" />
 									</td>
@@ -1341,17 +1341,17 @@
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
-                                PN: <span style="color:red">PN12345</span>
+                                PN: <span style="color:red"></span>
                             </div>
 
                             <div class="col-sm-3">
-                                PN Description: <span style="color:red">AirBustype</span>
+                                PN Description: <span style="color:red"></span>
                             </div>
                             <div class="col-sm-3">
-                                Alternate PN: <span style="color:red">PN12345</span>
+                                Alternate PN: <span style="color:red"></span>
                             </div>
                             <div class="col-sm-3">
-                                Manufacturer: <span style="color:red">Aeroexchange</span>
+                                Manufacturer: <span style="color:red"></span>
                             </div>
                         </div>
                         <div class="col-sm-12 add-colors font">
@@ -1451,7 +1451,7 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-4">
                                 <div class="col-sm-4">
-                                    <label class="lbl">Export UOM</label><span style="color:red;"> *</span>
+                                    <label class="lbl">Export UOM</label><span style="color:red;">*</span>
                                 </div>
                                 <div class="col-sm-6 inline-block display-flex">
                                     <select class="form-control w167" id="new-uom" name="">
@@ -3407,64 +3407,53 @@
 		</form>
 	</div>
 </ng-template>
-
-<!--<ng-template #integrationModel let-c="close" let-d="dismiss" style="width:auto">
-		<div class="modal-header">
-			<h4 class="modal-title" *ngIf="isEditMode">Edit Integration</h4>
-			<h4 class="modal-title" *ngIf="!isEditMode">Add Integration</h4>
-			<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="createIntegration()">
-				<div class="form-group">
-					<label for="url" class="control-label">WebSite url</label>
-					<div class="inner-addon right-addon inline-block">
-						<p-autoComplete (onSelect)="integrationPartnmId($event)" (onKeyUp)=integrationEventHandler($event) [(ngModel)]="portalURL" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterIntegrationsSelect($event)" [size]="30"
-										[minLength]="1" [dropdown]="true">
-							<ng-template let-integrationName pTemplate="item">
-								<div class="ui-helper-clearfix">{{integrationName}}</div>
-							</ng-template>
-						</p-autoComplete>
-						<div *ngIf="disableSave" style="color:red">Already Exists</div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<label for="netDays" class="control-label">Integration</label>
-					<div>
-						<input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceIntegration.description" minlength="2">
-						<div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-							Integration required.
-						</div>
-						<div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
-							Integration must be at least 2 characters long.
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<label for="description" class="control-label">Memo</label>
-					<div class="control-data">
-						<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceIntegration.memo">
-
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-6">
-						<label class="form-check-label" for="isActive">
-							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceIntegration.isActive"> Active
-						</label>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-success" [disabled]="disableIntegrationSave">Submit</button>
-					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-				</div>
-			</form>
-		</div>
-
-	</ng-template>-->
+<div id="EditMemo"
+     class="modal fade custom-popup"
+     role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title"> Edit Dash Number Memo</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="" name="">
+                    <div class="col-sm-12">
+                        <div class="form-group marginr50" style="display: inline-block;">
+                            <p class="fs10">
+                                <label class="control-label" style="width: auto;">PN</label>
+                                
+                            </p>
+                        </div>
+                        <div class="form-group marginr50" style="display: inline-block;">
+                            <p class="fs10">
+                                <label class="control-label" style="width: auto;">Aircraft</label>
+                                
+                            </p>
+                        </div>
+                        <div class="form-group marginr50" style="display: inline-block;">
+                            <p class="fs10">
+                                <label class="control-label" style="width: auto;">Model</label>
+                                
+                            </p>
+                        </div>
+                        <div class="form-group marginr50" style="display: inline-block;">
+                            <p class="fs10">
+                                <label class="control-label" style="width: auto;">Dash Number</label>
+                                
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <textarea class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

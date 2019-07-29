@@ -77,8 +77,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     disables: boolean = false;
     disable: boolean = false;
     disabled: boolean = false;
-    view: boolean = false;
-    viewed: boolean = false;
+    view: boolean = false;   
     disableIntegrationSave: boolean;
     currencySymbol: any;
     bulist: any[] = [];
@@ -2828,22 +2827,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.selectedModels.splice(this.selectedModels.indexOf(models[0], 1));
             this.selectedModels.push(selectedRow);
         }
-
-        //selectedRow.isBoolean = indeex;
-        //let ischange = false;
-        //if (this.selectedModels.length > 0) {
-        //    this.selectedModels.map((row) => {
-        //        if (selectedRow.aircraftModelId == row.aircraftModelId) {
-
-        //            ischange = true;
-        //        }
-        //    });
-        //}
-        //if (!ischange) {
-
-        //}
-        //console.log(this.selectedModels);
-
+        
     }
 
 
@@ -3709,11 +3693,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showGeneralData = false;
         this.showpurchaseData = false;
         this.showexportData = false;
-        // Created by Jyotsna
+        // Created ATA Main
         this.currentAtaNumber = new ATAChapter();
         this.atamain.getAtaMainList().subscribe(Atachapter => {
-            this.ataMainchapter = Atachapter[0];
-            console.log(this.ataMainchapter)
+            this.ataMainchapter = Atachapter[0];            
             for (let i = 0; i < this.ataMainchapter.length; i++) {
                 this.LoadAtachapter.push(
                     { value: this.ataMainchapter[i].ataChapterId, label: this.ataMainchapter[i].ataChapterName },
@@ -4281,8 +4264,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceIntegration.createdBy = this.userName;
-            this.sourceIntegration.updatedBy = this.userName;
-            //this.sourceAction.description = this.integrationName;
+            this.sourceIntegration.updatedBy = this.userName;            
             this.sourceIntegration.portalURL = this.portalURL;
             this.integrationService.newAction(this.sourceIntegration).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -4359,8 +4341,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     label: x.description,
                     value: x.ataSubChapterId
                 }
-            })
-            console.log(this.atasubchapter);
+            })           
         })
 
         this.disables = true;
@@ -4368,13 +4349,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.view = false;
     }
     LoadAircraft: any[];
-
+    selectedModels1: any;
     viewcheck1: boolean = false;
     addDashnumber() {
         this.viewCheck = false;
         this.disabled = true;
         this.disable1 = true;
-        this.viewcheck1 = true;
+        this.viewcheck1 = true;        
+        if (this.selectedModels1 == '') {
+            this.viewCheck = true;
+            this.disabled = false;
+            this.disable1 = false;
+            this.viewcheck1 = false;            
+        }
     }
     check($event) {
         this.disables = true;
@@ -4387,22 +4374,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     onToggle(e) {
         this.disable = true;
         this.view = e.target.checked;
-    }
-    dashdisable: boolean = false;
+    }    
     viewDash: boolean = true;
     viewCheck: boolean = true;
     disable1: boolean = false;
     view1: boolean = false;
-    onDashToggle(e) {
-        this.disabled = false;
+    onDashToggle(e) {       
         this.disable1 = true;
-        this.dashdisable = true;
-        this.view1 = e.target.checked;
+        this.view1 = e.target.checked;        
     }
-    onToggled($event) {
-        this.disable = false;
-        this.viewed = true;
-    }
+    
     schematic = false;
     onSchematic(e) {
         this.schematic = e.target.checked;

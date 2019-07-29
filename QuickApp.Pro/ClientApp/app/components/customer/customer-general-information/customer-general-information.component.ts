@@ -405,7 +405,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCountrylist().subscribe(
+        this.workFlowtService.getCountrylist().subscribe(           
             results => this.onDatacountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );

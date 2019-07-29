@@ -25,10 +25,15 @@
                             <button type="button" id="btnAddAssetStatus" matTooltip="Add Aircraft Manufacturer" (click)="open(Manufacturer)" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Add"><i class="fa fa-plus"></i></button>
 
                         </div>
-                        <div class="excel-upload mtop0">
-                            <input type="file" name="upload[]" multiple="" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                            <label for="upload"> <span data-toggle="tooltip" title="" data-original-title="Excel Upload (table rows)"><i class="fa fa-file-excel-o"></i></span> </label>
+                        <div class="form-group col-sm-2">
+                            <div class="excel-upload mtop0">
+                                <input type="file" name="upload[]" multiple="" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                <label for="upload"> <span data-toggle="tooltip" title="Upload Excel" data-original-title="Excel Upload (table rows)"><i class="fa fa-file-excel-o"></i></span> </label>
+                            </div>                          
                         </div>
+                        <!--<div class="excel-upload mtop0">
+                           
+                        </div>-->
                         <!--</form>-->
                     </div>
                     <!--<div class="table-responsive">

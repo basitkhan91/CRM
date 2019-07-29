@@ -2,15 +2,7 @@
 	<div class="right_col" role="main">
 		<div class="x_panel" style="">
 			<div class="x_content">
-				<!--<nav aria-label="breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-					<li class="breadcrumb-item active" aria-current="page">Customer Shipping Information</li>
-				</ol>
-			</nav>-->
-				<!--<div class="pheading">
-				<h4 class="page-heading">Customer Shipping Information</h4>
-			</div>-->
+				
 
 				<div class="table-responsive">
 					<p class="lead"></p>
@@ -201,7 +193,7 @@
 														<label class="control-label col-sm-4">Ship To Country <strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
-                                                                <p-autoComplete (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                                <p-autoComplete class="autocomplete-customer" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                                                                 [minLength]="1" [dropdown]="true">
                                                                     <ng-template let-countryName pTemplate="item">
                                                                         <div class="ui-helper-clearfix">{{countryName}}</div>
