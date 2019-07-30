@@ -61,8 +61,8 @@ export class ReceivngPoComponent implements OnInit {
     selectedManagementStructure: ManagementStructure[] = [];
     sites: Site[];
 
-    CustomerList: DropDownData[]=[];
-    VendorList: DropDownData[]=[];
+    CustomerList: DropDownData[] = [];
+    VendorList: DropDownData[] = [];
     ManufacturerList: DropDownData[] = [];
 
     toggleIcon: boolean = false;
@@ -448,7 +448,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     private partQuantityChange(event: any, part: PurchaseOrderPart): void {
-        var quantity = <number>event.target.value;
+        let quantity : number = <number> event.target.value;
 
         if (quantity > part.quantityOrdered) {
             event.target.value = "";
@@ -483,16 +483,17 @@ export class ReceivngPoComponent implements OnInit {
         }
 
         part.stocklineListObj[this.currentSLIndex].visible = true;
+
+        this.currentSLIndex = 0;
     }
 
     private gotoStockLinePage(event: any, part: PurchaseOrderPart): void {
         let value = event.target.value;
-        let index : number=0;
+        let index: number = 0;
         if (value == '') {
-            event.target.value = "1";
             this.currentSLIndex = 0;
         }
-        index = Number.parseInt(value)-1;
+        index = Number.parseInt(value) - 1;
         if (index < part.stocklineListObj.length) {
             this.currentSLIndex = index;
         }
@@ -502,8 +503,11 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    private moveStockLinePage(increment: number): void {
-        this.currentSLIndex += increment;
+    private moveStockLinePage(increment: number, part: PurchaseOrderPart): void {
+        let index: number = this.currentSLIndex + increment;
+        if (index < part.stocklineListObj.length) {
+            this.currentSLIndex = index;
+        }
     }
 
     private getStockLineCompanies(stockLine: StockLine): void {
@@ -589,17 +593,17 @@ export class ReceivngPoComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
-    
+
     private getStockLineSite(stockLine: StockLine): void {
         stockLine.SiteList = [];
         stockLine.siteId = 0;
         stockLine.WareHouseList = [];
-        stockLine.warehouseId= 0;
-        stockLine.LocationList= [];
-        stockLine.locationId= 0;
+        stockLine.warehouseId = 0;
+        stockLine.LocationList = [];
+        stockLine.locationId = 0;
         stockLine.ShelfList = [];
-        stockLine.shelfId= 0;
-        stockLine.BinList= [];
+        stockLine.shelfId = 0;
+        stockLine.BinList = [];
         stockLine.binId = 0;
 
         for (let site of this.sites) {
@@ -621,7 +625,7 @@ export class ReceivngPoComponent implements OnInit {
         stockLine.binId = 0;
         this.binservice.getWareHouseBySiteId(stockLine.siteId).subscribe( //calling and Subscribing for WareHouse Data
             results => {
-                
+
                 console.log(results);
                 for (let wareHouse of results) {
                     var dropdown = new DropDownData();
@@ -723,7 +727,7 @@ export class ReceivngPoComponent implements OnInit {
     private getManufacturers() {
         this.ManufacturerList = [];
         this.manufacturerService.getManufacturers().subscribe(
-            results => { 
+            results => {
                 for (let manufacturer of results[0]) {
                     var dropdown = new DropDownData();
                     dropdown.Key = manufacturer.manufacturerId.toLocaleString();
@@ -746,7 +750,7 @@ export class ReceivngPoComponent implements OnInit {
     //    );
     //}
 
-    
+
     //private getLocation(wareHouseId: number): void {
     //    this.loca
     //}
