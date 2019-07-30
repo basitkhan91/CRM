@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -16,6 +17,8 @@ namespace DAL.Models
 
     public partial class PublicationPNACMappingModel
     {
+        [Key]
+        public long PNACID { get; set; }
         public long DashNumberId { get; set; }
         public int DashNumber { get; set; }
         public int AircraftTypeId { get; set; }

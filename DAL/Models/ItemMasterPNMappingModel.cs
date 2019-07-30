@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -16,6 +17,8 @@ namespace DAL.Models
 
     public partial class ItemMasterPNMappingModel
     {
+        [Key]
+        public long PNIMID { get; set; }
         public long ItemMasterId { get; set; }
         public long ItemClassificationId { get; set; }
         public long ItemGroupId { get; set; }
