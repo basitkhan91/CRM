@@ -250,5 +250,8 @@ export class ItemMasterService {
     getAllAirCraftModels(){
         return this.itemMasterEndpoint.getAllAircraftList();
     }
+    newPNIMMapping(action: any) {
+        return this.itemMasterEndpoint.getPNIMMappingEndpoint<any>(action);
+    }
 }
 

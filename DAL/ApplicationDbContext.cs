@@ -349,6 +349,12 @@ namespace DAL
         public DbSet<AircraftDashNumber> AircraftDashNumber { get; set; }
         public DbSet<AircraftDashNumberAudit> AircraftDashNumberAudit { get; set; }
         public DbSet<AircraftTypeAudit> AircraftTypeAudit { get; set; }
+
+        public DbSet<ItemMasterPNMappingModel> ItemMasterPNMappingModel { get; set; }
+
+        public DbSet<PublicationPNACMappingModel> PublicationPNACMappingModel { get; set; }
+        public DbSet<PublicationPNATAMappingModel> PublicationPNATAMappingModel { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

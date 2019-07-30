@@ -49,6 +49,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly getAuditById: string = "/api/ItemMaster/audits";
     private readonly _itemclassificationUrlNew: string = "/api/ItemMaster/itemNonStockclasspost";
     private readonly _itemNonstockclassificationGetUrl: string = "/api/ItemMaster/GetNonStockClsiifications";
+    private readonly _itemPNMappingUrlNew: string = "/api/ItemMaster/PNIMMappingPost";
 
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -711,5 +712,12 @@ export class ItemMasterEndpoint extends EndpointFactory {
     getAllAircraftList():any{
       const getaircraftUrl = `${Url}AircraftManufacturer/getAll`;
       return this.http.get(getaircraftUrl , this.getRequestHeaders() );
+    }
+    getPNIMMappingEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._itemPNMappingUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPNIMMappingEndpoint(userObject));
+            });
     }
 }

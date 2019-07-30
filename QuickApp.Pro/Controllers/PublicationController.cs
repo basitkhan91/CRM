@@ -18,6 +18,7 @@ namespace QuickApp.Pro.Controllers
     public class PublicationController : Controller
     {
         private IUnitOfWork _unitOfWork;
+        private readonly ApplicationDbContext _context;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
@@ -176,6 +177,68 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.Publication.GetATASUBS(ChID);
             return Ok(result);
         }
-        
+
+        [HttpPost("PubPNACMappingPost")]
+        public IActionResult InsertPNACMapping([FromBody] PublicationPNACMappingModel PnAcMapping)
+        {
+            if (ModelState.IsValid)
+            {
+                if (PnAcMapping == null)
+                    return BadRequest($"{nameof(PnAcMapping)} cannot be null");
+
+                DAL.Models.PublicationPNACMappingModel pnacbject = new DAL.Models.PublicationPNACMappingModel();
+                pnacbject.PublicationId = PnAcMapping.PublicationId;
+                pnacbject.PartNumber = PnAcMapping.PartNumber;
+                pnacbject.DashNumberId = PnAcMapping.DashNumberId;
+                pnacbject.DashNumber = PnAcMapping.DashNumber;
+                pnacbject.AircraftTypeId = PnAcMapping.AircraftTypeId;
+                pnacbject.AircraftModelId = PnAcMapping.AircraftModelId;
+                pnacbject.AircraftModel = PnAcMapping.AircraftModel;
+                pnacbject.AircraftType = PnAcMapping.AircraftType;
+                pnacbject.MasterCompanyId = PnAcMapping.MasterCompanyId;
+                pnacbject.IsActive = PnAcMapping.IsActive;
+                pnacbject.CreatedDate = DateTime.Now;
+                pnacbject.UpdatedDate = DateTime.Now;
+                pnacbject.CreatedBy = PnAcMapping.CreatedBy;
+                pnacbject.UpdatedBy = PnAcMapping.UpdatedBy;
+                _context.PublicationPNACMappingModel.Add(pnacbject);
+                _context.SaveChanges();
+
+            }
+
+            return Ok(ModelState);
+        }
+
+        [HttpPost("PubPNATAMappingPost")]
+        public IActionResult InsertPNATAMapping([FromBody] PublicationPNATAMappingModel PnAtaMapping)
+        {
+            if (ModelState.IsValid)
+            {
+                if (PnAtaMapping == null)
+                    return BadRequest($"{nameof(PnAtaMapping)} cannot be null");
+                DAL.Models.PublicationPNATAMappingModel pnatabject = new DAL.Models.PublicationPNATAMappingModel();
+                pnatabject.PublicationId = PnAtaMapping.PublicationId;
+                pnatabject.PartNumber = PnAtaMapping.PartNumber;
+                pnatabject.ATAChapterId = PnAtaMapping.ATAChapterId;
+                pnatabject.ATAChapterCode = PnAtaMapping.ATAChapterCode;
+                pnatabject.ATASubChapterId = PnAtaMapping.ATASubChapterId;
+                pnatabject.ATAChapterName = PnAtaMapping.ATAChapterName;
+                pnatabject.ATASubChapterDescription = PnAtaMapping.ATASubChapterDescription;
+                
+                pnatabject.MasterCompanyId = PnAtaMapping.MasterCompanyId;
+                pnatabject.IsActive = PnAtaMapping.IsActive;
+                pnatabject.CreatedDate = DateTime.Now;
+                pnatabject.UpdatedDate = DateTime.Now;
+                pnatabject.CreatedBy = PnAtaMapping.CreatedBy;
+                pnatabject.UpdatedBy = PnAtaMapping.UpdatedBy;
+                _context.PublicationPNATAMappingModel.Add(pnatabject);
+                _context.SaveChanges();
+
+            }
+
+            return Ok(ModelState);
+        }
+
+
     }
 }

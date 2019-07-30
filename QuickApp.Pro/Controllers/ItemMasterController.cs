@@ -1164,6 +1164,39 @@ namespace QuickApp.Pro.Controllers
                 .ToList();
             return Ok(itemMasters);
         }
+
+        [HttpPost("PNIMMappingPost")]
+        public IActionResult CreatePNIMast([FromBody] ItemMasterPNMappingModel IMPNMapping)
+        {
+          
+                if (ModelState.IsValid)
+                {
+                    if (IMPNMapping == null)
+                        return BadRequest($"{nameof(IMPNMapping)} cannot be null");
+
+                    ItemMasterPNMappingModel cp = new ItemMasterPNMappingModel();
+                    cp.ItemMasterId = IMPNMapping.ItemMasterId;
+                    cp.PublicationId = IMPNMapping.PublicationId;
+                    cp.PartNumber = IMPNMapping.PartNumber;
+                    cp.PartNumberDescription = IMPNMapping.PartNumberDescription;
+                    cp.ItemClassification = IMPNMapping.ItemClassification;
+                    cp.ItemClassificationId = IMPNMapping.ItemClassificationId;
+                    cp.ItemGroupId = IMPNMapping.ItemGroupId;
+                    cp.MasterCompanyId = 1;
+                    cp.CreatedBy = IMPNMapping.CreatedBy;
+                    cp.UpdatedBy = IMPNMapping.UpdatedBy;
+                    cp.CreatedDate = DateTime.Now;
+                    cp.UpdatedDate = DateTime.Now;
+                    _context.ItemMasterPNMappingModel.Add(cp);
+                    _context.SaveChanges();
+
+                }
+
+                return Ok(ModelState);
+                { }
+          
+        }
+
     }
 
 }

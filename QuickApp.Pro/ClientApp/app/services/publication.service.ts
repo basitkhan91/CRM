@@ -79,4 +79,10 @@ export class PublicationService {
     getATASubDesc(Mid: number, Tid: number) {
         return this.publicationEndpoint.getATASubByID<any>(Mid, Tid);
     }
+    newPNACMappingAction(action: Publication) {
+        return this.publicationEndpoint.postPNACMapping<Publication>(action);
+    }
+    newPNATAMappingAction(action: Publication) {
+        return this.publicationEndpoint.postPNATAMapping<Publication>(action);
+    }
 }
