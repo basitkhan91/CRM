@@ -677,6 +677,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // save Customer Info//
     editItemCloseModel() {
+        if (this.classificationName.toLowerCase().trim() == "") {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            return;
+        }
         for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
             let description = this.allcustomerclassificationInfo[i].description;
             if (description.toLowerCase().localeCompare(this.classificationName.toLowerCase()) == 0) {

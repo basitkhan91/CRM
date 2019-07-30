@@ -315,6 +315,11 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     saveVendorClassificationDetails() {
         this.isSaving = true;
+        if (this.vendorClassName.toLowerCase().trim()=="")
+        {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            return;
+        }
         for (let i = 0; i < this.allVendorClassInfo.length; i++) {
             let vendorName = this.allVendorClassInfo[i].classificationName;
             if (vendorName.toLowerCase().localeCompare(this.vendorClassName.toLowerCase()) == 0) {
