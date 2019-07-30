@@ -23,7 +23,6 @@ import { EmployeeService } from "../../../../services/employee.service";
 import { StocklineService } from "../../../../services/stockline.service";
 import { ItemMasterService } from "../../../../services/itemMaster.service";
 import { WorkOrderPartNumberService } from "../../../../services/work-order/work-order-part-number.service";
-
 @Component({
   selector: "app-work-order-add",
   templateUrl: "./work-order-add.component.html",
@@ -58,38 +57,41 @@ export class WorkOrderAddComponent implements OnInit {
 
   woDealerType: String = "customer";
   woType: String = "single";
+  showTableGrid: Boolean = false;
+  worflowId = [];
+  gridActiveTab: String = "workFlow";
 
-  // workOrder = {
-  //   iD : 0,
-  //   workOrderId : 0,
-  //   itemMasterId : 0,
-  //   workOrderScopeId : 0,
-  //   nTE : "",
-  //   quantity : 0,
-  //   stockLineId : 0,
-  //   cMMId : 0,
-  //   workflowId : 0,
-  //   workOrderStageId : 0,
-  //   workOrderStatusId : 0,
-  //   workOrderPriorityId : 0,
-  //   customerRequestDate : new Date(),
-  //   promisedDate : new Date(),
-  //   estimatedCompletionDate : new Date(),
-  //   estimatedShipDate : new Date(),
-  //   isPMA : false,
-  //   isDER : false,
-  //   technicianName : "",
-  //   techStationId : 0,
-  //   tearDownReport : 0,
-  //   tATDaysStandard : 0,
-  //   masterCompanyId : 1,
-  //   createdBy : "Admin",
-  //   updatedBy : "",
-  //   createdDate : new Date(),
-  //   updatedDate : new Date(),
-  //   isActive : true,
-  //   isDelete : false
-  // };
+  workOrderMPN = {
+    iD: 0,
+    workOrderId: 0,
+    itemMasterId: 0,
+    workOrderScopeId: 0,
+    nTE: "",
+    quantity: 0,
+    stockLineId: 0,
+    cMMId: 0,
+    workflowId: 0,
+    workOrderStageId: 0,
+    workOrderStatusId: 0,
+    workOrderPriorityId: 0,
+    customerRequestDate: new Date(),
+    promisedDate: new Date(),
+    estimatedCompletionDate: new Date(),
+    estimatedShipDate: new Date(),
+    isPMA: false,
+    isDER: false,
+    technicianName: "",
+    techStationId: 0,
+    tearDownReport: 0,
+    tATDaysStandard: 0,
+    masterCompanyId: 1,
+    createdBy: "Admin",
+    updatedBy: "",
+    createdDate: new Date(),
+    updatedDate: new Date(),
+    isActive: true,
+    isDelete: false
+  };
 
   constructor(
     private alertService: AlertService,
@@ -102,7 +104,7 @@ export class WorkOrderAddComponent implements OnInit {
     private stocklineService: StocklineService
   ) {
     this.workOrderPartNumbers = [];
-    this.workOrderPartNumbers.push(new WorkOrderPartNumber());
+    // this.workOrderPartNumbers.push(new WorkOrderPartNumber());
     this.workOrder = new WorkOrder();
     this.workOrder.isSinglePN = true;
     this.workOrder.customerContactId = 68;
@@ -146,33 +148,35 @@ export class WorkOrderAddComponent implements OnInit {
     this.getAllWorkScpoes();
     this.getAllWorkOrderStages();
     this.getStockLines();
+    this.addMPN();
     //this.getAllIterMasters();
-    console.log(this.workOrderPartNumbers);
+    // { label: "WO123", value: "WO123" },
+    // { label: "WO124", value: "WO124" },
+    // { label: "WO125", value: "WO125" }
   }
 
   toggleDisplayMode(): void {
     this.isDetailedView = !this.isDetailedView;
   }
-
+  // Handles radio Button single or Multiple
   toggleWorkOrderType(value): void {
-    console.log(value);
-
     this.woType = value;
-    console.log(this.woType);
-
+    this.showTableGrid = false;
     // this.workOrder.isSinglePN = !this.workOrder.isSinglePN;
   }
-
+  // Handles type of the WorkOrder Dealer
   woDealerChange(value) {
-    console.log(value);
     this.woDealerType = value;
+  }
+  // added new MPN
+  addMPN() {
+    this.workOrderPartNumbers.push({ ...this.workOrderMPN });
   }
 
   addWorkOrder(): void {
-    debugger;
+    this.showTableGrid = true; // Show Grid Boolean
     this.workOrderService.add(this.workOrder).subscribe(
       result => {
-        debugger;
         this.workOrder = result;
         this.alertService.showMessage(
           this.moduleName,
@@ -185,7 +189,6 @@ export class WorkOrderAddComponent implements OnInit {
             .add(this.workOrderPartNumbers[i])
             .subscribe(
               result => {
-                debugger;
                 console.log(result);
               },
               error => {
@@ -218,7 +221,6 @@ export class WorkOrderAddComponent implements OnInit {
         );
       },
       error => {
-        debugger;
         var message = "";
         if (error.error.constructor == Array) {
           message = error.error[0].errorMessage;
@@ -238,6 +240,10 @@ export class WorkOrderAddComponent implements OnInit {
     );
   }
 
+  // Change of Table Grid
+  gridTabChange(value) {
+    this.gridActiveTab = value;
+  }
   changeSinglePN(event): void {
     this.workOrder.isSinglePN = !this.workOrder.isSinglePN;
   }
@@ -311,7 +317,6 @@ export class WorkOrderAddComponent implements OnInit {
   getAllEmployees(): void {
     this.employeeService.getEmployeeList().subscribe(
       result => {
-        debugger;
         this.employees = result[0];
       },
       error => {
@@ -368,10 +373,8 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getAllIterMasters(): void {
-    debugger;
     this.itemMasterService.getItemMasterList().subscribe(
       result => {
-        debugger;
         console.log(result);
       },
       error => {
@@ -440,7 +443,6 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   filterEmployee(event): void {
-    //debugger;
     this.employeeNames = [];
     this.filteredEmployeeNames = [];
     if (this.employees.length > 0) {
@@ -460,7 +462,6 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   onEmployeeSelected(event, selection): void {
-    //debugger;
     for (let i = 0; i < this.employees.length; i++) {
       let employeeName: string = this.employees[i].firstName;
       if (employeeName.toLowerCase().indexOf(event.toLowerCase()) == 0) {
