@@ -217,7 +217,7 @@
 									</div>
 								</div>
 								<div class="snumber-block2" *ngIf="sourceItemMaster.isExpirationDateAvailable">
-									<hr class="hr-dark">
+									
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">Rec'd date</label>
 										<div class="col-sm-7">
@@ -436,7 +436,7 @@
 								</div>
 
 								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">ATA Sub Chapter</label>
+									<label class="control-label col-sm-4" >ATA Sub Chapter</label>
 									<div class="col-sm-7">
 										<select class="form-control" [ngModelOptions]="{standalone: true}"
 												[(ngModel)]="sourceItemMaster.ataSubChapterId">
@@ -804,7 +804,7 @@
 							</div>
 						</div>
 						<button class="btn btn-success pull-right submit-btn"
-								(click)="movePurchaseInformation1()">
+								(click)="saveitemMasterclose()">
 							Save
 						</button>
 						<div class="clear"></div>
@@ -856,7 +856,7 @@
                                         <div class="col-sm-4 dash-num" *ngIf="disable1">
                                             <label *ngIf="!view1">Dash Number</label>
                                             <label *ngIf="view1" class="memo-style"> Memo</label>
-                                            <label *ngIf="viewcheck1">
+                                            <label *ngIf="viewcheck1" >
                                                 <input type="checkbox" data-md-icheck
                                                        (change)="onDashToggle($event)" />Unknown
                                             </label>
@@ -866,6 +866,7 @@
                                     <div class="col-sm-12">
                                         <div class="col-sm-3 inline-block display-flex">
                                             <select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+                                                <option>Select Aircraft</option>
                                                 <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
                                             </select>
                                             <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -1031,13 +1032,14 @@
                                             <br />
                                         </div>
                                         <div class="col-sm-4">
-                                            <label class="lab1">ATA Sub-chapter</label>
+                                            <label class="lab1" style="margin-left: -44px;">ATA Sub-chapter</label>
                                             <br />
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="col-sm-3 inline-block display-flex">
                                             <select class="select-option" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAtaNumber.ataChapterId" (change)="atasubchapterChange(currentAtaNumber.ataChapterId)">
+                                                <option>--Select--</option>
                                                 <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
                                             </select>
                                             <a [routerLink]="['/singlepages/singlepages/app-ata-main']" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -1171,19 +1173,19 @@
                                   
                                 </tr>
                                 <tr>
-                                    <th>Cond</th>
-                                    <th>UOM</th>
-                                    <th>Currency</th>
-                                    <th>FX Rate</th>
+                                    <th>Cond *</th>
+                                    <th>UOM *</th>
+                                    <th>Currency *</th>
+                                    <th>FX Rate *</th>
                                     <th>Vendor List Price</th>
                                     <th>Last List Price Date</th>
                                     <th>Purchase Disc %</th>
                                     <th>Purchase Disc Amount</th>
                                     <th>Last Purchase Disc Date</th>
-                                    <th>Unit Purchase Price *</th>
-                                    <th class="bg2">UOM</th>
-                                    <th class="bg2">Currency</th>
-                                    <th class="bg2">FX Rate</th>
+                                    <th>Unit Purchase Price</th>
+                                    <th class="bg2">UOM *</th>
+                                    <th class="bg2">Currency *</th>
+                                    <th class="bg2">FX Rate *</th>
                                     <th class="bg2">Flat Price Amount</th>
                                     <th class="bg2">Last Flat Price Date</th>
                                     <th class="bg3">Mark % on List Price</th>
@@ -1322,7 +1324,7 @@
 										<input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.unitPrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.unitSalePrice}}" />
 									</td>
 									<td>
-										<button class="btn btn-danger nobg" (click)="delete(index)">
+										<button class="btn btn-danger nobg" (click)="delete(i)">
 											<i class="fa fa-trash"></i>
 										</button>
 									</td>
@@ -1388,12 +1390,12 @@
                                     <label class="lbl">Country</label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-sm-6 float-left">
-                                    <select class="form-control w178" id="" name="">                                        
-                                        <option>America</option>
-                                        <option>Australia</option>
-                                        <option>America</option>
-                                        <option>America</option>
-                                    </select>
+                                    <p-autoComplete [(ngModel)]="sourceAction.countries_name" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                                        <ng-template let-countryName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{countryName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
                                 </div>
                             </div>
                         </div>
@@ -1490,7 +1492,7 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-4">
                                 <div class="col-sm-4">
-                                    <label class="lbl">Classification</label>
+                                    <label class="lbl">Classification</label><span style="color:red;">*</span>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="checkbox" /> Unspecified

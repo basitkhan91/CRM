@@ -150,7 +150,7 @@ export class ItemMasterService {
 
     getCountrydata() {
         return Observable.forkJoin(
-            this.itemMasterEndpoint.getCountrysTypes<any[]>());
+            this.itemMasterEndpoint.getCountrysTypes<any>());
     }
 	newItemMaster(itemMaster: any) {
 		return this.itemMasterEndpoint.getNewitemMasterEndpoint<any>(itemMaster);

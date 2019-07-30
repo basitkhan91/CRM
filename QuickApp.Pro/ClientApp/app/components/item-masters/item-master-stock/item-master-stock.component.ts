@@ -64,6 +64,7 @@ import { AircraftModelService } from '../../../services/aircraft-model/aircraft-
 import { AircraftManufacturerService } from '../../../services/aircraft-manufacturer/aircraftManufacturer.service';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 import { ATASubChapter } from '../../../models/atasubchapter.model';
+import { CustomerService } from '../../../services/customer.service';
 
 
 @Component({
@@ -100,6 +101,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     modelValue: boolean = false;
     allCapesData: any[] = [];
     enablePlus: boolean = false;
+    public sourceAction: any = {};
     allAircraftsGet: any[] = [];
     manfacturerAircraftmodelsarray: any[] = [];
     overhaulAircraftmodelsarray: any[] = [];
@@ -163,6 +165,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     unitName: string;
     none: any;
     allCountryInfo: any[];
+    countryName: any[];
     allCurrencyInfo: any[];
     localpriority: any[];
     priorityName: string;
@@ -207,7 +210,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     allComapnies: MasterCompany[] = [];
     allitemgroupobjInfo: Itemgroup[];
     private isSaving: boolean;
-    public sourceAction: any = {};
+    countrycollection: any[];
+    allCountryinfo: any[];
     public sourceActions: any = {};
     allATAMaininfo: ATAChapter[];
     allPriorityInfo: Priority[];
@@ -307,10 +311,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         sda: "",
         lastsales: "",
         unitPrice: "",
-
     }
 
-    constructor(private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+    constructor(public countryservice: CustomerService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
         public currency: CurrencyService,
@@ -451,7 +454,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }];
 
 
-    ngOnInit(): void {
+    ngOnInit(): void {        
         this.getAircraftAllList();
         this.getAtachapter();
         this.modalDash = [
@@ -485,8 +488,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },
         ];
         this.addFieldValue();
-
-
         this.loadManagementdata();
         this.manufacturerdata();
         this.aircraftManfacturerData();
@@ -513,6 +514,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getCpaesData();
         this.activeIndex = 0;
         this.Integration();
+        this.countrylist();
         this.sourceItemMaster.salesIsFixedPrice = true;
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([]),
@@ -3680,6 +3682,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.currentDashNumberType = new AircraftDashNumber();
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
             this.aircraftManufacturerList = aircraftManufacturer[0];
+           
             for (let i = 0; i < this.aircraftManufacturerList.length; i++) {
                 this.LoadAircraftmanufacturer.push(
                     { value: this.aircraftManufacturerList[i].aircraftTypeId, label: this.aircraftManufacturerList[i].description },
@@ -4294,6 +4297,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
 
     }
+ 
+
+
     integrationPartnmId(event) {
         //debugger;
         for (let i = 0; i < this.integrationNamecolle.length; i++) {
@@ -4336,6 +4342,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     atasubchapterChange(atachapterId) {
         this.atasubchapter1service.getATASubChapterListByATAChapterId(atachapterId).subscribe(atasubchapter => {
             const responseData = atasubchapter[0];
+            console.log(atasubchapter)
             this.atasubchapter = responseData.map(x => {
                 return {
                     label: x.description,
@@ -4400,9 +4407,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     }
-    delete(index) {
+    delete(i) {
         if (this.fieldArray.length > 0) {
-            this.fieldArray.splice(index, 1);
+            this.fieldArray.splice(i, 1);
         }
         else {
             this.Delete = false;
@@ -4439,7 +4446,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     aircraftList: any[];
     getAircraftAllList() {
-        this.aircraftModelService.getAll().subscribe(details => {            
+        this.aircraftModelService.getAll().subscribe(details => {               
             const responseData = details[0].map(x => {
                 return {
                     aircraft: x.aircraftType.description,
@@ -4465,6 +4472,40 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
     }
 
-     
+    private countrylist() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.countryservice.getCountrylist().subscribe(
+            results => this.onDatacountrySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onDatacountrySuccessful(allWorkFlows: any[]) {       
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allCountryinfo = allWorkFlows;
+        this.countrycollection = [];
+        if (this.allCountryinfo.length > 0) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                let countryName = this.allCountryinfo[i].nice_name;
+                if (countryName) {
+                    this.countrycollection.push(countryName);
+                }
+            }
+        }
+    }
+    filtercountry(event) {
+        this.countrycollection = [];       
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                let countryName = this.allCountryinfo[i].nice_name;
+                if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.countrycollection.push(countryName);
+                }
+            }
+        
+    }
+   
+
 }
 
