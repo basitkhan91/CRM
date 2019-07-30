@@ -5,7 +5,6 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
                     <li class="breadcrumb-item active" aria-current="page">Receiving PO</li>
-                    <!--<li class="breadcrumb-item " aria-current="page">Create Work Flow</li>-->
                 </ol>
             </nav>
         </div>
@@ -13,28 +12,47 @@
         <div class="card-body">
             <form id="" class="ro-grid-form" name="">
                 <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label style="float: left;">Status: <span class="clr-red">*</span></label>
+                            <div>
+                                <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
+                                    <label class="radio-cstm wauto">
+                                        <input type="radio" name="postatus" class="form-control" value="{{status.Key}}" required>
+                                        <span class="checkmark"></span> {{status.Value}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 15px;">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>PO Num <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber" disabled="disabled">
+                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber" disabled="disabled" required>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Vendor Num <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
-                                <input class="form-control" type="text" [value]="purchaseOrderData.vendor.vendorCode" disabled="disabled">
+                                <input class="form-control" type="text" [value]="purchaseOrderData.vendor.vendorCode" disabled="disabled" required>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Requisitioner <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
+                            <p-autoComplete [size]="32" class="rpo-acomp-header"
+                                            [minLength]="1" [dropdown]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.requestedBy">
+                            </p-autoComplete>
+                            <!--<div class="inner-addon right-addon inline-block">
                                 <div class="inner-addon right-addon inline-block">
-                                    <input type="text" class="form-control" [value]="purchaseOrderData.requestedBy">
+                                    <input type="text" class="form-control" [value]="purchaseOrderData.requestedBy" required>
                                 </div>
-                            </div>
+                            </div>--> 
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -50,15 +68,15 @@
                 <div class="form-row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Open Date</label>
-                            <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested"></p-calendar>
+                            <label>Open Date <span class="clr-red">*</span></label>
+                            <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested" [required]="true"></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Vendor Name <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
-                                <input type="text" class="form-control" [value]="purchaseOrderData.vendor.vendorName" disabled="disabled">
+                                <input type="text" class="form-control" [value]="purchaseOrderData.vendor.vendorName" disabled="disabled" required>
                             </div>
                         </div>
                     </div>
@@ -90,16 +108,19 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Vendor Contact</label>
-                            <div class="inner-addon right-addon inline-block">
+                            <p-autoComplete [size]="32" class="rpo-acomp-header"
+                                            [minLength]="1" [dropdown]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName">
+                            </p-autoComplete>
+                            <!--<div class="inner-addon right-addon inline-block">
                                 <i class="fa fa-search"></i>
                                 <input type="text" class="form-control" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.firstName" autocomplete="off">
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Approved Date <span class="clr-red">*</span></label>
-                            <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied" required></p-calendar>
+                            <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied" [required]="true"></p-calendar>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -126,15 +147,28 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Contact Phone</label>
-                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
+                            <input class="form-control" type="text" pKeyFilter="pnum" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Status</label>
                             <select class="form-control" [(ngModel)]="purchaseOrderData.statusId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let status of poStatus" [value]="status.Key">{{status.Value}}</option>
                             </select>
+                        </div>-->
+                        <div class="form-group">
+                            <label>Credit Limit &amp; Terms <span class="clr-red">*</span></label>
+                            <div class="form-row">
+                                <div class="col-sm-5">
+                                    <input class="form-control" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms" required>
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit" required>
+                                        <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -172,21 +206,6 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Credit Limit &amp; Terms <span class="clr-red">*</span></label>
-                            <div class="form-row">
-                                <div class="col-sm-5">
-                                    <input class="form-control" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms" required>
-                                </div>
-                                <div class="col-sm-7">
-                                    <select class="form-control" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit" required>
-                                        <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
                             <label>Memo</label>
                             <textarea class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
                         </div>
@@ -208,14 +227,14 @@
                             <thead>
                                 <tr class="po-table-tr">
                                     <th></th>
-                                    <th>Line no</th>
-                                    <th>PN</th>
-                                    <th>Qty Ordered</th>
-                                    <th>Qty Received</th>
+                                    <th>Line no <span class="clr-red">*</span></th>
+                                    <th>PN <span class="clr-red">*</span></th>
+                                    <th>Qty Ordered <span class="clr-red">*</span></th>
+                                    <th>Qty Received <span class="clr-red">*</span></th>
                                     <th>Qty Actually Received</th>
                                     <th>Qty Rejected</th>
-                                    <th>Qty Backordered</th>
-                                    <th>Status</th>
+                                    <th>Qty Backordered <span class="clr-red">*</span></th>
+                                    <th>Status <span class="clr-red">*</span></th>
                                     <th colspan="3" class="text-center">User Name</th>
                                     <th>Company</th>
                                     <th>BU</th>
@@ -270,17 +289,17 @@
                                     <tr class="basic-info splitshipment po-sub-tr" [hidden]="purchaseOrderData.purchaseOderPart[row_index+1] != undefined && !purchaseOrderData.purchaseOderPart[row_index+1].visible" *ngIf="part.isParent && purchaseOrderData.purchaseOderPart[row_index+1] != undefined && (!purchaseOrderData.purchaseOderPart[row_index+1].isParent)">
                                         <th></th>
                                         <th></th>
-                                        <th>PN</th>
-                                        <th>Qty Ordered</th>
-                                        <th>Qty Received</th>
-                                        <th>Qty Approved</th>
+                                        <th>PN <span class="clr-red">*</span></th>
+                                        <th>Qty Ordered <span class="clr-red">*</span></th>
+                                        <th>Qty Received <span class="clr-red">*</span></th>
+                                        <th>Qty Actually Received <span class="clr-red">*</span></th>
                                         <th>Qty Rejected</th>
-                                        <th>Qty Backordered</th>
-                                        <th>Status</th>
+                                        <th>Qty Backordered <span class="clr-red">*</span></th>
+                                        <th>Status <span class="clr-red">*</span></th>
                                         <th>User Type</th>
                                         <th>User Name</th>
-                                        <th>Address</th>
-                                        <th>Company</th>
+                                        <th>Address <span class="clr-red">*</span></th>
+                                        <th>Company <span class="clr-red">*</span></th>
                                         <th>BU</th>
                                         <th>Division</th>
                                         <th>Dep.</th>
@@ -544,30 +563,111 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Obtain From</label>
-                                                            <select class="form-control">
+                                                            <select class="form-control" (change)="onObtainFromChange($event)">
                                                                 <option value="0">Select</option>
                                                                 <option value="1">Customer</option>
                                                                 <option value="2">Other </option>
                                                                 <option value="3">Vendor</option>
                                                             </select>
+                                                        </div>
+                                                        <div class="form-group" *ngIf="obtainfromcustomer">
+                                                            <div class="form-row">
+                                                                <div class="col-sm-11">
+                                                                    <p-autoComplete class="rpo-acomp" [size]="32"
+                                                                                    [minLength]="1" [dropdown]="true">
+                                                                    </p-autoComplete>
+                                                                </div>
+                                                                <div class="col-sm-1">
+                                                                    <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><i class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></i></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group" *ngIf="obtainfromother">
+                                                            <input type="text" class="form-control" pInputText />
+                                                        </div>
+                                                        <div class="form-group" *ngIf="obtainfromvendor">
+                                                            <div class="form-row">
+                                                                <div class="col-sm-11">
+                                                                    <p-autoComplete class="rpo-acomp" [size]="32"
+                                                                                    [minLength]="1" [dropdown]="true">
+                                                                    </p-autoComplete>
+                                                                </div>
+                                                                <div class="col-sm-1">
+                                                                    <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><i class="fa fa-plus-circle fa-lg"></i></div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Owner</label>
-                                                            <select class="form-control">
+                                                            <select class="form-control" (change)="onOwnerChange($event)">
                                                                 <option value="0">Select</option>
                                                                 <option value="1">Customer</option>
                                                                 <option value="2">Other </option>
                                                                 <option value="3">Vendor</option>
                                                             </select>
                                                         </div>
+                                                        <div class="form-group" *ngIf="ownercustomer">
+                                                            <div class="form-row">
+                                                                <div class="col-sm-11">
+                                                                    <p-autoComplete class="rpo-acomp" [size]="32"
+                                                                                    [minLength]="1" [dropdown]="true">
+                                                                    </p-autoComplete>
+                                                                </div>
+                                                                <div class="col-sm-1">
+                                                                    <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><i class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></i></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group" *ngIf="ownerother">
+                                                            <input type="text" class="form-control" pInputText />
+                                                        </div>
+                                                        <div class="form-group" *ngIf="ownervendor">
+                                                            <div class="form-row">
+                                                                <div class="col-sm-11">
+                                                                    <p-autoComplete class="rpo-acomp" [size]="32"
+                                                                                    [minLength]="1" [dropdown]="true">
+                                                                    </p-autoComplete>
+                                                                </div>
+                                                                <div class="col-sm-1">
+                                                                    <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><i class="fa fa-plus-circle fa-lg"></i></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="form-group">
                                                             <label>Traceable To</label>
-                                                            <select class="form-control">
+                                                            <select class="form-control" (change)="onTraceableToChange($event)">
                                                                 <option value="0">Select</option>
                                                                 <option value="1">Customer</option>
                                                                 <option value="2">Other </option>
                                                                 <option value="3">Vendor</option>
                                                             </select>
+                                                        </div>
+                                                        <div class="form-group" *ngIf="traceabletocustomer">
+                                                            <div class="form-row">
+                                                                <div class="col-sm-11">
+                                                                    <p-autoComplete class="rpo-acomp" [size]="32"
+                                                                                    [minLength]="1" [dropdown]="true">
+                                                                    </p-autoComplete>
+                                                                </div>
+                                                                <div class="col-sm-1">
+                                                                    <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><i class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></i></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group" *ngIf="traceabletoother">
+                                                            <input type="text" class="form-control" pInputText />
+                                                        </div>
+                                                        <div class="form-group" *ngIf="traceabletovendor">
+                                                            <div class="form-row">
+                                                                <div class="col-sm-11">
+                                                                    <p-autoComplete class="rpo-acomp" [size]="32"
+                                                                                    [minLength]="1" [dropdown]="true">
+                                                                    </p-autoComplete>
+                                                                </div>
+                                                                <div class="col-sm-1">
+                                                                    <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><i class="fa fa-plus-circle fa-lg"></i></div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>MFG <span class="clr-red">*</span></label>
