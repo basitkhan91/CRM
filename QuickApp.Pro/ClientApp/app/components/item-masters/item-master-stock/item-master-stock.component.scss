@@ -53,6 +53,9 @@
     margin-left: -18px;
     padding-top: 10px;
 }
+.capes-view-btn .fa {
+    color: none !important;
+}
 
 .add-margin4 {
     margin-left: 15px;
@@ -66,6 +69,10 @@ p-multiselect {
     font-size: 14px !important;
     border-radius: 0px !important;
     border: 1px thin black;
+}
+.multi-general p-multiselect {
+    width: 207px !important;
+    height: 27px !important;
 }
 
 p-multiselect .ui-multiselect-filter-container {
@@ -137,7 +144,9 @@ lbl {
 .lbl1 {
     width: 94px;
 }
-
+.text-field{
+    width: 100% !important;
+}
 input[type=date]::-webkit-inner-spin-button,
 input[type=date]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -155,7 +164,9 @@ input[type=date]::-webkit-outer-spin-button {
 td {
     text-align: center;
 }
-
+.inline-adjust {
+    width: 60% !important;
+}
 .upload {
     position: relative;
     min-height: 1px;
@@ -201,4 +212,7 @@ td {
 .btn-add {
     height: 24px;
     width: 120px;
+}
+.control-label {
+    margin-top: 10px;
 }

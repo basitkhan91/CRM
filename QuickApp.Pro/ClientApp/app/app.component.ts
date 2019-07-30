@@ -32,7 +32,7 @@ import { MenuItem } from "primeng/components/common/menuitem"; //Bread crumb
 @Component({
     selector: "quickapp-pro-app",
     templateUrl: './app.component.html',
-    styleUrls: ['./styles.scss'],
+    styleUrls: ['./app.component.scss','./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, AfterViewInit {
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     routeActive: string = "active";
     private _mobileQueryListener: () => void;
     isAppLoaded: boolean;
-    isUserLoggedIn: boolean;
+    isUserLoggedIn: boolean = false;
     isAdminExpanded: boolean = false;
     removePrebootScreen: boolean;
     newNotificationCount = 0;
@@ -51,15 +51,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     userCollapsed: boolean = false;
     mobileQuery: MediaQueryList;
     stickyToasties: number[] = [];
-
     dataLoadingConsecutiveFailures = 0;
     notificationsLoadingSubscription: any;
     navIsFixed: any;
     closeCmpny: boolean = true;
-
-
     step: number;
-
     setStep(index: number) {
         this.step = index;
     }
@@ -76,9 +72,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     get notificationsTitle() {
-
         let gT = (key: string) => this.translationService.getTranslation(key);
-
         if (this.newNotificationCount) {
             return `${gT("app.Notifications")} (${this.newNotificationCount} ${gT("app.New")})`;
         }
@@ -116,8 +110,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.toastyConfig.showClose = true;
         this.routeActive = "active";
         this.appTitleService.appName = this.appTitle;
-        //this.configurations.configObjChangeObject$.subscribe(data => { this.setStep(data)})
-        //  alert('Load');
+    
 
     }
     showthis() {
@@ -130,74 +123,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.userCollapsed = true;
     }
 
-    ngAfterViewInit() {
-        var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
-            $BODY = $('body'),
-            $MENU_TOGGLE = $('#menu_toggle'),
-            $SIDEBAR_MENU = $('#sidebar-menu');
-        // Sidebar
-        $SIDEBAR_MENU.find('a').on('click', function (ev) {
-            var $li = $(this).parent();
-            if ($li.is('.active')) { } else {
-                if (!$li.parent().is('.child_menu')) {
-                    $SIDEBAR_MENU.find('li').not('.active').find('ul').slideUp();
-                    $(this).find('ul').slideUp();
-                } else {
-                    if ($BODY.is(".nav-sm")) {
-                        $SIDEBAR_MENU.find("li").removeClass("active active-sm");
-                        $SIDEBAR_MENU.find("li ul").slideUp();
-                    }
-                }
-                $li.addClass('highlight');
-                $('ul:first', $li).slideDown(function () {
-                });
-            }
-        });
-        $MENU_TOGGLE.on('click', function () {
-            if ($BODY.hasClass('nav-md')) {
-                $SIDEBAR_MENU.find('li.active ul').hide();
-                $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
-                $(".breadcrumb_content").attr('style', 'margin-left: 70px !important;');
-            } else {
-                $SIDEBAR_MENU.find('li.active-sm ul').show();
-                $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
-                $(".breadcrumb_content").removeAttr('style');
-            }
-
-            $BODY.toggleClass('nav-md nav-sm');
-
-        });
-        function init_sidebar() {
-
-
-            // check active menu
-            $SIDEBAR_MENU.find('a').parent('li').removeClass('current-page');
-            $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
-
-            $SIDEBAR_MENU.find('a').filter(function () {
-                return this.href == CURRENT_URL;
-            }).parent('li').addClass('current-page').parents('ul').slideDown(function () {
-            }).parent().addClass('active');
-            // fixed sidebar
-            if ($.fn.mCustomScrollbar) {
-                $('.menu_fixed').mCustomScrollbar({
-                    autoHideScrollbar: true,
-                    theme: 'minimal',
-                    mouseWheel: {
-                        preventDefault: true
-                    }
-                });
-            }
-        };
-        // /Sidebar
-
-        init_sidebar();
+    ngAfterViewInit() {     
     }
-
-
     ngOnInit() {
-
-
         // Created by Jyotsna
         this.items = [
             {
@@ -807,8 +735,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
     }
 
-    ngOnDestroy() {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);       
         this.unsubscribeNotifications();
     }
 
@@ -817,43 +745,6 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.notificationsLoadingSubscription.unsubscribe();
         }
     }
-    //    onclick(event:any) {
-    //        this.customerService.navigationObj.next(this.doThis(event))
-
-
-    //    }
-    //    doThis(event: any){
-    //    if (event == 'GeneralInfo') {
-    //        this.customerService.isGeneralInfo = true;
-    //        this.router.navigateByUrl('customersmodule/customerpages/app-customer-setup')
-    //    }
-    //    if (event == 'contact') {
-    //        this.customerService.isContact = true;
-    //        this.router.navigateByUrl('customersmodule/customerpages/app-customer-setup')
-    //    }
-    //    if (event == 'FinanicialInfo') {
-    //        this.customerService.isFinanicialInfo = true;
-    //        this.router.navigateByUrl('customersmodule/customerpages/app-customer-setup')
-
-    //    }
-    //    if (event == 'BillingInfo') {
-    //        this.customerService.isBillingInfo = true;
-    //        this.router.navigateByUrl('customersmodule/customerpages/app-customer-setup')
-    //    }
-    //    if (event == 'ShippingInfo') {
-    //        this.customerService.isShippingInfo = true;
-    //        this.router.navigateByUrl('customersmodule/customerpages/app-customer-setup')
-    //    }
-    //    if (event == 'Person') {
-    //        this.customerService.isPerson = true;
-    //        this.router.navigateByUrl('customersmodule/customerpages/app-customer-setup')
-    //    }
-    //    if (event == 'InternationalShipping') {
-    //        this.customerService.isInternationalShipping = true;
-    //        this.router.navigateByUrl('customersmodule/customerpages/app-customer-setup')
-    //    }
-    //    console.log(event);
-    //}
 
     initNotificationsLoading() {
         this.notificationsLoadingSubscription = this.notificationService.getNewNotificationsPeriodically()
@@ -947,10 +838,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     goBack() { window.history.back(); }
-
+    
     logout() {
+ 
         this.authService.logout();
         this.authService.redirectLogoutUser();
+        this.mobileQuery.removeListener(this._mobileQueryListener);    
     }
 
     get userName(): string {

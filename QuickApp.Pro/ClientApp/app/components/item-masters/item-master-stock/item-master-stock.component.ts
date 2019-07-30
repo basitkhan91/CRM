@@ -469,8 +469,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         ];
         this.salesDash = [
-            { aircraft: '51%', model: '40%', dashnumber: '$54,406.00' },
-            { aircraft: '51%', model: '40%', dashnumber: '$54,406.00' },
+            { aircraft: '', model: '', dashnumber: '' },
+            { aircraft: '', model: '', dashnumber: '' },
         ];
 
         this.atasub = [
@@ -578,10 +578,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 for (let i = 0; i < this.allaircraftInfo.length; i++)
                     this.manufacturerData.push(
                         { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
-
                     );
             }
-
         }
     }
 
