@@ -1,20 +1,4 @@
-﻿<!--<style>
-
-    .inner-addon.right-addon {
-        width: 100% !important;
-    }
-
-    .slider-btns a {
-        color: #fff;
-    }
-
-    .slider-btns .slider-num {
-        font-weight: bold;
-        background: #333;
-        color: white;
-    }
-</style>-->
-<div class="x_content" *ngIf="purchaseOrderData">
+﻿<div class="x_content" *ngIf="purchaseOrderData">
 
     <div class="card receiving-po">
         <div class="card-header">
@@ -1318,7 +1302,7 @@
         </div>
         <div class="clear"></div>
         <hr>
-        <a class="btn btn-primary-cstm pull-right">Submit to Receive</a>
+        <a class="btn btn-primary-cstm pull-right" (click)="onSubmitToReceive()">Submit to Receive</a>
         <div class="clear"></div>
         <br>
         <br>
@@ -1327,19 +1311,3 @@
     </div>
 
 </div>
-    
-
-
-    <!--<style>
-        .disabled {
-            cursor: not-allowed;
-        }
-
-        .eachcol {
-            width: 7%;
-        }
-
-        .eachcol6 {
-            width: 6%;
-        }
-    </style>-->

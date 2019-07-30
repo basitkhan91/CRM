@@ -1543,6 +1543,10 @@ export class ReceivngPoComponent implements OnInit {
         this.isDisabledTLboxes = !this.isDisabledTLboxes;
     }
 
+    onSubmitToReceive() {
+        return this.route.navigate(['/receivingmodule/receivingpages/app-edit-po']);
+    }
+
 
 
 
