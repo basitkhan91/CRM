@@ -11,7 +11,7 @@ import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder } from '../receivng-po/PurchaseOrder.model';
+import { PurchaseOrder, DropDownData } from '../receivng-po/PurchaseOrder.model';
 
 @Component({
     selector: 'app-purchase-order',
@@ -34,8 +34,8 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 	updatedDate: any = "";
 	selectedActionName: any;
 	disableSave: boolean;
-	actionamecolle: any[] = [];
-
+    actionamecolle: any[] = [];
+    poStatus: DropDownData[] = [];
 
 	auditHisory: AuditHistory[];
 	Active: string = "Active";
@@ -82,18 +82,29 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 		this.loadData();
 		this.cols = [
 			//{ field: 'statusId', header: 'Status' },
-			{ field: 'purchaseOrderNumber', header: 'PO Number' },
+            { field: 'status', header: 'Status' },
+            { field: 'noOfItems', header: '# of Items' },
+            { field: 'purchaseOrderNumber', header: 'PO Number' },
+            { field: 'currency', header: 'Currency' },
+            { field: 'poTotalCost', header: 'PO Total Cost' },
+            { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'vendorContact', header: 'Vendor Contact' },
+            { field: 'employeeName', header: 'Employee Name' },
+            { field: 'contactPhone', header: 'Contact Phone' },
+            { field: 'dateRequested', header: 'Open Date' },
+            { field: 'reference', header: 'Ref' },
 			{ field: 'requestedBy', header: 'Requested By' },
-			{ field: 'dateRequested', header: 'Open Date' },
-			{ field: 'requestedBy', header: 'Requested By' },
-			{ field: 'dateApprovied', header: ' Date Approvied ' },
-			{ field: 'approver', header: ' Approvied By' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' }
+			
+			
+			//{ field: 'dateApprovied', header: ' Date Approvied ' },
+			//{ field: 'approver', header: ' Approvied By' },
+			//{ field: 'createdBy', header: 'Created By' },
+			//{ field: 'updatedBy', header: 'Updated By' }
 		];
 		//this.breadCrumb.currentUrl = '/singlepages/singlepages/app-currency';
 		//this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-		this.selectedColumns = this.cols;
+        this.selectedColumns = this.cols;
+        this.getStatus();
 
 	}
 	ngAfterViewInit() {
@@ -381,5 +392,14 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 	//		return `with: ${reason}`;
 	//	}
 	//}
+
+    private getStatus() {
+        this.poStatus = [];
+        this.poStatus.push(<DropDownData>{ Key: '1', Value: 'Open' });
+        this.poStatus.push(<DropDownData>{ Key: '2', Value: 'Pending Approval' });
+        this.poStatus.push(<DropDownData>{ Key: '3', Value: 'Approved' });
+        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Rejected' });
+        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Fulfilled' });
+    }
 
 }

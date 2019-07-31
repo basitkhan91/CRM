@@ -9,8 +9,8 @@
                         <li class="breadcrumb-item " aria-current="page">Receiving PO Grid</li>
                     </ol>
                 </nav>
-                <button class="btn btn-primary-cstm pull-right" (click)="toggle_epo_header=!toggle_epo_header">
-                    {{toggle_epo_header ? 'See Less' : 'See More...'}}
+                <button class="btn btn-primary-cstm pull-right" (click)="toggle_vpo_header=!toggle_vpo_header">
+                    {{toggle_vpo_header ? 'See Less' : 'See More...'}}
                 </button>
             </div>
             <div class="card-body">
@@ -19,7 +19,7 @@
                     <div class="form-row">
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
+                                <label style="float: left;">Status:</label>
                                 <div>
                                     <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                                         <label class="radio-cstm wauto">
@@ -61,36 +61,36 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>PO Num</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Vendor Name</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorName}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Requistioner</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.requestedBy}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Approver</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.approver}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Memo</label>
-                                <textarea class="form-control" disabled="disabled"></textarea> <!--{{editPoData.memo}}-->
+                                <textarea class="form-control" disabled="disabled"></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-row" *ngIf="toggle_epo_header">
+                    <div class="form-row" *ngIf="toggle_vpo_header">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Priority</label>
@@ -98,52 +98,52 @@
                             </div>
                             <div class="form-group">
                                 <label>Date Requisitioned</label>
-                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar>
                             </div>
                             <div class="form-group">
                                 <label>Date Approved</label>
-                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar>
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Vendor Code</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorCode}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Vendor Contact</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorContact}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Contact Phone</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Vendor Code</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorCode}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Vendor Contact</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorContact}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Contact Phone</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Terms</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.terms}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Credit Limit</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.creditLimit}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Currency</label>
@@ -154,21 +154,21 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Company</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Business Unit</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>                           
+                                <input class="form-control" type="text" value="" disabled="disabled">
+                            </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Division</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                             <div class="form-group">
                                 <label>Department</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <input class="form-control" type="text" value="" disabled="disabled">
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,6 @@
             <table class="table table-bordered " id="po-table">
                 <thead>
                     <tr>
-                        <th><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit" style="padding-bottom:0; color:#fff;"><i class="fa fa-edit"></i></a></th>
                         <th>Item Num</th>
                         <th>PN</th>
                         <th>Alt PN</th>
@@ -211,7 +210,6 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let obj of localData" class="parent-data">
-                        <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
                         <td></td>
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partNumber}}</td>
@@ -317,7 +315,6 @@
                     </tr>
                     <tr class="child-header">
                         <th></th>
-                        <th></th>
                         <th>Stock Line</th>
                         <th>PN</th>
                         <th>Alt PN</th>
@@ -368,7 +365,6 @@
                         <th>Bin</th>
                     </tr>
                     <tr class="child-data splitship-child">
-                        <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
                         <td></td>
                         <td>SL-33653</td>
                         <td>AA-10024000</td>
@@ -673,6 +669,6 @@
 
         </div>
 
-        <a class="btn btn-primary-cstm pull-right" (click)="onSubmit()">Submit</a>
+        <a class="btn btn-primary-cstm pull-right" (click)="onSearchPO()">Search Another PO</a>
     </div>
         </div>

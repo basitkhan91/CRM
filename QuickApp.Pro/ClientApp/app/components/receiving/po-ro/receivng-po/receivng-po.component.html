@@ -14,11 +14,11 @@
                 <div class="form-row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label style="float: left;">Status: <span class="clr-red">*</span></label>
+                            <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status: <span class="clr-red">*</span></label>
                             <div>
                                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
                                     <label class="radio-cstm wauto">
-                                        <input type="radio" name="postatus" class="form-control" value="{{status.Key}}" required>
+                                        <input type="radio" name="postatus" class="form-control" value="{{status.Key}}" [checked]="status.Key == '1'" required>
                                         <span class="checkmark"></span> {{status.Value}}
                                     </label>
                                 </div>
@@ -236,10 +236,7 @@
                                     <th>Qty Backordered <span class="clr-red">*</span></th>
                                     <th>Status <span class="clr-red">*</span></th>
                                     <th colspan="3" class="text-center">User Name</th>
-                                    <th>Company</th>
-                                    <th>BU</th>
-                                    <th>Division</th>
-                                    <th>Dep.</th>
+                                    <th colspan="4">Management Structure <span class="clr-red">*</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -269,19 +266,8 @@
                                         <td>{{part.statusText}}</td>
                                         <!--<td>{{part.requestedBy}}</td>-->
                                         <td colspan="3"></td>
-                                        <td>
-                                            {{part.managementStructureName[0]}}
-                                        </td>
-                                        <td>
-                                            {{part.managementStructureName[1]}}
-                                        </td>
-                                        <td>
-                                            {{part.managementStructureName[2]}}
-                                        </td>
-                                        <td>
-                                            {{part.managementStructureName[3]}}
-                                        </td>
-                                        <td>
+                                        <td colspan="4">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
+                                        <td style="padding:4px;">
                                             <a *ngIf="part.quantityBackOrdered" (click)="addDetailsClick(part)" style="color:red">Add Details</a>
                                         </td>
                                     </tr>
@@ -299,10 +285,7 @@
                                         <th>User Type</th>
                                         <th>User Name</th>
                                         <th>Address <span class="clr-red">*</span></th>
-                                        <th>Company <span class="clr-red">*</span></th>
-                                        <th>BU</th>
-                                        <th>Division</th>
-                                        <th>Dep.</th>
+                                        <th colspan="4">Management Structure <span class="clr-red">*</span></th>
                                         <th> </th>
                                     </tr>
 
@@ -321,16 +304,13 @@
                                         <td>{{'NA'}}</td>
                                         <td>{{part?.userName}}</td>
                                         <td>{{part.addressText }}</td>
-                                        <td>{{part.managementStructureName[0]}}</td>
-                                        <td>{{part.managementStructureName[1]}}</td>
-                                        <td>{{part.managementStructureName[2]}}</td>
-                                        <td>{{part.managementStructureName[3]}}</td>
+                                        <td colspan="4">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
                                         <td><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Add Details'}}</a></td>
                                         <!--<td><a (click)="addStockLine(part)" class="btn btn-primary-cstm btn-po-details">Add Details</a></td>-->
                                         <!--<button type="button" (click)="showDialog()" pButton icon="fa-external-link-square" label="Show"></button>-->
                                     </tr>
 
-                                    <tr class="more-info" *ngIf="!part.isParent && part.showStockLineGrid">
+                                    <tr class="more-info" *ngIf="!part.isParent && part.showStockLineGrid" [hidden]="!part.visible">
                                         <td colspan="17">
                                             <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
                                                 <div class="col-md-2">
@@ -553,7 +533,7 @@
                                                             <label>Obtain From - <b> {{part.stocklineListObj[currentSLIndex].obtainFromType}}</b></label>
                                                             <select class="form-control"
                                                                     [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFromType"
-                                                                    #selects="ngModel" 
+                                                                    #selects="ngModel"
                                                                     [ngModelOptions]="{standalone: true}"
                                                                     (change)="onObtainFromChange($event)">
                                                                 <option value="0">Select</option>
@@ -901,8 +881,34 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </td>
+                                    </tr>
+
+                                    <!-- TODO: Remove once dynamic content is loaded -->
+                                    <tr class="basic-info" *ngIf="!part.isParent">
+                                        <td class="details-control eachcol" style="padding: 4px 6px;"></td>
+                                        <td>{{row_index + 1}}</td>
+                                        <td>
+                                            {{part.itemMaster.partNumber}}
+                                        </td>
+                                        <td>
+                                            {{part.quantityOrdered}}
+                                        </td>
+                                        <td>
+                                            {{part.quantityReceived}}
+                                        </td>
+                                        <td>
+                                            {{part.approver}}
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            {{part.quantityBackOrdered}}
+                                        </td>
+                                        <td>{{part.statusText}}</td>
+                                        <!--<td>{{part.requestedBy}}</td>-->
+                                        <td colspan="3"></td>
+                                        <td colspan="4">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
+                                        <td style="padding:4px;"><a class="btn btn-primary-cstm btn-po-details">Add Details</a></td>
                                     </tr>
 
                                 </ng-container>
