@@ -4,23 +4,21 @@
 <div id="app_container" [class.is-mobile]="mobileQuery.matches" class="nav-container" >
 
     <mat-sidenav-container class="app-sidenav-container"
-                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0" id="leftPanel">
-        <mat-sidenav *ngIf="isUserLoggedIn"  #mainNav class="app-sidenav-nav mat-elevation-z6" [mode]="mobileQuery.matches ? 'over' : 'side'"
-                     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="!mobileQuery.matches">
-            <div class="title-logo">
-                <p>
-                    <a routerLink="/">
-                        <img src="assets/images/PAS.png" id="logo" />
-                    </a>
-                </p>
-            </div>
-
-            <p-panelMenu [model]="items" [style]="{'width':'240px'}"></p-panelMenu>
-        </mat-sidenav>
-
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0" id="leftPanel">       
+            <mat-sidenav #mainNav class="app-sidenav-nav mat-elevation-z6" [mode]="mobileQuery.matches ? 'over' : 'side'"
+                         [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="!mobileQuery.matches">
+                <div class="title-logo" *ngIf="isUserLoggedIn">
+                    <p>
+                        <a routerLink="/">
+                            <img src="assets/images/PAS.png" id="logo" />
+                        </a>
+                    </p>
+                </div>
+                <p-panelMenu  [model]="items" *ngIf="isUserLoggedIn" [style]="{'width':'240px'}"></p-panelMenu>
+            </mat-sidenav>        
         <mat-sidenav-content>
             <div fxLayout="column" fxFlexOffset="10px" fxFlex>
-                <mat-toolbar color="primary" class="app-toolbar" *ngIf="isUserLoggedIn">
+                <mat-toolbar color="primary" class="app-toolbar"  *ngIf="isUserLoggedIn">
                     <button mat-icon-button (click)="mainNav.toggle()"><mat-icon>menu</mat-icon></button>
                     <button type="button" class="btn btn-danger back-btn" (click)="goBack()"> <i class="fa fa-chevron-circle-left"></i> Back</button>
                     <span class="app-toolbar-spacer"></span>
@@ -47,7 +45,7 @@
                     </mat-menu>
                 </mat-toolbar>
                 <br />
-                <div id="mainContent" >
+                <div id="mainContent">
                     <router-outlet></router-outlet>
                 </div>
             </div>

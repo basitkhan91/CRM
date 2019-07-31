@@ -46,7 +46,7 @@
 															(onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
 															[ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
 															(completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-															[dropdown]="true">
+															[dropdown]="true" class="autocomplete-customer">
 												<ng-template let-partName pTemplate="part">
 													<div class="ui-helper-clearfix">{{partName}}</div>
 												</ng-template>
@@ -68,7 +68,7 @@
 															[ngModelOptions]="{standalone: true}"
 															(completeMethod)="filterdescription($event)"
 															[(ngModel)]="sourceItemMaster.partDescription" [size]="30"
-															[minLength]="1" [dropdown]="true">
+															[minLength]="1" [dropdown]="true" class="autocomplete-customer">
 												<ng-template let-partDescription pTemplate="item">
 													<div class="ui-helper-clearfix">{{partDescription}}</div>
 												</ng-template>
@@ -94,7 +94,7 @@
 															(onKeyUp)=alterPnHandler($event) (onSelect)="onAlterPnSelect($event)"
 															[ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
 															(completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-															[dropdown]="true">
+															[dropdown]="true" class="autocomplete-customer">
 												<ng-template let-partName pTemplate="part">
 													<div class="ui-helper-clearfix">{{partName}}</div>
 												</ng-template>
@@ -130,7 +130,7 @@
 															(onKeyUp)=nhaHandler($event) (onSelect)="onNHASelect($event)"
 															[ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
 															(completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-															[dropdown]="true">
+															[dropdown]="true" class="autocomplete-customer">
 												<ng-template let-partName pTemplate="part">
 													<div class="ui-helper-clearfix">{{partName}}</div>
 												</ng-template>
@@ -144,8 +144,8 @@
 								<div class="form-group col-sm-12">
 									<label class="control-label col-sm-4">NSN</label>
 									<div class="col-sm-7">
-										<input class="form-control" type="text" [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.nationalStockNumber">
+										<input class="form-control text-field" type="text" [ngModelOptions]="{standalone: true}"
+											   [(ngModel)]="sourceItemMaster.nationalStockNumber" >
 									</div>
 								</div>
 
@@ -154,7 +154,7 @@
 									<label class="control-label col-sm-4">
 										Item Classification <strong class="clr-red">*</strong>
 									</label>
-									<div class="inner-addon col-sm-7 inline-block display-flex">
+									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 										<select [ngModelOptions]="{standalone: true}"
 												[(ngModel)]="sourceItemMaster.itemClassificationId">
 											<option *ngFor="let itemName of allitemclassificationInfo"
@@ -172,7 +172,7 @@
 								<div class="form-group col-sm-12 input-icon1">
 
 									<label class="control-label col-sm-4">Item Group </label>
-									<div class="inner-addon col-sm-7 inline-block display-flex">
+									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 										<select [ngModelOptions]="{standalone: true}"
 												[(ngModel)]="sourceItemMaster.itemGroupId">
 											<option *ngFor="let itemGroupName of allitemgroupobjInfo"
@@ -227,7 +227,7 @@
 													   [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
 											</label>
 											<input *ngIf="sourceItemMaster.isReceivedDateAvailable"
-												   class="form-control number exp-date-inputs w50" type="number"
+												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
 												   id="exp-rec-date-input" name="" placeholder="Days"
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.daysReceived">
@@ -242,7 +242,7 @@
 													   [(ngModel)]="sourceItemMaster.isManufacturingDateAvailable">
 											</label>
 											<input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
-												   class="form-control number exp-date-inputs w50" type="number"
+												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
 												   id="exp-rec-date-input" name="" placeholder="Days"
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.manufacturingDays">
@@ -257,7 +257,7 @@
 													   [(ngModel)]="sourceItemMaster.isTagDateAvailable">
 											</label>
 											<input *ngIf="sourceItemMaster.isTagDateAvailable"
-												   class="form-control number exp-date-inputs w50" type="number"
+												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
 												   id="exp-tag-date-input" name="" placeholder="Days"
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.tagDays">
@@ -272,7 +272,7 @@
 													   [(ngModel)]="sourceItemMaster.isOpenDateAvailable">
 											</label>
 											<input *ngIf="sourceItemMaster.isOpenDateAvailable"
-												   class="form-control number exp-date-inputs w50" type="number"
+												   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num" 
 												   id="exp-open-date-input" name="" placeholder="Days"
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.openDays">
@@ -287,7 +287,7 @@
 													   [(ngModel)]="sourceItemMaster.isShippedDateAvailable">
 											</label>
 											<input *ngIf="sourceItemMaster.isShippedDateAvailable"
-												   class="form-control number exp-date-inputs w50" type="number"
+												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
 												   id="exp-shipped-date-input" name="" placeholder="Days"
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.shippedDays">
@@ -302,7 +302,7 @@
 													   [(ngModel)]="sourceItemMaster.isOtherDateAvailable">
 											</label>
 											<input *ngIf="sourceItemMaster.isOtherDateAvailable"
-												   class="form-control number exp-date-inputs w50" type="number"
+												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
 												   id="exp-shipped-date-input" name="" placeholder="Days"
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.otherDays">
@@ -322,7 +322,7 @@
 
 								<div class="form-group col-sm-12 input-icon1">
 									<label class="control-label col-sm-4">Provision </label>
-									<div class="inner-addon col-sm-7 inline-block display-flex">
+									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 										<select [ngModelOptions]="{standalone: true}"
 												[(ngModel)]="sourceItemMaster.provisionId">
 											<option *ngFor="let provisionName of allProvisonInfo"
@@ -364,8 +364,8 @@
 							<div class="col-sm-4">
 								<div class="form-group col-sm-12 input-icon1">
 
-									<label class="control-label col-sm-4">Manufacturer </label>
-									<div class="inner-addon col-sm-7 inline-block display-flex">
+									<label class="control-label col-sm-4">Manufacturer <strong class="clr-red">*</strong></label>
+									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 										<select [ngModelOptions]="{standalone: true}"
 												[(ngModel)]="sourceItemMaster.manufacturerId">
 											<option *ngFor="let manufacturer of allManufacturerInfo"
@@ -380,11 +380,11 @@
 
 								</div>
 								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Aircraft Manufacturer</label>
+									<label class="control-label col-sm-4">Aircraft</label>
 									<div class="col-sm-7">
 										<div class="input-group">
 											<p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}"
-														   [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}">
+														   [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}" class="multi-general">
 											</p-multiSelect>
 										</div>
 									</div>
@@ -394,8 +394,7 @@
 								<div class="form-group col-sm-12">
 									<label class="control-label col-sm-4">Models</label>
 									<div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
-										<i class="fa fa-plus clr-blue cpointer" data-toggle="modal"
-										   data-target="#platform-block" (click)="openModelPopups(contentModel)"></i>
+										<i class="fa fa-plus capes-view-btn cpointer" (click)="openModelPopups(contentModel)"></i>
 										<table *ngIf="showInput" [style.border]="showInput ? '1px solid gray' : 'none'">
 											<tr *ngFor="let model of selectedModels; let in=index">
 												<td>
@@ -403,7 +402,6 @@
 												</td>
 											</tr>
 										</table>
-
 
 									</div>
 								</div>
@@ -484,19 +482,19 @@
 												<tbody>
 													<tr>
 														<td>
-															<input type="number" class="form-control w50 time"
+															<input  type="text" pKeyFilter="num"  class="form-control w50 time"
 																   placeholder="hours"
 																   [ngModelOptions]="{standalone: true}"
 																   [(ngModel)]="sourceItemMaster.overhaulHours">
 														</td>
 														<td>
-															<input type="number" class="form-control w50 time"
+															<input  type="text" pKeyFilter="num" class="form-control w50 time"
 																   placeholder="hours"
 																   [ngModelOptions]="{standalone: true}"
 																   [(ngModel)]="sourceItemMaster.rpHours">
 														</td>
 														<td>
-															<input type="number" class="form-control w50 time"
+															<input  type="text" pKeyFilter="num"  class="form-control w50 time"
 																   placeholder="hours"
 																   [ngModelOptions]="{standalone: true}"
 																   [(ngModel)]="sourceItemMaster.testHours">
@@ -523,12 +521,12 @@
 												<tbody>
 													<tr>
 														<td>
-															<input type="number" class="form-control w60 time"
+															<input  type="text" pKeyFilter="num"  class="form-control w60 time"
 																   placeholder="days" [ngModelOptions]="{standalone: true}"
 																   [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours">
 														</td>
 														<td>
-															<input type="number" class="form-control w60 time"
+															<input  type="text" pKeyFilter="num" class="form-control w60 time"
 																   placeholder="hours"
 																   [ngModelOptions]="{standalone: true}"
 																   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
@@ -571,7 +569,7 @@
 										<label class="control-label col-sm-4">
 											Purchase UOM <strong class="clr-red">*</strong>
 										</label>
-										<div class="inner-addon col-sm-7 inline-block display-flex">
+										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 											<select [ngModelOptions]="{standalone: true}"
 													[(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
 												<option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
@@ -586,7 +584,7 @@
 									</div>
 									<div class="form-group col-sm-12 input-icon1">
 										<label class="control-label col-sm-4">Stock UOM </label>
-										<div class="inner-addon col-sm-7 inline-block display-flex">
+										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 											<select [ngModelOptions]="{standalone: true}"
 													[(ngModel)]="sourceItemMaster.stockUnitOfMeasureId">
 												<option *ngFor="let unitName of allStockUnitOfMeasureinfo"
@@ -604,7 +602,7 @@
 
 									<div class="form-group col-sm-12 input-icon1">
 										<label class="control-label col-sm-4">Consume UOM </label>
-										<div class="inner-addon col-sm-7 inline-block display-flex">
+										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 											<select [ngModelOptions]="{standalone: true}"
 													[(ngModel)]="sourceItemMaster.consumeUnitOfMeasureId">
 												<option *ngFor="let unitName of allConsumeUnitOfMeasureinfo"
@@ -622,7 +620,7 @@
 
 									<div class="form-group col-sm-12 input-icon1">
 										<label class="control-label col-sm-4">Sold UOM</label>
-										<div class="inner-addon col-sm-7 inline-block display-flex">
+										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
 											<select [ngModelOptions]="{standalone: true}"
 													[(ngModel)]="sourceItemMaster.soldUnitOfMeasureId">
 												<option *ngFor="let unitName of allSOLDUnitOfMeasureinfo"
@@ -649,19 +647,19 @@
 								<div class="form-group col-sm-12">
 									<label class="control-label col-sm-4">Lead Time</label>
 									<div class="col-sm-4">
-										<input type="number" min="0" max="30" placeholder="Days"
+										<input type="text" pKeyFilter="num"  min="0" max="30" placeholder="Days"
 											   [ngModelOptions]="{standalone: true}"
 											   [(ngModel)]="sourceItemMaster.leadTimeDays">
 									</div>
 									<div class="col-sm-3">
-										<input type="number" placeholder="Hours" [ngModelOptions]="{standalone: true}"
+										<input  type="text" pKeyFilter="num"  placeholder="Hours" [ngModelOptions]="{standalone: true}"
 											   [(ngModel)]="sourceItemMaster.leadTimeHours">
 									</div>
 								</div>
 								<div class="form-group col-sm-12">
 									<label class="control-label col-sm-4">Stock Level</label>
 									<div class="col-sm-7">
-										<input class="form-control" type="number" [ngModelOptions]="{standalone: true}"
+										<input class="form-control"  type="text" pKeyFilter="num"  [ngModelOptions]="{standalone: true}"
 											   [(ngModel)]="sourceItemMaster.stockLevel">
 									</div>
 								</div>
@@ -669,7 +667,7 @@
 									<label class="control-label col-sm-4">Reorder Point</label>
 									<div class="col-sm-7">
 										<span data-toggle="tooltip" title="" data-original-title="calculation field">
-											<input class="form-control" value="1245" type="number"
+											<input class="form-control" value="1245"  type="text" pKeyFilter="num" 
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.reorderPoint">
 										</span>
@@ -678,14 +676,14 @@
 								<div class="form-group col-sm-12">
 									<label class="control-label col-sm-4">Reorder Qty</label>
 									<div class="col-sm-7">
-										<input class="form-control" type="number" [ngModelOptions]="{standalone: true}"
+										<input class="form-control"  type="text" pKeyFilter="num"  [ngModelOptions]="{standalone: true}"
 											   [(ngModel)]="sourceItemMaster.reorderQuantiy">
 									</div>
 								</div>
 								<div class="form-group col-sm-12">
 									<label class="control-label col-sm-4">Min Order Qty</label>
 									<div class="col-sm-7">
-										<input class="form-control" type="number" [ngModelOptions]="{standalone: true}"
+										<input class="form-control"  type="text" pKeyFilter="num" [ngModelOptions]="{standalone: true}"
 											   [(ngModel)]="sourceItemMaster.minimumOrderQuantity">
 									</div>
 								</div>
@@ -716,7 +714,7 @@
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">Core Value</label>
 										<div class="col-sm-7">
-											<input class="form-control" type="number"
+											<input class="form-control"  type="text" pKeyFilter="num" 
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.coreValue">
 										</div>
@@ -724,7 +722,7 @@
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">Exchange List price</label>
 										<div class="col-sm-7">
-											<input class="form-control" type="number"
+											<input class="form-control"  type="text" pKeyFilter="num" 
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.exchangeListPrice">
 										</div>
@@ -732,7 +730,7 @@
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">OVH Cost</label>
 										<div class="col-sm-7">
-											<input class="form-control" type="number"
+											<input class="form-control" type="text" pKeyFilter="num" 
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.overheadCost">
 										</div>
@@ -741,7 +739,7 @@
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">Part List Price</label>
 										<div class="col-sm-7">
-											<input class="form-control" type="number"
+											<input class="form-control"  type="text" pKeyFilter="num" 
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.partListPrice">
 										</div>
@@ -749,7 +747,7 @@
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">PO Core Charge</label>
 										<div class="col-sm-7">
-											<input class="form-control" type="number"
+											<input class="form-control"  type="text" pKeyFilter="num" 
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.poCoreCharge">
 										</div>
@@ -757,7 +755,7 @@
 									<div class="form-group col-sm-12">
 										<label class="control-label col-sm-4">SO Core Charge</label>
 										<div class="col-sm-7">
-											<input class="form-control" type="number"
+											<input class="form-control"  type="text" pKeyFilter="num" 
 												   [ngModelOptions]="{standalone: true}"
 												   [(ngModel)]="sourceItemMaster.soCoreCharge">
 										</div>
@@ -783,7 +781,7 @@
 									<label class="control-label col-sm-4">
 										Integration With <span class="clr-red"></span>
 									</label>
-									<div class="col-sm-7">
+									<div class="col-sm-7 inline-block display-flex">
 										<p-multiSelect [options]="integrationvalues"
 													   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes"
 													   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
@@ -1566,6 +1564,7 @@
 									<th *ngFor="let col of modalDash">
 										{{col.header}}
 									</th>
+                                    <th>Dash Number</th>
 									<th>Memo</th>
 									<th>Action</th>
 								</tr>
@@ -1576,6 +1575,8 @@
 									<td *ngFor="let col of modalDash">
 										{{rowData[col.field]}}
 									</td>
+                                    <td>
+                                    </td>
 									<td>
 										<textarea cols="12" rows="2"></textarea>
 									</td>

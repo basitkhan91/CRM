@@ -18,6 +18,10 @@ $theme: mat-light-theme($primary, $accent);
 //@import './mycustom-style.css';
 
 
+.hidedata{
+    display: none;
+}
+
 .nav-container {
     display: flex;
     flex-direction: column;
@@ -13543,6 +13547,20 @@ body .ui-datepicker table td > a.ui-state-active {
     padding: 8px 4px !important;
 }
 
+.multi-general p-multiselect {
+    width: 207px;
+}
+.multi-general p-multiselect .ui-multiselect { 
+    width: 106%;
+}
+.capes-view-btn .fa {
+    color: blue !important;
+}
+.multi-general p-multiselect[_ngcontent-c234]{
+    width: 207px !important;
+    height: 27px !important;
+}
+
 .radio-cstm {
     display: block;
     position: relative;
@@ -13599,5 +13617,4 @@ body .ui-datepicker table td > a.ui-state-active {
 
 .p-autoComplete-ctsm .ui-autocomplete{
   padding: 0px !important;
-
 }
