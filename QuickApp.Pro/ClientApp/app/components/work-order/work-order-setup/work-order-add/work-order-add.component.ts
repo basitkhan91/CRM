@@ -1,32 +1,32 @@
-﻿import { Component, OnInit } from "@angular/core";
-import { fadeInOut } from "../../../../services/animations";
-import { PageHeaderComponent } from "../../../../shared/page-header.component";
-import * as $ from "jquery";
-import { WorkOrder } from "../../../../models/work-order.model";
-import { WorkOrderPartNumber } from "../../../../models/work-order-partnumber.model";
-import { CreditTerms } from "../../../../models/credit-terms.model";
+﻿import { Component, OnInit } from '@angular/core';
+import { fadeInOut } from '../../../../services/animations';
+import { PageHeaderComponent } from '../../../../shared/page-header.component';
+import * as $ from 'jquery';
+import { WorkOrder } from '../../../../models/work-order.model';
+import { WorkOrderPartNumber } from '../../../../models/work-order-partnumber.model';
+import { CreditTerms } from '../../../../models/credit-terms.model';
 import {
   WorkOrderType,
   WorkOrderStatus,
   WorkScope,
   WorkOrderStage
-} from "../../../../models/work-order-type.model";
-import { Customer } from "../../../../models/customer.model";
+} from '../../../../models/work-order-type.model';
+import { Customer } from '../../../../models/customer.model';
 import {
   AlertService,
   MessageSeverity
-} from "../../../../services/alert.service";
-import { WorkOrderService } from "../../../../services/work-order/work-order.service";
-import { CreditTermsService } from "../../../../services/Credit Terms.service";
-import { CustomerService } from "../../../../services/customer.service";
-import { EmployeeService } from "../../../../services/employee.service";
-import { StocklineService } from "../../../../services/stockline.service";
-import { ItemMasterService } from "../../../../services/itemMaster.service";
-import { WorkOrderPartNumberService } from "../../../../services/work-order/work-order-part-number.service";
+} from '../../../../services/alert.service';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { CreditTermsService } from '../../../../services/Credit Terms.service';
+import { CustomerService } from '../../../../services/customer.service';
+import { EmployeeService } from '../../../../services/employee.service';
+import { StocklineService } from '../../../../services/stockline.service';
+import { ItemMasterService } from '../../../../services/itemMaster.service';
+import { WorkOrderPartNumberService } from '../../../../services/work-order/work-order-part-number.service';
 @Component({
-  selector: "app-work-order-add",
-  templateUrl: "./work-order-add.component.html",
-  styleUrls: ["./work-order-add.component.scss"],
+  selector: 'app-work-order-add',
+  templateUrl: './work-order-add.component.html',
+  styleUrls: ['./work-order-add.component.scss'],
   animations: [fadeInOut]
 })
 /** WorkOrderAdd component*/
@@ -55,18 +55,20 @@ export class WorkOrderAddComponent implements OnInit {
   selectedRadioButtonValue: boolean;
   moduleName: string;
 
-  woDealerType: String = "customer";
-  woType: String = "single";
+  woDealerType: String = 'customer';
+  woType: String = 'single';
   showTableGrid: Boolean = false;
   worflowId = [];
-  gridActiveTab: String = "workFlow";
+  isContract = true;
+  gridActiveTab: String = 'workFlow';
+  subTabWorkFlow: String;
 
   workOrderMPN = {
     iD: 0,
     workOrderId: 0,
     itemMasterId: 0,
     workOrderScopeId: 0,
-    nTE: "",
+    nTE: '',
     quantity: 0,
     stockLineId: 0,
     cMMId: 0,
@@ -80,13 +82,13 @@ export class WorkOrderAddComponent implements OnInit {
     estimatedShipDate: new Date(),
     isPMA: false,
     isDER: false,
-    technicianName: "",
+    technicianName: '',
     techStationId: 0,
     tearDownReport: 0,
     tATDaysStandard: 0,
     masterCompanyId: 1,
-    createdBy: "Admin",
-    updatedBy: "",
+    createdBy: 'Admin',
+    updatedBy: '',
     createdDate: new Date(),
     updatedDate: new Date(),
     isActive: true,
@@ -113,7 +115,7 @@ export class WorkOrderAddComponent implements OnInit {
     //this.workOrder.promiseDate = new Date;
     //this.workOrder.estimatedCompletionDate = new Date;
     //this.workOrder.estimatedShipDate = new Date;
-    this.moduleName = "Work Order";
+    this.moduleName = 'Work Order';
 
     // $(document).ready(function () {
     //     $('.closeall').click(function () { $('.panel-collapse.in').collapse('hide'); });
@@ -172,6 +174,10 @@ export class WorkOrderAddComponent implements OnInit {
   addMPN() {
     this.workOrderPartNumbers.push({ ...this.workOrderMPN });
   }
+  // subtab in grid change
+  subTabWorkFlowChange(value) {
+    this.subTabWorkFlow = value;
+  }
 
   addWorkOrder(): void {
     this.showTableGrid = true; // Show Grid Boolean
@@ -180,7 +186,7 @@ export class WorkOrderAddComponent implements OnInit {
         this.workOrder = result;
         this.alertService.showMessage(
           this.moduleName,
-          "Work Order Added Succesfully",
+          'Work Order Added Succesfully',
           MessageSeverity.success
         );
         for (var i = 0; i < this.workOrderPartNumbers.length; i++) {
@@ -192,7 +198,7 @@ export class WorkOrderAddComponent implements OnInit {
                 console.log(result);
               },
               error => {
-                var message = "";
+                var message = '';
                 if (error.error.constructor == Array) {
                   message = error.error[0].errorMessage;
                 } else {
@@ -216,12 +222,12 @@ export class WorkOrderAddComponent implements OnInit {
 
         this.alertService.showMessage(
           this.moduleName,
-          "Work Order Successfully Added : " + this.workOrder.workOrderNum,
+          'Work Order Successfully Added : ' + this.workOrder.workOrderNum,
           MessageSeverity.success
         );
       },
       error => {
-        var message = "";
+        var message = '';
         if (error.error.constructor == Array) {
           message = error.error[0].errorMessage;
         } else {
@@ -250,7 +256,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   changeWorkOrderType(event): void {
     this.workOrder.workOrderTypeId = Number.parseInt(
-      event.target.value.split("_")[1]
+      event.target.value.split('_')[1]
     );
   }
 
@@ -262,7 +268,7 @@ export class WorkOrderAddComponent implements OnInit {
       error => {
         this.alertService.showMessage(
           this.moduleName,
-          "Something Went Wrong",
+          'Something Went Wrong',
           MessageSeverity.error
         );
       }
@@ -277,7 +283,7 @@ export class WorkOrderAddComponent implements OnInit {
       error => {
         this.alertService.showMessage(
           this.moduleName,
-          "Something Went Wrong",
+          'Something Went Wrong',
           MessageSeverity.error
         );
       }
@@ -292,7 +298,7 @@ export class WorkOrderAddComponent implements OnInit {
       error => {
         this.alertService.showMessage(
           this.moduleName,
-          "Something Went Wrong",
+          'Something Went Wrong',
           MessageSeverity.error
         );
       }
@@ -307,7 +313,7 @@ export class WorkOrderAddComponent implements OnInit {
       error => {
         this.alertService.showMessage(
           this.moduleName,
-          "Something Went Wrong",
+          'Something Went Wrong',
           MessageSeverity.error
         );
       }
@@ -322,7 +328,7 @@ export class WorkOrderAddComponent implements OnInit {
       error => {
         this.alertService.showMessage(
           this.moduleName,
-          "Something Went Wrong",
+          'Something Went Wrong',
           MessageSeverity.error
         );
       }
@@ -337,7 +343,7 @@ export class WorkOrderAddComponent implements OnInit {
       error => {
         this.alertService.showMessage(
           this.moduleName,
-          "Something Went Wrong",
+          'Something Went Wrong',
           MessageSeverity.error
         );
       }
@@ -352,7 +358,7 @@ export class WorkOrderAddComponent implements OnInit {
       error => {
         this.alertService.showMessage(
           this.moduleName,
-          "Something Went Wrong",
+          'Something Went Wrong',
           MessageSeverity.error
         );
       }
@@ -384,7 +390,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   onCustomerSelected(event, selectionType): void {
-    if (selectionType == "name") {
+    if (selectionType == 'name') {
       for (let i = 0; i < this.customers.length; i++) {
         if (event == this.customers[i].name) {
           this.workOrder.customerId = this.customers[i].customerId;
@@ -405,7 +411,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   filterCustomer(event, selectionType): void {
-    if (selectionType == "name") {
+    if (selectionType == 'name') {
       this.customerNames = []; //['abc','aaa','aa1'];
       this.filteredCustomerNames = [];
       if (this.customers.length > 0) {
@@ -465,7 +471,7 @@ export class WorkOrderAddComponent implements OnInit {
     for (let i = 0; i < this.employees.length; i++) {
       let employeeName: string = this.employees[i].firstName;
       if (employeeName.toLowerCase().indexOf(event.toLowerCase()) == 0) {
-        if (selection == "employee") {
+        if (selection == 'employee') {
           this.workOrder.employeeId = this.employees[i].employeeId;
         } else {
           this.workOrder.salesPerson = this.employees[i].firstName;

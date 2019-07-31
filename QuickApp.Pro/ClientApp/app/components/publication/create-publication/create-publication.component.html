@@ -10,7 +10,7 @@
     <div class="md-step-bar-right"></div>
   </div>
   <div
-  class="md-step   "
+  class="md-step"
   [ngClass]="{ active: activeMenuItem >= 2 }"
   (click)="changeOfTab('PnMap')"
 >
@@ -44,181 +44,127 @@
   </div>
 </div>
 <div class="card">
-    <div  [ngClass]="{hideTab : currentTab !== 'General'}">
-      <div class="card-header header-text ">
-        General Information
-      </div>
-      <div class="card-body">
-        <div class="ui-g">
-      <div class="ui-g-12 ">
-    <div class="ui-g-6 ui-sm-12">
-    <div class="ui-g-4">
-        Entry Date
-      </div>
-      <div class="ui-g-8">
-        <p-calendar
-          [showIcon]="true"
-          [ngModelOptions]="{ standalone: true }"
-          [(ngModel)]="sourcePublication.entryDate"
-        ></p-calendar>
-      </div>
-      <div class="ui-g-4">
-          Publication ID
-        </div>
-        <div class="ui-g-8">
-          <input
-            class="form-control"
-            #pubID="ngModel"
-            type="text"
-            [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="sourcePublication.PublicationId"
-          />
-        </div>
-        <div class="ui-g-4">
-            Publication Description
+  <div [ngClass]="{hideTab : currentTab !== 'General'}">
+    <div class="card-header header-text ">
+      General Information
+    </div>
+  <div class="card-body">
+
+
+
+
+
+
+      <div class="form-row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="workflowid">Entry Date</label>
+            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.entryDate"></p-calendar>
           </div>
-          <div class="ui-g-8">
-            <textarea
-              pInputTextarea
-              class="form-control"
-              #pubDescription="ngModel"
-              type="text"
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.description"
-            ></textarea>
+          <div class="form-group">
+            <label for="publicationid">Publication ID</label>
+            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.PublicationId" />
           </div>
-              <div class="ui-g-4">
-                Publication Type
-              </div>
-              <div class="ui-g-8">
-                <p-dropdown
-                  [options]="types"
-                  class="pub-type-select"
-                  #pubType="ngModel"
-                  [(ngModel)]="sourcePublication.pubType"
-                ></p-dropdown>
-              </div>
-                <div class="ui-g-4">
-                  Author/Source/Directive
-                </div>
-                <div class="ui-g-8">
-                  <input
-                    class="form-control"
-                    #pubID="ngModel"
-                    type="text"
-                    [ngModelOptions]="{ standalone: true }"
-                    [(ngModel)]="sourcePublication.ASD"
-                  />
-                </div>
-                    <div class="ui-g-4">
-                      Sequence
-                    </div>
-                    <div class="ui-g-8">
-                      <input
-                        class="form-control"
-                        #pubID="ngModel"
-                        type="text"
-                        [ngModelOptions]="{ standalone: true }"
-                        [(ngModel)]="sourcePublication.sequence"
-                      />
-                    </div>
-                        <div class="ui-g-4">
-                          Published By
-                        </div>
-                        <div class="ui-g-8">
-                          <input
-                            class="form-control"
-                            #pubID="ngModel"
-                            type="text"
-                            [ngModelOptions]="{ standalone: true }"
-                            [(ngModel)]="sourcePublication.publishby"
-                          />
-                        </div>
-                            <div class="ui-g-4">
-                              Location
-                            </div>
-                            <div class="ui-g-8">
-                              <input
-                                class="form-control"
-                                #pubID="ngModel"
-                                type="text"
-                                [ngModelOptions]="{ standalone: true }"
-                                [(ngModel)]="sourcePublication.location"
-                              />
-                            </div>
-                          </div>
-                        <div class="ui-g-6 ui-sm-12">
-                        <div class="ui-g-4">
-                            Revision Date
-                          </div>
-                          <div class="ui-g-8">
-                            <p-calendar
-                              [showIcon]="true"
-                              [ngModelOptions]="{ standalone: true }"
-                              [(ngModel)]="sourcePublication.revisionDate"
-                            ></p-calendar>
-                          </div>
 
-                          <div class="ui-g-4">
-                              Expiration Date
-                            </div>
-                            <div class="ui-g-8">
-                              <p-calendar [showIcon]="true"></p-calendar>
-                            </div>
-                            <div class="ui-g-4">
-                                Next Review Date
-                              </div>
-                              <div class="ui-g-8">
-                                <p-calendar
-                                  [showIcon]="true"
-                                  [ngModelOptions]="{ standalone: true }"
-                                  [(ngModel)]="sourcePublication.nextreviewDate"
-                                ></p-calendar>
-                              </div>
-                              <div class="ui-g-4">
-                                  Employee
-                                </div>
-                                <div class="ui-g-8">
-                                  <input
-                                    class="form-control"
-                                    #pubID="ngModel"
-                                    type="text"
-                                    [ngModelOptions]="{ standalone: true }"
-                                    [(ngModel)]="sourcePublication.employee"
-                                  />
-                                </div>
-            <div class="ui-g-4">
-              Verified By
-            </div>
-            <div class="ui-g-8">
-              <input pInputText type="text" />
-            </div>
-    </div>
-    <div class="ui-g-12 ui-sm-12">
-        <div class="ui-g-2">File</div>
+          <div class="form-group">
+            <label for="PublicationDescription">Publication Description</label>
+            <textarea pInputTextarea class="form-control" #pubDescription="ngModel" type="text"
+              [ngModelOptions]="{ standalone: true }" [(ngModel)]="sourcePublication.description"></textarea>
+          </div>
 
-        <div class="ui-g-10">
-          <p-fileUpload
-            name="myfile[]"
-            customUpload="true"
-            (uploadHandler)="onUpload($event)"
-            multiple="multiple"
-            [showCancelButton]="false"
-          ></p-fileUpload>
+          <div class="form-group">
+            <label for="Publicationtype">Publication Type</label>
+            <p-dropdown [options]="types" class="pub-type-select" #pubType="ngModel"
+              [(ngModel)]="sourcePublication.pubType"></p-dropdown>
+          </div>
+
+
+          <div class="form-group">
+            <label for="asd">Author/Source/Directive</label>
+            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.ASD" />
+          </div>
+
+          <div class="form-group">
+            <label for="sequence">Sequence</label>
+            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.sequence" />
+          </div>
+          <div class="form-group">
+            <label for="Publicationby">Published By</label>
+            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.publishby" />
+          </div>
+
+
         </div>
-      </div>
-      <button
-      class="btn btn-primary-cstm pull-right button-save"
-      type="submit"
-      (click)="editItemCloseModel(); 
-      "
-    >
-      Save & Next
-    </button>
+
+        <div class="col-md-3">
+
+          <div class="form-group">
+            <label for="Publicationby">Location</label>
+            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.location" />
+          </div>
+          <div class="form-group">
+            <label for="workflowid">Revision Date</label>
+            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.revisionDate"></p-calendar>
+          </div>
+
+
+          <div class="form-group">
+            <label for="workflowid">Expiration Date</label>
+            <p-calendar [showIcon]="true"></p-calendar>
+          </div>
+
+          <div class="form-group">
+            <label for="workflowid">Next Review Date</label>
+            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.nextreviewDate"></p-calendar>
+          </div>
+
+          <div class="form-group">
+            <label for="workflowid">Employee</label>
+            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="sourcePublication.employee" />
+          </div>
+          <div class="form-group">
+            <label for="workflowid">Verified By</label>
+            <input pInputText type="text" />
+          </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+          <div class="form-group">
+            <label for="workflowid">File Upload </label>
+            <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="onUpload($event)" multiple="multiple"
+              [showCancelButton]="false"></p-fileUpload>
+          </div>
+
+
+        </div>
 
       </div>
-    </div>
-    </div>
+
+  
+      <div class="pull-right">
+          <button class="btn btn-primary-cstm  button-save" type="submit" (click)="editItemCloseModel(); ">
+            Save & Next
+          </button>
+        </div>               
+
+
+
+
+      
+  
+   
+  </div>
   </div>
      <div  [ngClass]="{hideTab : currentTab !== 'PnMap'}">
       <div class="card-header header-text ">
@@ -345,7 +291,7 @@
           <div class="col-md-12 ">
             <div class="shadow-Box">
               <h4>Search Dash Numbers</h4>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="form-group ">
                   <label class="fs12">Aircraft </label>
                   <p-multiSelect
@@ -354,12 +300,10 @@
                   ></p-multiSelect>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="form-group">
                   <label class="fs12">
                     Aircraft Model
-
-                    <!-- <input type="checkbox" /> -->
                   </label>
                   <p-multiSelect
                     [options]="types"
@@ -367,6 +311,16 @@
                   ></p-multiSelect>
                 </div>
               </div>
+              <div class="col-md-3">
+                  <div class="form-group ">
+                    <label class="fs12">DashNumber </label>
+                    <p-multiSelect
+                      [options]="types"
+                      class="pub-multi"
+                    ></p-multiSelect>
+                  </div>
+                </div>
+
               <div class="col-md-3">
                 <div class="form-group">
                   <button class="btn btn-primary mtop20">
@@ -480,7 +434,7 @@
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
-                [columns]="cols"               
+                [columns]="atacols"               
                 [paginator]="true"
                 [rows]="10"
                 [first]="first"

@@ -13546,6 +13546,7 @@ body .ui-datepicker table td > a.ui-state-active {
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
 }
+
 .multi-general p-multiselect {
     width: 207px;
 }
@@ -13558,4 +13559,62 @@ body .ui-datepicker table td > a.ui-state-active {
 .multi-general p-multiselect[_ngcontent-c234]{
     width: 207px !important;
     height: 27px !important;
+}
+
+.radio-cstm {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.radio-cstm input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+.radio-cstm .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+.radio-cstm input:checked ~ .checkmark {
+    background-color: #337ab7;
+}
+.radio-cstm .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.radio-cstm input:checked ~ .checkmark:after {
+    display: block;
+}
+.radio-cstm .checkmark:after {
+    top: 4px;
+    left: 4px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: white;
+}
+.radio-cstm input[type="radio"]:disabled {
+    opacity: 0 !important;
+}
+.rpo-acomp .ui-autocomplete {
+    padding: 4px !important;
+}
+.rpo-acomp-header .ui-autocomplete {
+    padding: 0 !important;
+
+.p-autoComplete-ctsm .ui-autocomplete{
+  padding: 0px !important;
 }
