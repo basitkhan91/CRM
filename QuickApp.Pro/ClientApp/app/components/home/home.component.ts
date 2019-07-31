@@ -8,7 +8,6 @@ import { fadeInOut } from '../../services/animations';
 import { ConfigurationService } from '../../services/configuration.service';
 import { Params, ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import * as $ from 'jquery';
-import { LayoutComponent } from '../layout/layout.component';
 import { AppComponent } from '../../app.component';
 @Component({
     selector: 'home',
