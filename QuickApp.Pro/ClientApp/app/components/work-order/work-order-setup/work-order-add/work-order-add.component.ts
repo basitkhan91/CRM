@@ -62,7 +62,20 @@ export class WorkOrderAddComponent implements OnInit {
   isContract = true;
   gridActiveTab: String = 'workFlow';
   subTabWorkFlow: String;
-
+  workFlowItems = [
+    {
+      label: 'WO123',
+      value: 'WO123'
+    },
+    {
+      label: 'WO124',
+      value: 'WO124'
+    },
+    {
+      label: 'WO125',
+      value: 'WO125'
+    }
+  ];
   workOrderMPN = {
     iD: 0,
     workOrderId: 0,
@@ -93,6 +106,41 @@ export class WorkOrderAddComponent implements OnInit {
     updatedDate: new Date(),
     isActive: true,
     isDelete: false
+  };
+  labor = {
+    WOId: null,
+    DataEnteredBy: null,
+    Expertise: '',
+    EmployeeId: null,
+    IsTaskCompletedByOne: true,
+    WorkFloworSpecificTaskorWorkOrder: 'workFlow',
+    HoursorClockorScan: 'labourHours',
+    Tasks: [
+      {
+        Receive: [
+          {
+            Expertise: '',
+            EmployeeId: null,
+            BillableorNonBillable: '',
+            StartDateandTime: Date,
+            EndDateandTime: Date,
+            HoursandMinutes: '',
+            Adjustments: '',
+            AdjustmentHours: '',
+            Memo: ''
+          }
+        ],
+        Inspect: [],
+        Evaluate: [],
+        TearDown: [],
+        Disassemble: [],
+        Assemble: [],
+        Testing: [],
+        QualityControl: [],
+        Ship: [],
+        Clean: []
+      }
+    ]
   };
 
   constructor(
@@ -177,6 +225,7 @@ export class WorkOrderAddComponent implements OnInit {
   // subtab in grid change
   subTabWorkFlowChange(value) {
     this.subTabWorkFlow = value;
+    this.gridActiveTab = '';
   }
 
   addWorkOrder(): void {
@@ -249,6 +298,7 @@ export class WorkOrderAddComponent implements OnInit {
   // Change of Table Grid
   gridTabChange(value) {
     this.gridActiveTab = value;
+    this.subTabWorkFlow = '';
   }
   changeSinglePN(event): void {
     this.workOrder.isSinglePN = !this.workOrder.isSinglePN;
