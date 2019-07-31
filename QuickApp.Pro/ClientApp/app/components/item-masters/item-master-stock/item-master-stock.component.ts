@@ -65,6 +65,7 @@ import { AircraftManufacturerService } from '../../../services/aircraft-manufact
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 import { ATASubChapter } from '../../../models/atasubchapter.model';
 import { CustomerService } from '../../../services/customer.service';
+import { PublicationService } from '../../../services/publication.service';
 
 
 @Component({
@@ -313,7 +314,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         unitPrice: "",
     }
 
-    constructor(public countryservice: CustomerService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+    constructor(public countryservice: CustomerService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
         public currency: CurrencyService,
@@ -4443,20 +4444,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     aircraftList: any[];
-    getAircraftAllList() {
-        this.aircraftModelService.getAll().subscribe(details => {               
-            const responseData = details[0].map(x => {
-                return {
-                    aircraft: x.aircraftType.description,
-                    model: x.modelName,
-                    dashNumber: "",
-                    memo: ""
-                };
-            });
-            this.aircraftList = responseData;
-        });
+    getAircraftAllList() {    
+        this.Publicationservice.getPublicationAList().subscribe(
+            details => this.onDataLoad(details[0]),
+            error => this.onDataLoadFailed(error)
+        );
     }
-  
+    private onDataLoad(allACList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.aircraftList = allACList;        
+    }
+    private  
     atachapterList: any[];
     getAtachapter() {
         this.atamain.getAtaMainList().subscribe(data => {

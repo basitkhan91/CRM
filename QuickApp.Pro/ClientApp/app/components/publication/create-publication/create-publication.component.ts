@@ -312,6 +312,7 @@ export class CreatePublicationComponent implements OnInit {
     private onDataLoadSuccessful(allACList: any[]) {
         this.alertService.stopLoadingMessage();
         this.aircraftList = allACList;
+        console.log(this.aircraftList)
     }
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();

@@ -12,8 +12,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetDashNoByID(string Mid,long Tid);
 
         IEnumerable<object> GetATASUBS(long ChID);
-        
-        //  void CreateAction(DAL.Models.Action action);
 
+        //  void CreateAction(DAL.Models.Action action);
+        IEnumerable<object> GetPublicationAircraftList();
     }
 }

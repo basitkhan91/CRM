@@ -834,72 +834,75 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-6 ">
-                                <div class="col-sm-12 add-color1">
-                                    <b class="add-name font">Add Dash Number</b>
-                                    <br />
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-3 add-margin">
-                                            <label>Aircraft</label>
-                                            <br />
-                                        </div>
-                                        <div class="col-sm-4 add-margin2" *ngIf="disable">
-                                            <label *ngIf="!view">Model</label>
-                                            <label *ngIf="view">Memo</label>
-                                            <label *ngIf="viewCheck">
-                                                <input type="checkbox" data-md-icheck
-                                                       (change)="onToggle($event)" />Unknown
-                                            </label>
-                                            <br />
-                                        </div>
-                                        <div class="col-sm-4 dash-num" *ngIf="disable1">
-                                            <label *ngIf="!view1">Dash Number</label>
-                                            <label *ngIf="view1" class="memo-style"> Memo</label>
-                                            <label *ngIf="viewcheck1" >
-                                                <input type="checkbox" data-md-icheck
-                                                       (change)="onDashToggle($event)" />Unknown
-                                            </label>
-                                            <br />
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-3 inline-block display-flex">
-                                            <select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
-                                                <option>Select Aircraft</option>
-                                                <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
-                                            </select>
-                                            <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon"><i class="fa fa-plus"></i></a>
-                                        </div>
-                                        <div class="col-sm-4 inline-block display-flex" *ngIf="disable">
-                                            <p-multiSelect *ngIf="!view" class="panel-style" [options]="LoadValues"
-                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels1"
-                                                           [panelStyle]="{minWidth:'12em'}" (onChange)="addDashnumber(e)"></p-multiSelect>
-                                            <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" *ngIf="!view"
-                                               class="add-icon">
-                                                <i class="fa fa-plus"></i>
-                                            </a>
-                                            <textarea *ngIf="view" class="form-control text-area"></textarea>
-                                        </div>
+                                <div class="col-sm-12 add1">
+                                    <b class="add-name font">Add Aircraft Information</b>                                  
+                                    <button type="button" data-toggle="modal"
+                    data-target="#ModalDashNumber" class="btn btn-primary btn-add1">
+                                        <i class="pi pi-plus"></i>
+                                    </button>
+                                    <!--<div class="col-sm-12">
+        <div class="col-sm-3 add-margin">
+            <label>Aircraft</label>
+            <br />
+        </div>
+        <div class="col-sm-4 add-margin2" *ngIf="disable">
+            <label *ngIf="!view">Model</label>
+            <label *ngIf="view">Memo</label>
+            <label *ngIf="viewCheck">
+                <input type="checkbox" data-md-icheck
+                       (change)="onToggle($event)" />Unknown
+            </label>
+            <br />
+        </div>
+        <div class="col-sm-4 dash-num" *ngIf="disable1">
+            <label *ngIf="!view1">Dash Number</label>
+            <label *ngIf="view1" class="memo-style"> Memo</label>
+            <label *ngIf="viewcheck1" >
+                <input type="checkbox" data-md-icheck
+                       (change)="onDashToggle($event)" />Unknown
+            </label>
+            <br />
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="col-sm-3 inline-block display-flex">
+            <select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+                <option>Select Aircraft</option>
+                <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+            </select>
+            <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon"><i class="fa fa-plus"></i></a>
+        </div>
+        <div class="col-sm-4 inline-block display-flex" *ngIf="disable">
+            <p-multiSelect *ngIf="!view" class="panel-style" [options]="LoadValues"
+                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels1"
+                           [panelStyle]="{minWidth:'12em'}" (onChange)="addDashnumber(e)"></p-multiSelect>
+            <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" *ngIf="!view"
+               class="add-icon">
+                <i class="fa fa-plus"></i>
+            </a>
+            <textarea *ngIf="view" class="form-control text-area"></textarea>
+        </div>
 
-                                        <div class="col-sm-3" *ngIf="view">
-                                            <button type="button" class="btn btn-primary btn-add">
-                                                <i class="pi pi-plus">Add</i>
-                                            </button>
-                                        </div>
+        <div class="col-sm-3" *ngIf="view">
+            <button type="button" class="btn btn-primary btn-add">
+                <i class="pi pi-plus">Add</i>
+            </button>
+        </div>
 
-                                        <div class="col-sm-3" *ngIf="disable1">
-                                            <button type="button" *ngIf="!view1" data-toggle="modal"
-                                                    data-target="#ModalDashNumber" class="btn btn-primary">
-                                                Add Dash Number
-                                            </button>
-                                            <textarea class="form-control text-area" *ngIf="view1"></textarea>
-                                        </div>
-                                        <div class="col-sm-2" *ngIf="view1">
-                                            <button type="button" class="btn btn-primary btn-add">
-                                                <i class="pi pi-plus">Add</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12" style="margin-bottom:10px;"></div>
+        <div class="col-sm-3" *ngIf="disable1">
+            <button type="button" *ngIf="!view1" data-toggle="modal"
+                    data-target="#ModalDashNumber" class="btn btn-primary">
+                Add Dash Number
+            </button>
+            <textarea class="form-control text-area" *ngIf="view1"></textarea>
+        </div>
+        <div class="col-sm-2" *ngIf="view1">
+            <button type="button" class="btn btn-primary btn-add">
+                <i class="pi pi-plus">Add</i>
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-12" style="margin-bottom:10px;"></div>-->
 
                                 </div>
                             </div>
@@ -1553,57 +1556,120 @@
 							data-dismiss="modal">
 						<i class="fa fa-close add"></i>
 					</button>
-					<h4 class="modal-title">Add Dash Numbers</h4>
+					<h4 class="modal-title">Add Aircraft Information</h4>
 				</div>
 				<div class="modal-body">
-					<div class="selection-box ">
-						<p-table [value]="salesDash" [rows]="6" [columns]="modalDash" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-							<ng-template pTemplate="header" let-columns>
-								<tr>
-									<th>Id</th>
-									<th *ngFor="let col of modalDash">
-										{{col.header}}
-									</th>
-                                    <th>Dash Number</th>
-									<th>Memo</th>
-									<th>Action</th>
-								</tr>
-							</ng-template>
-							<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-								<tr>
-									<td><input type="checkbox" /></td>
-									<td *ngFor="let col of modalDash">
-										{{rowData[col.field]}}
-									</td>
-                                    <td>
-                                    </td>
-									<td>
-										<textarea cols="12" rows="2"></textarea>
-									</td>
-									<td>
-										<button class="btn btn-danger nobg">
-											<i class="fa fa-trash"></i>
-										</button>
-									</td>
-								</tr>
-							</ng-template>
-						</p-table>
-						<div class="col-sm-12">
-							<div class="col-sm-6">
-								<button class="btn btn-success"
-										data-dismiss="modal">
-									SAVE
-								</button>
-							</div>
-							<div class="col-sm-6 inline-block display-flex">
-								<button class="btn btn-danger" style="margin-left: 172px"
-										data-dismiss="modal">
-									Close
-								</button>
-							</div>
-						</div>
+                    <div class="selection-box ">
+                        <div class="col-sm-12">
+                            <div class="col-sm-3 add-margin">
+                                <label>Aircraft</label>
+                                <br />
+                            </div>
+                            <div class="col-sm-4 add-margin2" *ngIf="disable">
+                                <label *ngIf="!view">Model</label>
+                                <label *ngIf="view">Memo</label>
+                                <label *ngIf="viewCheck">
+                                    <input type="checkbox" data-md-icheck
+                                           (change)="onToggle($event)" />Unknown
+                                </label>
+                                <br />
+                            </div>
+                            <div class="col-sm-4 dash-num" *ngIf="disable1">
+                                <label *ngIf="!view1">Dash Number</label>
+                                <label *ngIf="view1" class="memo-style"> Memo</label>
+                                <label *ngIf="viewcheck1">
+                                    <input type="checkbox" data-md-icheck
+                                           (change)="onDashToggle($event)" />Unknown
+                                </label>
+                                <br />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-3 inline-block display-flex">
+                                <!--<select [(ngModel)]="currentDashNumberType.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(currentDashNumberType.aircraftTypeId)">
+                                    <option>Select Aircraft</option>
+                                    <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+                                </select>
+                                <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                            </div>
+                            <div class="col-sm-4 inline-block display-flex" *ngIf="disable">
+                                <p-multiSelect *ngIf="!view" class="panel-style" [options]="LoadValues"
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedModels1"
+                                               [panelStyle]="{minWidth:'12em'}" (onChange)="addDashnumber(e)"></p-multiSelect>
+                                <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" *ngIf="!view"
+                                   class="add-icon">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                                <textarea *ngIf="view" class="form-control text-area"></textarea>
+                            </div>
 
-					</div>
+                            <div class="col-sm-3" *ngIf="view">
+                                <button type="button" class="btn btn-primary btn-add">
+                                    <i class="pi pi-plus">Add</i>
+                                </button>
+                            </div>
+
+                            <div class="col-sm-3" *ngIf="disable1">
+                                <button type="button" *ngIf="!view1" data-toggle="modal"
+                                        data-target="#ModalDashNumber" class="btn btn-primary">
+                                    Add Dash Number
+                                </button>
+                                <textarea class="form-control text-area" *ngIf="view1"></textarea>
+                            </div>
+                            <div class="col-sm-2" *ngIf="view1">
+                                <button type="button" class="btn btn-primary btn-add">
+                                    <i class="pi pi-plus">Add</i>
+                                </button>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="col-sm-12" style="margin-bottom:10px;"></div>
+                        <p-table [value]="salesDash" [rows]="6" [columns]="modalDash" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th>Id</th>
+                                    <th *ngFor="let col of modalDash">
+                                        {{col.header}}
+                                    </th>
+                                    <th>Dash Number</th>
+                                    <th>Memo</th>
+                                    <th>Action</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                <tr>
+                                    <td><input type="checkbox" /></td>
+                                    <td *ngFor="let col of modalDash">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <textarea cols="12" rows="2"></textarea>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger nobg">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <button class="btn btn-success"
+                                        data-dismiss="modal">
+                                    SAVE
+                                </button>
+                            </div>
+                            <div class="col-sm-6 inline-block display-flex">
+                                <button class="btn btn-danger" style="margin-left: 172px"
+                                        data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
 				</div>
 			</div>
 		</div>
