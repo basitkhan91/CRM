@@ -42,10 +42,11 @@ import { AircraftManufacturerService } from "../services/aircraft-manufacturer/a
 import { RouterModule } from "@angular/router";
 import { PublicationService } from "../services/publication.service";
 import { PublicationEndpointService } from "../services/publication-endpoint.service";
-
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
     imports: [
+        DropdownModule,
         RouterModule,
         KeyFilterModule,
         TabMenuModule,

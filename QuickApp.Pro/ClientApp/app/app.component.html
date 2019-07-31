@@ -5,16 +5,16 @@
 
     <mat-sidenav-container class="app-sidenav-container"
                            [style.marginTop.px]="mobileQuery.matches ? 56 : 0" id="leftPanel">       
-            <mat-sidenav #mainNav class="app-sidenav-nav mat-elevation-z6" [mode]="mobileQuery.matches ? 'over' : 'side'"
+            <mat-sidenav *ngIf="isUserLoggedIn" #mainNav class="app-sidenav-nav mat-elevation-z6" [mode]="mobileQuery.matches ? 'over' : 'side'"
                          [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="!mobileQuery.matches">
-                <div class="title-logo" *ngIf="isUserLoggedIn">
+                <div class="title-logo">
                     <p>
                         <a routerLink="/">
                             <img src="assets/images/PAS.png" id="logo" />
                         </a>
                     </p>
                 </div>
-                <p-panelMenu  [model]="items" *ngIf="isUserLoggedIn" [style]="{'width':'240px'}"></p-panelMenu>
+                <p-panelMenu  [model]="items"  [style]="{'width':'240px'}"></p-panelMenu>
             </mat-sidenav>        
         <mat-sidenav-content>
             <div fxLayout="column" fxFlexOffset="10px" fxFlex>
