@@ -238,7 +238,12 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-
-
+        [HttpGet("GetPublicationAircraftList")]
+        public IActionResult GetPAirCraftList()
+        {
+            var result = _unitOfWork.Publication.GetPublicationAircraftList();
+            return Ok(result);
+        }
+        
     }
 }

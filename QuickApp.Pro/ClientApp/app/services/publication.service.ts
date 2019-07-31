@@ -85,4 +85,9 @@ export class PublicationService {
     newPNATAMappingAction(action: Publication) {
         return this.publicationEndpoint.postPNATAMapping<Publication>(action);
     }
+    getPublicationAList() {
+        return Observable.forkJoin(
+            this.publicationEndpoint.getpublicationACListEndpoint<Publication[]>());
+    }
+    
 }
