@@ -66,6 +66,10 @@ export class CreatePublicationComponent implements OnInit {
     { label: "AD", value: "AD" },
     { label: "SB", value: "SB" }
   ];
+  atacols = [
+    { field: "ataChapter", header: "AtaChapter" },
+    { field: "ataSubChapter", header: "AtaSubChapter" }
+  ]
   status = [
     { label: "Select Status ", value: "Select Status" },
     { label: "Active", value: "Active" },
