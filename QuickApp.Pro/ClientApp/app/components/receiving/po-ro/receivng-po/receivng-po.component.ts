@@ -68,6 +68,19 @@ export class ReceivngPoComponent implements OnInit {
     toggleIcon: boolean = false;
     currentSLIndex: number = 0;
     pageTitle: string = "Receive PO";
+    isDisabledTLboxes: boolean = false;
+
+    obtainfromcustomer: boolean = false;
+    obtainfromother: boolean = false;
+    obtainfromvendor: boolean = false;
+
+    ownercustomer: boolean = false;
+    ownerother: boolean = false;
+    ownervendor: boolean = false;
+
+    traceabletocustomer: boolean = false;
+    traceabletoother: boolean = false;
+    traceabletovendor: boolean = false;
     //showGrid: boolean;
     //userName: any;
     //collectionofstockLine: any;
@@ -181,7 +194,7 @@ export class ReceivngPoComponent implements OnInit {
         this.poStatus.push(<DropDownData>{ Key: '2', Value: 'Pending Approval' });
         this.poStatus.push(<DropDownData>{ Key: '3', Value: 'Approved' });
         this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Rejected' });
-        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Fulfilled' });
+        this.poStatus.push(<DropDownData>{ Key: '5', Value: 'Fulfilled' });
 
         this.poUserType = [];
         this.poUserType.push(<DropDownData>{ Key: '1', Value: 'Customer' });
@@ -1542,7 +1555,6 @@ export class ReceivngPoComponent implements OnInit {
 
     //}
 
-    isDisabledTLboxes: boolean = false;
     onChangeTimeLife() {
         this.isDisabledTLboxes = !this.isDisabledTLboxes;
     }
@@ -1550,18 +1562,6 @@ export class ReceivngPoComponent implements OnInit {
     onSubmitToReceive() {
         return this.route.navigate(['/receivingmodule/receivingpages/app-edit-po']);
     }
-
-    obtainfromcustomer: boolean = false;
-    obtainfromother: boolean = false;
-    obtainfromvendor: boolean = false;
-
-    ownercustomer: boolean = false;
-    ownerother: boolean = false;
-    ownervendor: boolean = false;
-
-    traceabletocustomer: boolean = false;
-    traceabletoother: boolean = false;
-    traceabletovendor: boolean = false;
 
     onObtainFromChange(event) {
         if (event.target.value === '1') {

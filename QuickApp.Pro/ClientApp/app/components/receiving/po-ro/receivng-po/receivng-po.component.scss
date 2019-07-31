@@ -13,6 +13,7 @@ table {
 }
 .rpo-bcrumb {
     background-color: transparent;
+    color: #295d92;
 }
 .rpo-bcrumb li {
     font-family: 'Roboto';
@@ -70,6 +71,10 @@ select:disabled {
 }
 .po-sub-tr th {
     padding: 8px 4px;
+}
+#adminsearchlocationajax .clr-red {
+    font-size: 17px;
+    line-height: 14px;
 }
 @media (min-width: 768px) {
     .col-md-3 {

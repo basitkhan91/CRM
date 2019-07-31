@@ -13562,19 +13562,19 @@ body .ui-datepicker table td > a.ui-state-active {
     .p-table-cstm .ui-table-thead tr th {
         padding: 8px 2px !important;
     }
-.p-table-cstm .ui-table .ui-table-tbody > tr {
+.p-table-cstm .ui-table .ui-table-tbody > tr, .rpo-table-cstm .ui-table .ui-table-tbody > tr {
     background-color: #fff !important;
 }
 .p-table-cstm .ui-table-thead tr th:nth-child(4), .p-table-cstm .ui-table-thead tr th:nth-child(6) {
     width: 130px;
 }
-.p-table-cstm .ui-table .ui-table-tbody > tr > td {
+.p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td {
     padding: 5px 2px !important;
 }
-.p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight {
+.p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight, .rpo-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight {
     background-color: #f1f1f1 !important;
 }
-.p-table-cstm .ui-paginator, .p-table-cstm .ui-table-caption {
+.p-table-cstm .ui-paginator, .p-table-cstm .ui-table-caption, .rpo-table-cstm .ui-paginator, .rpo-table-cstm .ui-table-caption {
     background-color: transparent !important;
 }
 .po-head {

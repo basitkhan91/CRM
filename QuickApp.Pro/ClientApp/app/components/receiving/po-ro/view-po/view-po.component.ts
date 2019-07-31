@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { VendorService } from '../../../../services/vendor.service';
 import { ConditionService } from '../../../../services/condition.service';
 import { LegalEntityService } from '../../../../services/legalentity.service';
@@ -8,14 +7,15 @@ import { BinService } from '../../../../services/bin.service';
 import { SiteService } from '../../../../services/site.service';
 import { PriorityService } from '../../../../services/priority.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
+import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-edit-po',
-    templateUrl: './edit-po.component.html',
-    styleUrls: ['./edit-po.component.scss']
+    selector: 'app-view-po',
+    templateUrl: './view-po.component.html',
+    styleUrls: ['./view-po.component.scss']
 })
-/** edit-po component*/
-export class EditPoComponent implements OnInit {
+/** view-po component*/
+export class ViewPoComponent implements OnInit {
 
     localPoData: any;
     editPoData: any;
@@ -29,13 +29,14 @@ export class EditPoComponent implements OnInit {
     partDepartmentList: any[] = [];
     partDivisionlist: any[] = [];
     allPriorityInfo: any[] = [];
-    toggle_epo_header: boolean = false;
+    toggle_vpo_header: boolean = false;
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService, public priority: PriorityService, private vendorService: VendorService, public conditionService: ConditionService, public siteService: SiteService, public binservice: BinService, public legalEntityService: LegalEntityService, public manufacturerService: ManufacturerService, public route: Router) {
         //        debugger;
        // this.localData = this.receivingService.selectedPurchaseorderCollection;
         this.localPoData = this.vendorService.selectedPoCollection;
         this.editPoData = this.localData[0];
+        console.log(this.vendorService.selectedPoCollection);
 
     }
     ngOnInit(): void
@@ -190,7 +191,7 @@ export class EditPoComponent implements OnInit {
 
     }
 
-    private onSubmit() {
-        return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
+    private onSearchPO() {
+        return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
     }
 }
