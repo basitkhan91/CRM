@@ -19,6 +19,8 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly getATAUrl: string = "/api/Publication/GetATASUBS";
     private readonly _publicationPNACNEW: string = "/api/Publication/PubPNACMappingPost";
     private readonly _publicationPNATANEW: string = "/api/Publication/PubPNATAMappingPost";
+    private readonly getACListUrl: string = "/api/Publication/GetPublicationAircraftList";
+    
     
     get getCodeUrl() { return this.configurations.baseUrl + this._publicationGetUrl; }
 
@@ -117,5 +119,11 @@ export class PublicationEndpointService extends EndpointFactory {
             });
 
     }
+    getpublicationACListEndpoint<T>(): Observable<T> {
 
+        return this.http.get<T>(this.getACListUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getpublicationACListEndpoint());
+            });
+    }
 }

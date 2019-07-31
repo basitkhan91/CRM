@@ -38,7 +38,8 @@ export class CreatePublicationComponent implements OnInit {
   selectedFile: File = null;
   public sourcePublication: any = {};
   airCraftTypes = [];
-  airCraftModels = [];
+    airCraftModels = [];
+    dashModels = [];
   aircraftList: any = [];
   showModelAircraftModel: boolean = false;
   partNumberList = [];
@@ -79,7 +80,9 @@ export class CreatePublicationComponent implements OnInit {
     public inteService: IntegrationService,
     private http: HttpClient,
     private aircraftManufacturerService: AircraftManufacturerService,
-    private aircraftModelService: AircraftModelService,
+      private aircraftModelService: AircraftModelService,
+      private pubdashNumberService: PublicationService,  
+      
     private itemMasterService: ItemMasterService,
     private route: Router
   ) {}
@@ -296,17 +299,18 @@ export class CreatePublicationComponent implements OnInit {
       });
   }
 
-  getAircraftAllList() {
-    this.aircraftModelService.getAll().subscribe(details => {
-      const responseData = details[0].map(x => {
-        return {
-          aircraft: x.aircraftType.description,
-          model: x.modelName,
-          dashNumber: "",
-          memo: x.memo
-        };
-      });
-      this.aircraftList = responseData;
-    });
-  }
+    getAircraftAllList() {
+        this.publicationService.getPublicationAList().subscribe(
+            details => this.onDataLoadSuccessful(details[0]),
+                error => this.onDataLoadFailed(error)
+            );
+    }
+    private onDataLoadSuccessful(allACList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.aircraftList = allACList;
+    }
+    private onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
+        //this.loadingIndicator = false;
+    }
 }
