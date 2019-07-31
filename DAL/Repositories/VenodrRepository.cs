@@ -31,6 +31,15 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.Vendor
                                   join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                   join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
+                            select new { t.VendorId,t,t.VendorEmail,t.IsActive,
+                                Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode}).ToList();
+                return data;
+
+                //old query
+                /*
+                 var data = (from t in _appContext.Vendor
+                                  join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                  join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
                                   join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
                             from currency in curr.DefaultIfEmpty()
                             join creditterms in _appContext .CreditTerms on t.CreditTermsId equals creditterms.CreditTermsId into cred
@@ -46,9 +55,10 @@ namespace DAL.Repositories
                                 vendorclassification.ClassificationName,
                                 Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode}).ToList();
                 return data;
+                 */
 
             }
-        
+
         }
 
         public IEnumerable<object> GetVendorListByName(string Vendorname)
