@@ -13542,6 +13542,7 @@ body .ui-datepicker table td > a.ui-state-active {
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
 }
+
 .radio-cstm {
     display: block;
     position: relative;
@@ -13595,4 +13596,8 @@ body .ui-datepicker table td > a.ui-state-active {
 }
 .rpo-acomp-header .ui-autocomplete {
     padding: 0 !important;
+
+.p-autoComplete-ctsm .ui-autocomplete{
+  padding: 0px !important;
+
 }

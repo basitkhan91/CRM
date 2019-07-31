@@ -112,6 +112,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
       
 	],
 	exports: [WorkflowCreateTestComponent,
+		WorkflowListComponent,
 		ChargesCreateComponent,
 		DirectionsCreateComponent,
 		EquipmentCreateComponent,
