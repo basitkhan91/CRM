@@ -978,27 +978,27 @@
         </button>
     </div>
     <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCurrecy()">            
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCurrecy()">
             <div class="form-group input-icon1">
                 <label for="name" class="control-label">Currency Code<strong class="clr-red">*</strong></label>
                 <p-autoComplete [(ngModel)]="currencyName" [ngModelOptions]="{standalone: true}" (onKeyUp)=currencyHandler($event) (onSelect)="CurrencyInfo($event)" [suggestions]="currencyCollection" (completeMethod)="filterCurrency($event)" [size]="30"
                                 [minLength]="1" [dropdown]="true">
                     <ng-template let-currencyName pTemplate="item">
-						<div class="ui-helper-clearfix">{{currencyName}}</div>
+                        <div class="ui-helper-clearfix">{{currencyName}}</div>
                     </ng-template>
                 </p-autoComplete>
-				<div *ngIf="disableSaveCurrency" style="color:red"> Already Exist</div>
+                <div *ngIf="disableSaveCurrency" style="color:red"> Already Exist</div>
             </div>
             <div class="form-group">
                 <label for="netDays" class="control-label">Currency Symbol<strong class="clr-red">*</strong></label>
                 <div>
                     <input type="text" name="symbol" class="form-control" required #symbol="ngModel" [(ngModel)]="sourceAction.symbol" minlength="2">
                     <!--<div *ngIf="symbol.dirty && symbol.errors?.required && symbol.errors" class="invalid-form-error-message">
-                        Currency Symbol is required.
-                    </div>
-                    <div *ngIf="symbol.dirty && symbol.errors?.minlength && symbol.errors" class="invalid-form-error-message">
-                        Currency Symbol must be at least 2 characters long.
-                    </div>-->
+                Currency Symbol is required.
+            </div>
+            <div *ngIf="symbol.dirty && symbol.errors?.minlength && symbol.errors" class="invalid-form-error-message">
+                Currency Symbol must be at least 2 characters long.
+            </div>-->
                 </div>
                 <div class="clear"></div>
             </div>
@@ -1007,31 +1007,25 @@
                 <div>
                     <input type="text" name="displayName" class="form-control" required #displayName="ngModel" [(ngModel)]="sourceAction.displayName" minlength="2">
                     <!--<div *ngIf="displayName.dirty && displayName.errors?.required && displayName.errors" class="invalid-form-error-message">
-                        Currency Name required.
-                    </div>
-                    <div *ngIf="displayName.dirty && displayName.errors?.minlength && displayName.errors" class="invalid-form-error-message">
-                        Currency Name must be at least 2 characters long.
-                    </div>-->
+                Currency Name required.
+            </div>
+            <div *ngIf="displayName.dirty && displayName.errors?.minlength && displayName.errors" class="invalid-form-error-message">
+                Currency Name must be at least 2 characters long.
+            </div>-->
                 </div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group">
-                <label for="netDays" class="control-label">Country<strong class="clr-red">*</strong></label>
-                <div>
-                    <input type="text" name="" class="form-control">
-                </div>
-                <div class="clear"></div>
-            </div>
+
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
                     <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
                     <!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-                        Memo is required.
-                    </div>
-                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-                        Memo must be at least 2 characters long.
-                    </div>-->
+                Memo is required.
+            </div>
+            <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                Memo must be at least 2 characters long.
+            </div>-->
                 </div>
                 <div class="clear"></div>
             </div>
@@ -1049,6 +1043,13 @@
 
                 <button class="btn btn-success" [disabled]="disableSaveCurrency">Submit</button>
                 <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+            </div>
+            <div class="form-group" style="visibility:hidden">
+                <label for="netDays" class="control-label">Country<strong class="clr-red">*</strong></label>
+                <div>
+                    <input type="text" name="" class="form-control">
+                </div>
+                <div class="clear"></div>
             </div>
         </form>
     </div>

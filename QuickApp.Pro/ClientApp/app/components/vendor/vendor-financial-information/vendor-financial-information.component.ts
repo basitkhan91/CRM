@@ -644,12 +644,22 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     saveCurrecy() {
         this.isSaving = true;
         if (this.currencyName.toLowerCase().trim() == "") {
-            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            this.alertService.showMessage("Empty", 'Code Cannot Submit Empty', MessageSeverity.warn);
             return;
         }
+        
+        if (!(this.sourceAction.symbol)) {
+            this.alertService.showMessage("Empty", 'Symbol Cannot Be Empty', MessageSeverity.warn);
+            return;
+        }
+        if (!(this.sourceAction.displayName)) {
+            this.alertService.showMessage("Empty", 'Name Cannot Be Empty', MessageSeverity.warn);
+            return;
+        }
+
         for (let i = 0; i < this.allCurrencyInfo.length; i++) {
             if (this.allCurrencyInfo[i].code.toLowerCase().localeCompare(this.currencyName.toLowerCase()) == 0) {
-                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                this.alertService.showMessage("Duplicate", 'Currency Code Already Exist', MessageSeverity.warn);
                 return;
             }
             else {
