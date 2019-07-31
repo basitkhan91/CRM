@@ -7884,6 +7884,12 @@ input[type="text"] {
     .col-offset-3 {
         margin-left: 14%
     }
+    .col-width{
+        width: 111px !important;
+    }
+    .col-width .ui-radiobutton-label{
+        width: 111px !important;  
+    }
 
     .customer-work .col-offset-4 {
         margin-left: 31%;
@@ -12916,6 +12922,39 @@ body .ui-datepicker table td > a.ui-state-active {
     p-multiselect .ui-multiselect-item {
         padding-top: 0 !important;
     }
+    p-checkbox .ui-chkbox .ui-chkbox-box.ui-state-active{
+        border-color: #007ad9 !important;
+        background-color: #007ad9 !important;
+        color: #ffffff !important;
+        padding: 1px !important; 
+    
+    }
+    p-radiobutton .ui-radiobutton .ui-radiobutton-box.ui-state-active {
+        border-color: #007ad9 !important;
+        background-color: #007ad9 !important;
+        color: #ffffff;
+    }
+    .p-checkbox-label .ui-chkbox-label {
+        margin-top: 16px !important;
+        font-size: 12px !important;
+        font-weight: normal !important;
+        width: 93px !important;
+      }
+      .p-radiobutton-label-vertical .ui-radiobutton-label {
+        margin-top: -25px !important;
+        margin-left: 38px;
+        font-size: 12px !important;
+        font-weight: normal !important;
+        width: 262px !important;
+        text-align: left;
+      }
+      .p-radiobutton-label-horizontal .ui-radiobutton-label {
+        margin-left: 13px;
+        text-align: left;
+        font-size: 12px !important;
+        margin-top: 15px;
+        font-weight: normal;
+      }
 
     body .ui-paginator .ui-dropdown {
         min-width: 42px;
@@ -13617,4 +13656,11 @@ body .ui-datepicker table td > a.ui-state-active {
  }
 .p-autoComplete-ctsm .ui-autocomplete{
   padding: 0px !important;
+}
+.p-dropdown-custom .ui-dropdown label.ui-dropdown-label {
+  text-align: left;
+  font-size: 12px !important;
+}
+.p-dropdown-custom .ui-dropdown {
+  width: 224px !important;
 }

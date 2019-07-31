@@ -382,13 +382,13 @@
                                         <td>
 
                                             <span class="inline-block">
-
-                                                <select class="multiselect" id="" name="" multiple=""
+                                                <p-dropdown [options]="workFlowItems"      class="p-dropdown-custom" ></p-dropdown>
+                                                <!-- <select class="multiselect" id="" name="" multiple=""
                                                     data-placeholder="-- Select --" style="display: none;">
                                                     <option value="WO123" selected="">WO123</option>
                                                     <option value="WO124">WO124</option>
                                                     <option value="WO125" selected="">WO125</option>
-                                                </select>
+                                                </select> 
                                                 <div class="btn-group"><button type="button"
                                                         class="multiselect dropdown-toggle btn btn-default"
                                                         data-toggle="dropdown" title="WO123, WO125"><span
@@ -409,7 +409,7 @@
                                                                     class="checkbox"><input type="checkbox"
                                                                         value="WO125"> WO125</label></a></li>
                                                     </ul>
-                                                </div>
+                                                </div>-->
                                             </span>
                                         </td>
                                         <td>
@@ -961,6 +961,9 @@
                     </div>
                     <div [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
                             <app-workflow-list></app-workflow-list>
+                    </div>
+                    <div [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
+                        <app-work-order-labor [laborForm]="labor"></app-work-order-labor>
                     </div>
 
                 </div>
