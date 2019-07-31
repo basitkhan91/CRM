@@ -36,6 +36,8 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
     symbolInputFieldValue: any;
     matvhMode: any;
     field: any;
+    display: boolean;
+    modelValue: boolean;
     codeInputFieldValue: any;
     currency_Name: any = "";
     symbol: any =  "";
@@ -343,8 +345,30 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
         // debugger;
 
         this.isSaving = true;
+        if (this.currencyName.toLowerCase().trim() == "") {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            return;
+        }
+        if (!(this.sourceAction.displayName)) {
+            this.alertService.showMessage("Empty", 'Name Cannot Be Empty', MessageSeverity.warn);
+            return;
+        }
 
+        if (!(this.sourceAction.symbol)) {
+            this.alertService.showMessage("Empty", 'Symbol Cannot Be Empty', MessageSeverity.warn);
+            return;
+        }
+        
+        for (let i = 0; i < this.allCurrencyInfo.length; i++) {
+            if (this.allCurrencyInfo[i].code.toLowerCase().localeCompare(this.currencyName.toLowerCase()) == 0) {
+                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                return;
+            }
+            else {
+            }
+        }
         if (this.isEditMode == false) {
+
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.code = this.currencyName;

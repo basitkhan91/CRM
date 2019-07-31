@@ -643,6 +643,10 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     saveCurrecy() {
         this.isSaving = true;
+        if (this.currencyName.toLowerCase().trim() == "") {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            return;
+        }
         for (let i = 0; i < this.allCurrencyInfo.length; i++) {
             if (this.allCurrencyInfo[i].code.toLowerCase().localeCompare(this.currencyName.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
@@ -730,6 +734,10 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     saveCreditTermsdata() {
         this.isSaving = true;
+        if (this.creditTermsId.toLowerCase().trim() == "") {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            return;
+        }
         for (let i = 0; i < this.allcreditTermInfo.length; i++) {
             if (this.allcreditTermInfo[i].name.toLowerCase().localeCompare(this.creditTermsId.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
@@ -825,6 +833,10 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     editItemCloseModel() {
         this.isSaving = true;
+        if (this.discontValue.toLowerCase().trim() == "") {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            return;
+        }
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
             if (this.alldiscountvalueInfo[i].discontValue.toString().localeCompare(this.discontValue.toLowerCase()) == 0) {
                 this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
