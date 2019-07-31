@@ -69,5 +69,23 @@ namespace DAL.Repositories
             return data;
             throw new NotImplementedException();
         }
+        public IEnumerable<object> GetPublicationAircraftList()
+        {
+            {
+                var data = (from t in _appContext.AircraftDashNumber
+                            join at in _appContext.AircraftType on t.AircraftTypeId equals at.AircraftTypeId
+                            join am in _appContext.AircraftModel on t.AircraftModelId equals am.AircraftModelId
+                            select new
+                            {
+                                t.DashNumber,
+                                t.Memo,
+                                aircraft = at.Description,
+                                model = am.ModelName,
+                            }).ToList();
+                return data;
+
+            }
+
+        }
     }
 }

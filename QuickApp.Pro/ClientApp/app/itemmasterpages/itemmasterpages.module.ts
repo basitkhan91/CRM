@@ -40,6 +40,8 @@ import { AircraftModelEndpointService } from "../services/aircraft-model/aircraf
 import { AircraftManufacturerEndpointService } from "../services/aircraft-manufacturer/aircraftManufacturer-endpoint.service";
 import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
 import { RouterModule } from "@angular/router";
+import { PublicationService } from "../services/publication.service";
+import { PublicationEndpointService } from "../services/publication-endpoint.service";
 
 
 @NgModule({
@@ -87,6 +89,8 @@ import { RouterModule } from "@angular/router";
         AircraftModelEndpointService,
         AircraftManufacturerEndpointService,
         AircraftManufacturerService,
+        PublicationService,
+        PublicationEndpointService
       
     ],
     entryComponents: [
