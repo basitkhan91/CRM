@@ -191,7 +191,7 @@ export class ViewPoComponent implements OnInit {
 
     }
 
-    private onSearchPO() {
+    onSearchPO() {
         return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
     }
 }
