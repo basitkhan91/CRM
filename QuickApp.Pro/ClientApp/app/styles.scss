@@ -12938,7 +12938,7 @@ body .ui-datepicker table td > a.ui-state-active {
         margin-top: 16px !important;
         font-size: 12px !important;
         font-weight: normal !important;
-        width: 93px !important;
+        width: 194px !important;
       }
       .p-radiobutton-label-vertical .ui-radiobutton-label {
         margin-top: -25px !important;
@@ -13677,6 +13677,16 @@ body .ui-datepicker table td > a.ui-state-active {
 .p-dropdown-custom .ui-dropdown {
   width: 224px !important;
 }
+.p-dropdown-custom-2 .ui-dropdown{
+    width: 176px !important
+}
+.p-dropdown-custom-2 .ui-dropdown label.ui-dropdown-label {
+    text-align: left;
+    font-size: 12px !important;
+  }
+.p-dropdown-custom-md .ui-dropdown{
+    width: 148px !important;
+}
 .pub-multi3 {
     width: 200px;
 }
@@ -13703,4 +13713,7 @@ body .ui-datepicker table td > a.ui-state-active {
 
 .modal-full {
     max-width: 700px !important;
+}
+.margintop {
+    margin-top: 7px !important;
 }

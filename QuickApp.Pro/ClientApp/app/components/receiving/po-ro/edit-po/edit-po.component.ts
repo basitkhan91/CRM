@@ -10,13 +10,12 @@ import { PriorityService } from '../../../../services/priority.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
 
 @Component({
-    selector: 'app-edit-po',
-    templateUrl: './edit-po.component.html',
-    styleUrls: ['./edit-po.component.scss']
+  selector: 'app-edit-po',
+  templateUrl: './edit-po.component.html',
+  styleUrls: ['./edit-po.component.scss']
 })
 /** edit-po component*/
 export class EditPoComponent implements OnInit {
-
     localPoData: any;
     editPoData: any;
     allSites: any[];
@@ -194,3 +193,4 @@ export class EditPoComponent implements OnInit {
         return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
     }
 }
+

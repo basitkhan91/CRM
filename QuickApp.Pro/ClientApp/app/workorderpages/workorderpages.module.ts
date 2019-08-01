@@ -29,6 +29,7 @@ import { WorkOrderQuoteComponent } from '../components/work-order/work-order-set
 import { WorkOrderShippingComponent } from '../components/work-order/work-order-setup/work-order-shipping/work-order-shipping.component';
 import { WorkOrderListComponent } from '../components/work-order/work-order-list/work-order-list.component';
 import { WorkOrderLaborComponent } from '../components/work-order/work-order-setup/work-order-labor/work-order-labor.component';
+
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -45,6 +46,9 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { WorkOrderAssetsComponent } from '../components/work-order/work-order-setup/work-order-assets/work-order-assets.component';
+import { WorkOrderAddressesComponent } from '../components/work-order/work-order-setup/work-order-addresses/work-order-addresses.component';
+
 @NgModule({
   imports: [
     FormsModule,
@@ -84,7 +88,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     WorkOrderShippingComponent,
     WorkOrderListComponent,
     DirectLabourComponent,
-    WorkOrderLaborComponent
+    WorkOrderLaborComponent,
+    WorkOrderAssetsComponent,
+    WorkOrderAddressesComponent
   ],
   entryComponents: [],
   providers: [
