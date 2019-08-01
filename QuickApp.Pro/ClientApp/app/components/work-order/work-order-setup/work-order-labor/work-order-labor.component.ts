@@ -41,7 +41,9 @@ export class WorkOrderLaborComponent implements OnInit {
         ]
       };
     }
-    console.log(this.laborForm);
+  }
+  addNewTask(taskName) {
+    this.laborForm.Tasks[0][taskName].push({ ...this.allTasks });
   }
   startandStop(obj) {
     if (obj.StartDateandTime === '-') {

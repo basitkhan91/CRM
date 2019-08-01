@@ -38,6 +38,7 @@ import { WorkFlowPagesComponent } from "./workflowpages.component";
 import { WorkflowCreateComponent } from "../components/workflow/workflow-create/workflow-create.component";
 import { AccordionModule } from "primeng/accordion";
 
+
 import { TabViewModule } from 'primeng/tabview';
 import { WorkflowCreateTestComponent } from "../Workflow/Workflow-Create.component";
 import { ActionService } from "../Workflow/ActionService";
@@ -100,6 +101,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 		WorkflowListComponent,
 		WorkflowCreateComponent,
 		WorkflowCreateTestComponent,
+
 		ChargesCreateComponent,
 		DirectionsCreateComponent,
 		EquipmentCreateComponent,

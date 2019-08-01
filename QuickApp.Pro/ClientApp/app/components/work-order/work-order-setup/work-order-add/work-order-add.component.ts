@@ -112,24 +112,12 @@ export class WorkOrderAddComponent implements OnInit {
     DataEnteredBy: null,
     Expertise: '',
     EmployeeId: null,
-    IsTaskCompletedByOne: true,
+    IsTaskCompletedByOne: false,
     WorkFloworSpecificTaskorWorkOrder: 'workFlow',
     HoursorClockorScan: 'labourHours',
     Tasks: [
       {
-        Receive: [
-          {
-            Expertise: '',
-            EmployeeId: null,
-            BillableorNonBillable: '',
-            StartDateandTime: Date,
-            EndDateandTime: Date,
-            HoursandMinutes: '',
-            Adjustments: '',
-            AdjustmentHours: '',
-            Memo: ''
-          }
-        ],
+        Receive: [],
         Inspect: [],
         Evaluate: [],
         TearDown: [],
@@ -164,26 +152,6 @@ export class WorkOrderAddComponent implements OnInit {
     //this.workOrder.estimatedCompletionDate = new Date;
     //this.workOrder.estimatedShipDate = new Date;
     this.moduleName = 'Work Order';
-
-    // $(document).ready(function () {
-    //     $('.closeall').click(function () { $('.panel-collapse.in').collapse('hide'); });
-    //     $('.openall').click(function () { $('.panel-collapse:not(".in")').collapse('show'); });
-    //     $("#checkall").click(function () { $(".pcheck").prop('checked', $(this).prop('checked')); });
-
-    //     $(".deferred-table").hide(); $(".default-workflow-table").hide();
-    //     $(".deferred-btn").click(function () { $(".deferred-table").show(); $(".default-workflow-table").hide(); });
-    //     $(".default-workflow-btn").click(function () { $(".deferred-table").hide(); $(".default-workflow-table").show(); });
-
-    //     $(".flat-data").hide();
-    //     $('input[type=radio][name=billing-options]').change(function () {
-    //         if (this.value == 'cost') {
-    //             $(".flat-data").hide(); $(".cost-data").show();
-    //         }
-    //         else if (this.value == 'flat') {
-    //             $(".flat-data").show(); $(".cost-data").hide();
-    //         }
-    //     });
-    // });
   }
 
   ngOnInit(): void {
@@ -199,10 +167,6 @@ export class WorkOrderAddComponent implements OnInit {
     this.getAllWorkOrderStages();
     this.getStockLines();
     this.addMPN();
-    //this.getAllIterMasters();
-    // { label: "WO123", value: "WO123" },
-    // { label: "WO124", value: "WO124" },
-    // { label: "WO125", value: "WO125" }
   }
 
   toggleDisplayMode(): void {
@@ -212,7 +176,6 @@ export class WorkOrderAddComponent implements OnInit {
   toggleWorkOrderType(value): void {
     this.woType = value;
     this.showTableGrid = false;
-    // this.workOrder.isSinglePN = !this.workOrder.isSinglePN;
   }
   // Handles type of the WorkOrder Dealer
   woDealerChange(value) {
@@ -416,16 +379,20 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getStockLines(): void {
-    //this.stocklineService.getStockLineList().subscribe(
-    //    result => {
-    //        alert("Data Loaded Successfully");
-    //        console.clear();
-    //        console.log(result);
-    //    },
-    //    error => {
-    //        this.alertService.showMessage(this.moduleName, "Something Went Wrong", MessageSeverity.error);
-    //    }
-    //)
+    this.stocklineService.getStockLineList().subscribe(
+      result => {
+        alert('Data Loaded Successfully');
+        console.clear();
+        console.log(result);
+      },
+      error => {
+        this.alertService.showMessage(
+          this.moduleName,
+          'Something Went Wrong',
+          MessageSeverity.error
+        );
+      }
+    );
   }
 
   getAllIterMasters(): void {

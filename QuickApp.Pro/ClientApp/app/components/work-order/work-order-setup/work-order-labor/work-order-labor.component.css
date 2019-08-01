@@ -31,3 +31,9 @@ table.table-bordered tr td {
   letter-spacing: 0.1px;
   font-weight: normal;
 }
+.float-right i.fa.fa-plus-circle.fa-lg {
+  float: right;
+}
+.padding-td {
+  padding: 8px 51px !important;
+}
