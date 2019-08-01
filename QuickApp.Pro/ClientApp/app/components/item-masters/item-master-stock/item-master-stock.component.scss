@@ -62,23 +62,23 @@
     padding-top: 10px;
 }
 
-p-multiselect {
+/*p-multiselect {
     width: 118px;
     height: 25px !important;
     padding: 1px 12px !important;
     font-size: 14px !important;
     border-radius: 0px !important;
     border: 1px thin black;
-}
+}*/
 .multi-general p-multiselect {
     width: 207px !important;
     height: 27px !important;
 }
 
-p-multiselect .ui-multiselect-filter-container {
+/*p-multiselect .ui-multiselect-filter-container {
     margin-left: 10px !important;
     margin-top: 3px !important;
-}
+}*/
 
 .add-margin6 {
     margin-top: 10px;
@@ -107,14 +107,6 @@ p-multiselect .ui-multiselect-filter-container {
 .add1 {   
     text-align: left;
 }
-
-.btn-add1 {
-    border-radius: 16px;
-    width: 28px;
-    padding: 3px;
-    margin-top: 10px;
-    margin-left: 10px;
-}
 .bg3 {
     background: #1a7171 !important;
 }
@@ -122,7 +114,10 @@ p-multiselect .ui-multiselect-filter-container {
 th {
     text-align: center;
 }
-
+.icon1 {
+    margin-top: 1px;
+    height: 26px;
+}
 table.table-bordered thead tr th {
     font-size: 12px;
     padding: 4px;
@@ -145,6 +140,9 @@ lbl {
 .btn-new:hover {
     background-color: deepskyblue !important;
     color: white;
+}
+.select-option1{
+    width:100% !important;
 }
 
 .add {
@@ -225,4 +223,22 @@ td {
 }
 .control-label {
     margin-top: 10px;
+}
+.add-new-align {
+    margin-left: -10px;
+    margin-top: 2px
+}
+.btn-add1 {
+    border-radius: 16px;
+    width: 25px;
+    padding: 3px;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+.modal-body p {
+    overflow: initial !important;
+}
+.icon2 {
+    height: 29px;
+    width: 30px;
 }
