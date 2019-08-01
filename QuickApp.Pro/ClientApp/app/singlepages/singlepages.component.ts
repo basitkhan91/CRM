@@ -437,7 +437,7 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-action-attributes') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'Actions Attributes' }
+                    { label: 'Task Attributes' }
 				];
 			}
 

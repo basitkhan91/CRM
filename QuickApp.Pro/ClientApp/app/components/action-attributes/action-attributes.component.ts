@@ -68,6 +68,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
     updatedBy: any;
     createdBy: any;
     updatedDate: any;
+    taId: any;
     AuditDetails: SingleScreenAuditDetails[];
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ActionAttributeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
@@ -80,7 +81,8 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
         this.loadData();
         this.cols = [
             //{ field: 'actionAttributeId', header: 'ACID' },
-            { field: 'description', header: 'Action Attribute Name' },
+            { field: 'actionAttributeId', header: 'Task Attribute Id' },
+            { field: 'description', header: 'Task Attribute Name' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
@@ -120,7 +122,6 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
     openView(content, row) {
 
         this.sourceView = row;
-
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -188,6 +189,7 @@ export class ActionAttributesComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.description = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
