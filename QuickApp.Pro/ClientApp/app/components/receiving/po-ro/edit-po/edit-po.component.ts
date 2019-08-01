@@ -190,7 +190,7 @@ export class EditPoComponent implements OnInit {
 
     }
 
-    private onSubmit() {
+    onSubmit() {
         return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
     }
 }
