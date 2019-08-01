@@ -276,7 +276,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataMainchapter: ATAChapter[]
     showAircraftData: boolean = false;
     showAtachapter: boolean = false;
-    selectedAircraftId: any;
+    selectedAircraftId: any = [] ;
     selectedModelId: any;
     //new code-- for purchase and sales calculation
     itemQuantitys = [];  
@@ -314,6 +314,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         lastsales: "",
         unitPrice: "",
     }
+    aircraftData = { 
+        aircraft: '',
+        model: '',
+        dashNumber: '',
+        memo:''
+    }
+
 
     constructor(public countryservice: CustomerService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
@@ -3687,18 +3694,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
             const responseData = aircraftManufacturer[0];            
             this.aircraftManufacturerList = responseData.map(x => {                
-                return {
+                return {                    
                     label: x.description,
-                    value: x.aircraftTypeId
+                    value: x.aircraftTypeId,                     
                 }
             })           
              
         });
     }
     LoadValues: any[] = [];
-    getModelvalues() {        
-        this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
-            const responseValue = models[0];
+    newValue: any;
+    getModelvalues(value) {
+
+        this.newValue = value.originalEvent.target.textContent;
+            this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
+            const responseValue = models[0];            
             this.LoadValues = responseValue.map(models => {               
                 return {
                     label: models.modelName,
@@ -3710,7 +3720,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedAircraftIdvalue: any;
     selectedModelIdvalue: any;
     LoadModelidValues: any[] = [];
+    newModelValue: any = [];
     getModelIdvalues() {
+       
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftIdvalue).subscribe(models => {
             const responseValue = models[0];
             this.LoadModelidValues = responseValue.map(models => {
@@ -3719,14 +3731,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     value: models.aircraftModelId
                 }
             });
-        });     
+        });    
+        
     }
     LoadDashnumberValues: any[] = [];
     getDashNumberValues() {
         this.Publicationservice.getDashNumber(this.selectedModelIdvalue, this.selectedAircraftIdvalue).subscribe(dashnumbers => {
             const responseData = dashnumbers;
-            this.LoadDashnumberValues = responseData.map(dashnumbers => {
-                console.log(dashnumbers)
+            this.LoadDashnumberValues = responseData.map(dashnumbers => {                
                 return {
                     label: dashnumbers.dashNumber,
                     value: dashnumbers.dashNumber
@@ -3735,11 +3747,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
     }
     LoadDashnumber = [];
-    getDashNumber() {        
+    getDashNumber(value) {  
+        console.log(value.orginalEvent);
         this.Publicationservice.getDashNumber(this.selectedModelId, this.selectedAircraftId).subscribe(dashnumbers => {          
             const responseData = dashnumbers;
-            this.LoadDashnumber = responseData.map(dashnumbers => {
-                console.log(dashnumbers)
+            this.LoadDashnumber = responseData.map(dashnumbers => {                
                 return {
                     label: dashnumbers.dashNumber,
                     value: dashnumbers.dashNumber
@@ -3749,14 +3761,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     viewTable: boolean = false;
     aircraftdata = [];
-    selectedDashnumber: any;
-  
+    selectedDashnumber: any;  
     adddashnumber() {
-        this.viewTable = true;
-        this.aircraftdata = [{
-            aircraft: this.selectedAircraftId,
-            model: this.LoadValues[0].label,            
-            dashNumber: this.LoadDashnumber[0].label           
+
+        this.viewTable = true;     
+        this.aircraftdata = [{                
+            aircraft: this.newValue,   
         }]
         if (this.selectedModelId == null && this.selectedDashnumber == null ) {
             this.aircraftdata = [{

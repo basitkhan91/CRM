@@ -19,7 +19,7 @@ namespace DAL.Models
         public long   AircraftModelId { get; set; }
 
         [Required(ErrorMessage = "Dash Number is required.")]
-        public int  DashNumber { get; set; }
+        public string  DashNumber { get; set; }
         
         public Int32 MasterCompanyId { get; set; }
 

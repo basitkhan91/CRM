@@ -221,9 +221,7 @@ td {
     height: 24px;
     width: 120px;
 }
-.control-label {
-    margin-top: 10px;
-}
+
 .add-new-align {
     margin-left: -10px;
     margin-top: 2px
@@ -241,4 +239,26 @@ td {
 .icon2 {
     height: 29px;
     width: 30px;
+}
+.icon-multi{
+    height: 28px;
+}
+.control-alter{
+margin-top: 0px !important;
+}
+.control-label {
+    margin-top: 10px;
+}
+.control-item{
+  width: 140px !important;
+}
+.text-item{
+  width: 96% !important;
+ margin-left: 5px;
+}
+.form-check-label{
+    float: left;
+}
+.form-check-input .modal-body input{
+    width: 20px !important;
 }

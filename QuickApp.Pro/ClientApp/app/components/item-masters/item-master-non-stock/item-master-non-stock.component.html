@@ -145,7 +145,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Unit Cost</label>
-                                <input class="form-control" type="text" pattern="[0-9]+" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.unitCost">
+                                <input class="form-control" type="text" maxlength="15" pattern="[0-9]+" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.unitCost">
                             </div>
                         </div>
                     </div>
@@ -165,7 +165,7 @@
                         <div class="col-md-6">
                             <div class="form-group input-icon1">
                                 <label>List Price </label>
-                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.listPrice">
+                                <input class="form-control" maxlength="15" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.listPrice">
                             </div>
                         </div>
                     </div>
