@@ -62,6 +62,7 @@ export class WorkflowListComponent implements OnInit {
         );
 
         this.gridColumns = [
+            { field: 'status', header: 'Status' },
             { field: 'workflowId', header: 'Work Flow ID' },
             { field: 'partNumber', header: 'Part Number' },
             { field: 'partDescription', header: 'PN Description' },
@@ -147,5 +148,6 @@ export class WorkflowListComponent implements OnInit {
     
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+    }
+
 }
