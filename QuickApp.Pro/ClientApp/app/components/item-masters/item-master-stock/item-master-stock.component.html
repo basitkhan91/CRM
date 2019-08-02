@@ -30,776 +30,775 @@
 			<div class="" id="menu3">
 				<div class="clear"></div>
 				<p-tabMenu [model]="items1" [activeItem]="items1[0]" class="panel-menu"></p-tabMenu>
-				<div *ngIf="showGeneralData">
-					<div class="tab-pane active">
-						<div class="col-sm-12">
-							<div class="col-sm-4">
-								<!--First Block SDtart-->
-								<div class="form-group col-sm-12 input-icon1">
-									<label for="customerName" class="control-label col-sm-4">
-										PN<strong class="clr-red">*</strong>
-									</label>
-									<div class="col-sm-7">
-										<div class="inner-addon right-addon inline-block">
+                <div *ngIf="showGeneralData">
+                    <div class="tab-pane active">
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <!--First Block SDtart-->
+                                <div class="form-group col-sm-12 input-icon1">
+                                    <label for="customerName" class="control-label col-sm-4">
+                                        PN<strong class="clr-red">*</strong>
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <div class="inner-addon right-addon inline-block">
 
-											<p-autoComplete [(ngModel)]="sourceItemMaster.partNumber"
-															(onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
-															[ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
-															(completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-															[dropdown]="true" class="autocomplete-customer">
-												<ng-template let-partName pTemplate="part">
-													<div class="ui-helper-clearfix">{{partName}}</div>
-												</ng-template>
-											</p-autoComplete>
-											<div *ngIf="disableSavepartNumber" style="color:red">Already Exists</div>
-										</div>
+                                            <p-autoComplete [(ngModel)]="sourceItemMaster.partNumber"
+                                                            (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
+                                                            [ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
+                                                            (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
+                                                            [dropdown]="true" class="autocomplete-customer">
+                                                <ng-template let-partName pTemplate="part">
+                                                    <div class="ui-helper-clearfix">{{partName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                            <div *ngIf="disableSavepartNumber" style="color:red">Already Exists</div>
+                                        </div>
 
-									</div>
-								</div>
-								<div class="form-group col-sm-12 input-icon1">
-									<label class="control-label col-sm-4">
-										PN Description <strong class="clr-red">*</strong>
-									</label>
-									<div class="col-sm-7">
-										<div class="inner-addon right-addon inline-block">
-											<p-autoComplete (onKeyUp)=descriptionHandler($event)
-															(onSelect)="partdescriptionId($event)"
-															[suggestions]="descriptionCollection"
-															[ngModelOptions]="{standalone: true}"
-															(completeMethod)="filterdescription($event)"
-															[(ngModel)]="sourceItemMaster.partDescription" [size]="30"
-															[minLength]="1" [dropdown]="true" class="autocomplete-customer">
-												<ng-template let-partDescription pTemplate="item">
-													<div class="ui-helper-clearfix">{{partDescription}}</div>
-												</ng-template>
-											</p-autoComplete>
-											<div *ngIf="disableSavepartDescription" style="color:red">
-												Already Exist
-											</div>
-										</div>
-									</div>
-								</div>
-
-
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Alternate</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.isAlternatePartChecked">
-									</div>
-									<div class="col-sm-7" *ngIf="sourceItemMaster.isAlternatePartChecked">
-										<div class="inner-addon right-addon inline-block" id="alternate-input">
-											<p-autoComplete [(ngModel)]="sourceItemMaster.partAlternatePartId"
-															(onKeyUp)=alterPnHandler($event) (onSelect)="onAlterPnSelect($event)"
-															[ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
-															(completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-															[dropdown]="true" class="autocomplete-customer">
-												<ng-template let-partName pTemplate="part">
-													<div class="ui-helper-clearfix">{{partName}}</div>
-												</ng-template>
-											</p-autoComplete>
-											<div *ngIf="disableSaveAlterumber" style="color:red">
-												Please Select From
-												DropDown
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Serialized</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.isSerialized">
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Time Life</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.isTimeLife">
-									</div>
-								</div>
-								<div class="form-group col-sm-12 input-icon1">
-									<label class="control-label col-sm-4">NHA</label>
-									<div class="col-sm-7">
-										<div class="inner-addon right-addon inline-block">
-											<p-autoComplete [(ngModel)]="sourceItemMaster.nha"
-															(onKeyUp)=nhaHandler($event) (onSelect)="onNHASelect($event)"
-															[ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
-															(completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-															[dropdown]="true" class="autocomplete-customer">
-												<ng-template let-partName pTemplate="part">
-													<div class="ui-helper-clearfix">{{partName}}</div>
-												</ng-template>
-											</p-autoComplete>
-										</div>
-										<div *ngIf="disableSaveNHANumber" style="color:red">
-											Please select from drop down
-										</div>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">NSN</label>
-									<div class="col-sm-7">
-										<input class="form-control text-field" type="text" [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.nationalStockNumber" >
-									</div>
-								</div>
-
-								<div class="form-group col-sm-12">
-
-									<label class="control-label col-sm-4">
-										Item Classification <strong class="clr-red">*</strong>
-									</label>
-									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-										<select [ngModelOptions]="{standalone: true}"
-												[(ngModel)]="sourceItemMaster.itemClassificationId">
-											<option *ngFor="let itemName of allitemclassificationInfo"
-													[ngValue]="itemName.itemClassificationId">
-												{{itemName.description}}
-											</option>
-										</select>
-										<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
-										   (click)="itemclassification(contentEdit)"><i class="fa fa-plus"></i></a>
-									</div>
-
-								</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 input-icon1">
+                                    <label class="control-label col-sm-4">
+                                        PN Description <strong class="clr-red">*</strong>
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <div class="inner-addon right-addon inline-block">
+                                            <p-autoComplete (onKeyUp)=descriptionHandler($event)
+                                                            (onSelect)="partdescriptionId($event)"
+                                                            [suggestions]="descriptionCollection"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            (completeMethod)="filterdescription($event)"
+                                                            [(ngModel)]="sourceItemMaster.partDescription" [size]="30"
+                                                            [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                                                <ng-template let-partDescription pTemplate="item">
+                                                    <div class="ui-helper-clearfix">{{partDescription}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                            <div *ngIf="disableSavepartDescription" style="color:red">
+                                                Already Exist
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
-								<div class="form-group col-sm-12 input-icon1">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Alternate</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isAlternatePartChecked">
+                                    </div>
+                                    <div class="col-sm-7" *ngIf="sourceItemMaster.isAlternatePartChecked">
+                                        <div class="inner-addon right-addon inline-block" id="alternate-input">
+                                            <p-autoComplete [(ngModel)]="sourceItemMaster.partAlternatePartId"
+                                                            (onKeyUp)=alterPnHandler($event) (onSelect)="onAlterPnSelect($event)"
+                                                            [ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
+                                                            (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
+                                                            [dropdown]="true" class="autocomplete-customer">
+                                                <ng-template let-partName pTemplate="part">
+                                                    <div class="ui-helper-clearfix">{{partName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                            <div *ngIf="disableSaveAlterumber" style="color:red">
+                                                Please Select From
+                                                DropDown
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label  control-alter col-sm-4">Serialized</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isSerialized">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label  control-alter col-sm-4">Time Life</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isTimeLife">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 input-icon1">
+                                    <label class="control-label col-sm-4">NHA</label>
+                                    <div class="col-sm-7">
+                                        <div class="inner-addon right-addon inline-block">
+                                            <p-autoComplete [(ngModel)]="sourceItemMaster.nha"
+                                                            (onKeyUp)=nhaHandler($event) (onSelect)="onNHASelect($event)"
+                                                            [ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
+                                                            (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
+                                                            [dropdown]="true" class="autocomplete-customer">
+                                                <ng-template let-partName pTemplate="part">
+                                                    <div class="ui-helper-clearfix">{{partName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                        </div>
+                                        <div *ngIf="disableSaveNHANumber" style="color:red">
+                                            Please select from drop down
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">NSN</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control text-field" maxlength="10" type="text" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.nationalStockNumber">
+                                    </div>
+                                </div>
 
-									<label class="control-label col-sm-4">Item Group </label>
-									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-										<select [ngModelOptions]="{standalone: true}"
-												[(ngModel)]="sourceItemMaster.itemGroupId">
-											<option *ngFor="let itemGroupName of allitemgroupobjInfo"
-													[ngValue]="itemGroupName.itemGroupId">
-												{{itemGroupName.description}}
-											</option>
-										</select>
+                                <div class="form-group col-sm-12">
 
-										<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
-										   (click)="item(contentEdits)"><i class="fa fa-plus"></i></a>
-									</div>
+                                    <label class="control-label col-sm-4">
+                                        Item Classification <strong class="clr-red">*</strong>
+                                    </label>
+                                    <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                        <select [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="sourceItemMaster.itemClassificationId">
+                                            <option *ngFor="let itemName of allitemclassificationInfo"
+                                                    [ngValue]="itemName.itemClassificationId">
+                                                {{itemName.description}}
+                                            </option>
+                                        </select>
+                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
+                                           (click)="itemclassification(contentEdit)"><i class="fa fa-plus"></i></a>
+                                    </div>
 
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Acquired?</label>
-									<div class="col-sm-7">
-										<label class="radio-inline">
-											<input type="radio" [value]="true" [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
-											Buy
-										</label>
-										<label class="radio-inline">
-											<input type="radio" [value]="false" [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
-											Make
-										</label>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Expiration Date</label>
-									<div class="col-sm-7">
-
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.isExpirationDateAvailable">
-									</div>
-									<div class="col-sm-7 expdate-input"
-										 *ngIf="sourceItemMaster.isExpirationDateAvailable">
-										<p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
-													[(ngModel)]="sourceItemMaster.expirationDate"></p-calendar>
-
-									</div>
-								</div>
-								<div class="snumber-block2" *ngIf="sourceItemMaster.isExpirationDateAvailable">
-									
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Rec'd date</label>
-										<div class="col-sm-7">
-											<label class="wauto">
-												<input type="checkbox" name="exp-date-radio"
-													   id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
-													   [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
-											</label>
-											<input *ngIf="sourceItemMaster.isReceivedDateAvailable"
-												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
-												   id="exp-rec-date-input" name="" placeholder="Days"
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.daysReceived">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Mfg date</label>
-										<div class="col-sm-7">
-											<label class="wauto">
-												<input type="checkbox" name="exp-date-radio"
-													   id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
-													   [(ngModel)]="sourceItemMaster.isManufacturingDateAvailable">
-											</label>
-											<input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
-												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
-												   id="exp-rec-date-input" name="" placeholder="Days"
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.manufacturingDays">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Tag date</label>
-										<div class="col-sm-7">
-											<label class="wauto">
-												<input type="checkbox" name="exp-date-radio"
-													   id="exp-tag-date-radio" [ngModelOptions]="{standalone: true}"
-													   [(ngModel)]="sourceItemMaster.isTagDateAvailable">
-											</label>
-											<input *ngIf="sourceItemMaster.isTagDateAvailable"
-												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
-												   id="exp-tag-date-input" name="" placeholder="Days"
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.tagDays">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Open date</label>
-										<div class="col-sm-7">
-											<label class="wauto">
-												<input type="checkbox" name="exp-date-radio"
-													   id="exp-open-date-radio" [ngModelOptions]="{standalone: true}"
-													   [(ngModel)]="sourceItemMaster.isOpenDateAvailable">
-											</label>
-											<input *ngIf="sourceItemMaster.isOpenDateAvailable"
-												   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num" 
-												   id="exp-open-date-input" name="" placeholder="Days"
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.openDays">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Shipped date</label>
-										<div class="col-sm-7">
-											<label class="wauto">
-												<input type="checkbox" name="exp-date-radio" id="exp-shipped-date-radio"
-													   [ngModelOptions]="{standalone: true}"
-													   [(ngModel)]="sourceItemMaster.isShippedDateAvailable">
-											</label>
-											<input *ngIf="sourceItemMaster.isShippedDateAvailable"
-												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
-												   id="exp-shipped-date-input" name="" placeholder="Days"
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.shippedDays">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Other date</label>
-										<div class="col-sm-7">
-											<label class="wauto">
-												<input type="checkbox" name="exp-date-radio" id="exp-shipped-date-radio"
-													   [ngModelOptions]="{standalone: true}"
-													   [(ngModel)]="sourceItemMaster.isOtherDateAvailable">
-											</label>
-											<input *ngIf="sourceItemMaster.isOtherDateAvailable"
-												   class="form-control number exp-date-inputs w50"  type="text" pKeyFilter="num" 
-												   id="exp-shipped-date-input" name="" placeholder="Days"
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.otherDays">
-										</div>
-									</div>
-									<div class="clear"></div>
-								</div>
-
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Shelf Life</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.shelfLife">
-									</div>
-								</div>
-
-								<div class="form-group col-sm-12 input-icon1">
-									<label class="control-label col-sm-4">Provision </label>
-									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-										<select [ngModelOptions]="{standalone: true}"
-												[(ngModel)]="sourceItemMaster.provisionId">
-											<option *ngFor="let provisionName of allProvisonInfo"
-													[ngValue]="provisionName.provisionId">
-												{{provisionName.description}}
-											</option>
-										</select>
-
-										<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
-										   (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
-									</div>
-
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Hazardous Material</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.isHazardousMaterial">
-									</div>
-								</div>
-
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">PMA</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.pma">
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4 ">DER</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.der">
-									</div>
-								</div>
-							</div>
-							<!--First Block End-->
-							<div class="col-sm-4">
-								<div class="form-group col-sm-12 input-icon1">
-
-									<label class="control-label col-sm-4">Manufacturer <strong class="clr-red">*</strong></label>
-									<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-										<select [ngModelOptions]="{standalone: true}"
-												[(ngModel)]="sourceItemMaster.manufacturerId">
-											<option *ngFor="let manufacturer of allManufacturerInfo"
-													[ngValue]="manufacturer.manufacturerId">
-												{{manufacturer.name}}
-											</option>
-										</select>
-										<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
-										   (click)="Manufacturer(modeledt)"><i class="fa fa-plus"></i></a>
-									</div>
+                                </div>
 
 
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Aircraft</label>
-									<div class="col-sm-7">
-										<div class="input-group">
-											<p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}"
-														   [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}" class="multi-general">
-											</p-multiSelect>
-										</div>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Capes</label>
-									<div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
-										<input class="form-control inline-block" type="checkbox" id="capes-checkbox"
-											   [ngModelOptions]="{standalone: true}" [(ngModel)]="isEnabeCapes">
-										<i class="fa fa-eye capes-view-btn clr-blue" data-toggle="modal" title="View"
-										   *ngIf="isEnabeCapes" (click)="ViewFunction()"></i>
-										<i class="fa fa-edit capes-view-btn clr-blue" data-toggle="modal" title="Edit"
-										   data-target="#capes-block-edit"
-										   (click)="cunstructCapabilities(contentCapes)" *ngIf="isEnabeCapes"></i>
-									</div>
-								</div>
-								<div class="form-group col-sm-12 input-icon1">
-									<label class="control-label col-sm-4">ATA Chapter </label>
-									<div class="col-sm-7">
-										<div class="inner-addon right-addon autosuggesions-add inline-block">
-											<select [ngModelOptions]="{standalone: true}"
-													[(ngModel)]="sourceItemMaster.ataChapterId"
-													(change)="getATASubChapterData(sourceItemMaster.ataChapterId)">
-												<option class="form-control" *ngFor="let ataName of allATAMaininfo"
-														[ngValue]="ataName.ataChapterId">
-													{{ataName.ataChapterCode}}-{{ataName.ataChapterName}}
-												</option>
-											</select>
-										</div>
-									</div>
-								</div>
+                                <div class="form-group col-sm-12 input-icon1">
 
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4" >ATA Sub Chapter</label>
-									<div class="col-sm-7">
-										<select class="form-control" [ngModelOptions]="{standalone: true}"
-												[(ngModel)]="sourceItemMaster.ataSubChapterId">
-											<option *ngFor="let subchapter of allSubChapter"
-													[ngValue]="subchapter.ataSubChapterId">
-												{{subchapter.ataSubChapterCode}}-{{subchapter.description}}
-											</option>
-										</select>
-									</div>
-								</div>
+                                    <label class="control-label col-sm-4">Item Group </label>
+                                    <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                        <select [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="sourceItemMaster.itemGroupId">
+                                            <option *ngFor="let itemGroupName of allitemgroupobjInfo"
+                                                    [ngValue]="itemGroupName.itemGroupId">
+                                                {{itemGroupName.description}}
+                                            </option>
+                                        </select>
 
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Schematic</label>
-									<div class="col-sm-1">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.isSchematic">
-									</div>
-								</div>
-								<div class="schematic-block" *ngIf="sourceItemMaster.isSchematic">
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Attach Drawing</label>
-										<div class="col-sm-6 upload">
-											<input type="file" name="upload[]" id="upload" class="inputfile upload-file"
-												   data-multiple-caption="{count} files selected" multiple="">
-											<label for="upload">
-												<figure> <i class="fa fa-upload"></i></figure>
-												<span>Choose a file…</span>
-											</label>
-										</div>
-									</div>
-								</div>
-								<div class="form-group col-sm-12 input-icon1">
-									<label class="control-label col-sm-4">NTE</label>
-									<div class="col-sm-6">
-										<div class="table-responsive">
-											<table class="table table-bordered table-striped">
-												<thead style="text-align:center;">
-													<tr>
-														<th>Ovh</th>
-														<th>Repair</th>
-														<th>Test</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>
-															<input  type="text" pKeyFilter="num"  class="form-control w50 time"
-																   placeholder="hours"
-																   [ngModelOptions]="{standalone: true}"
-																   [(ngModel)]="sourceItemMaster.overhaulHours">
-														</td>
-														<td>
-															<input  type="text" pKeyFilter="num" class="form-control w50 time"
-																   placeholder="hours"
-																   [ngModelOptions]="{standalone: true}"
-																   [(ngModel)]="sourceItemMaster.rpHours">
-														</td>
-														<td>
-															<input  type="text" pKeyFilter="num"  class="form-control w50 time"
-																   placeholder="hours"
-																   [ngModelOptions]="{standalone: true}"
-																   [(ngModel)]="sourceItemMaster.testHours">
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-										<div class="clear"></div>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Turn Time</label>
-									<div class="col-sm-6">
-										<div class="table-responsive">
-											<table class="table table-bordered table-striped">
-												<thead style="text-align:center;">
-													<tr>
-														<th>Ovh</th>
-														<th>Repair</th>
+                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
+                                           (click)="item(contentEdits)"><i class="fa fa-plus"></i></a>
+                                    </div>
 
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>
-															<input  type="text" pKeyFilter="num"  class="form-control w60 time"
-																   placeholder="days" [ngModelOptions]="{standalone: true}"
-																   [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours">
-														</td>
-														<td>
-															<input  type="text" pKeyFilter="num" class="form-control w60 time"
-																   placeholder="hours"
-																   [ngModelOptions]="{standalone: true}"
-																   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
-														</td>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Acquired?</label>
+                                    <div class="col-sm-7">
+                                        <label class="radio-inline">
+                                            <input type="radio" [value]="true" [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
+                                            Buy
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" [value]="false" [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
+                                            Make
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Expiration Date</label>
+                                    <div class="col-sm-7">
 
-													</tr>
-												</tbody>
-											</table>
-										</div>
-										<div class="clear"></div>
-									</div>
-								</div>
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isExpirationDateAvailable">
+                                    </div>
+                                    <div class="col-sm-7 expdate-input"
+                                         *ngIf="sourceItemMaster.isExpirationDateAvailable">
+                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.expirationDate"></p-calendar>
 
+                                    </div>
+                                </div>
+                                <div class="snumber-block2" *ngIf="sourceItemMaster.isExpirationDateAvailable">
 
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">RFQ Tracking</label>
-									<div class="col-sm-7">
-										<input class="form-control" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.rfqTracking">
-									</div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label control-alter col-sm-4">Rec'd date</label>
+                                        <div class="col-sm-7">
+                                            <label class="wauto">
+                                                <input type="checkbox" name="exp-date-radio"
+                                                       id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
+                                            </label>
+                                            <input *ngIf="sourceItemMaster.isReceivedDateAvailable"
+                                                   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                   id="exp-rec-date-input" name="" placeholder="Days"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.daysReceived">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label control-alter col-sm-4">Mfg date</label>
+                                        <div class="col-sm-7">
+                                            <label class="wauto">
+                                                <input type="checkbox" name="exp-date-radio"
+                                                       id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.isManufacturingDateAvailable">
+                                            </label>
+                                            <input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
+                                                   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                   id="exp-rec-date-input" name="" placeholder="Days"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.manufacturingDays">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label control-alter col-sm-4">Tag date</label>
+                                        <div class="col-sm-7">
+                                            <label class="wauto">
+                                                <input type="checkbox" name="exp-date-radio"
+                                                       id="exp-tag-date-radio" [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.isTagDateAvailable">
+                                            </label>
+                                            <input *ngIf="sourceItemMaster.isTagDateAvailable"
+                                                   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                   id="exp-tag-date-input" name="" placeholder="Days"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.tagDays">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label control-alter col-sm-4">Open date</label>
+                                        <div class="col-sm-7">
+                                            <label class="wauto">
+                                                <input type="checkbox" name="exp-date-radio"
+                                                       id="exp-open-date-radio" [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.isOpenDateAvailable">
+                                            </label>
+                                            <input *ngIf="sourceItemMaster.isOpenDateAvailable"
+                                                   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                   id="exp-open-date-input" name="" placeholder="Days"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.openDays">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label control-alter col-sm-4">Shipped date</label>
+                                        <div class="col-sm-7">
+                                            <label class="wauto">
+                                                <input type="checkbox" name="exp-date-radio" id="exp-shipped-date-radio"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.isShippedDateAvailable">
+                                            </label>
+                                            <input *ngIf="sourceItemMaster.isShippedDateAvailable"
+                                                   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                   id="exp-shipped-date-input" name="" placeholder="Days"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.shippedDays">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label control-alter col-sm-4">Other date</label>
+                                        <div class="col-sm-7">
+                                            <label class="wauto">
+                                                <input type="checkbox" name="exp-date-radio" id="exp-shipped-date-radio"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.isOtherDateAvailable">
+                                            </label>
+                                            <input *ngIf="sourceItemMaster.isOtherDateAvailable"
+                                                   class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                   id="exp-shipped-date-input" name="" placeholder="Days"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.otherDays">
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
 
-									<div class="form-group col-sm-12 input-icon1">
-										<label class="control-label col-sm-4">
-											GL Acct.<strong class="clr-red">*</strong>
-										</label>
-										<div class="col-sm-7">
-											<div>
-												<select [ngModelOptions]="{standalone: true}"
-														[(ngModel)]="sourceItemMaster.glAccountId">
-													<option class="form-control" *ngFor="let glAccounts of allGlInfo"
-															[ngValue]="glAccounts.glAccountId">
-														{{glAccounts.accountName}}
-													</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="form-group col-sm-12 input-icon1">
-										<label class="control-label col-sm-4">
-											Purchase UOM <strong class="clr-red">*</strong>
-										</label>
-										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-											<select [ngModelOptions]="{standalone: true}"
-													[(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
-												<option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-														[ngValue]="unitName.unitOfMeasureId">
-													{{unitName.shortName}}
-												</option>
-											</select>
-											<a data-toggle="modal" data-target="#addPurchaseUom" class="add-icon"
-											   (click)="unitmeasure(conEdit)"><i class="fa fa-plus"></i></a>
-										</div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Shelf Life</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.shelfLife">
+                                    </div>
+                                </div>
 
-									</div>
-									<div class="form-group col-sm-12 input-icon1">
-										<label class="control-label col-sm-4">Stock UOM </label>
-										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-											<select [ngModelOptions]="{standalone: true}"
-													[(ngModel)]="sourceItemMaster.stockUnitOfMeasureId">
-												<option *ngFor="let unitName of allStockUnitOfMeasureinfo"
-														[ngValue]="unitName.unitOfMeasureId">
-													{{unitName.shortName}}
-												</option>
-											</select>
-											<a href="#" data-toggle="modal" data-target="#addPurchaseUom"
-											   class="add-icon" (click)="unitmeasure(conmodel)">
-												<i class="fa fa-plus"></i>
-											</a>
-										</div>
+                                <div class="form-group col-sm-12 input-icon1">
+                                    <label class="control-label col-sm-4">Provision </label>
+                                    <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                        <select [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="sourceItemMaster.provisionId">
+                                            <option *ngFor="let provisionName of allProvisonInfo"
+                                                    [ngValue]="provisionName.provisionId">
+                                                {{provisionName.description}}
+                                            </option>
+                                        </select>
 
-									</div>
+                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
+                                           (click)="provisionope(contents)"><i class="fa fa-plus"></i></a>
+                                    </div>
 
-									<div class="form-group col-sm-12 input-icon1">
-										<label class="control-label col-sm-4">Consume UOM </label>
-										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-											<select [ngModelOptions]="{standalone: true}"
-													[(ngModel)]="sourceItemMaster.consumeUnitOfMeasureId">
-												<option *ngFor="let unitName of allConsumeUnitOfMeasureinfo"
-														[ngValue]="unitName.unitOfMeasureId">
-													{{unitName.shortName}}
-												</option>
-											</select>
-											<a href="#" data-toggle="modal" data-target="#addPurchaseUom"
-											   class="add-icon" (click)="unitmeasure(conEdited)">
-												<i class="fa fa-plus"></i>
-											</a>
-										</div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Hazardous Material</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isHazardousMaterial">
+                                    </div>
+                                </div>
 
-									</div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">PMA</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.pma">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4 ">DER</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.der">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--First Block End-->
+                            <div class="col-sm-4">
+                                <div class="form-group col-sm-12 input-icon1">
 
-									<div class="form-group col-sm-12 input-icon1">
-										<label class="control-label col-sm-4">Sold UOM</label>
-										<div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-											<select [ngModelOptions]="{standalone: true}"
-													[(ngModel)]="sourceItemMaster.soldUnitOfMeasureId">
-												<option *ngFor="let unitName of allSOLDUnitOfMeasureinfo"
-														[ngValue]="unitName.unitOfMeasureId">
-													{{unitName.shortName}}
-												</option>
-											</select>
-											<a href="#" data-toggle="modal" data-target="#addPurchaseUom"
-											   class="add-icon" (click)="unitmeasure(contextEdited)">
-												<i class="fa fa-plus"></i>
-											</a>
-										</div>
-
-									</div>
+                                    <label class="control-label col-sm-4">Manufacturer <strong class="clr-red">*</strong></label>
+                                    <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                        <select [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="sourceItemMaster.manufacturerId">
+                                            <option *ngFor="let manufacturer of allManufacturerInfo"
+                                                    [ngValue]="manufacturer.manufacturerId">
+                                                {{manufacturer.name}}
+                                            </option>
+                                        </select>
+                                        <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
+                                           (click)="Manufacturer(modeledt)"><i class="fa fa-plus"></i></a>
+                                    </div>
 
 
-								</div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Aircraft</label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}" class="multi-general">
+                                            </p-multiSelect>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Capes</label>
+                                    <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
+                                        <input class="form-control inline-block" type="checkbox" id="capes-checkbox"
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="isEnabeCapes">
+                                        <i class="fa fa-eye capes-view-btn clr-blue" data-toggle="modal" title="View"
+                                           *ngIf="isEnabeCapes" (click)="ViewFunction()"></i>
+                                        <i class="fa fa-edit capes-view-btn clr-blue" data-toggle="modal" title="Edit"
+                                           data-target="#capes-block-edit"
+                                           (click)="cunstructCapabilities(contentCapes)" *ngIf="isEnabeCapes"></i>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 input-icon1">
+                                    <label class="control-label col-sm-4">ATA Chapter </label>
+                                    <div class="col-sm-7">
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                            <select [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.ataChapterId"
+                                                    (change)="getATASubChapterData(sourceItemMaster.ataChapterId)">
+                                                <option class="form-control" *ngFor="let ataName of allATAMaininfo"
+                                                        [ngValue]="ataName.ataChapterId">
+                                                    {{ataName.ataChapterCode}}-{{ataName.ataChapterName}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
-							</div>
-							<!--Second Block End-->
-							<div class="col-sm-4">
-								<!--Third Block Start-->
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">ATA Sub Chapter</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="sourceItemMaster.ataSubChapterId">
+                                            <option *ngFor="let subchapter of allSubChapter"
+                                                    [ngValue]="subchapter.ataSubChapterId">
+                                                {{subchapter.ataSubChapterCode}}-{{subchapter.description}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
 
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Lead Time</label>
-									<div class="col-sm-4">
-										<input type="text" pKeyFilter="num"  min="0" max="30" placeholder="Days"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.leadTimeDays">
-									</div>
-									<div class="col-sm-3">
-										<input  type="text" pKeyFilter="num"  placeholder="Hours" [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.leadTimeHours">
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Stock Level</label>
-									<div class="col-sm-7">
-										<input class="form-control"  type="text" pKeyFilter="num"  [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.stockLevel">
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Reorder Point</label>
-									<div class="col-sm-7">
-										<span data-toggle="tooltip" title="" data-original-title="calculation field">
-											<input class="form-control" value="1245"  type="text" pKeyFilter="num" 
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.reorderPoint">
-										</span>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Reorder Qty</label>
-									<div class="col-sm-7">
-										<input class="form-control"  type="text" pKeyFilter="num"  [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.reorderQuantiy">
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Min Order Qty</label>
-									<div class="col-sm-7">
-										<input class="form-control"  type="text" pKeyFilter="num" [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.minimumOrderQuantity">
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Exchange Info</label>
-									<div class="col-sm-7">
-										<input class="form-control exchangeinfo-checkbox" type="checkbox"
-											   [ngModelOptions]="{standalone: true}"
-											   [(ngModel)]="sourceItemMaster.isExchangeInfoAvailable">
-									</div>
-								</div>
-								<div *ngIf="sourceItemMaster.isExchangeInfoAvailable">
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Currency</label>
-										<div class="col-sm-7">
-											<select [ngModelOptions]="{standalone: true}"
-													[(ngModel)]="sourceItemMaster.currencyId">
-												<option class="form-control"
-														*ngFor="let currencyName of allCurrencyInfo"
-														[ngValue]="currencyName.currencyId">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Schematic</label>
+                                    <div class="col-sm-1">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isSchematic">
+                                    </div>
+                                </div>
+                                <div class="schematic-block" *ngIf="sourceItemMaster.isSchematic">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Attach Drawing</label>
+                                        <div class="col-sm-6 upload">
+                                            <input type="file" name="upload[]" id="upload" class="inputfile upload-file"
+                                                   data-multiple-caption="{count} files selected" multiple="">
+                                            <label for="upload">
+                                                <figure> <i class="fa fa-upload"></i></figure>
+                                                <span>Choose a file…</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12 input-icon1">
+                                    <label class="control-label col-sm-4">NTE</label>
+                                    <div class="col-sm-6">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped">
+                                                <thead style="text-align:center;">
+                                                    <tr>
+                                                        <th>Ovh</th>
+                                                        <th>Repair</th>
+                                                        <th>Test</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" pKeyFilter="num" class="form-control w50 time"
+                                                                   placeholder="hours"
+                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [(ngModel)]="sourceItemMaster.overhaulHours">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" pKeyFilter="num" class="form-control w50 time"
+                                                                   placeholder="hours"
+                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [(ngModel)]="sourceItemMaster.rpHours">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" pKeyFilter="num" maxlength="5" class="form-control w50 time"
+                                                                   placeholder="hours"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.testHours">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Turn Time</label>
+                                    <div class="col-sm-6">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped">
+                                                <thead style="text-align:center;">
+                                                    <tr>
+                                                        <th>Ovh</th>
+                                                        <th>Repair</th>
 
-													<!--{{currencyName.code}}-->
-													{{currencyName.symbol}}
-												</option>
-											</select>
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Core Value</label>
-										<div class="col-sm-7">
-											<input class="form-control"  type="text" pKeyFilter="num" 
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.coreValue">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Exchange List price</label>
-										<div class="col-sm-7">
-											<input class="form-control"  type="text" pKeyFilter="num" 
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.exchangeListPrice">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">OVH Cost</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" pKeyFilter="num" 
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.overheadCost">
-										</div>
-									</div>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <input maxlength="5" type="text" pKeyFilter="num" class="form-control w60 time"
+                                                                   placeholder="days" [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours">
+                                                        </td>
+                                                        <td>
+                                                            <input maxlength="5" type="text" pKeyFilter="num" class="form-control w60 time"
+                                                                   placeholder="hours"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
+                                                        </td>
 
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">Part List Price</label>
-										<div class="col-sm-7">
-											<input class="form-control"  type="text" pKeyFilter="num" 
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.partListPrice">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">PO Core Charge</label>
-										<div class="col-sm-7">
-											<input class="form-control"  type="text" pKeyFilter="num" 
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.poCoreCharge">
-										</div>
-									</div>
-									<div class="form-group col-sm-12">
-										<label class="control-label col-sm-4">SO Core Charge</label>
-										<div class="col-sm-7">
-											<input class="form-control"  type="text" pKeyFilter="num" 
-												   [ngModelOptions]="{standalone: true}"
-												   [(ngModel)]="sourceItemMaster.soCoreCharge">
-										</div>
-									</div>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
 
-								</div>
-								<div class="form-group col-sm-12 input-icon1 ">
 
-									<label class="control-label col-sm-4">Priority </label>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">RFQ Tracking</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.rfqTracking">
+                                    </div>
 
-									<div class="col-sm-7">
-										<select [ngModelOptions]="{standalone: true}"
-												[(ngModel)]="sourceItemMaster.priorityId">
-											<option class="form-control" *ngFor="let priorityName of allPriorityInfo"
-													[ngValue]="priorityName.priorityId">
-												{{priorityName.description}}
-											</option>
-										</select>
-									</div>
+                                    <div class="form-group col-sm-12 input-icon1">
+                                        <label class="control-label col-sm-4">
+                                            GL Acct.<strong class="clr-red">*</strong>
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                                <select [ngModelOptions]="{standalone: true}"
+                                                        [(ngModel)]="sourceItemMaster.glAccountId">
+                                                    <option  *ngFor="let glAccounts of allGlInfo"
+                                                            [ngValue]="glAccounts.glAccountId">
+                                                        {{glAccounts.accountName}}
+                                                    </option>
+                                                </select>
+                                                <a data-toggle="modal"  class="add-icon"
+                                                   ><i class="fa fa-plus"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12 input-icon1">
+                                        <label class="control-label col-sm-4">
+                                            Purchase UOM <strong class="clr-red">*</strong>
+                                        </label>
+                                        <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                            <select [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
+                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                            <a data-toggle="modal" data-target="#addPurchaseUom" class="add-icon"
+                                               (click)="unitmeasure(conEdit)"><i class="fa fa-plus"></i></a>
+                                        </div>
 
-								</div>
-								<div class="form-group col-sm-12 input-icon1">
-									<label class="control-label col-sm-4">
-										Integration With <span class="clr-red"></span>
-									</label>
-									<div class="col-sm-7 inline-block display-flex">
-										<p-multiSelect [options]="integrationvalues"
-													   [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes"
-													   [panelStyle]="{minWidth:'12em'}" class="pub-multi1"></p-multiSelect>
-										<a href="#" data-toggle="modal" data-target="#addIntegration" class="add-icon icon1"
-										   (click)="addIntegrationModelSingle(integrationModel)">
-											<i class="fa fa-plus"></i>
-										</a>
-									</div>
-								</div>
-								<div class="form-group col-sm-12">
-									<label class="control-label col-sm-4">Memo</label>
-									<div class="col-sm-7">
-										<textarea class="form-control" type="text" rows="4"
-												  [ngModelOptions]="{standalone: true}"
-												  [(ngModel)]="sourceItemMaster.memo"></textarea>
-									</div>
-								</div>
-							</div>
-						</div>
-						<button class="btn btn-success pull-right submit-btn"
-								(click)="saveitemMasterclose()">
-							Save
-						</button>
-						<div class="clear"></div>
-					</div>
-					<hr />
-					<button class="btn btn-success pull-right submit-btn"
-							(click)="movePurchaseInformation()">
-						Next
-					</button>
-				</div>
+                                    </div>
+                                    <div class="form-group col-sm-12 input-icon1">
+                                        <label class="control-label col-sm-4">Stock UOM </label>
+                                        <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                            <select [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.stockUnitOfMeasureId">
+                                                <option *ngFor="let unitName of allStockUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                            <a href="#" data-toggle="modal" data-target="#addPurchaseUom"
+                                               class="add-icon" (click)="unitmeasure(conmodel)">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
 
+                                    </div>
+
+                                    <div class="form-group col-sm-12 input-icon1">
+                                        <label class="control-label col-sm-4">Consume UOM </label>
+                                        <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                            <select [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.consumeUnitOfMeasureId">
+                                                <option *ngFor="let unitName of allConsumeUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                            <a href="#" data-toggle="modal" data-target="#addPurchaseUom"
+                                               class="add-icon" (click)="unitmeasure(conEdited)">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group col-sm-12 input-icon1">
+                                        <label class="control-label col-sm-4">Sold UOM</label>
+                                        <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
+                                            <select [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.soldUnitOfMeasureId">
+                                                <option *ngFor="let unitName of allSOLDUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                            <a href="#" data-toggle="modal" data-target="#addPurchaseUom"
+                                               class="add-icon" (click)="unitmeasure(contextEdited)">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <!--Second Block End-->
+                            <div class="col-sm-4">
+                                <!--Third Block Start-->
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Lead Time</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" pKeyFilter="num" min="0" maxlength="10" placeholder="Days"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.leadTimeDays">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" pKeyFilter="num" placeholder="Hours" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.leadTimeHours">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Stock Level</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" min="0" maxlength="10" type="text" pKeyFilter="num" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.stockLevel">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Reorder Point</label>
+                                    <div class="col-sm-7">
+                                        <span data-toggle="tooltip" title="" data-original-title="calculation field">
+                                            <input class="form-control" value="1245" min="0" maxlength="10" type="text" pKeyFilter="num"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.reorderPoint">
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Reorder Qty</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text" pKeyFilter="num" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.reorderQuantiy">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Min Order Qty</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="text" pKeyFilter="num" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.minimumOrderQuantity">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label control-alter col-sm-4">Exchange Info</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control exchangeinfo-checkbox" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isExchangeInfoAvailable">
+                                    </div>
+                                </div>
+                                <div *ngIf="sourceItemMaster.isExchangeInfoAvailable">
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Currency
+                                            <strong class="clr-red">*</strong></label>
+                                        <div class="col-sm-7">
+                                            <select [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.currencyId">
+                                                <option class="form-control"
+                                                        *ngFor="let currencyName of allCurrencyInfo"
+                                                        [ngValue]="currencyName.currencyId">
+
+                                                    <!--{{currencyName.code}}-->
+                                                    {{currencyName.symbol}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Core Value</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" maxlength="15" pKeyFilter="num"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.coreValue">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Exchange List price</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" maxlength="15" pKeyFilter="num"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.exchangeListPrice">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">OVH Cost</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text"  maxlength="15" pKeyFilter="num"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.overheadCost">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Part List Price</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" maxlength="15" pKeyFilter="num"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.partListPrice">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">PO Core Charge</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" maxlength="15" pKeyFilter="num"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.poCoreCharge">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">SO Core Charge</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" maxlength="15" pKeyFilter="num"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.soCoreCharge">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-sm-12 input-icon1 ">
+
+                                    <label class="control-label col-sm-4">Priority </label>
+
+                                    <div class="col-sm-7">
+                                        <select [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="sourceItemMaster.priorityId">
+                                            <option class="form-control" *ngFor="let priorityName of allPriorityInfo"
+                                                    [ngValue]="priorityName.priorityId">
+                                                {{priorityName.description}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-sm-12 input-icon1">
+                                    <label class="control-label col-sm-4">
+                                        Integration With <span class="clr-red"></span>
+                                    </label>
+                                    <div class="col-sm-7 inline-block display-flex">
+                                        <p-multiSelect [options]="integrationvalues"
+                                                       [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes"
+                                                       [panelStyle]="{minWidth:'12em'}" class="pub-multi3"></p-multiSelect>
+                                        <a href="#" data-toggle="modal" data-target="#addIntegration" class="add-icon icon1"
+                                           (click)="addIntegrationModelSingle(integrationModel)">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label col-sm-4">Memo</label>
+                                    <div class="col-sm-7">
+                                        <textarea class="form-control" type="text" rows="4"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  [(ngModel)]="sourceItemMaster.memo"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                      
+                        <div class="clear"></div>
+                    </div>                    
+                    <div class="col-sm-12">   
+                        <div class="col-sm-6">
+                         </div>
+                            <div class="col-sm-6">
+                                <button class="btn-new float-right" pButton type="button" (click)="saveitemMasterclose()" icon="pi pi-angle-right" iconPos="right" label="Save & Next"></button>
+                            </div>
+                        </div>
+                </div>
 				<!--Jyotsna Code-->
-
                 <div *ngIf="showAircraftData">
                     <div class="card">
                         <div class="col-sm-12 font-padding">
@@ -1313,7 +1312,7 @@
                                 </div>
                                 <div class="col-sm-6 float-left">
                                     <p-autoComplete [(ngModel)]="sourceAction.countries_name" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer ">
                                         <ng-template let-countryName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{countryName}}</div>
                                         </ng-template>
@@ -1328,7 +1327,7 @@
                                     <label class="lbl">Value</label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-sm-6 float-left">
-                                    <input type="text" pKeyFilter="num" />
+                                    <input type="text" pKeyFilter="num" maxlength="15"/>
                                 </div>
                             </div>
                         </div>
@@ -1356,7 +1355,7 @@
                                     <label class="lbl">Weight</label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-sm-3 float-left">
-                                    <input type="text" pKeyFilter="num" />
+                                    <input type="text" pKeyFilter="num" maxlength="10"/>
                                 </div>
                                 <div class="col-sm-3 float-left">
                                     <select class="form-control w84" id="" name="">
@@ -1400,13 +1399,13 @@
                                     <label class="lbl">Size (L,W,H)</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" pKeyFilter="num" />
+                                    <input type="text" pKeyFilter="num" maxlength="10"/>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" pKeyFilter="num" />
+                                    <input type="text" pKeyFilter="num" maxlength="10"/>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" pKeyFilter="num" />
+                                    <input type="text" pKeyFilter="num" maxlength="10"/>
                                 </div>
                             </div>
                         </div>
@@ -1481,7 +1480,7 @@
                                 <label class="fs12">Aircraft Type </label>
                                 <br />
                                 <span class="inline-block display-flex">
-                                    <p-dropdown class="imstock-pddowm" [options]="aircraftManufacturerList" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getModelvalues()" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
+                                    <p-dropdown class="imstock-pddowm" [options]="aircraftManufacturerList"  filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getModelvalues($event)"  placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                                     <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon icon2"><i class="fa fa-plus"></i></a>
                                 </span>
                             </div>
@@ -1492,7 +1491,7 @@
                                 <br />
                                 <span class="inline-block display-flex">
                                     <p-multiSelect [options]="LoadValues" [(ngModel)]="selectedModelId"  [ngModelOptions]="{standalone: true}"
-                                                   class="pub-multi3" (onChange)="getDashNumber()"></p-multiSelect>
+                                                   class="pub-multi3" (onChange)="getDashNumber($event)"></p-multiSelect>
                                     <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon icon2"><i class="fa fa-plus"></i></a>
                                 </span>                                
                             </div>
@@ -1564,43 +1563,43 @@
 				<div class="modal-body">
 					<div class="selection-box ">
 						<div class="col-sm-12">
-							<div class="col-sm-6">
+							<div class="col-sm-4">
 								<label class="lbl1">Unit Of Measure</label>
 							</div>
 							<div class="col-sm-6 inline-block display-flex">
-								<p-multiSelect class="panel-style" [options]="models"
+								<p-multiSelect class="panel-style multi-modal" [options]="models"
 											   [ngModelOptions]="{standalone: true}" [(ngModel)]="selected"
 											   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 								<a href="#" *ngIf="!view" data-toggle="modal" data-target="#addCustomerClass"
-								   class="add-icon">
+								   class="add-icon icon-multi">
 									<i class="fa fa-search"></i>
 								</a>
 							</div>
 						</div>
 						<div class="col-sm-12">
-							<div class="col-sm-6">
+							<div class="col-sm-4">
 								<label class="lbl1">Short Name</label>
 							</div>
 							<div class="col-sm-6 inline-block display-flex">
-								<p-multiSelect class="panel-style" [options]="models"
+								<p-multiSelect class="panel-style multi-modal" [options]="models"
 											   [ngModelOptions]="{standalone: true}" [(ngModel)]="selected"
 											   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 								<a href="#" *ngIf="!view" data-toggle="modal" data-target="#addCustomerClass"
-								   class="add-icon">
+								   class="add-icon icon-multi">
 									<i class="fa fa-search"></i>
 								</a>
 							</div>
 						</div>
 						<div class="col-sm-12">
-							<div class="col-sm-6">
+							<div class="col-sm-4">
 								<label class="lbl1">Standard</label>
 							</div>
 							<div class="col-sm-6 inline-block display-flex">
-								<p-multiSelect class="panel-style" [options]="models"
+								<p-multiSelect class="panel-style multi-modal" [options]="models"
 											   [ngModelOptions]="{standalone: true}" [(ngModel)]="selected"
 											   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 								<a href="#" *ngIf="!view" data-toggle="modal" data-target="#addCustomerClass"
-								   class="add-icon">
+								   class="add-icon icon-multi">
 									<i class="fa fa-search"></i>
 								</a>
 							</div>
@@ -1639,85 +1638,76 @@
 	</div>
 	<div class="modal-body">
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveItemclass()">
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="name" class="control-label"> Classification <span class="clr-red">*</span></label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="name" class="control-label control-item"> Classification <span class="clr-red">*</span></label>
+                    </div>
+                    <div class="col-sm-8">
+                        <p-autoComplete [(ngModel)]="itemName" [ngModelOptions]="{standalone: true}"
+                                        (onKeyUp)=ItemHandler($event) (onSelect)="ItemClassficationCode($event)"
+                                        [suggestions]="localCollection" (completeMethod)="filterItems($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-itemName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{itemName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSaveItemClassficationCode" class="clr-red">Already Exists</div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="netDays" class="control-label control-item">
+                            Item Classification Name<span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <p-autoComplete (onSelect)="classificationId($event)" (onKeyUp)=classeventHandler($event)
+                                        [(ngModel)]="className" [ngModelOptions]="{standalone: true}"
+                                        [suggestions]="localNameCollection" (completeMethod)="filterItemNames($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-className pTemplate="description">
+                                <div class="ui-helper-clearfix">{{className}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableClassdesc" style="color:Red">Already Exist</div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="netDays" class="control-label control-item">Item Type<span class="clr-red">*</span></label>
+                    </div>
+                    <div class="col-sm-8">
+                        <p-autoComplete (onSelect)="classificationtypeId($event)" (onKeyUp)=classeventtypeHandler($event)
+                                        [(ngModel)]="itemTypeName" [ngModelOptions]="{standalone: true}"
+                                        [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-itemTypeName pTemplate="ItemType">
+                                <div class="ui-helper-clearfix">{{itemTypeName}}</div>
+                            </ng-template>
 
-					<p-autoComplete [(ngModel)]="itemName" [ngModelOptions]="{standalone: true}"
-									(onKeyUp)=ItemHandler($event) (onSelect)="ItemClassficationCode($event)"
-									[suggestions]="localCollection" (completeMethod)="filterItems($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-itemName pTemplate="item">
-							<div class="ui-helper-clearfix">{{itemName}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disableSaveItemClassficationCode" class="clr-red">Already Exists</div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="netDays" class="control-label">
-						Item Classification Name<span class="clr-red">*</span>
-					</label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete (onSelect)="classificationId($event)" (onKeyUp)=classeventHandler($event)
-									[(ngModel)]="className" [ngModelOptions]="{standalone: true}"
-									[suggestions]="localNameCollection" (completeMethod)="filterItemNames($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-className pTemplate="description">
-							<div class="ui-helper-clearfix">{{className}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disableClassdesc" style="color:Red">Already Exist</div>
-				</div>
-			</div>
-			<div class="clear"></div>
+                        </p-autoComplete>
+                        <div *ngIf="disabletypeSave" style="color:Red">Already Exist</div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label control-item">Memo</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
+                               [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
+                    </div>
+                </div>              
+                </div>        
 
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="netDays" class="control-label">Item Type<span class="clr-red">*</span></label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete (onSelect)="classificationtypeId($event)" (onKeyUp)=classeventtypeHandler($event)
-									[(ngModel)]="itemTypeName" [ngModelOptions]="{standalone: true}"
-									[suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-itemTypeName pTemplate="ItemType">
-							<div class="ui-helper-clearfix">{{itemTypeName}}</div>
-						</ng-template>
+            <div class="col-sm-12">
 
-					</p-autoComplete>
-					<div *ngIf="disabletypeSave" style="color:Red">Already Exist</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="description" class="control-label">Memo</label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
-					<input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-						   [(ngModel)]="sourceAction.memo" minlength="2">
-
-				</div>
-				<div class="clear"></div>
-			</div>
-
-			<div class="form-group">
-				<div class="col-sm-6">
-					<label class="form-check-label" for="isActive">
-						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
-							   id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-					</label>
-				</div>
-				<div class="clear"></div>
-			</div>
-
-
+                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
+                       id="isActive" [(ngModel)]="sourceAction.isActive"><span class="form-check-label" for="isActive">
+    Active
+</span>
+            </div>
 			<div class="modal-footer">
 
 				<button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveItemClassficationCode"
@@ -1741,68 +1731,58 @@
 		</button>
 	</div>
 	<div class="modal-body">
-		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveitemgroup()">
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="name" class="control-label">Item Group Id<span class="clr-red">*</span></label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete [(ngModel)]="itemGroupName" [ngModelOptions]="{standalone: true}"
-									(onKeyUp)=ItemGroupHandler($event) (onSelect)="itemGroupCode($event)" [suggestions]="localgroup"
-									(completeMethod)="filterItemgroups($event)" [size]="30" [minLength]="1" [dropdown]="true">
-						<ng-template let-itemGroupName pTemplate="item">
-							<div class="ui-helper-clearfix">{{itemGroupName}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disableSaveItemGroup" class="clr-red">Already Exists</div>
-					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="netDays" class="control-label">
-						Item Group Description<span class="clr-red">*</span>
-					</label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
-					<input type="text" name="description" class="form-control" required #description="ngModel"
-						   [(ngModel)]="sourceAction.description" minlength="2">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveitemgroup()">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label for="name" class="control-label control-item">Item Group Id<span class="clr-red">*</span></label>
+                </div>
+                <div class="col-sm-8">
+                    <p-autoComplete [(ngModel)]="itemGroupName" [ngModelOptions]="{standalone: true}"
+                                    (onKeyUp)=ItemGroupHandler($event) (onSelect)="itemGroupCode($event)" [suggestions]="localgroup"
+                                    (completeMethod)="filterItemgroups($event)" [size]="30" [minLength]="1" [dropdown]="true" class="autocomplete-customer1">
+                        <ng-template let-itemGroupName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{itemGroupName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="disableSaveItemGroup" class="clr-red">Already Exists</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label for="netDays" class="control-label control-item">
+                        Item Group Description<span class="clr-red">*</span>
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" name="description" class="form-control" style="width: 96% !important;margin-left: 4px; !important" required #description="ngModel"
+                           [(ngModel)]="sourceAction.description" minlength="2">
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label for="description" class="control-label control-item">Memo</label>
+                </div>
+                <div class="col-sm-8">
+                    <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
+                              [(ngModel)]="sourceAction.memo" minlength="2"></textarea>                    
+                </div>
+            </div>
+            <div class="col-md-12">
+                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
+                       id="isActive" [(ngModel)]="sourceAction.isActive"> <label class="form-check-label" for="isActive">
+                    Active
+                </label>
+            </div>  
+                
+            <div class="modal-footer">
 
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="description" class="control-label">Memo</label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
-					<input #memo="ngModel" style="width:196px" id="memo" [ngModelOptions]="{standalone: true}"
-						   [(ngModel)]="sourceAction.memo" minlength="2">
-
-				</div>
-				<div class="clear"></div>
-			</div>
-
-			<div class="form-group">
-				<div class="col-sm-6">
-					<label class="form-check-label" for="isActive">
-						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
-							   id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-					</label>
-				</div>
-				<div class="clear"></div>
-			</div>
-
-
-			<div class="modal-footer">
-
-				<button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveItemGroup"
-						(click)="saveitemgroup()">
-					Submit
-				</button>
-				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-			</div>
-		</form>
+                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveItemGroup"
+                        (click)="saveitemgroup()">
+                    Submit
+                </button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
 	</div>
 
 </ng-template>
@@ -1818,62 +1798,54 @@
 		</button>
 	</div>
 	<div class="modal-body">
-		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveprovision()">
-			<div class="form-group">
-				<div class="col-sm-4">
-					<label for="description" class="control-label">Provision Name<span class="clr-red">*</span></label>
-				</div>
-				<div class="inner-addon right-addon inline-block">
-					<p-autoComplete [(ngModel)]="provisionName" [ngModelOptions]="{standalone: true}"
-									(onKeyUp)=ProvisionHandler($event) (onSelect)="ProvisionDescription($event)"
-									[suggestions]="localprovision" (completeMethod)="filterprovisions($event)" [size]="30"
-									[minLength]="1" [dropdown]="true">
-						<ng-template let-provisionName pTemplate="item">
-							<div class="ui-helper-clearfix">{{provisionName}}</div>
-						</ng-template>
-					</p-autoComplete>
-					<div *ngIf="disableSaveProvision" class="clr-red">Already Exists</div>
-					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="description" class="control-label">Memo</label>
-				<div class="control-data">
-					<input placeholder="Memo" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-						   [(ngModel)]="sourceAction.memo" minlength="2">
-					<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-						Memo is required.
-					</div>
-					<div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-						Memo must be at least 2 characters long.
-					</div>
-				</div>
-				<div class="clear"></div>
-			</div>
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveprovision()">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label for="description" class="control-label control-item">Provision Name<span class="clr-red">*</span></label>
+                </div>
+                <div class="col-sm-8">
+                    <p-autoComplete [(ngModel)]="provisionName" [ngModelOptions]="{standalone: true}"
+                                    (onKeyUp)=ProvisionHandler($event) (onSelect)="ProvisionDescription($event)"
+                                    [suggestions]="localprovision" (completeMethod)="filterprovisions($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                        <ng-template let-provisionName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{provisionName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label for="description" class="control-label">Memo</label>
+                </div>
+                <div class="col-sm-8">
+                    <input placeholder="Memo" class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
+                           [(ngModel)]="sourceAction.memo" minlength="2">
+                    <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                        Memo is required.
+                    </div>
+                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                        Memo must be at least 2 characters long.
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <label class="form-check-label" for="isActive">
+                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
+                           id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                </label>
+            </div>          
 
-			<div class="form-group">
-				<div class="col-sm-6">
-					<label class="form-check-label" for="isActive">
-						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
-							   id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-					</label>
-				</div>
-				<div class="clear"></div>
-			</div>
+            <div class="modal-footer">
 
-
-			<div class="modal-footer">
-
-				<button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveProvision"
-						(click)="saveprovision()">
-					Submit
-				</button>
-				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-			</div>
-		</form>
+                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveProvision"
+                        (click)="saveprovision()">
+                    Submit
+                </button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
 	</div>
-
-
 </ng-template>
 
 <ng-template #conEdit let-c="close" let-d="dismiss" style="width:auto">

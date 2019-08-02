@@ -162,9 +162,6 @@ $theme: mat-light-theme($primary, $accent);
 .ui-menuitem-text {
     background: none !important;
 }
-
-
-
 .ui-panelmenu-content {
     border: none;
 }
@@ -13517,7 +13514,7 @@ body .ui-datepicker table td > a.ui-state-active {
 
     .panel-style .ui-multiselect .ui-multiselect-panel {
         min-width: 100%;
-        margin-left: -15px;
+        margin-left: 0px;
     }
 
     .panel-style .ui-multiselect .ui-multiselect-trigger {
@@ -13533,7 +13530,9 @@ body .ui-datepicker table td > a.ui-state-active {
         margin-left: 10px;
         margin-top: 0px;
     }
-
+    .multi-modal{
+        width: 160px;
+    }
     .wf-task-pautocomp .ui-inputtext {
         height: 22px !important;
     }
@@ -13611,6 +13610,23 @@ body .ui-datepicker table td > a.ui-state-active {
 .multi-general p-multiselect[_ngcontent-c234]{
     width: 207px !important;
     height: 27px !important;
+}
+.autocomplete-customer .ui-autocomplete .ui-autocomplete-panel {
+    min-width: 95% !important;
+    margin-left: 5px !important;
+    margin-top: 5px;
+}
+.autocomplete-customer1 .ui-autocomplete .ui-autocomplete-panel {
+    min-width: 95% !important;
+    margin-left: 5px !important;
+    margin-top: 5px;
+}
+.autocomplete-customer1 .ui-autocomplete{
+    min-width: 95% !important;
+    margin-left: 5px !important;
+    margin-top: 5px;
+    margin-left: -1px !important;
+    width: 100% !important;
 }
 
 .radio-cstm {
@@ -13697,6 +13713,12 @@ body .ui-datepicker table td > a.ui-state-active {
 
 .pub-multi3 label {
     margin-top: 5px;
+}
+.pub-multi3 .ui-multiselect-item {
+    clear: both !important;
+}
+.pub-multi3 .ui-multiselect-item:not(.ui-state-highlight):not(.ui-state-disabled):hover {
+    background-color: transparent !important;
 }
 
 .pub-multi4 {
