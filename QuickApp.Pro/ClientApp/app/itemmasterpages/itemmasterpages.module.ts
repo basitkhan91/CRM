@@ -43,6 +43,9 @@ import { RouterModule } from "@angular/router";
 import { PublicationService } from "../services/publication.service";
 import { PublicationEndpointService } from "../services/publication-endpoint.service";
 import { DropdownModule } from 'primeng/dropdown';
+import { DashnumberComponent } from "../components/dashnumber/dashnumber.component";
+import { DashNumberService } from "../services/dash-number/dash-number.service";
+import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 
 @NgModule({
     imports: [
@@ -91,7 +94,9 @@ import { DropdownModule } from 'primeng/dropdown';
         AircraftManufacturerEndpointService,
         AircraftManufacturerService,
         PublicationService,
-        PublicationEndpointService
+        PublicationEndpointService,
+        DashNumberService,
+        DashNumberEndpointService
       
     ],
     entryComponents: [
