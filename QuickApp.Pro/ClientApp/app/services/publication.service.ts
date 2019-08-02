@@ -12,7 +12,6 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 
-
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import { Role } from '../models/role.model';
@@ -81,6 +80,6 @@ export class PublicationService {
     newPNATAMappingAction(action: Publication) {
         return this.publicationEndpoint.postPNATAMapping<Publication>(action);
     }
-   
     
+
 }

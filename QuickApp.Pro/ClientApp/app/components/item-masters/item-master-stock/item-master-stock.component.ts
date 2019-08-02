@@ -66,6 +66,7 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 import { ATASubChapter } from '../../../models/atasubchapter.model';
 import { CustomerService } from '../../../services/customer.service';
 import { PublicationService } from '../../../services/publication.service';
+import { DashNumberService } from '../../../services/dash-number/dash-number.service';
 
 
 @Component({
@@ -91,6 +92,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     maincompanylist: any[] = [];
     allManagemtninfo: any[] = [];
     selectdescription: any;
+    aircraftList: any[];
     itemdescription: any[] = [];
     showexportData: boolean;
     showGeneralData: boolean = true;
@@ -318,7 +320,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     aircraftData: any;
 
 
-    constructor(public countryservice: CustomerService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+    constructor(public countryservice: CustomerService, private Dashnumservice:DashNumberService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
         public currency: CurrencyService,
@@ -470,7 +472,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         { field: "dashNumber", header: "Dash Numbers" },        
     ];
     ngOnInit(): void {        
-        this.getAircraftAllList();
+        
         this.getAtachapter();
         this.modalDash = [
             { field: 'aircraft', header: 'Aircraft' },
@@ -3685,6 +3687,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showexportData = false;
         this.showAtachapter = false;
         this.currentDashNumberType = new AircraftDashNumber();
+        this.getAircraftAllList();
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
             const responseData = aircraftManufacturer[0];            
             this.aircraftManufacturerList = responseData.map(x => {                
@@ -3692,9 +3695,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     label: x.description,
                     value: x.aircraftTypeId,                     
                 }
-            })           
-             
+            })            
+
         });
+        
     }
     LoadValues: any[] = [];
     newValue: any;
@@ -3727,8 +3731,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });  
     }
     LoadDashnumberValues: any[] = [];
-    getDashNumberValues() {            
-        this.Publicationservice.getDashNumber(this.selectedModelIdvalue, this.selectedAircraftIdvalue).subscribe(dashnumbers => {
+    getDashNumberValues() {
+        this.Dashnumservice.getDashNumberByModelTypeId(this.selectedModelIdvalue, this.selectedAircraftIdvalue).subscribe(dashnumbers => {
+
             const responseData = dashnumbers;
             this.LoadDashnumberValues = responseData.map(dashnumbers => {                
                 return {
@@ -3747,7 +3752,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }, '')
         this.dashNumberUrl = this.dashNumberUrl.substr(1);
         console.log(this.dashNumberUrl)
-        this.Publicationservice.getDashNumber(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {          
+        this.Dashnumservice.getDashNumberByModelTypeId(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {  
             const responseData = dashnumbers;
             this.LoadDashnumber = responseData.map(dashnumbers => {                
                 return {
@@ -3769,7 +3774,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.viewTable = true;
         console.log(this.newModelValue);        
         if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
-            this.itemser.getAllDashModels(this.dashNumberUrl, this.selectedAircraftId, this.selectedDashnumber).subscribe(aircraftdata => {
+            this.Dashnumservice.getAllDashModels(this.dashNumberUrl, this.selectedAircraftId, this.selectedDashnumber).subscribe(aircraftdata => {
                 const responseValue = aircraftdata;                
                 this.aircraftData = responseValue.map(x => {
                     return {
@@ -3799,11 +3804,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     
     }
     selectedMemo: any;
-    newModelName = this.selectedModelId.map(x => {
-        return x.modelName
-    })
+   
     saveAircraft() {
-        //this.itemser.newItemMasterAircarftClass(1, this.selectedAircraftId, this.dashNumberUrl, 22, this.selectedDashnumber, this.selectedDashnumber, this.newDashnumValue, this.newValue, this.newModelName, this.selectedMemo,)
     }
     moveAtachapter() {
         this.activeTab = 2
@@ -4551,12 +4553,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
         })
     }
-    aircraftList: any[];
-    getAircraftAllList() {    
-        this.Publicationservice.getPublicationAList().subscribe(
+   
+
+    getAircraftAllList() {
+        this.aircraftManufacturerService.getAll().subscribe(
             details => this.onDataLoad(details[0]),
             error => this.onDataLoadFailed(error)
-        );
+        );       
     }
     private onDataLoad(allACList: any[]) {
         this.alertService.stopLoadingMessage();
