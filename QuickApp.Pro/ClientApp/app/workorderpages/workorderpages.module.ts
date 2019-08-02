@@ -46,6 +46,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { WorkOrderAssetsComponent } from '../components/work-order/work-order-setup/work-order-assets/work-order-assets.component';
 import { WorkOrderAddressesComponent } from '../components/work-order/work-order-setup/work-order-addresses/work-order-addresses.component';
 
@@ -64,7 +65,8 @@ import { WorkOrderAddressesComponent } from '../components/work-order/work-order
     CalendarModule,
     DropdownModule,
     CheckboxModule,
-    RadioButtonModule
+    RadioButtonModule,
+    InputSwitchModule
   ],
   declarations: [
     WorkOrderPagesComponent,

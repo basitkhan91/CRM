@@ -128,7 +128,6 @@
                                     <div class="col-md-3">
                                         <div class="form-group ">
                                             <label for="workflownum">WO Num
-
                                             </label>
                                             <input class="form-control" data-toggle="tooltip" type="text"
                                                 value="Creating" disabled=""
@@ -925,11 +924,24 @@
                         <app-work-order-assets></app-work-order-assets>
                     </div>
 
+                    <div [ngClass]="{hidedata : gridActiveTab !== 'quote'}">
+                            <app-work-order-quote></app-work-order-quote>
+                        </div>
+
+
+
                     <div [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
                         <app-work-order-billing></app-work-order-billing>
                     </div>
                     <div [ngClass]="{hidedata : gridActiveTab !== 'address'}">
-                        <app-work-order-addresses></app-work-order-addresses>
+                        <app-work-order-addresses [addressesForm]="adresses"></app-work-order-addresses>
+                    </div>
+
+                    <div [ngClass]="{hidedata: gridActiveTab !== 'analysis'}">
+                        <app-work-order-analysis></app-work-order-analysis>
+                    </div> 
+                    <div [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
+                            <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
                     </div>
                 </div>
             </div>

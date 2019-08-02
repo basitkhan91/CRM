@@ -1,18 +1,221 @@
-﻿<div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="x_panel">
-            <div class="x_content">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                    </ol>
-                </nav>
-                <div class="col-sm-12 form-bg">
-                    <div class="form-group add-inputs">
-                        <h3 class="text-center"> Content not given for Quote page.</h3>
-                    </div>
-                </div>
+﻿<div class="card">
+  <div class="card-body">
+    <div class="col-md-12">
+      <div class="col-md-6">
+        <div class="form-row">
+          <div class="col-md-6">
+            <div class="form-group ">
+              <label>Quote Number <span class="clr-red">*</span></label>
+              <input class="form-control" type="text" />
             </div>
+            <div class="form-group ">
+              <label>Open Date <span class="clr-red">*</span> </label>
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label>Quote Due Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Valid For Days <span class="clr-red">*</span></label>
+              <input class="form-control" type="number" />
+            </div>
+            <div class="form-group ">
+              <label> Expiration Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+
+            <div class="form-group">
+              <label> Expiration Date <span class="clr-red">*</span></label>
+              <select>
+                <option value="">Select Status</option>
+                <option value="open">Open</option>
+                <option value="Closed">Closed</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Delayed">Delayed</option>
+              </select>
+            </div>
+            <div class="form-group ">
+              <label>WO Num </label>
+              <input class="form-control" type="text" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="customername"
+                >Customer Name
+                <span class="clr-red">*</span>
+              </label>
+              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true">
+              </p-autoComplete>
+            </div>
+            <div class="form-group ">
+              <label for="customercode"
+                >Customer Code
+                <span class="clr-red">*</span>
+              </label>
+              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true">
+              </p-autoComplete>
+            </div>
+
+            <div class="form-group ">
+              <label for="customercontact"
+                >Customer Contact
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="customeremail"
+                >Customer Email
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="form-group ">
+              <label for="customerphone"
+                >Customer Phone
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="form-group ">
+              <label for="customerref"
+                >Customer Ref
+                <span class="clr-red">*</span>
+              </label>
+
+              <input type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+              <div class="checkbox-cstm">
+                <label>
+                  <input type="checkbox" name="contract" />
+                  <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                  Contract
+                </label>
+                <input type="text" class="form-control" />
+              </div>
+            </div>
+
+            <div class="form-group ">
+              <label for="customerref"
+                >Quantity
+                <span class="clr-red">*</span>
+              </label>
+
+              <input type="text" class="form-control" />
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-row">
+          <div class="col-md-6">
+            <div class="form-group ">
+              <label>
+                Customer Request Date <span class="clr-red">*</span></label
+              >
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Promise Date<span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Est.Completion Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Est.Ship Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true"></p-calendar>
+            </div>
+
+            <div class="form-group">
+              <label for="credit"
+                >Credit Terms &amp; Limit <span class="clr-red">*</span>
+              </label>
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <input type="text" class="form-control" value="" />
+                </div>
+                <div class="col-md-6">
+                  <select>
+                    <option value="">- Terms -</option>
+                    <option value="2% 10, Net 30">2% 10, Net 30</option>
+                    <option value="2% 10, Net 45">2% 10, Net 45</option>
+                    <option value="3% 10, Net 45">3% 10, Net 45</option>
+                    <option value="CIA">CIA</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Due Upon Receipt">Due Upon Receipt</option>
+                    <option value="Net 30">Net 30</option>
+                    <option value="Net 45">Net 45</option>
+                    <option value="Net 60">Net 60</option>
+                    <option value="Net 90">Net 90</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label> Item Count <span class="clr-red">*</span></label>
+              <input type="text" class="form-control" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group ">
+              <label for="customercontact">
+                Sales Person
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+
+            <div class="form-group ">
+              <label for="customercontact"
+                >CSR
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="form-group ">
+              <label for="customercontact"
+                >Employee
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="form-group ">
+              <label for="customercontact"
+                >Currency
+                <span class="clr-red">*</span>
+              </label>
+              <select>
+                <option value="inr">₹</option>
+                <option value="usd" selected="1">$</option>
+                <option value="pound">£</option>
+                <option value="euro">€</option>
+                <option value="yen">¥</option>
+              </select>
+            </div>
+            <div class="form-group ">
+              <label for="customercontact"
+                >DSO
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="form-group ">
+              <label for="customercontact"
+                >AR BAL
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

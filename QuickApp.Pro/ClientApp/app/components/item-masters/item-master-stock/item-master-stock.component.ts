@@ -3733,6 +3733,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     LoadDashnumberValues: any[] = [];
     getDashNumberValues() {
         this.Dashnumservice.getDashNumberByModelTypeId(this.selectedModelIdvalue, this.selectedAircraftIdvalue).subscribe(dashnumbers => {
+
             const responseData = dashnumbers;
             this.LoadDashnumberValues = responseData.map(dashnumbers => {                
                 return {
@@ -3751,7 +3752,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }, '')
         this.dashNumberUrl = this.dashNumberUrl.substr(1);
         console.log(this.dashNumberUrl)
-        this.Dashnumservice.getDashNumberByModelTypeId(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {          
+        this.Dashnumservice.getDashNumberByModelTypeId(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {  
             const responseData = dashnumbers;
             this.LoadDashnumber = responseData.map(dashnumbers => {                
                 return {
@@ -3805,7 +3806,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedMemo: any;
    
     saveAircraft() {
-      
     }
     moveAtachapter() {
         this.activeTab = 2
