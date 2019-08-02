@@ -6,76 +6,41 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="woID">WO ID </label>
-              <p-autoComplete
-                class="p-autoComplete-ctsm"
-                [size]="30"
-                [minLength]="1"
-                [dropdown]="true"
-              >
+              <p-autoComplete class="p-autoComplete-ctsm" [size]="30" [minLength]="1" [dropdown]="true">
               </p-autoComplete>
             </div>
             <div class="form-group">
               <label for="dataentered">Data Entered By </label>
-              <p-autoComplete
-                class="p-autoComplete-ctsm"
-                [size]="30"
-                [minLength]="1"
-                [dropdown]="true"
-              >
+              <p-autoComplete class="p-autoComplete-ctsm" [size]="30" [minLength]="1" [dropdown]="true">
               </p-autoComplete>
             </div>
             <div class="form-group">
               <label for="expertise">Expertise </label>
-              <p-dropdown
-                [options]="expertiseDropdownMenu"
-                class="p-dropdown-custom"
-              ></p-dropdown>
+              <p-dropdown [options]="expertiseDropdownMenu" class="p-dropdown-custom"></p-dropdown>
             </div>
             <div class="form-group">
               <label for="employee">Employee </label>
-              <p-autoComplete
-                class="p-autoComplete-ctsm"
-                [size]="30"
-                [minLength]="1"
-                [dropdown]="true"
-              >
+              <p-autoComplete class="p-autoComplete-ctsm" [size]="30" [minLength]="1" [dropdown]="true">
               </p-autoComplete>
             </div>
           </div>
 
           <div class="col-md-4 col-offset-3">
             <div class="form-group">
-              <p-checkbox
-                class="p-checkbox-label"
-                name="task"
-                binary="true"
-                label="Taskcompleted"
-                [(ngModel)]="laborForm.IsTaskCompletedByOne"
-              ></p-checkbox>
+              <p-checkbox class="p-checkbox-label" name="task" binary="false" label="Taskcompleted By one Tech/Mech"
+                [(ngModel)]="laborForm.IsTaskCompletedByOne"></p-checkbox>
             </div>
 
             <div class="form-group">
-              <p-radioButton
-                class="p-radiobutton-label-vertical"
-                name="WorkFloworSpecificTaskorWorkOrder"
-                label="Use target hours from workflow"
-                value="workFlow"
-                [(ngModel)]="laborForm.WorkFloworSpecificTaskorWorkOrder"
-              ></p-radioButton>
-              <p-radioButton
-                class="p-radiobutton-label-vertical"
-                name="WorkFloworSpecificTaskorWorkOrder"
-                label="Assign hours by specific tasks"
-                value="specificTasks"
-                [(ngModel)]="laborForm.WorkFloworSpecificTaskorWorkOrder"
-              ></p-radioButton>
-              <p-radioButton
-                class="p-radiobutton-label-vertical"
-                name="WorkFloworSpecificTaskorWorkOrder"
-                label="Assign total hours to workorder "
-                value="workOrder"
-                [(ngModel)]="laborForm.WorkFloworSpecificTaskorWorkOrder"
-              ></p-radioButton>
+              <p-radioButton class="p-radiobutton-label-vertical" name="WorkFloworSpecificTaskorWorkOrder"
+                label="Use target hours from workflow" value="workFlow"
+                [(ngModel)]="laborForm.WorkFloworSpecificTaskorWorkOrder"></p-radioButton>
+              <p-radioButton class="p-radiobutton-label-vertical" name="WorkFloworSpecificTaskorWorkOrder"
+                label="Assign hours by specific tasks" value="specificTasks"
+                [(ngModel)]="laborForm.WorkFloworSpecificTaskorWorkOrder"></p-radioButton>
+              <p-radioButton class="p-radiobutton-label-vertical" name="WorkFloworSpecificTaskorWorkOrder"
+                label="Assign total hours to workorder " value="workOrder"
+                [(ngModel)]="laborForm.WorkFloworSpecificTaskorWorkOrder"></p-radioButton>
             </div>
           </div>
         </div>
@@ -83,54 +48,38 @@
     </div>
     <div class="form-row">
       <div class="form-group">
-        <p-radioButton
-          class="p-radiobutton-label-horizontal"
-          name="HoursorClockorScan"
-          label="Labourhours"
-          value="labourHours"
-          [(ngModel)]="laborForm.HoursorClockorScan"
-        ></p-radioButton>
-        <p-radioButton
-          class="p-radiobutton-label-horizontal col-width"
-          name="HoursorClockorScan"
-          value="labourClock"
-          label="Labour Clock In/Out"
-          [(ngModel)]="laborForm.HoursorClockorScan"
-        ></p-radioButton>
+        <p-radioButton class="p-radiobutton-label-horizontal" name="HoursorClockorScan" label="Labourhours"
+          value="labourHours" [(ngModel)]="laborForm.HoursorClockorScan"></p-radioButton>
+        <p-radioButton class="p-radiobutton-label-horizontal col-width" name="HoursorClockorScan" value="labourClock"
+          label="Labour Clock In/Out" [(ngModel)]="laborForm.HoursorClockorScan"></p-radioButton>
 
-        <p-radioButton
-          class="p-radiobutton-label-horizontal"
-          name="HoursorClockorScan"
-          value="scan"
-          label="Scan"
-          [(ngModel)]="laborForm.HoursorClockorScan"
-        ></p-radioButton>
+        <p-radioButton class="p-radiobutton-label-horizontal" name="HoursorClockorScan" value="scan" label="Scan"
+          [(ngModel)]="laborForm.HoursorClockorScan"></p-radioButton>
       </div>
     </div>
   </div>
-  <div class="table-responsive pas-table-cstm">
-    <table
-      class="table table-bordered  table-sorting mpn-list-table"
-    >
+  <div class="table-responsive pas-table-cstm" *ngIf="laborForm.HoursorClockorScan !== 'scan' ">
+    <table class="table table-bordered  table-sorting mpn-list-table">
       <thead>
         <tr>
-          <th class="text-center" style="width: 200px;">Tasks</th>
+          <th class="text-center padding-td"> Tasks</th>
           <th class="text-center">Expertise</th>
-          <th class="text-center">Employee</th>
+          <th class="text-center" style="padding: 8px 64px !important;">Employee</th>
           <th class="text-center">Billable /NonBillable</th>
-          <th class="text-center">Start/Stop</th>
-          <th class="text-center"  style="width: 100px;">Start Date and Time</th>
-          <th class="text-center">End Date and Time</th>
-          <th class="text-center">Hours/Mins</th>
-          <th class="text-center">Adjustments</th>
+          <th class="text-center" *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">Start/Stop</th>
+          <th class="text-center" style="width: 100px;" *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">Start Date and Time</th>
+          <th class="text-center" *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">End Date and Time</th>
+          <th class="text-center" >Hours/Mins</th>
+          <th class="text-center" >Adjustments</th>
           <th class="text-center">Adjusted Hours</th>
           <th class="text-center" style="padding: 7px 53px !important;">Memo</th>
         </tr>
       </thead>
       <tbody>
         <!-- Receive -->
-        <tr *ngFor="let rec of laborForm.Tasks[0].Receive">
-          <td>Receive</td>
+        <tr *ngFor="let rec of laborForm.Tasks[0].Receive; let i = index;">
+          <td *ngIf="i < 1">Receive  <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Receive')"></i></td>
+          <td *ngIf="i >= 1">&nbsp;</td>
           <td>
             <select class="w100" [(ngModel)]="rec.Expertise" name="Technician">
               <option value="">Select Expertise</option>
@@ -144,40 +93,33 @@
             </select>
           </td>
           <td>
-            <p-dropdown
-              [options]="EmployeeList"
-              class="p-dropdown-custom"
-              [(ngModel)]="rec.EmployeeId"
-            >
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="rec.EmployeeId">
             </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select
-              class="w100"
-              [(ngModel)]="rec.BillableorNonBillable"
-              name="billing"
-            >
+            <select class="w100" [(ngModel)]="rec.BillableorNonBillable" name="billing">
               <option value="">Select Billing Type</option>
               <option value="billable">Billable</option>
               <option value="non-billable">Non Billable</option>
             </select>
           </td>
-          <td>
-            <button
-              class="btn btn-primary-cstm start-btn"
-              (click)="startandStop(rec)"
-            >
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(rec)" >
               Start/Stop
             </button>
           </td>
-          <td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
             {{ rec.StartDateandTime }}
           </td>
-          <td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
             {{ rec.EndDateandTime }}
           </td>
-          <td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
             {{ rec.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+            <input type="text" [(ngModel)]="rec.HoursandMinutes" name="hours"> 
           </td>
           <td>
             <input type="number" [(ngModel)]="rec.Adjustments" />
@@ -190,554 +132,505 @@
           </td>
         </tr>
         <!-- inspect -->
-        <tr *ngFor="let inspect of laborForm.Tasks[0].Inspect">
-            <td>Inspect</td>
-            <td>
-              <select class="w100" [(ngModel)]="inspect.Expertise" name="Technician">
-                <option value="">Select Expertise</option>
-                <option value="Technician">Technician</option>
-                <option value="Quality">Quality</option>
-                <option value="Mechanic">Mechanic</option>
-                <option value="Inspector">Inspector</option>
-                <option value="Receiver">Receiver</option>
-                <option value="Auditor">Auditor</option>
-                <option value="Engineer">Engineer</option>
-              </select>
+        <tr *ngFor="let inspect of laborForm.Tasks[0].Inspect; let i = index;">
+            <td *ngIf="i < 1">Inspect <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Inspect')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+    
+          <td>
+            <select class="w100" [(ngModel)]="inspect.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="inspect.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="inspect.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(inspect)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ inspect.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ inspect.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ inspect.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="inspect.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              <p-dropdown
-                [options]="EmployeeList"
-                class="p-dropdown-custom"
-                [(ngModel)]="inspect.EmployeeId"
-              >
-              </p-dropdown>
+          <td>
+            <input type="number" [(ngModel)]="inspect.Adjustments" />
+          </td>
+          <td>
+            {{ inspect.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="inspect.Memo" />
+          </td>
+        </tr>
+        <!-- Evaluate -->
+        <tr *ngFor="let evaluate of laborForm.Tasks[0].Evaluate; let i = index;">
+            <td *ngIf="i < 1">Evaluate <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Evaluate')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+          <td>
+            <select class="w100" [(ngModel)]="evaluate.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="evaluate.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="evaluate.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(evaluate)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ evaluate.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ evaluate.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ evaluate.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="evaluate.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              <select
-                class="w100"
-                [(ngModel)]="inspect.BillableorNonBillable"
-                name="billing"
-              >
-                <option value="">Select Billing Type</option>
-                <option value="billable">Billable</option>
-                <option value="non-billable">Non Billable</option>
-              </select>
-            </td>
-            <td>
-              <button
-                class="btn btn-primary-cstm start-btn"
-                (click)="startandStop(inspect)"
-              >
-                Start/Stop
-              </button>
-            </td>
-            <td>
-              {{ inspect.StartDateandTime }}
-            </td>
-            <td>
-              {{ inspect.EndDateandTime }}
-            </td>
-            <td>
-              {{ inspect.HoursandMinutes }}
-            </td>
-            <td>
-              <input type="number" [(ngModel)]="inspect.Adjustments" />
-            </td>
-            <td>
-              {{ inspect.AdjustmentedHours }}
-            </td>
-            <td>
-              <input type="text" [(ngModel)]="inspect.Memo" />
-            </td>
-          </tr>
-          <!-- Evaluate -->
-          <tr *ngFor="let evaluate of laborForm.Tasks[0].Evaluate">
-              <td>Evaluate</td>
-              <td>
-                <select class="w100" [(ngModel)]="evaluate.Expertise" name="Technician">
-                  <option value="">Select Expertise</option>
-                  <option value="Technician">Technician</option>
-                  <option value="Quality">Quality</option>
-                  <option value="Mechanic">Mechanic</option>
-                  <option value="Inspector">Inspector</option>
-                  <option value="Receiver">Receiver</option>
-                  <option value="Auditor">Auditor</option>
-                  <option value="Engineer">Engineer</option>
-                </select>
-              </td>
-              <td>
-                <p-dropdown
-                  [options]="EmployeeList"
-                  class="p-dropdown-custom"
-                  [(ngModel)]="evaluate.EmployeeId"
-                >
-                </p-dropdown>
-              </td>
-              <td>
-                <select
-                  class="w100"
-                  [(ngModel)]="evaluate.BillableorNonBillable"
-                  name="billing"
-                >
-                  <option value="">Select Billing Type</option>
-                  <option value="billable">Billable</option>
-                  <option value="non-billable">Non Billable</option>
-                </select>
-              </td>
-              <td>
-                <button
-                  class="btn btn-primary-cstm start-btn"
-                  (click)="startandStop(evaluate)"
-                >
-                  Start/Stop
-                </button>
-              </td>
-              <td>
-                {{ evaluate.StartDateandTime }}
-              </td>
-              <td>
-                {{ evaluate.EndDateandTime }}
-              </td>
-              <td>
-                {{ evaluate.HoursandMinutes }}
-              </td>
-              <td>
-                <input type="number" [(ngModel)]="evaluate.Adjustments" />
-              </td>
-              <td>
-                {{ evaluate.AdjustmentedHours }}
-              </td>
-              <td>
-                <input type="text" [(ngModel)]="evaluate.Memo" />
-              </td>
-            </tr>
+          <td>
+            <input type="number" [(ngModel)]="evaluate.Adjustments" />
+          </td>
+          <td>
+            {{ evaluate.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="evaluate.Memo" />
+          </td>
+        </tr>
         <!-- TearDown -->
-        <tr *ngFor="let teardown of laborForm.Tasks[0].TearDown">
-            <td>TearDown</td>
-            <td>
-              <select class="w100" [(ngModel)]="teardown.Expertise" name="Technician">
-                <option value="">Select Expertise</option>
-                <option value="Technician">Technician</option>
-                <option value="Quality">Quality</option>
-                <option value="Mechanic">Mechanic</option>
-                <option value="Inspector">Inspector</option>
-                <option value="Receiver">Receiver</option>
-                <option value="Auditor">Auditor</option>
-                <option value="Engineer">Engineer</option>
-              </select>
+        <tr *ngFor="let teardown of laborForm.Tasks[0].TearDown; let i = index;">
+            <td *ngIf="i < 1">TearDown <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('TearDown')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+          <td>
+            <select class="w100" [(ngModel)]="teardown.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="teardown.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="teardown.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(teardown)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ teardown.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ teardown.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ teardown.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="teardown.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              <p-dropdown
-                [options]="EmployeeList"
-                class="p-dropdown-custom"
-                [(ngModel)]="teardown.EmployeeId"
-              >
-              </p-dropdown>
+          <td>
+            <input type="number" [(ngModel)]="teardown.Adjustments" />
+          </td>
+          <td>
+            {{ teardown.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="teardown.Memo" />
+          </td>
+        </tr>
+        <!-- Disassemble -->
+        <tr *ngFor="let disassemble of laborForm.Tasks[0].Disassemble; let i = index;">
+            <td *ngIf="i < 1">Disassemble <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Disassemble')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+      
+          <td>
+            <select class="w100" [(ngModel)]="disassemble.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="disassemble.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="disassemble.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(disassemble)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ disassemble.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ disassemble.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ disassemble.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="disassemble.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              <select
-                class="w100"
-                [(ngModel)]="teardown.BillableorNonBillable"
-                name="billing"
-              >
-                <option value="">Select Billing Type</option>
-                <option value="billable">Billable</option>
-                <option value="non-billable">Non Billable</option>
-              </select>
+          <td>
+            <input type="number" [(ngModel)]="disassemble.Adjustments" />
+          </td>
+          <td>
+            {{ disassemble.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="disassemble.Memo" />
+          </td>
+        </tr>
+        <!-- Assemble -->
+        <tr *ngFor="let assemble of laborForm.Tasks[0].Assemble; let i = index;">
+            <td *ngIf="i < 1">Assemble <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Assemble')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+          <td>
+            <select class="w100" [(ngModel)]="assemble.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="assemble.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="assemble.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(assemble)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ assemble.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ assemble.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ assemble.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="assemble.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              <button
-                class="btn btn-primary-cstm start-btn"
-                (click)="startandStop(teardown)"
-              >
-                Start/Stop
-              </button>
+          <td>
+            <input type="number" [(ngModel)]="assemble.Adjustments" />
+          </td>
+          <td>
+            {{ assemble.AdjustmentedHours }}
+          </td>
+          
+          <td>
+            <input type="text" [(ngModel)]="assemble.Memo" />
+          </td>
+        </tr>
+        <!-- Testing -->
+        <tr *ngFor="let testing of laborForm.Tasks[0].Testing; let i = index;">
+          
+                <td *ngIf="i < 1">Testing <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Testing')"></i></td>
+                <td *ngIf="i >= 1">&nbsp;</td>
+          <td>
+            <select class="w100" [(ngModel)]="testing.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="testing.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="testing.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(testing)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' "> 
+            {{ testing.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ testing.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ testing.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="testing.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              {{ teardown.StartDateandTime }}
+          <td>
+            <input type="number" [(ngModel)]="testing.Adjustments" />
+          </td>
+          <td>
+            {{ testing.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="testing.Memo" />
+          </td>
+        </tr>
+        <!-- QualityControl -->
+        <tr *ngFor="let qc of laborForm.Tasks[0].QualityControl; let i = index;">
+            <td *ngIf="i < 1">QualityControl <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('QualityControl')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+          <td>
+            <select class="w100" [(ngModel)]="qc.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="qc.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="qc.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(qc)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ qc.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ qc.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ qc.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="qc.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              {{ teardown.EndDateandTime }}
+          <td>
+            <input type="number" [(ngModel)]="qc.Adjustments" />
+          </td>
+          <td>
+            {{ qc.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="qc.Memo" />
+          </td>
+        </tr>
+        <!-- Ship -->
+        <tr *ngFor="let ship of laborForm.Tasks[0].Ship; let i= index;">
+            <td *ngIf="i < 1">Ship <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Ship')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+      
+          <td>
+            <select class="w100" [(ngModel)]="ship.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="ship.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="ship.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(ship)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ ship.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ ship.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ ship.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="ship.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              {{ teardown.HoursandMinutes }}
+          <td>
+            <input type="number" [(ngModel)]="ship.Adjustments" />
+          </td>
+          <td>
+            {{ ship.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="ship.Memo" />
+          </td>
+        </tr>
+        <!-- Clean -->
+        <tr *ngFor="let clean of laborForm.Tasks[0].Clean; let i = index;">
+            <td *ngIf="i < 1">Clean <i  *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('Clean')"></i></td>
+            <td *ngIf="i >= 1">&nbsp;</td>
+          <td>
+            <select class="w100" [(ngModel)]="clean.Expertise" name="Technician">
+              <option value="">Select Expertise</option>
+              <option value="Technician">Technician</option>
+              <option value="Quality">Quality</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Receiver">Receiver</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+          </td>
+          <td>
+            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="clean.EmployeeId">
+            </p-dropdown>
+            <i *ngIf="!laborForm.IsTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
+          </td>
+          <td>
+            <select class="w100" [(ngModel)]="clean.BillableorNonBillable" name="billing">
+              <option value="">Select Billing Type</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non Billable</option>
+            </select>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(clean)">
+              Start/Stop
+            </button>
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ clean.StartDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ clean.EndDateandTime }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan !== 'labourHours' ">
+            {{ clean.HoursandMinutes }}
+          </td>
+          <td *ngIf="laborForm.HoursorClockorScan === 'labourHours'"> 
+              <input type="text" [(ngModel)]="clean.HoursandMinutes" name="hours"> 
             </td>
-            <td>
-              <input type="number" [(ngModel)]="teardown.Adjustments" />
-            </td>
-            <td>
-              {{ teardown.AdjustmentedHours }}
-            </td>
-            <td>
-              <input type="text" [(ngModel)]="teardown.Memo" />
-            </td>
-          </tr>
-          <!-- Disassemble -->
-          <tr *ngFor="let disassemble of laborForm.Tasks[0].Disassemble">
-              <td>Disassemble</td>
-              <td>
-                <select class="w100" [(ngModel)]="disassemble.Expertise" name="Technician">
-                  <option value="">Select Expertise</option>
-                  <option value="Technician">Technician</option>
-                  <option value="Quality">Quality</option>
-                  <option value="Mechanic">Mechanic</option>
-                  <option value="Inspector">Inspector</option>
-                  <option value="Receiver">Receiver</option>
-                  <option value="Auditor">Auditor</option>
-                  <option value="Engineer">Engineer</option>
-                </select>
-              </td>
-              <td>
-                <p-dropdown
-                  [options]="EmployeeList"
-                  class="p-dropdown-custom"
-                  [(ngModel)]="disassemble.EmployeeId"
-                >
-                </p-dropdown>
-              </td>
-              <td>
-                <select
-                  class="w100"
-                  [(ngModel)]="disassemble.BillableorNonBillable"
-                  name="billing"
-                >
-                  <option value="">Select Billing Type</option>
-                  <option value="billable">Billable</option>
-                  <option value="non-billable">Non Billable</option>
-                </select>
-              </td>
-              <td>
-                <button
-                  class="btn btn-primary-cstm start-btn"
-                  (click)="startandStop(disassemble)"
-                >
-                  Start/Stop
-                </button>
-              </td>
-              <td>
-                {{ disassemble.StartDateandTime }}
-              </td>
-              <td>
-                {{ disassemble.EndDateandTime }}
-              </td>
-              <td>
-                {{ disassemble.HoursandMinutes }}
-              </td>
-              <td>
-                <input type="number" [(ngModel)]="disassemble.Adjustments" />
-              </td>
-              <td>
-                {{ disassemble.AdjustmentedHours }}
-              </td>
-              <td>
-                <input type="text" [(ngModel)]="disassemble.Memo" />
-              </td>
-            </tr>
-            <!-- Assemble -->
-            <tr *ngFor="let assemble of laborForm.Tasks[0].Assemble">
-                <td>Assemble</td>
-                <td>
-                  <select class="w100" [(ngModel)]="assemble.Expertise" name="Technician">
-                    <option value="">Select Expertise</option>
-                    <option value="Technician">Technician</option>
-                    <option value="Quality">Quality</option>
-                    <option value="Mechanic">Mechanic</option>
-                    <option value="Inspector">Inspector</option>
-                    <option value="Receiver">Receiver</option>
-                    <option value="Auditor">Auditor</option>
-                    <option value="Engineer">Engineer</option>
-                  </select>
-                </td>
-                <td>
-                  <p-dropdown
-                    [options]="EmployeeList"
-                    class="p-dropdown-custom"
-                    [(ngModel)]="assemble.EmployeeId"
-                  >
-                  </p-dropdown>
-                </td>
-                <td>
-                  <select
-                    class="w100"
-                    [(ngModel)]="assemble.BillableorNonBillable"
-                    name="billing"
-                  >
-                    <option value="">Select Billing Type</option>
-                    <option value="billable">Billable</option>
-                    <option value="non-billable">Non Billable</option>
-                  </select>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-primary-cstm start-btn"
-                    (click)="startandStop(assemble)"
-                  >
-                    Start/Stop
-                  </button>
-                </td>
-                <td>
-                  {{ assemble.StartDateandTime }}
-                </td>
-                <td>
-                  {{ assemble.EndDateandTime }}
-                </td>
-                <td>
-                  {{ assemble.HoursandMinutes }}
-                </td>
-                <td>
-                  <input type="number" [(ngModel)]="assemble.Adjustments" />
-                </td>
-                <td>
-                  {{ assemble.AdjustmentedHours }}
-                </td>
-                <td>
-                  <input type="text" [(ngModel)]="assemble.Memo" />
-                </td>
-              </tr>
-              <!-- Testing -->
-              <tr *ngFor="let testing of laborForm.Tasks[0].Testing">
-                  <td>Testing</td>
-                  <td>
-                    <select class="w100" [(ngModel)]="testing.Expertise" name="Technician">
-                      <option value="">Select Expertise</option>
-                      <option value="Technician">Technician</option>
-                      <option value="Quality">Quality</option>
-                      <option value="Mechanic">Mechanic</option>
-                      <option value="Inspector">Inspector</option>
-                      <option value="Receiver">Receiver</option>
-                      <option value="Auditor">Auditor</option>
-                      <option value="Engineer">Engineer</option>
-                    </select>
-                  </td>
-                  <td>
-                    <p-dropdown
-                      [options]="EmployeeList"
-                      class="p-dropdown-custom"
-                      [(ngModel)]="testing.EmployeeId"
-                    >
-                    </p-dropdown>
-                  </td>
-                  <td>
-                    <select
-                      class="w100"
-                      [(ngModel)]="testing.BillableorNonBillable"
-                      name="billing"
-                    >
-                      <option value="">Select Billing Type</option>
-                      <option value="billable">Billable</option>
-                      <option value="non-billable">Non Billable</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button
-                      class="btn btn-primary-cstm start-btn"
-                      (click)="startandStop(testing)"
-                    >
-                      Start/Stop
-                    </button>
-                  </td>
-                  <td>
-                    {{ testing.StartDateandTime }}
-                  </td>
-                  <td>
-                    {{ testing.EndDateandTime }}
-                  </td>
-                  <td>
-                    {{ testing.HoursandMinutes }}
-                  </td>
-                  <td>
-                    <input type="number" [(ngModel)]="testing.Adjustments" />
-                  </td>
-                  <td>
-                    {{ testing.AdjustmentedHours }}
-                  </td>
-                  <td>
-                    <input type="text" [(ngModel)]="testing.Memo" />
-                  </td>
-                </tr>
-                <!-- QualityControl -->
-                <tr *ngFor="let qc of laborForm.Tasks[0].QualityControl">
-                    <td>QualityControl</td>
-                    <td>
-                      <select class="w100" [(ngModel)]="qc.Expertise" name="Technician">
-                        <option value="">Select Expertise</option>
-                        <option value="Technician">Technician</option>
-                        <option value="Quality">Quality</option>
-                        <option value="Mechanic">Mechanic</option>
-                        <option value="Inspector">Inspector</option>
-                        <option value="Receiver">Receiver</option>
-                        <option value="Auditor">Auditor</option>
-                        <option value="Engineer">Engineer</option>
-                      </select>
-                    </td>
-                    <td>
-                      <p-dropdown
-                        [options]="EmployeeList"
-                        class="p-dropdown-custom"
-                        [(ngModel)]="qc.EmployeeId"
-                      >
-                      </p-dropdown>
-                    </td>
-                    <td>
-                      <select
-                        class="w100"
-                        [(ngModel)]="qc.BillableorNonBillable"
-                        name="billing"
-                      >
-                        <option value="">Select Billing Type</option>
-                        <option value="billable">Billable</option>
-                        <option value="non-billable">Non Billable</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button
-                        class="btn btn-primary-cstm start-btn"
-                        (click)="startandStop(qc)"
-                      >
-                        Start/Stop
-                      </button>
-                    </td>
-                    <td>
-                      {{ qc.StartDateandTime }}
-                    </td>
-                    <td>
-                      {{ qc.EndDateandTime }}
-                    </td>
-                    <td>
-                      {{ qc.HoursandMinutes }}
-                    </td>
-                    <td>
-                      <input type="number" [(ngModel)]="qc.Adjustments" />
-                    </td>
-                    <td>
-                      {{ qc.AdjustmentedHours }}
-                    </td>
-                    <td>
-                      <input type="text" [(ngModel)]="qc.Memo" />
-                    </td>
-                  </tr>
-                  <!-- Ship -->
-                  <tr *ngFor="let ship of laborForm.Tasks[0].Ship">
-                      <td>Ship</td>
-                      <td>
-                        <select class="w100" [(ngModel)]="ship.Expertise" name="Technician">
-                          <option value="">Select Expertise</option>
-                          <option value="Technician">Technician</option>
-                          <option value="Quality">Quality</option>
-                          <option value="Mechanic">Mechanic</option>
-                          <option value="Inspector">Inspector</option>
-                          <option value="Receiver">Receiver</option>
-                          <option value="Auditor">Auditor</option>
-                          <option value="Engineer">Engineer</option>
-                        </select>
-                      </td>
-                      <td>
-                        <p-dropdown
-                          [options]="EmployeeList"
-                          class="p-dropdown-custom"
-                          [(ngModel)]="ship.EmployeeId"
-                        >
-                        </p-dropdown>
-                      </td>
-                      <td>
-                        <select
-                          class="w100"
-                          [(ngModel)]="ship.BillableorNonBillable"
-                          name="billing"
-                        >
-                          <option value="">Select Billing Type</option>
-                          <option value="billable">Billable</option>
-                          <option value="non-billable">Non Billable</option>
-                        </select>
-                      </td>
-                      <td>
-                        <button
-                          class="btn btn-primary-cstm start-btn"
-                          (click)="startandStop(ship)"
-                        >
-                          Start/Stop
-                        </button>
-                      </td>
-                      <td>
-                        {{ ship.StartDateandTime }}
-                      </td>
-                      <td>
-                        {{ ship.EndDateandTime }}
-                      </td>
-                      <td>
-                        {{ ship.HoursandMinutes }}
-                      </td>
-                      <td>
-                        <input type="number" [(ngModel)]="ship.Adjustments" />
-                      </td>
-                      <td>
-                        {{ ship.AdjustmentedHours }}
-                      </td>
-                      <td>
-                        <input type="text" [(ngModel)]="ship.Memo" />
-                      </td>
-                    </tr>
-                    <!-- Clean -->
-                    <tr *ngFor="let clean of laborForm.Tasks[0].Clean">
-                        <td>Clean</td>
-                        <td>
-                          <select class="w100" [(ngModel)]="clean.Expertise" name="Technician">
-                            <option value="">Select Expertise</option>
-                            <option value="Technician">Technician</option>
-                            <option value="Quality">Quality</option>
-                            <option value="Mechanic">Mechanic</option>
-                            <option value="Inspector">Inspector</option>
-                            <option value="Receiver">Receiver</option>
-                            <option value="Auditor">Auditor</option>
-                            <option value="Engineer">Engineer</option>
-                          </select>
-                        </td>
-                        <td>
-                          <p-dropdown
-                            [options]="EmployeeList"
-                            class="p-dropdown-custom"
-                            [(ngModel)]="clean.EmployeeId"
-                          >
-                          </p-dropdown>
-                        </td>
-                        <td>
-                          <select
-                            class="w100"
-                            [(ngModel)]="clean.BillableorNonBillable"
-                            name="billing"
-                          >
-                            <option value="">Select Billing Type</option>
-                            <option value="billable">Billable</option>
-                            <option value="non-billable">Non Billable</option>
-                          </select>
-                        </td>
-                        <td>
-                          <button
-                            class="btn btn-primary-cstm start-btn"
-                            (click)="startandStop(clean)"
-                          >
-                            Start/Stop
-                          </button>
-                        </td>
-                        <td>
-                          {{ clean.StartDateandTime }}
-                        </td>
-                        <td>
-                          {{ clean.EndDateandTime }}
-                        </td>
-                        <td>
-                          {{ clean.HoursandMinutes }}
-                        </td>
-                        <td>
-                          <input type="number" [(ngModel)]="clean.Adjustments" />
-                        </td>
-                        <td>
-                          {{ clean.AdjustmentedHours }}
-                        </td>
-                        <td>
-                          <input type="text" [(ngModel)]="clean.Memo" />
-                        </td>
-                      </tr>
+          <td>
+            <input type="number" [(ngModel)]="clean.Adjustments" />
+          </td>
+          <td>
+            {{ clean.AdjustmentedHours }}
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="clean.Memo" />
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

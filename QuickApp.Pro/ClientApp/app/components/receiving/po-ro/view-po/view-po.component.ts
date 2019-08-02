@@ -10,13 +10,12 @@ import { ReceivingService } from '../../../../services/receiving/receiving.servi
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-view-po',
-    templateUrl: './view-po.component.html',
-    styleUrls: ['./view-po.component.scss']
+  selector: 'app-view-po',
+  templateUrl: './view-po.component.html',
+  styleUrls: ['./view-po.component.scss']
 })
 /** view-po component*/
 export class ViewPoComponent implements OnInit {
-
     localPoData: any;
     editPoData: any;
     allSites: any[];
@@ -191,7 +190,8 @@ export class ViewPoComponent implements OnInit {
 
     }
 
-    private onSearchPO() {
+    onSearchPO() {
         return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
     }
 }
+

@@ -77,7 +77,7 @@ import { PublicationService } from '../../../services/publication.service';
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     disables: boolean = false;
-    disable: boolean = false;
+    disable1: boolean = true;
     disabled: boolean = false;
     view: boolean = false;   
     disableIntegrationSave: boolean;
@@ -276,9 +276,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataMainchapter: ATAChapter[]
     showAircraftData: boolean = false;
     showAtachapter: boolean = false;
+    selectedAircraftId: any = [] ;
+    selectedModelId: any;
     //new code-- for purchase and sales calculation
-    itemQuantitys = [];
-    colst: any[];
+    itemQuantitys = [];  
     sales: any[];
     atasub: any[];
     sales2: any[];
@@ -287,7 +288,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     currentDashNumberType: AircraftDashNumber;
     selectedAircrafttype: AircraftDashNumber;
     currentAtaNumber: ATAChapter;
-    aircraftManufacturerList: AircraftType[];
+    aircraftManufacturerList = [];
     aircraftModelsList: AircraftModel[];
     atasubchapter = [];
     LoadAircraftmanufacturer: any[] = [];
@@ -313,6 +314,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         lastsales: "",
         unitPrice: "",
     }
+    aircraftData = { 
+        aircraft: '',
+        model: '',
+        dashNumber: '',
+        memo:''
+    }
+
 
     constructor(public countryservice: CustomerService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
@@ -454,7 +462,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
     }];
 
-
+    colst: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+    ];
+    colaircraft: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },        
+    ];
     ngOnInit(): void {        
         this.getAircraftAllList();
         this.getAtachapter();
@@ -462,13 +480,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             { field: 'aircraft', header: 'Aircraft' },
             { field: 'model', header: 'Model' },
         ];
-        this.colst = [
-            { field: 'aircraft', header: 'Aircraft' },
-            { field: 'model', header: 'Model' },
-            { field: 'dashnumber', header: 'DashNumber' },
-            { field: 'memo', header: 'Memo' },
-
-        ];
+      
         this.salesDash = [
             { aircraft: '', model: '', dashnumber: '' },
             { aircraft: '', model: '', dashnumber: '' },
@@ -3680,14 +3692,94 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showAtachapter = false;
         this.currentDashNumberType = new AircraftDashNumber();
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
-            this.aircraftManufacturerList = aircraftManufacturer[0];
-           
-            for (let i = 0; i < this.aircraftManufacturerList.length; i++) {
-                this.LoadAircraftmanufacturer.push(
-                    { value: this.aircraftManufacturerList[i].aircraftTypeId, label: this.aircraftManufacturerList[i].description },
-                );
-            }
+            const responseData = aircraftManufacturer[0];            
+            this.aircraftManufacturerList = responseData.map(x => {                
+                return {                    
+                    label: x.description,
+                    value: x.aircraftTypeId,                     
+                }
+            })           
+             
         });
+    }
+    LoadValues: any[] = [];
+    newValue: any;
+    getModelvalues(value) {
+
+        this.newValue = value.originalEvent.target.textContent;
+            this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
+            const responseValue = models[0];            
+            this.LoadValues = responseValue.map(models => {               
+                return {
+                    label: models.modelName,
+                    value: models.aircraftModelId
+                }
+            });
+        });        
+    }
+    selectedAircraftIdvalue: any;
+    selectedModelIdvalue: any;
+    LoadModelidValues: any[] = [];
+    newModelValue: any = [];
+    getModelIdvalues() {
+       
+        this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftIdvalue).subscribe(models => {
+            const responseValue = models[0];
+            this.LoadModelidValues = responseValue.map(models => {
+                return {
+                    label: models.modelName,
+                    value: models.aircraftModelId
+                }
+            });
+        });    
+        
+    }
+    LoadDashnumberValues: any[] = [];
+    getDashNumberValues() {
+        this.Publicationservice.getDashNumber(this.selectedModelIdvalue, this.selectedAircraftIdvalue).subscribe(dashnumbers => {
+            const responseData = dashnumbers;
+            this.LoadDashnumberValues = responseData.map(dashnumbers => {                
+                return {
+                    label: dashnumbers.dashNumber,
+                    value: dashnumbers.dashNumber
+                }
+            });
+        });
+    }
+    LoadDashnumber = [];
+    getDashNumber(value) {  
+        console.log(value.orginalEvent);
+        this.Publicationservice.getDashNumber(this.selectedModelId, this.selectedAircraftId).subscribe(dashnumbers => {          
+            const responseData = dashnumbers;
+            this.LoadDashnumber = responseData.map(dashnumbers => {                
+                return {
+                    label: dashnumbers.dashNumber,
+                    value: dashnumbers.dashNumber
+                }
+            });          
+        });
+    }
+    viewTable: boolean = false;
+    aircraftdata = [];
+    selectedDashnumber: any;  
+    adddashnumber() {
+
+        this.viewTable = true;     
+        this.aircraftdata = [{                
+            aircraft: this.newValue,   
+        }]
+        if (this.selectedModelId == null && this.selectedDashnumber == null ) {
+            this.aircraftdata = [{
+                aircraft: this.selectedAircraftId,               
+            }]
+        }       
+        if (this.selectedModelId == !null) {
+            this.aircraftdata = [{
+                aircraft: this.selectedAircraftId,
+                model: this.LoadValues[0].label,     
+            }]
+        }
+        
     }
     moveAtachapter() {
         this.showAtachapter = true;
@@ -4074,7 +4166,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
-
     classificationtypeId(event) {
         if (this.allitemclassificationInfo) {
             for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
@@ -4085,8 +4176,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
 
     filterItemNames(event) {
 
@@ -4324,24 +4413,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
     // New code for loading dropdown
-    LoadValues: any[] = [];
-    aircraftManufacturerChange(aircraftManufacturerId) {
-        this.aircraftModelService.getAircraftModelListByManufactureId(aircraftManufacturerId).subscribe(dashNumbers => {
-            this.aircraftModelsList = dashNumbers[0];
-            for (let i = 0; i < this.aircraftModelsList.length; i++) {
-                this.LoadValues.push(
-                    { value: this.aircraftModelsList[i].aircraftModelId, label: this.aircraftModelsList[i].modelName },
-                );
-            }
-        });
-        this.disables = true;
-        this.disable = true;
-        this.view = false;
-    }
+   
     atasubchapterChange(atachapterId) {
         this.atasubchapter1service.getATASubChapterListByATAChapterId(atachapterId).subscribe(atasubchapter => {
-            const responseData = atasubchapter[0];
-            console.log(atasubchapter)
+            const responseData = atasubchapter[0];            
             this.atasubchapter = responseData.map(x => {
                 return {
                     label: x.description,
@@ -4350,8 +4425,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })           
         })
 
-        this.disables = true;
-        this.disable = true;
+        this.disables = true;      
         this.view = false;
     }
     LoadAircraft: any[];
@@ -4371,25 +4445,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     check($event) {
         this.disables = true;
-        this.disable = true;
         this.view = false;
     }
     Adddash($event) {
         this.disabled = false;
     }
-    onToggle(e) {
-        this.disable = true;
-        this.view = e.target.checked;
-    }    
+    onToggle(i) {
+        this.disable1 = false;  
+     }    
     viewDash: boolean = true;
     viewCheck: boolean = true;
-    disable1: boolean = false;
-    view1: boolean = false;
-    onDashToggle(e) {       
-        this.disable1 = true;
-        this.view1 = e.target.checked;        
-    }
-    
+       
     schematic = false;
     onSchematic(e) {
         this.schematic = e.target.checked;
@@ -4442,7 +4508,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             field.unitSalePrice = field.saleDiscountAmount - field.baseSaleprice
         }
     }
-
+    atasubchapterValues = [];
+    selectedATachapter: any;
+    selectedAtachapterID() {
+        this.atasubchapter1service.getATASubChapterListByATAChapterId(this.selectedATachapter).subscribe(atasubchapter => {
+            const responseData = atasubchapter[0];
+            this.atasubchapterValues = responseData.map(x => {
+                return {
+                    label: x.description,
+                    value: x.ataSubChapterId
+                }
+            })
+        })
+    }
     aircraftList: any[];
     getAircraftAllList() {    
         this.Publicationservice.getPublicationAList().subscribe(

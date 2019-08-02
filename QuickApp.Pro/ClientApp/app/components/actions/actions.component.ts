@@ -41,6 +41,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createddate: any = "";
     updatedDate: any = "";
+    tasks_id: any = "";
     display: boolean = false;
 
     ngOnInit(): void {
@@ -102,6 +103,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
 
         this.cols = [
             //{ field: 'actionId', header: 'Action Id' },
+            { field: 'taskId', header: 'Task Id' },
 			{ field: 'description', header: 'Task Name' },
 			{ field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
@@ -271,6 +273,7 @@ export class ActionsComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.action_name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -301,13 +304,8 @@ export class ActionsComponent implements OnInit, AfterViewInit {
         this.updatedBy = row.updatedBy;
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
+        this.tasks_id = row.taskId;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');

@@ -8,7 +8,7 @@
             <table class="table table-bordered" *ngFor="let auditData of AuditDetails">
                 <thead>
                     <tr>
-                        <th>
+                        <th style="padding:4px;">
                             {{auditData.areaName}}
                         </th>
                     </tr>
@@ -19,9 +19,9 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th style="width:30%;">Last Updated By</th>
-                                        <th style="width:35%;">Last Updated Time</th>
-                                        <th style="width:35%;">&nbsp;</th>
+                                        <th style="width:30%; padding:4px;">Last Updated By</th>
+                                        <th style="width:35%; padding:4px;">Last Updated Time</th>
+                                        <th style="width:35%; padding:4px;">&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -33,15 +33,15 @@
                                             <td style="width:35%;">
                                                 <span>
                                                     <a (click)="ToggleChangedPropertiesSection(audit)" class="sd-history-btn btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View">
-                                                        <i class="fa fa-plus"></i>
+                                                        <i class="fa fa-{{audit.Visible ? 'minus' : 'plus'}}"></i>
                                                     </a>
                                                 </span>
                                             </td>
                                         </tr>
                                         <tr [hidden]="!audit.Visible" style="background:#007bff;">
-                                            <th style="width:30%;color:white">Field Name</th>
-                                            <th style="width:35%;color:white">New Value</th>
-                                            <th style="width:35%;color:white">Old Value</th>
+                                            <th style="width:30%;color:white;padding:2px;">Field Name</th>
+                                            <th style="width:35%;color:white;padding:2px;">New Value</th>
+                                            <th style="width:35%;color:white;padding:2px;">Old Value</th>
                                         </tr>
                                         <tr [hidden]="!audit.Visible" *ngFor="let auditChange of audit.AuditChanges" style="background:#ececec;">
                                             <td>{{auditChange.FieldFriendlyname}}</td>
