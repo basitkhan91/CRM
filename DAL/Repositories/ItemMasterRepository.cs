@@ -436,5 +436,25 @@ namespace DAL.Repositories
       
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
+        public IEnumerable<object> getDashListByIDS(string Mid, long Tid,string Did)
+        {
+            long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            string[] myDids = Did.Split(',').Select(x => x).ToArray();
+            var data = (from iM in _appContext.AircraftDashNumber
+                        join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
+                        join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
+                        where myMids.Contains(iM.AircraftModelId) && iM.AircraftTypeId == Tid && myDids.Contains(iM.DashNumber)
+                        select new
+                        {
+                            aircraft = at.Description,
+                            model = am.ModelName,
+                            iM.DashNumber,
+                            iM.Memo
+
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+
     }
 }

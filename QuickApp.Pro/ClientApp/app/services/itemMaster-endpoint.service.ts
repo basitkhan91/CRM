@@ -50,7 +50,13 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _itemclassificationUrlNew: string = "/api/ItemMaster/itemNonStockclasspost";
     private readonly _itemNonstockclassificationGetUrl: string = "/api/ItemMaster/GetNonStockClsiifications";
     private readonly _itemPNMappingUrlNew: string = "/api/ItemMaster/PNIMMappingPost";
+    private readonly _DashListUrlNew: string = "/api/ItemMaster/GetDashListByIDS";
+    private readonly _ItemMasterAircraftPostUrlNew: string = "/api/ItemMaster/ItemMasterAircraftPost";
+    private readonly _ItemMasterATAPostUrlNew: string = "/api/ItemMaster/ItemMasterATAPost";
+    private readonly _ItemMasterPurcSaleUrlNew: string = "/api/ItemMaster/ItemMasterPurcSalePost";
 
+
+    get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
     get actionsUrlCaps() { return this.configurations.baseUrl + this._actionsCapsUrl; }
@@ -73,6 +79,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
     get getNonstockList() { return this.configurations.baseUrl + this._itemNonstockclassificationGetUrl; }
+    get getDashListByIdsURL() { return this.configurations.baseUrl + this._DashListUrlNew; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -698,7 +705,27 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getNewitemclassificationEndpoint(userObject));
             });
     }
+    getNewitemAircraftEndpoint<T>(userObject: any): Observable<T> {
 
+        return this.http.post<T>(this._ItemMasterAircraftPostUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemAircraftEndpoint(userObject));
+            });
+    }
+    getNewitemATAEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._ItemMasterATAPostUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemATAEndpoint(userObject));
+            });
+    }
+    getNewitemPurcSaleEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._ItemMasterPurcSaleUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemPurcSaleEndpoint(userObject));
+            });
+    }
 
     getUpdateActionEndpoint<T>(roleObject: any, actionId: number): Observable<T> {
         let endpointUrl = `${this._itemclassificationUrlNew}/${actionId}`;
@@ -718,6 +745,13 @@ export class ItemMasterEndpoint extends EndpointFactory {
         return this.http.post<T>(this._itemPNMappingUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getPNIMMappingEndpoint(userObject));
+            });
+    }
+    getDASHLISTByID<T>(Mid: string, Tid: number,Did: string): Observable<T> {
+        let endpointUrl = `${this.getDashListByIdsURL}/${Mid}/${Tid}/${Did}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDASHLISTByID(Mid, Tid, Did));
             });
     }
 }

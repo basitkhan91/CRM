@@ -19,6 +19,10 @@ namespace DAL
     {
         // Test Changes....
         public string CurrentUserId { get; set; }
+        
+        public DbSet<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
+        public DbSet<ItemMasterATAMapping> ItemMasterATAMapping { get; set; }
+        public DbSet<ItemMasterPurchaseSale> ItemMasterPurchaseSale { get; set; }
         public DbSet<WorkflowPublicationDashNumber> WorkflowPublicationDashNumber { get; set; }
         public DbSet<UserRoleMapper> UserRoleMapper { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
@@ -350,7 +354,7 @@ namespace DAL
         public DbSet<AircraftDashNumberAudit> AircraftDashNumberAudit { get; set; }
         public DbSet<AircraftTypeAudit> AircraftTypeAudit { get; set; }
 
-        public DbSet<ItemMasterPNMappingModel> ItemMasterPNMappingModel { get; set; }
+        public DbSet<PublicationItemMasterMapping> PublicationItemMasterMapping { get; set; }
 
         public DbSet<PublicationPNACMappingModel> PublicationPNACMappingModel { get; set; }
         public DbSet<PublicationPNATAMappingModel> PublicationPNATAMappingModel { get; set; }

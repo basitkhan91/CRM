@@ -6,19 +6,28 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
-namespace WebApplication5.Models
+namespace DAL.Models
 {
-    using DAL.Models;
-    using System;
-    using System.Collections.Generic;
-    
-    public partial class ItemMasterAircraftModel
+
+    public partial class ItemMasterAircraftMapping
     {
-        public long ItemMasterAircraftModelId { get; set; }
+        [Key]
+        public long ItemMasterAircraftMappingId { get; set; }
         public long ItemMasterId { get; set; }
         public long AircraftModelId { get; set; }
-        public string  DashNumber { get; set; }
+        public long AircraftTypelId { get; set; }
+        public long DashNumberId { get; set; }
+        public string PartNumber { get; set; }
+        public string DashNumber { get; set; }
+        public string AircraftType { get; set; }
+        public string AircraftModel { get; set; }
+        public string Memo { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
@@ -26,6 +35,5 @@ namespace WebApplication5.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
     
-        public virtual AircraftModel AircraftModel { get; set; }
     }
 }
