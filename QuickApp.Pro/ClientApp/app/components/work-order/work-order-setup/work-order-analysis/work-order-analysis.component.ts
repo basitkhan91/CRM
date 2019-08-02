@@ -4,15 +4,12 @@ import { PageHeaderComponent } from '../../../../shared/page-header.component';
 import * as $ from 'jquery';
 
 @Component({
-    selector: 'app-work-order-analysis',
-    templateUrl: './work-order-analysis.component.html',
-    styleUrls: ['./work-order-analysis.component.scss'],
-    animations: [fadeInOut]
+  selector: 'app-work-order-analysis',
+  templateUrl: './work-order-analysis.component.html',
+  styleUrls: ['./work-order-analysis.component.scss'],
+  animations: [fadeInOut]
 })
 /** WorkOrderAnalysis component*/
 export class WorkOrderAnalysisComponent {
-    /** WorkOrderAnalysis ctor */
-    constructor() {
-
-    }
+  constructor() {}
 }

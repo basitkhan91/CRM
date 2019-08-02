@@ -1,94 +1,130 @@
-﻿<div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="col-md-12">
-            <div class="x_panel" style="">
-                <div class="x_content">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a routerLink="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a routerLink="wo-main.html">WO Setup</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Documents</li>
-                        </ol>
-                    </nav>
-                    <div class="pheading">
-                        <h4 class="page-heading clr-green">WO Setup - Documents</h4>
-                        <div class="clear mtop10"></div>
-                    </div>
-                    <div class="cdetails-top">
-                        <div class="col-sm-12">
-                            <label>Company</label>
-                            <span>Silverxis</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>BU</label>
-                            <span>Adso</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>Division</label>
-                            <span>Development</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>Dept</label>
-                            <span>Java</span>
-                        </div>
+﻿<div class="card">
+  <div class="card-body">
+    <button class="btn btn-success pull-right" (click)="addNewDoc()">
+      Add Document
+    </button>
+    <div class="table-responsive pas-table-cstm ng-star-inserted">
+      <table class="table table-bordered documents-table">
+        <thead>
+          <tr>
+            <th>Comp</th>
+            <th>BU</th>
+            <th>Div</th>
+            <th>Dep</th>
+            <th>Document Code</th>
+            <th>Description</th>
+            <th>Link to Doc</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="mpn-row" *ngFor="let d of documentForm; let i = index">
+            <td>
+              <select [(ngModel)]="d.Comp" name="comp">
+                <option value="">Select</option>
+                <option value="Condax">Condax</option>
+                <option value="Golddex">Golddex</option>
+                <option value="Goodsilron">Goodsilron</option>
+                <option value="Openlane">Openlane</option>
+                <option value="Opentech">Opentech</option>
+                <option value="Yearin">Yearin</option>
+                <option value="year-job">year-job"</option>
+              </select>
+            </td>
+            <td>
+              <select [(ngModel)]="d.BU" name="bu">
+                <option value="">Select</option>
+                <option value="Condax">Condax</option>
+                <option value="Golddex">Golddex</option>
+                <option value="Goodsilron">Goodsilron</option>
+                <option value="Openlane">Openlane</option>
+                <option value="Opentech">Opentech</option>
+                <option value="Yearin">Yearin</option>
+                <option value="year-job">year-job"</option>
+              </select>
+            </td>
+            <td>
+              <select [(ngModel)]="d.Div" name="div">
+                <option value="">Select </option>
+                <option value="Accountant">Accountant</option>
+                <option value="Controller">Controller</option>
+                <option value="CSR">CSR</option>
+                <option value="Engineer">Engineer</option>
+                <option value="General Manager">General Manager</option>
+                <option value="Janitor">Janitor</option>
+                <option value="Mech">Mech</option>
+                <option value="Purchasing Manager">Purchasing Manager</option>
+                <option value="Purchasing">Purchasing</option>
+                <option value="QC Manager">QC Manager</option>
+                <option value="Receptionist">Receptionist</option>
+                <option value="Sales">Sales</option>
+                <option value="Sales manager">Sales manager</option>
+                <option value="Shop Manager">Shop Manager</option>
+                <option value="Supply Room Clerk">Supply Room Clerk</option>
+                <option value="Tech">Tech</option>
+                <option value="Warehouse man">Warehouse man</option>
+              </select>
+            </td>
+            <td>
+              <select [(ngModel)]="d.Dep" name="Dep">
+                <option value="">Select </option>
+                <option value="Accountant">Accountant</option>
+                <option value="Controller">Controller</option>
+                <option value="CSR">CSR</option>
+                <option value="Engineer">Engineer</option>
+                <option value="General Manager">General Manager</option>
+                <option value="Janitor">Janitor</option>
+                <option value="Mech">Mech</option>
+                <option value="Purchasing Manager">Purchasing Manager</option>
+                <option value="Purchasing">Purchasing</option>
+                <option value="QC Manager">QC Manager</option>
+                <option value="Receptionist">Receptionist</option>
+                <option value="Sales">Sales</option>
+                <option value="Sales manager">Sales manager</option>
+                <option value="Shop Manager">Shop Manager</option>
+                <option value="Supply Room Clerk">Supply Room Clerk</option>
+                <option value="Tech">Tech</option>
+                <option value="Warehouse man">Warehouse man</option>
+              </select>
+            </td>
+            <td>
+              <select [(ngModel)]="d.DocumentCode" name="documentCode">
+                <option value="8130">8130</option>
+                <option value="APO">APO</option>
+                <option value="ASO">ASO</option>
+                <option value="CERT">CERT</option>
+                <option value="CON">CON</option>
+                <option value="Figure">FIGURE</option>
+                <option value="PL">PL</option>
+                <option value="VA">VA</option>
+              </select>
+            </td>
+            <td>{{ d.Description }}</td>
+            <td>
+              <input
+                type="text"
+                class="form-control w200"
+                [(ngModel)]="d.DocLink"
+              />
+            </td>
+            <td>
+              <p-inputSwitch
+                [(ngModel)]="d.IsActive"
+                title="Active/Inactive"
+              ></p-inputSwitch>
+              <a title="Edit" class="btn btn-primary boxed-float-btn nobg"
+                ><i class="fa fa-edit"></i
+              ></a>
 
-                    </div>
-                    <div class="clear"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12 col-sm-12 col-12 po-ro-setup">
-            <div class="x_panel">
-                <div class="tab-content">
-                    <div class="table-responsive default-bg clear ro-grid-table">
-
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th colspan="5">Documents &nbsp; &nbsp;<i class="fa fa-plus plus-icon"></i></th>
-                                </tr>
-                                <tr>
-                                    <th>Document Code</th>
-                                    <th>Description</th>
-                                    <th>WO</th>
-                                    <th>Link to Doc</th>
-                                    <th class="w100"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <select>
-                                            <option>8130</option>
-                                            <option>APO</option>
-                                            <option>ASO</option>
-                                            <option>CERT</option>
-                                            <option selected>CON</option>
-                                            <option>FIGURE</option>
-                                            <option>PL</option>
-                                            <option>VA</option>
-                                        </select>
-                                    </td>
-                                    <td>Contract</td>
-                                    <td>WO12345</td>
-                                    <td><input type="text" class="form-control w200" value="http://google.co.in/" /></td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="View" class="btn btn-success boxed-float-btn nobg"><i class="fa fa-eye"></i></a>
-                                        <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
-                                        <a data-toggle="tooltip" title="Delete" class="btn btn-success boxed-float-btn nobg"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="clear"></div>
-                <br />
-                <br />
-                <br />
-                <br />
-            </div>
-        </div>
+              <a
+                title="Delete"
+                class="btn btn-success boxed-float-btn nobg delete-row-btn"
+                ><i class="fa fa-trash"></i
+              ></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>

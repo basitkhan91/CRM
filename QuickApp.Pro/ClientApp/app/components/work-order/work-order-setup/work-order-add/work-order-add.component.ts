@@ -108,7 +108,7 @@ export class WorkOrderAddComponent implements OnInit {
     isDelete: false
   };
   labor = {
-    WOId: null,
+    WOId: '',
     DataEnteredBy: null,
     Expertise: '',
     EmployeeId: null,
@@ -130,6 +130,24 @@ export class WorkOrderAddComponent implements OnInit {
       }
     ]
   };
+  adresses = {
+    WOId: '',
+    ShipTo: [],
+    BillTo: []
+  };
+  documents = [
+    {
+      WOId: '',
+      Comp: '',
+      BU: '',
+      Div: '',
+      Dep: '',
+      DocumentCode: '',
+      Description: 'Contract',
+      DocLink: '',
+      IsActive: false
+    }
+  ];
 
   constructor(
     private alertService: AlertService,
