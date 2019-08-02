@@ -29,7 +29,7 @@
 		<div class="tab-content form-bg margin0 padding0">
 			<div class="" id="menu3">
 				<div class="clear"></div>
-				<p-tabMenu [model]="items1" [activeItem]="items1[0]" class="panel-menu"></p-tabMenu>
+				<p-tabMenu [model]="items1" [activeItem]="items1[activeTab]" class="panel-menu"></p-tabMenu>
                 <div *ngIf="showGeneralData">
                     <div class="tab-pane active">
                         <div class="col-sm-12">
@@ -923,7 +923,7 @@
                         </div>
                         <div class="col-sm-12">
                             <button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-                            <button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+                            <button class="btn-new float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step"></button>
                         </div>
                     </div>
                 <div *ngIf="showAtachapter">
@@ -1049,7 +1049,7 @@
                     </div>
                     <div class="col-sm-12">
                         <button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-                        <button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+                        <button class="btn-new float-right" pButton (click)="movePurchaseInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
                     </div>
 
                 </div>
@@ -1501,7 +1501,7 @@
                                 <label class="fs12">DashNumber</label>
                                 <br />
                                 <span class="inline-block display-flex">
-                                    <p-multiSelect [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}"
+                                    <p-multiSelect [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"
                                                    class="pub-multi3"></p-multiSelect>                                   
                                 </span>
                             </div>
@@ -1514,7 +1514,7 @@
                         </div>
                     </div>
                     <div class="card" *ngIf="viewTable">
-                        <p-table [value]="aircraftdata" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                        <p-table [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th>Id</th>
@@ -1532,7 +1532,7 @@
                                         {{rowData[col.field]}}
                                     </td>  
                                     <td>
-                                        <input type="text" [disabled]="disable1" style="width:127px" />
+                                        <input type="text" [disabled]="disable1" [(ngModel)]="selectedMemo" style="width:127px" />
                                     </td>
                                 </tr>
                             </ng-template>
@@ -1540,7 +1540,7 @@
                         </div>
                     </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveAircraft()">Save</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>

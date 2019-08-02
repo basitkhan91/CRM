@@ -179,6 +179,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     localprovision: any[] = [];
     localgroup: any[] = [];
     allProvisonInfo: Provision[];
+    activeTab: number = 0;
     // New Code -- Jyotsna
     itemQuantity = [];
     // 
@@ -314,12 +315,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         lastsales: "",
         unitPrice: "",
     }
-    aircraftData = { 
-        aircraft: '',
-        model: '',
-        dashNumber: '',
-        memo:''
-    }
+    aircraftData: any;
 
 
     constructor(public countryservice: CustomerService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -1406,8 +1402,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                             valAirCraft.push(this.allAircraftManufacturer[i].aircraftTypeId);
                         }
                         this.selectedAircraftTypes = valAirCraft; //if there is Aircraft Data with ItemMasterId that will be Checked 
-                        console.log(this.selectedAircraftTypes);
-                    }
+                                            }
 
                 },
                     error => this.onDataLoadFailed(error)
@@ -3704,24 +3699,23 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     LoadValues: any[] = [];
     newValue: any;
     getModelvalues(value) {
-
-        this.newValue = value.originalEvent.target.textContent;
+        this.newValue = value.originalEvent.target.textContent;       
             this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
             const responseValue = models[0];            
             this.LoadValues = responseValue.map(models => {               
                 return {
                     label: models.modelName,
-                    value: models.aircraftModelId
+                    value: models
                 }
-            });
+                });           
+
         });        
     }
     selectedAircraftIdvalue: any;
     selectedModelIdvalue: any;
     LoadModelidValues: any[] = [];
-    newModelValue: any = [];
-    getModelIdvalues() {
-       
+    
+    getModelIdvalues() {       
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftIdvalue).subscribe(models => {
             const responseValue = models[0];
             this.LoadModelidValues = responseValue.map(models => {
@@ -3730,11 +3724,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     value: models.aircraftModelId
                 }
             });
-        });    
-        
+        });  
     }
     LoadDashnumberValues: any[] = [];
-    getDashNumberValues() {
+    getDashNumberValues() {            
         this.Publicationservice.getDashNumber(this.selectedModelIdvalue, this.selectedAircraftIdvalue).subscribe(dashnumbers => {
             const responseData = dashnumbers;
             this.LoadDashnumberValues = responseData.map(dashnumbers => {                
@@ -3746,9 +3739,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
     }
     LoadDashnumber = [];
+    newModelValue: any = [];
     getDashNumber(value) {  
-        console.log(value.orginalEvent);
-        this.Publicationservice.getDashNumber(this.selectedModelId, this.selectedAircraftId).subscribe(dashnumbers => {          
+        this.dashNumberUrl = this.selectedModelId.reduce((acc, obj) => {
+
+            return `${acc},${obj.aircraftModelId}`
+        }, '')
+        this.dashNumberUrl = this.dashNumberUrl.substr(1);
+        console.log(this.dashNumberUrl)
+        this.Publicationservice.getDashNumber(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {          
             const responseData = dashnumbers;
             this.LoadDashnumber = responseData.map(dashnumbers => {                
                 return {
@@ -3758,29 +3757,56 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             });          
         });
     }
+    newDashnumValue: any = [];
+    selectedDashnumbervalue(value) {
+        this.newDashnumValue = value.originalEvent.target.textContent; 
+    }
     viewTable: boolean = false;
     aircraftdata = [];
-    selectedDashnumber: any;  
+    selectedDashnumber: any; 
+    dashNumberUrl: any;
     adddashnumber() {
-
-        this.viewTable = true;     
-        this.aircraftdata = [{                
-            aircraft: this.newValue,   
-        }]
-        if (this.selectedModelId == null && this.selectedDashnumber == null ) {
-            this.aircraftdata = [{
-                aircraft: this.selectedAircraftId,               
-            }]
-        }       
-        if (this.selectedModelId == !null) {
-            this.aircraftdata = [{
-                aircraft: this.selectedAircraftId,
-                model: this.LoadValues[0].label,     
+        this.viewTable = true;
+        console.log(this.newModelValue);        
+        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
+            this.itemser.getAllDashModels(this.dashNumberUrl, this.selectedAircraftId, this.selectedDashnumber).subscribe(aircraftdata => {
+                const responseValue = aircraftdata;                
+                this.aircraftData = responseValue.map(x => {
+                    return {
+                        aircraft: x.aircraft,
+                        model: x.model,
+                        dashNumber: x.dashNumber
+                    }
+                })
+            })             
+        }      
+        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber === undefined) {
+            this.aircraftData = this.selectedModelId.map(x => {
+                return {
+                    aircraft: this.newValue,
+                    model: x.modelName,
+                    dashNumber : ''
+                }
+            })
+        }
+        if (this.selectedAircraftId !== undefined && this.selectedModelId === undefined && this.selectedDashnumber === undefined) {
+            this.aircraftData = [{                
+                aircraft: this.newValue, 
+                model: '',
+                dashNumber: ''
             }]
         }
-        
+    
+    }
+    selectedMemo: any;
+    newModelName = this.selectedModelId.map(x => {
+        return x.modelName
+    })
+    saveAircraft() {
+        //this.itemser.newItemMasterAircarftClass(1, this.selectedAircraftId, this.dashNumberUrl, 22, this.selectedDashnumber, this.selectedDashnumber, this.newDashnumValue, this.newValue, this.newModelName, this.selectedMemo,)
     }
     moveAtachapter() {
+        this.activeTab = 2
         this.showAtachapter = true;
         this.showAircraftData = false;
         this.showGeneralData = false;
@@ -3798,6 +3824,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
     }
     movePurchaseInformation() {
+        this.activeTab = 3;
         this.showpurchaseData = true;
         this.showGeneralData = false;
         this.showexportData = false;
@@ -3806,6 +3833,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     moveExportInformation() {
+        this.activeTab = 4;
         this.showpurchaseData = false;
         this.showGeneralData = false;
         this.showexportData = true;
@@ -3928,8 +3956,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                             }
                         }
                     }
-                    this.alertService.startLoadingMessage();
-                    // this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+                    this.activeTab = 1;
+                    this.alertService.startLoadingMessage();                    
                     this.moveAircraftInformation();
                 })
             }
