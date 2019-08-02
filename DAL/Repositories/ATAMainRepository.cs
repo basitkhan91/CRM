@@ -39,6 +39,11 @@ namespace DAL.Repositories
           
         }
 
+        public IEnumerable<object> GetATASUBS(long ChID)
+        {
+            throw new NotImplementedException();
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

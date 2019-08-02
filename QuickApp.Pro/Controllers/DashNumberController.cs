@@ -158,6 +158,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(data);
         }
 
+        [HttpGet("getDashListByModel_Type_Dash_IDS/{Mid}/{Tid}/{Did}")]
+        [Produces(typeof(List<ItemMasterViewModel>))]
+        public IActionResult GetDashList(string Mid, long Tid, string Did)
+        {
+            var result = unitOfWork.DashNumberRepository.getDashListByIDS(Mid, Tid, Did);
+            return Ok(result);
+        }
+        [HttpGet("GetDashNoBy_Model_TypeID/{Mid}/{Tid}")]
+        public IActionResult GetDashNumb(string Mid, long Tid)
+        {
+            var result = unitOfWork.DashNumberRepository.GetDashNoByID(Mid, Tid);
+            return Ok(result);
+        }
         #endregion Public Methods
 
         #region Private Methods

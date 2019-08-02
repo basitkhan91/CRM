@@ -164,20 +164,9 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
-        [HttpGet("GetDashNoByID/{Mid}/{Tid}")]
-        public IActionResult GetDashNumb(string Mid,long Tid)
-        {
-            var result = _unitOfWork.Publication.GetDashNoByID(Mid,Tid);
-            return Ok(result);
-        }
+      
 
-        [HttpGet("GetATASUBS/{ChID}")]
-        public IActionResult GetATASub(long ChID)
-        {
-            var result = _unitOfWork.Publication.GetATASUBS(ChID);
-            return Ok(result);
-        }
-
+        
         [HttpPost("PubPNACMappingPost")]
         public IActionResult InsertPNACMapping([FromBody] PublicationPNACMappingModel PnAcMapping)
         {
@@ -238,12 +227,8 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        [HttpGet("GetPublicationAircraftList")]
-        public IActionResult GetPAirCraftList()
-        {
-            var result = _unitOfWork.Publication.GetPublicationAircraftList();
-            return Ok(result);
-        }
+        
+       
         
     }
 }

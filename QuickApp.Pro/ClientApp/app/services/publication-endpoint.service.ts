@@ -15,11 +15,11 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _publicationUrlNew: string = "/api/Publication/publicationpost";
     private readonly _actionsUrlAuditHistory: string = "/api/Publication/auditHistoryById";
     private readonly getPublicationAuditById: string = "/api/Publication/audits";
-    private readonly getDash: string = "/api/Publication/GetDashNoByID";
-    private readonly getATAUrl: string = "/api/Publication/GetATASUBS";
+    
+    
     private readonly _publicationPNACNEW: string = "/api/Publication/PubPNACMappingPost";
     private readonly _publicationPNATANEW: string = "/api/Publication/PubPNATAMappingPost";
-    private readonly getACListUrl: string = "/api/Publication/GetPublicationAircraftList";
+    
     
     
     get getCodeUrl() { return this.configurations.baseUrl + this._publicationGetUrl; }
@@ -88,20 +88,7 @@ export class PublicationEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getPublincationAuditById(publicationId));
             });
     }
-    getDashNumberById<T>(Mid: string, Tid: number): Observable<T> {
-        let endpointUrl = `${this.getDash}/${Mid}/${Tid}`;
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDashNumberById(Mid,Tid));
-            });
-    }
-    getATASubByID<T>(Mid: number, Tid: number): Observable<T> {
-        let endpointUrl = `${this.getATAUrl}/${Mid}/${Tid}`;
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getATASubByID(Mid, Tid));
-            });
-    }
+   
     
     postPNACMapping<T>(userObject: any): Observable<T> {
 
@@ -119,11 +106,5 @@ export class PublicationEndpointService extends EndpointFactory {
             });
 
     }
-    getpublicationACListEndpoint<T>(): Observable<T> {
-
-        return this.http.get<T>(this.getACListUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getpublicationACListEndpoint());
-            });
-    }
+    
 }

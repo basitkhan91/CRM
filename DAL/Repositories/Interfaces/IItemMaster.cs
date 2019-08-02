@@ -32,7 +32,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> getLegalEntityAccountsData(long id);
 
-        IEnumerable<object> getDashListByIDS(string Mid,long Tid,string Did);
+        
 
     }
 }

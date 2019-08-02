@@ -263,8 +263,6 @@ export class ItemMasterService {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
     }
     
-    getAllDashModels(Mid: string, Tid: number, Did: string) {
-        return this.itemMasterEndpoint.getDASHLISTByID<any>(Mid, Tid, Did);
-    }
+   
 }
 

@@ -66,5 +66,7 @@ export class AtaMainService {
     getAtaChapterAudit(ataChapterId: number) {
         return this.ataMainEndpoint.getAtaChapterAuditById<any>(ataChapterId);
     }
-
+    getATASubDesc(Chid: number) {
+        return this.ataMainEndpoint.getATASubByID<any>(Chid);
+    }
 }
