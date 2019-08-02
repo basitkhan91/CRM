@@ -1166,7 +1166,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("PNIMMappingPost")]
-        public IActionResult CreatePNIMast([FromBody] ItemMasterPNMappingModel IMPNMapping)
+        public IActionResult CreatePNIMast([FromBody] PublicationItemMasterMapping IMPNMapping)
         {
           
                 if (ModelState.IsValid)
@@ -1174,7 +1174,7 @@ namespace QuickApp.Pro.Controllers
                     if (IMPNMapping == null)
                         return BadRequest($"{nameof(IMPNMapping)} cannot be null");
 
-                    ItemMasterPNMappingModel cp = new ItemMasterPNMappingModel();
+                PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                     cp.ItemMasterId = IMPNMapping.ItemMasterId;
                     cp.PublicationId = IMPNMapping.PublicationId;
                     cp.PartNumber = IMPNMapping.PartNumber;
@@ -1187,7 +1187,7 @@ namespace QuickApp.Pro.Controllers
                     cp.UpdatedBy = IMPNMapping.UpdatedBy;
                     cp.CreatedDate = DateTime.Now;
                     cp.UpdatedDate = DateTime.Now;
-                    _context.ItemMasterPNMappingModel.Add(cp);
+                    _context.PublicationItemMasterMapping.Add(cp);
                     _context.SaveChanges();
 
                 }
@@ -1197,6 +1197,143 @@ namespace QuickApp.Pro.Controllers
           
         }
 
+        [HttpGet("getDashListByIDS/{Mid}/{Tid}/{Did}")]
+        [Produces(typeof(List<ItemMasterViewModel>))]
+        public IActionResult GetDashList(string Mid,long Tid,string Did)
+        {
+            var result = _unitOfWork.itemMaster.getDashListByIDS(Mid, Tid,Did);
+            return Ok(result);
+        }
+        [HttpPost("ItemMasterAircraftPost")]
+        public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.ItemMasterAircraftMapping.Any(o => o.AircraftModelId == itemMasterAircraftMapping.AircraftModelId))
+                {
+                    // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
+                    var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.AircraftModelId == itemMasterAircraftMapping.AircraftModelId).FirstOrDefault();
+                    existingresule.ItemMasterId = itemMasterAircraftMapping.ItemMasterId;
+                    existingresule.AircraftTypelId = itemMasterAircraftMapping.AircraftTypelId;
+                    existingresule.AircraftModelId = itemMasterAircraftMapping.AircraftModelId;
+                    existingresule.PartNumber = itemMasterAircraftMapping.PartNumber;
+                    existingresule.DashNumberId = itemMasterAircraftMapping.DashNumberId;
+                    existingresule.DashNumber = itemMasterAircraftMapping.DashNumber;
+                    existingresule.AircraftType = itemMasterAircraftMapping.AircraftType;
+                    existingresule.AircraftModel = itemMasterAircraftMapping.AircraftModel;
+                    existingresule.Memo = itemMasterAircraftMapping.Memo;
+                    existingresule.CreatedBy = itemMasterAircraftMapping.CreatedBy;
+                    existingresule.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
+                    existingresule.MasterCompanyId = 1;
+                    existingresule.CreatedDate = DateTime.Now;
+                    existingresule.UpdatedDate = DateTime.Now;
+                    _context.ItemMasterAircraftMapping.Update(existingresule);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    ItemMasterAircraftMapping cp = new ItemMasterAircraftMapping();
+                    cp.ItemMasterId = itemMasterAircraftMapping.ItemMasterId;
+                    cp.AircraftTypelId = itemMasterAircraftMapping.AircraftTypelId;
+                    cp.AircraftModelId = itemMasterAircraftMapping.AircraftModelId;
+                    cp.PartNumber = itemMasterAircraftMapping.PartNumber;
+                    cp.DashNumberId = itemMasterAircraftMapping.DashNumberId;
+                    cp.DashNumber = itemMasterAircraftMapping.DashNumber;
+                    cp.AircraftType = itemMasterAircraftMapping.AircraftType;
+                    cp.AircraftModel = itemMasterAircraftMapping.AircraftModel;
+                    cp.Memo = itemMasterAircraftMapping.Memo;
+                    cp.MasterCompanyId = 1;
+                    cp.CreatedBy = itemMasterAircraftMapping.CreatedBy;
+                    cp.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
+                    cp.CreatedDate = DateTime.Now;
+                    cp.UpdatedDate = DateTime.Now;
+                    _context.ItemMasterAircraftMapping.Add(cp);
+                    _context.SaveChanges();
+                    //long returnid = cp.CapabilityId;
+                    //saveItemcapes(returnid, itemMasterAircraftModel.itemId);
+
+                }
+            }
+            return Ok(itemMasterAircraftMapping);
+            // return Ok(ModelState);
+        }
+
+        [HttpPost("ItemMasterATAPost")]
+        public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping)
+        {
+            if (ModelState.IsValid)
+            {
+               
+                {
+                    ItemMasterATAMapping cp = new ItemMasterATAMapping();
+                    cp.ATAChapterId = itemMasterATAMapping.ATAChapterId;
+                    cp.ATASubChapterId = itemMasterATAMapping.ATASubChapterId;
+                    cp.ItemMasterId = itemMasterATAMapping.ItemMasterId;
+                    cp.PartNumber = itemMasterATAMapping.PartNumber;
+                    cp.ATAChapterCode= itemMasterATAMapping.ATAChapterCode;
+                    cp.ATAChapterName = itemMasterATAMapping.ATAChapterName;
+                    cp.ATASubChapterDescription = itemMasterATAMapping.ATASubChapterDescription;
+                    cp.MasterCompanyId = 1;
+                    cp.CreatedBy = itemMasterATAMapping.CreatedBy;
+                    cp.UpdatedBy = itemMasterATAMapping.UpdatedBy;
+                    cp.CreatedDate = DateTime.Now;
+                    cp.UpdatedDate = DateTime.Now;
+                    _context.ItemMasterATAMapping.Add(cp);
+                    _context.SaveChanges();
+                    //long returnid = cp.CapabilityId;
+                    //saveItemcapes(returnid, itemMasterAircraftModel.itemId);
+
+                }
+            }
+            return Ok(itemMasterATAMapping);
+            // return Ok(ModelState);
+        }
+
+        [HttpPost("ItemMasterPurcSalePost")]
+        public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale)
+        {
+            if (ModelState.IsValid)
+            {
+                {
+                    ItemMasterPurchaseSale cp = new ItemMasterPurchaseSale();
+                    cp.ItemMasterId = itemMasterPurchaseSale.ItemMasterId;
+                    cp.PartNumber = itemMasterPurchaseSale.PartNumber;
+                    cp.Condition = itemMasterPurchaseSale.Condition;
+                    cp.PP_UOMId = itemMasterPurchaseSale.PP_UOMId;
+                    cp.PP_CurrencyId = itemMasterPurchaseSale.PP_CurrencyId;
+                    cp.PP_FXRatePerc = itemMasterPurchaseSale.PP_FXRatePerc;
+                    cp.PP_VendorListPrice = itemMasterPurchaseSale.PP_VendorListPrice;
+                    cp.PP_LastListPriceDate = itemMasterPurchaseSale.PP_LastListPriceDate;
+                    cp.PP_PurchaseDiscPerc = itemMasterPurchaseSale.PP_PurchaseDiscPerc;
+                    cp.PP_PurchaseDiscAmount = itemMasterPurchaseSale.PP_PurchaseDiscAmount;
+                    cp.PP_LastPurchaseDiscDate = itemMasterPurchaseSale.PP_LastPurchaseDiscDate;
+                    cp.PP_UnitPurchasePrice = itemMasterPurchaseSale.PP_UnitPurchasePrice;
+                    cp.SP_FSP_UOMId = itemMasterPurchaseSale.SP_FSP_UOMId;
+                    cp.SP_FSP_CurrencyId = itemMasterPurchaseSale.SP_FSP_CurrencyId;
+                    cp.SP_FSP_FXRatePerc = itemMasterPurchaseSale.SP_FSP_FXRatePerc;
+                    cp.SP_FSP_FlatPriceAmount = itemMasterPurchaseSale.SP_FSP_FlatPriceAmount;
+                    cp.SP_FSP_LastFlatPriceDate = itemMasterPurchaseSale.SP_FSP_LastFlatPriceDate;
+                    cp.SP_CalSPByPP_MarkUpPercOnListPrice = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpPercOnListPrice;
+                    cp.SP_CalSPByPP_MarkUpAmount = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpAmount;
+                    cp.SP_CalSPByPP_LastMarkUpDate = itemMasterPurchaseSale.SP_CalSPByPP_LastMarkUpDate;
+                    cp.SP_CalSPByPP_BaseSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_BaseSalePrice;
+                    cp.SP_CalSPByPP_SaleDiscPerc = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscPerc;
+                    cp.SP_CalSPByPP_SaleDiscAmount = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscAmount;
+                    cp.SP_CalSPByPP_LastSalesDiscDate = itemMasterPurchaseSale.SP_CalSPByPP_LastSalesDiscDate;
+                    cp.SP_CalSPByPP_UnitSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_UnitSalePrice;
+
+                    cp.MasterCompanyId = 1;
+                    cp.CreatedBy = itemMasterPurchaseSale.CreatedBy;
+                    cp.UpdatedBy = itemMasterPurchaseSale.UpdatedBy;
+                    cp.CreatedDate = DateTime.Now;
+                    cp.UpdatedDate = DateTime.Now;
+                    _context.ItemMasterPurchaseSale.Add(cp);
+                    _context.SaveChanges();
+                }
+            }
+            return Ok(itemMasterPurchaseSale);
+            // return Ok(ModelState);
+        }
     }
 
 }

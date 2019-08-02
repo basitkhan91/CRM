@@ -3342,8 +3342,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.modal.close();
     }
-
-
+    
     saveStockunitofmeasure() {
         this.isSaving = true;
 
@@ -3858,11 +3857,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                     this.AddCustomerAircraftdata(this.collectionofItemMaster); //passing ItemMaster Saved Collection for Stote Aircraft Data
 
-                    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+                    //this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+                    
                     this.value = 1;
-                    this.itemser.listStock = true;
-                    this.itemser.listNonstock = false;
-                    this.itemser.listEquipment = false;
+                    this.moveAircraftInformation();
+                    //this.itemser.listStock = true;
+                    //this.itemser.listNonstock = false;
+                    //this.itemser.listEquipment = false;
 
                 })
 
@@ -3928,7 +3929,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                         }
                     }
                     this.alertService.startLoadingMessage();
-                    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+                    // this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-list')
+                    this.moveAircraftInformation();
                 })
             }
         } else { }
