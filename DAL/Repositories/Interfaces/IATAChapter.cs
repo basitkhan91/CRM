@@ -9,6 +9,7 @@ namespace DAL.Repositories.Interfaces
     public interface IATAChapter : IRepository<ATAChapter>
     {
         IEnumerable<ATAChapter> GetATAChapterData();
+        IEnumerable<object> GetATASUBS(long ChID);
 
     }
 }

@@ -1197,13 +1197,7 @@ namespace QuickApp.Pro.Controllers
           
         }
 
-        [HttpGet("getDashListByIDS/{Mid}/{Tid}/{Did}")]
-        [Produces(typeof(List<ItemMasterViewModel>))]
-        public IActionResult GetDashList(string Mid,long Tid,string Did)
-        {
-            var result = _unitOfWork.itemMaster.getDashListByIDS(Mid, Tid,Did);
-            return Ok(result);
-        }
+       
         [HttpPost("ItemMasterAircraftPost")]
         public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
         {
