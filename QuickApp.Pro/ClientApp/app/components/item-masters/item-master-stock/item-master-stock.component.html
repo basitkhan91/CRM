@@ -367,7 +367,7 @@
                                     <label class="control-label col-sm-4">Manufacturer <strong class="clr-red">*</strong></label>
                                     <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
                                         <select [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="sourceItemMaster.manufacturerId">
+                                                [(ngModel)]="sourceItemMaster.manufacturerId" (change)="getManufacturer(manufacturer)">
                                             <option *ngFor="let manufacturer of allManufacturerInfo"
                                                     [ngValue]="manufacturer.manufacturerId">
                                                 {{manufacturer.name}}
@@ -376,35 +376,22 @@
                                         <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon"
                                            (click)="Manufacturer(modeledt)"><i class="fa fa-plus"></i></a>
                                     </div>
-
-
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Aircraft</label>
-                                    <div class="col-sm-7">
-                                        <div class="input-group">
-                                            <p-multiSelect [options]="shiftValues" [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}" class="multi-general">
-                                            </p-multiSelect>
-                                        </div>
-                                    </div>
-                                </div>
+                                </div>                             
                                 <div class="form-group col-sm-12">
                                     <label class="control-label control-alter col-sm-4">Capes</label>
                                     <div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
                                         <input class="form-control inline-block" type="checkbox" id="capes-checkbox"
                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="isEnabeCapes">
-                                        <i class="fa fa-eye capes-view-btn clr-blue" data-toggle="modal" title="View"
+                                        <i class="fa fa-eye clr-blue"  title="View"
                                            *ngIf="isEnabeCapes" (click)="ViewFunction()"></i>
-                                        <i class="fa fa-edit capes-view-btn clr-blue" data-toggle="modal" title="Edit"
+                                        <i class="fa fa-edit clr-blue"  title="Edit"
                                            data-target="#capes-block-edit"
                                            (click)="cunstructCapabilities(contentCapes)" *ngIf="isEnabeCapes"></i>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1">
-                                    <label class="control-label col-sm-4">ATA Chapter </label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                    <label class="control-label col-sm-4">ATA Chapter </label>                                    
+                                        <div class="inner-addon col-sm-7 right-addon autosuggesions-add inline-block">
                                             <select [ngModelOptions]="{standalone: true}"
                                                     [(ngModel)]="sourceItemMaster.ataChapterId"
                                                     (change)="getATASubChapterData(sourceItemMaster.ataChapterId)">
@@ -412,8 +399,7 @@
                                                         [ngValue]="ataName.ataChapterId">
                                                     {{ataName.ataChapterCode}}-{{ataName.ataChapterName}}
                                                 </option>
-                                            </select>
-                                        </div>
+                                            </select>                                        
                                     </div>
                                 </div>
 
@@ -453,33 +439,36 @@
                                 </div>
                                 <div class="form-group col-sm-12 input-icon1">
                                     <label class="control-label col-sm-4">NTE</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-7">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped">
                                                 <thead style="text-align:center;">
                                                     <tr>
                                                         <th>Ovh</th>
                                                         <th>Repair</th>
-                                                        <th>Test</th>
+                                                        <th>Bench Test</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" pKeyFilter="num" class="form-control w50 time"
-                                                                   placeholder="hours"
+                                                            <strong>Hours</strong>  
+                                                            <br/>
+                                                            <input type="text" pKeyFilter="num" class="form-control w50 time"                                                                   
                                                                    [ngModelOptions]="{standalone: true}" maxlength="5"
                                                                    [(ngModel)]="sourceItemMaster.overhaulHours">
                                                         </td>
                                                         <td>
+                                                            <strong>Hours</strong>
+                                                            <br />
                                                             <input type="text" pKeyFilter="num" class="form-control w50 time"
-                                                                   placeholder="hours"
                                                                    [ngModelOptions]="{standalone: true}" maxlength="5"
                                                                    [(ngModel)]="sourceItemMaster.rpHours">
                                                         </td>
                                                         <td>
+                                                            <strong>Hours</strong>
+                                                            <br />
                                                             <input type="text" pKeyFilter="num" maxlength="5" class="form-control w50 time"
-                                                                   placeholder="hours"
                                                                    [ngModelOptions]="{standalone: true}"
                                                                    [(ngModel)]="sourceItemMaster.testHours">
                                                         </td>
@@ -492,26 +481,36 @@
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label class="control-label col-sm-4">Turn Time</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-7">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped">
                                                 <thead style="text-align:center;">
                                                     <tr>
                                                         <th>Ovh</th>
                                                         <th>Repair</th>
-
+                                                        <th>Bench Test</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <input maxlength="5" type="text" pKeyFilter="num" class="form-control w60 time"
-                                                                   placeholder="days" [ngModelOptions]="{standalone: true}"
+                                                            <strong>Days</strong>
+                                                            <br/>
+                                                            <input maxlength="5" type="text" pKeyFilter="num" class="form-control w50 time"
+                                                                    [ngModelOptions]="{standalone: true}"
                                                                    [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours">
                                                         </td>
                                                         <td>
-                                                            <input maxlength="5" type="text" pKeyFilter="num" class="form-control w60 time"
-                                                                   placeholder="hours"
+                                                            <strong>Days</strong>
+                                                            <br />
+                                                            <input maxlength="5" type="text" pKeyFilter="num" class="form-control w50 time"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
+                                                        </td>
+                                                        <td>
+                                                            <strong>Days</strong>
+                                                            <br />
+                                                            <input maxlength="5" type="text" pKeyFilter="num" class="form-control w50 time"
                                                                    [ngModelOptions]="{standalone: true}"
                                                                    [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
                                                         </td>
@@ -523,8 +522,6 @@
                                         <div class="clear"></div>
                                     </div>
                                 </div>
-
-
                                 <div class="form-group col-sm-12">
                                     <label class="control-label control-alter col-sm-4">RFQ Tracking</label>
                                     <div class="col-sm-7">
@@ -536,20 +533,18 @@
                                     <div class="form-group col-sm-12 input-icon1">
                                         <label class="control-label col-sm-4">
                                             GL Acct.<strong class="clr-red">*</strong>
-                                        </label>
-                                        <div class="col-sm-7">
+                                        </label>                                        
                                             <div class="inner-addon col-sm-7 inline-block display-flex inline-adjust">
-                                                <select [ngModelOptions]="{standalone: true}"
+                                                <select [ngModelOptions]="{standalone: true}" 
                                                         [(ngModel)]="sourceItemMaster.glAccountId">
                                                     <option  *ngFor="let glAccounts of allGlInfo"
-                                                            [ngValue]="glAccounts.glAccountId">
+                                                            [ngValue]="glAccounts.glAccountId" title="Id:{{glAccounts.glAccountId}},                                                     Description{{glAccounts.accountDescription}},">
                                                         {{glAccounts.accountName}}
                                                     </option>
                                                 </select>
-                                                <a data-toggle="modal"  class="add-icon"
-                                                   ><i class="fa fa-plus"></i></a>
-                                            </div>
-                                        </div>
+                                                <a data-toggle="modal"  class="add-icon" 
+                                                   [routerLink]="['/generalledgermodule/generalledgerpage/app-glaccount-create']" ><i class="fa fa-plus"></i></a>
+                                            </div>                                        
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
                                         <label class="control-label col-sm-4">
@@ -803,16 +798,16 @@
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
-                                PN: <span style="color:red"></span>
+                                PN: <span style="color:red">{{pnvalue}}</span>
                             </div>
                             <div class="col-sm-3">
-                                PN Description: <span style="color:red"></span>
+                                PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
                             <div class="col-sm-3">
-                                Alternate PN: <span style="color:red"></span>
+                                Alternate PN: <span style="color:red">{{alternatePn}}</span>
                             </div>
                             <div class="col-sm-3">
-                                Manufacturer: <span style="color:red"></span>
+                                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
                         </div>                        
                             <div class="col-md-12">
@@ -869,12 +864,9 @@
                                     </div>
                                 </div>
                                 </div>
-                            </div>
-
-                           
+                            </div>                       
                        
                         <br />
-
                         <div class="card">
                             <p-table [value]="aircraftList" [rows]="6" [columns]="colst" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                                 <ng-template pTemplate="header" let-columns>
@@ -930,16 +922,16 @@
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
-                                PN: <span style="color:red"></span>
+                                PN: <span style="color:red">{{pnvalue}}</span>
                             </div>
                             <div class="col-sm-3">
-                                PN Description: <span style="color:red"></span>
+                                PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
                             <div class="col-sm-3">
-                                Alternate PN: <span style="color:red"></span>
+                                Alternate PN: <span style="color:red">{{alternatePn}}</span>
                             </div>
                             <div class="col-sm-3">
-                                Manufacturer: <span style="color:red"></span>
+                                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -1055,22 +1047,22 @@
                 </div>
 
 				<div *ngIf="showpurchaseData">
-					<!--New Changes in Purchase and Sales page--Jyotsna-->
+					<!--New Changes in Purchase and Sales page-->
 					<div class="card">
-						<div class="col-sm-12 font-padding">
-							<div class="col-sm-2">
-								PN: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								PN Description: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								Alternate PN: <span style="color:red"></span>
-							</div>
-							<div class="col-sm-3">
-								Manufacturer: <span style="color:red"></span>
-							</div>
-						</div>
+                        <div class="col-sm-12 font-padding">
+                            <div class="col-sm-2">
+                                PN: <span style="color:red">{{pnvalue}}</span>
+                            </div>
+                            <div class="col-sm-3">
+                                PN Description: <span style="color:red">{{pnDescription}}</span>
+                            </div>
+                            <div class="col-sm-3">
+                                Alternate PN: <span style="color:red">{{alternatePn}}</span>
+                            </div>
+                            <div class="col-sm-3">
+                                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                            </div>
+                        </div>
 						<div class="col-sm-12 add-colors font">
 							<span>Purchase and Sales Price Information</span>
 						</div>
@@ -1080,185 +1072,187 @@
 							</span>
 						</div>
 					</div>
-					<div class="table-responsive ">
-						<table class="table table-bordered table-striped table-sorting mpn-list-table fixed-column-table column-r1-fixed" id="mpn-list-table">
-                            <thead>
-                                <tr>
-                                    <th colspan="10">Unit Purchase Price</th>
-                                    <th colspan="19" class="bg1">Unit Sale Price</th>                                    
-                                </tr>
-                                <tr>
-                                    <th colspan="10"></th>
-                                    <th colspan="5" class="bg2">Use Flat Sale Price</th>
-                                    <th colspan="13" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
-                                  
-                                </tr>
-                                <tr>
-                                    <th>Cond *</th>
-                                    <th>UOM *</th>
-                                    <th>Currency *</th>
-                                    <th>FX Rate *</th>
-                                    <th>Vendor List Price</th>
-                                    <th>Last List Price Date</th>
-                                    <th>Purchase Disc %</th>
-                                    <th>Purchase Disc Amount</th>
-                                    <th>Last Purchase Disc Date</th>
-                                    <th>Unit Purchase Price</th>
-                                    <th class="bg2">UOM *</th>
-                                    <th class="bg2">Currency *</th>
-                                    <th class="bg2">FX Rate *</th>
-                                    <th class="bg2">Flat Price Amount</th>
-                                    <th class="bg2">Last Flat Price Date</th>
-                                    <th class="bg3">Mark % on List Price</th>
-                                    <th class="bg3">Mark Up Amount</th>
-                                    <th class="bg3">Last Mark Up Date</th>
-                                    <th class="bg3">Base Sale Price</th>
-                                    <th class="bg3">Sale Disc %</th>
-                                    <th class="bg3">Sale Disc Amount</th>
-                                    <th class="bg3">Last Sales Disc Date</th>
-                                    <th class="bg3">Unit Sale Price</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-							<tbody>
+                    
+                        <div class="table-responsive ">
+                            <table class="table table-bordered table-striped table-sorting mpn-list-table fixed-column-table column-r1-fixed" id="mpn-list-table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="10">Unit Purchase Price</th>
+                                        <th colspan="19" class="bg1">Unit Sale Price</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="10"></th>
+                                        <th colspan="5" class="bg2">Use Flat Sale Price</th>
+                                        <th colspan="13" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
 
-								<tr *ngFor="let field of fieldArray; let i = index">
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="NEW" selected="1">NEW</option>
-											<option value="AS-IS">AS-IS</option>
-											<option value="REPAIR">REPAIR</option>
-											<option value="SRV">SRV</option>
-											<option value="OVERHAUL">OVERHAUL</option>
-											<option value="AR">AR</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="Gals" selected="1">Gals</option>
-											<option value="Each">Each</option>
-											<option value="Inch">Inch</option>
-											<option value="Lbs">Lbs</option>
-											<option value="Ozs">Ozs</option>
-											<option value="Feet">Feet</option>
-											<option value="Yards">Yards</option>
-											<option value="Litre">Litre</option>
-											<option value="Meter">Meter</option>
-											<option value="Kilograms">Kilograms</option>
-											<option value="Grams">Grams</option>
-											<option value="Centimeters">Centimeters</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="usd" selected="1">$</option>
-											<option value="inr">₹</option>
-											<option value="pound">£</option>
-											<option value="euro">€</option>
-											<option value="yen">¥</option>
-										</select>
-									</td>
-									<td>
-										<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate" />
-									</td>
-									<td>
-										<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.vendorPrice" (input)="percentValue(field)" />
-									</td>
-									<td>
-										<input type="date">
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="" [(ngModel)]="field.purchaseDiscount" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
-											<option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
-										</select>
-									</td>
-									<td>
-										<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.purchaseAmount" [disabled]="true" />
-									</td>
-									<td>
-                                        <input type="date">
-									</td>
-									<td>
-										<input type="text" pKeyFilter="num" maxlength="15" value="{{field.purchaseDiscountAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.DiscountAmount" [disabled]="true" />
-									</td>
-									
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="Gals" selected="1">Gals</option>
-											<option value="Each">Each</option>
-											<option value="Inch">Inch</option>
-											<option value="Lbs">Lbs</option>
-											<option value="Ozs">Ozs</option>
-											<option value="Feet">Feet</option>
-											<option value="Yards">Yards</option>
-											<option value="Litre">Litre</option>
-											<option value="Meter">Meter</option>
-											<option value="Kilograms">Kilograms</option>
-											<option value="Grams">Grams</option>
-											<option value="Centimeters">Centimeters</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="">
-											<option value="usd" selected="1">$</option>
-											<option value="inr">₹</option>
-											<option value="pound">£</option>
-											<option value="euro">€</option>
-											<option value="yen">¥</option>
-										</select>
-									</td>
-									<td>
-										<input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fxrate1" />
-									</td>
-									<td>
-										<input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.fpa" />
-									</td>
-									<td>
-                                        <input type="date">
-									</td>
-									<td>
-										<select class="form-control w80" id="" name="" [(ngModel)]="field.Markuppercent" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select> %
-									</td>
-									<td>
-										<input type="text" pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.markupAmount" value="{{field.markupAmount}}" />
-									</td>
-									<td>
-                                        <input type="date">
-									</td>
-									<td>
-										<input type="text" pKeyFilter="money" maxlength="15" [(ngModel)]="field.baseSaleprice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
-									</td>
-									<td>
-										<select class="form-control w50" id="" name="" [(ngModel)]="field.saleDiscount" [ngModelOptions]="{standalone: true}" (change)="salePercent(field)">
-											<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-										</select> %
-									</td>
-									<td>
-										<input type="text" pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.sda" value="{{field.saleDiscountAmount}}" />
-									</td>
-                                    <td>
-                                        <input type="date">
-                                    </td>
-									<td>
-										<input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.unitPrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.unitSalePrice}}" />
-									</td>
-									<td>
-										<button class="btn btn-danger nobg" (click)="delete(i)">
-											<i class="fa fa-trash"></i>
-										</button>
-									</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Cond *</th>
+                                        <th>UOM *</th>
+                                        <th>Currency *</th>
+                                        <th>FX Rate *</th>
+                                        <th>Vendor List Price</th>
+                                        <th>Last List Price Date</th>
+                                        <th>Purchase Disc %</th>
+                                        <th>Purchase Disc Amount</th>
+                                        <th>Last Purchase Disc Date</th>
+                                        <th>Unit Purchase Price</th>
+                                        <th class="bg2">UOM *</th>
+                                        <th class="bg2">Currency *</th>
+                                        <th class="bg2">FX Rate *</th>
+                                        <th class="bg2">Flat Price Amount</th>
+                                        <th class="bg2">Last Flat Price Date</th>
+                                        <th class="bg3">Mark % on List Price</th>
+                                        <th class="bg3">Mark Up Amount</th>
+                                        <th class="bg3">Last Mark Up Date</th>
+                                        <th class="bg3">Base Sale Price</th>
+                                        <th class="bg3">Sale Disc %</th>
+                                        <th class="bg3">Sale Disc Amount</th>
+                                        <th class="bg3">Last Sales Disc Date</th>
+                                        <th class="bg3">Unit Sale Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-								</tr>
-							</tbody>
-						</table>
-					</div>
+                                    <tr *ngFor="let field of fieldArray; let i = index">
+                                        <td>
+                                            <select class="form-control w80" id="" name="" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
+                                                <option value="NEW" selected="1">NEW</option>
+                                                <option value="AS-IS">AS-IS</option>
+                                                <option value="REPAIR">REPAIR</option>
+                                                <option value="SRV">SRV</option>
+                                                <option value="OVERHAUL">OVERHAUL</option>
+                                                <option value="AR">AR</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80" id="" name="" [(ngModel)]="field.PP_UOMId" [ngModelOptions]="{standalone: true}">
+                                                <option value="Gals" selected="1">Gals</option>
+                                                <option value="Each">Each</option>
+                                                <option value="Inch">Inch</option>
+                                                <option value="Lbs">Lbs</option>
+                                                <option value="Ozs">Ozs</option>
+                                                <option value="Feet">Feet</option>
+                                                <option value="Yards">Yards</option>
+                                                <option value="Litre">Litre</option>
+                                                <option value="Meter">Meter</option>
+                                                <option value="Kilograms">Kilograms</option>
+                                                <option value="Grams">Grams</option>
+                                                <option value="Centimeters">Centimeters</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80" id="" name="" [(ngModel)]="field.PP_CurrencyId " [ngModelOptions]="{standalone: true}">
+                                                <option value="usd" selected="1">$</option>
+                                                <option value="inr">₹</option>
+                                                <option value="pound">£</option>
+                                                <option value="euro">€</option>
+                                                <option value="yen">¥</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_FXRatePerc" />
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
+                                        </td>
+                                        <td>
+                                            <input type="date" [(ngModel)]="field.PP_LastListPriceDate" [ngModelOptions]="{standalone: true}">
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80" id="" name="" [(ngModel)]="field.PP_PurchaseDiscPerc" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+                                                <option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="num" maxlength="15" value="{{field.PP_PurchaseDiscAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_PurchaseDiscAmount" [disabled]="true" />
+                                        </td>
+                                        <td>
+                                            <input type="date" [(ngModel)]="field.PP_LastPurchaseDiscDate" [ngModelOptions]="{standalone: true}">
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="num" maxlength="15" value="{{field.PP_UnitPurchasePrice}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_UnitPurchasePrice" [disabled]="true" />
+                                        </td>
 
-					<div class="col-sm-12">
-						<button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-						<button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
-					</div>
+                                        <td>
+                                            <select class="form-control w80" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_UOMId">
+                                                <option value="Gals" selected="1">Gals</option>
+                                                <option value="Each">Each</option>
+                                                <option value="Inch">Inch</option>
+                                                <option value="Lbs">Lbs</option>
+                                                <option value="Ozs">Ozs</option>
+                                                <option value="Feet">Feet</option>
+                                                <option value="Yards">Yards</option>
+                                                <option value="Litre">Litre</option>
+                                                <option value="Meter">Meter</option>
+                                                <option value="Kilograms">Kilograms</option>
+                                                <option value="Grams">Grams</option>
+                                                <option value="Centimeters">Centimeters</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_CurrencyId">
+                                                <option value="usd" selected="1">$</option>
+                                                <option value="inr">₹</option>
+                                                <option value="pound">£</option>
+                                                <option value="euro">€</option>
+                                                <option value="yen">¥</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FXRatePerc" />
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
+                                        </td>
+                                        <td>
+                                            <input type="date" [(ngModel)]="field.SP_FSP_LastFlatPriceDate" [ngModelOptions]="{standalone: true}">
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80" id="" name="" [(ngModel)]="field.SP_CalSPByPP_MarkUpPercOnListPrice" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+                                                <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+                                            </select> %
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_MarkUpAmount" value="{{field.markupAmount}}" />
+                                        </td>
+                                        <td>
+                                            <input type="date" [(ngModel)]="field.SP_CalSPByPP_LastMarkUpDate" [ngModelOptions]="{standalone: true}" />
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="money" maxlength="15" [(ngModel)]="field.SP_CalSPByPP_BaseSalePrice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
+                                        </td>
+                                        <td>
+                                            <select class="form-control w50" id="" name="" [(ngModel)]="field.SP_CalSPByPP_SaleDiscPerc" [ngModelOptions]="{standalone: true}" (change)="salePercent(field)">
+                                                <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+                                            </select> %
+                                        </td>
+                                        <td>
+                                            <input type="text" pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_SaleDiscAmount" value="{{field.SP_CalSPByPP_SaleDiscAmount}}" />
+                                        </td>
+                                        <td>
+                                            <input type="date" [(ngModel)]="field.SP_CalSPByPP_LastSalesDiscDate" [ngModelOptions]="{standalone: true}" >
+                                        </td>
+                                        <td>
+                                            <input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.SP_CalSPByPP_UnitSalePrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.SP_CalSPByPP_UnitSalePrice}}" />
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger nobg" (click)="delete(i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <button class="btn-new float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+                            <button class="btn-new float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+                        </div>
+                    
 				</div>
 				<div *ngIf="showexportData">
                     <div class="card">
