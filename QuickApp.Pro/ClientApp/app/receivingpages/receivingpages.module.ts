@@ -50,6 +50,10 @@ import { ReceivingService } from "../services/receiving/receiving.service";
 import { ReceivingEndpointService } from "../services/receiving/receiving-endpoint.service";
 import { RepairOrderComponent } from "../components/receiving/repair-order/repair-order.component";
 import { ViewPoComponent } from "../components/receiving/po-ro/view-po/view-po.component";
+import { EditRoComponent } from "../components/receiving/repair-order/edit-ro/edit-ro.component";
+import { RoComponent } from "../components/receiving/repair-order/ro/ro.component";
+import { ReceivingRoComponent } from "../components/receiving/repair-order/receiving-ro/receiving-ro.component";
+import { ViewRoComponent } from "../components/receiving/repair-order/view-ro/view-ro.component";
 
 @NgModule({
     imports: [
@@ -76,7 +80,11 @@ import { ViewPoComponent } from "../components/receiving/po-ro/view-po/view-po.c
 		ReceivngPoComponent,
         ReceivingpagesComponent,
         RepairOrderComponent,
-        ViewPoComponent
+        ViewPoComponent,
+        EditRoComponent,
+        RoComponent,
+        ReceivingRoComponent,
+        ViewRoComponent
 
 	],
     providers: [ReceivingService, ReceivingEndpointService

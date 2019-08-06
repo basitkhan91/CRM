@@ -13590,6 +13590,16 @@ body .ui-datepicker table td > a.ui-state-active {
 .wfl-table-cstm tr th:nth-child(10) {
     width: 136px !important;
 }
+.rro-table-cstm {
+    overflow-y: hidden;
+}
+.rro-table-cstm th {
+    width: 110px;
+    padding: 8px 5px !important;
+}
+.rro-table-cstm .ui-table {
+    padding-bottom: 60px;
+}
 .wfl-view-popup .modal-content, .wfl-view-popup .modal-sm {
     max-width: 1000px !important;
 }

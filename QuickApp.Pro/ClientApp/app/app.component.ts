@@ -296,7 +296,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         ]
                     },
                     { label: 'Purchase Order', routerLink: '/receivingmodule/receivingpages/app-purchase-order' },
-                    { label: 'Repair Order', routerLink: '/receivingmodule/receivingpages/app-repair-order' },
+                    { label: 'Repair Order', routerLink: '/receivingmodule/receivingpages/app-ro' },
                     { label: 'Shipping Receiver', routerLink: '/receivingmodule/receivingpages/app-shipping' },
                     {label:'Work Order', routerLink: '/#' },
                     {
