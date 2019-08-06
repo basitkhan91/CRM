@@ -1286,8 +1286,8 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("ItemMasterPurcSalePost")]
         public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 {
                     ItemMasterPurchaseSale cp = new ItemMasterPurchaseSale();
                     cp.ItemMasterId = itemMasterPurchaseSale.ItemMasterId;
@@ -1324,7 +1324,7 @@ namespace QuickApp.Pro.Controllers
                     _context.ItemMasterPurchaseSale.Add(cp);
                     _context.SaveChanges();
                 }
-            }
+           //}
             return Ok(itemMasterPurchaseSale);
             // return Ok(ModelState);
         }
