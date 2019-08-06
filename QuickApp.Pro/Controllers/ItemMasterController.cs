@@ -1286,47 +1286,21 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("ItemMasterPurcSalePost")]
         public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale)
         {
-            //if (ModelState.IsValid)
-            //{
-                {
-                    ItemMasterPurchaseSale cp = new ItemMasterPurchaseSale();
-                    cp.ItemMasterId = itemMasterPurchaseSale.ItemMasterId;
-                    cp.PartNumber = itemMasterPurchaseSale.PartNumber;
-                    cp.Condition = itemMasterPurchaseSale.Condition;
-                    cp.PP_UOMId = itemMasterPurchaseSale.PP_UOMId;
-                    cp.PP_CurrencyId = itemMasterPurchaseSale.PP_CurrencyId;
-                    cp.PP_FXRatePerc = itemMasterPurchaseSale.PP_FXRatePerc;
-                    cp.PP_VendorListPrice = itemMasterPurchaseSale.PP_VendorListPrice;
-                    cp.PP_LastListPriceDate = itemMasterPurchaseSale.PP_LastListPriceDate;
-                    cp.PP_PurchaseDiscPerc = itemMasterPurchaseSale.PP_PurchaseDiscPerc;
-                    cp.PP_PurchaseDiscAmount = itemMasterPurchaseSale.PP_PurchaseDiscAmount;
-                    cp.PP_LastPurchaseDiscDate = itemMasterPurchaseSale.PP_LastPurchaseDiscDate;
-                    cp.PP_UnitPurchasePrice = itemMasterPurchaseSale.PP_UnitPurchasePrice;
-                    cp.SP_FSP_UOMId = itemMasterPurchaseSale.SP_FSP_UOMId;
-                    cp.SP_FSP_CurrencyId = itemMasterPurchaseSale.SP_FSP_CurrencyId;
-                    cp.SP_FSP_FXRatePerc = itemMasterPurchaseSale.SP_FSP_FXRatePerc;
-                    cp.SP_FSP_FlatPriceAmount = itemMasterPurchaseSale.SP_FSP_FlatPriceAmount;
-                    cp.SP_FSP_LastFlatPriceDate = itemMasterPurchaseSale.SP_FSP_LastFlatPriceDate;
-                    cp.SP_CalSPByPP_MarkUpPercOnListPrice = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpPercOnListPrice;
-                    cp.SP_CalSPByPP_MarkUpAmount = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpAmount;
-                    cp.SP_CalSPByPP_LastMarkUpDate = itemMasterPurchaseSale.SP_CalSPByPP_LastMarkUpDate;
-                    cp.SP_CalSPByPP_BaseSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_BaseSalePrice;
-                    cp.SP_CalSPByPP_SaleDiscPerc = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscPerc;
-                    cp.SP_CalSPByPP_SaleDiscAmount = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscAmount;
-                    cp.SP_CalSPByPP_LastSalesDiscDate = itemMasterPurchaseSale.SP_CalSPByPP_LastSalesDiscDate;
-                    cp.SP_CalSPByPP_UnitSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_UnitSalePrice;
-
-                    cp.MasterCompanyId = 1;
-                    cp.CreatedBy = itemMasterPurchaseSale.CreatedBy;
-                    cp.UpdatedBy = itemMasterPurchaseSale.UpdatedBy;
-                    cp.CreatedDate = DateTime.Now;
-                    cp.UpdatedDate = DateTime.Now;
-                    _context.ItemMasterPurchaseSale.Add(cp);
-                    _context.SaveChanges();
+            try
+            {
+                if (ModelState.IsValid)
+                {                   
+                    _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale);
+                    _unitOfWork.SaveChanges();
                 }
-           //}
-            return Ok(itemMasterPurchaseSale);
-            // return Ok(ModelState);
+                return Ok(itemMasterPurchaseSale);
+                // return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                var xerr = ex.Message;
+                throw;
+            }
         }
     }
 

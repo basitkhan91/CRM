@@ -173,7 +173,9 @@ input[type=date]::-webkit-outer-spin-button {
     margin-left: -4px;
     margin-top: 1px;
 }
-
+.form-check-input{
+    width: 40px !important;
+}
 td {
     text-align: center;
 }
