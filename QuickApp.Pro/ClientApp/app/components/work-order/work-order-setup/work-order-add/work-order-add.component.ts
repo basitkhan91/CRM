@@ -79,18 +79,17 @@ export class WorkOrderAddComponent implements OnInit {
     WoNumber: 'Creating',
     OpenDate: new Date(),
     WoStatus: '',
-    CustomerId: null,
-    CustomerCodeId: null,
+    CustomerId: '',
+    CustomerCodeId: '',
     CustomerReference: '',
-    IsContract: Boolean,
-    Contract: String,
-    CustomerContact: Number,
-    CustomerPhone: Number,
-    CustomerEmail: String,
-    CreditTerms: String,
-    CreditTermsandLimit: String,
-    EmployeeId: Number,
-    SalesPersonId: Number
+    IsContract: false,
+    Contract: '',
+    CustomerContact: null,
+    CreditTerms: '',
+    CreditTermsandLimit: '',
+    EmployeeId: '',
+    SalesPersonId: '',
+    CSR: ''
   };
   workOrderMPN = {
     iD: 0,
@@ -235,6 +234,7 @@ export class WorkOrderAddComponent implements OnInit {
     this.getStockLines();
     this.addMPN();
   }
+
 
   toggleDisplayMode(): void {
     this.isDetailedView = !this.isDetailedView;

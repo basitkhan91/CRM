@@ -45,6 +45,11 @@ const workorderPagesRoutes: Routes = [
         data: { title: 'Work Order Setup' }
       },
       {
+        path: 'app-work-order-quote',
+        component: WorkOrderQuoteComponent,
+        data: { title: 'Quote' }
+      },
+      {
         path: 'app-work-order-manual-entry-labor-hours',
         component: ManualEntryLaborHoursComponent,
         data: { title: 'Manual Entry Labor Hours' }
