@@ -149,6 +149,39 @@ export class WorkOrderAddComponent implements OnInit {
     }
   ];
 
+  quote = {
+    QuoteNumber: '',
+    OpenDate: '',
+    QuoteDueDate: '',
+    ValidForDays: null,
+    ExpDate: '',
+    ExpDateStatus: '',
+    WoNumber: '',
+    CustomerId: null,
+    CustomerCodeId: null,
+    CustomerContact: null,
+    CustomerEmail: '',
+    CustomerPhone: null,
+    CustomerReference: '',
+    IsContract: false,
+    Contract: '',
+    Quantity: null,
+    customerRequestDate: '',
+    PromiseDate: '',
+    EstCompletionDate: '',
+    EstShipDate: '',
+    CreditTerms: '',
+    CreditTermsandLimit: '',
+    ItemCount: null,
+    SalesPersonId: null,
+    CSR: '',
+    EmployeeId: null,
+    Currency: '',
+    DSO: '',
+    ARBal: '',
+    partsDetails: []
+  };
+
   constructor(
     private alertService: AlertService,
     private workOrderService: WorkOrderService,

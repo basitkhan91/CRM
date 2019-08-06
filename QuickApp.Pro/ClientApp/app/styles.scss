@@ -12937,6 +12937,10 @@ body .ui-datepicker table td > a.ui-state-active {
         font-weight: normal !important;
         width: 194px !important;
       }
+      .p-checkbox .checkbox-table .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default {
+        margin-top: -6px;
+        margin-left: -4px;
+    }
       .p-radiobutton-label-vertical .ui-radiobutton-label {
         margin-top: -25px !important;
         margin-left: 38px;
