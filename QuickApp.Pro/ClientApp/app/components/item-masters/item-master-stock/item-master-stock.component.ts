@@ -298,28 +298,35 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     LoadAtachapter: any[] = [];
     vendorPrice: any;
     purchaseDiscount: any;
+    pnDescription: any;
+    ManufacturerValue: any;
+    alternatePn: any;
     newFields = {
-        fxrate: "",
-        vendorPrice: "",
-        purchaseDiscount: "",
-        purchaseAmount: "",
-        lastDate: "",
-        DiscountAmount: "",
-        fxrate1: "",
-        fpa: "",
-        lastflat: "",
-        Markuppercent: "",
-        markupAmount: "",
-        lastmarkup: "",
-        baseSaleprice: "",
-        saleDiscount: "",
-        sda: "",
-        lastsales: "",
-        unitPrice: "",
+        Condition:"NEW",
+        PP_UOMId:"Gals",
+        PP_CurrencyId : "$",
+        PP_FXRatePerc: "",
+        PP_VendorListPrice: "",
+        PP_LastListPriceDate: "",
+        PP_PurchaseDiscPerc: "",
+        PP_LastPurchaseDiscDate: "",
+        PP_PurchaseDiscAmount: "",
+        PP_UnitPurchasePrice: "",
+        SP_FSP_UOMId: "Gals",
+        SP_FSP_CurrencyId: "$",
+        SP_FSP_FXRatePerc: "",
+        SP_FSP_FlatPriceAmount: "",
+        SP_FSP_LastFlatPriceDate: "",
+        SP_CalSPByPP_MarkUpPercOnListPrice: "",
+        SP_CalSPByPP_MarkUpAmount: "",
+        SP_CalSPByPP_LastMarkUpDate: "",
+        SP_CalSPByPP_BaseSalePrice: "",
+        SP_CalSPByPP_SaleDiscPerc: "",
+        SP_CalSPByPP_SaleDiscAmount: "",
+        SP_CalSPByPP_LastSalesDiscDate: "",
+        SP_CalSPByPP_UnitSalePrice:""
     }
     aircraftData: any;
-
-
     constructor(public countryservice: CustomerService, private Dashnumservice:DashNumberService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
@@ -472,7 +479,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         { field: "dashNumber", header: "Dash Numbers" },        
     ];
     ngOnInit(): void {        
-        
+        this.addFieldValue();
         this.getAtachapter();
         this.modalDash = [
             { field: 'aircraft', header: 'Aircraft' },
@@ -498,7 +505,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
             { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },
         ];
-        this.addFieldValue();
+        
         this.loadManagementdata();
         this.manufacturerdata();
         this.aircraftManfacturerData();
@@ -818,6 +825,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allGlInfo = getGlList;
+        console.log(this.allGlInfo);
     }
 
     //getting ItemMaster//
@@ -1783,7 +1791,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     Manufacturerdescription(event) {
 
         if (this.allManufacturerInfo) {
-
             for (let i = 0; i < this.allManufacturerInfo.length; i++) {
                 if (event == this.allManufacturerInfo[i].name) {
                     this.sourcemanufacturer.name = this.allManufacturerInfo[i].name;
@@ -3680,7 +3687,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showAircraftData = false;
         this.showAtachapter = false;
     }
+    pnvalue: any;
+    getManufacturer(value) {
+        console.log(value.originalEvent);
+    }
     moveAircraftInformation() {
+        this.pnvalue = this.sourceItemMaster.partNumber;
+        this.pnDescription = this.sourceItemMaster.partDescription;
+        this.ManufacturerValue = this.sourceItemMaster.name;        
+        console.log(this.sourceItemMaster.name);
+        this.alternatePn = this.sourceItemMaster.partAlternatePartId;
+        this.activeTab = 1;
         this.showAircraftData = true;
         this.showGeneralData = false;
         this.showpurchaseData = false;
@@ -3697,8 +3714,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             })            
 
-        });
-        
+        });        
     }
     LoadValues: any[] = [];
     newValue: any;
@@ -3826,6 +3842,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
     }
     movePurchaseInformation() {
+        
         this.activeTab = 3;
         this.showpurchaseData = true;
         this.showGeneralData = false;
@@ -3835,7 +3852,23 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     moveExportInformation() {
+        const data = this.fieldArray.map(obj => {
+         return {
+             ...obj,
+             ItemMasterId: this.collectionofItemMaster.itemMasterId,             
+             PartNumber: this.pnvalue,
+             MasterCompanyId : 1,
+             CreatedBy: this.sourceItemMaster.createdBy,
+             UpdatedBy: this.sourceItemMaster.updatedBy,
+             CreatedDate : new Date(),
+             UpdatedDate : new Date()
+         }
+        })
+        console.log(this.ItemMasterId);
         this.activeTab = 4;
+        this.itemser.newItemMasterPurcSaleClass(this.data).subscribe(datas=>{
+            console.log(datas);
+        })
         this.showpurchaseData = false;
         this.showGeneralData = false;
         this.showexportData = true;
@@ -3876,6 +3909,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                 this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
                     this.collectionofItemMaster = data;
+                    console.log(this.collectionofItemMaster);
                     this.savesuccessCompleted(this.sourceItemMaster);
                     if (data != null) {
                         this.ItemMasterId = data.itemMasterId;
@@ -3957,8 +3991,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                             }
                         }
-                    }
-                    this.activeTab = 1;
+                    }                    
                     this.alertService.startLoadingMessage();                    
                     this.moveAircraftInformation();
                 })
@@ -4511,33 +4544,24 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         else {
             this.Delete = false;
         }
-
     }
-    purchaseAmount: number;
-    purchaseDiscountAmount: number;
-    Markuppercent: number;
-    markupAmount: number;
-    baseSaleprice: number;
-    saleDiscount: number;
-    saleDiscountAmount: number;
-    unitSalePrice: number;
     percentValue(field) {
-        if (field.vendorPrice && field.purchaseDiscount && !field.Markuppercent) {
-            field.purchaseAmount = field.vendorPrice * field.purchaseDiscount
+        if (field.PP_VendorListPrice && field.PP_PurchaseDiscPerc && !field.SP_FSP_FlatPriceAmount) {
+            field.PP_PurchaseDiscAmount = field.PP_VendorListPrice * field.PP_PurchaseDiscPerc
         }
-        if (field.purchaseAmount) {
-            field.purchaseDiscountAmount = field.purchaseAmount - field.vendorPrice
+        if (field.PP_PurchaseDiscAmount) {
+            field.PP_UnitPurchasePrice = field.PP_PurchaseDiscAmount - field.PP_VendorListPrice
         }
-        if (field.Markuppercent && field.vendorPrice) {
-            field.markupAmount = field.vendorPrice * field.Markuppercent;
+        if (field.SP_CalSPByPP_MarkUpPercOnListPrice && field.PP_VendorListPrice) {
+            field.SP_CalSPByPP_MarkUpAmount = field.PP_VendorListPrice * field.SP_CalSPByPP_MarkUpPercOnListPrice;
         }
     }
     salePercent(field) {
-        if (field.baseSaleprice && field.saleDiscount) {
-            field.saleDiscountAmount = field.baseSaleprice * field.saleDiscount
+        if (field.SP_CalSPByPP_BaseSalePrice && field.SP_CalSPByPP_SaleDiscPerc) {
+            field.SP_CalSPByPP_SaleDiscAmount = field.SP_CalSPByPP_BaseSalePrice * field.SP_CalSPByPP_BaseSalePrice
         }
-        if (field.saleDiscountAmount && field.baseSaleprice) {
-            field.unitSalePrice = field.saleDiscountAmount - field.baseSaleprice
+        if (field.SP_CalSPByPP_SaleDiscAmount && field.SP_CalSPByPP_BaseSalePrice) {
+            field.SP_CalSPByPP_UnitSalePrice = field.SP_CalSPByPP_SaleDiscAmount - field.SP_CalSPByPP_BaseSalePrice
         }
     }
     atasubchapterValues = [];
@@ -4552,9 +4576,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             })
         })
-    }
-   
-
+    }  
     getAircraftAllList() {
         this.aircraftManufacturerService.getAll().subscribe(
             details => this.onDataLoad(details[0]),
