@@ -13681,6 +13681,10 @@ body .ui-datepicker table td > a.ui-state-active {
 .radio-cstm input[type="radio"]:disabled {
     opacity: 0 !important;
 }
+.p-accordion-cstm p-accordiontab .ui-accordion-header {
+    border: none !important;
+    padding: 0 !important;
+}
 .rpo-acomp .ui-autocomplete {
     padding: 4px !important;
 }

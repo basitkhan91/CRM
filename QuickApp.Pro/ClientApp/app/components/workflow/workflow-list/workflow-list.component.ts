@@ -35,6 +35,11 @@ export class WorkflowListComponent implements OnInit {
     workflowList: any[];
     modal: NgbModalRef;
     currentWorkflow: any;
+    toggle_wf_header: boolean = false;
+    displayAccord1: boolean = false;
+    displayAccord2: boolean = false;
+    displayAccord3: boolean = false;
+    toggle_detailhistory: boolean = false;
     
     constructor(private actionService: ActionService,
         private router: ActivatedRoute,
@@ -88,6 +93,7 @@ export class WorkflowListComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.workFlowGridSource.data = allWorkFlows;
         this.workflowList = allWorkFlows;
+console.log(this.workflowList);
     }
     
     confirmDelete(confirmDeleteTemplate, rowData) {
@@ -149,5 +155,25 @@ export class WorkflowListComponent implements OnInit {
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+
+    onOpenAll() {
+        this.displayAccord1 = true;
+        this.displayAccord2 = true;
+        this.displayAccord3 = true;
+    }
+    onCloseAll() {
+        this.displayAccord1 = false;
+        this.displayAccord2 = false;
+        this.displayAccord3 = false;
+    }
+    onAccordTabClick1() {
+        this.displayAccord1 = true;
+    }
+    onAccordTabClick2() {
+            this.displayAccord2 = true;
+        }
+    onAccordTabClick3() {
+            this.displayAccord3 = true;
+        }
 
 }
