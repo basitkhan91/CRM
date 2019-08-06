@@ -54,9 +54,6 @@ export class WorkOrderAddComponent implements OnInit {
   isDetailedView: boolean;
   selectedRadioButtonValue: boolean;
   moduleName: string;
-
-  woDealerType: String = 'customer';
-  woType: String = 'single';
   showTableGrid: Boolean = false;
   worflowId = [];
   isContract = true;
@@ -76,6 +73,25 @@ export class WorkOrderAddComponent implements OnInit {
       value: 'WO125'
     }
   ];
+  WorkOrder = {
+    WoType: 'single',
+    WoDealerType: 'customer',
+    WoNumber: 'Creating',
+    OpenDate: new Date(),
+    WoStatus: '',
+    CustomerId: null,
+    CustomerCodeId: null,
+    CustomerReference: '',
+    IsContract: Boolean,
+    Contract: String,
+    CustomerContact: Number,
+    CustomerPhone: Number,
+    CustomerEmail: String,
+    CreditTerms: String,
+    CreditTermsandLimit: String,
+    EmployeeId: Number,
+    SalesPersonId: Number
+  };
   workOrderMPN = {
     iD: 0,
     workOrderId: 0,
@@ -192,12 +208,12 @@ export class WorkOrderAddComponent implements OnInit {
   }
   // Handles radio Button single or Multiple
   toggleWorkOrderType(value): void {
-    this.woType = value;
+    this.WorkOrder.WoType = value;
     this.showTableGrid = false;
   }
   // Handles type of the WorkOrder Dealer
   woDealerChange(value) {
-    this.woDealerType = value;
+    this.WorkOrder.WoDealerType = value;
   }
   // added new MPN
   addMPN() {
