@@ -337,7 +337,7 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>QTY Rejected <span class="clr-red">*</span></label>
-                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" value="NA" required />
+                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" required />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -679,14 +679,7 @@
                                                             <!--why is this a checkbox ?-->
                                                             <div class="form-group">
                                                                 <label>Expiration Date</label>
-                                                                <div class="form-group">
-                                                                    <div class="checkbox-cstm" style="margin-top: 4px">
-                                                                        <label>
-                                                                            <input type="checkbox" class="form-control">
-                                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
+                                                                <p-calendar class="pas-clder pas-clder-po-table" [showIcon]="true"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Unit Cost</label>
