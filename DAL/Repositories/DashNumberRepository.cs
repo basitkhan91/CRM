@@ -26,5 +26,51 @@ namespace DAL.Repositories
                 .OrderByDescending(c => c.DashNumberId).ToList().AsQueryable();
         }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        public IEnumerable<object> getDashListByIDS(string Mid, long Tid, string Did)
+        {
+            long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            string[] myDids = Did.Split(',').Select(x => x).ToArray();
+            var data = (from iM in _appContext.AircraftDashNumber
+                        join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
+                        join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
+                        where myMids.Contains(iM.AircraftModelId) && iM.AircraftTypeId == Tid && myDids.Contains(iM.DashNumber)
+                        select new
+                        {
+                            aircraft = at.Description,
+                            model = am.ModelName,
+                            typeid=at.AircraftTypeId,
+                            modelid=am.AircraftModelId,
+                            iM.DashNumber,
+                            iM.DashNumberId,
+                            iM.Memo
+
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+        public IEnumerable<object> GetDashNoByID(string Mid, long Tid)
+        {
+            long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var data = (from iM in _appContext.AircraftDashNumber
+                        join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
+                        join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
+                        where myMids.Contains(iM.AircraftModelId) && iM.AircraftTypeId == Tid
+                        select new
+                        {
+                            iM.DashNumber,
+                            iM.DashNumberId,
+                            at.AircraftTypeId,
+                            at.Description,
+                            am.AircraftModelId,
+                            am.ModelName,
+                            iM.Memo,
+                            iM.MasterCompanyId
+                            
+
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+
     }
 }

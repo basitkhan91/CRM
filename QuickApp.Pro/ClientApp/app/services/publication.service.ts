@@ -12,7 +12,6 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 
-
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import { Role } from '../models/role.model';
@@ -73,21 +72,14 @@ export class PublicationService {
     getPublicationAudit(publicationId: number) {
         return this.publicationEndpoint.getPublincationAuditById<any>(publicationId);
     }
-    getDashNumber(Mid: string, Tid: number) {
-        return this.publicationEndpoint.getDashNumberById<any>(Mid, Tid);
-    }
-    getATASubDesc(Mid: number, Tid: number) {
-        return this.publicationEndpoint.getATASubByID<any>(Mid, Tid);
-    }
+    
+   
     newPNACMappingAction(action: Publication) {
         return this.publicationEndpoint.postPNACMapping<Publication>(action);
     }
     newPNATAMappingAction(action: Publication) {
         return this.publicationEndpoint.postPNATAMapping<Publication>(action);
     }
-    getPublicationAList() {
-        return Observable.forkJoin(
-            this.publicationEndpoint.getpublicationACListEndpoint<Publication[]>());
-    }
     
+
 }

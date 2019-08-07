@@ -18,7 +18,7 @@ namespace WebApplication5.Models
         public long ItemMasterAircraftModelId { get; set; }
         public long ItemMasterId { get; set; }
         public long AircraftModelId { get; set; }
-        public Nullable<int> DashNumber { get; set; }
+        public string  DashNumber { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

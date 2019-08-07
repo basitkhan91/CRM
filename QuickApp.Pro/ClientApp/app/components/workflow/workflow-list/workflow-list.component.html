@@ -66,7 +66,7 @@
                                         <p-inputSwitch *ngIf="rowData.workflow.isActive == null" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
-                                            <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="">
+                                            <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="View">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -85,7 +85,7 @@
                                                 <i class="fa fa-history"></i>
                                             </a>
                                         </span>
-                                        <span (click)="confirmDelete(deleteConfirm,rowData)" data-toggle="modal" data-target="#data">
+                                        <span (click)="confirmDelete(deleteConfirm, rowData)" data-toggle="modal" data-target="#delete">
                                             <a class="btn btn-danger nobg" pTooltip="Delete" tooltipPosition="bottom" data-toggle="tooltip" title="" data-original-title="Delete">
                                                 <i class="fa fa-trash"></i>
                                             </a>
@@ -102,10 +102,10 @@
 </div>
 
 <ng-template #deleteConfirm let-c="close" let-d="dismiss">
-    <div class="modal-title">
+    <div class="modal-title" style="    padding: 10px 10px 0;">
         <h4>Confirm workflow delete</h4>
     </div>
-    <div>
+    <div style="    padding: 0px 10px;">
         <p> Are you sure you want to delete Worklflow ACC{{currentWorkflow.workflowId}}?</p>
     </div>
     <div class="modal-footer">
@@ -124,16 +124,754 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-header">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
-                                <li class="breadcrumb-item active" aria-current="page">Workflow Details</li>
+                        <nav class="pull-left" aria-label="breadcrumb">
+                            <ol class="breadcrumb" style="background-color: transparent;">
+                                <li class="breadcrumb-item active" aria-current="page" style="font-size: 16px;margin-top: 3px;">Work Flow Details</li>
                             </ol>
                         </nav>
+                        <button class="btn btn-primary-cstm pull-right" (click)="toggle_wf_header=!toggle_wf_header">
+                            {{toggle_wf_header ? 'See Less' : 'See More...'}}
+                        </button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" *ngIf="toggle_wf_header">
+                        <div class="form-horizontal wf-popup-form">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Work Flow ID: </label>ACC123
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Version: </label>2
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Create Date: </label>6/2/2019
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Expiration Date: </label>7/4/2019
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Currency: </label>US Dollar
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Make Inactive: </label>Yes
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Work Flow Description: </label>Gear Repairing
+                                            </div>
+                                            <div class="form-group">
+                                                <label>CMM URL: </label><a href="#" target="_blank">URL</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>PN: </label>12345
+                                            </div>
+                                            <div class="form-group">
+                                                <label>PN Description: </label>Used For Gears
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Changed PN: </label>44543
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Work Scope: </label>OVH
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Customer Name: </label>John
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Memo: </label>Used For Gears
+                                            </div>
+                                            <div class="form-group">
+                                                <label>CMM ID: </label>CMM123
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header" style="padding: 4px 10px;">
+                                            <h5 style="margin-bottom: 0;font-size: 15px;">BER Determination</h5>
+                                        </div>
+                                        <div class="card-body" style="padding: 10px 20px;">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Fixed Amount: </label>12345
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
 
+                                                    <div style="float:right;">
+                                                        <div class="form-group">
+                                                            <label style="margin-top: 5px;">BER Threshold: </label>
+                                                            <input class="w60 form-control wf-ber-thrld" type="number" value="12345" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label style="text-align: left;width: 150px;">% of Cost of New: </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div style="padding-left: 36px;margin-top: 8px;">
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Cost of New: </label>222
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Percent: </label> <span style="width: 60px">22%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Amount: </label> 222
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label style="text-align: left;width: 150px;">% of Replacement Cost: </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div style="padding-left: 36px;margin-top: 8px;">
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Cost of Replace: </label> 22
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Percent: </label> <span style="width: 60px">22%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Amount: </label> 224
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" style="margin-top: 10px;margin-left: -22px;">
+                                        <div class="form-group">
+                                            <label style="width: 150px;">Total Work Flow Cost: </label>$30,000
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <div>
+                    <hr />
+                    <button type="button" class="btn btn-primary-cstm" (click)="onOpenAll()">Open All</button>
+                    <button type="button" class="btn btn-primary-cstm" (click)="onCloseAll()">Close All</button>
+                    <hr />
+                </div>
+
+                <p-accordion [multiple]="true" class="p-accordion-cstm">
+                    <p-accordionTab header="Receive" [selected]="displayAccord1" (click)="onAccordTabClick1()">
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>PN</th>
+                                    <th>PN Description</th>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>UOM</th>
+                                    <th>Cond</th>
+                                    <th>Unit Cost</th>
+                                    <th>Ext. Cost</th>
+                                    <th>Provision</th>
+                                    <th>Deferred</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>45789</td>
+                                    <td>Engine</td>
+                                    <td>Mandatory</td>
+                                    <td>5</td>
+                                    <td>Each</td>
+                                    <td>New</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>Replace</td>
+                                    <td>Yes</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Equipment ID</th>
+                                    <th>Equipment Description</th>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>45789</td>
+                                    <td>Engine</td>
+                                    <td>Mandatory</td>
+                                    <td>1</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Expertise Type</th>
+                                    <th>Estimated Hours</th>
+                                    <th>Standard Rate</th>
+                                    <th>Estimated Cost</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mech</td>
+                                    <td>5</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Estimated Cost of Expertise List</td>
+                                    <td colspan="2">100.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>Unit Cost</th>
+                                    <th>Extended Cost</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Shipping Charges</td>
+                                    <td>5</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Ext. Cost of Charges</td>
+                                    <td colspan="2">20.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5>Total Cost for Receive Action : $220.00</h5>
+
+                    </p-accordionTab>
+                    <p-accordionTab header="Inspect" [selected]="displayAccord2" (click)="onAccordTabClick2()">
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>PN</th>
+                                    <th>PN Description</th>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>UOM</th>
+                                    <th>Cond</th>
+                                    <th>Unit Cost</th>
+                                    <th>Ext. Cost</th>
+                                    <th>Provision</th>
+                                    <th>Deferred</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>45789</td>
+                                    <td>Engine</td>
+                                    <td>Mandatory</td>
+                                    <td>5</td>
+                                    <td>Each</td>
+                                    <td>New</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>Replace</td>
+                                    <td>Yes</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Equipment ID</th>
+                                    <th>Equipment Description</th>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>45789</td>
+                                    <td>Engine</td>
+                                    <td>Mandatory</td>
+                                    <td>1</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Expertise Type</th>
+                                    <th>Estimated Hours</th>
+                                    <th>Standard Rate</th>
+                                    <th>Estimated Cost</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mech</td>
+                                    <td>5</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Estimated Cost of Expertise List</td>
+                                    <td colspan="2">100.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>Unit Cost</th>
+                                    <th>Extended Cost</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Shipping Charges</td>
+                                    <td>5</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Ext. Cost of Charges</td>
+                                    <td colspan="2">20.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5>Total Cost for Inspect Action : $220.00</h5>
+
+                    </p-accordionTab>
+                    <p-accordionTab header="Evaluate" [selected]="displayAccord3" (click)="onAccordTabClick3()">
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>PN</th>
+                                    <th>PN Description</th>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>UOM</th>
+                                    <th>Cond</th>
+                                    <th>Unit Cost</th>
+                                    <th>Ext. Cost</th>
+                                    <th>Provision</th>
+                                    <th>Deferred</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>45789</td>
+                                    <td>Engine</td>
+                                    <td>Mandatory</td>
+                                    <td>5</td>
+                                    <td>Each</td>
+                                    <td>New</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>Replace</td>
+                                    <td>Yes</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Equipment ID</th>
+                                    <th>Equipment Description</th>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>45789</td>
+                                    <td>Engine</td>
+                                    <td>Mandatory</td>
+                                    <td>1</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Expertise Type</th>
+                                    <th>Estimated Hours</th>
+                                    <th>Standard Rate</th>
+                                    <th>Estimated Cost</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mech</td>
+                                    <td>5</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Estimated Cost of Expertise List</td>
+                                    <td colspan="2">100.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                    <th>Unit Cost</th>
+                                    <th>Extended Cost</th>
+                                    <th>Perform</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Shipping Charges</td>
+                                    <td>5</td>
+                                    <td>10.00</td>
+                                    <td>50.00</td>
+                                    <td>
+                                        <span>
+                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Ext. Cost of Charges</td>
+                                    <td colspan="2">20.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5>Total Cost for Evaluate Action : $220.00</h5>
+
+                    </p-accordionTab>
+                </p-accordion>
+                <h5>Total Cost for the Work Flow : $660.00</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" id="view-material-lists" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                <h4 class="modal-title">Material list of Work Flow "ACC123" for PN "PN15245" and Scope "OVH"</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal wf-popup-form">
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Part No: </label>PN45854
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Work Flow ID: </label>ACC123
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Scope: </label>OVH
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>PN</th>
+                            <th>PN Description</th>
+                            <th>Item Classification</th>
+                            <th>Qty</th>
+                            <th>UOM</th>
+                            <th>Cond</th>
+                            <th>Unit Cost</th>
+                            <th>Ext. Cost</th>
+                            <th>Provision</th>
+                            <th>Deferred</th>
+                            <th>Fig ID</th>
+                            <th>Perform</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Receive</td>
+                            <td>45789</td>
+                            <td>Engine</td>
+                            <td>Consumables</td>
+                            <td>5</td>
+                            <td>Each</td>
+                            <td>New</td>
+                            <td>10.00</td>
+                            <td>50.00</td>
+                            <td>Replace</td>
+                            <td>
+                                <div class="checkbox-cstm">
+                                    <label>
+                                        <input type="checkbox" checked disabled>
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>https://www.google.co.in/</td>
+                            <td>
+                                <span>
+                                    <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
+                                        <i class="fa fa-history"></i>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" id="history" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                <h4 class="modal-title">History of Workflow ACC123</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal wf-popup-form">
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Part No: </label>PN45854
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Work Flow ID: </label>ACC123
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Scope: </label>OVH
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                    <thead>
+                        <tr>
+                            <th>Memo</th>
+                            <th>Last Updated By</th>
+                            <th>Last Updated Time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Updated Work Phone</td>
+                            <td>Admin</td>
+                            <td>02-03-2018 14:15:45</td>
+                            <td>
+                                <span data-toggle="modal" data-target="#view">
+                                    <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="View">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </span>
+                                <span>
+                                    <a data-toggle="tooltip" class="btn btn-primary nobg" data-original-title="Toggle">
+                                        <i class="fa fa-{{toggle_detailhistory ? 'minus' : 'plus'}}" (click)="toggle_detailhistory=!toggle_detailhistory"></i>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="detailed-history" style="display: table-row;" *ngIf="toggle_detailhistory">
+                            <td colspan="4">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Field Name</th>
+                                            <th>New Value</th>
+                                            <th>Old Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Workflow Description</td>
+                                            <td>Gear Repairing</td>
+                                            <td>Gears</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Version</td>
+                                            <td>2</td>
+                                            <td>1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Customer Name</td>
+                                            <td>Shabbir</td>
+                                            <td>Satish</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Workflow Expiration Date</td>
+                                            <td>02/20/2018</td>
+                                            <td>02/20/2019</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>

@@ -5,7 +5,7 @@ export class AircraftDashNumber {
     dashNumberId: number;
     aircraftTypeId: number;
     aircraftModelId: number;
-    dashNumber: number;
+    dashNumber: string;
     createdBy: string;
     updatedBy: string;
     createdDate: Date;

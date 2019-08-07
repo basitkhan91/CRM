@@ -8,7 +8,7 @@ namespace DAL.Models
     public class AircraftDashNumber : BaseEntity, IAudit
     {
         [Key]
-        public int  DashNumberId { get; set; }
+        public long  DashNumberId { get; set; }
 
         [Required(ErrorMessage ="Aircraft Id is required.")]
         [ForeignKey("AircraftTypeId")]

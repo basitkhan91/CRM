@@ -54,13 +54,7 @@ export class CreatePublicationComponent implements OnInit {
   onFileChanged(event) {
     this.selectedFile = event.target.files[0];
   }
-  // onUpload() {
-  //   const uploadData = new FormData();
-  //   uploadData.append("image", this.selectedFile, this.selectedFile.name);
-  //   this.http.post("/upload", uploadData).subscribe(event => {
-  //     console.log(event); // handle event here
-  //   });
-  // }
+ 
   types = [
     { label: "SelectPublication ", value: "Select publication" },
     { label: "CMM", value: "CMM" },
@@ -144,7 +138,7 @@ export class CreatePublicationComponent implements OnInit {
       //this.fileupload..push(file);
     }
     this.selectedFile = <File>event.target.files[0];
-    //this.hasFile = true;
+ 
   }
 
   onUpload(event) {
@@ -162,67 +156,30 @@ export class CreatePublicationComponent implements OnInit {
     }
   }
   editItemCloseModel() {
-    if (this.sourcePublication.PublicationId != "") {
-      this.generalInformationDetails = this.sourcePublication;
-      //this.isSaving = true;
-      //if (this.isEditMode == false)
-      {
-        //this.sourcePublication.createdBy = this.userName;
-        //this.sourcePublication.updatedBy = this.userName;
-        this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
-        this.sourcePublication.masterCompanyId = 1;
-        this.publicationService
-          .newAction(this.sourcePublication)
-          .subscribe(res => {
-            this.changeOfTab("PnMap"),
-              role => this.saveSuccessHelper(role),
-              error => this.saveFailedHelper(error);
-          });
+      if (this.sourcePublication.PublicationId != "") {
+          this.generalInformationDetails = this.sourcePublication;
+       
+          {
+        
+              this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
+              this.sourcePublication.masterCompanyId = 1;
+              this.publicationService
+                  .newAction(this.sourcePublication)
+                  .subscribe(res => {
+                      this.changeOfTab("PnMap"),
+                          role => this.saveSuccessHelper(role),
+                          error => this.saveFailedHelper(error);
+                  });
+          }
+     
       }
-      //this.publicationService.newAction(this.sourcePublication).subscribe(data => {
-      //    if (data)
-      //    {
-      //        this.sourcePublication.PublicationId = data.publicationId;
-      //        this.sourcePublication.pubDescr = data.description
-      //        this.sourcePublication.entryDate = data.entryDate;
-      //        this.sourcePublication.pubType = data.pubType;
-      //        this.sourcePublication.pubType = data.pubType;
-
-      //    }
-      //    //this.loadCustomerClassifiData();
-      //    this.changeOfTab('Aircraft');
-      //})
-    }
-    // else {
-
-    //this.sourceClassification.updatedBy = this.userName;
-    //this.sourceClassification.description = this.classificationName;
-    //this.sourceClassification.masterCompanyId = 1;
-    //this.customerClassificationService.updatecustomerclass(this.sourceClassification).subscribe(
-    //    response => this.saveCompleted(this.sourceClassification),
-    //    error => this.saveFailedHelper(error));
-    // }
-
-    //this.displayCustomerClassification = false;
-    //this.customerClassificationError = false;
-    //this.modal.close();
-    // }
   }
   private loadCustomerClassifiData() {
-    //this.alertService.startLoadingMessage();
-    //this.loadingIndicator = true;
-    //this.customerClassificationService.getCustomerClassificationList().subscribe(
-    //    results => this.onDataLoadClassifiSuccessful(results[0]),
-    //    error => this.onDataLoadFailed(error)
-    //);
+  
   }
   private onDataLoadClassifiSuccessful(
     getCustomerClassificationList: CustomerClassification[]
   ) {
-    //this.alertService.stopLoadingMessage();
-    //this.loadingIndicator = false;
-    //this.dataSource.data = getCustomerClassificationList;
-    //this.allcustomerclassificationInfo = getCustomerClassificationList;
   }
 
   // get All
@@ -257,20 +214,6 @@ export class CreatePublicationComponent implements OnInit {
       });
     });
   }
- //  its a new Functionality which need to to added in future
-  // updateDropdown(partList, selectedParts) {
-  //   console.log(partList[0].label, selectedParts);
-  //   // const data = selectedParts.reduce((acc, x) => {
-  //   //   console.log(acc);
-  //   // }, partList);
-  //   // return x.filter(item => item[y.key].toString().includes(y.value));
-  //   const data = selectedParts.reduce((x, y) => {
-  //     console.log(x.label);
-  //   }, partList);
-
-  //   // console.log(data);
-  // }
-
   mapPartNumbers() {
     this.pnMapping = this.selectedPartNumbers.map(obj => {
       return {
@@ -304,7 +247,7 @@ export class CreatePublicationComponent implements OnInit {
   }
 
     getAircraftAllList() {
-        this.publicationService.getPublicationAList().subscribe(
+        this.aircraftManufacturerService.getAll().subscribe(
             details => this.onDataLoadSuccessful(details[0]),
                 error => this.onDataLoadFailed(error)
             );

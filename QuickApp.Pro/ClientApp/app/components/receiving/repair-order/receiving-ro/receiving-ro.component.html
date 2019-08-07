@@ -1,0 +1,199 @@
+﻿<div class="x_content">
+    <div class="card receiving-po">
+        <div class="card-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+                    <li class="breadcrumb-item active" aria-current="page">Receiving RO</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="card-body">
+            <form id="" class="ro-grid-form" name="">
+                <!--<div class="form-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status: <span class="clr-red">*</span></label>
+                            <div>
+                                <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
+                                    <label class="radio-cstm wauto">
+                                        <input type="radio" name="postatus" class="form-control" value="{{status.Key}}" required>
+                                        <span class="checkmark"></span> {{status.Value}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+                <div class="form-row" style="margin-top: 15px;">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>PO Num</label>
+                            <input class="form-control" type="text" disabled="disabled" required> <!--repairOrderData.purchaseOrderNumber-->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Num</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <input class="form-control" type="text" disabled="disabled" required> <!--repairOrderData.vendor.vendorCode-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Requisitioner</label>
+                            <p-autoComplete disabled="disabled" [size]="32" class="rpo-acomp-header"
+                                            [minLength]="1" [dropdown]="true"> <!--repairOrderData.requestedBy-->
+                            </p-autoComplete>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Company</label>
+                            <select disabled="disabled" class="form-control" required> <!--roSelectedCompanyId-->
+                                <option *ngFor="let company of roCompanyList" [value]="company.Key">{{company.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Open Date</label>
+                            <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [required]="true"></p-calendar> <!--repairOrderData.dateRequested-->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Name</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <input type="text" class="form-control" disabled="disabled" required> <!--repairOrderData.vendor.vendorName-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Approver</label>
+                            <div class="inner-addon">
+                                <input disabled="disabled" type="text" class="form-control" required> <!--repairOrderData.approver-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>BU</label>
+                            <select disabled="disabled" class="form-control"> <!--roSelectedBusinessUnitId-->
+                                <option *ngFor="let businessUnit of roBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Need By</label>
+                            <p-calendar disabled="disabled" name="needByDate" class="pas-clder" [showIcon]="true"></p-calendar> <!--repairOrderData.needByDate-->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Vendor Contact</label>
+                            <input class="form-control" type="text" disabled="disabled" /> <!--repairOrderData.vendor.firstName-->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Approved Date</label>
+                            <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [required]="true"></p-calendar> <!--repairOrderData.dateApprovied-->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Dept</label>
+                            <select disabled="disabled" class="form-control"> <!--roSelectedDepartmentId-->
+                                <option *ngFor="let department of roDepartmentList" [value]="department.Key">{{department.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <div class="inner-addon right-addon inline-block">
+                                <select disabled="disabled" class="form-control"> <!--repairOrderData.priorityId-->
+                                    <option *ngFor="let priority of roPriorityInfo" [value]="priority.Key">{{priority.Value}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Contact Phone</label>
+                            <input disabled="disabled" class="form-control" type="text" pKeyFilter="pnum"> <!--repairOrderData.workPhone-->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Credit Limit &amp; Terms</label>
+                            <div class="form-row">
+                                <div class="col-sm-5">
+                                    <input class="form-control" type="text" placeholder="limit" required> <!--repairOrderData.terms-->
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" required> <!--repairOrderData.creditLimit-->
+                                        <option *ngFor="let creditTerm of roCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Division</label>
+                            <select disabled="disabled" class="form-control"> <!--poSelectedDivisionId-->
+                                <option *ngFor="let division of roDivisionList" [value]="division.Key">{{division.Value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Deferred Receiver</label>
+                            <div class="checkbox-cstm" style="margin-top: 4px">
+                                <label>
+                                    <input type="checkbox" class="form-control"> <!--repairOrderData.deferredReceiver-->
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Resale</label>
+                            <div class="checkbox-cstm" style="margin-top: 4px">
+                                <label>
+                                    <input type="checkbox" class="form-control"> <!--repairOrderData.resale-->
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Memo</label>
+                            <textarea class="form-control"></textarea> <!--repairOrderData.notes-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

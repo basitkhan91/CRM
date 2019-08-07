@@ -45,4 +45,10 @@ export class DashNumberService {
         return Observable.forkJoin(
             this.dashNumberEndpoint.getAircraftDashNumberRecords<AircraftDashNumber[]>(serverSidePagesData));
     }
+    getAllDashModels(Mid: string, Tid: number, Did: string) {
+        return this.dashNumberEndpoint.getDASHLISTByID<any>(Mid, Tid, Did);
+    }
+    getDashNumberByModelTypeId(Mid: string, Tid: number) {
+        return this.dashNumberEndpoint.getDashNumberByModelTypeId<any>(Mid, Tid);
+    }
 }

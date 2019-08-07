@@ -1,18 +1,603 @@
-﻿<div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="x_panel">
-            <div class="x_content">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                    </ol>
-                </nav>
-                <div class="col-sm-12 form-bg">
-                    <div class="form-group add-inputs">
-                        <h3 class="text-center"> Content not given for Quote page.</h3>
-                    </div>
-                </div>
+﻿<div class="card">
+  <div class="card-body">
+    <div class="col-md-12">
+      <div class="col-md-6">
+        <div class="form-row">
+          <div class="col-md-6">
+            <div class="form-group ">
+              <label>Quote Number <span class="clr-red">*</span></label>
+              <input class="form-control" type="text" [(ngModel)]="quoteForm.QuoteNumber" name="quotenumber" />
             </div>
+            <div class="form-group ">
+              <label>Open Date <span class="clr-red">*</span> </label>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.OpenDate" name="openDate"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label>Quote Due Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.QuoteDueDate" name="QuoteDueDate"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Valid For Days <span class="clr-red">*</span></label>
+              <input class="form-control" type="number" [(ngModel)]="quoteForm.ValidForDays" name="ValidForDays" />
+            </div>
+            <div class="form-group ">
+              <label> Expiration Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.ExpDate" name="ExpDate"></p-calendar>
+            </div>
+
+            <div class="form-group">
+              <label> Expiration Date <span class="clr-red">*</span></label>
+              <select [(ngModel)]="quoteForm.ExpDateStatus" name="ExpDateStatus">
+                <option value="">Select Status</option>
+                <option value="open">Open</option>
+                <option value="Closed">Closed</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Delayed">Delayed</option>
+              </select>
+            </div>
+            <div class="form-group ">
+              <label>WO Num </label>
+              <input class="form-control" type="text" [(ngModel)]="quoteForm.WoNumber" name="WoNumber" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="customername">Customer Name
+                <span class="clr-red">*</span>
+              </label>
+              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.CustomerId"
+                name="CustomerId">
+              </p-autoComplete>
+            </div>
+            <div class="form-group ">
+              <label for="customercode">Customer Code
+                <span class="clr-red">*</span>
+              </label>
+              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.CustomerCodeId"
+                name="CustomerCodeId">
+              </p-autoComplete>
+            </div>
+
+            <div class="form-group ">
+              <label for="customercontact">Customer Contact
+                <span class="clr-red">*</span>
+              </label>
+              <input type="number" class="form-control" [(ngModel)]="quoteForm.CustomerContact"
+                name="CustomerContact" />
+            </div>
+            <div class="form-group">
+              <label for="customeremail">Customer Email
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.CustomerEmail" name="CustomerEmail" />
+            </div>
+            <div class="form-group ">
+              <label for="customerphone">Customer Phone
+                <span class="clr-red">*</span>
+              </label>
+              <input type="number" class="form-control" [(ngModel)]="quoteForm.CustomerPhone" name="CustomerPhone" />
+            </div>
+            <div class="form-group ">
+              <label for="customerref">Customer Ref
+                <span class="clr-red">*</span>
+              </label>
+
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.CustomerReference"
+                name="CustomerReference" />
+            </div>
+            <div class="form-group">
+              <div class="checkbox-cstm">
+                <label>
+                  <input type="checkbox" name="contract" [(ngModel)]="quoteForm.IsContract" />
+                  <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                  Contract
+                </label>
+                <input *ngIf="quoteForm.IsContract" type="text" class="form-control" [(ngModel)]="quoteForm.Contract"
+                  name="Contract" />
+              </div>
+            </div>
+
+            <div class="form-group ">
+              <label for="customerref">Quantity
+                <span class="clr-red">*</span>
+              </label>
+
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.Quantity" name="Quantity" />
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-row">
+          <div class="col-md-6">
+            <div class="form-group ">
+              <label>
+                Customer Request Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.customerRequestDate" name="customerRequestDate">
+              </p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Promise Date<span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.PromiseDate" name="PromiseDate"></p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Est.Completion Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.EstCompletionDate" name="EstCompletionDate">
+              </p-calendar>
+            </div>
+            <div class="form-group ">
+              <label> Est.Ship Date <span class="clr-red">*</span></label>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.EstShipDate" name="EstShipDate"></p-calendar>
+            </div>
+
+            <div class="form-group">
+              <label for="credit">Credit Terms &amp; Limit <span class="clr-red">*</span>
+              </label>
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <input type="text" class="form-control" [(ngModel)]="quoteForm.CreditTerms" name="CreditTerms" />
+                </div>
+                <div class="col-md-6">
+                  <select [(ngModel)]="quoteForm.CreditTermsandLimit" name="CreditTermsandLimit">
+                    <option value="">- Terms -</option>
+                    <option value="2% 10, Net 30">2% 10, Net 30</option>
+                    <option value="2% 10, Net 45">2% 10, Net 45</option>
+                    <option value="3% 10, Net 45">3% 10, Net 45</option>
+                    <option value="CIA">CIA</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Due Upon Receipt">Due Upon Receipt</option>
+                    <option value="Net 30">Net 30</option>
+                    <option value="Net 45">Net 45</option>
+                    <option value="Net 60">Net 60</option>
+                    <option value="Net 90">Net 90</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label> Item Count <span class="clr-red">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.ItemCount" name="ItemCount" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group ">
+              <label for="customercontact">
+                Sales Person
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.SalesPersonId" name="SalesPersonId" />
+            </div>
+
+            <div class="form-group ">
+              <label for="customercontact">CSR
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.CSR" name="CSR" />
+            </div>
+            <div class="form-group ">
+              <label for="customercontact">Employee
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.EmployeeId" name="EmployeeId" />
+            </div>
+            <div class="form-group ">
+              <label for="customercontact">Currency
+                <span class="clr-red">*</span>
+              </label>
+              <select [(ngModel)]="quoteForm.Currency" name="Currency">
+                <option value="">Select Currency</option>
+                <option value="inr">₹</option>
+                <option value="usd" selected="1">$</option>
+                <option value="pound">£</option>
+                <option value="euro">€</option>
+                <option value="yen">¥</option>
+              </select>
+            </div>
+            <div class="form-group ">
+              <label for="customercontact">DSO
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.DSO" name="DSO" />
+            </div>
+            <div class="form-group ">
+              <label for="customercontact">AR BAL
+                <span class="clr-red">*</span>
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.ARBal" name="ARBal" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
+    <div class="col-md-12">
+      <button class="btn btn-success pull-right" (click)="saveQuoteDetails()">Save Details</button>
+      <button class="btn btn-success pull-right">Edit Details</button>
+    </div>
+  </div>
 </div>
+
+
+
+<div class="col-md-12">
+
+        <span><strong>Part Details </strong></span>
+        <span class="btn btn-success pull-right add-row-btn" (click)="addMPN()">Add MPN</span>
+        <div class="clear"></div>
+        <div class="table-responsive">
+          <table class="table table-bordered  table-sorting mpn-list-table" id="mpn-list-table">
+            <thead>
+              <tr>
+                <th rowspan="2">PN *</th>
+                <th rowspan="2">PN Description *</th>
+                <th rowspan="2">Revised PN</th>
+                <th rowspan="2">Work Scope *</th>
+                <th rowspan="2">Qty *</th>
+                <th rowspan="2">CMM/Pub Ref</th>
+                <th rowspan="2">Workflow ID *</th>
+                <th rowspan="2">Priority *</th>
+                <th rowspan="2">Customer Request Date *</th>
+                <th rowspan="2">Promised Date *</th>
+                <th rowspan="2">Est. Comp Date *</th>
+                <th rowspan="2">Est. Ship Date *</th>
+                <th rowspan="2">PMA</th>
+                <th rowspan="2">DER</th>
+                <th rowspan="2">TAT (Days)</th>
+                <th class="w100">Action</th>
+
+              </tr>
+
+            </thead>
+            <tbody>
+              <tr class="mpn-row" style="display: table-row;" *ngFor="let pd of quoteForm.partsDetails">
+                <td>
+                  <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="pd.PnId" [dropdown]="true">
+                  </p-autoComplete>
+                </td>
+                <td><input type="text" [(ngModel)]="pd.PnDescription" name="PnDescription"></td>
+                <td>
+                  <p-autoComplete class="p-autoComplete-ctsm" name="RevisedPnId" [(ngModel)]="pd.RevisedPnId"
+                    [dropdown]="true">
+                  </p-autoComplete>
+                </td>
+                <td>
+                  <p-dropdown class="p-dropdown-custom" [(ngModel)]="pd.WorkScopeId">
+                  </p-dropdown>
+                </td>
+
+                <td><input type="number" class="form-control w50" [(ngModel)]="pd.Qty"></td>
+
+
+                <td><a href="sample-document.pdf" target="_blank" class="clr-red">View</a>
+                </td>
+                <td>
+
+                  <p-dropdown class="p-dropdown-custom" [(ngModel)]="pd.WorkScopeId">
+                  </p-dropdown>
+
+                </td>
+                <td><select [(ngModel)]="pd.Priority">
+                    <option value="">AOG</option>
+                    <option value="">Critical</option>
+                    <option value="">Routine</option>
+                  </select></td>
+
+                <td>
+                  <p-calendar [showIcon]="true" [(ngModel)]="pd.CustomerRequestDate"></p-calendar>
+                </td>
+                <td>
+                  <p-calendar [showIcon]="true" [(ngModel)]="pd.PromiseDate"></p-calendar>
+                </td>
+                <td>
+                  <p-calendar [showIcon]="true" [(ngModel)]="pd.EstCompletionDate"></p-calendar>
+                </td>
+                <td>
+                  <p-calendar [showIcon]="true" [(ngModel)]="pd.EstShipDate"></p-calendar>
+                </td>
+                <td>
+                  <p-checkbox [(ngModel)]="pd.IsPMA" binary="false" class="checkbox-table"></p-checkbox>
+                </td>
+                <td>
+                  <p-checkbox [(ngModel)]="pd.IsDER" binary="false" class="checkbox-table"></p-checkbox>
+                </td>
+                <td>
+                  <input type="text" [(ngModel)]="pd.TATDaysStandard">
+                </td>
+                <td>
+                  <p-inputSwitch
+                [(ngModel)]="pd.IsActive"
+                title="Active/Inactive"
+              ></p-inputSwitch>
+              <a
+                title="Delete"
+                class="btn btn-success boxed-float-btn nobg delete-row-btn"
+                ><i class="fa fa-trash"></i
+              ></a>
+                </td>
+
+
+              </tr>
+
+            </tbody>
+          </table>
+         
+        </div>
+        <button class="btn btn-success pull-right"> Save MPN(s)</button>
+
+</div>
+
+<br>
+
+<div class="card">
+<div class="card-body">
+
+<div class="col-md-12">
+
+  <div>
+      <div class="col-md-3">
+          <div class="form-group ">
+            <label class="fs12"
+              >MPN
+            </label>
+            <select class="mpn-select" style="width: 100px;">
+                <option>PN12345</option>
+                <option>PN23456</option>
+                <option>PN34567</option>
+                <option>PN45678</option>
+                <option>PN56789</option>
+              </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group ">
+                <label class="fs12"
+                  >PN Description
+                </label> IDG
+              </div>
+        </div>
+  </div>
+</div>
+
+  <div class="col-md-12">
+      <div class="form-group ">
+          <label class="fs12"
+            >Build Method: 
+          </label>
+          <button type="button" class="btn btn-primary-cstm">Use Work Flow</button>
+          <button type="button" class="btn btn-primary-cstm">Use Historical WOs</button>
+          <button type="button" class="btn btn-primary-cstm">Build From Scratch</button>
+          <button type="button" class="btn btn-primary-cstm" data-toggle="modal" data-target="#quote-details">Display 3rd Party Pricing</button>
+        </div>
+
+
+       
+  </div>
+  <div class="table-responsive">
+      <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+      <thead>
+            <tr>
+                <th class="events1"></th>
+                <th>Cust Name</th>
+                <th>MC PN</th>
+                <th>MC Description</th>
+                <th>WO #</th>
+                <th>Work Scope</th>
+                <th>Comp Date</th>
+                <th>Currency</th>
+                <th>OEM/PMA/DER</th>
+                <th>Revenue</th>
+                <th>Parts Cost</th>
+                <th>Labor Hrs</th>
+                <th>Labor Cost</th>
+                <th>Overhead</th>
+                <th>Other</th>
+                <th>Total Cost</th>
+                <th>Margins</th>
+                <th>% of Revenue</th>
+            </tr>
+      </thead>
+      <tbody>
+        <tr class="mpn-row">
+          <td><input type="radio" name="historical-wo-list" class="select-mpn-quote"></td>
+          <td>ABC</td>
+          <td>457787-14</td>
+          <td>457787-14</td>
+          <td>WO-45774</td>
+          <td>Overhaul</td>
+          <td>1/12/2018</td>
+          <td>USD</td>
+          <td>Multiple</td>
+          <td> 10,000.00 </td>
+          <td> 2,500.00 </td>
+          <td> 23.80 </td>
+          <td> 595.00 </td>
+          <td> 928.20 </td>
+          <td> 125.00 </td>
+          <td> 4,148.20 </td>
+          <td> 5,851.80 </td>
+          <td>58.5%</td>
+        </tr>
+          <tr class="mpn-row">
+          <td><input type="radio" name="historical-wo-list" class="select-mpn-quote"></td>
+          <td>ABC</td>
+          <td>457787-14</td>
+          <td>457787-14</td>
+          <td>WO-45799</td>
+          <td>Overhaul</td>
+          <td>1/31/2018</td>
+          <td>USD</td>
+          <td>OEM</td>
+          <td> 10,000.00 </td>
+          <td> 2,300.00 </td>
+          <td> 20.00 </td>
+          <td> 500.00 </td>
+          <td> 775.00 </td>
+          <td> 100.00 </td>
+          <td> 3,675.00 </td>
+          <td> 6,325.00 </td>
+          <td>63.9%</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="quote-details" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h4 class="modal-title"> 3rd Party Pricing details</h4>
+          </div>
+          <div class="modal-body">
+              
+            <form method="post" id="" name="">
+                
+                <div class="col-sm-3 w150">
+                    <p>
+                        <span class="col-sm-12"><b>Site Name: </b></span> 
+                        <span class="col-sm-12 right-addon inner-addon w200">
+                            <select id="" name="" multiple="multiple" class="multiselect" style="display: none;">
+                                <option value="" class=""></option>
+                              <option value="145.com" class="">145.com</option>
+                              <option value="Aeroxchange" class="">Aeroxchange</option>
+                              <option value="AvRef" class="">AvRef</option>
+                              <option value="ILS" class="">ILS</option>
+                              <option value="Parts base" class="">Parts base</option>
+                            </select>
+                            
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-2 w100 mtop25">
+                    <p>
+                        <span class="col-sm-12">
+                            <label class="text-left mleft10"><input type="checkbox"> PMA</label>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-2 w100 mtop25">
+                    <p>
+                        <span class="col-sm-12">
+                            <label class="text-left mleft10"><input type="checkbox"> DRE</label>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-3 w150">
+                    <p>
+                        <span class="col-sm-12"><b>Date Range: </b></span> 
+                        <span class="col-sm-12 right-addon inner-addon">
+                            <select class="quote-3rd-party-date-range-select">
+                            <option value="6">6 Mths</option>
+                            <option value="12">12 Mths</option>
+                            <option value="18">18 Mths</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
+                    <p>
+                        <span class="col-sm-12"><b>Date From: </b></span> 
+                        <span class="col-sm-12">
+                            <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891243">
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
+                    <p>
+                        <span class="col-sm-12"><b>Date From: </b></span> 
+                        <span class="col-sm-12">
+                            <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891244">
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-2 w100 mtop20">
+                    <p>
+                        <span class="col-sm-12">
+                            <button type="button" id="" name="" class="btn btn-success show-pricing-btn">Show Pricing</button>
+                        </span>
+                    </p>
+                </div>
+            </form>
+              <div class="table-responsive pricing-3rd-party" style="display: none;">
+                  <hr>
+                      <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+                      <thead>
+                          <tr>
+                              <th colspan="8"></th>
+                              <th colspan="4">Average Unit Price</th>
+                              <th colspan="4">Number of Units</th>
+                          </tr>
+                            <tr>
+                                <th>Provider</th>
+                                <th>PN</th>
+                                <th>Alternate PN</th>
+                                <th>PN Description</th>
+                                <th>Cond Type</th>
+                                <th>UOM</th>
+                                <th>OEM/PMA/DER</th>
+                                <th>Date Parameters</th>
+                                <th>High</th>
+                                <th>Mid</th>
+                                <th>Low</th>
+                                <th>Average</th>
+                                <th>High</th>
+                                <th>Mid</th>
+                                <th>Low</th>
+                                <th>Average</th>
+                            </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="mpn-row">
+                          <td>ILS</td>
+                          <td>12345435</td>
+                          <td></td>
+                          <td>IDG</td>
+                          <td>Overhaul</td>
+                          <td>EA</td>
+                          <td>OEM</td>
+                          <td>12 Mths</td>
+                          <td> 40,000 </td>
+                          <td> 37,000 </td>
+                          <td> 32,000 </td>
+                          <td> 38,000 </td>
+                          <td> 50 </td>
+                          <td> 150 </td>
+                          <td> 150 </td>
+                          <td></td>
+                        </tr>
+                        <tr class="mpn-row">
+                          <td>AEX</td>
+                          <td>12345435</td>
+                          <td></td>
+                          <td>IDG</td>
+                          <td>AR</td>
+                          <td>EA</td>
+                          <td>OEM</td>
+                          <td>12 Mths</td>
+                          <td> 40,000 </td>
+                          <td> 37,000 </td>
+                          <td></td>
+                          <td> 38,000 </td>
+                          <td> 50 </td>
+                          <td> 123 </td>
+                          <td> 126 </td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+             
+                  </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+  </div>

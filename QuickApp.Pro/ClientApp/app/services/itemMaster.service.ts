@@ -258,5 +258,16 @@ export class ItemMasterService {
     newPNIMMapping(action: any) {
         return this.itemMasterEndpoint.getPNIMMappingEndpoint<any>(action);
     }
+    newItemMasterAircarftClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemAircraftEndpoint<any>(action);
+    }
+    newItemMasterATAClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemATAEndpoint<any>(action);
+    }
+    newItemMasterPurcSaleClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
+    }
+    
+   
 }
 

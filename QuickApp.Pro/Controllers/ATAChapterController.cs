@@ -170,7 +170,12 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
-
+        [HttpGet("GetATASUBS_BY_ATAMain_ID/{ChID}")]
+        public IActionResult GetATASub(long ChID)
+        {
+            var result = _unitOfWork.ATAChapter.GetATASUBS(ChID);
+            return Ok(result);
+        }
     }
 
 

@@ -15,7 +15,7 @@ using System.Text;
 namespace DAL.Models
 {
 
-    public partial class ItemMasterPNMappingModel
+    public partial class PublicationItemMasterMapping
     {
         [Key]
         public long PNIMID { get; set; }

@@ -54,9 +54,6 @@ export class WorkOrderAddComponent implements OnInit {
   isDetailedView: boolean;
   selectedRadioButtonValue: boolean;
   moduleName: string;
-
-  woDealerType: String = 'customer';
-  woType: String = 'single';
   showTableGrid: Boolean = false;
   worflowId = [];
   isContract = true;
@@ -76,6 +73,24 @@ export class WorkOrderAddComponent implements OnInit {
       value: 'WO125'
     }
   ];
+  WorkOrder = {
+    WoType: 'single',
+    WoDealerType: 'customer',
+    WoNumber: 'Creating',
+    OpenDate: new Date(),
+    WoStatus: '',
+    CustomerId: '',
+    CustomerCodeId: '',
+    CustomerReference: '',
+    IsContract: false,
+    Contract: '',
+    CustomerContact: null,
+    CreditTerms: '',
+    CreditTermsandLimit: '',
+    EmployeeId: '',
+    SalesPersonId: '',
+    CSR: ''
+  };
   workOrderMPN = {
     iD: 0,
     workOrderId: 0,
@@ -108,7 +123,7 @@ export class WorkOrderAddComponent implements OnInit {
     isDelete: false
   };
   labor = {
-    WOId: null,
+    WOId: '',
     DataEnteredBy: null,
     Expertise: '',
     EmployeeId: null,
@@ -129,6 +144,57 @@ export class WorkOrderAddComponent implements OnInit {
         Clean: []
       }
     ]
+  };
+  adresses = {
+    WOId: '',
+    ShipTo: [],
+    BillTo: []
+  };
+  documents = [
+    {
+      WOId: '',
+      Comp: '',
+      BU: '',
+      Div: '',
+      Dep: '',
+      DocumentCode: '',
+      Description: 'Contract',
+      DocLink: '',
+      IsActive: false
+    }
+  ];
+
+  quote = {
+    QuoteNumber: '',
+    OpenDate: '',
+    QuoteDueDate: '',
+    ValidForDays: null,
+    ExpDate: '',
+    ExpDateStatus: '',
+    WoNumber: '',
+    CustomerId: null,
+    CustomerCodeId: null,
+    CustomerContact: null,
+    CustomerEmail: '',
+    CustomerPhone: null,
+    CustomerReference: '',
+    IsContract: false,
+    Contract: '',
+    Quantity: null,
+    customerRequestDate: '',
+    PromiseDate: '',
+    EstCompletionDate: '',
+    EstShipDate: '',
+    CreditTerms: '',
+    CreditTermsandLimit: '',
+    ItemCount: null,
+    SalesPersonId: null,
+    CSR: '',
+    EmployeeId: null,
+    Currency: '',
+    DSO: '',
+    ARBal: '',
+    partsDetails: []
   };
 
   constructor(
@@ -169,17 +235,18 @@ export class WorkOrderAddComponent implements OnInit {
     this.addMPN();
   }
 
+
   toggleDisplayMode(): void {
     this.isDetailedView = !this.isDetailedView;
   }
   // Handles radio Button single or Multiple
   toggleWorkOrderType(value): void {
-    this.woType = value;
+    this.WorkOrder.WoType = value;
     this.showTableGrid = false;
   }
   // Handles type of the WorkOrder Dealer
   woDealerChange(value) {
-    this.woDealerType = value;
+    this.WorkOrder.WoDealerType = value;
   }
   // added new MPN
   addMPN() {

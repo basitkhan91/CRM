@@ -31,5 +31,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getItemMasterData(long id);
 
         IEnumerable<object> getLegalEntityAccountsData(long id);
+
+        
+
     }
 }
