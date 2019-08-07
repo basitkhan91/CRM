@@ -328,10 +328,9 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//debugger;
 		if (value == "Stock") {
 			this.stockTable = true;
-			this.cols = [
-				//{ field: 'actionId', header: 'Action Id' },
+			this.cols = [				
 				{ field: 'partNumber', header: 'PN' },
-				{ field: 'partDescription', header: 'Description' },
+				{ field: 'partDescription', header: 'PN Description' },
 				{ field: 'isHazardousMaterial', header: 'Is Hazardous Material' },
 				//{ field: '', header: 'Material Type' },
 				{ field: 'provisiondesc', header: 'Provision' },
@@ -340,10 +339,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 				//{ field: '', header: ' Aircraft Manufacturer' },
 				{ field: 'nationalStockNumber', header: 'NSN' },
 				{ field: 'prioritydesc', header: 'Priority' },
-
 				//{ field: 'updatedDate', header: 'Updated Date' },
 				//{ field: 'createdDate', header: 'Created Date' }
-
 			];
 			this.selectedColumns = this.cols;
 			this.loadingIndicator = false;

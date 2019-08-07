@@ -17,13 +17,17 @@ namespace DAL.Models
 
     public partial class ItemMasterPurchaseSale
     {
+
         [Key]
         public long ItemMasterPurchaseSaleId { get; set; }
+        [ForeignKey("ItemMasterId")]
         public long ItemMasterId { get; set; }
         public string PartNumber { get; set; }
         public string Condition { get; set; }
+        [ForeignKey("PP_UOMId")]
         public long PP_UOMId { get; set; }
-        public long PP_CurrencyId { get; set; }
+        [ForeignKey("PP_CurrencyId")]
+        public int PP_CurrencyId { get; set; }
         public decimal PP_FXRatePerc { get; set; }
         public decimal PP_VendorListPrice { get; set; }
         public DateTime PP_LastListPriceDate { get; set; }
@@ -31,7 +35,9 @@ namespace DAL.Models
         public decimal PP_PurchaseDiscAmount { get; set; }
         public DateTime PP_LastPurchaseDiscDate { get; set; }
         public decimal PP_UnitPurchasePrice { get; set; }
+        [ForeignKey("SP_FSP_UOMId")]
         public long SP_FSP_UOMId { get; set; }
+        [ForeignKey("SP_FSP_CurrencyId")]
         public int SP_FSP_CurrencyId { get; set; }
         public decimal SP_FSP_FXRatePerc { get; set; }
         public decimal SP_FSP_FlatPriceAmount { get; set; }
@@ -50,6 +56,7 @@ namespace DAL.Models
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
 
     }
 }

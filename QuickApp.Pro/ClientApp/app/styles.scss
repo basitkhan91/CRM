@@ -13630,13 +13630,18 @@ body .ui-datepicker table td > a.ui-state-active {
     margin-left: 5px !important;
     margin-top: 5px;
 }
-.autocomplete-customer1 .ui-autocomplete .ui-autocomplete-panel {
+.autocomplete-customer2 .ui-autocomplete .ui-autocomplete-panel {
     min-width: 95% !important;
+    margin-left: 5px !important;
+    margin-top: 10px;
+}
+.autocomplete-customer1 .ui-autocomplete .ui-autocomplete-panel {
+    min-width: 97% !important;
     margin-left: 5px !important;
     margin-top: 5px;
 }
 .autocomplete-customer1 .ui-autocomplete{
-    min-width: 95% !important;
+    min-width: 97% !important;
     margin-left: 5px !important;
     margin-top: 5px;
     margin-left: -1px !important;

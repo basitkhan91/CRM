@@ -69,11 +69,13 @@ import { EditVendorCapabilitiesComponent } from "../components/vendor/vendor-cap
 import { AuthService } from "../services/auth.service";
 import { RolesGuardService } from "../services/roles-guard.service";
 import { ValidateAccessModule } from "../validateaccess/validateaccess.module";
+import { KeyFilterModule } from "primeng/keyfilter";
 
 @NgModule({
 	imports: [
 		//SharedModule,
 		//CompanyComponent,
+        KeyFilterModule,
 		FlexLayoutModule,
 		FormsModule, ReactiveFormsModule,
 		QuickAppProMaterialModule,
