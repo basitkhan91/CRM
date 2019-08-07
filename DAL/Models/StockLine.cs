@@ -47,6 +47,7 @@ namespace DAL.Models
         public string ManufacturerLotNumber { get; set; }
         public DateTime? ManufacturingDate { get; set; }
         public string ManufacturingBatchNumber { get; set; }
+        //public string ManufactureTrace { get; set; }
         public string PartCertificationNumber { get; set; }
         public string CertifiedBy { get; set; }
         public DateTime? CertifiedDate { get; set; }

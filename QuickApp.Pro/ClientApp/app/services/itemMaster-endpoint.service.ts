@@ -79,6 +79,14 @@ export class ItemMasterEndpoint extends EndpointFactory {
         super(http, configurations, injector);
     }
 
+    getItemMasterById<T>(id: number): Observable<T>{
+        let url = `${this._actionsUrl}/${id}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getItemMasterById(id));
+            });
+    }
+
     getitemMasterEndpoint<T>(): Observable<T> {
 
         return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())

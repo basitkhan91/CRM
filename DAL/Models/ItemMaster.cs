@@ -129,6 +129,10 @@ namespace DAL.Models
 
         public string Memo { get; set; }
 
+        public string ExportECCN { get; set; }
+        
+        public string ITARNumber { get; set; }
+
         [ForeignKey("ExportCountryId")]
         public Int16? ExportCountryId { get; set; }
 

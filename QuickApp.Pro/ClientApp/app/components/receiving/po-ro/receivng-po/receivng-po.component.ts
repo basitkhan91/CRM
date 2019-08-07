@@ -33,6 +33,8 @@ import { Shelf } from '../../../../models/shelf.model';
 import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 import { error } from '@angular/compiler/src/util';
 import { Customer } from '../../../../models/customer.model';
+import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
+import { Console } from '@angular/core/src/console';
 
 @Component({
     selector: 'app-receivng-po',
@@ -66,7 +68,10 @@ export class ReceivngPoComponent implements OnInit {
     VendorList: DropDownData[] = [];
     ManufacturerList: DropDownData[] = [];
     ConditionList: DropDownData[] = [];
+    GLAccountList: DropDownData[] = [];
     ConditionId: number = 0;
+    allPartGLAccountId: number;
+
 
     toggleIcon: boolean = false;
     currentSLIndex: number = 0;
@@ -159,14 +164,15 @@ export class ReceivngPoComponent implements OnInit {
         public creditTermsService: CreditTermsService,
         public employeeService: EmployeeService,
         private alertService: AlertService,
-        private accountService: AccountService) {
-        //this.loadPurchaseOrderData();
+        private accountService: AccountService,
+        private glAccountService: GlAccountService) {
         this.getManagementStructure();
         this.getAllSite();
         this.getCustomers();
         this.getVendors();
         this.getManufacturers();
         this.getConditionList();
+        this.getAllGLAccount();
     }
 
     ngOnInit() {
@@ -191,6 +197,13 @@ export class ReceivngPoComponent implements OnInit {
         //this.vendorListForStockline();
 
     }
+
+    //private getItemDetails(PurchaseOrderPart: any): void {
+    //    this.itemmaster.getItemMasterById().subscribe(item => {
+    //        Console.log(item[0]);
+    //    });
+    //}
+
 
     private getStatus() {
         this.poStatus = [];
@@ -463,7 +476,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     private partQuantityChange(event: any, part: PurchaseOrderPart): void {
-        let quantity : number = <number> event.target.value;
+        let quantity: number = <number>event.target.value;
 
         if (quantity > part.quantityOrdered) {
             event.target.value = "";
@@ -830,8 +843,7 @@ export class ReceivngPoComponent implements OnInit {
         this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
 
-
-    onFilter(event, stockLine, type) : void {
+    onFilter(event, stockLine, type): void {
         stockLine.filteredRecords = [];
         var dropdownSource = type == 1 ? this.CustomerList : this.VendorList;
         if (dropdownSource != undefined && dropdownSource.length > 0) {
@@ -856,5 +868,18 @@ export class ReceivngPoComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
+
+    getAllGLAccount(): void {
+        this.glAccountService.getAll().subscribe(glAccountData => {
+            for (let glAccount of glAccountData[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = glAccount.glAccountId.toLocaleString();
+                dropdown.Value = glAccount.accountCode;
+                this.GLAccountList.push(dropdown);
+            }
+        });
+    }
+
+    //});
 }
 

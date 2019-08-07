@@ -56,6 +56,11 @@ export class ItemMasterService {
         private authService: AuthService,
         private itemMasterEndpoint: ItemMasterEndpoint) { }
 
+    getItemMasterById(id: number) {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getItemMasterById<any[]>(id));
+    }
+
     getItemMasterList() {
         return Observable.forkJoin(
             this.itemMasterEndpoint.getitemMasterEndpoint<any[]>());

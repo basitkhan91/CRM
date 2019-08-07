@@ -31,6 +31,17 @@ namespace QuickApp.Pro.Controllers
             _context = context;
         }
 
+        [HttpGet("Get/{itemMasterId}")]
+        public IActionResult GetItemById(long itemMasterId)
+        {
+            var item = _unitOfWork.Repository<ItemMaster>().Get(itemMasterId);
+            
+            if(item == null) {
+                return BadRequest();
+            }
+
+            return Ok(item);
+        }
 
         [HttpGet("Get")]
         [Produces(typeof(List<ItemMasterViewModel>))]
@@ -40,6 +51,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allPartDetails);
         }
 
+        
         [HttpGet("GetRolesData")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetRolesData()

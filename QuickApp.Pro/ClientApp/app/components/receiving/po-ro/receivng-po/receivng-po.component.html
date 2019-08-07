@@ -97,13 +97,15 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Need By</label>
-                            <p-calendar disabled="disabled" name="needByDate" class="pas-clder" [showIcon]="true" [(ngModel)]="purchaseOrderData.needByDate" #selects="ngModel" [ngModelOptions]="{standalone: true}" [minDate]="purchaseOrderData.dateRequested"></p-calendar>
+                            <p-calendar disabled="disabled" name="needByDate" class="pas-clder" [showIcon]="true"></p-calendar>
+                            <!--[(ngModel)]="purchaseOrderData.needByDate" #selects="ngModel" [ngModelOptions]="{standalone: true}" [minDate]="purchaseOrderData.dateRequested"-->
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Vendor Contact</label>
-                            <input class="form-control" type="text" [(ngModel)]="purchaseOrderData.vendor.firstName" disabled="disabled" />
+                            <input class="form-control" type="text" disabled="disabled" />
+                            <!--[(ngModel)]="purchaseOrderData.vendor.firstName"-->
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -304,13 +306,13 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>PN Description</label>
-                                                        <input type="text" pInputText class="form-control" value="" />
+                                                        <input type="text" pInputText class="form-control" disabled [value]="part.itemMaster?.partDescription" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>Cond <span class="clr-red">*</span></label>
-                                                        <select class="form-control" required [(ngModel)]="conditionId">
+                                                        <select class="form-control" required [(ngModel)]="part.conditionId">
                                                             <option value="0">Select</option>
                                                             <option *ngFor="let condition of ConditionList" [ngValue]="condition.Key">{{condition.Value}}</option>
                                                         </select>
@@ -319,7 +321,7 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>QTY To Receive</label>
-                                                        <input type="text"  pInputText pKeyFilter="pnum" class="form-control" disabled="disabled" />
+                                                        <input type="text"  pInputText pKeyFilter="pnum" class="form-control" disabled="disabled" [value]="part.quantityOrdered" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -341,31 +343,37 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>GL Account <span class="clr-red">*</span></label>
-                                                        <input type="text" pInputText class="form-control" value="" required />
+                                                        <select class="form-control" 
+                                                                [(ngModel)]="part.itemMaster.glAccountId"
+                                                                #selects="ngModel"
+                                                                [ngModelOptions]="{standalone: true}">
+                                                            <option value="0">Select</option>
+                                                            <option *ngFor="let glAccount of GLAccountList" [value]="glAccount.Key">{{glAccount.Value}}</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Export Control Classification Number">ECCN</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.exportECCN" disabled="{{part.itemMaster.exportECCN.length > 0}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="International Traffic in Arms Regulations Number">ITAR Num</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.itarNumber" disabled="{{part.itemMaster.itarNumber.length > 0}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="National Stock Number">NSN</label>
-                                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.nationalStockNumber" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Top Level Assembly">TLA</label>
-                                                        <input class="form-control" type="text" pInputText [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.TopLevelAssembly" type="text" pInputText [maxLength]="25">
                                                     </div>
                                                 </div>
 
@@ -375,7 +383,7 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Next Higher Assembly">NHA</label>
-                                                        <input class="form-control" type="text" pInputText>
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.nha" type="text" pInputText>
                                                     </div>
                                                 </div>
                                             </div>
