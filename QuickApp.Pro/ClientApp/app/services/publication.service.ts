@@ -80,6 +80,8 @@ export class PublicationService {
     newPNATAMappingAction(action: Publication) {
         return this.publicationEndpoint.postPNATAMapping<Publication>(action);
     }
-    
+    getPublicationPNMapping(PNid: string) {
+        return this.publicationEndpoint.getPubPNById<any>(PNid);
+    }
 
 }

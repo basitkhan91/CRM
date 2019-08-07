@@ -19,7 +19,8 @@ export class DashNumberEndpointService extends EndpointFactory {
     private readonly getDashNumber: string = "/api/dashnumber/pagination";
     private readonly getDashListByIdsURL: string = "/api/dashnumber/getDashListByModel_Type_Dash_IDS";
     private readonly getDash: string = "/api/dashnumber/GetDashNoBy_Model_TypeID";
-    
+    private readonly getDashListByMultiIdsURL: string = "/api/dashnumber/getDashListBy_MUTLI_MID_TID_DID";
+
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
     get add() { return this.configurations.baseUrl + this.addURL; }
@@ -115,5 +116,11 @@ export class DashNumberEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getDashNumberByModelTypeId(Mid, Tid));
             });
     }
-
+    getDASHLISTBy_MultiID<T>(Mid: string, Tid: number, Did: string): Observable<T> {
+        let endpointUrl = `${this.getDashListByMultiIdsURL}/${Mid}/${Tid}/${Did}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDASHLISTBy_MultiID(Mid, Tid, Did));
+            });
+    }
 }
