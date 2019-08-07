@@ -16,6 +16,11 @@ import {
   AlertService,
   MessageSeverity
 } from '../../../../services/alert.service';
+import { workOrderGeneralInfo } from '../../../../models/work-order-generalInformation.model';
+import {
+  addressesForm,
+  Addresses
+} from '../../../../models/work-order-address.model';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CreditTermsService } from '../../../../services/Credit Terms.service';
 import { CustomerService } from '../../../../services/customer.service';
@@ -59,6 +64,11 @@ export class WorkOrderAddComponent implements OnInit {
   isContract = true;
   gridActiveTab: String = 'workFlow';
   subTabWorkFlow: String;
+  // WorkOrder general Information JSON
+  workOrderGeneralInformation = workOrderGeneralInfo;
+  // Address Information JSON
+  addresses = addressesForm;
+
   workFlowItems = [
     {
       label: 'WO123',
@@ -73,24 +83,6 @@ export class WorkOrderAddComponent implements OnInit {
       value: 'WO125'
     }
   ];
-  WorkOrder = {
-    WoType: 'single',
-    WoDealerType: 'customer',
-    WoNumber: 'Creating',
-    OpenDate: new Date(),
-    WoStatus: '',
-    CustomerId: '',
-    CustomerCodeId: '',
-    CustomerReference: '',
-    IsContract: false,
-    Contract: '',
-    CustomerContact: null,
-    CreditTerms: '',
-    CreditTermsandLimit: '',
-    EmployeeId: '',
-    SalesPersonId: '',
-    CSR: ''
-  };
   workOrderMPN = {
     iD: 0,
     workOrderId: 0,
@@ -144,11 +136,6 @@ export class WorkOrderAddComponent implements OnInit {
         Clean: []
       }
     ]
-  };
-  adresses = {
-    WOId: '',
-    ShipTo: [],
-    BillTo: []
   };
   documents = [
     {
@@ -235,18 +222,17 @@ export class WorkOrderAddComponent implements OnInit {
     this.addMPN();
   }
 
-
   toggleDisplayMode(): void {
     this.isDetailedView = !this.isDetailedView;
   }
   // Handles radio Button single or Multiple
   toggleWorkOrderType(value): void {
-    this.WorkOrder.WoType = value;
+    // this.workOrderGeneralInformation.workOrderType = value;
     this.showTableGrid = false;
   }
   // Handles type of the WorkOrder Dealer
   woDealerChange(value) {
-    this.WorkOrder.WoDealerType = value;
+    // this.workOrderGeneralInformation.workOrderDealerType = value;
   }
   // added new MPN
   addMPN() {
@@ -259,6 +245,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   addWorkOrder(): void {
+    console.log(this.workOrderGeneralInformation);
     this.showTableGrid = true; // Show Grid Boolean
     this.workOrderService.add(this.workOrder).subscribe(
       result => {
@@ -273,9 +260,7 @@ export class WorkOrderAddComponent implements OnInit {
           this.workOrderPartNumberService
             .add(this.workOrderPartNumbers[i])
             .subscribe(
-              result => {
-                console.log(result);
-              },
+              result => {},
               error => {
                 var message = '';
                 if (error.error.constructor == Array) {
@@ -447,11 +432,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   getStockLines(): void {
     this.stocklineService.getStockLineList().subscribe(
-      result => {
-        alert('Data Loaded Successfully');
-        console.clear();
-        console.log(result);
-      },
+      result => {},
       error => {
         this.alertService.showMessage(
           this.moduleName,
@@ -463,14 +444,9 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getAllIterMasters(): void {
-    this.itemMasterService.getItemMasterList().subscribe(
-      result => {
-        console.log(result);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    this.itemMasterService
+      .getItemMasterList()
+      .subscribe(result => {}, error => {});
   }
 
   onCustomerSelected(event, selectionType): void {

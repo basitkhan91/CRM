@@ -9,7 +9,7 @@
               <label for="woID">Site Name </label>
               <p-dropdown
                 [options]="siteDropdownMenu"
-                [(ngModel)]="addressesForm.SiteName"
+                [(ngModel)]="addressesForm.shipTo.siteName"
                 class="p-dropdown-custom-2"
               ></p-dropdown>
               <button
@@ -26,7 +26,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.Address"
+                [(ngModel)]="addressesForm.shipTo.address"
               />
             </div>
             <div class="form-group">
@@ -37,7 +37,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.City"
+                [(ngModel)]="addressesForm.shipTo.city"
               />
             </div>
             <div class="form-group">
@@ -48,7 +48,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.StateorProvince"
+                [(ngModel)]="addressesForm.shipTo.stateorProvince"
               />
             </div>
             <div class="form-group">
@@ -59,7 +59,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.Country"
+                [(ngModel)]="addressesForm.shipTo.country"
               />
             </div>
             <div class="form-group">
@@ -70,7 +70,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.ContactName"
+                [(ngModel)]="addressesForm.shipTo.contactName"
               />
             </div>
           </div>
@@ -81,7 +81,7 @@
               <label for="woID">Site Name </label>
               <p-dropdown
                 [options]="siteDropdownMenu"
-                [(ngModel)]="addressesForm.SiteName"
+                [(ngModel)]="addressesForm.billTo.siteName"
                 class="p-dropdown-custom-2"
               ></p-dropdown>
               <button
@@ -98,7 +98,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.Address"
+                [(ngModel)]="addressesForm.billTo.address"
               />
             </div>
             <div class="form-group">
@@ -109,7 +109,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.City"
+                [(ngModel)]="addressesForm.billTo.city"
               />
             </div>
             <div class="form-group">
@@ -120,7 +120,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.StateorProvince"
+                [(ngModel)]="addressesForm.billTo.stateorProvince"
               />
             </div>
             <div class="form-group">
@@ -131,7 +131,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.Country"
+                [(ngModel)]="addressesForm.billTo.country"
               />
             </div>
             <div class="form-group">
@@ -142,7 +142,7 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="addressesForm.ContactName"
+                [(ngModel)]="addressesForm.billTo.contactName"
               />
             </div>
           </div>
@@ -151,6 +151,8 @@
     </div>
   </div>
 </div>
+
+<button (click)="saveAddress()">Save</button>
 
 <div
   class="modal fade "
