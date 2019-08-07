@@ -4,42 +4,43 @@ import { PageHeaderComponent } from '../../../../shared/page-header.component';
 import * as $ from 'jquery';
 
 @Component({
-    selector: 'app-work-order-quote',
-    templateUrl: './work-order-quote.component.html',
-    styleUrls: ['./work-order-quote.component.scss'],
+  selector: 'app-work-order-quote',
+  templateUrl: './work-order-quote.component.html',
+  styleUrls: ['./work-order-quote.component.scss']
 })
 /** WorkOrderQuote component*/
 export class WorkOrderQuoteComponent implements OnInit {
-    @Input() quoteForm;
-   multiParts={
-    PnId:null,
-    PnDescription:'',
-    RevisedPnId:null,
-    WorkScopeId:'',
-    Qty:null,
-    IsCMMorPubRef:'',
-    WorkFlowId:null,
-    Priority:'',
-    CustomerRequestDate:'',
-    PromiseDate:'',
-    EstCompletionDate:'',
-    EstShipDate:'',
+  @Input() quoteForm;
+  multiParts = {
+    PnId: null,
+    PnDescription: '',
+    RevisedPnId: null,
+    WorkScopeId: '',
+    Qty: null,
+    IsCMMorPubRef: '',
+    WorkFlowId: null,
+    Priority: '',
+    CustomerRequestDate: '',
+    PromiseDate: '',
+    EstCompletionDate: '',
+    EstShipDate: '',
     IsPMA: false,
     IsDER: false,
     TATDaysStandard: null,
-    IsActive:false,
-    }
+    IsActive: false
+  };
 
-
-    constructor() {}
-    ngOnInit(){
-        this.quoteForm = {...this.quoteForm , partsDetails:[{...this.multiParts}] }
-    }
-    saveQuoteDetails(){
-        console.log(this.quoteForm);
-
-    }
-    addMPN(){
-      this.quoteForm.partsDetails.push({...this.multiParts}) 
-    }
+  constructor() {}
+  ngOnInit() {
+    this.quoteForm = {
+      ...this.quoteForm,
+      partsDetails: [{ ...this.multiParts }]
+    };
+  }
+  saveQuoteDetails() {
+    console.log(this.quoteForm);
+  }
+  addMPN() {
+    this.quoteForm.partsDetails.push({ ...this.multiParts });
+  }
 }

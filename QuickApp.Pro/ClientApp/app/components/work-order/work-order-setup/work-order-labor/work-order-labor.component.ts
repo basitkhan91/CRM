@@ -22,7 +22,7 @@ export class WorkOrderLaborComponent implements OnInit {
   allTasks = {
     Expertise: '',
     EmployeeId: null,
-    BillableorNonBillable: '',
+    BillableorNonBillable: 'billable',
     StartDateandTime: '-',
     EndDateandTime: '-',
     HoursandMinutes: '',
