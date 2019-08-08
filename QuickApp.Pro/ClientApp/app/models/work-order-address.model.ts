@@ -1,10 +1,4 @@
-export interface Addresses {
-  wOId?: string;
-  shipTo: AddressDetails;
-  billTo: AddressDetails;
-}
-
-export interface AddressDetails {
+interface AddressDetails {
   siteName: string;
   address: string;
   city: string;
@@ -14,6 +8,9 @@ export interface AddressDetails {
 }
 
 export class addressesForm {
+  woId: string;
+  shipTo: AddressDetails;
+  billTo: AddressDetails;
   constructor() {
     this.woId = '';
     this.shipTo = {
@@ -33,8 +30,4 @@ export class addressesForm {
       contactName: ''
     };
   }
-
-  woId: string;
-  shipTo: object;
-  billTo: object;
 }

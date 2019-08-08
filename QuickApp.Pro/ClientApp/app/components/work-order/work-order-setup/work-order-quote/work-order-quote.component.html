@@ -6,28 +6,28 @@
           <div class="col-md-6">
             <div class="form-group ">
               <label>Quote Number <span class="clr-red">*</span></label>
-              <input class="form-control" type="text" [(ngModel)]="quoteForm.QuoteNumber" name="quotenumber" />
+              <input class="form-control" type="text" [(ngModel)]="quoteForm.quoteNumber" name="quotenumber" />
             </div>
             <div class="form-group ">
               <label>Open Date <span class="clr-red">*</span> </label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.OpenDate" name="openDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.openDate" name="openDate"></p-calendar>
             </div>
             <div class="form-group ">
               <label>Quote Due Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.QuoteDueDate" name="QuoteDueDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.quoteDueDate" name="QuoteDueDate"></p-calendar>
             </div>
             <div class="form-group ">
               <label> Valid For Days <span class="clr-red">*</span></label>
-              <input class="form-control" type="number" [(ngModel)]="quoteForm.ValidForDays" name="ValidForDays" />
+              <input class="form-control" type="number" [(ngModel)]="quoteForm.validForDays" name="ValidForDays" />
             </div>
             <div class="form-group ">
               <label> Expiration Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.ExpDate" name="ExpDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.expirationDate" name="ExpDate"></p-calendar>
             </div>
 
             <div class="form-group">
               <label> Expiration Date <span class="clr-red">*</span></label>
-              <select [(ngModel)]="quoteForm.ExpDateStatus" name="ExpDateStatus">
+              <select [(ngModel)]="quoteForm.expirationDateStatus" name="ExpDateStatus">
                 <option value="">Select Status</option>
                 <option value="open">Open</option>
                 <option value="Closed">Closed</option>
@@ -37,7 +37,7 @@
             </div>
             <div class="form-group ">
               <label>WO Num </label>
-              <input class="form-control" type="text" [(ngModel)]="quoteForm.WoNumber" name="WoNumber" />
+              <input class="form-control" type="text" [(ngModel)]="quoteForm.workOrderNumber" name="WoNumber" />
             </div>
           </div>
           <div class="col-md-6">
@@ -45,7 +45,7 @@
               <label for="customername">Customer Name
                 <span class="clr-red">*</span>
               </label>
-              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.CustomerId"
+              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.customerId"
                 name="CustomerId">
               </p-autoComplete>
             </div>
@@ -53,46 +53,28 @@
               <label for="customercode">Customer Code
                 <span class="clr-red">*</span>
               </label>
-              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.CustomerCodeId"
+              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.customerCodeId"
                 name="CustomerCodeId">
               </p-autoComplete>
             </div>
 
-            <div class="form-group ">
-              <label for="customercontact">Customer Contact
-                <span class="clr-red">*</span>
-              </label>
-              <input type="number" class="form-control" [(ngModel)]="quoteForm.CustomerContact"
-                name="CustomerContact" />
-            </div>
-            <div class="form-group">
-              <label for="customeremail">Customer Email
-                <span class="clr-red">*</span>
-              </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.CustomerEmail" name="CustomerEmail" />
-            </div>
-            <div class="form-group ">
-              <label for="customerphone">Customer Phone
-                <span class="clr-red">*</span>
-              </label>
-              <input type="number" class="form-control" [(ngModel)]="quoteForm.CustomerPhone" name="CustomerPhone" />
-            </div>
+
             <div class="form-group ">
               <label for="customerref">Customer Ref
                 <span class="clr-red">*</span>
               </label>
 
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.CustomerReference"
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.customerReference"
                 name="CustomerReference" />
             </div>
             <div class="form-group">
               <div class="checkbox-cstm">
                 <label>
-                  <input type="checkbox" name="contract" [(ngModel)]="quoteForm.IsContract" />
+                  <input type="checkbox" name="contract" [(ngModel)]="quoteForm.isContract" />
                   <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                   Contract
                 </label>
-                <input *ngIf="quoteForm.IsContract" type="text" class="form-control" [(ngModel)]="quoteForm.Contract"
+                <input *ngIf="quoteForm.isContract" type="text" class="form-control" [(ngModel)]="quoteForm.contract"
                   name="Contract" />
               </div>
             </div>
@@ -102,7 +84,7 @@
                 <span class="clr-red">*</span>
               </label>
 
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.Quantity" name="Quantity" />
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.quantity" name="Quantity" />
             </div>
           </div>
         </div>
@@ -119,16 +101,16 @@
             </div>
             <div class="form-group ">
               <label> Promise Date<span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.PromiseDate" name="PromiseDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.promiseDate" name="PromiseDate"></p-calendar>
             </div>
             <div class="form-group ">
               <label> Est.Completion Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.EstCompletionDate" name="EstCompletionDate">
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.estCompletionDate" name="EstCompletionDate">
               </p-calendar>
             </div>
             <div class="form-group ">
               <label> Est.Ship Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.EstShipDate" name="EstShipDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.estShipDate" name="EstShipDate"></p-calendar>
             </div>
 
             <div class="form-group">
@@ -136,10 +118,10 @@
               </label>
               <div class="col-md-12">
                 <div class="col-md-4">
-                  <input type="text" class="form-control" [(ngModel)]="quoteForm.CreditTerms" name="CreditTerms" />
+                  <input type="text" class="form-control" [(ngModel)]="quoteForm.creditTerms" name="CreditTerms" />
                 </div>
                 <div class="col-md-6">
-                  <select [(ngModel)]="quoteForm.CreditTermsandLimit" name="CreditTermsandLimit">
+                  <select [(ngModel)]="quoteForm.creditTermsandLimit" name="CreditTermsandLimit">
                     <option value="">- Terms -</option>
                     <option value="2% 10, Net 30">2% 10, Net 30</option>
                     <option value="2% 10, Net 45">2% 10, Net 45</option>
@@ -158,35 +140,15 @@
 
             <div class="form-group">
               <label> Item Count <span class="clr-red">*</span></label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.ItemCount" name="ItemCount" />
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.itemCount" name="ItemCount" />
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group ">
-              <label for="customercontact">
-                Sales Person
-                <span class="clr-red">*</span>
-              </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.SalesPersonId" name="SalesPersonId" />
-            </div>
-
-            <div class="form-group ">
-              <label for="customercontact">CSR
-                <span class="clr-red">*</span>
-              </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.CSR" name="CSR" />
-            </div>
-            <div class="form-group ">
-              <label for="customercontact">Employee
-                <span class="clr-red">*</span>
-              </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.EmployeeId" name="EmployeeId" />
-            </div>
-            <div class="form-group ">
               <label for="customercontact">Currency
                 <span class="clr-red">*</span>
               </label>
-              <select [(ngModel)]="quoteForm.Currency" name="Currency">
+              <select [(ngModel)]="quoteForm.currency" name="Currency">
                 <option value="">Select Currency</option>
                 <option value="inr">₹</option>
                 <option value="usd" selected="1">$</option>
@@ -199,13 +161,13 @@
               <label for="customercontact">DSO
                 <span class="clr-red">*</span>
               </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.DSO" name="DSO" />
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.dso" name="DSO" />
             </div>
             <div class="form-group ">
               <label for="customercontact">AR BAL
                 <span class="clr-red">*</span>
               </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.ARBal" name="ARBal" />
+              <input type="text" class="form-control" [(ngModel)]="quoteForm.accountsReceivableBalance" name="ARBal" />
             </div>
           </div>
         </div>

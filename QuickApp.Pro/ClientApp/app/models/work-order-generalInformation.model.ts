@@ -1,4 +1,19 @@
 export class workOrderGeneralInfo {
+  workOrderType: string;
+  workOrderDealerType: string;
+  workOrderNumber: string;
+  openDate: Date;
+  workOrderStatus: string;
+  customerId: string;
+  customerCodeId: string;
+  customerReference: string;
+  isContract: boolean;
+  contract: string;
+  creditTerms: string;
+  creditTermsandLimitId: string;
+  employeeId: string;
+  salesPersonId: string;
+  csr: string;
   constructor() {
     this.workOrderType = 'single';
     this.workOrderDealerType = 'customer';
@@ -16,20 +31,4 @@ export class workOrderGeneralInfo {
     this.salesPersonId = '';
     this.csr = '';
   }
-
-  workOrderType: string;
-  workOrderDealerType: string;
-  workOrderNumber: string;
-  openDate: Date;
-  workOrderStatus: string;
-  customerId: string;
-  customerCodeId: string;
-  customerReference: string;
-  isContract: boolean;
-  contract: string;
-  creditTerms: string;
-  creditTermsandLimitId: string;
-  employeeId: string;
-  salesPersonId: string;
-  csr: string;
 }
