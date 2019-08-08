@@ -105,7 +105,7 @@ namespace QuickApp.Pro.Controllers
 
             }
 
-            return Ok(ModelState);
+            return Ok(publicationViewModel);
         }
         [HttpPut("publicationpost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] PublicationViewModel publicationViewModel)
