@@ -35,6 +35,7 @@ import { error } from '@angular/compiler/src/util';
 import { Customer } from '../../../../models/customer.model';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { Console } from '@angular/core/src/console';
+import { ShippingService } from '../../../../services/shipping/shipping-service';
 
 @Component({
     selector: 'app-receivng-po',
@@ -69,6 +70,10 @@ export class ReceivngPoComponent implements OnInit {
     ManufacturerList: DropDownData[] = [];
     ConditionList: DropDownData[] = [];
     GLAccountList: DropDownData[] = [];
+    ShippingReferenceList: DropDownData[];
+    ShippingViaList: DropDownData[];
+    ShippingAccountList: DropDownData[];
+
     ConditionId: number = 0;
     allPartGLAccountId: number;
 
@@ -165,7 +170,8 @@ export class ReceivngPoComponent implements OnInit {
         public employeeService: EmployeeService,
         private alertService: AlertService,
         private accountService: AccountService,
-        private glAccountService: GlAccountService) {
+        private glAccountService: GlAccountService,
+        private shippingService: ShippingService) {
         this.getManagementStructure();
         this.getAllSite();
         this.getCustomers();
@@ -173,6 +179,9 @@ export class ReceivngPoComponent implements OnInit {
         this.getManufacturers();
         this.getConditionList();
         this.getAllGLAccount();
+        this.getShippingReference();
+        this.getShippingVia();
+        this.getShippingAccount();
     }
 
     ngOnInit() {
@@ -198,12 +207,42 @@ export class ReceivngPoComponent implements OnInit {
 
     }
 
-    //private getItemDetails(PurchaseOrderPart: any): void {
-    //    this.itemmaster.getItemMasterById().subscribe(item => {
-    //        Console.log(item[0]);
-    //    });
-    //}
+    private getShippingReference(): void {
+        this.shippingService.getAllShippingReference().subscribe(results => {
+            this.ShippingReferenceList = [];
+            for (let shippingReference of results[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = shippingReference.shippingReferenceId.toLocaleString();
+                dropdown.Value = shippingReference.name;
+                this.ShippingReferenceList.push(dropdown);
+            }
+        });
+    }
 
+    private getShippingVia(): void {
+        this.shippingService.getAllShippingVia().subscribe(results => {
+            this.ShippingViaList = [];
+            for (let shippingVia of results[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = shippingVia.shippingViaId.toLocaleString();
+                dropdown.Value = shippingVia.name;
+                this.ShippingViaList.push(dropdown);
+            }
+        });
+    }
+
+    private getShippingAccount(): void {
+        this.shippingService.getAllShippingAccount().subscribe(results => {
+            this.ShippingAccountList = [];
+            for (let shippingAccount of results[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = shippingAccount.shippingAccountId.toLocaleString();
+                dropdown.Value = shippingAccount.accountNumber;
+                this.ShippingAccountList.push(dropdown);
+            }
+            
+        });
+    }
 
     private getStatus() {
         this.poStatus = [];
@@ -506,7 +545,6 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.visible = false;
             this.getStockLineCompanies(stockLine);
             this.getStockLineSite(stockLine);
-
             part.stocklineListObj.push(stockLine);
         }
 
@@ -533,6 +571,8 @@ export class ReceivngPoComponent implements OnInit {
         }
         else {
             this.alertService.showMessage(this.pageTitle, "Invalid stock line page", MessageSeverity.error);
+            event.target.value = "1";
+            this.currentSLIndex = 0;
             return;
         }
     }
@@ -880,6 +920,8 @@ export class ReceivngPoComponent implements OnInit {
         });
     }
 
-    //});
+    //getAllShippingReference(): void {
+    //    this.
+    //}
 }
 

@@ -42,8 +42,29 @@ namespace DAL.Repositories
             }
         }
 
-        
-      
-        
+        public IEnumerable<object> GetPubPNMappingData(string PNIds)
+        {
+            string[] myPNids = PNIds.Split(',').Select(n => n).ToArray();
+            var data = (from iM in _appContext.PublicationItemMasterMapping
+                        where myPNids.Contains(iM.PartNumber)
+                        select new
+                        {
+
+                            iM.ItemMasterId,
+                            iM.PublicationId,
+                            iM.PartNumber,
+                            iM.PartNumberDescription,
+                            iM.ItemClassification,
+                            iM.ItemClassificationId,
+                            iM.ItemGroupId,
+                            iM.MasterCompanyId
+
+
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+
+
     }
 }

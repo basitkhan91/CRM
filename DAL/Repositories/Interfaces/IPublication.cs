@@ -9,6 +9,6 @@ namespace DAL.Repositories.Interfaces
     public interface IPublication : IRepository<DAL.Models.Publication>
     {
         IEnumerable<DAL.Models.Publication> GetPublications();
-        
+        IEnumerable<object> GetPubPNMappingData(string id);
     }
 }

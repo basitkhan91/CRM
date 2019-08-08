@@ -24,8 +24,11 @@ table {
     font-weight: bold;
 }
 
-input[type="text"], input[type="number"], select, textarea {
+input[type="text"], input[type="number"], select {
     height: 24px !important;
+    border-radius: 5px !important;
+}
+textarea {
     border-radius: 5px !important;
 }
 
@@ -92,6 +95,9 @@ select:disabled {
 #adminsearchlocationajax .clr-red {
     font-size: 17px;
     line-height: 14px;
+}
+a.fa.fa-plus-circle {
+    color: green !important;
 }
 
 @media (min-width: 768px) {

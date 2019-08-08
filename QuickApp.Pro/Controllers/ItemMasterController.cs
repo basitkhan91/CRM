@@ -1179,121 +1179,108 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPost("PNIMMappingPost")]
         public IActionResult CreatePNIMast([FromBody] PublicationItemMasterMapping IMPNMapping)
-        {
-          
-                if (ModelState.IsValid)
-                {
-                    if (IMPNMapping == null)
-                        return BadRequest($"{nameof(IMPNMapping)} cannot be null");
+		{
+			try
+			{
 
-                PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
-                    cp.ItemMasterId = IMPNMapping.ItemMasterId;
-                    cp.PublicationId = IMPNMapping.PublicationId;
-                    cp.PartNumber = IMPNMapping.PartNumber;
-                    cp.PartNumberDescription = IMPNMapping.PartNumberDescription;
-                    cp.ItemClassification = IMPNMapping.ItemClassification;
-                    cp.ItemClassificationId = IMPNMapping.ItemClassificationId;
-                    cp.ItemGroupId = IMPNMapping.ItemGroupId;
-                    cp.MasterCompanyId = 1;
-                    cp.CreatedBy = IMPNMapping.CreatedBy;
-                    cp.UpdatedBy = IMPNMapping.UpdatedBy;
-                    cp.CreatedDate = DateTime.Now;
-                    cp.UpdatedDate = DateTime.Now;
-                    _context.PublicationItemMasterMapping.Add(cp);
-                    _context.SaveChanges();
+				if (ModelState.IsValid)
+				{
+					if (IMPNMapping == null)
+						return BadRequest($"{nameof(IMPNMapping)} cannot be null");
 
-                }
+					PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
+					cp.ItemMasterId = IMPNMapping.ItemMasterId;
+					cp.PublicationId = IMPNMapping.PublicationId;
+					cp.PartNumber = IMPNMapping.PartNumber;
+					cp.PartNumberDescription = IMPNMapping.PartNumberDescription;
+					cp.ItemClassification = IMPNMapping.ItemClassification;
+					cp.ItemClassificationId = IMPNMapping.ItemClassificationId;
+					cp.ItemGroupId = IMPNMapping.ItemGroupId;
+					cp.PublicationRecordId = IMPNMapping.PublicationRecordId;
+					cp.MasterCompanyId = 1;
+					cp.CreatedBy = IMPNMapping.CreatedBy;
+					cp.UpdatedBy = IMPNMapping.UpdatedBy;
+					cp.CreatedDate = DateTime.Now;
+					cp.UpdatedDate = DateTime.Now;
+					_context.PublicationItemMasterMapping.Add(cp);
+					_context.SaveChanges();
 
-                return Ok(ModelState);
-                { }
+				}
+
+				return Ok(ModelState);
+				{ }
+
+			}
+			catch(Exception ex)
+			{
+				throw;
+			}
           
         }
 
-       
+
         [HttpPost("ItemMasterAircraftPost")]
         public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
         {
-            if (ModelState.IsValid)
+            try
             {
-                if (_context.ItemMasterAircraftMapping.Any(o => o.AircraftModelId == itemMasterAircraftMapping.AircraftModelId))
+                if (ModelState.IsValid)
                 {
-                    // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
-                    var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.AircraftModelId == itemMasterAircraftMapping.AircraftModelId).FirstOrDefault();
-                    existingresule.ItemMasterId = itemMasterAircraftMapping.ItemMasterId;
-                    existingresule.AircraftTypelId = itemMasterAircraftMapping.AircraftTypelId;
-                    existingresule.AircraftModelId = itemMasterAircraftMapping.AircraftModelId;
-                    existingresule.PartNumber = itemMasterAircraftMapping.PartNumber;
-                    existingresule.DashNumberId = itemMasterAircraftMapping.DashNumberId;
-                    existingresule.DashNumber = itemMasterAircraftMapping.DashNumber;
-                    existingresule.AircraftType = itemMasterAircraftMapping.AircraftType;
-                    existingresule.AircraftModel = itemMasterAircraftMapping.AircraftModel;
-                    existingresule.Memo = itemMasterAircraftMapping.Memo;
-                    existingresule.CreatedBy = itemMasterAircraftMapping.CreatedBy;
-                    existingresule.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
-                    existingresule.MasterCompanyId = 1;
-                    existingresule.CreatedDate = DateTime.Now;
-                    existingresule.UpdatedDate = DateTime.Now;
-                    _context.ItemMasterAircraftMapping.Update(existingresule);
-                    _context.SaveChanges();
+                    _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping);
+                    _unitOfWork.SaveChanges();
                 }
-                else
-                {
-                    ItemMasterAircraftMapping cp = new ItemMasterAircraftMapping();
-                    cp.ItemMasterId = itemMasterAircraftMapping.ItemMasterId;
-                    cp.AircraftTypelId = itemMasterAircraftMapping.AircraftTypelId;
-                    cp.AircraftModelId = itemMasterAircraftMapping.AircraftModelId;
-                    cp.PartNumber = itemMasterAircraftMapping.PartNumber;
-                    cp.DashNumberId = itemMasterAircraftMapping.DashNumberId;
-                    cp.DashNumber = itemMasterAircraftMapping.DashNumber;
-                    cp.AircraftType = itemMasterAircraftMapping.AircraftType;
-                    cp.AircraftModel = itemMasterAircraftMapping.AircraftModel;
-                    cp.Memo = itemMasterAircraftMapping.Memo;
-                    cp.MasterCompanyId = 1;
-                    cp.CreatedBy = itemMasterAircraftMapping.CreatedBy;
-                    cp.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
-                    cp.CreatedDate = DateTime.Now;
-                    cp.UpdatedDate = DateTime.Now;
-                    _context.ItemMasterAircraftMapping.Add(cp);
-                    _context.SaveChanges();
-                    //long returnid = cp.CapabilityId;
-                    //saveItemcapes(returnid, itemMasterAircraftModel.itemId);
-
-                }
+                return Ok(itemMasterAircraftMapping);
             }
-            return Ok(itemMasterAircraftMapping);
-            // return Ok(ModelState);
+            catch (Exception ex)
+            {
+                var xerr = ex.Message;
+                throw;
+            }
         }
 
         [HttpPost("ItemMasterATAPost")]
         public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping)
         {
-            if (ModelState.IsValid)
-            {
-               
-                {
-                    ItemMasterATAMapping cp = new ItemMasterATAMapping();
-                    cp.ATAChapterId = itemMasterATAMapping.ATAChapterId;
-                    cp.ATASubChapterId = itemMasterATAMapping.ATASubChapterId;
-                    cp.ItemMasterId = itemMasterATAMapping.ItemMasterId;
-                    cp.PartNumber = itemMasterATAMapping.PartNumber;
-                    cp.ATAChapterCode= itemMasterATAMapping.ATAChapterCode;
-                    cp.ATAChapterName = itemMasterATAMapping.ATAChapterName;
-                    cp.ATASubChapterDescription = itemMasterATAMapping.ATASubChapterDescription;
-                    cp.MasterCompanyId = 1;
-                    cp.CreatedBy = itemMasterATAMapping.CreatedBy;
-                    cp.UpdatedBy = itemMasterATAMapping.UpdatedBy;
-                    cp.CreatedDate = DateTime.Now;
-                    cp.UpdatedDate = DateTime.Now;
-                    _context.ItemMasterATAMapping.Add(cp);
-                    _context.SaveChanges();
-                    //long returnid = cp.CapabilityId;
-                    //saveItemcapes(returnid, itemMasterAircraftModel.itemId);
 
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _unitOfWork.Repository<ItemMasterATAMapping>().Add(itemMasterATAMapping);
+                    _unitOfWork.SaveChanges();
                 }
+                return Ok(itemMasterATAMapping);
             }
-            return Ok(itemMasterATAMapping);
-            // return Ok(ModelState);
+            catch (Exception ex)
+            {
+                var xerr = ex.Message;
+                throw;
+            }
+
+            {
+                //ItemMasterATAMapping cp = new ItemMasterATAMapping();
+                //cp.ATAChapterId = itemMasterATAMapping.ATAChapterId;
+                //cp.ATASubChapterId = itemMasterATAMapping.ATASubChapterId;
+                //cp.ItemMasterId = itemMasterATAMapping.ItemMasterId;
+                //cp.PartNumber = itemMasterATAMapping.PartNumber;
+                //cp.ATAChapterCode= itemMasterATAMapping.ATAChapterCode;
+                //cp.ATAChapterName = itemMasterATAMapping.ATAChapterName;
+                //cp.ATASubChapterDescription = itemMasterATAMapping.ATASubChapterDescription;
+                //cp.MasterCompanyId = 1;
+                //cp.CreatedBy = itemMasterATAMapping.CreatedBy;
+                //cp.UpdatedBy = itemMasterATAMapping.UpdatedBy;
+                //cp.CreatedDate = DateTime.Now;
+                //cp.UpdatedDate = DateTime.Now;
+                //_context.ItemMasterATAMapping.Add(cp);
+                //_context.SaveChanges();
+            }
+
+            //return Ok(itemMasterATAMapping);
         }
+
+
+
+
 
         [HttpPost("ItemMasterPurcSalePost")]
         public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale)
@@ -1313,6 +1300,55 @@ namespace QuickApp.Pro.Controllers
                 var xerr = ex.Message;
                 throw;
             }
+        }
+
+        [HttpGet("getAircraftMapped/{Pnid}")]
+        [Produces(typeof(List<AircraftTypeViewModel>))]
+        public IActionResult aircraftMapped(string PNid)
+        {
+            var result = _unitOfWork.itemMaster.GetAircraftMapped(PNid);
+            return Ok(result);
+
+        }
+        [HttpGet("getATAMapped/{Pnid}")]
+        [Produces(typeof(List<AircraftTypeViewModel>))]
+        public IActionResult ataMapped(string PNid)
+        {
+            var result = _unitOfWork.itemMaster.GetATAMapped(PNid);
+            return Ok(result);
+
+        }
+        [HttpPut("ExportInfoPostBy_IMastID/{id}")]
+        public IActionResult ExportInfoupdate(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (itemMasterViewModel == null)
+                    return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
+                var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
+                itemMasterViewModel.MasterCompanyId = 1;
+                itemmaserObj.ExportECCN = itemMasterViewModel.ExportECCN;
+                itemmaserObj.ITARNumber = itemMasterViewModel.ITARNumber;
+                itemmaserObj.ExportUomId = itemMasterViewModel.ExportUomId;
+                itemmaserObj.ExportCountryId = itemMasterViewModel.ExportCountryId;
+                itemmaserObj.ExportValue = itemMasterViewModel.ExportValue;
+                itemmaserObj.ExportWeightUnit = itemMasterViewModel.ExportWeightUnit;
+                itemmaserObj.ExportCurrencyId = itemMasterViewModel.ExportCurrencyId;
+                itemmaserObj.ExportWeight = itemMasterViewModel.ExportWeight;
+                itemmaserObj.ExportWeightUnit = itemMasterViewModel.ExportWeightUnit;
+                itemmaserObj.ExportSizeLength = itemMasterViewModel.ExportSizeLength;
+                itemmaserObj.ExportSizeWidth = itemMasterViewModel.ExportSizeWidth;
+                itemmaserObj.ExportSizeHeight = itemMasterViewModel.ExportSizeHeight;
+                itemmaserObj.ExportSizeUnit = itemMasterViewModel.ExportSizeUnit;
+                itemmaserObj.ExportClassificationId = itemMasterViewModel.ExportClassificationId;
+                itemmaserObj.ExpirationDate = itemMasterViewModel.ExpirationDate;
+                _unitOfWork.itemMaster.Update(itemmaserObj);
+                _unitOfWork.SaveChanges();
+                return Ok(itemmaserObj);
+            }
+
+
+            return Ok(ModelState);
         }
     }
 

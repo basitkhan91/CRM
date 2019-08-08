@@ -19,7 +19,9 @@ namespace DAL
     {
         // Test Changes....
         public string CurrentUserId { get; set; }
-        
+        public DbSet<ShippingReference> ShippingReference { get; set; }
+        public DbSet<ShippingVia> ShippingVia { get; set; }
+        public DbSet<ShippingAccount> ShippingAccount { get; set; }
         public DbSet<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
         public DbSet<ItemMasterATAMapping> ItemMasterATAMapping { get; set; }
         public DbSet<ItemMasterPurchaseSale> ItemMasterPurchaseSale { get; set; }

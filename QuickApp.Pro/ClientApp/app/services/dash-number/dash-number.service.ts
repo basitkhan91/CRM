@@ -51,4 +51,7 @@ export class DashNumberService {
     getDashNumberByModelTypeId(Mid: string, Tid: number) {
         return this.dashNumberEndpoint.getDashNumberByModelTypeId<any>(Mid, Tid);
     }
+    getAllDashModels_MultiID(Mid: string, Tid: number, Did: string) {
+        return this.dashNumberEndpoint.getDASHLISTByID<any>(Mid, Tid, Did);
+    }
 }

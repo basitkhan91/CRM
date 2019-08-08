@@ -1,5 +1,4 @@
-﻿
-import { Injectable, Injector } from '@angular/core';
+﻿import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -9,102 +8,162 @@ import { ConfigurationService } from './configuration.service';
 
 @Injectable()
 export class PublicationEndpointService extends EndpointFactory {
+  private readonly _publicationGetUrl: string = '/api/Publication/Get';
+  private readonly _publicationUrlNew: string =
+    '/api/Publication/publicationpost';
+  private readonly _actionsUrlAuditHistory: string =
+    '/api/Publication/auditHistoryById';
+  private readonly getPublicationAuditById: string = '/api/Publication/audits';
 
+  private readonly _publicationPNACNEW: string =
+    '/api/Publication/PubPNACMappingPost';
+  private readonly _publicationPNATANEW: string =
+    '/api/Publication/PubPNATAMappingPost';
+  private readonly _PostPNMapping: string = '/api/ItemMaster/PNIMMappingPost';
 
-    private readonly _publicationGetUrl: string = "/api/Publication/Get";
-    private readonly _publicationUrlNew: string = "/api/Publication/publicationpost";
-    private readonly _actionsUrlAuditHistory: string = "/api/Publication/auditHistoryById";
-    private readonly getPublicationAuditById: string = "/api/Publication/audits";
-    
-    
-    private readonly _publicationPNACNEW: string = "/api/Publication/PubPNACMappingPost";
-    private readonly _publicationPNATANEW: string = "/api/Publication/PubPNATAMappingPost";
-    
-    
-    
-    get getCodeUrl() { return this.configurations.baseUrl + this._publicationGetUrl; }
+  private readonly _publicationPNMappingData: string =
+    '/api/Publication/GetPubPNMappedData_PNID';
 
-    constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
+  get getCodeUrl() {
+    return this.configurations.baseUrl + this._publicationGetUrl;
+  }
 
-        super(http, configurations, injector);
-    }
+  constructor(
+    http: HttpClient,
+    configurations: ConfigurationService,
+    injector: Injector
+  ) {
+    super(http, configurations, injector);
+  }
 
-    getpublicationEndpoint<T>(): Observable<T> {
+  getpublicationEndpoint<T>(): Observable<T> {
+    return this.http
+      .get<T>(this.getCodeUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () => this.getpublicationEndpoint());
+      });
+  }
 
-        return this.http.get<T>(this.getCodeUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getpublicationEndpoint());
-            });
-    }
+  getNewpublicationEndpoint<T>(userObject: any): Observable<T> {
+    return this.http
+      .post<T>(
+        this._publicationUrlNew,
+        JSON.stringify(userObject),
+        this.getRequestHeaders()
+      )
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getNewpublicationEndpoint(userObject)
+        );
+      });
+  }
 
-    getNewpublicationEndpoint<T>(userObject: any): Observable<T> {
+  getEditActionEndpoint<T>(actionId?: number): Observable<T> {
+    let endpointUrl = actionId
+      ? `${this._publicationUrlNew}/${actionId}`
+      : this._publicationUrlNew;
 
-        return this.http.post<T>(this._publicationUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getNewpublicationEndpoint(userObject));
-            });
-    }
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getEditActionEndpoint(actionId)
+        );
+      });
+  }
 
-    getEditActionEndpoint<T>(actionId?: number): Observable<T> {
-        let endpointUrl = actionId ? `${this._publicationUrlNew}/${actionId}` : this._publicationUrlNew;
+  getUpdateActionEndpoint<T>(roleObject: any, actionId: any): Observable<T> {
+    let endpointUrl = `${this._publicationUrlNew}/${actionId}`;
 
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getEditActionEndpoint(actionId));
-            });
-    }
+    return this.http
+      .put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getUpdateActionEndpoint(roleObject, actionId)
+        );
+      });
+  }
 
-    getUpdateActionEndpoint<T>(roleObject: any, actionId: any): Observable<T> {
-        let endpointUrl = `${this._publicationUrlNew}/${actionId}`;
+  getDeleteActionEndpoint<T>(actionId: number): Observable<T> {
+    let endpointUrl = `${this._publicationUrlNew}/${actionId}`;
 
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getUpdateActionEndpoint(roleObject, actionId));
-            });
-    }
+    return this.http
+      .delete<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getDeleteActionEndpoint(actionId)
+        );
+      });
+  }
+  getHistoryActionEndpoin<T>(actionId: number): Observable<T> {
+    let endpointUrl = `${this._actionsUrlAuditHistory}/${actionId}`;
 
-    getDeleteActionEndpoint<T>(actionId: number): Observable<T> {
-        let endpointUrl = `${this._publicationUrlNew}/${actionId}`;
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getHistoryActionEndpoin(actionId)
+        );
+      });
+  }
 
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeleteActionEndpoint(actionId));
-            });
-    }
-    getHistoryActionEndpoin<T>(actionId: number): Observable<T> {
-        let endpointUrl = `${this._actionsUrlAuditHistory}/${actionId}`;
+  getPublincationAuditById<T>(publicationId: number): Observable<T> {
+    let endpointUrl = `${this.getPublicationAuditById}/${publicationId}`;
 
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getHistoryActionEndpoin(actionId));
-            });
-    }
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getPublincationAuditById(publicationId)
+        );
+      });
+  }
 
-    getPublincationAuditById<T>(publicationId: number): Observable<T> {
-        let endpointUrl = `${this.getPublicationAuditById}/${publicationId}`;
+  postPNACMapping<T>(userObject: any): Observable<T> {
+    return this.http
+      .post<T>(
+        this._publicationPNACNEW,
+        JSON.stringify(userObject),
+        this.getRequestHeaders()
+      )
+      .catch(error => {
+        return this.handleError(error, () => this.postPNACMapping(userObject));
+      });
+  }
+  postPNATAMapping<T>(userObject: any): Observable<T> {
+    return this.http
+      .post<T>(
+        this._publicationPNATANEW,
+        JSON.stringify(userObject),
+        this.getRequestHeaders()
+      )
+      .catch(error => {
+        return this.handleError(error, () => this.postPNATAMapping(userObject));
+      });
+  }
 
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getPublincationAuditById(publicationId));
-            });
-    }
-   
-    
-    postPNACMapping<T>(userObject: any): Observable<T> {
+  getPubPNById<T>(PNid: string): Observable<T> {
+    let endpointUrl = `${this._publicationPNMappingData}/${PNid}`;
 
-        return this.http.post<T>(this._publicationPNACNEW, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.postPNACMapping(userObject));
-            });
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () => this.getPubPNById(PNid));
+      });
+  }
 
-    }
-    postPNATAMapping<T>(userObject: any): Observable<T> {
-
-        return this.http.post<T>(this._publicationPNATANEW, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.postPNATAMapping(userObject));
-            });
-
-    }
-    
+  // Save Part Number Mapping
+  postPartNumberMappedData<T>(object): Observable<T> {
+    return this.http
+      .post<T>(
+        this._PostPNMapping,
+        JSON.stringify(object),
+        this.getRequestHeaders()
+      )
+      .catch(err => {
+        return this.handleError(err, () =>
+          this.postPartNumberMappedData(object)
+        );
+      });
+  }
 }

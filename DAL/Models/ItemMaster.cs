@@ -116,7 +116,6 @@ namespace DAL.Models
 
         [ForeignKey("ConsumeUnitOfMeasureId")]
         public long? ConsumeUnitOfMeasureId { get; set; }
-
       
         [ForeignKey("PriorityId")]
         public long? PriorityId { get; set; }
@@ -137,6 +136,7 @@ namespace DAL.Models
         public Int16? ExportCountryId { get; set; }
 
         public decimal? ExportValue { get; set; }
+
         [ForeignKey("ExportCurrencyId")]
         public int? ExportCurrencyId { get; set; }
 
@@ -166,7 +166,7 @@ namespace DAL.Models
         public virtual Priority Priority { get; set; }
         public virtual ItemClassfication ItemClassification { get; set; }
         public virtual Currency Currency { get; set; }
-         public virtual ExportClassification ExportClassification { get; set; }
+        public virtual ExportClassification ExportClassification { get; set; }
         public virtual GLAccount GLAccount { get; set; }
         public virtual ItemNonStockClassification ItemNonStockClassification { get; set; }
     }

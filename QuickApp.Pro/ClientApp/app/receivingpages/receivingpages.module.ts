@@ -36,6 +36,7 @@ import { TreeModule } from 'primeng/tree';
 import { TreeTableModule } from 'primeng/treetable';
 import { TabViewModule } from 'primeng/tabview';
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { ReceivingPagesRoutingModule } from "./receivingpages-routing.module";
 import { CustomerWorksListComponent } from "../components/receiving/customer-work/customer-works-list/customer-works-list.component";
@@ -54,6 +55,8 @@ import { EditRoComponent } from "../components/receiving/repair-order/edit-ro/ed
 import { RoComponent } from "../components/receiving/repair-order/ro/ro.component";
 import { ReceivingRoComponent } from "../components/receiving/repair-order/receiving-ro/receiving-ro.component";
 import { ViewRoComponent } from "../components/receiving/repair-order/view-ro/view-ro.component";
+import { ShippingService } from "../services/shipping/shipping-service";
+import { ShippingEndpoint } from "../services/shipping/shipping-endpoint.service";
 
 @NgModule({
     imports: [
@@ -69,7 +72,7 @@ import { ViewRoComponent } from "../components/receiving/repair-order/view-ro/vi
 		MultiSelectModule,
 		ReceivingPagesRoutingModule,
 		AutoCompleteModule,
-        GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule, InputSwitchModule, CheckboxModule, TreeModule, TreeTableModule, TabViewModule, KeyFilterModule
+        GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule, CalendarModule, InputSwitchModule, CheckboxModule, TreeModule, TreeTableModule, TabViewModule, KeyFilterModule, TooltipModule
 	],
 	declarations: [
 		CustomerWorksListComponent,
@@ -84,11 +87,14 @@ import { ViewRoComponent } from "../components/receiving/repair-order/view-ro/vi
         EditRoComponent,
         RoComponent,
         ReceivingRoComponent,
-        ViewRoComponent
+        ViewRoComponent,
+
 
 	],
-    providers: [ReceivingService, ReceivingEndpointService
-
+    providers: [ReceivingService,
+                ReceivingEndpointService,
+                ShippingService,
+                ShippingEndpoint
 	],
 	entryComponents: [
 	]

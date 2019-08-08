@@ -1,5 +1,6 @@
 ﻿import { Vendor } from "../../../../models/vendor.model";
 import { AddressModel } from "../../../../models/address.model";
+import { Dropdown } from "primeng/dropdown";
 
 export class PurchaseOrder {
 
@@ -211,7 +212,7 @@ export class StockLine
     isSerialized: boolean;
     idNumber: number;
 
-    /////////////////////
+    //View Properties
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
     DivisionList: DropDownData[];
@@ -223,7 +224,6 @@ export class StockLine
     BinList: DropDownData[];
     CustomerList: DropDownData[];
     VendorList: DropDownData[];
-
     visible: boolean;
 }
 
