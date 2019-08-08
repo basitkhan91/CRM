@@ -66,7 +66,7 @@
                                                 <div class="col-sm-7">
                                                     <div class="inner-addon right-addon inline-block">
 
-                                                        <p-autoComplete  class="autocomplete-customer"  (onSelect)="onCustomerNameselected($event)"  (onKeyUp)=eventHandler($event) (keypress)="onBlurMethod('name')" [(ngModel)]="sourceCustomer.name" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                                        <p-autoComplete class="autocomplete-customer" (onSelect)="onCustomerNameselected($event)" (onKeyUp)=eventHandler($event) (keypress)="onBlurMethod('name')" [(ngModel)]="sourceCustomer.name" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
                                                                         [minLength]="1" [dropdown]="true">
                                                             <ng-template let-name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{name}}</div>
@@ -106,7 +106,7 @@
                                                     <div class="cparent-input cust-name input-icon1" *ngIf="sourceCustomer.parent">
                                                         <div class="inner-addon right-addon inline-block">
                                                             <i class="fa fa-search"></i>
-                                                            <p-autoComplete  class="autocomplete-customer" (onSelect)="onParentNameselected($event)"  (onKeyUp)=parentEventHandler($event) [(ngModel)]="sourceCustomer.customerParentName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterCustomerParentNames($event)" [size]="30"
+                                                            <p-autoComplete class="autocomplete-customer" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event) [(ngModel)]="sourceCustomer.customerParentName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterCustomerParentNames($event)" [size]="30"
                                                                             [minLength]="1" [dropdown]="true">
                                                                 <ng-template let-customerParentName pTemplate="item">
                                                                     <div class="ui-helper-clearfix">{{customerParentName}}</div>
@@ -121,7 +121,7 @@
                                                 <label class="control-label col-sm-4">Phone <strong class="clr-red">*</strong></label>
                                                 <div class="col-sm-7">
                                                     <input type="text" pInputText pKeyFilter="num" [pattern]="mobnumPattern" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.customerPhone">
-                                                    <div *ngIf="mobPattern.errors" [ngClass]="'error'">                                                       
+                                                    <div *ngIf="mobPattern.errors" [ngClass]="'error'">
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,7 +184,7 @@
                                                 <label class="control-label col-sm-4">Country <strong class="clr-red">*</strong></label>
                                                 <div class="col-sm-7">
                                                     <div class="inner-addon right-addon inline-block">
-                                                      
+
                                                         <p-autoComplete class="autocomplete-customer" (onSelect)="onCountrieselected($event)" filter="true" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                                                         [minLength]="1" [dropdown]="true">
                                                             <ng-template let-nice_name pTemplate="item">
@@ -195,7 +195,7 @@
                                                     <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div>
                                                 </div>
                                             </div>
-                                           
+
                                             <div class="form-control col-sm-12" *ngIf="checkAddress">
                                                 <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
 
@@ -356,9 +356,9 @@
                                             </div>
                                         </div>
                                         <div class="clear"></div>
-                                        <hr>
                                         <button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode ||disablesave || disableSaveParentName" (click)="editItemAndCloseModel()">Save &amp; Next</button>
-
+                                        <div class="clear"></div>
+                                        <hr>
                                         <div class="clear"></div>
                                     </div>
                                 </div>

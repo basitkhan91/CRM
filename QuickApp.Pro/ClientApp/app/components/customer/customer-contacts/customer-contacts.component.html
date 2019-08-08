@@ -190,7 +190,7 @@
 	<form #userForm="ngForm" class="form-horizontal add-custustomer">				
    		<div class="col-xs-12">
 				<div class="tab-content">
-					<div class="" id="">
+                    <div class="" id="">
                         <p class="lead" style="font-size:medium">Add Contact Details</p>
                         <div class="col-sm-6 w400">
                             <div class="form-group col-sm-12">
@@ -209,7 +209,7 @@
                                 <label for="First Name" class="control-label col-sm-4">First Name<strong class="clr-red">*</strong></label>
                                 <div class="col-sm-7">
                                     <div class="inner-addon right-addon inline-block">
-                                        <p-autoComplete class="autocomplete-customer" (keypress)="onBlurMethod('firstName')"  (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)" [(ngModel)]="sourceCustomer.firstName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                        <p-autoComplete class="autocomplete-customer" (keypress)="onBlurMethod('firstName')" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)" [(ngModel)]="sourceCustomer.firstName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-firstName pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{firstName}}</div>
@@ -283,7 +283,7 @@
                             <div class="form-group col-sm-12">
                                 <label class="control-label col-sm-4">Work Phone <strong class="clr-red">*</strong></label>
                                 <div class="col-sm-7">
-                                    <input class="form-contro  w80" type="text"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhone">
+                                    <input class="form-contro  w80" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhone">
                                     -
                                     <input class="form-control w50" type="text" (keypress)="keyPress($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.workPhoneExtn">
                                 </div>
@@ -297,67 +297,63 @@
                             </div>
 
                         </div>
-						<div class="col-sm-6 w400">
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Primary Contact </label>
-								<div class="col-sm-7">
-									<input class="form-control" type="checkbox"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isDefaultContact">
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Web Site</label>
-								<div class="col-sm-7">
-									<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.websiteURL">
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Mobile Phone</label>
-								<div class="col-sm-7">
-									<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.mobilePhone">
-								</div>
+                        <div class="col-sm-6 w400">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Primary Contact </label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isDefaultContact">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Web Site</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.websiteURL">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Mobile Phone</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.mobilePhone">
+                                </div>
 
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Alternate Phone</label>
-								<div class="col-sm-7">
-									<input class="form-control" type="text"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.alternatePhone">
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Fax</label>
-								<div class="col-sm-7">
-									<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.fax">
-								</div>
-							</div>
-							<div class="form-group col-sm-12">
-								<label class="control-label col-sm-4">Memo</label>
-								<div class="col-sm-7">
-									<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.notes">
-								</div>
-							</div>
-						</div>
-						<div class="clear"></div>
-						<hr>
-						<button type="button" class="btn btn-success pull-right submit-btn" style="text-align:center" [disabled]="disableSaveFirstName || disableSaveMiddleName || disableSaveLastName"  (click)="editItemAndCloseModel()">Save</button>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Alternate Phone</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.alternatePhone">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Fax</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.fax">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Memo</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.notes">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <button type="button" class="btn btn-success pull-right submit-btn" style="text-align:center" [disabled]="disableSaveFirstName || disableSaveMiddleName || disableSaveLastName" (click)="editItemAndCloseModel()">Save</button>
+                        <div class="clear"></div>
+                        <hr>
+                        <div class="clear"></div>
 
-						&nbsp;&nbsp;&nbsp;
+                        <p-dialog [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+                                  [width]="350" [minWidth]="200" [responsive]="true"
+                                  [minY]="1050" [baseZIndex]="1100000">
+                            <h5 [ngStyle]="{'color':'red'}">
+                                Please Enter (*) Mandatory Fields
+                            </h5>
+                            <p-footer>
+                                <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+                            </p-footer>
+                        </p-dialog>
 
-
-						<div class="clear"></div>
-						<div class="clear"></div>
-
-						<p-dialog [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-								  [width]="350" [minWidth]="200" [responsive]="true"
-								  [minY]="1050" [baseZIndex]="1100000">
-							<h5 [ngStyle]="{'color':'red'}">
-								Please Enter (*) Mandatory Fields
-							</h5>
-							<p-footer>
-								<button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-							</p-footer>
-						</p-dialog>
-
-					</div>
+                    </div>
 				</div>
 			</div>
 	</form>

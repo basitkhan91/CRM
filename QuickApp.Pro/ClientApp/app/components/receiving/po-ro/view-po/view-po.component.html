@@ -83,9 +83,10 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-group">
+                            <div class="form-group memo-popup-cstm">
                                 <label>Memo</label>
-                                <textarea class="form-control" disabled="disabled"></textarea>
+                                <span pTooltip="{{memoNotes}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{memoNotes}}" disabled /></span>
+                                <i class="fa fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top"></i>
                             </div>
                         </div>
                     </div>
@@ -151,24 +152,33 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Company</label>
-                                <input class="form-control" type="text" value="" disabled="disabled">
-                            </div>
-                            <div class="form-group">
-                                <label>Business Unit</label>
-                                <input class="form-control" type="text" value="" disabled="disabled">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Division</label>
-                                <input class="form-control" type="text" value="" disabled="disabled">
-                            </div>
-                            <div class="form-group">
-                                <label>Department</label>
-                                <input class="form-control" type="text" value="" disabled="disabled">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header" style="padding: 10px 12px;">
+                                    <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
+                                </div>
+                                <div class="card-body" style="padding: 6px 12px 4px;">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Company</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Business Unit</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Division</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Department</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -184,12 +194,13 @@
                         <th>PN</th>
                         <th>Alt PN</th>
                         <th>PN Description</th>
-                        <th>Item Category</th>
+                        <th>Change PN to</th>
                         <th>Manufacturer</th>
                         <th>Cond</th>
-                        <th>UOM</th>
-                        <th>OEM, DER,PMA Flag</th>
-                        <th>Qty Ordered	</th>
+                        <th>Qty to Repair</th>
+                        <th>Qty Reserved</th>
+                        <th>Qty Repaired</th>
+                        <th>Qty Reconciled</th>
                         <th>Unit Cost</th>
                         <th>Discount</th>
                         <th>Extended Cost</th>
@@ -214,26 +225,32 @@
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partDescription}}</td>
-                        <td>{{obj.ItemTypeId}}</td>
+                        <td></td> <!--{{obj.ItemTypeId}}-->
                         <td>{{obj.manufacturer}}</td>
                         <td>
-                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId">
+                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId" disabled="">
                                 <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                             </select>
                         </td>
-                        <td>UOM</td>
-                        <td>{{obj.oem}}{{obj.pma}}{{obj.der}}</td>
-                        <td>{{obj.quantityOrdered}}</td>
-                        <td>{{obj.unitCost}}</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>
+                            <select class="form-control" disabled="">
+                                <!--{{obj.unitCost}}-->
+                                <option value="">Select</option>
+                            </select>
+                        </td>
                         <td>discount</td>
                         <td>extended cost</td>
                         <td>
-                            <select disabled="">
+                            <select class="form-control" disabled="">
                                 <option value="">WO-45450</option>
                             </select>
                         </td>
                         <td>
-                            <select disabled="">
+                            <select class="form-control" disabled="">
                                 <option value="">SO-45450</option>
                                 <option value="">SO-45451</option>
                                 <option value="">SO-45452</option>
@@ -243,7 +260,7 @@
                             </select>
                         </td>
                         <td>
-                            <select disabled="">
+                            <select class="form-control" disabled="">
                                 <option value="">SWO-45450</option>
                                 <option value="">SWO-45451</option>
                                 <option value="">SWO-45452</option>
@@ -287,27 +304,27 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)" disabled="">
                                 <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)" disabled="">
                                 <option *ngFor="let warehouse of obj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)" disabled="">
                                 <option *ngFor="let location of obj.allLocations" [ngValue]="location.locationId">{{location.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)" disabled="">
                                 <option *ngFor="let shelf of obj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)">
+                            <select class="form-control" [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)" disabled="">
                                 <option *ngFor="let bin of obj.allBins" [ngValue]="bin.binId">{{bin.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
@@ -317,17 +334,16 @@
                         <th></th>
                         <th>Stock Line</th>
                         <th>PN</th>
-                        <th>Alt PN</th>
                         <th>PN Description</th>
                         <th>Control Num</th>
                         <th>ID</th>
                         <th>Cond</th>
-                        <th>Item category</th>
+                        <th>UOM</th>
                         <th>Serial Num</th>
-                        <th>Qty Ordered</th>
-                        <th>Qty Received</th>
-                        <th>QTY Back Order</th>
-                        <th>Unit Cost</th>
+                        <th>Out for Repair</th>
+                        <th>Qty Repaired</th>
+                        <th>Inventory Cost</th>
+                        <th>Repair Cost</th>
                         <th>Extended Cost</th>
                         <th>Receiver no.</th>
                         <th>WO </th>
@@ -337,7 +353,7 @@
                         <th>Name</th>
                         <th>Obtain From</th>
                         <th>Name</th>
-                        <th>Traceble to</th>
+                        <th>Traceable to</th>
                         <th>Name</th>
                         <th>Trace</th>
                         <th>Mfg</th>
@@ -369,7 +385,6 @@
                         <td>SL-33653</td>
                         <td>AA-10024000</td>
                         <td></td>
-                        <td>Motor</td>
                         <td>CN-100557</td>
                         <td>7</td>
                         <td>
@@ -382,13 +397,13 @@
                                 <option>SRV</option>
                             </select>
                         </td>
-                        <td>Stock</td>
+                        <td>Each</td>
                         <td>SN-10006</td>
                         <td>1</td>
                         <td>1</td>
-                        <td> - </td>
-                        <td>$<input type="text" class="form-control amount disabled2" disabled="" value="100.00"></td>
-                        <td> $100.00 </td>
+                        <td>$<input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="100.00"></td>
+                        <td>$<input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="400.00"></td>
+                        <td> $400.00 </td>
                         <td>RO-55577</td>
                         <td>
                             <select class="form-control" disabled="">
@@ -427,43 +442,7 @@
                                 <option value="Vendor">Vendor</option>
                             </select>
                         </td>
-                        <td>
-                            <div class=" col-sm-12 owner-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 owner-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 owner-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </td>
+                        <td></td>
                         <td>
                             <select id="" name="" class="form-control obtain-selection disabled2" disabled="">
                                 <option value="Customer">Customer</option>
@@ -471,42 +450,7 @@
                                 <option value="Vendor">Vendor</option>
                             </select>
                         </td>
-                        <td>
-                            <div class=" col-sm-12 obtain-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 obtain-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 obtain-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
+                        <td></td>
                         <td>
                             <select id="" name="" class="form-control traceable-selection disabled2" disabled="">
                                 <option value="Customer">Customer</option>
@@ -514,42 +458,8 @@
                                 <option value="Vendor">Vendor</option>
                             </select>
                         </td>
-                        <td>
-                            <div class=" col-sm-12 traceable-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 traceable-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 traceable-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
+                        <td></td>
+                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
                         <td>
                             <select class="form-control" disabled="">
                                 <option>MFG 1</option>
@@ -574,7 +484,6 @@
                                 <option value="">789</option>
                             </select>
                         </td>
-                        <td></td>
                         <td>GL12345(Description)</td>
                         <td>
                             <div class="checkbox-cstm" style="margin-top: 4px">

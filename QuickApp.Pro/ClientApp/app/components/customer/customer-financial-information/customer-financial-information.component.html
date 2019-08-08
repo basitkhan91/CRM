@@ -21,149 +21,149 @@
 					<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
 
 						<div class="col-md-12 col-sm-12 col-12">
-							<div class="tab-content form-bg">
-								<div class="tab-pane active" id="menu2">
-									<p class="lead" style="font-size:medium">Financial Information</p>
-									<div class="col-sm-6 w400">
+                            <div class="tab-content form-bg">
+                                <div class="tab-pane active" id="menu2">
+                                    <p class="lead" style="font-size:medium">Financial Information</p>
+                                    <div class="col-sm-6 w400">
                                         <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4">MarkUp %</label>
                                             <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                <select  [ngModelOptions]="{standalone: true}" class="select-markup" [(ngModel)]="sourceCustomer.markUpPercentageId">
+                                                <select [ngModelOptions]="{standalone: true}" class="select-markup" [(ngModel)]="sourceCustomer.markUpPercentageId">
                                                     <option *ngFor="let markUpPercentageId of allMarkUpList" [ngValue]="markUpPercentageId.markUpPercentageId">{{markUpPercentageId.markUpValue}}</option>
                                                 </select>
                                                 <a href="#" data-toggle="modal" data-target="#addMarkUp" class="add-icon" (click)="openMarkUpPercentage(openPopUpMarkUp)"><i class="fa fa-plus"></i></a>
                                             </div>
                                         </div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Credit Limit <strong class="clr-red">*</strong></label>
-											<div class="col-sm-7">
-												<input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.creditLimit">												
-											</div>
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Credit Terms<strong class="clr-red">*</strong></label>
-											<div class="inner-addon col-sm-7 inline-block display-flex">
-												<select [ngModelOptions]="{standalone: true}" class="select-markup"  [(ngModel)]="sourceCustomer.creditTermsId">
-													<option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
-												</select>
-												<a href="#" data-toggle="modal" data-target="#addcredit" class="add-icon" (click)="openCrediTerms(contentEdit)"><i class="fa fa-plus"></i></a>
-											</div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Credit Limit <strong class="clr-red">*</strong></label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.creditLimit">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Credit Terms<strong class="clr-red">*</strong></label>
+                                            <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                <select [ngModelOptions]="{standalone: true}" class="select-markup" [(ngModel)]="sourceCustomer.creditTermsId">
+                                                    <option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
+                                                </select>
+                                                <a href="#" data-toggle="modal" data-target="#addcredit" class="add-icon" (click)="openCrediTerms(contentEdit)"><i class="fa fa-plus"></i></a>
+                                            </div>
 
-										</div>
+                                        </div>
 
-										<div class="form-group col-sm-12 input-icon1">
-											<label class="control-label col-sm-4">Discount %</label>
-											<div class="inner-addon col-sm-7 inline-block display-flex">
-												<select (keypress)="onBlurMethod('discountId')" class="select-markup"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.discountId">
-													<option *ngFor="let discontValue of alldiscountvalueInfo" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
-												</select>
-												<a href="#" data-toggle="modal" data-target="#addDiscount" class="add-icon" (click)="openDiscount(contentEdits)"><i class="fa fa-plus"></i></a>
-											</div>
+                                        <div class="form-group col-sm-12 input-icon1">
+                                            <label class="control-label col-sm-4">Discount %</label>
+                                            <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                <select (keypress)="onBlurMethod('discountId')" class="select-markup" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.discountId">
+                                                    <option *ngFor="let discontValue of alldiscountvalueInfo" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
+                                                </select>
+                                                <a href="#" data-toggle="modal" data-target="#addDiscount" class="add-icon" (click)="openDiscount(contentEdits)"><i class="fa fa-plus"></i></a>
+                                            </div>
 
-										</div>
-										
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Allow Netting of AP/AR</label>
-											<div class="col-sm-7">
-												<input class="form-control" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.allowNettingOfAPAR">
-											</div>
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Tax Exempt</label>
-											<div class="col-sm-7">
-												<input class="form-control" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isTaxExempt">
+                                        </div>
 
-											</div>
-										</div>
-										<div>
-											<div class="form-group col-sm-12 tax-certificate">
-												<label class="control-label col-sm-4">Attach Certificate</label>
-												<div class="col-sm-7">
-													<input type="file" id="file">
-												</div>
-											</div>
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Tax Rate - State/Prov </label>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Allow Netting of AP/AR</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.allowNettingOfAPAR">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Tax Exempt</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isTaxExempt">
 
-											<!--<i class="fa fa-caret-down"></i>-->
-											<div class="col-sm-7">
-												<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.taxRateStateOrProvince">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-group col-sm-12 tax-certificate">
+                                                <label class="control-label col-sm-4">Attach Certificate</label>
+                                                <div class="col-sm-7">
+                                                    <input type="file" id="file">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Tax Rate - State/Prov </label>
+
+                                            <!--<i class="fa fa-caret-down"></i>-->
+                                            <div class="col-sm-7">
+                                                <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.taxRateStateOrProvince">
                                                     <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}&#37;</option>
-                                			    </select>
-											</div>
+                                                </select>
+                                            </div>
 
-											<!--<a data-toggle="modal" data-target="#addTaxRate" class="add-icon"><i class="fa fa-plus"></i></a>-->
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">TaxRate / Other</label>
+                                            <!--<a data-toggle="modal" data-target="#addTaxRate" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">TaxRate / Other</label>
 
-											<input class="form-control wauto" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.taxRateOther">
-											<!--<p-multiSelect [options]="taxRateValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.taxTypeId" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>-->
-											<div class="col-sm-7">
-												<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.taxTypeId" *ngIf="sourceCustomer.taxRateOther">
-													<option *ngFor="let taxRate of allTaxrateInfo" [ngValue]="taxRate.taxTypeId">{{taxRate.taxTypeId}}</option>
+                                            <input class="form-control wauto" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.taxRateOther">
+                                            <!--<p-multiSelect [options]="taxRateValues" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.taxTypeId" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>-->
+                                            <div class="col-sm-7">
+                                                <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.taxTypeId" *ngIf="sourceCustomer.taxRateOther">
+                                                    <option *ngFor="let taxRate of allTaxrateInfo" [ngValue]="taxRate.taxTypeId">{{taxRate.taxTypeId}}</option>
 
-												</select>
-											</div>
-											<!--</div>-->
-											<!--<a href="#" *ngIf="sourceCustomer.taxRateOther" data-toggle="modal" data-target="#addTaxRate" class="add-icon" (click)="opentaxratemodel(contentModel)"><i class="fa fa-plus"></i></a>-->
+                                                </select>
+                                            </div>
+                                            <!--</div>-->
+                                            <!--<a href="#" *ngIf="sourceCustomer.taxRateOther" data-toggle="modal" data-target="#addTaxRate" class="add-icon" (click)="opentaxratemodel(contentModel)"><i class="fa fa-plus"></i></a>-->
 
-										</div>
-									</div>
+                                        </div>
+                                    </div>
 
-									<div class="col-sm-6 w400">
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">EDI</label>
-											<div class="col-sm-7">
-												<input class="edi-checkbox" type="checkbox"  id="tax" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.edi">
-												<div class="edi-input" *ngIf="sourceCustomer.edi">
-													<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ediDescription">
-												</div>
-											</div>
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Aeroxchange</label>
-											<div class="col-sm-7">
-												<input class="aeroxchange-checkbox" type="checkbox"  id="Aeroxchange" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isAeroExchange">
-												<div class="aeroxchange-input" *ngIf="sourceCustomer.isAeroExchange">													
-													<input type="text" id="tax" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.aeroExchangeDescription">
-												</div>												
-											</div>
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
-											<div class="inner-addon col-sm-7 inline-block display-flex">
-												<select class="select-markup" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.currencyId">
-													<option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-															[ngValue]="currencyName.currencyId">
-														<!--{{currencyName.code}}-->{{currencyName.symbol}}
-													</option>
-												</select>
-												<a href="#" data-toggle="modal" data-target="#addCurrency" class="add-icon" (click)="openCurrency(contentCurrency)"><i class="fa fa-plus"></i></a>
-											</div>
+                                    <div class="col-sm-6 w400">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">EDI</label>
+                                            <div class="col-sm-7">
+                                                <input class="edi-checkbox" type="checkbox" id="tax" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.edi">
+                                                <div class="edi-input" *ngIf="sourceCustomer.edi">
+                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.ediDescription">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Aeroxchange</label>
+                                            <div class="col-sm-7">
+                                                <input class="aeroxchange-checkbox" type="checkbox" id="Aeroxchange" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isAeroExchange">
+                                                <div class="aeroxchange-input" *ngIf="sourceCustomer.isAeroExchange">
+                                                    <input type="text" id="tax" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.aeroExchangeDescription">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
+                                            <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                <select class="select-markup" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.currencyId">
+                                                    <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                                            [ngValue]="currencyName.currencyId">
+                                                        <!--{{currencyName.code}}-->{{currencyName.symbol}}
+                                                    </option>
+                                                </select>
+                                                <a href="#" data-toggle="modal" data-target="#addCurrency" class="add-icon" (click)="openCurrency(contentCurrency)"><i class="fa fa-plus"></i></a>
+                                            </div>
 
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Allow Partial Billing </label>
-											<div class="col-sm-7">
-												<input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.allowPartialBilling">
-											</div>
-										</div>
-										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">Allow ProForma Billing</label>
-											<div class="col-sm-7">
-												<input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.allowProformaBilling">
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--Right End-->
-								<div class="clear"></div>
-								<hr>
-								<button type="submit" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
-
-							</div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Allow Partial Billing </label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.allowPartialBilling">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Allow ProForma Billing</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.allowProformaBilling">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Right End-->
+                                <div class="clear"></div>
+                                <button type="submit" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+                                <div class="clear"></div>
+                                <hr>
+                            </div>
 						</div>
 						<div class="clearfix"></div>
 

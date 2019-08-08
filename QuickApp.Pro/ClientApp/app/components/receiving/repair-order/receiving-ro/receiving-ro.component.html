@@ -29,11 +29,11 @@
                 <div class="form-row" style="margin-top: 15px;">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>PO Num</label>
+                            <label>PO Num <span class="clr-red">*</span></label>
                             <input class="form-control" type="text" disabled="disabled" required> <!--repairOrderData.purchaseOrderNumber-->
                         </div>
                         <div class="form-group">
-                            <label>Open Date</label>
+                            <label>Open Date <span class="clr-red">*</span></label>
                             <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [required]="true"></p-calendar> <!--repairOrderData.dateRequested-->
                         </div>
                         <div class="form-group">
@@ -61,13 +61,13 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Vendor Num</label>
+                            <label>Vendor Num <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
                                 <input class="form-control" type="text" disabled="disabled" required> <!--repairOrderData.vendor.vendorCode-->
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Vendor Name</label>
+                            <label>Vendor Name <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
                                 <input type="text" class="form-control" disabled="disabled" required> <!--repairOrderData.vendor.vendorName-->
                             </div>
@@ -92,24 +92,24 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Requisitioner</label>
+                            <label>Requisitioner <span class="clr-red">*</span></label>
                             <p-autoComplete disabled="disabled" [size]="32" class="rpo-acomp-header"
                                             [minLength]="1" [dropdown]="true">
                                 <!--repairOrderData.requestedBy-->
                             </p-autoComplete>
                         </div>
                         <div class="form-group">
-                            <label>Approver</label>
+                            <label>Approver <span class="clr-red">*</span></label>
                             <div class="inner-addon">
                                 <input disabled="disabled" type="text" class="form-control" required> <!--repairOrderData.approver-->
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Approved Date</label>
+                            <label>Approved Date <span class="clr-red">*</span></label>
                             <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [required]="true"></p-calendar> <!--repairOrderData.dateApprovied-->
                         </div>
                         <div class="form-group">
-                            <label>Credit Limit &amp; Terms</label>
+                            <label>Credit Limit &amp; Terms <span class="clr-red">*</span></label>
                             <div class="form-row">
                                 <div class="col-sm-5">
                                     <input class="form-control" type="text" placeholder="limit" required> <!--repairOrderData.terms-->
@@ -131,7 +131,7 @@
                     <div class="col-md-3">
                         <div class="card">
                             <div class="card-header" style="padding: 10px 12px;">
-                                <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
+                                <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
                             </div>
                             <div class="card-body" style="padding: 12px 12px 4px;">
                                 <div class="form-group">
@@ -147,17 +147,17 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <select disabled="disabled" class="form-control"> <!--roSelectedDepartmentId-->
-                                    <option value="">Select Dept</option>
-                                    <option *ngFor="let department of roDepartmentList" [value]="department.Key">{{department.Value}}</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
                                 <select disabled="disabled" class="form-control"> <!--poSelectedDivisionId-->
                                     <option value="">Select Division</option>
                                     <option *ngFor="let division of roDivisionList" [value]="division.Key">{{division.Value}}</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <select disabled="disabled" class="form-control"> <!--roSelectedDepartmentId-->
+                                    <option value="">Select Dept</option>
+                                    <option *ngFor="let department of roDepartmentList" [value]="department.Key">{{department.Value}}</option>
+                                </select>
+                            </div>                           
                             </div>
                         </div>
                     </div>

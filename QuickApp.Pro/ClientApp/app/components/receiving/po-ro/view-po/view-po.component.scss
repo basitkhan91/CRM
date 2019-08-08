@@ -15,8 +15,9 @@ input[type="text"], input[type="number"], select, textarea {
 .form-control:disabled {
     background-color: #e9ecef !important;
 }
-.child-data td {
+.child-data td, .parent-data td {
     background: #fff !important;
+    padding: 3px;
 }
 .child-header {
     background: #fafafa !important;

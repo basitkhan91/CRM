@@ -83,9 +83,10 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Memo</label>
-                                <textarea class="form-control" disabled="disabled"></textarea> <!--{{editPoData.memo}}-->
+                            <div class="form-group memo-popup-cstm">
+                                <label>Memo</label> <!--{{editPoData.memo}}-->
+                                <span pTooltip="{{memoNotes}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{memoNotes}}" disabled /></span>
+                                <i class="fa fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top"></i>
                             </div>
                         </div>
                     </div>
@@ -151,24 +152,33 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Company</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Business Unit</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>                           
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Division</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Department</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header" style="padding: 10px 12px;">
+                                    <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
+                                </div>
+                                <div class="card-body" style="padding: 6px 12px 4px;">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Company</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Business Unit</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Division</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Department</label>
+                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -176,21 +186,22 @@
             </div>
         </div>
 
-        <div class="table-responsive pas-table-cstm">
+        <div class="table-responsive pas-table-cstm ero-table-cstm">
             <table class="table table-bordered " id="po-table">
                 <thead>
                     <tr>
-                        <th><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit" style="padding-bottom:0; color:#fff;"><i class="fa fa-edit"></i></a></th>
+                        <th><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit" style="padding-bottom:0; color:#fff;"><i class="fa fa-edit" (click)="onEditGridFields()"></i></a></th>
                         <th>Item Num</th>
                         <th>PN</th>
                         <th>Alt PN</th>
                         <th>PN Description</th>
-                        <th>Item Category</th>
+                        <th>Change PN to</th>
                         <th>Manufacturer</th>
                         <th>Cond</th>
-                        <th>UOM</th>
-                        <th>OEM, DER,PMA Flag</th>
-                        <th>Qty Ordered	</th>
+                        <th>Qty to Repair</th>
+                        <th>Qty Reserved</th>
+                        <th>Qty Repaired</th>
+                        <th>Qty Reconciled</th>
                         <th>Unit Cost</th>
                         <th>Discount</th>
                         <th>Extended Cost</th>
@@ -211,31 +222,37 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let obj of localData" class="parent-data">
-                        <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
+                        <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditParentGridFields()"></i></a></td>
                         <td></td>
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partDescription}}</td>
-                        <td>{{obj.ItemTypeId}}</td>
+                        <td></td> <!--{{obj.ItemTypeId}}-->
                         <td>{{obj.manufacturer}}</td>
                         <td>
-                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId">
+                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId" [disabled]="rpoEditPF">
                                 <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                             </select>
                         </td>
-                        <td>UOM</td>
-                        <td>{{obj.oem}}{{obj.pma}}{{obj.der}}</td>
-                        <td>{{obj.quantityOrdered}}</td>
-                        <td>{{obj.unitCost}}</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>
+                            <select class="form-control" [disabled]="rpoEditPF">
+                                <!--{{obj.unitCost}}-->
+                                <option value="">Select</option>
+                            </select>
+                        </td>
                         <td>discount</td>
                         <td>extended cost</td>
                         <td>
-                            <select disabled="">
+                            <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">WO-45450</option>
                             </select>
                         </td>
                         <td>
-                            <select disabled="">
+                            <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">SO-45450</option>
                                 <option value="">SO-45451</option>
                                 <option value="">SO-45452</option>
@@ -245,7 +262,7 @@
                             </select>
                         </td>
                         <td>
-                            <select disabled="">
+                            <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">SWO-45450</option>
                                 <option value="">SWO-45451</option>
                                 <option value="">SWO-45452</option>
@@ -255,7 +272,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
                                 <option value="">ILS</option>
@@ -265,7 +282,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
                                 <option value="">ILS</option>
@@ -275,41 +292,41 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">Designing</option>
                                 <option value="">Development</option>
                                 <option value="">Repear</option>
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">.net</option>
                                 <option value="">HTML</option>
                                 <option value="">Java</option>
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)" [disabled]="rpoEditPF">
                                 <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)" [disabled]="rpoEditPF">
                                 <option *ngFor="let warehouse of obj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)" [disabled]="rpoEditPF">
                                 <option *ngFor="let location of obj.allLocations" [ngValue]="location.locationId">{{location.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)">
+                            <select class="form-control" [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)" [disabled]="rpoEditPF">
                                 <option *ngFor="let shelf of obj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)">
+                            <select class="form-control" [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)" [disabled]="rpoEditPF">
                                 <option *ngFor="let bin of obj.allBins" [ngValue]="bin.binId">{{bin.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
                         </td>
@@ -320,17 +337,16 @@
                         <th></th>
                         <th>Stock Line</th>
                         <th>PN</th>
-                        <th>Alt PN</th>
                         <th>PN Description</th>
                         <th>Control Num</th>
                         <th>ID</th>
                         <th>Cond</th>
-                        <th>Item category</th>
+                        <th>UOM</th>
                         <th>Serial Num</th>
-                        <th>Qty Ordered</th>
-                        <th>Qty Received</th>
-                        <th>QTY Back Order</th>
-                        <th>Unit Cost</th>
+                        <th>Out for Repair</th>
+                        <th>Qty Repaired</th>
+                        <th>Inventory Cost</th>
+                        <th>Repair Cost</th>
                         <th>Extended Cost</th>
                         <th>Receiver no.</th>
                         <th>WO </th>
@@ -340,7 +356,7 @@
                         <th>Name</th>
                         <th>Obtain From</th>
                         <th>Name</th>
-                        <th>Traceble to</th>
+                        <th>Traceable to</th>
                         <th>Name</th>
                         <th>Trace</th>
                         <th>Mfg</th>
@@ -368,16 +384,15 @@
                         <th>Bin</th>
                     </tr>
                     <tr class="child-data splitship-child">
-                        <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit"></i></a></td>
+                        <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditChildGridFields()"></i></a></td>
                         <td></td>
                         <td>SL-33653</td>
                         <td>AA-10024000</td>
                         <td></td>
-                        <td>Motor</td>
                         <td>CN-100557</td>
                         <td>7</td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option>AR</option>
                                 <option>AS-IS</option>
                                 <option>NEW</option>
@@ -386,16 +401,16 @@
                                 <option>SRV</option>
                             </select>
                         </td>
-                        <td>Stock</td>
+                        <td>Each</td>
                         <td>SN-10006</td>
                         <td>1</td>
                         <td>1</td>
-                        <td> - </td>
-                        <td>$<input type="text" class="form-control amount disabled2" disabled="" value="100.00"></td>
-                        <td> $100.00 </td>
+                        <td>$<input type="text" class="form-control amount disabled2" value="100.00" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" [disabled]="rpoEditCF"></td>
+                        <td>$<input type="text" class="form-control amount disabled2" value="400.00" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" [disabled]="rpoEditCF"></td>
+                        <td> $400.00 </td>
                         <td>RO-55577</td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">WO-45450</option>
                                 <option value="">WO-45451</option>
                                 <option value="">WO-45452</option>
@@ -405,7 +420,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">SO-45450</option>
                                 <option value="">SO-45451</option>
                                 <option value="">SO-45452</option>
@@ -415,7 +430,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">SWO-45450</option>
                                 <option value="">SWO-45451</option>
                                 <option value="">SWO-45452</option>
@@ -425,171 +440,182 @@
                             </select>
                         </td>
                         <td>
-                            <select id="" name="" class="form-control disabled2 owner-selection" disabled="">
-                                <option value="Customer">Customer</option>
-                                <option value="Other">Other </option>
-                                <option value="Vendor">Vendor</option>
+                            <select id="" name="" class="form-control disabled2 owner-selection" (change)="onOwnerChange($event)" [disabled]="rpoEditCF">
+                                <option value="0">Select</option>
+                                <option value="1">Customer</option>
+                                <option value="2">Other </option>
+                                <option value="3">Vendor</option>
                             </select>
                         </td>
                         <td>
-                            <div class=" col-sm-12 owner-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div class="form-row" *ngIf="ownercustomer" style="width: 140px;margin-right: 4px;">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete class="rpo-acomp"
+                                                        [size]="32"
+                                                        [minLength]="1"
+                                                        [dropdown]="true">
+                                            <ng-template let-Value pTemplate="customer">
+                                                <div class="ui-helper-clearfix">{{Value}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="ownerother">
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="text" pInputText>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="ownervendor" style="width: 140px;margin-right: 4px;">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete class="rpo-acomp"
+                                                        [size]="32"
+                                                        [minLength]="1"
+                                                        [dropdown]="true">
+                                            <ng-template let-Value pTemplate="vendor">
+                                                <div class="ui-helper-clearfix">{{Value}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class=" col-sm-12 owner-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-12 owner-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-
                         </td>
                         <td>
-                            <select id="" name="" class="form-control obtain-selection disabled2" disabled="">
-                                <option value="Customer">Customer</option>
-                                <option value="Other">Other </option>
-                                <option value="Vendor">Vendor</option>
+                            <select id="" name="" class="form-control obtain-selection disabled2" (change)="onObtainFromChange($event)" [disabled]="rpoEditCF">
+                                <option value="0">Select</option>
+                                <option value="1">Customer</option>
+                                <option value="2">Other </option>
+                                <option value="3">Vendor</option>
                             </select>
                         </td>
                         <td>
-                            <div class=" col-sm-12 obtain-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div class="form-row" *ngIf="obtainfromcustomer" style="width: 140px;margin-right: 4px;">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete class="rpo-acomp"
+                                                        [size]="32"
+                                                        [minLength]="1"
+                                                        [dropdown]="true">
+                                            <ng-template let-Value pTemplate="customer">
+                                                <div class="ui-helper-clearfix">{{Value}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class=" col-sm-12 obtain-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
+                                <div class="form-row" *ngIf="obtainfromother">
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="text" pInputText>
                                     </div>
                                 </div>
-                            </div>
-                            <div class=" col-sm-12 obtain-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                <div class="form-row" *ngIf="obtainfromvendor" style="width: 140px;margin-right: 4px;">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete class="rpo-acomp"
+                                                        [size]="32"
+                                                        [minLength]="1"
+                                                        [dropdown]="true">
+                                            <ng-template let-Value pTemplate="vendor">
+                                                <div class="ui-helper-clearfix">{{Value}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
                                     </div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <select id="" name="" class="form-control traceable-selection disabled2" disabled="">
-                                <option value="Customer">Customer</option>
-                                <option value="Other">Other </option>
-                                <option value="Vendor">Vendor</option>
+                            <select id="" name="" class="form-control traceable-selection disabled2" (change)="onTraceableToChange($event)" [disabled]="rpoEditCF">
+                                <option value="0">Select</option>
+                                <option value="1">Customer</option>
+                                <option value="2">Other </option>
+                                <option value="3">Vendor</option>
                             </select>
                         </td>
                         <td>
-                            <div class=" col-sm-12 traceable-inputs-customer" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="customer-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div class="form-row" *ngIf="traceabletocustomer" style="width: 140px;margin-right: 4px;">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete class="rpo-acomp"
+                                                        [size]="32"
+                                                        [minLength]="1"
+                                                        [dropdown]="true">
+                                            <ng-template let-Value pTemplate="customer">
+                                                <div class="ui-helper-clearfix">{{Value}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class=" col-sm-12 traceable-inputs-other" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
+                                <div class="form-row" *ngIf="traceabletoother">
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="text" pInputText>
                                     </div>
                                 </div>
-                            </div>
-                            <div class=" col-sm-12 traceable-inputs-vendor" style="display: none;">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4"></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon autosuggesions-add inline-block">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control names ui-autocomplete-input" id="" name="" autocomplete="off">
-                                        </div>
-                                        <a href="vendor-setup.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
+                                <div class="form-row" *ngIf="traceabletovendor" style="width: 140px;margin-right: 4px;">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete class="rpo-acomp"
+                                                        [size]="32"
+                                                        [minLength]="1"
+                                                        [dropdown]="true">
+                                            <ng-template let-Value pTemplate="vendor">
+                                                <div class="ui-helper-clearfix">{{Value}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
                                     </div>
                                 </div>
                             </div>
                         </td>
+                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option>MFG 1</option>
                                 <option>MFG 2</option>
                                 <option>MFG 3</option>
                             </select>
                         </td>
-                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
-                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
-                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
-                        <td><input class="form-control" type="text" disabled="" value="Shabbir Ahmad"></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
+                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
+                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
+                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
+                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
+                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
+                        <td><input class="form-control" type="text" value="Shabbir Ahmad" [disabled]="rpoEditCF"></td>
+                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
+                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
+                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
+                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">123</option>
                                 <option value="">456</option>
                                 <option value="">789</option>
                             </select>
                         </td>
-                        <td></td>
                         <td>GL12345(Description)</td>
                         <td>
                             <div class="checkbox-cstm" style="margin-top: 4px">
                                 <label style="width: 50px;">
-                                    <input type="checkbox" class="form-control" disabled>
+                                    <input type="checkbox" class="form-control" [disabled]="rpoEditCF">
                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 </label>
                             </div>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
                                 <option value="">ILS</option>
@@ -599,7 +625,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
                                 <option value="">ILS</option>
@@ -609,21 +635,21 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Designing</option>
                                 <option value="">Development</option>
                                 <option value="">Repear</option>
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">.net</option>
                                 <option value="">HTML</option>
                                 <option value="">Java</option>
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Site 1</option>
                                 <option value="">Site 2</option>
                                 <option value="">Site 3</option>
@@ -632,7 +658,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Warehouse 1</option>
                                 <option value="">Warehouse 2</option>
                                 <option value="">Warehouse 3</option>
@@ -641,7 +667,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Location 1</option>
                                 <option value="">Location 2</option>
                                 <option value="">Location 3</option>
@@ -650,7 +676,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Shelf 1</option>
                                 <option value="">Shelf 2</option>
                                 <option value="">Shelf 3</option>
@@ -659,7 +685,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Bin 1</option>
                                 <option value="">Bin 2</option>
                                 <option value="">Bin 3</option>

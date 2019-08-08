@@ -29,6 +29,19 @@ export class EditPoComponent implements OnInit {
     partDivisionlist: any[] = [];
     allPriorityInfo: any[] = [];
     toggle_epo_header: boolean = false;
+    obtainfromcustomer: boolean = false;
+    obtainfromother: boolean = false;
+    obtainfromvendor: boolean = false;
+    ownercustomer: boolean = false;
+    ownerother: boolean = false;
+    ownervendor: boolean = false;
+    traceabletocustomer: boolean = false;
+    traceabletoother: boolean = false;
+    traceabletovendor: boolean = false;
+    rpoEditPF: boolean = true; //remove once add dynamic content
+    rpoEditCF: boolean = true; //remove once add dynamic content
+    memoNotes: string;
+
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService, public priority: PriorityService, private vendorService: VendorService, public conditionService: ConditionService, public siteService: SiteService, public binservice: BinService, public legalEntityService: LegalEntityService, public manufacturerService: ManufacturerService, public route: Router) {
         //        debugger;
@@ -46,6 +59,11 @@ export class EditPoComponent implements OnInit {
         this.priorityData();
 
         this.loadReceivingPOEditGrid();
+
+        //TODO: Remove once we load dynamic content
+        this.localData = [
+            { partNumber: 'PN123' }
+        ]
     }
     private loadReceivingPOEditGrid()
     {
@@ -187,6 +205,74 @@ export class EditPoComponent implements OnInit {
     private onDataLoadFailed(error: any) {
 
 
+    }
+
+    onObtainFromChange(event) {
+        if (event.target.value === '1') {
+            this.obtainfromcustomer = true;
+            this.obtainfromother = false;
+            this.obtainfromvendor = false;
+        }
+        if (event.target.value === '2') {
+            this.obtainfromother = true;
+            this.obtainfromcustomer = false;
+            this.obtainfromvendor = false;
+        }
+        if (event.target.value === '3') {
+            this.obtainfromvendor = true;
+            this.obtainfromcustomer = false;
+            this.obtainfromother = false;
+        }
+    }
+
+    onOwnerChange(event) {
+        if (event.target.value === '1') {
+            this.ownercustomer = true;
+            this.ownerother = false;
+            this.ownervendor = false;
+        }
+        if (event.target.value === '2') {
+            this.ownerother = true;
+            this.ownercustomer = false;
+            this.ownervendor = false;
+        }
+        if (event.target.value === '3') {
+            this.ownervendor = true;
+            this.ownercustomer = false;
+            this.ownerother = false;
+        }
+    }
+
+    onTraceableToChange(event) {
+        if (event.target.value === '1') {
+            this.traceabletocustomer = true;
+            this.traceabletoother = false;
+            this.traceabletovendor = false;
+        }
+        if (event.target.value === '2') {
+            this.traceabletoother = true;
+            this.traceabletocustomer = false;
+            this.traceabletovendor = false;
+        }
+        if (event.target.value === '3') {
+            this.traceabletovendor = true;
+            this.traceabletocustomer = false;
+            this.traceabletoother = false;
+        }
+    }
+
+    //remove once add dynamic content
+    onEditParentGridFields() {
+        this.rpoEditPF = false;
+    }
+    //remove once add dynamic content
+    onEditChildGridFields() {
+        this.rpoEditCF = false;
+    }
+    //remove once add dynamic content
+    onEditGridFields() {
+        this.rpoEditPF = false;
+        this.rpoEditCF = false;
     }
 
     onSubmit() {
