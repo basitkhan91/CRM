@@ -227,8 +227,15 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        
-       
-        
+
+        [HttpGet("GetPubPNMappedData_PNID/{PNIds}")]
+        public IActionResult PubPNMappedDetails(string PNIds)
+        {
+
+            var result = _unitOfWork.Publication.GetPubPNMappingData(PNIds);
+            return Ok(result);
+
+        }
+
     }
 }

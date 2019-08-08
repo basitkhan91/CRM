@@ -21,7 +21,7 @@ namespace DAL.Models
         public long ItemMasterAircraftMappingId { get; set; }
         public long ItemMasterId { get; set; }
         public long AircraftModelId { get; set; }
-        public long AircraftTypelId { get; set; }
+        public int AircraftTypeId { get; set; }
         public long DashNumberId { get; set; }
         public string PartNumber { get; set; }
         public string DashNumber { get; set; }
@@ -34,6 +34,8 @@ namespace DAL.Models
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
-    
+        public Nullable<bool> IsDeleted { get; set; }
+
+
     }
 }

@@ -267,7 +267,14 @@ export class ItemMasterService {
     newItemMasterPurcSaleClass(action: any) {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
     }
-    
-   
+    getMappedAirCraftDetails(PNid: string) {
+        return this.itemMasterEndpoint.getAircraftMappingEndpoint<any>(PNid);
+    }
+    getMappedATADetails(PNid: string) {
+        return this.itemMasterEndpoint.getATAMappingEndpoint<any>(PNid);
+    } 
+    newItemMasterExportInfoClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
+    }
 }
 
