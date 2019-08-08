@@ -13665,6 +13665,18 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     opacity: 1;
     background-color: rgba(233, 236, 239, 0.5) !important;
 }
+.ero-table-cstm .ui-datepicker-calendar td {
+    background: #fff !important;
+}
+.ero-table-cstm .ui-datepicker-calendar td a {
+    padding: 7px !important;
+}
+.ero-table-cstm .ui-datepicker-group {
+    padding: 10px !important;
+}
+.ero-table-cstm {
+    min-height: 300px;
+}
 
 .multi-general p-multiselect {
     width: 207px;
@@ -13730,6 +13742,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .radio-cstm input:checked ~ .checkmark {
     background-color: #337ab7;
+}
+.radio-cstm input:checked:disabled ~ .checkmark {
+    background-color: rgba(51, 122, 183, 0.7);
 }
 .radio-cstm .checkmark:after {
     content: "";

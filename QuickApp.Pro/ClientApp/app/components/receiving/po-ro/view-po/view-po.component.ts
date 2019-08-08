@@ -29,6 +29,8 @@ export class ViewPoComponent implements OnInit {
     partDivisionlist: any[] = [];
     allPriorityInfo: any[] = [];
     toggle_vpo_header: boolean = false;
+    memoNotes: string;
+
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService, public priority: PriorityService, private vendorService: VendorService, public conditionService: ConditionService, public siteService: SiteService, public binservice: BinService, public legalEntityService: LegalEntityService, public manufacturerService: ManufacturerService, public route: Router) {
         //        debugger;
@@ -47,6 +49,11 @@ export class ViewPoComponent implements OnInit {
         this.priorityData();
 
         this.loadReceivingPOEditGrid();
+
+        //TODO: Remove once we load dynamic content
+        this.localData = [
+            { partNumber: 'PN123' }
+        ]
     }
     private loadReceivingPOEditGrid()
     {

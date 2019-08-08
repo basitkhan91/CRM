@@ -49,7 +49,10 @@
 								<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 								<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 								<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
-								<button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
+                                <button class="btn-view" mat-icon-button matTooltip="view">
+                                    <mat-icon style="color: green;">remove_red_eye</mat-icon>
+                                </button>
+                                <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
 									<mat-icon>edit</mat-icon>
 								</button>
 								<!--<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
