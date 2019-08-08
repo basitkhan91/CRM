@@ -67,46 +67,57 @@ namespace QuickApp.Pro.Controllers
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] PublicationViewModel publicationViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                if (publicationViewModel == null)
-                    return BadRequest($"{nameof(publicationViewModel)} cannot be null");
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					if (publicationViewModel == null)
+						return BadRequest($"{nameof(publicationViewModel)} cannot be null");
 
-                DAL.Models.Publication publicationobject = new DAL.Models.Publication();
-                publicationobject.PublicationId = publicationViewModel.PublicationId;
-                publicationobject.Description = publicationViewModel.Description;
-                publicationobject.PartNumber = publicationViewModel.PartNumber;
-                publicationobject.Memo = publicationViewModel.Memo;
-                publicationobject.Platform = publicationViewModel.Platform;
-                publicationobject.Model = publicationViewModel.Model;
-                publicationobject.Description = publicationViewModel.Description;
-                publicationobject.ATAMain = publicationViewModel.ATAMain;
-                publicationobject.ATASubChapter = publicationViewModel.ATASubChapter;
-                publicationobject.ATAPositionZone = publicationViewModel.ATAPositionZone;
-                publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
-                publicationobject.IsActive = publicationViewModel.IsActive;
-                publicationobject.EntryDate = publicationViewModel.EntryDate;
-                publicationobject.revisionDate = publicationViewModel.revisionDate;
-                publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
-                publicationobject.ASD = publicationViewModel.ASD;
-                publicationobject.publishby = publicationViewModel.publishby;
-                publicationobject.location = publicationViewModel.location;
-                publicationobject.revision = publicationViewModel.revision;
-                publicationobject.verifiedby = publicationViewModel.verifiedby;
-                publicationobject.verifieddate = publicationViewModel.verifieddate;
-                publicationobject.employee = publicationViewModel.employee;
-                publicationobject.docpath = publicationViewModel.docpath;
-                publicationobject.CreatedDate = DateTime.Now;
-                publicationobject.UpdatedDate = DateTime.Now;
-                publicationobject.CreatedBy = publicationViewModel.CreatedBy;
-                publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
-                _unitOfWork.Publication.Add(publicationobject);
-                _unitOfWork.SaveChanges();
+					DAL.Models.Publication publicationobject = new DAL.Models.Publication();
+					publicationobject.PublicationRecordId = publicationViewModel.PublicationRecordId;
+					publicationobject.PublicationId = publicationViewModel.PublicationId;
+					publicationobject.Description = publicationViewModel.Description;
+					publicationobject.PartNumber = publicationViewModel.PartNumber;
+					publicationobject.Memo = publicationViewModel.Memo;
+					publicationobject.Platform = publicationViewModel.Platform;
+					publicationobject.Model = publicationViewModel.Model;
+					publicationobject.Description = publicationViewModel.Description;
+					publicationobject.ATAMain = publicationViewModel.ATAMain;
+					publicationobject.ATASubChapter = publicationViewModel.ATASubChapter;
+					publicationobject.ATAPositionZone = publicationViewModel.ATAPositionZone;
+					publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
+					publicationobject.IsActive = publicationViewModel.IsActive;
+					publicationobject.EntryDate = publicationViewModel.EntryDate;
+					publicationobject.revisionDate = publicationViewModel.revisionDate;
+					publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
+					publicationobject.ASD = publicationViewModel.ASD;
+					publicationobject.publishby = publicationViewModel.publishby;
+					publicationobject.location = publicationViewModel.location;
+					publicationobject.revision = publicationViewModel.revision;
+					publicationobject.verifiedby = publicationViewModel.verifiedby;
+					publicationobject.verifieddate = publicationViewModel.verifieddate;
+					publicationobject.employee = publicationViewModel.employee;
+					publicationobject.docpath = publicationViewModel.docpath;
+					publicationobject.CreatedDate = DateTime.Now;
+					publicationobject.UpdatedDate = DateTime.Now;
+					publicationobject.CreatedBy = publicationViewModel.CreatedBy;
+					publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
+					_unitOfWork.Publication.Add(publicationobject);
+					_unitOfWork.SaveChanges();
 
-            }
 
-            return Ok(publicationViewModel);
-        }
+					return Ok(publicationobject);
+				}
+
+				return Ok(ModelState);
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
+		}
         [HttpPut("publicationpost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] PublicationViewModel publicationViewModel)
         {
@@ -170,6 +181,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("PubPNACMappingPost")]
         public IActionResult InsertPNACMapping([FromBody] PublicationPNACMappingModel PnAcMapping)
         {
+		
             if (ModelState.IsValid)
             {
                 if (PnAcMapping == null)
@@ -227,8 +239,15 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        
-       
-        
+
+        [HttpGet("GetPubPNMappedData_PNID/{PNIds}")]
+        public IActionResult PubPNMappedDetails(string PNIds)
+        {
+
+            var result = _unitOfWork.Publication.GetPubPNMappingData(PNIds);
+            return Ok(result);
+
+        }
+
     }
 }

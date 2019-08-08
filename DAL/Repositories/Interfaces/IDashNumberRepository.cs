@@ -13,5 +13,6 @@ namespace DAL.Repositories.Interfaces
         new IQueryable<AircraftDashNumber> GetPaginationData();
         IEnumerable<object> getDashListByIDS(string Mid, long Tid, string Did);
         IEnumerable<object> GetDashNoByID(string Mid, long Tid);
+        IEnumerable<object> getDashListBy_MUTLIIDs(string Mid, string Tid, string Did);
     }
 }

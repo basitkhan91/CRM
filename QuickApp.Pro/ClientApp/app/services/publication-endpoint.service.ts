@@ -21,6 +21,9 @@ export class PublicationEndpointService extends EndpointFactory {
     '/api/Publication/PubPNATAMappingPost';
   private readonly _PostPNMapping: string = '/api/ItemMaster/PNIMMappingPost';
 
+  private readonly _publicationPNMappingData: string =
+    '/api/Publication/GetPubPNMappedData_PNID';
+
   get getCodeUrl() {
     return this.configurations.baseUrl + this._publicationGetUrl;
   }
@@ -138,6 +141,17 @@ export class PublicationEndpointService extends EndpointFactory {
         return this.handleError(error, () => this.postPNATAMapping(userObject));
       });
   }
+
+  getPubPNById<T>(PNid: string): Observable<T> {
+    let endpointUrl = `${this._publicationPNMappingData}/${PNid}`;
+
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () => this.getPubPNById(PNid));
+      });
+  }
+
   // Save Part Number Mapping
   postPartNumberMappedData<T>(object): Observable<T> {
     return this.http

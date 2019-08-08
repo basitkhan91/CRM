@@ -171,6 +171,12 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.DashNumberRepository.GetDashNoByID(Mid, Tid);
             return Ok(result);
         }
+        [HttpGet("getDashListBy_MUTLI_MID_TID_DID/{Mid}/{Tid}/{Did}")]
+        public IActionResult GetDashNumbMutli(string Mid, string Tid, string Did)
+        {
+            var result = unitOfWork.DashNumberRepository.getDashListBy_MUTLIIDs(Mid, Tid, Did);
+            return Ok(result);
+        }
         #endregion Public Methods
 
         #region Private Methods

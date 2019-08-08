@@ -45,6 +45,7 @@ export class CreatePublicationComponent implements OnInit {
   partNumberList = [];
   selectedPartNumbers = [];
   pnMapping = [];
+  publicationRecordId: Number;
   headersforPNMapping = [
     { field: 'PartNumber', header: 'PN ID/Code' },
     { field: 'PartNumberDescription', header: 'PN Description' },
@@ -80,7 +81,7 @@ export class CreatePublicationComponent implements OnInit {
     private aircraftManufacturerService: AircraftManufacturerService,
     private aircraftModelService: AircraftModelService,
     private pubdashNumberService: PublicationService,
-
+    private authService: AuthService,
     private itemMasterService: ItemMasterService,
     private route: Router
   ) {}
@@ -92,6 +93,13 @@ export class CreatePublicationComponent implements OnInit {
   ];
   first: number = 0;
   ngOnInit() {}
+
+  get userName(): string {
+    return this.authService.currentUser
+      ? this.authService.currentUser.userName
+      : '';
+  }
+
   changeOfTab(value) {
     if (value === 'General') {
       this.currentTab = 'General';
@@ -163,6 +171,8 @@ export class CreatePublicationComponent implements OnInit {
         this.publicationService
           .newAction(this.sourcePublication)
           .subscribe(res => {
+            const { publicationRecordId } = res;
+            this.publicationRecordId = publicationRecordId;
             this.changeOfTab('PnMap'),
               role => this.saveSuccessHelper(role),
               error => this.saveFailedHelper(error);
@@ -208,8 +218,10 @@ export class CreatePublicationComponent implements OnInit {
     });
   }
   savePNMapping() {
+    console.log(this.publicationRecordId);
     this.pnMapping = this.selectedPartNumbers.map(obj => {
       return {
+        PublicationRecordId: this.publicationRecordId,
         PublicationId: this.generalInformationDetails.PublicationId,
         PartNumber: obj.partNumber,
         PartNumberDescription: obj.partDescription,
@@ -217,7 +229,11 @@ export class CreatePublicationComponent implements OnInit {
         ItemClassification:
           obj.itemClassification === null ? '-' : obj.itemClassification,
         ItemClassificationId: obj.itemClassificationId,
-        ItemGroupId: obj.itemGroupId
+        ItemGroupId: obj.itemGroupId == null ? 1 : obj.itemGroupId,
+        CreatedBy: this.userName,
+        UpdatedBy: this.userName,
+        MasterCompanyId: obj.masterCompanyId,
+        IsActive: true
       };
     });
     this.selectedPartNumbers = [];
@@ -225,7 +241,7 @@ export class CreatePublicationComponent implements OnInit {
     this.publicationService
       .postMappedPartNumbers(this.pnMapping)
       .subscribe(res => {
-        this.alertService.startLoadingMessage('PN Mapping', '');
+        // this.alertService.startLoadingMessage('PN Mapping', '');
       });
   }
 

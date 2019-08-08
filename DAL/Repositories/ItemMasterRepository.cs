@@ -435,8 +435,54 @@ namespace DAL.Repositories
         }
       
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        public IEnumerable<object> GetAircraftMapped(string PNid)
+        {
+            {
+                //int[] myMids = Mid.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
 
-      
+                var data = (from iM in _appContext.ItemMasterAircraftMapping
+                            where iM.PartNumber == PNid && iM.IsActive == true && iM.IsDeleted == false
+                            select new
+                            {
+                                iM.ItemMasterAircraftMappingId,
+                                iM.ItemMasterId,
+                                iM.AircraftTypeId,
+                                iM.AircraftType,
+                                iM.AircraftModelId,
+                                iM.DashNumberId,
+                                iM.PartNumber,
+                                iM.DashNumber,
+                                iM.AircraftModel,
+                                iM.Memo
+
+                            }).ToList();
+                return data;
+            }
+        }
+        public IEnumerable<object> GetATAMapped(string PNid)
+        {
+            {
+                //int[] myMids = Mid.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+
+                var data = (from iM in _appContext.ItemMasterATAMapping
+                            where iM.PartNumber == PNid && iM.IsActive == true && iM.IsDeleted == false
+                            select new
+                            {
+                                iM.ItemMasterATAMappingId,
+                                iM.ItemMasterId,
+                                iM.ATAChapterId,
+                                iM.ATAChapterCode,
+                                iM.ATAChapterName,
+                                iM.PartNumber,
+                                iM.ATASubChapterId,
+                                iM.ATASubChapterDescription
+
+
+                            }).ToList();
+                return data;
+            }
+        }
+
 
     }
 }
