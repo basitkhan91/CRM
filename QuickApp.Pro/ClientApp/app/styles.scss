@@ -13600,6 +13600,47 @@ body .ui-datepicker table td > a.ui-state-active {
 .rro-table-cstm .ui-table {
     padding-bottom: 60px;
 }
+
+.rro-table-cstm .ui-table-wrapper {
+    max-width: 100%;
+    max-height: 500px;
+    overflow: scroll;
+    position: relative;
+    padding: 0;
+}
+.rro-table-cstm .ui-table-wrapper table {
+    position: relative;
+    border-collapse: collapse;
+}
+.rro-table-cstm .ui-table-wrapper thead th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: -1px;
+    background: #0d57b0;
+}
+.rro-table-cstm thead th:last-child {
+    right: 0;
+    z-index: 1;
+    padding-left: 5px;
+}
+.rro-table-cstm tbody td:last-child {
+    position: -webkit-sticky;
+    position: sticky;
+    right: 0;
+    background: #fafafa !important;
+    border-right: 1px solid #CCC;
+    padding-left: 5px;
+    text-align: center;
+}
+/*body .ui-panelmenu .ui-state-active, body .ui-panelmenu .ui-state-active:hover, body .ui-panelmenu .ui-panelmenu-header.ui-state-active a:hover {
+    background-color: antiquewhite !important;
+}*/
+body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link:hover, body .ui-panelmenu .ui-panelmenu-header > a:hover {
+    background-color: #fafafa !important;
+}
+body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active:hover {
+    background-color: antiquewhite !important;
+}
 .wfl-view-popup .modal-content, .wfl-view-popup .modal-sm {
     max-width: 1000px !important;
 }
@@ -13610,6 +13651,19 @@ body .ui-datepicker table td > a.ui-state-active {
 }
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
+}
+.memo-popup-cstm input {
+    width: calc(100% - 20px);
+    text-overflow: ellipsis;
+}
+.memo-popup-cstm i {
+    margin-left: 3px;
+    color: #337ab7;
+    cursor: pointer;
+}
+.memo-popup-cstm input.form-control:disabled {
+    opacity: 1;
+    background-color: rgba(233, 236, 239, 0.5) !important;
 }
 
 .multi-general p-multiselect {

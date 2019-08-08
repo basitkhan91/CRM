@@ -43,13 +43,13 @@ export class RoComponent implements OnInit {
         this.selectedColumns = this.cols;
         this.allPolistInfo = [
             { status: 'Open', noOfItems: '10'},
-            { status: 'Close', noOfItems: '1'},
+            { status: 'Open', noOfItems: '1'},
             { status: 'Open', noOfItems: '7'},
             { status: 'Open', noOfItems: '8'},
-            { status: 'Close', noOfItems: '5'},
-            { status: 'Close', noOfItems: '5'},
             { status: 'Open', noOfItems: '5'},
-            { status: 'Close', noOfItems: '5'},
+            { status: 'Open', noOfItems: '2'},
+            { status: 'Open', noOfItems: '6'},
+            { status: 'Open', noOfItems: '1'},
         ];
     }
 
