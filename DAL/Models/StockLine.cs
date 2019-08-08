@@ -47,7 +47,10 @@ namespace DAL.Models
         public string ManufacturerLotNumber { get; set; }
         public DateTime? ManufacturingDate { get; set; }
         public string ManufacturingBatchNumber { get; set; }
-        //public string ManufactureTrace { get; set; }
+        public string ManufacturingTrace { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+
+
         public string PartCertificationNumber { get; set; }
         public string CertifiedBy { get; set; }
         public DateTime? CertifiedDate { get; set; }
@@ -61,6 +64,7 @@ namespace DAL.Models
         [ForeignKey("PurchaseOrderId")]
         public long? PurchaseOrderId  { get; set;}
         public decimal? PurchaseOrderUnitCost { get; set; }
+        public decimal? PurchaseOrderExtendedCost { get; set; }
         public decimal? InventoryUnitCost { get; set; }
 
         //[FK]

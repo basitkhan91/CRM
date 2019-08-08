@@ -54,6 +54,8 @@ import { EditRoComponent } from "../components/receiving/repair-order/edit-ro/ed
 import { RoComponent } from "../components/receiving/repair-order/ro/ro.component";
 import { ReceivingRoComponent } from "../components/receiving/repair-order/receiving-ro/receiving-ro.component";
 import { ViewRoComponent } from "../components/receiving/repair-order/view-ro/view-ro.component";
+import { ShippingService } from "../services/shipping/shipping-service";
+import { ShippingEndpoint } from "../services/shipping/shipping-endpoint.service";
 
 @NgModule({
     imports: [
@@ -84,11 +86,14 @@ import { ViewRoComponent } from "../components/receiving/repair-order/view-ro/vi
         EditRoComponent,
         RoComponent,
         ReceivingRoComponent,
-        ViewRoComponent
+        ViewRoComponent,
+
 
 	],
-    providers: [ReceivingService, ReceivingEndpointService
-
+    providers: [ReceivingService,
+                ReceivingEndpointService,
+                ShippingService,
+                ShippingEndpoint
 	],
 	entryComponents: [
 	]
