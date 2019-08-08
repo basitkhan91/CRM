@@ -19,6 +19,8 @@ export class PublicationEndpointService extends EndpointFactory {
     
     private readonly _publicationPNACNEW: string = "/api/Publication/PubPNACMappingPost";
     private readonly _publicationPNATANEW: string = "/api/Publication/PubPNATAMappingPost";
+
+    private readonly _publicationPNMappingData: string = "/api/Publication/GetPubPNMappedData_PNID";
     
     
     
@@ -106,5 +108,12 @@ export class PublicationEndpointService extends EndpointFactory {
             });
 
     }
-    
+    getPubPNById<T>(PNid: string): Observable<T> {
+        let endpointUrl = `${this._publicationPNMappingData}/${PNid}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPubPNById(PNid));
+            });
+    }
 }

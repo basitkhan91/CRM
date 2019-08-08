@@ -8,6 +8,8 @@ namespace DAL.Repositories.Interfaces
 
     public interface IItemMaster : IRepository<ItemMaster>
     {
+        IEnumerable<object> GetAircraftMapped(string PNid);
+        IEnumerable<object> GetATAMapped(string PNid);
         IEnumerable<ItemMaster> getAlldata();
 
         IEnumerable<object> getAllItemMasterdata();

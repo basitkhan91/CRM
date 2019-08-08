@@ -116,6 +116,8 @@ namespace QuickApp.Pro.ViewModels
         public long? StockUnitOfMeasureId { get; set; }
 
         public long? ExportUomId { get; set; }
+        public string ExportECCN { get; set; }
+        public string ITARNumber { get; set; }
 
         public long? ConsumeUnitOfMeasureId { get; set; }
 

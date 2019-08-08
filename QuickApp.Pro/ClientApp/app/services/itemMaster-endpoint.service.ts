@@ -54,7 +54,9 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _ItemMasterAircraftPostUrlNew: string = "/api/ItemMaster/ItemMasterAircraftPost";
     private readonly _ItemMasterATAPostUrlNew: string = "/api/ItemMaster/ItemMasterATAPost";
     private readonly _ItemMasterPurcSaleUrlNew: string = "/api/ItemMaster/ItemMasterPurcSalePost";
-
+    private readonly _getAircraftMapped: string = "/api/ItemMaster/getAircraftMapped";
+    private readonly _getATAMapped: string = "/api/ItemMaster/getATAMapped";
+    private readonly _ItemMasterExportInfoUrlNew: string = "/api/ItemMaster/ExportInfoPostBy_IMastID";
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -755,5 +757,27 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getPNIMMappingEndpoint(userObject));
             });
     }
-   
+    getAircraftMappingEndpoint<T>(PNid: string): Observable<T> {
+        let endpointUrl = `${this._getAircraftMapped}/${PNid}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAircraftMappingEndpoint(PNid));
+            });
+    }
+    getATAMappingEndpoint<T>(PNid: string): Observable<T> {
+        let endpointUrl = `${this._getATAMapped}/${PNid}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATAMappingEndpoint(PNid));
+            });
+    }
+    getNewitemExportInfoEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._ItemMasterExportInfoUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemExportInfoEndpoint(userObject));
+            });
+    }
 }
