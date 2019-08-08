@@ -68,7 +68,7 @@ export class WorkOrderAddComponent implements OnInit {
   // Address Information JSON
   addresses: addressesForm;
   documents: Documents[] = [];
-  quote : WorkOrderQuote;
+  quote: WorkOrderQuote;
 
   workFlowItems = [
     {
@@ -139,39 +139,6 @@ export class WorkOrderAddComponent implements OnInit {
     ]
   };
 
-  // quote = {
-  //   QuoteNumber: '',
-  //   OpenDate: '',
-  //   QuoteDueDate: '',
-  //   ValidForDays: null,
-  //   ExpDate: '',
-  //   ExpDateStatus: '',
-  //   WoNumber: '',
-  //   CustomerId: null,
-  //   CustomerCodeId: null,
-  //   CustomerContact: null,
-  //   CustomerEmail: '',
-  //   CustomerPhone: null,
-  //   CustomerReference: '',
-  //   IsContract: false,
-  //   Contract: '',
-  //   Quantity: null,
-  //   customerRequestDate: '',
-  //   PromiseDate: '',
-  //   EstCompletionDate: '',
-  //   EstShipDate: '',
-  //   CreditTerms: '',
-  //   CreditTermsandLimit: '',
-  //   ItemCount: null,
-  //   SalesPersonId: null,
-  //   CSR: '',
-  //   EmployeeId: null,
-  //   Currency: '',
-  //   DSO: '',
-  //   ARBal: '',
-  //   partsDetails: []
-  // };
-
   constructor(
     private alertService: AlertService,
     private workOrderService: WorkOrderService,
@@ -183,15 +150,10 @@ export class WorkOrderAddComponent implements OnInit {
     private stocklineService: StocklineService
   ) {
     this.workOrderPartNumbers = [];
-    // this.workOrderPartNumbers.push(new WorkOrderPartNumber());
     this.workOrder = new WorkOrder();
     this.workOrder.isSinglePN = true;
     this.workOrder.customerContactId = 68;
     this.workOrder.masterCompanyId = 1;
-    //this.workOrder.openDate = new Date();
-    //this.workOrder.promiseDate = new Date;
-    //this.workOrder.estimatedCompletionDate = new Date;
-    //this.workOrder.estimatedShipDate = new Date;
     this.moduleName = 'Work Order';
   }
 
@@ -216,7 +178,6 @@ export class WorkOrderAddComponent implements OnInit {
 
     this.documents = [new Documents()];
     this.quote = new WorkOrderQuote();
-    console.log(typeof this.documents);
   }
 
   toggleDisplayMode(): void {

@@ -1,7 +1,3 @@
-// quote = {
-//   partsDetails: []
-// };
-
 export class WorkOrderQuote {
   quoteNumber: string;
   openDate: string;
@@ -13,7 +9,7 @@ export class WorkOrderQuote {
   customerId: string;
   customerCodeId: null;
   customerReference: string;
-  isContract: false;
+  isContract: boolean;
   contract: string;
   quantity: null;
   customerRequestDate: Date;
@@ -27,6 +23,7 @@ export class WorkOrderQuote {
   dso: string;
   accountsReceivableBalance: string;
 
+
   constructor() {
     this.quoteNumber = '';
     this.openDate = '';
@@ -38,7 +35,7 @@ export class WorkOrderQuote {
     this.customerId = '';
     this.customerCodeId = null;
     this.customerReference = '';
-    this.isContract = false;
+    this.isContract = true;
     this.contract = '';
     this.quantity = null;
     this.customerRequestDate = new Date();
@@ -51,5 +48,6 @@ export class WorkOrderQuote {
     this.currency = '';
     this.dso = '';
     this.accountsReceivableBalance = '';
+
   }
 }

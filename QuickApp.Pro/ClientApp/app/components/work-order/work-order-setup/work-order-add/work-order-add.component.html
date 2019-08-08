@@ -160,9 +160,7 @@
                                                             <i class="fa fa-eye"></i>
                                                         </a>
                                                     </span>
-                                              
                                             </label>
-                                          
                                             <p-autoComplete class="p-autoComplete-ctsm"
                                                     emptyMessage="Not Records Found"
                                                 (onSelect)="onCustomerSelected($event,'name')"
@@ -193,10 +191,7 @@
 
                                             <input type="text" class="form-control" [(ngModel)]="workOrderGeneralInformation.customerReference">
                                         </div>
-
-
                                     </div>
-
                                     <div class="col-md-3">
                                             <div class="form-group">
                                                     <div class="checkbox-cstm">
@@ -208,18 +203,14 @@
                                                         <input *ngIf="workOrderGeneralInformation.isContract" type="text" class="form-control" [(ngModel)]="workOrderGeneralInformation.contract">
                                                     </div>
                                                 </div>
-
-
                                                     <div class="form-group ">
                                                         <label for="customercontact">CSR
                                                           <span class="clr-red">*</span>
                                                         </label>
                                                         <input type="text" class="form-control" [(ngModel)]="workOrderGeneralInformation.csr" name="CSR" />
                                                       </div>
-
                                     </div>
                                     
-
                                     <div class="col-md-3">
                                         <div class="form-group">
                       
@@ -633,9 +624,6 @@
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
-
-
-
                     <div [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
                         <app-work-order-billing></app-work-order-billing>
                     </div>

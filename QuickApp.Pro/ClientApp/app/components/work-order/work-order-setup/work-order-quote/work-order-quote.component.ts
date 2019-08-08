@@ -11,6 +11,7 @@ import * as $ from 'jquery';
 /** WorkOrderQuote component*/
 export class WorkOrderQuoteComponent implements OnInit {
   @Input() quoteForm;
+  partsDetails = [];
   multiParts = {
     PnId: null,
     PnDescription: '',
@@ -31,40 +32,9 @@ export class WorkOrderQuoteComponent implements OnInit {
   };
 
   constructor() {}
-  ngOnInit() {
-    this.quoteForm = {
-      ...this.quoteForm,
-      partsDetails: [{ ...this.multiParts }]
-    };
-  }
-  saveQuoteDetails() {
-    console.log(this.quoteForm);
-  }
+  ngOnInit() {}
+  saveQuoteDetails() {}
   addMPN() {
-    this.quoteForm.partsDetails.push({ ...this.multiParts });
+    // this.quoteForm.partsDetails.push({ ...this.multiParts });
   }
-
-  this.quoteNumber = '';
-  this.openDate = '';
-  this.quoteDueDate = '';
-  this.validForDays = null;
-  this.expirationDate = new Date();
-  this.expirationDateStatus = '';
-  this.workOrderNumber = '';
-  this.customerId = '';
-  this.customerCodeId = null;
-  this.customerReference = '';
-  this.isContract = false;
-  this.contract = '';
-  this.quantity = null;
-  this.customerRequestDate = new Date();
-  this.promiseDate = new Date();
-  this.estCompletionDate = new Date();
-  this.estShipDate = new Date();
-  this.creditTerms = '';
-  this.creditTermsandLimit = '';
-  this.itemCount = null;
-  this.currency = '';
-  this.dso = '';
-  this.accountsReceivableBalance = '';
 }
