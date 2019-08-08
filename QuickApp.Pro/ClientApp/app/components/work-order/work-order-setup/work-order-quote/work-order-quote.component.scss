@@ -12,3 +12,13 @@ textarea {
   height: 24px !important;
   border-radius: 5px !important;
 }
+@media (min-width: 768px) {
+  .col-md-6 .col-md-6 {
+    max-width: 44%;
+    margin-right: 15px;
+  }
+  .col-md-3 {
+    max-width: 22%;
+    margin-right: 15px;
+  }
+}

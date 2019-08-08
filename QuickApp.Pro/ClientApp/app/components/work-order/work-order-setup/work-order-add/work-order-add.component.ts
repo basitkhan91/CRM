@@ -16,6 +16,8 @@ import {
   AlertService,
   MessageSeverity
 } from '../../../../services/alert.service';
+import { workOrderGeneralInfo } from '../../../../models/work-order-generalInformation.model';
+import { addressesForm } from '../../../../models/work-order-address.model';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CreditTermsService } from '../../../../services/Credit Terms.service';
 import { CustomerService } from '../../../../services/customer.service';
@@ -23,6 +25,8 @@ import { EmployeeService } from '../../../../services/employee.service';
 import { StocklineService } from '../../../../services/stockline.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { WorkOrderPartNumberService } from '../../../../services/work-order/work-order-part-number.service';
+import { Documents } from '../../../../models/work-order-documents.modal';
+import { WorkOrderQuote } from '../../../../models/work-order-quote.modal';
 @Component({
   selector: 'app-work-order-add',
   templateUrl: './work-order-add.component.html',
@@ -59,6 +63,13 @@ export class WorkOrderAddComponent implements OnInit {
   isContract = true;
   gridActiveTab: String = 'workFlow';
   subTabWorkFlow: String;
+  // WorkOrder general Information JSON
+  workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
+  // Address Information JSON
+  addresses: addressesForm;
+  documents: Documents[] = [];
+  quote: WorkOrderQuote;
+
   workFlowItems = [
     {
       label: 'WO123',
@@ -73,24 +84,6 @@ export class WorkOrderAddComponent implements OnInit {
       value: 'WO125'
     }
   ];
-  WorkOrder = {
-    WoType: 'single',
-    WoDealerType: 'customer',
-    WoNumber: 'Creating',
-    OpenDate: new Date(),
-    WoStatus: '',
-    CustomerId: '',
-    CustomerCodeId: '',
-    CustomerReference: '',
-    IsContract: false,
-    Contract: '',
-    CustomerContact: null,
-    CreditTerms: '',
-    CreditTermsandLimit: '',
-    EmployeeId: '',
-    SalesPersonId: '',
-    CSR: ''
-  };
   workOrderMPN = {
     iD: 0,
     workOrderId: 0,
@@ -145,57 +138,6 @@ export class WorkOrderAddComponent implements OnInit {
       }
     ]
   };
-  adresses = {
-    WOId: '',
-    ShipTo: [],
-    BillTo: []
-  };
-  documents = [
-    {
-      WOId: '',
-      Comp: '',
-      BU: '',
-      Div: '',
-      Dep: '',
-      DocumentCode: '',
-      Description: 'Contract',
-      DocLink: '',
-      IsActive: false
-    }
-  ];
-
-  quote = {
-    QuoteNumber: '',
-    OpenDate: '',
-    QuoteDueDate: '',
-    ValidForDays: null,
-    ExpDate: '',
-    ExpDateStatus: '',
-    WoNumber: '',
-    CustomerId: null,
-    CustomerCodeId: null,
-    CustomerContact: null,
-    CustomerEmail: '',
-    CustomerPhone: null,
-    CustomerReference: '',
-    IsContract: false,
-    Contract: '',
-    Quantity: null,
-    customerRequestDate: '',
-    PromiseDate: '',
-    EstCompletionDate: '',
-    EstShipDate: '',
-    CreditTerms: '',
-    CreditTermsandLimit: '',
-    ItemCount: null,
-    SalesPersonId: null,
-    CSR: '',
-    EmployeeId: null,
-    Currency: '',
-    DSO: '',
-    ARBal: '',
-    partsDetails: []
-  };
 
   constructor(
     private alertService: AlertService,
@@ -208,19 +150,15 @@ export class WorkOrderAddComponent implements OnInit {
     private stocklineService: StocklineService
   ) {
     this.workOrderPartNumbers = [];
-    // this.workOrderPartNumbers.push(new WorkOrderPartNumber());
     this.workOrder = new WorkOrder();
     this.workOrder.isSinglePN = true;
     this.workOrder.customerContactId = 68;
     this.workOrder.masterCompanyId = 1;
-    //this.workOrder.openDate = new Date();
-    //this.workOrder.promiseDate = new Date;
-    //this.workOrder.estimatedCompletionDate = new Date;
-    //this.workOrder.estimatedShipDate = new Date;
     this.moduleName = 'Work Order';
   }
 
   ngOnInit(): void {
+    this.getAllGridModals();
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
@@ -235,18 +173,25 @@ export class WorkOrderAddComponent implements OnInit {
     this.addMPN();
   }
 
+  getAllGridModals() {
+    this.addresses = new addressesForm();
+
+    this.documents = [new Documents()];
+    this.quote = new WorkOrderQuote();
+  }
 
   toggleDisplayMode(): void {
     this.isDetailedView = !this.isDetailedView;
   }
   // Handles radio Button single or Multiple
   toggleWorkOrderType(value): void {
-    this.WorkOrder.WoType = value;
+    this.workOrderGeneralInformation.workOrderType = value;
     this.showTableGrid = false;
+    this.getAllGridModals();
   }
   // Handles type of the WorkOrder Dealer
   woDealerChange(value) {
-    this.WorkOrder.WoDealerType = value;
+    this.workOrderGeneralInformation.workOrderDealerType = value;
   }
   // added new MPN
   addMPN() {
@@ -259,6 +204,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   addWorkOrder(): void {
+    console.log(this.workOrderGeneralInformation);
     this.showTableGrid = true; // Show Grid Boolean
     this.workOrderService.add(this.workOrder).subscribe(
       result => {
@@ -273,9 +219,7 @@ export class WorkOrderAddComponent implements OnInit {
           this.workOrderPartNumberService
             .add(this.workOrderPartNumbers[i])
             .subscribe(
-              result => {
-                console.log(result);
-              },
+              result => {},
               error => {
                 var message = '';
                 if (error.error.constructor == Array) {
@@ -447,11 +391,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   getStockLines(): void {
     this.stocklineService.getStockLineList().subscribe(
-      result => {
-        alert('Data Loaded Successfully');
-        console.clear();
-        console.log(result);
-      },
+      result => {},
       error => {
         this.alertService.showMessage(
           this.moduleName,
@@ -463,14 +403,9 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getAllIterMasters(): void {
-    this.itemMasterService.getItemMasterList().subscribe(
-      result => {
-        console.log(result);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    this.itemMasterService
+      .getItemMasterList()
+      .subscribe(result => {}, error => {});
   }
 
   onCustomerSelected(event, selectionType): void {

@@ -1,68 +1,59 @@
 <div class="equipment-tab-content">
-  <div class="x_panel">
-    <div class="tab-content">
-      <div class="table-responsive" id="workflow-attributes-block">
-        <table class="table table-bordered ">
-          <thead>
-            <tr>
-              <th colspan="9" class="text-center">
-                Asset &nbsp; &nbsp;<a
-  
-                  class="add-asset-checkin-checkout"
-                  data-toggle="modal" data-target=".asset-checkin-checkout"
-                  ><i class="fa fa-plus plus-icon"></i
-                ></a>
-              </th>
-            </tr>
-            <tr>
-              <th colspan="4" class="text-center"></th>
-              <th colspan="4" class="text-center">TOLERANCE</th>
-              <th class="text-center"></th>
-            </tr>
-            <tr>
-              <th class="text-center">Asset #</th>
-              <th class="text-center">Asset Description</th>
-              <th class="text-center">Asset Type</th>
-              <th class="text-center">Qty</th>
-              <th class="text-center">Min</th>
-              <th class="text-center">Max</th>
-              <th class="text-center">Expected</th>
-              <th class="text-center">Findings</th>
-              <th class="text-center"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>A12345</td>
-              <td>Asset Description</td>
-              <td>Equipmemt</td>
-              <td>4</td>
-              <td>1</td>
-              <td>10</td>
-              <td>9</td>
-              <td>Findings Memo</td>
-              <td>
-                <span data-toggle="modal" data-target="#delete">
-                  <a
-                    
-                    class="btn btn-success boxed-float-btn nobg"
-                    data-toggle="tooltip"
-                    title="Delete Asset"
-                    ><i class="fa fa-trash"></i
-                  ></a>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="x_panel">
+        <div class="tab-content">
+            <div class="table-responsive" id="workflow-attributes-block">
+                <table class="table table-bordered ">
+                    <thead>
+                        <tr>
+                            <th colspan="9" class="text-center">
+                                Equipment &nbsp; &nbsp;<a class="add-asset-checkin-checkout" data-toggle="modal"
+                                    data-target=".asset-checkin-checkout"><i class="fa fa-plus plus-icon"></i></a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="4" class="text-center"></th>
+                            <th colspan="4" class="text-center">TOLERANCE</th>
+                            <th class="text-center"></th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Equipment #</th>
+                            <th class="text-center">Equipment Description</th>
+                            <th class="text-center">Equipment Type</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-center">Min</th>
+                            <th class="text-center">Max</th>
+                            <th class="text-center">Expected</th>
+                            <th class="text-center">Findings</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A12345</td>
+                            <td>Equipment Description</td>
+                            <td>Equipmemt</td>
+                            <td>4</td>
+                            <td>1</td>
+                            <td>10</td>
+                            <td>9</td>
+                            <td>Findings Memo</td>
+                            <td>
+                                <span data-toggle="modal" data-target="#delete">
+                                    <a class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip"
+                                        title="Delete Asset"><i class="fa fa-trash"></i></a>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <br />
+        <br />
+        <br />
+        <br />
     </div>
-    <div class="clear"></div>
-    <br />
-    <br />
-    <br />
-    <br />
-  </div>
 </div>
 
 
@@ -70,8 +61,9 @@
 
 
 
-            <div class="modal fade asset-checkin-checkout" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
+<div class="modal fade asset-checkin-checkout" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
@@ -137,8 +129,8 @@
                             </div>
                             <div class="clear"></div>
                             <hr class="hr-dark">
-                            <a  class="btn btn-primary openall">open all</a> <a 
-                                class="btn btn-warning closeall">close all</a>
+                            <a class="btn btn-primary openall">open all</a> <a class="btn btn-warning closeall">close
+                                all</a>
                             <hr>
                             <div class="panel-group" id="accordion">
                                 <div class="panel panel-default">

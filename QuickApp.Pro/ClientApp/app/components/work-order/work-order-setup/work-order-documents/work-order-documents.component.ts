@@ -1,7 +1,6 @@
 ﻿import { Component, Input } from '@angular/core';
-import { fadeInOut } from '../../../../services/animations';
-import { PageHeaderComponent } from '../../../../shared/page-header.component';
-import * as $ from 'jquery';
+
+import { Documents } from '../../../../models/work-order-documents.modal';
 
 @Component({
   selector: 'app-work-order-documents',
@@ -11,21 +10,8 @@ import * as $ from 'jquery';
 /** WorkOrderDocuments component*/
 export class WorkOrderDocumentsComponent {
   @Input() documentForm;
-
-  document = {
-    WOId: '',
-    Comp: '',
-    BU: '',
-    Div: '',
-    Dep: '',
-    DocumentCode: '',
-    Description: 'Contract',
-    DocLink: '',
-    IsActive: false
-  };
-  /** WorkOrderDocuments ctor */
   constructor() {}
   addNewDoc() {
-    this.documentForm = [...this.documentForm, { ...this.document }];
+    this.documentForm = [...this.documentForm, new Documents()];
   }
 }

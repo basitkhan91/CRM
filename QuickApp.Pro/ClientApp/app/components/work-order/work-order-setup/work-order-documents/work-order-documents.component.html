@@ -20,7 +20,7 @@
         <tbody>
           <tr class="mpn-row" *ngFor="let d of documentForm; let i = index">
             <td>
-              <select [(ngModel)]="d.Comp" name="comp">
+              <select [(ngModel)]="d.company" name="comp">
                 <option value="">Select</option>
                 <option value="Condax">Condax</option>
                 <option value="Golddex">Golddex</option>
@@ -32,7 +32,7 @@
               </select>
             </td>
             <td>
-              <select [(ngModel)]="d.BU" name="bu">
+              <select [(ngModel)]="d.businessUnit" name="bu">
                 <option value="">Select</option>
                 <option value="Condax">Condax</option>
                 <option value="Golddex">Golddex</option>
@@ -44,7 +44,7 @@
               </select>
             </td>
             <td>
-              <select [(ngModel)]="d.Div" name="div">
+              <select [(ngModel)]="d.divison" name="div">
                 <option value="">Select </option>
                 <option value="Accountant">Accountant</option>
                 <option value="Controller">Controller</option>
@@ -66,7 +66,7 @@
               </select>
             </td>
             <td>
-              <select [(ngModel)]="d.Dep" name="Dep">
+              <select [(ngModel)]="d.department" name="Dep">
                 <option value="">Select </option>
                 <option value="Accountant">Accountant</option>
                 <option value="Controller">Controller</option>
@@ -88,7 +88,7 @@
               </select>
             </td>
             <td>
-              <select [(ngModel)]="d.DocumentCode" name="documentCode">
+              <select [(ngModel)]="d.documentCode" name="documentCode">
                 <option value="8130">8130</option>
                 <option value="APO">APO</option>
                 <option value="ASO">ASO</option>
@@ -99,17 +99,17 @@
                 <option value="VA">VA</option>
               </select>
             </td>
-            <td>{{ d.Description }}</td>
+            <td>{{ d.description }}</td>
             <td>
               <input
                 type="text"
                 class="form-control w200"
-                [(ngModel)]="d.DocLink"
+                [(ngModel)]="d.docLink"
               />
             </td>
             <td>
               <p-inputSwitch
-                [(ngModel)]="d.IsActive"
+                [(ngModel)]="d.isActive"
                 title="Active/Inactive"
               ></p-inputSwitch>
               <a title="Edit" class="btn btn-primary boxed-float-btn nobg"

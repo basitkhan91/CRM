@@ -1196,7 +1196,7 @@ namespace QuickApp.Pro.Controllers
 					cp.ItemClassification = IMPNMapping.ItemClassification;
 					cp.ItemClassificationId = IMPNMapping.ItemClassificationId;
 					cp.ItemGroupId = IMPNMapping.ItemGroupId;
-					cp.PublicationRecordId = IMPNMapping.PublicationRecordId;
+					
 					cp.MasterCompanyId = 1;
 					cp.CreatedBy = IMPNMapping.CreatedBy;
 					cp.UpdatedBy = IMPNMapping.UpdatedBy;

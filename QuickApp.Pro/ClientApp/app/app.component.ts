@@ -348,7 +348,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Work-order Quote', items: [
                             { label: 'WO Quote List', routerLink: '/#' },
-                            { label: 'Create New WO Quote', routerLink: '/#' },
+                            { label: 'Create New WO Quote', routerLink: '/workordersmodule/workorderspages/app-work-order-quote' },
                             { label: 'WO Quote Approvals', routerLink: '/#' }
                         ]
                     },
