@@ -20,7 +20,7 @@ import { BinService } from '../../../../services/bin.service';
 import { ManufacturerService } from '../../../../services/manufacturer.service';
 import { StocklineService } from '../../../../services/stockline.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder, PurchaseOrderPart, StockLine, DropDownData } from './PurchaseOrder.model';
+import { PurchaseOrder, PurchaseOrderPart, StockLine, DropDownData, TimeLife } from './PurchaseOrder.model';
 import { ManagementStructure } from './managementstructure.model';
 import { Dropdown } from 'primeng/dropdown';
 import { AccountService } from '../../../../services/account.service';
@@ -196,15 +196,6 @@ export class ReceivngPoComponent implements OnInit {
         this.getAllCreditTerms();
         this.getAllPriority();
         this.getStatus();
-        //this.priorityData();
-        //this.loadVendorData();
-
-        //this.loadManufacturerData();
-        //this.loadSiteData();
-        //this.loadConditionData();
-        //this.customerListForStockline();
-        //this.vendorListForStockline();
-
     }
 
     private getShippingReference(): void {
@@ -307,7 +298,7 @@ export class ReceivngPoComponent implements OnInit {
 
             part.visible = false;
             part.showStockLineGrid = false;
-
+            part.isSameDetailsForAllParts = false;
             let selectedOrgStruct: ManagementStructure[] = [];
 
             if (part.isParent) {
@@ -530,9 +521,9 @@ export class ReceivngPoComponent implements OnInit {
         }
 
         part.stocklineListObj = [];
-
+        part.timeLifeList = [];
         for (var i = 0; i < quantity; i++) {
-            var stockLine = new StockLine();
+            let stockLine: StockLine = new StockLine();
             stockLine.CompanyList = [];
             stockLine.companyId = 0;
             stockLine.BusinessUnitList = [];
@@ -543,13 +534,18 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.departmentId = 0;
             stockLine.manufacturerId = 0;
             stockLine.visible = false;
+            stockLine.shippingReferenceId = 0;
+            stockLine.shippingViaId = 0;
+            stockLine.shippingAccountId = 0;
             this.getStockLineCompanies(stockLine);
             this.getStockLineSite(stockLine);
             part.stocklineListObj.push(stockLine);
+
+            let timeLife: TimeLife = new TimeLife();
+            part.timeLifeList.push(timeLife);
         }
-
+       
         part.stocklineListObj[this.currentSLIndex].visible = true;
-
         this.currentSLIndex = 0;
     }
 
@@ -566,7 +562,7 @@ export class ReceivngPoComponent implements OnInit {
             return;
         }
         index = Number.parseInt(value) - 1;
-        if (index < part.stocklineListObj.length) {
+        if (index < part.stocklineListObj.length && index >= 0) {
             this.currentSLIndex = index;
         }
         else {
@@ -920,8 +916,8 @@ export class ReceivngPoComponent implements OnInit {
         });
     }
 
-    //getAllShippingReference(): void {
-    //    this.
-    //}
+    toggleSameDetailsForAllParts(event: any, part : PurchaseOrderPart): void {
+        part.isSameDetailsForAllParts = !part.isSameDetailsForAllParts;
+    }
 }
 
