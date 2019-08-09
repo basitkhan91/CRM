@@ -19,7 +19,7 @@ export class PublicationEndpointService extends EndpointFactory {
     '/api/Publication/PubPNACMappingPost';
   private readonly _publicationPNATANEW: string =
     '/api/Publication/PubPNATAMappingPost';
-  private readonly _PostPNMapping: string = '/api/ItemMaster/PNIMMappingPost';
+  private readonly _PostPNMapping: string = '/api/Publication/PNIMMappingPost';
 
   private readonly _publicationPNMappingData: string =
     '/api/Publication/GetPubPNMappedData_PNID';

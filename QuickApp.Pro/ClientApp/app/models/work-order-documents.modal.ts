@@ -1,5 +1,5 @@
 export class Documents {
-  workOrderId: string;
+  workOrderId: number;
   company: string;
   businessUnit: string;
   divison: string;
@@ -9,7 +9,7 @@ export class Documents {
   docLink: string;
   isActive: boolean;
   constructor() {
-    this.workOrderId = '';
+    this.workOrderId = null;
     this.company = '';
     this.businessUnit = '';
     this.divison = '';
