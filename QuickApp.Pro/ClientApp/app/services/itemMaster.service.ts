@@ -267,11 +267,11 @@ export class ItemMasterService {
     newItemMasterPurcSaleClass(action: any) {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
     }
-    getMappedAirCraftDetails(PNid: string) {
-        return this.itemMasterEndpoint.getAircraftMappingEndpoint<any>(PNid);
+    getMappedAirCraftDetails(ItemmasterId: number) {
+        return this.itemMasterEndpoint.getAircraftMappingEndpoint<any>(ItemmasterId);
     }
-    getMappedATADetails(PNid: string) {
-        return this.itemMasterEndpoint.getATAMappingEndpoint<any>(PNid);
+    getMappedATADetails(ItemmasterId: number) {
+        return this.itemMasterEndpoint.getATAMappingEndpoint<any>(ItemmasterId);
     } 
     newItemMasterExportInfoClass(action: any) {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);

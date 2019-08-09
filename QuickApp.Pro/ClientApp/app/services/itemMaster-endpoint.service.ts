@@ -757,20 +757,20 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getPNIMMappingEndpoint(userObject));
             });
     }
-    getAircraftMappingEndpoint<T>(PNid: string): Observable<T> {
-        let endpointUrl = `${this._getAircraftMapped}/${PNid}`;
+    getAircraftMappingEndpoint<T>(ItemmasterId: number): Observable<T> {
+        let endpointUrl = `${this._getAircraftMapped}/${ItemmasterId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAircraftMappingEndpoint(PNid));
+                return this.handleError(error, () => this.getAircraftMappingEndpoint(ItemmasterId));
             });
     }
-    getATAMappingEndpoint<T>(PNid: string): Observable<T> {
-        let endpointUrl = `${this._getATAMapped}/${PNid}`;
+    getATAMappingEndpoint<T>(ItemmasterId: number): Observable<T> {
+        let endpointUrl = `${this._getATAMapped}/${ItemmasterId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getATAMappingEndpoint(PNid));
+                return this.handleError(error, () => this.getATAMappingEndpoint(ItemmasterId));
             });
     }
     getNewitemExportInfoEndpoint<T>(userObject: any): Observable<T> {
