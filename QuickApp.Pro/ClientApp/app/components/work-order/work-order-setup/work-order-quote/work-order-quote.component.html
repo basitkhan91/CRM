@@ -45,6 +45,11 @@
               <label for="customername">Customer Name
                 <span class="clr-red">*</span>
               </label>
+              <span *ngIf="quoteForm.customerId !== '' && quoteForm.customerId !== null ">
+                <a data-toggle="tooltip" pTooltip="Customer Email: 'Indigo@gmail.com' , Customer Phone: 0423588779" tooltipPosition="bottom" title=""  data-original-title="View" data-toggle="modal" data-target="#viewcustomerDetailsinQuote"  >
+                    <i class="fa fa-eye"></i>
+                </a>
+            </span>
               <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.customerId"
                 name="CustomerId">
               </p-autoComplete>
@@ -218,62 +223,62 @@
 
       </thead>
       <tbody>
-        <tr class="mpn-row" style="display: table-row;" *ngFor="let pd of partsDetails">
+        <tr class="mpn-row" style="display: table-row;" *ngFor="let pd of quoteForm.partsDetails">
           <td>
-            <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="pd.PnId" [dropdown]="true">
+            <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="pd.partNumberId" [dropdown]="true">
             </p-autoComplete>
           </td>
-          <td><input type="text" [(ngModel)]="pd.PnDescription" name="PnDescription"></td>
+          <td><input type="text" [(ngModel)]="pd.partNumberDescription" name="PnDescription"></td>
           <td>
-            <p-autoComplete class="p-autoComplete-ctsm" name="RevisedPnId" [(ngModel)]="pd.RevisedPnId"
+            <p-autoComplete class="p-autoComplete-ctsm" name="RevisedPnId" [(ngModel)]="pd.revisedPartNumberId"
               [dropdown]="true">
             </p-autoComplete>
           </td>
           <td>
-            <p-dropdown class="p-dropdown-custom" [(ngModel)]="pd.WorkScopeId">
+            <p-dropdown class="p-dropdown-custom-md" [(ngModel)]="pd.workScopeId">
             </p-dropdown>
           </td>
 
-          <td><input type="number" class="form-control w50" [(ngModel)]="pd.Qty"></td>
+          <td><input type="number" class="form-control w50" [(ngModel)]="pd.qty"></td>
 
 
           <td><a href="sample-document.pdf" target="_blank" class="clr-red">View</a>
           </td>
           <td>
 
-            <p-dropdown class="p-dropdown-custom" [(ngModel)]="pd.WorkScopeId">
+            <p-dropdown class="p-dropdown-custom-md" [(ngModel)]="pd.workScopeId">
             </p-dropdown>
 
           </td>
-          <td><select [(ngModel)]="pd.Priority">
+          <td><select [(ngModel)]="pd.priority">
               <option value="">AOG</option>
               <option value="">Critical</option>
               <option value="">Routine</option>
             </select></td>
 
           <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.CustomerRequestDate"></p-calendar>
+            <p-calendar [showIcon]="true" [(ngModel)]="pd.customerRequestDate"></p-calendar>
           </td>
           <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.PromiseDate"></p-calendar>
+            <p-calendar [showIcon]="true" [(ngModel)]="pd.promiseDate"></p-calendar>
           </td>
           <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.EstCompletionDate"></p-calendar>
+            <p-calendar [showIcon]="true" [(ngModel)]="pd.estCompletionDate"></p-calendar>
           </td>
           <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.EstShipDate"></p-calendar>
+            <p-calendar [showIcon]="true" [(ngModel)]="pd.estShipDate"></p-calendar>
           </td>
           <td>
-            <p-checkbox [(ngModel)]="pd.IsPMA" binary="false" class="checkbox-table"></p-checkbox>
+            <p-checkbox [(ngModel)]="pd.isPMA" binary="false" class="checkbox-table"></p-checkbox>
           </td>
           <td>
-            <p-checkbox [(ngModel)]="pd.IsDER" binary="false" class="checkbox-table"></p-checkbox>
+            <p-checkbox [(ngModel)]="pd.isDER" binary="false" class="checkbox-table"></p-checkbox>
           </td>
           <td>
-            <input type="text" [(ngModel)]="pd.TATDaysStandard">
+            <input type="text" [(ngModel)]="pd.tatDaysStandard">
           </td>
           <td>
-            <p-inputSwitch [(ngModel)]="pd.IsActive" title="Active/Inactive"></p-inputSwitch>
+            <p-inputSwitch [(ngModel)]="pd.isActive" title="Active/Inactive"></p-inputSwitch>
             <a title="Delete" class="btn btn-success boxed-float-btn nobg delete-row-btn"><i
                 class="fa fa-trash"></i></a>
           </td>
@@ -403,159 +408,522 @@
 
     </div>
   </div>
-</div>
 
-<div class="modal fade" id="quote-details" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4 class="modal-title"> 3rd Party Pricing details</h4>
-      </div>
-      <div class="modal-body">
 
-        <form method="post" id="" name="">
-
-          <div class="col-sm-3 w150">
-            <p>
-              <span class="col-sm-12"><b>Site Name: </b></span>
-              <span class="col-sm-12 right-addon inner-addon w200">
-                <select id="" name="" multiple="multiple" class="multiselect" style="display: none;">
-                  <option value="" class=""></option>
-                  <option value="145.com" class="">145.com</option>
-                  <option value="Aeroxchange" class="">Aeroxchange</option>
-                  <option value="AvRef" class="">AvRef</option>
-                  <option value="ILS" class="">ILS</option>
-                  <option value="Parts base" class="">Parts base</option>
-                </select>
-
-              </span>
-            </p>
+  <div class="modal fade " id="viewcustomerDetailsinQuote" role="dialog" >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" id="" name="">×</button>
+          <h4 class="modal-title">Details of Customer "Shabbir Ahmad"</h4>
+        </div>
+        <div class="modal-body viewform">
+          <div id="adminsearchlocationajax" class="table-responsive default-bg clear"> <a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>
+            <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a data-toggle="collapse" href="#step1" aria-expanded="true" aria-controls="receive">General Information</a> </h4>
+                </div>
+                <div id="step1" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    <div class="col-sm-6">
+                      <p><span class="label"><b>User Name: </b></span><span class="value">sha123</span></p>
+                      <p><span class="label"><b>Customer Name: </b></span><span class="value">Shabbir Ahmad</span></p>
+                      <p><span class="label"><b>Customer Code: </b></span><span class="value">Cust546</span></p>
+                      <p><span class="label"><b>Internal/External: </b></span><span class="value">Internal</span></p>
+                      <p><span class="label"><b>d/b/a: </b></span><span class="value">d/b/a</span></p>
+                      <p><span class="label"><b>Parent: </b></span><span class="value">Silverxis</span></p>
+                      <p><span class="label"><b>Address 1: </b></span><span class="value">10656 S De Anza Blvd, Suite 859</span></p>
+                      <p><span class="label"><b>Address 2: </b></span><span class="value">23658 Paseo Padre Pkwy, Suite 528</span></p>
+                      <p><span class="label"><b>Address 3: </b></span><span class="value">85698 Decoto Road, Suite 459</span></p>
+                      <p><span class="label"><b>City: </b></span><span class="value">Cupertino</span></p>
+                      <p><span class="label"><b>State/Province: </b></span><span class="value">CA</span></p>
+                      <p><span class="label"><b>Postal: </b></span><span class="value">95014</span></p>
+                      <p><span class="label"><b>Country: </b></span><span class="value">USA</span></p>
+                      <p><span class="label"><b>Email: </b></span><span class="value">mshabbir5007@gmail.com</span></p>
+                    </div>
+                    <div class="col-sm-6">
+                      <p><span class="label"><b>Core Due In: </b></span><span class="value">52 Days</span></p>
+                      <p><span class="label"><b>Classification: </b></span><span class="value">Commercial</span></p>
+                      <p><span class="label"><b>Contract Ref: </b></span><span class="value">Shabbir</span></p>
+                      <p><span class="label"><b>PBH Customer: </b></span><span class="value">PBH Customer Memo (If not checked this field is hidden)</span></p>
+                      <p><span class="label"><b>Restrict PMA: </b></span><span class="value">Restrict PMA Memo (If not checked this field is hidden)</span></p>
+                      <p><span class="label"><b>Integration: </b></span><span class="value">ILS</span></p>
+                      <p><span class="label"><b>URL to Customer site: </b></span><span class="value">https://www.google.co.in/</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">Contact</a> </h4>
+                </div>
+                <div id="step2" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>UID</th>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <th>Work Phone</th>
+                            <th>Email</th>
+                            <th>Mobile Phone</th>
+                            <th>Alt. Mobile Phone</th>
+                            <th>Website</th>
+                            <th>Fax</th>
+                            <th>Memo</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>Donald Budhu </td>
+                            <td>Aerospace Vendor</td>
+                            <td>653-258-8960</td>
+                            <td>donaldbudhu@gmail.com</td>
+                            <td>589-678-5412</td>
+                            <td>985-687-4523</td>
+                            <td>pas.com</td>
+                            <td>589-678</td>
+                            <td>This Testing UI</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Information</a> </h4>
+                </div>
+                <div id="step3" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                        <h6>Dash Numbers</h6>
+                      <table class="table table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Aircraft</th>
+                                  <th>Model</th>
+                                  <th>Dash Numbers</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>1</td>
+                                  <td>Airbus</td>
+                                  <td>A767</td>
+                                  <td>333</td>
+                                </tr>
+                                <tr>
+                                  <td>2</td>
+                                  <td>Airbus</td>
+                                  <td>A767</td>
+                                  <td>444</td>
+                                </tr>
+                                <tr>
+                                  <td>3</td>
+                                  <td>Airbus</td>
+                                  <td>A767</td>
+                                  <td>555</td>
+                                </tr>
+                                <tr>
+                                  <td>4</td>
+                                  <td>Airbus</td>
+                                  <td>A767</td>
+                                  <td>666</td>
+                                </tr>
+                                <tr>
+                                  <td>5</td>
+                                  <td>Airbus</td>
+                                  <td>A768</td>
+                                  <td>333</td>
+                                </tr>
+                                <tr>
+                                  <td>6</td>
+                                  <td>Airbus</td>
+                                  <td>A768</td>
+                                  <td>777</td>
+                                </tr>
+                                
+                              </tbody>
+                            </table>                          
+                    </div>
+                      <div class="table-responsive">
+                        <h6>ATA Chapters</h6>
+                      <table class="table table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>ATA Chapter</th>
+                                  <th>ATA Sub-Chapter</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>1</td>
+                                  <td>MAINTENANCE POLICY</td>
+                                  <td>Sub SUPPORT</td>
+                                </tr>
+                                <tr>
+                                  <td>2</td>
+                                  <td>SUPPORT</td>
+                                  <td>Sub SUPPORT</td>
+                                </tr>
+                              </tbody>
+                            </table>                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">Financial Information</a> </h4>
+                </div>
+                <div id="step4" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="col-sm-6">
+                      <p><span class="label"><b>MarkUp %: </b></span><span class="value">10 %</span></p>
+                      <p><span class="label"><b>Credit Limit:: </b></span><span class="value">10</span></p>
+                      <p><span class="label"><b>Credit Terms: </b></span><span class="value">Net 30</span></p>
+                      <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">Yes</span></p>
+                      <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">Yes</span></p>
+                      <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">8%</span></p>
+                      <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">25</span></p>
+                    </div>
+                    <div class="col-sm-6">
+                      <p><span class="label"><b>EDI: </b></span><span class="value">EDI</span></p>
+                      <p><span class="label"><b>Deferred PO: </b></span><span class="value">Yes</span></p>
+                      <p><span class="label"><b>Deferred RO: </b></span><span class="value">No</span></p>
+                      <p><span class="label"><b>Currency: </b></span><span class="value">US Dollar</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Billing Information</a> </h4>
+                </div>
+                <div id="step5" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>UID</th>
+                            <th>Address 1</th>
+                            <th>Address 2</th>
+                            <th>Address 3</th>
+                            <th>City</th>
+                            <th>State/Prov</th>
+                            <th>Postal Code</th>
+                            <th>Country</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>10656 S De Anza Blvd, Suite 859 </td>
+                            <td>23658 Paseo Padre Pkwy, Suite 528 </td>
+                            <td>85698 Decoto Road, Suite 459</td>
+                            <td>Cupertino</td>
+                            <td>CA</td>
+                            <td>95014</td>
+                            <td>USA</td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>438 Cherry Hill Road </td>
+                            <td>8996 X Eisenhower PkwyAnn Arbor</td>
+                            <td>4692 Woodward Ave. Ste 680</td>
+                            <td>Bloomfield Hills</td>
+                            <td>MI</td>
+                            <td>48302</td>
+                            <td>Canada</td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>852 Research Blvd Suite C#105</td>
+                            <td>12678 W Hebron Pkwy Suite C#1089</td>
+                            <td>8596 Fry Rd Suite C5-300</td>
+                            <td>Austin</td>
+                            <td>TX</td>
+                            <td>78759</td>
+                            <td>UK</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">Shipping Information</a> </h4>
+                </div>
+                <div id="step6" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>UID</th>
+                            <th>Site Name</th>
+                            <th>Address 1</th>
+                            <th>Address 2</th>
+                            <th>Address 3</th>
+                            <th>City</th>
+                            <th>State/Prov</th>
+                            <th>PostalCode</th>
+                            <th>Country</th>
+                            <th>Ship Via</th>
+                            <th>Shipping ID</th>
+                            <th>Shipping URL</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>AOX</td>
+                            <td>10656 S De Anza Blvd, Suite 859 </td>
+                            <td>23658 Paseo Padre Pkwy, Suite 528 </td>
+                            <td>85698 Decoto Road, Suite 459</td>
+                            <td>Cupertino</td>
+                            <td>CA</td>
+                            <td>95014</td>
+                            <td>USA</td>
+                            <td>Fed Ex</td>
+                            <td>UHJ9990</td>
+                            <td>www.fedex.com/ship</td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>AOX</td>
+                            <td>438 Cherry Hill Road </td>
+                            <td>8996 X Eisenhower PkwyAnn Arbor</td>
+                            <td>4692 Woodward Ave. Ste 680</td>
+                            <td>Bloomfield Hills</td>
+                            <td>MI</td>
+                            <td>48302</td>
+                            <td>Canada</td>
+                            <td>Fed Ex</td>
+                            <td>UHJ478001</td>
+                            <td>www.fedex.com/ship</td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>AOX</td>
+                            <td>852 Research Blvd Suite C#105</td>
+                            <td>12678 W Hebron Pkwy Suite C#1089</td>
+                            <td>8596 Fry Rd Suite C5-300</td>
+                            <td>Austin</td>
+                            <td>TX</td>
+                            <td>78759</td>
+                            <td>UK</td>
+                            <td>Fed Ex</td>
+                            <td>UHJ58756</td>
+                            <td>www.fedex.com/ship</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step7">Sales Person/Agent Information</a> </h4>
+                </div>
+                <div id="step7" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="col-sm-10">
+                      <p><span class="label"><b>Primary Sales Person Name: </b></span><span class="value">Shabbir Ahmad</span></p>
+                      <p><span class="label"><b>Secondary Sales Person Name: </b></span><span class="value">Donald</span></p>
+                      <p><span class="label"><b>CSR Name: </b></span><span class="value">Roger</span></p>
+                      <p><span class="label"><b>Agent Name: </b></span><span class="value">Prasad</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step8">International Shipping Info</a> </h4>
+                </div>
+                <div id="step8" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="col-sm-10">
+                      <p><span class="label"><b>Export License Required: </b></span><span class="value">125468254</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="col-sm-2 w100 mtop25">
-            <p>
-              <span class="col-sm-12">
-                <label class="text-left mleft10"><input type="checkbox"> PMA</label>
-              </span>
-            </p>
-          </div>
-          <div class="col-sm-2 w100 mtop25">
-            <p>
-              <span class="col-sm-12">
-                <label class="text-left mleft10"><input type="checkbox"> DRE</label>
-              </span>
-            </p>
-          </div>
-          <div class="col-sm-3 w150">
-            <p>
-              <span class="col-sm-12"><b>Date Range: </b></span>
-              <span class="col-sm-12 right-addon inner-addon">
-                <select class="quote-3rd-party-date-range-select">
-                  <option value="6">6 Mths</option>
-                  <option value="12">12 Mths</option>
-                  <option value="18">18 Mths</option>
-                  <option value="custom">Custom</option>
-                </select>
-              </span>
-            </p>
-          </div>
-          <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
-            <p>
-              <span class="col-sm-12"><b>Date From: </b></span>
-              <span class="col-sm-12">
-                <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891243">
-              </span>
-            </p>
-          </div>
-          <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
-            <p>
-              <span class="col-sm-12"><b>Date From: </b></span>
-              <span class="col-sm-12">
-                <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891244">
-              </span>
-            </p>
-          </div>
-          <div class="col-sm-2 w100 mtop20">
-            <p>
-              <span class="col-sm-12">
-                <button type="button" id="" name="" class="btn btn-success show-pricing-btn">Show Pricing</button>
-              </span>
-            </p>
-          </div>
-        </form>
-        <div class="table-responsive pricing-3rd-party" style="display: none;">
-          <hr>
-          <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
-            <thead>
-              <tr>
-                <th colspan="8"></th>
-                <th colspan="4">Average Unit Price</th>
-                <th colspan="4">Number of Units</th>
-              </tr>
-              <tr>
-                <th>Provider</th>
-                <th>PN</th>
-                <th>Alternate PN</th>
-                <th>PN Description</th>
-                <th>Cond Type</th>
-                <th>UOM</th>
-                <th>OEM/PMA/DER</th>
-                <th>Date Parameters</th>
-                <th>High</th>
-                <th>Mid</th>
-                <th>Low</th>
-                <th>Average</th>
-                <th>High</th>
-                <th>Mid</th>
-                <th>Low</th>
-                <th>Average</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="mpn-row">
-                <td>ILS</td>
-                <td>12345435</td>
-                <td></td>
-                <td>IDG</td>
-                <td>Overhaul</td>
-                <td>EA</td>
-                <td>OEM</td>
-                <td>12 Mths</td>
-                <td> 40,000 </td>
-                <td> 37,000 </td>
-                <td> 32,000 </td>
-                <td> 38,000 </td>
-                <td> 50 </td>
-                <td> 150 </td>
-                <td> 150 </td>
-                <td></td>
-              </tr>
-              <tr class="mpn-row">
-                <td>AEX</td>
-                <td>12345435</td>
-                <td></td>
-                <td>IDG</td>
-                <td>AR</td>
-                <td>EA</td>
-                <td>OEM</td>
-                <td>12 Mths</td>
-                <td> 40,000 </td>
-                <td> 37,000 </td>
-                <td></td>
-                <td> 38,000 </td>
-                <td> 50 </td>
-                <td> 123 </td>
-                <td> 126 </td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="">Close</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+    </div>
+  </div> 
+  <div class="modal fade" id="quote-details" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h4 class="modal-title"> 3rd Party Pricing details</h4>
+        </div>
+        <div class="modal-body">
+  
+          <form method="post" id="" name="">
+  
+            <div class="col-sm-3 w150">
+              <p>
+                <span class="col-sm-12"><b>Site Name: </b></span>
+                <span class="col-sm-12 right-addon inner-addon w200">
+                  <select id="" name="" multiple="multiple" class="multiselect" style="display: none;">
+                    <option value="" class=""></option>
+                    <option value="145.com" class="">145.com</option>
+                    <option value="Aeroxchange" class="">Aeroxchange</option>
+                    <option value="AvRef" class="">AvRef</option>
+                    <option value="ILS" class="">ILS</option>
+                    <option value="Parts base" class="">Parts base</option>
+                  </select>
+  
+                </span>
+              </p>
+            </div>
+            <div class="col-sm-2 w100 mtop25">
+              <p>
+                <span class="col-sm-12">
+                  <label class="text-left mleft10"><input type="checkbox"> PMA</label>
+                </span>
+              </p>
+            </div>
+            <div class="col-sm-2 w100 mtop25">
+              <p>
+                <span class="col-sm-12">
+                  <label class="text-left mleft10"><input type="checkbox"> DRE</label>
+                </span>
+              </p>
+            </div>
+            <div class="col-sm-3 w150">
+              <p>
+                <span class="col-sm-12"><b>Date Range: </b></span>
+                <span class="col-sm-12 right-addon inner-addon">
+                  <select class="quote-3rd-party-date-range-select">
+                    <option value="6">6 Mths</option>
+                    <option value="12">12 Mths</option>
+                    <option value="18">18 Mths</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </span>
+              </p>
+            </div>
+            <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
+              <p>
+                <span class="col-sm-12"><b>Date From: </b></span>
+                <span class="col-sm-12">
+                  <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891243">
+                </span>
+              </p>
+            </div>
+            <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
+              <p>
+                <span class="col-sm-12"><b>Date From: </b></span>
+                <span class="col-sm-12">
+                  <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891244">
+                </span>
+              </p>
+            </div>
+            <div class="col-sm-2 w100 mtop20">
+              <p>
+                <span class="col-sm-12">
+                  <button type="button" id="" name="" class="btn btn-success show-pricing-btn">Show Pricing</button>
+                </span>
+              </p>
+            </div>
+          </form>
+          <div class="table-responsive pricing-3rd-party" style="display: none;">
+            <hr>
+            <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+              <thead>
+                <tr>
+                  <th colspan="8"></th>
+                  <th colspan="4">Average Unit Price</th>
+                  <th colspan="4">Number of Units</th>
+                </tr>
+                <tr>
+                  <th>Provider</th>
+                  <th>PN</th>
+                  <th>Alternate PN</th>
+                  <th>PN Description</th>
+                  <th>Cond Type</th>
+                  <th>UOM</th>
+                  <th>OEM/PMA/DER</th>
+                  <th>Date Parameters</th>
+                  <th>High</th>
+                  <th>Mid</th>
+                  <th>Low</th>
+                  <th>Average</th>
+                  <th>High</th>
+                  <th>Mid</th>
+                  <th>Low</th>
+                  <th>Average</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="mpn-row">
+                  <td>ILS</td>
+                  <td>12345435</td>
+                  <td></td>
+                  <td>IDG</td>
+                  <td>Overhaul</td>
+                  <td>EA</td>
+                  <td>OEM</td>
+                  <td>12 Mths</td>
+                  <td> 40,000 </td>
+                  <td> 37,000 </td>
+                  <td> 32,000 </td>
+                  <td> 38,000 </td>
+                  <td> 50 </td>
+                  <td> 150 </td>
+                  <td> 150 </td>
+                  <td></td>
+                </tr>
+                <tr class="mpn-row">
+                  <td>AEX</td>
+                  <td>12345435</td>
+                  <td></td>
+                  <td>IDG</td>
+                  <td>AR</td>
+                  <td>EA</td>
+                  <td>OEM</td>
+                  <td>12 Mths</td>
+                  <td> 40,000 </td>
+                  <td> 37,000 </td>
+                  <td></td>
+                  <td> 38,000 </td>
+                  <td> 50 </td>
+                  <td> 123 </td>
+                  <td> 126 </td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+  
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+

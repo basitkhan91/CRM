@@ -22,7 +22,7 @@ export class WorkOrderQuote {
   currency: string;
   dso: string;
   accountsReceivableBalance: string;
-
+  partsDetails: multiParts[];
 
   constructor() {
     this.quoteNumber = '';
@@ -48,6 +48,43 @@ export class WorkOrderQuote {
     this.currency = '';
     this.dso = '';
     this.accountsReceivableBalance = '';
+    this.partsDetails = [new multiParts()];
+  }
+}
+export class multiParts {
+  partNumberId: number;
+  partNumberDescription: string;
+  revisedPartNumberId: number;
+  workScopeId: number;
+  qty: number;
+  isCMMorPubRef: string;
+  workFlowId: number;
+  priority: string;
+  customerRequestDate: string;
+  promiseDate: string;
+  estCompletionDate: string;
+  estShipDate: string;
+  isPMA: boolean;
+  isDER: boolean;
+  tatDaysStandard: number;
+  isActive: boolean;
 
+  constructor() {
+    this.partNumberId = null;
+    this.partNumberDescription = '';
+    this.revisedPartNumberId = null;
+    this.workScopeId = null;
+    this.qty = null;
+    this.isCMMorPubRef = '';
+    this.workFlowId = null;
+    this.priority = '';
+    this.customerRequestDate = '';
+    this.promiseDate = '';
+    this.estCompletionDate = '';
+    this.estShipDate = '';
+    this.isPMA = false;
+    this.isDER = false;
+    this.tatDaysStandard = null;
+    this.isActive = false;
   }
 }

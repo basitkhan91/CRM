@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+
+
 namespace QuickApp.Pro.Controllers
+
 {
 
 
@@ -24,20 +27,21 @@ namespace QuickApp.Pro.Controllers
         private const string GetActionByIdActionName = "GetActionById";
         ApplicationDbContext db;
 
-
-        public PublicationController(IUnitOfWork unitOfWork, ILogger<PublicationController> logger, IEmailer emailer)
+		
+		public PublicationController(IUnitOfWork unitOfWork, ILogger<PublicationController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
         }
-
-        // GET: api/values
-        [HttpGet("Get")]
+		
+		// GET: api/values
+		[HttpGet("Get")]
         [Produces(typeof(List<PublicationViewModel>))]
         public IActionResult Get()
         {
-            var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
+		
+			var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
             return Ok(Mapper.Map<IEnumerable<PublicationViewModel>>(allpublicationinfo));
 
         }
@@ -249,5 +253,53 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-    }
+
+		[HttpPost("PNIMMappingPost")]
+		public IActionResult CreatePNIMast([FromBody] PublicationItemMasterMapping[] IMPNMapping)
+		{
+			try
+			{
+
+			
+				if (ModelState.IsValid)
+				{
+					if (IMPNMapping == null)
+						return BadRequest($"{nameof(IMPNMapping)} cannot be null");
+					for (int i = 0; i <= IMPNMapping.Length - 1; i++)
+					{
+						
+
+						PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
+						cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
+						cp.PublicationId = IMPNMapping[i].PublicationId;
+						cp.PartNumber = IMPNMapping[i].PartNumber;
+						cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+						cp.ItemClassification = IMPNMapping[i].ItemClassification;
+						cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
+						cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
+						cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
+						cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
+						cp.CreatedBy = IMPNMapping[i].CreatedBy;
+						cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
+						cp.CreatedDate = DateTime.Now;
+						cp.UpdatedDate = DateTime.Now;
+						cp.IsActive = IMPNMapping[i].IsActive;
+
+						_context.PublicationItemMasterMapping.Add(cp);
+						_context.SaveChanges();
+					}
+				}
+
+				return Ok(ModelState);
+				{ }
+
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+
+		}
+
+	}
 }

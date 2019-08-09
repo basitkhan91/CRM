@@ -1169,7 +1169,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(itemMasters);
         }
 
-        //To post data in Aircraft information Tab in Item Master
         [HttpPost("ItemMasterAircraftPost")]
         public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
         {
