@@ -20,6 +20,8 @@ export class RoComponent implements OnInit {
     dataSource: MatTableDataSource<any>;
     paginator: MatPaginator;
     sort: MatSort;
+    toggleIcon: boolean = false;
+    toggleAddDetails: boolean = false;
 
     constructor(public _router: Router) {
         this.dataSource = new MatTableDataSource();
@@ -29,9 +31,9 @@ export class RoComponent implements OnInit {
         this.cols = [
             { field: 'status', header: 'Status' },
             { field: 'noOfItems', header: '# of Items' },
-            { field: 'purchaseOrderNumber', header: 'PO Number' },
+            { field: 'repairOrderNumber', header: 'RO Number' },
             { field: 'currency', header: 'Currency' },
-            { field: 'poTotalCost', header: 'PO Total Cost' },
+            { field: 'roTotalCost', header: 'RO Total Cost' },
             { field: 'vendorName', header: 'Vendor Name' },
             { field: 'vendorContact', header: 'Vendor Contact' },
             { field: 'employeeName', header: 'Employee Name' },
@@ -64,5 +66,15 @@ export class RoComponent implements OnInit {
 
     onCreateRO() {
         this._router.navigateByUrl('/vendorsmodule/vendorpages/app-create-ro');
+    }
+
+    toggleExpandIcon() {
+        this.toggleIcon = !this.toggleIcon;
+    }
+
+    addStockLine() {
+        this.toggleAddDetails = !this.toggleAddDetails;
+    }
+    dismissModel() {
     }
 }
