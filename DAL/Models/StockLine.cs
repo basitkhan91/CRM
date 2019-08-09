@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-  public class StockLine:PasBase
+    public class StockLine : PasBase
     {
         [Key]
         public long StockLineId { get; set; }
@@ -20,7 +20,7 @@ namespace DAL.Models
         //[FK]
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
-
+        public string EngineSerialNumber { get; set; }
         public string SerialNumber { get; set; }
         public bool? ShelfLife { get; set; }
         public DateTime? ShelfLifeExpirationDate { get; set; }
@@ -62,14 +62,14 @@ namespace DAL.Models
 
         //[FK]
         [ForeignKey("PurchaseOrderId")]
-        public long? PurchaseOrderId  { get; set;}
+        public long? PurchaseOrderId { get; set; }
         public decimal? PurchaseOrderUnitCost { get; set; }
         public decimal? PurchaseOrderExtendedCost { get; set; }
         public decimal? InventoryUnitCost { get; set; }
 
         //[FK]
         [ForeignKey("RepairOrderId")]
-        public long? RepairOrderId  {get;set;}
+        public long? RepairOrderId { get; set; }
         public decimal? RepairOrderUnitCost { get; set; }
 
         public DateTime? ReceivedDate { get; set; }
@@ -79,14 +79,17 @@ namespace DAL.Models
         public decimal? CoreUnitCost { get; set; }
         public long? GLAccountId { get; set; }
         public long? AssetId { get; set; }
-       // public bool? IsHazardousMaterial { get; set; }
+        // public bool? IsHazardousMaterial { get; set; }
         public bool? IsPMA { get; set; }
         public bool? IsDER { get; set; }
         public bool? OEM { get; set; }
         public string Memo { get; set; }
         public long? ManagementStructureEntityId { get; set; }
         public long? TimeLifeCyclesId { get; set; }
-        
+        public string AircraftTailNumber { get; set; }
+        public long? ShippingReferenceId { get; set; }
+        public long? ShippingViaId { get; set; }
+        public long? ShippingAccountId { get; set; }
         //public string Site { get; set; }
         //public string Shelf { get; set; }
         //public string Bin { get; set; }
@@ -116,7 +119,7 @@ namespace DAL.Models
         public bool? IsSerialized { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
         public string IdNumber { get; set; }
-    
+
         public virtual TimeLife TimeLifeObject { get; set; }
 
     }

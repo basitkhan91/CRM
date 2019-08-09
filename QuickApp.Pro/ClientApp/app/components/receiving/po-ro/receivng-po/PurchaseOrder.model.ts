@@ -105,6 +105,7 @@ export class PurchaseOrderPart {
     visible: boolean;
    
     stocklineListObj: StockLine[];
+    timeLifeList: TimeLife[];
     poPartSplitAddress: AddressModel;
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
@@ -116,26 +117,30 @@ export class PurchaseOrderPart {
     addressText: string;
     showStockLineGrid: boolean;
     quantityToReceive: number;
-
+    isSameDetailsForAllParts: boolean;
 
 }
 
 export class TimeLife {
 
     timeLifeCyclesId: number;
+
     cyclesRemaining: number;
     cyclesSinceNew: number;
     cyclesSinceOVH: number;
     cyclesSinceInspection: number;
     cyclesSinceRepair: number;
+
     timeRemaining: number;
     timeSinceNew: number;
     timeSinceOVH: number;
     timeSinceInspection: number;
     timeSinceRepair: number;
+
     lastSinceNew: number;
     lastSinceOVH: number;
     lastSinceInspection: number;
+
     masterCompanyId: number;
     isActive: boolean;
 }
@@ -165,6 +170,7 @@ export class StockLine
     manufacturer: string;
     manufacturerLotNumber: string;
     manufacturingDate: Date;
+    expirationDate: Date;
     manufacturingBatchNumber: string;
     partCertificationNumber: string;
     certifiedBy: string;
@@ -176,6 +182,7 @@ export class StockLine
     orderDate: Date;
     purchaseOrderId: number;
     purchaseOrderUnitCost: number;
+    purchaseOrderExtendedCost: number;
     inventoryUnitCost: number;
     repairOrderId: number;
     repairOrderUnitCost: number;
@@ -211,7 +218,11 @@ export class StockLine
     quantityToReceive: number;
     isSerialized: boolean;
     idNumber: number;
-
+    aircraftTailNumber: string;
+    shippingReferenceId: number;
+    shippingViaId: number;
+    shippingAccountId: number;
+    engineSerialNumber: string;
     //View Properties
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
