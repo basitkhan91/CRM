@@ -1168,56 +1168,64 @@ namespace QuickApp.Pro.Controllers
                 .ToList();
             return Ok(itemMasters);
         }
-
+        
+        //To Insert Aircraft Info in Item Master Aricraft Mapping
         [HttpPost("ItemMasterAircraftPost")]
         public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
         {
-            try
-            {
-                if (ModelState.IsValid)
+               if (ModelState.IsValid)
                 {
-                    _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping);
-                    _unitOfWork.SaveChanges();
-                    return Ok(itemMasterAircraftMapping);
+                    if (_context.ItemMasterAircraftMapping.Any(o => o.ItemMasterId == itemMasterAircraftMapping.ItemMasterId))
+                    {
+                        var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.ItemMasterId == itemMasterAircraftMapping.ItemMasterId).FirstOrDefault();
+                        existingresule.UpdatedDate = DateTime.Now;
+                        existingresule.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
+                        _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(existingresule);
+                        //    _context.ItemMasterAircraftMapping.Update(existingresule);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterAircraftMapping);
+                    }
+                    else
+                    {
+                        _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterAircraftMapping);
+                    }
                 }
                 else
                 {
                     return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
                 }
-                
-            }
-            catch (Exception ex)
-            {
-                var xerr = ex.Message;
-                throw;
-            }
+
+          
         }
 
         //To post data in ATA Chapter Tab in Item Master
         [HttpPost("ItemMasterATAPost")]
         public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping)
         {
-
-            try
-            {
-                if (ModelState.IsValid)
+          if (ModelState.IsValid)
                 {
-                    _unitOfWork.Repository<ItemMasterATAMapping>().Add(itemMasterATAMapping);
-                    _unitOfWork.SaveChanges();
-                    return Ok(itemMasterATAMapping);
+                    if (_context.ItemMasterATAMapping.Any(o => o.ItemMasterId == itemMasterATAMapping.ItemMasterId))
+                    {
+                        var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterId == itemMasterATAMapping.ItemMasterId).FirstOrDefault();
+                        existingresule.UpdatedDate = DateTime.Now;
+                        existingresule.UpdatedBy = itemMasterATAMapping.UpdatedBy;
+                        _unitOfWork.Repository<ItemMasterATAMapping>().Update(existingresule);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterATAMapping);
+                    }
+                    else
+                    {
+                        _unitOfWork.Repository<ItemMasterATAMapping>().Add(itemMasterATAMapping);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterATAMapping);
+                    }
                 }
                 else
                 {
                     return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
                 }
-                
-            }
-            catch (Exception ex)
-            {
-                var xerr = ex.Message;
-                throw;
-            }
-         
         }
         //To post data in Purchase Sale Tab in Item Master
         [HttpPost("ItemMasterPurcSalePost")]
@@ -1226,16 +1234,29 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {                   
-                    _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale);
-                    _unitOfWork.SaveChanges();
-                    return Ok(itemMasterPurchaseSale);
+                {
+                    if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterId == itemMasterPurchaseSale.ItemMasterId))
+                    {
+                        var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterId == itemMasterPurchaseSale.ItemMasterId).FirstOrDefault();
+                        existingresule.UpdatedDate = DateTime.Now;
+                        existingresule.UpdatedBy = itemMasterPurchaseSale.UpdatedBy;
+                        _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
+                        //    _context.ItemMasterAircraftMapping.Update(existingresule);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterPurchaseSale);
+                    }
+                    else
+                    {
+                        _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterPurchaseSale);
+                    }
                 }
                 else
                 {
                     return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
                 }
-              
+
                 // return Ok(ModelState);
             }
             catch (Exception ex)
@@ -1280,37 +1301,28 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (itemMasterViewModel == null)
+                if (_context.ItemMaster.Any(o => o.ItemMasterId == itemMasterViewModel.ItemMasterId))
+                {
+                    var existingresule = _context.ItemMaster.Where(c => c.ItemMasterId == itemMasterViewModel.ItemMasterId).FirstOrDefault();
+                    existingresule.UpdatedDate = DateTime.Now;
+                    existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
+                    _unitOfWork.Repository<ItemMaster>().Update(existingresule);
+                    _unitOfWork.SaveChanges();
+                    return Ok(itemMasterViewModel);
+                }
+                else
+                {
                     return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
-                var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
-                itemMasterViewModel.MasterCompanyId = 1;
-                itemmaserObj.ExportECCN = itemMasterViewModel.ExportECCN;
-                itemmaserObj.ITARNumber = itemMasterViewModel.ITARNumber;
-                itemmaserObj.ExportUomId = itemMasterViewModel.ExportUomId;
-                itemmaserObj.ExportCountryId = itemMasterViewModel.ExportCountryId;
-                itemmaserObj.ExportValue = itemMasterViewModel.ExportValue;
-                itemmaserObj.ExportWeightUnit = itemMasterViewModel.ExportWeightUnit;
-                itemmaserObj.ExportCurrencyId = itemMasterViewModel.ExportCurrencyId;
-                itemmaserObj.ExportWeight = itemMasterViewModel.ExportWeight;
-                itemmaserObj.ExportWeightUnit = itemMasterViewModel.ExportWeightUnit;
-                itemmaserObj.ExportSizeLength = itemMasterViewModel.ExportSizeLength;
-                itemmaserObj.ExportSizeWidth = itemMasterViewModel.ExportSizeWidth;
-                itemmaserObj.ExportSizeHeight = itemMasterViewModel.ExportSizeHeight;
-                itemmaserObj.ExportSizeUnit = itemMasterViewModel.ExportSizeUnit;
-                itemmaserObj.ExportClassificationId = itemMasterViewModel.ExportClassificationId;
-                itemmaserObj.ExpirationDate = itemMasterViewModel.ExpirationDate;
-                _unitOfWork.itemMaster.Update(itemmaserObj);
-                _unitOfWork.SaveChanges();
-                return Ok(itemmaserObj);
+                }
+
             }
             else
             {
                 return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
             }
 
-
-           
         }
+
     }
 
 }
