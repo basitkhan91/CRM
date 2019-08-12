@@ -13,10 +13,14 @@ namespace DAL.Models
         public string PartNumber { get; set; }
         public string StockLineNumber { get; set; }
         public string ControlNumber { get; set; }
+        
         //[FK]
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
-        public Int32? Quantity { get; set; }
+
+        public int? Quantity { get; set; }
+        public int QuantityRejected { get; set; }
+
         //[FK]
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
@@ -63,6 +67,11 @@ namespace DAL.Models
         //[FK]
         [ForeignKey("PurchaseOrderId")]
         public long? PurchaseOrderId { get; set; }
+
+        //[ForeignKey("PurchaseOrderPartRecordId")]
+        public long? PurchaseOrderPartRecordId { get; set; }
+
+
         public decimal? PurchaseOrderUnitCost { get; set; }
         public decimal? PurchaseOrderExtendedCost { get; set; }
         public decimal? InventoryUnitCost { get; set; }
@@ -121,6 +130,10 @@ namespace DAL.Models
         public string IdNumber { get; set; }
 
         public virtual TimeLife TimeLifeObject { get; set; }
+
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
+        
+        public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }
 
     }
 }

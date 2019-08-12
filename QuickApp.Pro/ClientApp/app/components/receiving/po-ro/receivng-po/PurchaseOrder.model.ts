@@ -41,6 +41,7 @@ export class PurchaseOrder {
     deferredReceiver: boolean;
     resale: boolean;
     isActive: boolean;
+    managementStructureId: number;
 
 
     purchaseOderPart: PurchaseOrderPart[];
@@ -70,6 +71,8 @@ export class PurchaseOrderPart {
     status: string;
     trace: string;
     conditionCode: string;
+    quantityActuallyReceived: string;
+    quantityRejected: string;
     uOMId: number;
     quantityOrdered: number;
     unitCost: number;
@@ -103,9 +106,10 @@ export class PurchaseOrderPart {
     isParent: boolean;
     itemMaster: any;
     visible: boolean;
+    conditionId: number;
    
-    stocklineListObj: StockLine[];
-    timeLifeList: TimeLife[];
+    public stocklineListObj: StockLine[];
+    public timeLifeList: TimeLife[];
     poPartSplitAddress: AddressModel;
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
@@ -154,6 +158,7 @@ export class StockLine
     controlNumber: string;
     itemMasterId: number;
     quantity: number;
+    quantityRejected: number;
     conditionId: number;
     serialNumber: string;
     shelfLife: boolean;

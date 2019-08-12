@@ -423,9 +423,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     wf.selectedItems = [];
                                     if (this.UpdateMode) {
                                         wf.workflowId = this.updateWorkFlowId;
-                                        //charge[0].ActionId = this.currentActionId;
-                                        //charge[0].WorkFlowId = this.updateWorkFlowId;
-
                                     }
 
                                     if (workFlow[0].charges != undefined && workFlow[0].charges.length > 0) {
