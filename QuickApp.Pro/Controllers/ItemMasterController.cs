@@ -1168,65 +1168,59 @@ namespace QuickApp.Pro.Controllers
                 .ToList();
             return Ok(itemMasters);
         }
-        
-        //To Insert Aircraft Info in Item Master Aricraft Mapping
-        [HttpPost("ItemMasterAircraftPost")]
-        public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
-        {
-               if (ModelState.IsValid)
-                {
-                    if (_context.ItemMasterAircraftMapping.Any(o => o.ItemMasterId == itemMasterAircraftMapping.ItemMasterId))
-                    {
-                        var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.ItemMasterId == itemMasterAircraftMapping.ItemMasterId).FirstOrDefault();
-                        existingresule.UpdatedDate = DateTime.Now;
-                        existingresule.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
-                        _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(existingresule);
-                        //    _context.ItemMasterAircraftMapping.Update(existingresule);
-                        _unitOfWork.SaveChanges();
-                        return Ok(itemMasterAircraftMapping);
-                    }
-                    else
-                    {
-                        _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping);
-                        _unitOfWork.SaveChanges();
-                        return Ok(itemMasterAircraftMapping);
-                    }
-                }
-                else
-                {
-                    return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
-                }
 
-          
-        }
+		//To Insert Aircraft Info in Item Master Aricraft Mapping
+		[HttpPost("ItemMasterAircraftPost")]
+		public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
+		{
+			if (ModelState.IsValid)
+			{
+				if (_context.ItemMasterAircraftMapping.Any(o => o.ItemMasterId == itemMasterAircraftMapping.ItemMasterId))
+				{
+					var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.ItemMasterId == itemMasterAircraftMapping.ItemMasterId).FirstOrDefault();
+					existingresule.UpdatedDate = DateTime.Now;
+					existingresule.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
+					_unitOfWork.Repository<ItemMasterAircraftMapping>().Update(existingresule);
+					//    _context.ItemMasterAircraftMapping.Update(existingresule);
+					_unitOfWork.SaveChanges();
+					return Ok(itemMasterAircraftMapping);
+				}
+				else
+				{
+					_unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping);
+					_unitOfWork.SaveChanges();
+					return Ok(itemMasterAircraftMapping);
+				}
+			}
+			else
+			{
+				return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
+			}
 
-        //To post data in ATA Chapter Tab in Item Master
-        [HttpPost("ItemMasterATAPost")]
-        public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping)
-        {
-          if (ModelState.IsValid)
-                {
-                    if (_context.ItemMasterATAMapping.Any(o => o.ItemMasterId == itemMasterATAMapping.ItemMasterId))
-                    {
-                        var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterId == itemMasterATAMapping.ItemMasterId).FirstOrDefault();
-                        existingresule.UpdatedDate = DateTime.Now;
-                        existingresule.UpdatedBy = itemMasterATAMapping.UpdatedBy;
-                        _unitOfWork.Repository<ItemMasterATAMapping>().Update(existingresule);
-                        _unitOfWork.SaveChanges();
-                        return Ok(itemMasterATAMapping);
-                    }
-                    else
-                    {
-                        _unitOfWork.Repository<ItemMasterATAMapping>().Add(itemMasterATAMapping);
-                        _unitOfWork.SaveChanges();
-                        return Ok(itemMasterATAMapping);
-                    }
-                }
-                else
-                {
-                    return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
-                }
-        }
+
+		}
+
+
+		//To post data in ATA Chapter Tab in Item Master
+		[HttpPost("ItemMasterATAPost")]
+		public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping[] itemMasterATAMapping)
+		{
+			if (ModelState.IsValid)
+			{
+				for (int i = 0; i <= itemMasterATAMapping.Length - 1; i++)
+				{
+					_unitOfWork.Repository<ItemMasterATAMapping>().Add(itemMasterATAMapping[i]);
+					_unitOfWork.SaveChanges();
+					
+				}
+
+			}
+			else
+			{
+				return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
+			}
+			return Ok(ModelState);
+		}
         //To post data in Purchase Sale Tab in Item Master
         [HttpPost("ItemMasterPurcSalePost")]
         public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale)

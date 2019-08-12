@@ -57,6 +57,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _getAircraftMapped: string = "/api/ItemMaster/getAircraftMapped";
     private readonly _getATAMapped: string = "/api/ItemMaster/getATAMapped";
     private readonly _ItemMasterExportInfoUrlNew: string = "/api/ItemMaster/ExportInfoPostBy_IMastID";
+    private readonly _ATAMappingUrl : string = '/api/ItemMaster/ItemMasterATAPost';
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -779,5 +780,11 @@ export class ItemMasterEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getNewitemExportInfoEndpoint(userObject));
             });
+    }
+    saveATAMapping<T>(mappedData: any):Observable<T>{
+        return this.http.post<T>( this._ATAMappingUrl, JSON.stringify(mappedData), this.getRequestHeaders())
+        .catch(err => {
+            return this.handleError( err , () => this.saveATAMapping(mappedData));
+        })
     }
 }

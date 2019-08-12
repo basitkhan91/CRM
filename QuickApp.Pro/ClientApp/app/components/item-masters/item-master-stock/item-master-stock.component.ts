@@ -280,6 +280,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
     cols1: any[];
+    
     ataMainchapter: ATAChapter[]
     showAircraftData: boolean = false;
     showAtachapter: boolean = false;
@@ -306,6 +307,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ManufacturerValue: any;
     alternatePn: any;
     ataform: FormGroup;
+    ataChaptherSelected : any;
     newFields = {
         Condition:"NEW",
         PP_UOMId:"2",
@@ -332,6 +334,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         SP_CalSPByPP_UnitSalePrice:""
     }
     aircraftData: any;
+    selectedAtAChapther: ATAChapter[];
+
+    ataMappedList :any;
     constructor(private fb: FormBuilder, public countryservice: CustomerService,private Dashnumservice:DashNumberService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
@@ -520,9 +525,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             { aircraft: '', model: '', dashnumber: '' },
             { aircraft: '', model: '', dashnumber: '' },
         ];
+
         this.atasub = [
-            { field: 'atachapter', header: 'ATA Chapter' },
-            { field: 'atasubchapter', header: 'ATA Sub-Chapter' }
+            { field: 'ataChapterName', header: 'ATA Chapter' },
+            { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
         ];
         this.itemQuantity = Array(10).fill(1).map((x, i) => i + 1);
         this.itemQuantitys = Array(6).fill(1).map((x, i) => i + 1);
@@ -3824,7 +3830,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                         AircraftModel: x.model,
                         DashNumber: x.dashNumber,
                         AircraftModelId: x.modelid,
-                        DashNumberId: x.dashNumberId
+                        DashNumberId: x.dashNumberId,
+                        Memo: '',
+                        
+                     
                     }
                 })
             })             
@@ -3836,7 +3845,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     AircraftModel: x.modelName,
                     DashNumber: '',
                     AircraftModelId: x.modelid,
-                    DashNumberId: ''
+                    DashNumberId: '',
+                    Memo: '',
                 }
             })
         }
@@ -3846,13 +3856,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 AircraftModel: '',
                 DashNumber: '',
                 AircraftModelId: '',
-                DashNumberId: ''
+                DashNumberId: '', 
+                Memo: '',
             }]
         }
     
     }
     selectedMemo: any;   
     saveAircraft() {     
+        console.log(this.collectionofItemMaster);
         const data = this.aircraftData.map(obj => {
             return {
                 ...obj,
@@ -3868,12 +3880,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 IsDeleted: false
             }
         })
-        for (var i = 0; i <= data.length - 1; i++) {
-            this.itemser.newItemMasterAircarftClass(data[i]).subscribe(datas => {
+       // posting the DashNumber Mapped data from Popup
+            this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
                 console.log(datas);
             })
-        }
-        this.itemser.getMappedAirCraftDetails(this.pnvalue).subscribe(data => {
+   // Used to get the Data Posted in the Popup
+        this.itemser.getMappedAirCraftDetails(this.collectionofItemMaster.itemMasterId).subscribe(data => {
             const responseData = data;
             console.log(data);
             this.aircraftListData = responseData.map(x => {
@@ -3884,7 +3896,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     memo: x.memo,
                 }
             })
+            // resetting popup Data
+            this.aircraftData = undefined;
+            this.selectedAircraftId = []
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
         })
+
+
        
     }
     moveAtachapter() {
@@ -3904,6 +3923,42 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 );
             }
         });
+    }
+
+
+    addATAMapping(){
+        console.log(this.selectedModels, this.ataChaptherSelected);
+        const ataMappingData =  this.selectedModels.map(x => {
+              return {
+                ItemMasterId : this.collectionofItemMaster.itemMasterId,
+                ATAChapterId   : this.ataChaptherSelected[0].ataChapterId,
+                ATASubChapterId   : x.ataSubChapterId,
+                ATAChapterCode : this.ataChaptherSelected[0].ataChapterCode,
+                ATAChapterName : this.ataChaptherSelected[0].ataChapterName,
+                ATASubChapterDescription : x.description,
+                MasterCompanyId : x.masterCompanyId,
+                CreatedBy: this.userName , 
+                UpdatedBy : this.userName , 
+                CreatedDate: new Date(), 
+                UpdatedDate: new Date() , 
+                PartNumber : this.collectionofItemMaster.partNumber,
+                IsActive : true,
+                IsDeleted : false,
+              }
+        } )
+    
+            this.itemser.postATAMapping(ataMappingData ).subscribe(res => {
+                this.itemser.getMappedATADetails(this.collectionofItemMaster.itemMasterId).subscribe(res => {
+                  this.ataMappedList  = res.map(x => {
+                    return {
+                        ataChapterName : x.ataChapterName,
+                        ataSubChapterDescription : x.ataSubChapterDescription
+                     } 
+                  })
+                    
+                })
+})
+
     }
     movePurchaseInformation() {        
         this.activeTab = 3;
@@ -3977,6 +4032,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.itemTypeId = 1;
 
                 this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
+                    // response Data after save 
                     this.collectionofItemMaster = data;
                     console.log(this.collectionofItemMaster);
                     this.savesuccessCompleted(this.sourceItemMaster);
@@ -4534,12 +4590,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     // New code for loading dropdown
    
     atasubchapterChange(atachapterId) {
+        this.ataChaptherSelected  =   this.ataMainchapter.filter( x => {
+            if( x.ataChapterId === atachapterId  ){
+                return x;
+            }
+        });
+        console.log(this.ataChaptherSelected);
+        
+        
         this.atasubchapter1service.getATASubChapterListByATAChapterId(atachapterId).subscribe(atasubchapter => {
             const responseData = atasubchapter[0];            
             this.atasubchapter = responseData.map(x => {
+                // modified  from x.ataSubChapterId to
                 return {
                     label: x.description,
-                    value: x.ataSubChapterId
+                    value: x
                 }
             })           
         })
