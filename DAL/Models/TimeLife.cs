@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 
@@ -25,5 +26,10 @@ namespace DAL.Models
         public Int32? LastSinceInspection { get; set; }
         public Int32? MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
+
+        [ForeignKey("PurchaseOrderId")]
+        public long PurchaseOrderId { get; set; }
+
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
     }
 }

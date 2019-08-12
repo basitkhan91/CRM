@@ -16,16 +16,12 @@ namespace DAL.Repositories
 
             var purchaseOrder = _appContext.PurchaseOrder
                                    .Include("Vendor")
-                                  .Include("StockLine")
                                    .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
-
-            //purchaseOrder.StockLine = _appContext.StockLine
-            //                      .Include("Stockline")
-            //                      .Where(x => x.PurchaseOrderId == id).ToList();
 
             purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
                                    .Include("ItemMaster")
-                                   //.Include("StockLine")
+                                   .Include("StockLine")
+                                   .Include("TimeLife")
                                    .Where(x => x.PurchaseOrderId == id).ToList();
 
             purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
@@ -35,24 +31,12 @@ namespace DAL.Repositories
                     part.POPartSplitAddress = _appContext.Address.Where(x => x.AddressId == part.POPartSplitAddressId).FirstOrDefault();
                 }
             });
-
-            purchaseOrder.StockLine = _appContext.StockLine
-                                    .Include("TimeLifeObject")
-                                    .Where(x => x.PurchaseOrderId == id).ToList();
-
-
-
+            
             foreach (var part in purchaseOrder.PurchaseOderPart)
             {
                 part.ItemMaster.Manufacturer = _appContext.Manufacturer.Where(x => x.ManufacturerId == part.ItemMaster.ManufacturerId).FirstOrDefault();
             }
-
-            //foreach (var stocklineMapper in purchaseOrder.PurchaseOderPart)
-            //{
-            //    stocklineMapper.PartStockLineMapper = _appContext.PartStockLineMapper.Where(x => x.pur == part.ItemMaster.ManufacturerId).FirstOrDefault();
-            //}
-
-
+            
             return purchaseOrder;
 
         }
