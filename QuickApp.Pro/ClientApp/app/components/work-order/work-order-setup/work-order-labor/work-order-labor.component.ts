@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import * as moment from 'moment';
-
+import {
+  WorkOrderLabor,
+  AllTasks
+} from '../../../../models/work-order-labor.modal';
 @Component({
   selector: 'app-work-order-labor',
   templateUrl: './work-order-labor.component.html',
@@ -8,7 +11,7 @@ import * as moment from 'moment';
 })
 /** WorkOrderMainComponent component*/
 export class WorkOrderLaborComponent implements OnInit {
-  @Input() laborForm: any;
+  @Input() laborForm: WorkOrderLabor;
 
   expertiseDropdownMenu = [
     { label: 'Technician', value: 'Technician' },
@@ -19,39 +22,18 @@ export class WorkOrderLaborComponent implements OnInit {
     { label: 'Auditor', value: 'Auditor' },
     { label: 'Engineer', value: 'Engineer' }
   ];
-  allTasks = {
-    Expertise: '',
-    EmployeeId: null,
-    BillableorNonBillable: 'billable',
-    StartDateandTime: '-',
-    EndDateandTime: '-',
-    HoursandMinutes: '',
-    Adjustments: '',
-    AdjustmentedHours: '',
-    Memo: ''
-  };
-
-  ngOnInit() {
-    const keysArray = Object.keys(this.laborForm.Tasks[0]);
-    for (let i = 0; i < keysArray.length; i++) {
-      this.laborForm = {
-        ...this.laborForm,
-        Tasks: [
-          { ...this.laborForm.Tasks[0], [keysArray[i]]: [{ ...this.allTasks }] }
-        ]
-      };
-    }
-  }
+  ngOnInit() {}
   addNewTask(taskName) {
-    this.laborForm.Tasks[0][taskName].push({ ...this.allTasks });
+    this.laborForm.tasks[0][taskName].push(new AllTasks());
   }
   startandStop(obj) {
-    if (obj.StartDateandTime === '-') {
-      obj.StartDateandTime = moment(new Date()).format('DD/MM/YYYY, h:mm:ss a');
-    } else if (obj.EndDateandTime === '-') {
-      obj.EndDateandTime = moment(new Date()).format('DD/MM/YYYY, h:mm:ss a');
+    if (obj.startDateandTime === null) {
+      obj.startDateandTime = new Date();
+    } else if (obj.endDateandTime === null) {
+      obj.endDateandTime = new Date();
     }
   }
+  // moment(new Date()).format('DD/MM/YYYY, h:mm:ss a');
   saveLabor() {
     console.log(this.laborForm);
   }

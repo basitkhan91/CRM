@@ -435,13 +435,13 @@ namespace DAL.Repositories
         }
       
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
-        public IEnumerable<object> GetAircraftMapped(string PNid)
+        public IEnumerable<object> GetAircraftMapped(long ItemmasterId)
         {
             {
                 //int[] myMids = Mid.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
 
                 var data = (from iM in _appContext.ItemMasterAircraftMapping
-                            where iM.PartNumber == PNid && iM.IsActive == true && iM.IsDeleted == false
+                            where iM.ItemMasterId == ItemmasterId && iM.IsActive == true && iM.IsDeleted == false
                             select new
                             {
                                 iM.ItemMasterAircraftMappingId,
@@ -459,13 +459,13 @@ namespace DAL.Repositories
                 return data;
             }
         }
-        public IEnumerable<object> GetATAMapped(string PNid)
+        public IEnumerable<object> GetATAMapped(long ItemMasterid)
         {
             {
                 //int[] myMids = Mid.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
 
                 var data = (from iM in _appContext.ItemMasterATAMapping
-                            where iM.PartNumber == PNid && iM.IsActive == true && iM.IsDeleted == false
+                            where iM.ItemMasterId == ItemMasterid && iM.IsActive == true && iM.IsDeleted == false
                             select new
                             {
                                 iM.ItemMasterATAMappingId,

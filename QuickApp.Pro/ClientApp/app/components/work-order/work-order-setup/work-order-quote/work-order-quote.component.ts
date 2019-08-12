@@ -1,7 +1,8 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
-import { fadeInOut } from '../../../../services/animations';
-import { PageHeaderComponent } from '../../../../shared/page-header.component';
-import * as $ from 'jquery';
+import {
+  WorkOrderQuote,
+  multiParts
+} from '../../../../models/work-order-quote.modal';
 
 @Component({
   selector: 'app-work-order-quote',
@@ -10,31 +11,14 @@ import * as $ from 'jquery';
 })
 /** WorkOrderQuote component*/
 export class WorkOrderQuoteComponent implements OnInit {
-  @Input() quoteForm;
-  partsDetails = [];
-  multiParts = {
-    PnId: null,
-    PnDescription: '',
-    RevisedPnId: null,
-    WorkScopeId: '',
-    Qty: null,
-    IsCMMorPubRef: '',
-    WorkFlowId: null,
-    Priority: '',
-    CustomerRequestDate: '',
-    PromiseDate: '',
-    EstCompletionDate: '',
-    EstShipDate: '',
-    IsPMA: false,
-    IsDER: false,
-    TATDaysStandard: null,
-    IsActive: false
-  };
+  @Input() quoteForm: WorkOrderQuote;
 
   constructor() {}
   ngOnInit() {}
-  saveQuoteDetails() {}
+  saveQuoteDetails() {
+    console.log(this.quoteForm);
+  }
   addMPN() {
-    // this.quoteForm.partsDetails.push({ ...this.multiParts });
+    this.quoteForm.partsDetails.push(new multiParts());
   }
 }

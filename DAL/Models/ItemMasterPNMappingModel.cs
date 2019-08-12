@@ -18,20 +18,22 @@ namespace DAL.Models
     public partial class PublicationItemMasterMapping
     {
         [Key]
-        public long PNIMID { get; set; }
+        public long PublicationItemMasterMappingId  { get; set; }
         public long ItemMasterId { get; set; }
         public long ItemClassificationId { get; set; }
         public long ItemGroupId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public System.DateTime UpdatedDate { get; set; }
+        public System.DateTime CreatedDate  { get; set; }
+        public System.DateTime  UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public string ItemClassification { get; set; }
         public string PartNumberDescription { get; set; }
         public string PartNumber { get; set; }
         public string PublicationId { get; set; }
+
+		public long PublicationRecordId { get; set; }
 
     }
 }

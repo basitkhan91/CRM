@@ -4,15 +4,15 @@ export class workOrderGeneralInfo {
   workOrderNumber: string;
   openDate: Date;
   workOrderStatus: string;
-  customerId: string;
-  customerCodeId: string;
+  customerId: number;
+  customerCodeId: number;
   customerReference: string;
   isContract: boolean;
   contract: string;
   creditTerms: string;
   creditTermsandLimitId: string;
-  employeeId: string;
-  salesPersonId: string;
+  employeeId: number;
+  salesPersonId: number;
   csr: string;
   constructor() {
     this.workOrderType = 'single';
@@ -20,15 +20,15 @@ export class workOrderGeneralInfo {
     this.workOrderNumber = 'Creating';
     this.openDate = new Date();
     this.workOrderStatus = '';
-    this.customerId = '';
-    this.customerCodeId = '';
+    this.customerId = null;
+    this.customerCodeId = null;
     this.customerReference = '';
     this.isContract = false;
     this.contract = '';
     this.creditTerms = '';
     this.creditTermsandLimitId = '';
-    this.employeeId = '';
-    this.salesPersonId = '';
+    this.employeeId = null;
+    this.salesPersonId = null;
     this.csr = '';
   }
 }

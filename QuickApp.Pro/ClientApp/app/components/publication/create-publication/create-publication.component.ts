@@ -233,7 +233,9 @@ export class CreatePublicationComponent implements OnInit {
         CreatedBy: this.userName,
         UpdatedBy: this.userName,
         MasterCompanyId: obj.masterCompanyId,
-        IsActive: true
+        IsActive: true,
+          CreatedDate:  '2019-08-12',
+          UpdatedDate: '2019-08-12',
       };
     });
     this.selectedPartNumbers = [];

@@ -155,7 +155,7 @@
                                         <div class="form-group">
                                             <label for="customername">Customer Name
                                                 <span class="clr-red">*</span>
-                                                <span *ngIf="workOrderGeneralInformation.customerId !== ''">
+                                                <span *ngIf="workOrderGeneralInformation.customerId !== '' && workOrderGeneralInformation.customerId !== null ">
                                                         <a data-toggle="tooltip" pTooltip="Customer Email: 'Indigo@gmail.com' , Customer Phone: 0423588779" tooltipPosition="bottom" title=""  data-original-title="View" data-toggle="modal" data-target="#viewcustomerDetails"  >
                                                             <i class="fa fa-eye"></i>
                                                         </a>
@@ -387,7 +387,7 @@
                                 </td>
                                 <td>
                                         <p-calendar [showIcon]="true" 
-                                        [(ngModel)]="workOrderPartNumber.customerRequestDate"></p-calendar>
+                                        [(ngModel)]="workOrderPartNumber.customerRequestDate"    ></p-calendar>
                                 <td>
                                         <p-calendar [showIcon]="true" 
                                         [(ngModel)]="workOrderPartNumber.promisedDate"></p-calendar>
@@ -613,7 +613,7 @@
                     <div [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
                         <!-- <app-workflow-list></app-workflow-list> -->
                     </div>
-                    <div [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
+                    <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [laborForm]="labor"></app-work-order-labor>
                     </div>
 

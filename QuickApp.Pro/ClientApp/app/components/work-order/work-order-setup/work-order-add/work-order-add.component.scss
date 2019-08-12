@@ -67,7 +67,7 @@ textarea {
   padding: 0px !important;
 }
 .nav-pills li a {
-  padding: 5px 6px !important;
+  padding: 5px 4px !important;
 }
 @media (min-width: 768px) {
   .col-md-6 .col-md-6 {
@@ -78,4 +78,10 @@ textarea {
     max-width: 22%;
     margin-right: 15px;
   }
+}
+#accordion h4 a.collapsed {
+  font-size: 12px !important;
+}
+#accordion h4 a {
+  font-size: 12px !important;
 }

@@ -27,6 +27,11 @@ import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { WorkOrderPartNumberService } from '../../../../services/work-order/work-order-part-number.service';
 import { Documents } from '../../../../models/work-order-documents.modal';
 import { WorkOrderQuote } from '../../../../models/work-order-quote.modal';
+import {
+  WorkOrderLabor,
+  AllTasks
+} from '../../../../models/work-order-labor.modal';
+
 @Component({
   selector: 'app-work-order-add',
   templateUrl: './work-order-add.component.html',
@@ -63,12 +68,16 @@ export class WorkOrderAddComponent implements OnInit {
   isContract = true;
   gridActiveTab: String = 'workFlow';
   subTabWorkFlow: String;
-  // WorkOrder general Information JSON
+  // WorkOrder general Information Object Modal
   workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
-  // Address Information JSON
+  // Address Information Object Modal
   addresses: addressesForm;
+  // Document Object Modal
   documents: Documents[] = [];
+  // quote Object Modal
   quote: WorkOrderQuote;
+  // labor Object Modal
+  labor: WorkOrderLabor;
 
   workFlowItems = [
     {
@@ -115,29 +124,6 @@ export class WorkOrderAddComponent implements OnInit {
     isActive: true,
     isDelete: false
   };
-  labor = {
-    WOId: '',
-    DataEnteredBy: null,
-    Expertise: '',
-    EmployeeId: null,
-    IsTaskCompletedByOne: false,
-    WorkFloworSpecificTaskorWorkOrder: 'workFlow',
-    HoursorClockorScan: 'labourHours',
-    Tasks: [
-      {
-        Receive: [],
-        Inspect: [],
-        Evaluate: [],
-        TearDown: [],
-        Disassemble: [],
-        Assemble: [],
-        Testing: [],
-        QualityControl: [],
-        Ship: [],
-        Clean: []
-      }
-    ]
-  };
 
   constructor(
     private alertService: AlertService,
@@ -173,11 +159,27 @@ export class WorkOrderAddComponent implements OnInit {
     this.addMPN();
   }
 
+  // create all Forms in the Grid
   getAllGridModals() {
+    this.gridActiveTab = 'workFlow';
     this.addresses = new addressesForm();
-
     this.documents = [new Documents()];
     this.quote = new WorkOrderQuote();
+    this.labor = new WorkOrderLabor();
+    // adding Form Object Dynamically
+    this.generateLaborForm();
+  }
+
+  generateLaborForm() {
+    console.log('Test');
+    const keysArray = Object.keys(this.labor.tasks[0]);
+    for (let i = 0; i < keysArray.length; i++) {
+      this.labor = {
+        ...this.labor,
+        tasks: [{ ...this.labor.tasks[0], [keysArray[i]]: [new AllTasks()] }]
+      };
+    }
+    console.log(this.labor);
   }
 
   toggleDisplayMode(): void {

@@ -12642,7 +12642,7 @@ body .ui-datepicker table td > a.ui-state-active {
     border: 1px solid #c5c5c5;
     /* background: white; */
     font-weight: normal;
-    color: #ffff;
+    color: #fff;
 }
     body .ui-table .ui-sortable-column:not(.ui-state-highlight):hover {
         background-color: #4298ff;
@@ -12937,9 +12937,10 @@ body .ui-datepicker table td > a.ui-state-active {
         font-weight: normal !important;
         width: 194px !important;
       }
-      .p-checkbox .checkbox-table .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default {
-        margin-top: -6px !important;
-        margin-left: -4px !important;
+      p-checkbox.checkbox-table .ui-chkbox.ui-widget {
+
+        margin-top: -15px;
+        margin-left: -3px;
     }
       .p-radiobutton-label-vertical .ui-radiobutton-label {
         margin-top: -25px !important;
@@ -12996,11 +12997,14 @@ body .ui-datepicker table td > a.ui-state-active {
         border: 0;
         font-size: 14px;
     }
-
-    .checkbox-cstm label {
-        width: 200px;
-        font-size: 12px !important;
+    .ro-popup-clder .ui-calendar-button span {
+        font-size: 17px !important;
     }
+
+.checkbox-cstm label {
+    width: 200px;
+    font-size: 12px !important;
+}
 
     .checkbox-cstm label:after {
         content: '';
@@ -13170,7 +13174,7 @@ body .ui-datepicker table td > a.ui-state-active {
         border: 1px solid #c5c5c5;
         /* background: white; */
         font-weight: normal;
-        color: #ffff;
+        color: #fff;
     }
 
     .ui-g-4 {
@@ -13505,6 +13509,12 @@ body .ui-datepicker table td > a.ui-state-active {
     .pas-tabview .ui-tabview .ui-tabview-nav > li.ui-state-active:hover .fa {
         color: #000 !important;
     }
+    .pas-tabview .ui-tabview .ui-tabview-nav li.ui-state-active {
+        background-color: #337ab7 !important;
+    }
+    .pas-tabview .ui-tabview .ui-tabview-nav li.ui-state-active a {        
+        color: #fff !important;
+    }
     /*Css form multiselect input itemmaster*/
     .panel-style .p-multiselect .ui-multiselect-close {
         margin-left: -9px;
@@ -13646,8 +13656,8 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .po-head {
     font-weight: bold;
-    font-size: 16px;
-    color: #295d92;
+    font-size: 16px !important;
+    color: #295d92 !important;
 }
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
