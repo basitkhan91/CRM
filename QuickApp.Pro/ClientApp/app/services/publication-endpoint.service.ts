@@ -20,7 +20,8 @@ export class PublicationEndpointService extends EndpointFactory {
   private readonly _publicationPNATANEW: string =
     '/api/Publication/PubPNATAMappingPost';
   private readonly _PostPNMapping: string = '/api/Publication/PNIMMappingPost';
-
+    private readonly _getAirMappingByPublicationID: string = '/api/Publication/getItemAircraftMappedByPublcationID';
+    private readonly _getAtaMappingByPublicationID: string = '/api/Publication/getItemAtaMappedByPublcationID';
   private readonly _publicationPNMappingData: string =
     '/api/Publication/GetPubPNMappedData_PNID';
 
@@ -165,5 +166,23 @@ export class PublicationEndpointService extends EndpointFactory {
           this.postPartNumberMappedData(object)
         );
       });
-  }
+    }
+    getAirMappedByPubId<T>(PublicationID: number): Observable<T> {
+        let endpointUrl = `${this._getAirMappingByPublicationID}/${PublicationID}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAirMappedByPubId(PublicationID));
+            });
+    }
+    getAtaMappedByPubId<T>(PublicationID: number): Observable<T> {
+        let endpointUrl = `${this._getAtaMappingByPublicationID}/${PublicationID}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaMappedByPubId(PublicationID));
+            });
+    }
 }

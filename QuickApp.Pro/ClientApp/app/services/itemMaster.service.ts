@@ -276,5 +276,15 @@ export class ItemMasterService {
     newItemMasterExportInfoClass(action: any) {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
     }
+   
+    updateItemMasterAircraft(ItemMasterAircraftMappingId: number) {
+        return this.itemMasterEndpoint.updateItemMasterAircraftEndpoint<any>(ItemMasterAircraftMappingId);
+    }
+    updateItemMasterATA(ItemMasterATAMappingId: number) {
+        return this.itemMasterEndpoint.updateItemMasterATAEndpoint<any>(ItemMasterATAMappingId);
+    }
+    updateItemMasterPurchaseSale(ItemMasterPurchaseSaleId: number) {
+        return this.itemMasterEndpoint.updateItemMasterPurchaseSaleEndpoint<any>(ItemMasterPurchaseSaleId);
+    }
 }
 
