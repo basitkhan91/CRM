@@ -9,6 +9,14 @@
 .add-color {
     border: 1px solid grey;
 }
+.add-icon-new {
+    border-radius: 15px !important;
+    background: #337ab7;
+    height: 24px;
+    display: inline-block;
+    width: 25px;
+    margin-left: -45px;
+}
 
 .font-padding {
     font-weight: 600;
@@ -67,24 +75,13 @@
     padding-top: 10px;
 }
 
-/*p-multiselect {
-    width: 118px;
-    height: 25px !important;
-    padding: 1px 12px !important;
-    font-size: 14px !important;
-    border-radius: 0px !important;
-    border: 1px thin black;
-}*/
 .multi-general p-multiselect {
     width: 207px !important;
     height: 27px !important;
 }
-
-/*p-multiselect .ui-multiselect-filter-container {
-    margin-left: 10px !important;
-    margin-top: 3px !important;
-}*/
-
+.new-checkbox {
+    margin-top: 10px !important;
+}
 .add-margin6 {
     margin-top: 10px;
     margin-left: 21px;
@@ -255,6 +252,9 @@ margin-top: 0px !important;
 }
 .control-label {
     margin-top: 10px;
+    text-align: left;
+    font-size: 12px !important;
+    width: 150px !important;
 }
 .control-item{
   width: 140px !important;
@@ -269,3 +269,8 @@ margin-top: 0px !important;
 .form-check-input .modal-body input{
     width: 20px !important;
 }
+
+.select-value {
+    margin-top: 6px;
+}
+

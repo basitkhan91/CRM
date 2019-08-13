@@ -307,6 +307,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ManufacturerValue: any;
     alternatePn: any;
     ataform: FormGroup;
+    manufacturerValue: FormGroup;
     ataChaptherSelected : any;
     newFields = {
         Condition:"NEW",
@@ -335,7 +336,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     aircraftData: any;
     selectedAtAChapther: ATAChapter[];
-
     ataMappedList :any;
     constructor(private fb: FormBuilder, public countryservice: CustomerService,private Dashnumservice:DashNumberService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService,public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
@@ -514,6 +514,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.ataform = this.fb.group({
             'atanumber': new FormControl('', Validators.required),
             'atasubchaptername': new FormControl('', Validators.required)
+        });
+        this.manufacturerValue = this.fb.group({
+            'manufacturerId': new FormControl('', Validators.required)
         });
         this.addFieldValue();
         this.getAtachapter();
