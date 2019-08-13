@@ -10,5 +10,7 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<DAL.Models.Publication> GetPublications();
         IEnumerable<object> GetPubPNMappingData(string id);
+        IEnumerable<object> GetAircraftMappingDataById(long Publicationid);
+        IEnumerable<object> GetATAMappingDataById(long Publicationid);
     }
 }
