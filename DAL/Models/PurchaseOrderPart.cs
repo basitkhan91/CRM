@@ -26,6 +26,7 @@ namespace DAL.Models
         public string ConditionCode { get; set; }
         public Nullable<long> UOMId { get; set; }
         public Nullable<short> QuantityOrdered { get; set; }
+        public Nullable<int> QuantityBackOrdered { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
         public Nullable<short> DiscountPerUnit { get; set; }
         public Nullable<short> DiscountCostPerUnit { get; set; }
@@ -58,6 +59,8 @@ namespace DAL.Models
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
         public virtual List<PartStockLineMapper> PartStockLineMapper { get; set; }
+        public virtual ICollection<StockLine> StockLine { get; set; }
+        public virtual ICollection<TimeLife> TimeLife { get; set; }
 
         public virtual Address POPartSplitAddress { get; set; }
     }

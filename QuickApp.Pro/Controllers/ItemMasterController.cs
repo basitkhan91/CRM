@@ -1216,6 +1216,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
                 }
         }
+
         //To post data in Purchase Sale Tab in Item Master
         [HttpPost("ItemMasterPurcSalePost")]
         public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale)

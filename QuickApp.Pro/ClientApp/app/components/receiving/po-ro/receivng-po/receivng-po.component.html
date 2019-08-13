@@ -18,8 +18,8 @@
                             <div>
                                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
                                     <!--<label class="radio-cstm wauto">-->
-                                        <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" required>
-                                        <span class="checkmark"></span> 
+                                    <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" required>
+                                    <span class="checkmark"></span>
                                     {{status.Value}}
                                     <!--</label>-->
                                 </div>
@@ -98,15 +98,15 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Need By</label>
-                            <p-calendar disabled="disabled" name="needByDate" class="pas-clder" [showIcon]="true"></p-calendar>
-                            <!--[(ngModel)]="purchaseOrderData.needByDate" #selects="ngModel" [ngModelOptions]="{standalone: true}" [minDate]="purchaseOrderData.dateRequested"-->
+                            <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested" [required]="true"></p-calendar>
+
+
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Vendor Contact</label>
-                            <input class="form-control" type="text" disabled="disabled" />
-                            <!--[(ngModel)]="purchaseOrderData.vendor.firstName"-->
+                            <input class="form-control" [(ngModel)]="purchaseOrderData.vendor.vendorName"  type="text" disabled="disabled" />
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -139,7 +139,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Contact Phone</label>
-                            <input disabled="disabled" class="form-control" type="text" pKeyFilter="pnum" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.workPhone">
+                            <input disabled="disabled" class="form-control" type="text" pKeyFilter="pnum" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.vendorPhone">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -171,23 +171,24 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Deferred Receiver</label>
-                            <div class="checkbox-cstm" style="margin-top: 4px">
+                            <input type="checkbox" [checked]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input">
+                            <!--<div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
-                                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input" autocomplete="off">
                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 </label>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Resale</label>
-                            <div class="checkbox-cstm" style="margin-top: 4px">
+                            <input type="checkbox" [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
+                            <!--<div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
-                                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input" autocomplete="off">
+                                    <input type="checkbox" [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 </label>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -313,7 +314,10 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>Cond <span class="clr-red">*</span></label>
-                                                        <select class="form-control" required [(ngModel)]="part.conditionId">
+                                                        <select class="form-control" required 
+                                                                [(ngModel)]="part.conditionId"
+                                                                #selects="ngModel"
+                                                                        [ngModelOptions]="{standalone: true}">
                                                             <option value="0">Select</option>
                                                             <option *ngFor="let condition of ConditionList" [ngValue]="condition.Key">{{condition.Value}}</option>
                                                         </select>
@@ -322,13 +326,13 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>QTY To Receive</label>
-                                                        <input type="text"  pInputText pKeyFilter="pnum" class="form-control" disabled="disabled" [value]="part.quantityOrdered" />
+                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" disabled="disabled" [value]="part.quantityOrdered" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>QTY Actually Received <span class="clr-red">*</span></label>
-                                                        <input type="text" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
+                                                        <input type="text" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
                                                     </div>
                                                 </div>
 
@@ -338,13 +342,13 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>QTY Rejected <span class="clr-red">*</span></label>
-                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" required />
+                                                        <input type="text"  [(ngModel)]="part.quantityRejected" pInputText pKeyFilter="pnum" class="form-control" required />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>GL Account <span class="clr-red">*</span></label>
-                                                        <select class="form-control" 
+                                                        <select class="form-control"
                                                                 [(ngModel)]="part.itemMaster.glAccountId"
                                                                 #selects="ngModel"
                                                                 [ngModelOptions]="{standalone: true}">
@@ -390,10 +394,10 @@
                                             </div>
 
                                             <div style="margin-left: 6px;" *ngIf="part.stocklineListObj != undefined && part.stocklineListObj.length > 0">
-                                                <h3 class="add-details-heading">Receiving Qty-  {{currentSLIndex + 1}}  of part {{part.itemMaster?.partNumber}}</h3>
-                                                <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="!part.isSameDetailsForAllParts">
+                                                <h3 class="add-details-heading">Receiving Qty {{ !part.isSameDetailsForAllParts ?  (currentSLIndex + 1) : "" }} of part {{ part.itemMaster?.partNumber }}</h3>
+                                                <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized && !part.isSameDetailsForAllParts">
                                                     <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(-1, part)"></i>
-                                                    <input [value]="currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                    <input [value]="currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
                                                     <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(1, part)"></i>
                                                     <p>Page {{currentSLIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
                                                 </div>
@@ -404,7 +408,7 @@
                                                             <div class="form-group">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
-                                                                        <input type="checkbox" class="form-control" (change)="toggleSameDetailsForAllParts($event, part)">
+                                                                        <input *ngIf="part.itemMaster.isSerialized" type="checkbox" class="form-control" (change)="toggleSameDetailsForAllParts($event, part)">
                                                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span> Same Details For All Parts
                                                                     </label>
                                                                 </div>
@@ -678,11 +682,11 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Unit Cost</label>
-                                                                <input type="text" class="form-control" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[currentSLIndex].purchaseOrderUnitCost" >
+                                                                <input type="text" class="form-control" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[currentSLIndex].purchaseOrderUnitCost">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Extended Cost</label>
-                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[currentSLIndex].purchaseOrderExtendedCost" >
+                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[currentSLIndex].purchaseOrderExtendedCost">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Parts Cert Num</label>
@@ -690,7 +694,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Cert By</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedBy"  type="text" pInputText>
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedBy" type="text" pInputText>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Certified Date</label>
@@ -747,24 +751,37 @@
 
                                                 <section>
                                                     <h3 class="add-details-heading" style="text-align: left;" *ngIf="part.itemMaster.isSerialized">Is Serialized</h3>
+                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
+                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(-1, part)"></i>
+                                                        <input [value]="currentTLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(1, part)"></i>
+                                                        <p>Page {{currentSERIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
+                                                    </div>
                                                     <div class="form-row">
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Serial Num</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].serialNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSERIndex].serialNumber" type="text" pInputText pKeyFilter="pnum">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </section>
 
-                                                <section>
-                                                    <h3 class="add-details-heading" style="text-align: left;">Time Life</h3>
+                                                <section *ngIf="part.itemMaster.isTimeLife">
+                                                    <h3 class="add-details-heading">Time Life - {{ currentTLIndex + 1 }}  of part {{ part.itemMaster?.partNumber }}</h3>
+                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
+                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(-1, part)"></i>
+                                                        <input [value]="currentTLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(1, part)"></i>
+                                                        <p>Page {{currentTLIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
+                                                    </div>
+
                                                     <div class="form-row">
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
-                                                                        <input type="checkbox" class="form-control" (click)="onChangeTimeLife()">
+                                                                        <input type="checkbox" class="form-control" (click)="onChangeTimeLife(part)">
                                                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span> Time Life Details Update Later
                                                                     </label>
                                                                 </div>
@@ -783,41 +800,41 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td>Remaining</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].cyclesRemaining" ></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesRemaining"></td>
                                                                     <td>Remaining</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].timeRemaining" ></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeRemaining"></td>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].lastSinceNew" ></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].lastSinceNew"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].cyclesSinceNew"></td>
-                                                                    <td>Since New</td>                                                      
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].timeSinceNew"></td>
-                                                                    <td>Since Ovh</td>                                                       
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].lastSinceOVH"></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceNew"></td>
+                                                                    <td>Since New</td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceNew"></td>
+                                                                    <td>Since Ovh</td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].lastSinceOVH"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].cyclesSinceOVH"></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceOVH"></td>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].timeSinceOVH" ></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceOVH"></td>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].lastSinceInspection"></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].lastSinceInspection"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].cyclesSinceInspection" ></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceInspection"></td>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].timeSinceInspection"></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceInspection"></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Repair</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].cyclesSinceRepair"></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceRepair"></td>
                                                                     <td>Since Repair</td>
-                                                                    <td><input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentSLIndex].timeSinceRepair"></td>
+                                                                    <td><input class="form-control" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceRepair"></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>
@@ -826,7 +843,7 @@
                                                     </div>
                                                 </section>
 
-                                                <section>
+                                                <section *ngIf="part.assetId != null">
                                                     <h3 class="add-details-heading" style="text-align: left;">Calibrated Equipment</h3>
                                                     <div class="form-row">
                                                         <div class="col-md-3">

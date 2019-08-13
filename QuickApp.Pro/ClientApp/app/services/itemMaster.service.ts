@@ -4,7 +4,7 @@
 // ===============================
 
 import { Injectable } from '@angular/core';
-import { Router, NavigationExtras } from "@angular/router";
+import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -19,8 +19,11 @@ import { Role } from '../models/role.model';
 //import { ItemMaster } from '../models/itemMaster.model';
 import { AuditHistory } from '../models/audithistory.model';
 
-export type RolesChangedOperation = "add" | "delete" | "modify";
-export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
+export type RolesChangedOperation = 'add' | 'delete' | 'modify';
+export type RolesChangedEventArg = {
+  roles: Role[] | string[];
+  operation: RolesChangedOperation;
+};
 
 @Injectable()
 export class ItemMasterService {
@@ -286,5 +289,5 @@ export class ItemMasterService {
     updateItemMasterPurchaseSale(ItemMasterPurchaseSaleId: number) {
         return this.itemMasterEndpoint.updateItemMasterPurchaseSaleEndpoint<any>(ItemMasterPurchaseSaleId);
     }
-}
 
+}

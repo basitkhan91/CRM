@@ -807,4 +807,10 @@ export class ItemMasterEndpoint extends EndpointFactory {
             });
     }
     
+    saveATAMapping<T>(mappedData: any):Observable<T>{
+        return this.http.post<T>( this._ATAMappingUrl, JSON.stringify(mappedData), this.getRequestHeaders())
+        .catch(err => {
+            return this.handleError( err , () => this.saveATAMapping(mappedData));
+        })
+    }
 }

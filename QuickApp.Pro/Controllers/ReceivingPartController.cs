@@ -144,6 +144,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(receivingData);
         }
 
+
+        [HttpPost("receiveParts")]
+        public IActionResult ReceiveParts([FromBody] PurchaseOrder purchaseOrder)
+        {
+
+            return Ok();
+        }
+
         #endregion Public Methods
 
         #region Private Methods
