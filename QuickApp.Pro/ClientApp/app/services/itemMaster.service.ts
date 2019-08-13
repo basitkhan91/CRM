@@ -289,5 +289,9 @@ export class ItemMasterService {
     updateItemMasterPurchaseSale(ItemMasterPurchaseSaleId: number) {
         return this.itemMasterEndpoint.updateItemMasterPurchaseSaleEndpoint<any>(ItemMasterPurchaseSaleId);
     }
+    postATAMapping(action: any) {
+        return this.itemMasterEndpoint.saveATAMapping<any>(action);
+    }
+
 
 }
