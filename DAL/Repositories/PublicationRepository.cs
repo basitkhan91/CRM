@@ -64,6 +64,48 @@ namespace DAL.Repositories
             return data;
             throw new NotImplementedException();
         }
+        public IEnumerable<object> GetAircraftMappingDataById(long PublicationID)
+        {
+            var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
+                        join it in _appContext.ItemMasterAircraftMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID
+
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.AircraftTypeId,
+                            it.AircraftModelId,
+                            it.DashNumberId,
+                            it.DashNumber,
+                            it.AircraftType,
+                            it.AircraftModel,
+                            it.Memo,
+                            it.MasterCompanyId
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+        public IEnumerable<object> GetATAMappingDataById(long PublicationID)
+        {
+            var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
+                        join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.ATAChapterId,
+                            it.ATAChapterCode,
+                            it.ATAChapterName,
+                            it.ATASubChapterId,
+                            it.ATASubChapterDescription,
+                            it.MasterCompanyId
+                        }).ToList();
+            return data;
+        }
 
 
     }

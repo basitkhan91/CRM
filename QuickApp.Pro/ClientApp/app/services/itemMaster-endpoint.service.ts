@@ -49,15 +49,19 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly getAuditById: string = "/api/ItemMaster/audits";
     private readonly _itemclassificationUrlNew: string = "/api/ItemMaster/itemNonStockclasspost";
     private readonly _itemNonstockclassificationGetUrl: string = "/api/ItemMaster/GetNonStockClsiifications";
+    //post
     private readonly _itemPNMappingUrlNew: string = "/api/ItemMaster/PNIMMappingPost";
-    
     private readonly _ItemMasterAircraftPostUrlNew: string = "/api/ItemMaster/ItemMasterAircraftPost";
     private readonly _ItemMasterATAPostUrlNew: string = "/api/ItemMaster/ItemMasterATAPost";
     private readonly _ItemMasterPurcSaleUrlNew: string = "/api/ItemMaster/ItemMasterPurcSalePost";
+    //get
     private readonly _getAircraftMapped: string = "/api/ItemMaster/getAircraftMapped";
     private readonly _getATAMapped: string = "/api/ItemMaster/getATAMapped";
     private readonly _ItemMasterExportInfoUrlNew: string = "/api/ItemMaster/ExportInfoPostBy_IMastID";
-    private readonly _ATAMappingUrl : string = '/api/ItemMaster/ItemMasterATAPost';
+    //update
+    private readonly _ItemMasterAircraftUpdate: string = "/api/ItemMaster/ItemMasterAircraftUpdate";
+    private readonly _ItemMasterATAUpdate: string = "/api/ItemMaster/ItemMasterAtaUpdate";
+    private readonly _ItemMasterPurcSaleUpdate: string = "/api/ItemMaster/ItemMasterPurcSaleUpdate";
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -781,6 +785,28 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getNewitemExportInfoEndpoint(userObject));
             });
     }
+    updateItemMasterAircraftEndpoint<T>(ItemMasterAircraftMappingId: number,): Observable<T> {
+
+        return this.http.put<T>(this._ItemMasterAircraftUpdate, JSON.stringify(ItemMasterAircraftMappingId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterAircraftEndpoint(ItemMasterAircraftMappingId));
+            });
+    }
+    updateItemMasterATAEndpoint<T>(ItemMasterATAMappingId: number, ): Observable<T> {
+
+        return this.http.put<T>(this._ItemMasterATAUpdate, JSON.stringify(ItemMasterATAMappingId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterATAEndpoint(ItemMasterATAMappingId));
+            });
+    }
+    updateItemMasterPurchaseSaleEndpoint<T>(ItemMasterPurchaseSaleId: number, ): Observable<T> {
+
+        return this.http.put<T>(this._ItemMasterPurcSaleUpdate, JSON.stringify(ItemMasterPurchaseSaleId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterPurchaseSaleEndpoint(ItemMasterPurchaseSaleId));
+            });
+    }
+    
     saveATAMapping<T>(mappedData: any):Observable<T>{
         return this.http.post<T>( this._ATAMappingUrl, JSON.stringify(mappedData), this.getRequestHeaders())
         .catch(err => {

@@ -27,290 +27,267 @@ export type RolesChangedEventArg = {
 
 @Injectable()
 export class ItemMasterService {
-  enableExternal: boolean = false;
-  listEquipmentCollection: any;
-  itemmasterObj: any[];
-  listNonStockCollection: any;
-  listCollection: any;
-  isEditMode: boolean = false;
-  listNonstock: boolean;
-  listEquipment: boolean;
-  listStock: boolean = true;
-  public static readonly roleAddedOperation: RolesChangedOperation = 'add';
-  public static readonly roleDeletedOperation: RolesChangedOperation = 'delete';
-  public static readonly roleModifiedOperation: RolesChangedOperation =
-    'modify';
-  public indexObj = new Subject<any>();
-  private _rolesChanged = new Subject<RolesChangedEventArg>();
-  public currentUrl = this.router.url;
-  public alertObj = new Subject<any>();
-  public alertChangeObject$ = this.alertObj.asObservable();
-  public bredcrumbObj = new Subject<any>();
-  public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
-  public stockable = new Subject<any>();
-  public stockableObjChangeObject$ = this.stockable.asObservable();
-  isCapsEditMode: boolean;
-  capabilityCollection: any;
-  capsCollection: any;
+	enableExternal: boolean = false;
+	listEquipmentCollection: any;
+	itemmasterObj: any[];
+    listNonStockCollection: any;
+    listCollection: any;
+    isEditMode: boolean=false;
+    listNonstock: boolean;
+    listEquipment: boolean;
+    listStock: boolean=true;
+    public static readonly roleAddedOperation: RolesChangedOperation = "add";
+    public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
+    public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
+	public indexObj = new Subject<any>();
+	private _rolesChanged = new Subject<RolesChangedEventArg>();
+	public currentUrl = this.router.url;
+	public alertObj = new Subject<any>();
+	public alertChangeObject$ = this.alertObj.asObservable();
+	public bredcrumbObj = new Subject<any>();
+	public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
+    public stockable = new Subject<any>();
+    public stockableObjChangeObject$ = this.stockable.asObservable();
+    isCapsEditMode: boolean;
+    capabilityCollection: any;
+    capsCollection: any;
+   
+   
+    constructor(
+        private router: Router,
+        private http: HttpClient,
+        private authService: AuthService,
+        private itemMasterEndpoint: ItemMasterEndpoint) { }
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private authService: AuthService,
-    private itemMasterEndpoint: ItemMasterEndpoint
-  ) {}
+    getItemMasterById(id: number) {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getItemMasterById<any[]>(id));
+    }
 
-  getItemMasterById(id: number) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getItemMasterById<any[]>(id)
-    );
-  }
+    getItemMasterList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemMasterEndpoint<any[]>());
+    }
 
-  getItemMasterList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getitemMasterEndpoint<any[]>()
-    );
-  }
+    getItemMasterCapsList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemMasterCapsDataEndpoint<any[]>());
+    }
 
-  getItemMasterCapsList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getitemMasterCapsDataEndpoint<any[]>()
-    );
-  }
+	getAircaftManafacturerList(itemid:any) {
+		return Observable.forkJoin(
+			this.itemMasterEndpoint.getAircraftManafacturerList<any[]>(itemid));
+	}
 
-  getAircaftManafacturerList(itemid: any) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getAircraftManafacturerList<any[]>(itemid)
-    );
-  }
+	getAircaftList(itemid: any) {
+		return Observable.forkJoin(
+			this.itemMasterEndpoint.getAircraftList<any[]>(itemid));
+	}
+	getCpaesData(itemid: any) {
+		return Observable.forkJoin(
+			this.itemMasterEndpoint.getCpaesData<any[]>(itemid));
+	}
+    getItemStockList(value) {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemListEndpoint<any[]>(value));
+	}
+	getRolesData() {
+		return Observable.forkJoin(
+			this.itemMasterEndpoint.getRolesData<any[]>());
+	}
+	getRolesDataByUserId(event) {
+		return Observable.forkJoin(
+			this.itemMasterEndpoint.getRolesDatayRoleId<any[]>(event));
+	}
+    getItemstock() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getStocklist<any[]>());
+    }
 
-  getAircaftList(itemid: any) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getAircraftList<any[]>(itemid)
-    );
-  }
-  getCpaesData(itemid: any) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getCpaesData<any[]>(itemid)
-    );
-  }
-  getItemStockList(value) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getitemListEndpoint<any[]>(value)
-    );
-  }
-  getRolesData() {
-    return Observable.forkJoin(this.itemMasterEndpoint.getRolesData<any[]>());
-  }
-  getRolesDataByUserId(event) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getRolesDatayRoleId<any[]>(event)
-    );
-  }
-  getItemstock() {
-    return Observable.forkJoin(this.itemMasterEndpoint.getStocklist<any[]>());
-  }
 
-  getItemNonstockList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getitemNonstockListEndpoint<any[]>()
-    );
-  }
+    getItemNonstockList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemNonstockListEndpoint<any[]>());
+    }
 
-  updaateEquipmentDelete(action: any) {
-    return this.itemMasterEndpoint.updateDeleteStatus(action);
-  }
+    updaateEquipmentDelete(action: any) {
+        return this.itemMasterEndpoint.updateDeleteStatus(action);
+    }
 
-  getItemeStockList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getitemStockListEndpoint<any[]>()
-    );
-  }
+    getItemeStockList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemStockListEndpoint<any[]>());
+    }
 
-  getItemEquipmentList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getitemEquipmentListEndpoint<any[]>()
-    );
-  }
+    getItemEquipmentList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemEquipmentListEndpoint<any[]>());
+    }
 
-  getManufacturerList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getManufacturerEndpoint<any[]>()
-    );
-  }
+    getManufacturerList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getManufacturerEndpoint<any[]>());
+    }
 
-  getPrtnumberslistList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getPartnumbersEndpoint<any>()
-    );
-  }
+    getPrtnumberslistList () {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getPartnumbersEndpoint<any>());
+    }
 
-  geteuipmentList() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getEquipmentEndpoint<any[]>()
-    );
-  }
+    geteuipmentList() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getEquipmentEndpoint<any[]>());
+    }
 
-  getAircraft() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getAircraftmodels<any[]>()
-    );
-  }
 
-  getAircraftTypes(selectedvalues) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getAirccraftTypes<any>(selectedvalues)
-    );
-  }
+    getAircraft() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getAircraftmodels<any[]>());
+    }
 
-  getWarningdata() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getwarningdataEndpoint<any[]>()
-    );
-  }
+    getAircraftTypes(selectedvalues) {
 
-  getCountrydata() {
-    return Observable.forkJoin(this.itemMasterEndpoint.getCountrysTypes<any>());
-  }
-  newItemMaster(itemMaster: any) {
-    return this.itemMasterEndpoint.getNewitemMasterEndpoint<any>(itemMaster);
-  }
-  saveManfacturerinforcapes(data) {
-    return this.itemMasterEndpoint.saveItemmastercapesmaninfo<any>(data);
-  }
-  saveAircraftinfo(data) {
-    return this.itemMasterEndpoint.saveAircraftinfo<any>(data);
-  }
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getAirccraftTypes<any>(selectedvalues));
+    }
 
-  savemanufacutrer(itemMaster: any) {
-    return this.itemMasterEndpoint.getNewManufacturerEndpoint<any>(itemMaster);
-  }
+    getWarningdata() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getwarningdataEndpoint<any[]>());
+    } 
 
-  saveequipment(itemMaster: any) {
-    return this.itemMasterEndpoint.getNewEquipmentEndpoint<any>(itemMaster);
-  }
+    getCountrydata() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getCountrysTypes<any>());
+    }
+	newItemMaster(itemMaster: any) {
+		return this.itemMasterEndpoint.getNewitemMasterEndpoint<any>(itemMaster);
+	}
+	saveManfacturerinforcapes(data) {
+		return this.itemMasterEndpoint.saveItemmastercapesmaninfo<any>(data);
+	}
+	saveAircraftinfo(data) {
+		return this.itemMasterEndpoint.saveAircraftinfo<any>(data);
+	}
 
-  historyItemMaster(itemMasterId: number) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getHistoryitemMasterEndpoint<AuditHistory[]>(
-        itemMasterId
-      )
-    );
-  }
+    savemanufacutrer(itemMaster: any) {
+        return this.itemMasterEndpoint.getNewManufacturerEndpoint<any>(itemMaster);
+    }
 
-  getItemMaster(itemMasterId?: number) {
-    return this.itemMasterEndpoint.getEdititemMasterEndpoint<any>(itemMasterId);
-  }
+    saveequipment(itemMaster: any) {
+        return this.itemMasterEndpoint.getNewEquipmentEndpoint<any>(itemMaster);
+    }
 
-  updateItemMaster(itemMaster: any) {
-    return this.itemMasterEndpoint.getUpdateitemMasterEndpoint<any>(
-      itemMaster,
-      itemMaster
-    );
-  }
 
-  updateNonStockItemMaster(itemMaster: any) {
-    return this.itemMasterEndpoint.getUpdateitemMasterNonstockEndpoint<any>(
-      itemMaster,
-      itemMaster
-    );
-  }
+    historyItemMaster(itemMasterId: number) {
+        return Observable.forkJoin(this.itemMasterEndpoint.getHistoryitemMasterEndpoint<AuditHistory[]>(itemMasterId));
+    }
 
-  updateEquipment(itemMaster: any) {
-    return this.itemMasterEndpoint.getUpdateitemMasterEquipmentEndpoint<any>(
-      itemMaster,
-      itemMaster
-    );
-  }
+    getItemMaster(itemMasterId?: number) {
+        return this.itemMasterEndpoint.getEdititemMasterEndpoint<any>(itemMasterId);
+    }
 
-  deleteItemMaster(itemMasterId: number) {
-    return this.itemMasterEndpoint.getDeleteitemMasterEndpoint(itemMasterId);
-  }
-  newWarning(itemMaster: any) {
-    return this.itemMasterEndpoint.getNewwarningEndpoint<any>(itemMaster);
-  }
+    updateItemMaster(itemMaster: any) {
+        return this.itemMasterEndpoint.getUpdateitemMasterEndpoint<any>(itemMaster,itemMaster);
+    }
 
-  getDescriptionbypart(partNumber) {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getDescriptionbypart<any[]>(partNumber)
-    );
-  }
+    updateNonStockItemMaster(itemMaster: any) {
+        return this.itemMasterEndpoint.getUpdateitemMasterNonstockEndpoint<any>(itemMaster, itemMaster);
+    }
 
-  updateActionforActiveforstock(itemmaster: any) {
-    return this.itemMasterEndpoint.getUpdatestockEndpointforActive(itemmaster);
-  }
 
-  getintegrationtypes(itemMasterId: any) {
-    return this.itemMasterEndpoint.getIntegrationEndpoint<any[]>(itemMasterId);
-  }
-  Addmultiintegrations(action: any) {
-    return this.itemMasterEndpoint.getMultiIntegrations<any>(action);
-  }
+    updateEquipment(itemMaster: any) {
+        return this.itemMasterEndpoint.getUpdateitemMasterEquipmentEndpoint<any>(itemMaster, itemMaster);
+    }
 
-  //for Storing Air craft Type,Data
-  AddItemMasteraircrafttype(action: any) {
-    return this.itemMasterEndpoint.getItemMasteraircrafttypeEndpoint<any>(
-      action
-    );
-  }
-  Addmultileaves(action: any) {
-    return this.itemMasterEndpoint.getMultileaves<any>(action);
-  }
+    deleteItemMaster(itemMasterId: number) {
 
-  getCapabilityData(itemMasterId?: number) {
-    return this.itemMasterEndpoint.getCapabilityDataEndpoint<any>(itemMasterId);
-  }
+        return this.itemMasterEndpoint.getDeleteitemMasterEndpoint(itemMasterId);
 
-  getAudit(itemMasterId: number) {
-    return this.itemMasterEndpoint.getAudit<any[]>(itemMasterId);
-  }
+    }
+    newWarning(itemMaster: any) {
+        return this.itemMasterEndpoint.getNewwarningEndpoint<any>(itemMaster);
+    }
 
-  getAllNonStockitems() {
-    return Observable.forkJoin(
-      this.itemMasterEndpoint.getitemclassificationnonStockEndpoint<any[]>()
-    );
-  }
+	getDescriptionbypart(partNumber) {
+		return Observable.forkJoin(
+			this.itemMasterEndpoint.getDescriptionbypart<any[]>(partNumber));
+	}
+	
+	updateActionforActiveforstock(itemmaster: any) {
+		return this.itemMasterEndpoint.getUpdatestockEndpointforActive(itemmaster);
+	}
 
-  newNonstockClass(action: any) {
-    return this.itemMasterEndpoint.getNewitemclassificationEndpoint<any>(
-      action
-    );
-  }
+	getintegrationtypes(itemMasterId: any) {
+		return this.itemMasterEndpoint.getIntegrationEndpoint<any[]>(itemMasterId);
+	}
+	Addmultiintegrations(action: any) {
+		return this.itemMasterEndpoint.getMultiIntegrations<any>(action);
+	}
 
-  updateNonstockClass(action: any) {
-    return this.itemMasterEndpoint.getUpdateActionEndpoint(
-      action,
-      action.itemNonClassificationId
-    );
-  }
-  // get all aircraft models
-  getAllAirCraftModels() {
-    return this.itemMasterEndpoint.getAllAircraftList();
-  }
-  newPNIMMapping(action: any) {
-    return this.itemMasterEndpoint.getPNIMMappingEndpoint<any>(action);
-  }
-  newItemMasterAircarftClass(action: any) {
-    return this.itemMasterEndpoint.getNewitemAircraftEndpoint<any>(action);
-  }
-  newItemMasterATAClass(action: any) {
-    return this.itemMasterEndpoint.getNewitemATAEndpoint<any>(action);
-  }
-  newItemMasterPurcSaleClass(action: any) {
-    return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
-  }
-  getMappedAirCraftDetails(ItemmasterId: number) {
-    return this.itemMasterEndpoint.getAircraftMappingEndpoint<any>(
-      ItemmasterId
-    );
-  }
-  getMappedATADetails(ItemmasterId: number) {
-    return this.itemMasterEndpoint.getATAMappingEndpoint<any>(ItemmasterId);
-  }
-  newItemMasterExportInfoClass(action: any) {
-    return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
-  }
-  postATAMapping(action: any) {
-    return this.itemMasterEndpoint.saveATAMapping<any>(action);
-  }
+	//for Storing Air craft Type,Data
+	AddItemMasteraircrafttype(action: any) {
+		return this.itemMasterEndpoint.getItemMasteraircrafttypeEndpoint<any>(action);
+	}
+	Addmultileaves(action: any) {
+		return this.itemMasterEndpoint.getMultileaves<any>(action);
+    }
+
+    getCapabilityData(itemMasterId?: number) {
+        return this.itemMasterEndpoint.getCapabilityDataEndpoint<any>(itemMasterId);
+    }
+
+    getAudit(itemMasterId: number) {
+        return this.itemMasterEndpoint.getAudit<any[]>(itemMasterId);
+    }
+
+    getAllNonStockitems() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getitemclassificationnonStockEndpoint<any[]>());
+    }
+
+    newNonstockClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemclassificationEndpoint<any>(action);
+    }
+    
+
+    updateNonstockClass(action: any) {
+        return this.itemMasterEndpoint.getUpdateActionEndpoint(action, action.itemNonClassificationId);
+    }
+     // get all aircraft models
+    getAllAirCraftModels(){
+        return this.itemMasterEndpoint.getAllAircraftList();
+    }
+    newPNIMMapping(action: any) {
+        return this.itemMasterEndpoint.getPNIMMappingEndpoint<any>(action);
+    }
+    newItemMasterAircarftClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemAircraftEndpoint<any>(action);
+    }
+    newItemMasterATAClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemATAEndpoint<any>(action);
+    }
+    newItemMasterPurcSaleClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
+    }
+    getMappedAirCraftDetails(ItemmasterId: number) {
+        return this.itemMasterEndpoint.getAircraftMappingEndpoint<any>(ItemmasterId);
+    }
+    getMappedATADetails(ItemmasterId: number) {
+        return this.itemMasterEndpoint.getATAMappingEndpoint<any>(ItemmasterId);
+    } 
+    newItemMasterExportInfoClass(action: any) {
+        return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
+    }
+   
+    updateItemMasterAircraft(ItemMasterAircraftMappingId: number) {
+        return this.itemMasterEndpoint.updateItemMasterAircraftEndpoint<any>(ItemMasterAircraftMappingId);
+    }
+    updateItemMasterATA(ItemMasterATAMappingId: number) {
+        return this.itemMasterEndpoint.updateItemMasterATAEndpoint<any>(ItemMasterATAMappingId);
+    }
+    updateItemMasterPurchaseSale(ItemMasterPurchaseSaleId: number) {
+        return this.itemMasterEndpoint.updateItemMasterPurchaseSaleEndpoint<any>(ItemMasterPurchaseSaleId);
+    }
+
 }

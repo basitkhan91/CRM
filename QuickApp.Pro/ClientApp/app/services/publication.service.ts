@@ -101,11 +101,16 @@ export class PublicationService {
   postMappedPartNumbers(actionData) {
     return this.publicationEndpoint.postPartNumberMappedData(actionData);
   }
-
   aircraftInformationSearch(searchUrl, publicationId?) {
     return this.publicationEndpoint.getAircraftInformationBySearch(
       searchUrl,
       publicationId
     );
   }
+    getAircraftMappedByPublicationId(PublicationID: number) {
+        return this.publicationEndpoint.getAirMappedByPubId<any>(PublicationID);
+    }
+    getAtaMappedByPublicationId(PublicationID: number) {
+        return this.publicationEndpoint.getAtaMappedByPubId<any>(PublicationID);
+    }
 }

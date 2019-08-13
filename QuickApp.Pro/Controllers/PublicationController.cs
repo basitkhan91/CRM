@@ -178,10 +178,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
-
-      
-
-        
+                
         [HttpPost("PubPNACMappingPost")]
         public IActionResult InsertPNACMapping([FromBody] PublicationPNACMappingModel PnAcMapping)
         {
@@ -253,53 +250,103 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("PNIMMappingPost")]
+        public IActionResult CreatePNIMast([FromBody] PublicationItemMasterMapping[] IMPNMapping)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (IMPNMapping == null)
+                        return BadRequest($"{nameof(IMPNMapping)} cannot be null");
+                    for (int i = 0; i <= IMPNMapping.Length - 1; i++)
+                    {
+                        PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
+                        if (_context.PublicationItemMasterMapping.Any(o => o.PublicationItemMasterMappingId == IMPNMapping[i].PublicationItemMasterMappingId))
+                        {
+                            var existingresule = _context.PublicationItemMasterMapping.Where(c => c.PublicationId == IMPNMapping[i].PublicationId).FirstOrDefault();
+                            
+                            cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
+                            cp.PublicationId = IMPNMapping[i].PublicationId;
+                            cp.PartNumber = IMPNMapping[i].PartNumber;
+                            cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+                            cp.ItemClassification = IMPNMapping[i].ItemClassification;
+                            cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
+                            cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
+                            cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
+                            cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
+                            cp.CreatedBy = IMPNMapping[i].CreatedBy;
+                            cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
+                            cp.CreatedDate = DateTime.Now;
+                            cp.UpdatedDate = DateTime.Now;
+                            cp.IsActive = IMPNMapping[i].IsActive;
+                            _context.PublicationItemMasterMapping.Update(cp);
+                            _context.SaveChanges();
+                        }
+                        else
+                        {
+                            cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
+                            cp.PublicationId = IMPNMapping[i].PublicationId;
+                            cp.PartNumber = IMPNMapping[i].PartNumber;
+                            cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+                            cp.ItemClassification = IMPNMapping[i].ItemClassification;
+                            cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
+                            cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
+                            cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
+                            cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
+                            cp.CreatedBy = IMPNMapping[i].CreatedBy;
+                            cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
+                            cp.CreatedDate = DateTime.Now;
+                            cp.UpdatedDate = DateTime.Now;
+                            cp.IsActive = IMPNMapping[i].IsActive;
 
-		[HttpPost("PNIMMappingPost")]
-		public IActionResult CreatePNIMast([FromBody] PublicationItemMasterMapping[] IMPNMapping)
-		{
-			try
-			{
+                            _context.PublicationItemMasterMapping.Add(cp);
+                            _context.SaveChanges();
+                        }
+                    }
 
-			
-				if (ModelState.IsValid)
-				{
-					if (IMPNMapping == null)
-						return BadRequest($"{nameof(IMPNMapping)} cannot be null");
-					for (int i = 0; i <= IMPNMapping.Length - 1; i++)
-					{
-						
+                }
 
-						PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
-						cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
-						cp.PublicationId = IMPNMapping[i].PublicationId;
-						cp.PartNumber = IMPNMapping[i].PartNumber;
-						cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
-						cp.ItemClassification = IMPNMapping[i].ItemClassification;
-						cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
-						cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
-						cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
-						cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
-						cp.CreatedBy = IMPNMapping[i].CreatedBy;
-						cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
-						cp.CreatedDate = DateTime.Now;
-						cp.UpdatedDate = DateTime.Now;
-						cp.IsActive = IMPNMapping[i].IsActive;
+                return Ok(ModelState);
+                { }
 
-						_context.PublicationItemMasterMapping.Add(cp);
-						_context.SaveChanges();
-					}
-				}
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
-				return Ok(ModelState);
-				{ }
+        }
 
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+        [HttpGet("getItemAircraftMappedByPublcationID/{PublicationId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult aircraftMapped(long PublicationId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataById(PublicationId);
 
-		}
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemATAMappedByPublcationID/{PublicationId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult ataMapped(long PublicationId)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataById(PublicationId);
 
-	}
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+    }
 }
