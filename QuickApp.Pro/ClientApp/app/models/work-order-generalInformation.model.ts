@@ -5,7 +5,7 @@ export class workOrderGeneralInfo {
   openDate: Date;
   workOrderStatus: string;
   customerId: number;
-  customerCodeId: number;
+  customerCodeId: number ;
   customerReference: string;
   isContract: boolean;
   contract: string;

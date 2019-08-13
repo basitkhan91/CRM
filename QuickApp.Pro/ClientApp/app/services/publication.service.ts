@@ -100,7 +100,13 @@ export class PublicationService {
   // Save Part Number Mapping
   postMappedPartNumbers(actionData) {
     return this.publicationEndpoint.postPartNumberMappedData(actionData);
-    }
+  }
+  aircraftInformationSearch(searchUrl, publicationId?) {
+    return this.publicationEndpoint.getAircraftInformationBySearch(
+      searchUrl,
+      publicationId
+    );
+  }
     getAircraftMappedByPublicationId(PublicationID: number) {
         return this.publicationEndpoint.getAirMappedByPubId<any>(PublicationID);
     }

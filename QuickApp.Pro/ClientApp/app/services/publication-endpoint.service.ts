@@ -24,7 +24,8 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _getAtaMappingByPublicationID: string = '/api/Publication/getItemAtaMappedByPublcationID';
   private readonly _publicationPNMappingData: string =
     '/api/Publication/GetPubPNMappedData_PNID';
-
+  private readonly _AircraftInformationSearch: string =
+    'getDashListBy_MUTLI_MID_TID_DID/';
   get getCodeUrl() {
     return this.configurations.baseUrl + this._publicationGetUrl;
   }
@@ -166,7 +167,21 @@ export class PublicationEndpointService extends EndpointFactory {
           this.postPartNumberMappedData(object)
         );
       });
-    }
+
+  }
+
+  getAircraftInformationBySearch<T>(searchUrl, publicationId?): Observable<T> {
+    console.log(searchUrl);
+    return this.http
+      .get<T>(`${this._AircraftInformationSearch}${searchUrl}`)
+      .catch(err => {
+        return this.handleError(err, () =>
+          this.getAircraftInformationBySearch(searchUrl, publicationId)
+        );
+      });
+  }
+
+
     getAirMappedByPubId<T>(PublicationID: number): Observable<T> {
         let endpointUrl = `${this._getAirMappingByPublicationID}/${PublicationID}`;
 
