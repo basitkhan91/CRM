@@ -1191,36 +1191,32 @@ namespace QuickApp.Pro.Controllers
        
         //To post data in ATA Chapter Tab in Item Master
         [HttpPost("ItemMasterATAPost")]
-        public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping)
+        public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping[] itemMasterATAMapping)
         {
-          if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                for (int i = 0; i < itemMasterATAMapping.Length; i++)
                 {
-                    if (_context.ItemMasterATAMapping.Any(o => o.ItemMasterId == itemMasterATAMapping.ItemMasterId))
-                    {
-                        var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterId == itemMasterATAMapping.ItemMasterId).FirstOrDefault();
-                        existingresule.UpdatedDate = DateTime.Now;
-                        existingresule.UpdatedBy = itemMasterATAMapping.UpdatedBy;
-                        _unitOfWork.Repository<ItemMasterATAMapping>().Update(existingresule);
-                        _unitOfWork.SaveChanges();
-                        return Ok(itemMasterATAMapping);
-                    }
-                    else
-                    {
-                        _unitOfWork.Repository<ItemMasterATAMapping>().Add(itemMasterATAMapping);
-                        _unitOfWork.SaveChanges();
-                        return Ok(itemMasterATAMapping);
-                    }
+                    _unitOfWork.Repository<ItemMasterATAMapping>().Add(itemMasterATAMapping[i]);
+                    _unitOfWork.SaveChanges();
                 }
-                else
-                {
-                    return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
-                }
-        }
+            }
+            else
+            {
+                return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
+            }
 
-        //To post data in Purchase Sale Tab in Item Master
-        [HttpPost("ItemMasterPurcSalePost")]
+            return Ok(ModelState);
+           
+        }
+    
+
+    //To post data in Purchase Sale Tab in Item Master
+    [HttpPost("ItemMasterPurcSalePost")]
         public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale)
         {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     for (int i = 0; i < itemMasterPurchaseSale.Length; i++)
@@ -1234,7 +1230,10 @@ namespace QuickApp.Pro.Controllers
                 {
                     return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
                 }
-
+            }catch(Exception ex)
+            {
+                throw;
+            }
                  return Ok(ModelState);
         }
         
@@ -1338,7 +1337,7 @@ namespace QuickApp.Pro.Controllers
 
                 if (_context.ItemMasterAircraftMapping.Any(o => o.ItemMasterId == id))
                 {
-                    var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterId == id).FirstOrDefault();
+                    var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterATAMappingId == id).FirstOrDefault();
                     existingresule.PartNumber = itemMasterATAMapping.PartNumber;
                     existingresule.ItemMasterId = itemMasterATAMapping.ItemMasterId;
                     existingresule.ATAChapterId = itemMasterATAMapping.ATAChapterId;
@@ -1369,7 +1368,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterId == id))
                 {
-                    var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterId == id).FirstOrDefault();
+                    var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == id).FirstOrDefault();
                     existingresule.ItemMasterId = itemMasterPurchaseSale.ItemMasterId;
                     existingresule.PartNumber = itemMasterPurchaseSale.PartNumber;
                     existingresule.PP_CurrencyId= itemMasterPurchaseSale.PP_CurrencyId;
@@ -1411,6 +1410,38 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
+         [HttpGet("getItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID/{ItemMasterID}/{AircraftTypeID}/{AircraftModelID}/{DashNumberId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiDashId(long ItemMasterID, string AircraftTypeID, string AircraftModelID, string DashNumberId)
+        {
+            var result = _unitOfWork.itemMaster.getItemAircraftMappingDataByMultiTypeIdModelIDDashID(ItemMasterID, AircraftTypeID, AircraftModelID, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemATAMappedByItemMasterIDMultiATAIDATASubID/{ItemMasterID}/{ATAID}/{ATASubID}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult ATAMappedMultiATASUBId(long ItemMasterID, string ATAID, string ATASubID)
+        {
+            var result = _unitOfWork.itemMaster.getItemATAMappingDataByMultiTypeIdATAIDATASUBID(ItemMasterID, ATAID, ATASubID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        
     }
 
 }

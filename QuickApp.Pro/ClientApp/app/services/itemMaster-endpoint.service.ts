@@ -62,6 +62,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _ItemMasterAircraftUpdate: string = "/api/ItemMaster/ItemMasterAircraftUpdate";
     private readonly _ItemMasterATAUpdate: string = "/api/ItemMaster/ItemMasterAtaUpdate";
     private readonly _ItemMasterPurcSaleUpdate: string = "/api/ItemMaster/ItemMasterPurcSaleUpdate";
+    private readonly _getItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/getItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
+    private readonly _getItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/getItemATAMappedByItemMasterIDMultiATAIDATASubID';
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -812,5 +814,24 @@ export class ItemMasterEndpoint extends EndpointFactory {
         .catch(err => {
             return this.handleError( err , () => this.saveATAMapping(mappedData));
         })
+
+    }
+    getAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number, AircraftTypeId: string, AircraftModelID: string, DashNumberId: string): Observable<T> {
+        let endpointUrl = `${this._getItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}${AircraftTypeId}/${AircraftModelID}/${DashNumberId}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAirMappedByMultiTypeIDModelIDDashID(ItemmasterId, AircraftTypeId, AircraftModelID, DashNumberId));
+            });
+    }
+    getATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number, ATAID: string, ATASubID: string): Observable<T> {
+        let endpointUrl = `${this._getItemATAMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}${ATAID}/${ATASubID}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATAMappedByMultiATAIDATASUBID(ItemmasterId, ATAID, ATASubID));
+            });
     }
 }

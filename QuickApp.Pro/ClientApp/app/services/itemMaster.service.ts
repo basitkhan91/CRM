@@ -292,6 +292,10 @@ export class ItemMasterService {
     postATAMapping(action: any) {
         return this.itemMasterEndpoint.saveATAMapping<any>(action);
     }
-
-
+    getItemAirMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, AircraftTypeID: string, AircraftModelID: string, DashNumberId: string) {
+        return this.itemMasterEndpoint.getAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId, AircraftTypeID, AircraftModelID, DashNumberId);
+    }
+    getItemATAMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, ATAID: string, ATASubID: string) {
+        return this.itemMasterEndpoint.getATAMappedByMultiATAIDATASUBID<any>(ItemmasterId, ATAID, ATASubID);
+    }
 }
