@@ -113,4 +113,20 @@ export class PublicationService {
     getAtaMappedByPublicationId(PublicationID: number) {
         return this.publicationEndpoint.getAtaMappedByPubId<any>(PublicationID);
     }
+    getAirMappedByMultiTypeId(PublicationID: number,AircraftTypeID: string) {
+        return this.publicationEndpoint.getAirMappedByMultiTypeId<any>(PublicationID, AircraftTypeID);
+    }
+    getAirMappedByMultiModelId(PublicationID: number, AircraftModelID:string) {
+        return this.publicationEndpoint.getAtaMappedByMultiModelId<any>(PublicationID,AircraftModelID);
+    }
+    getAirMappedByMultiDashId(PublicationID: number, DashNumberId : string) {
+        return this.publicationEndpoint.getAtaMappedByMultiDashId<any>(PublicationID, DashNumberId );
+    }
+    getAirMappedByMultiTypeIdModelID(PublicationID: number, AircraftTypeID: string, AircraftModelID: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiTypeIDModelID<any>(PublicationID, AircraftTypeID, AircraftModelID);
+    }
+
+    getAirMappedByMultiTypeIdModelIDDashID(PublicationID: number, AircraftTypeID: string, AircraftModelID: string, DashNumberId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiTypeIDModelIDDashID<any>(PublicationID, AircraftTypeID, AircraftModelID, DashNumberId);
+    }
 }
