@@ -13568,10 +13568,17 @@ body .ui-datepicker table td > a.ui-state-active {
         background-color: white !important;
     }
 
-    .autocomplete-customer .ui-autocomplete {
-        margin-left: -5px !important;
-        width: 106% !important;
-    }
+.autocomplete-customer .ui-autocomplete {
+    margin-left: -5px !important;
+    width: 100% !important;
+    margin-top: -6px !important;
+}
+.autocomplete-customer .ui-autocomplete input.ui-inputtext {
+    border-radius: 5px !important;
+}
+.calender-border .ui-calendar.ui-calendar-w-btn .ui-inputtext {
+    border-radius: 6px !important;
+}
 .p-table-cstm .ui-table-thead tr th, .wf-table-cstm .ui-table-thead tr th {
     padding: 8px 2px !important;
 }
@@ -13810,7 +13817,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-size: 12px !important;
 }
 .pub-multi3 {
-    width: 200px;
+    width: 218px;
 }
 
 .pub-multi3 .ui-chkbox {

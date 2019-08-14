@@ -10,14 +10,17 @@
     border: 1px solid grey;
 }
 .add-icon-new {
-    border-radius: 15px !important;
+    border-radius: 14px !important;
     background: #337ab7;
-    height: 24px;
+    height: 20px;
     display: inline-block;
-    width: 25px;
-    margin-left: -45px;
+    width: 20px;
+    margin-left: -39px;
+    margin-top: 6px;
 }
-
+.exp-date-inputs {
+    border-radius: 6px !important;
+}
 .font-padding {
     font-weight: 600;
     padding-top: 10px;
@@ -31,10 +34,16 @@
 .add-name {
     padding-left: 3px;
 }
-
+.text-area-align{
+  width: 94%;
+  border-radius: 5px;
+}
 .add-margin1 {
     margin-top: 10px;
     margin-left: -9px;
+}
+.input-value {
+    border-radius: 5px !important;
 }
 
 .add-margin {
@@ -50,18 +59,27 @@
 .select-option {
     width: 100%
 }
-
+.select-drop {
+    width: 96% !important;
+}
 .fa {
     color: white;
     padding-left: 24%;
     padding-top: 24%;
+}
+.memo{
+    padding-left: 0px !important;
+    padding-top: 0px !important;
 }
 .clr-blue {
     color: #4298ff !important;
     padding-left: 2% !important;
     padding-top: 0% !important;
 }
-
+.radio-value {
+    margin-top: 10px;
+    margin-left: -69px;
+}
 .add-margin3 {
     margin-left: -18px;
     padding-top: 10px;
@@ -75,12 +93,21 @@
     padding-top: 10px;
 }
 
+    @media (min-width: 768px) {
+        .col-row  .col-md-3 {
+            max-width: 22%;
+            margin-right: 15px;
+        }
+    }
+
+
 .multi-general p-multiselect {
     width: 207px !important;
     height: 27px !important;
 }
 .new-checkbox {
     margin-top: 10px !important;
+    margin-left: -38px;
 }
 .add-margin6 {
     margin-top: 10px;
@@ -102,7 +129,17 @@
 .bg1 {
     background: #ff8080 !important;
 }
-
+.shelf {
+    margin-top: 7px;
+    margin-left: 2px;
+}
+.shelf1 {
+    margin-top: 5px;
+}
+.checkbox-value {
+    margin-left: 60px !important;
+    margin-top: 6px !important;
+}
 .bg2 {
     background: #83b028 !important;
 }
@@ -155,7 +192,8 @@ lbl {
     width: 94px;
 }
 .text-field{
-    width: 100% !important;
+    width: 96% !important;
+    border-radius: 5px !important;
 }
 input[type=date]::-webkit-inner-spin-button,
 input[type=date]::-webkit-outer-spin-button {
@@ -216,6 +254,21 @@ td {
 }
 .memo-style{
     margin-left: -33px;
+}
+.memo-popup-cstm input {
+    width: calc(100% - 20px);
+    text-overflow: ellipsis;
+}
+
+.memo-popup-cstm i {
+    margin-left: 3px !important;
+    color: #337ab7 !important;
+    cursor: pointer !important;
+}
+
+.memo-popup-cstm input.form-control:disabled {
+    opacity: 1;
+    background-color: rgba(233, 236, 239, 0.5) !important;
 }
 .text-area {
     height: 24px;
