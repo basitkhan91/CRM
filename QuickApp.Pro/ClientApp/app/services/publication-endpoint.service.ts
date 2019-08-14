@@ -22,6 +22,14 @@ export class PublicationEndpointService extends EndpointFactory {
   private readonly _PostPNMapping: string = '/api/Publication/PNIMMappingPost';
     private readonly _getAirMappingByPublicationID: string = '/api/Publication/getItemAircraftMappedByPublcationID';
     private readonly _getAtaMappingByPublicationID: string = '/api/Publication/getItemAtaMappedByPublcationID';
+    private readonly _getAirMappingByMultiTypeID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiTypeID';
+    private readonly _getAirMappingByMultiModelID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiModelID';
+    private readonly _getAirMappingByMultiDashID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiDashID';
+    private readonly _getAirMappingByMultiTypeIDModelID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiTypeIDModelID';
+    private readonly _getAirMappingByMultiTypeIDModelIDDashID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
+    
+    
+    
   private readonly _publicationPNMappingData: string =
     '/api/Publication/GetPubPNMappedData_PNID';
   private readonly _AircraftInformationSearch: string =
@@ -200,4 +208,50 @@ export class PublicationEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getAtaMappedByPubId(PublicationID));
             });
     }
+    getAirMappedByMultiTypeId<T>(PublicationID: number,AircraftTypeId: string): Observable<T> {
+        let endpointUrl = `${this._getAirMappingByMultiTypeID}/${PublicationID}${AircraftTypeId}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAirMappedByMultiTypeId(PublicationID, AircraftTypeId));
+            });
+    }
+    getAtaMappedByMultiModelId<T>(PublicationID: number, AircraftModelID: string): Observable<T> {
+        let endpointUrl = `${this._getAirMappingByMultiModelID}/${PublicationID}${AircraftModelID}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaMappedByMultiModelId(PublicationID, AircraftModelID));
+            });
+    }
+    getAtaMappedByMultiDashId<T>(PublicationID: number, DashNumberId : string): Observable<T> {
+        let endpointUrl = `${this._getAirMappingByMultiDashID}/${PublicationID}${DashNumberId }`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaMappedByMultiDashId(PublicationID, DashNumberId));
+            });
+    }
+    getAtaMappedByMultiTypeIDModelID<T>(PublicationID: number, AircraftTypeId: string, AircraftModelID: string): Observable<T> {
+        let endpointUrl = `${this._getAirMappingByMultiTypeIDModelID}/${PublicationID}${AircraftTypeId}/${AircraftModelID}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaMappedByMultiTypeIDModelID(PublicationID, AircraftTypeId, AircraftModelID));
+            });
+    }
+    getAtaMappedByMultiTypeIDModelIDDashID<T>(PublicationID: number, AircraftTypeId: string, AircraftModelID: string, DashNumberId: string): Observable<T> {
+        let endpointUrl = `${this._getAirMappingByMultiTypeIDModelIDDashID}/${PublicationID}${AircraftTypeId}/${AircraftModelID}/${DashNumberId}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaMappedByMultiTypeIDModelIDDashID(PublicationID, AircraftTypeId, AircraftModelID, DashNumberId));
+            });
+    }
+    
 }

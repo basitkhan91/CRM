@@ -107,6 +107,135 @@ namespace DAL.Repositories
             return data;
         }
 
+        public IEnumerable<object> GetAircraftMappingDataByMultiTypeId(long PublicationID,string AircraftTypeId)
+        {
+            var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var data = (from it in _appContext.ItemMasterAircraftMapping
+                        join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId)
+
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.AircraftTypeId,
+                            it.AircraftModelId,
+                            it.DashNumberId,
+                            it.DashNumber,
+                            it.AircraftType,
+                            it.AircraftModel,
+                            it.Memo,
+                            it.MasterCompanyId,
+                            it.IsActive,
+                            it.IsDeleted
+                        }).ToList();
+            return data;
+        }
+        public IEnumerable<object> GetAircraftMappingDataByMultiModelId(long PublicationID, string AircraftModelId)
+        {
+            var myAircraftModelId = AircraftModelId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var data = (from it in _appContext.ItemMasterAircraftMapping
+                        join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId)
+
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.AircraftTypeId,
+                            it.AircraftModelId,
+                            it.DashNumberId,
+                            it.DashNumber,
+                            it.AircraftType,
+                            it.AircraftModel,
+                            it.Memo,
+                            it.MasterCompanyId,
+                            it.IsActive,
+                            it.IsDeleted
+                        }).ToList();
+            return data;
+        }
+        public IEnumerable<object> GetAircraftMappingDataByMultiDashId(long PublicationID, string DashNumberId)
+        {
+            var myDashNumberId = DashNumberId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var data = (from it in _appContext.ItemMasterAircraftMapping
+                        join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myDashNumberId.Contains(it.DashNumberId)
+
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.AircraftTypeId,
+                            it.AircraftModelId,
+                            it.DashNumberId,
+                            it.DashNumber,
+                            it.AircraftType,
+                            it.AircraftModel,
+                            it.Memo,
+                            it.MasterCompanyId,
+                            it.IsActive,
+                            it.IsDeleted
+                        }).ToList();
+            return data;
+        }
+        public IEnumerable<object> GetAircraftMappingDataByMultiTypeIdModelID(long PublicationID, string AircraftTypeId, string AircraftModelId)
+        {
+            var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            var data = (from it in _appContext.ItemMasterAircraftMapping
+                        join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId)  && myAircraftModelId.Contains(it.AircraftModelId)
+
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.AircraftTypeId,
+                            it.AircraftModelId,
+                            it.DashNumberId,
+                            it.DashNumber,
+                            it.AircraftType,
+                            it.AircraftModel,
+                            it.Memo,
+                            it.MasterCompanyId,
+                            it.IsActive,
+                            it.IsDeleted
+                        }).ToList();
+            return data;
+        }
+
+        public IEnumerable<object> GetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationID, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        {
+            var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            var myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+            var data = (from it in _appContext.ItemMasterAircraftMapping
+                        join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId)
+
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.AircraftTypeId,
+                            it.AircraftModelId,
+                            it.DashNumberId,
+                            it.DashNumber,
+                            it.AircraftType,
+                            it.AircraftModel,
+                            it.Memo,
+                            it.MasterCompanyId,
+                            it.IsActive,
+                            it.IsDeleted
+                        }).ToList();
+            return data;
+        }
 
     }
 }

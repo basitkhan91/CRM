@@ -348,5 +348,81 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+        [HttpGet("getItemAirMappedByPublicationIdMultiTypeID/{PublicationId}/{AircraftTypeId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiTypeId(long PublicationId,string AircraftTypeId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiTypeId(PublicationId, AircraftTypeId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemAirMappedByPublicationIdMultiModelID/{PublicationId}/{AircraftModelID}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiModelId(long PublicationId, string AircraftModelID)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiModelId(PublicationId, AircraftModelID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemAirMappedByPublicationIdMultiDashID/{PublicationId}/{DashNumberId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiDashId(long PublicationId, string DashNumberId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiDashId(PublicationId, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        //Publication and AircraftTypeId and AircraftModelId search 
+        [HttpGet("getItemAirMappedByPublicationIdMultiTypeIDModelID/{PublicationId}/{AircraftTypeID}/{AircraftModelID}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiDashId(long PublicationId, string AircraftTypeID, string AircraftModelID)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiTypeIdModelID(PublicationId, AircraftTypeID, AircraftModelID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemAirMappedByPublicationIdMultiTypeIDModelIDDashID/{PublicationId}/{AircraftTypeID}/{AircraftModelID}/{DashNumberId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiDashId(long PublicationId, string AircraftTypeID, string AircraftModelID, string DashNumberId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiTypeIdModelIDDashID(PublicationId, AircraftTypeID, AircraftModelID, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
     }
 }
