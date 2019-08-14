@@ -69,6 +69,14 @@ export class CreatePublicationComponent implements OnInit {
   ataChapterList = []
   selectedATAchapter = []
 
+  // dropdown
+
+  publicationTypes = [
+    {label: 'CMM' , value : 'CMM'},
+    {label: 'AD' , value : 'AD'},
+    {label: 'SB', value: 'SB'}
+  ]
+
   // table columns for ata
 
   atacols = [
@@ -301,6 +309,14 @@ export class CreatePublicationComponent implements OnInit {
     });
   }
 
+  // get aircraft information by publication id 
+  getAircraftInformationByPublicationId(){
+    this.publicationService.getAircraftMappedByPublicationId(this.generalInformationDetails.PublicationId).subscribe(res => {
+
+    })
+  }
+
+
   // get AircraftModels By manufacturer Type
   async getAircraftModelByManfacturerType() {
     // construct url from array
@@ -360,13 +376,7 @@ export class CreatePublicationComponent implements OnInit {
 
   async searchAircraftInformation() {
     await this.searchByFieldUrlCreate();
-    // search only by manfacturer and publicationId
-    console.log(
-      this.aircraftManfacturerIdsUrl,
-      this.aircraftModelsIdUrl,
-      this.dashNumberIdUrl
-    );
-
+    
     // checks where multi select is empty or not and calls the service
     if (
       this.aircraftManfacturerIdsUrl !== '' &&
@@ -402,7 +412,14 @@ export class CreatePublicationComponent implements OnInit {
       .subscribe(res => {});
   }
 
+  // get atachapter by publication id 
+  getAtaChapterByPublicationId(){
+    this.publicationService.getAtaMappedByPublicationId(this.generalInformationDetails.PublicationId).subscribe( res => {
+      
+    })
+  }
 
+ // get ata chapter for dropdown
   getAllATAChapter(){
     this.ataMainSer.getAtaMainList().subscribe(Atachapter => {
    const response  = Atachapter[0];            
@@ -413,6 +430,7 @@ export class CreatePublicationComponent implements OnInit {
      })
   });
   }
+  // get all subchapter for dropdown
   getAllSubChapters(){
     this.atasubchapter1service.getAtaSubChapter1List().subscribe(atasubchapter => {
       const responseData = atasubchapter[0];
@@ -425,7 +443,6 @@ export class CreatePublicationComponent implements OnInit {
   })
   }
   getSubChapterByATAChapter() {
-
     this.atasubchapter1service.getATASubChapterListByATAChapterId(16).subscribe(atasubchapter => {
         const responseData = atasubchapter[0];
         this.ataSubChapterList = responseData.map(x => {

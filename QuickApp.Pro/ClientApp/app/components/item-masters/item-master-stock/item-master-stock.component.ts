@@ -578,6 +578,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             repairForm: this.formBuilder.array([]),
             exchangeForm: this.formBuilder.array([])
         });
+        this.getAllAircraftModels();
+        this.getAllDashNumbers();
     }
 
 
@@ -3766,10 +3768,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         console.log(this.LoadValues);
     }
     selectedAircraftIdvalue: any;
-    selectedModelIdvalue: any;
+    selectedModelIdvalue: any ;
     LoadModelidValues: any[] = [];
     
-    getModelIdvalues() {       
+    getModelIdvalues() {    
+       this.selectedModelIdvalue = undefined;
+       this.selectedDashnumber = undefined;
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftIdvalue).subscribe(models => {
             const responseValue = models[0];
             this.LoadModelidValues = responseValue.map(models => {
@@ -3960,9 +3964,39 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                   })
                     
                 })
+
+                
 })
 
     }
+
+  // get all Aircraft Models
+  getAllAircraftModels() {
+    this.aircraftModelService.getAll().subscribe(models => {
+      const responseValue = models[0];
+      this.LoadModelidValues = responseValue.map(models => {
+        return {
+          label: models.modelName,
+          value: models.aircraftModelId
+        };
+      });
+    });
+  }
+
+
+    // get all dashnumber
+    getAllDashNumbers() {
+        this.Dashnumservice.getAll().subscribe(dashnumbers => {
+          const responseData = dashnumbers[0];
+          this.LoadDashnumberValues = responseData.map(dashnumbers => {
+            return {
+              label: dashnumbers.dashNumber,
+              value: dashnumbers.dashNumberId
+            };
+          });
+        });
+      }
+
     movePurchaseInformation() {        
         this.activeTab = 3;
         this.showpurchaseData = true;
