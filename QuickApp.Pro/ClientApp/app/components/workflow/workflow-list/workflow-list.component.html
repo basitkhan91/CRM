@@ -37,15 +37,13 @@
                             </ng-template>
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th style="width: 40px;"></th>
                                     <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
-                                    <th></th>
+                                    <th style="width: 135px;"></th>
                                 </tr>
                                 <tr>
-                                    <th></th>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
                                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
                                     </th>
@@ -55,7 +53,6 @@
 
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
-                                    <td><input type="radio" class="form-control" /></td>
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
@@ -65,7 +62,7 @@
                                         <p-inputSwitch *ngIf="rowData.workflow.isActive == false" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData.workflow.isActive == null" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData.workflow.isActive"></p-inputSwitch>
 
-                                        <span data-toggle="modal" data-target="#view">
+                                        <span data-toggle="modal" data-target="#view" (click)="onViewWFDetails(rowData)">
                                             <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="View">
                                                 <i class="fa fa-eye"></i>
                                             </a>
@@ -137,54 +134,45 @@
                         <div class="form-horizontal wf-popup-form">
                             <div class="form-row">
                                 <div class="col-md-6">
-                                    <div class="form-row">
+                                    <div class="form-row" style="margin-top: 20px;">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Work Flow ID: </label>ACC123
+                                                <label>Work Flow ID: </label> {{currentWFList.workflow.workflowId}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Version: </label>2
+                                                <label>Work Flow Description: </label>{{currentWFList.workflow.workflowDescription}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Create Date: </label>6/2/2019
+                                                <label>Version: </label>{{currentWFList.version}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Expiration Date: </label>7/4/2019
+                                                <label>Create Date: </label>{{currentWFList.workflowCreateDate}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Currency: </label>US Dollar
+                                                <label>Expiration Date: </label>{{currentWFList.workflowExpirationDate}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Make Inactive: </label>Yes
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Work Flow Description: </label>Gear Repairing
-                                            </div>
-                                            <div class="form-group">
-                                                <label>CMM URL: </label><a href="#" target="_blank">URL</a>
+                                                <label>Currency: </label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>PN: </label>12345
+                                                <label>PN: </label>{{currentWFList.partNumber}}
                                             </div>
                                             <div class="form-group">
-                                                <label>PN Description: </label>Used For Gears
+                                                <label>PN Description: </label>{{currentWFList.partDescription}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Changed PN: </label>44543
+                                                <label>Changed PN: </label>{{currentWFList.workflow.changedPartNumber}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Work Scope: </label>OVH
+                                                <label>Work Scope: </label>{{currentWFList.workflow.workScope.description}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Customer Name: </label>John
+                                                <label>Customer Name: </label>{{currentWFList.name}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Memo: </label>Used For Gears
-                                            </div>
-                                            <div class="form-group">
-                                                <label>CMM ID: </label>CMM123
+                                                <label>Memo: </label>{{currentWFList.workflow.workScope.memo}}
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +186,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label>Fixed Amount: </label>12345
+                                                        <label>Fixed Amount: </label>{{currentWFList.workflow.fixedAmount}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">
@@ -206,7 +194,7 @@
                                                     <div style="float:right;">
                                                         <div class="form-group">
                                                             <label style="margin-top: 5px;">BER Threshold: </label>
-                                                            <input class="w60 form-control wf-ber-thrld" type="number" value="12345" disabled>
+                                                            <input class="w60 form-control wf-ber-thrld" type="number" value="{{currentWFList.workflow.berThresholdAmount}}" disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -222,17 +210,17 @@
                                                     <div style="padding-left: 36px;margin-top: 8px;">
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Cost of New: </label>222
+                                                                <label style="width: 80px;">Cost of New: </label>{{currentWFList.workflow.costOfNew}}
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Percent: </label> <span style="width: 60px">22%</span>
+                                                                <label>Percent: </label> <span style="width: 60px">{{currentWFList.workflow.percentageOfNew}}%</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Amount: </label> 222
+                                                                <label style="width: 80px;">Amount: </label> 
                                                             </div>
                                                         </div>
                                                     </div>
@@ -249,17 +237,17 @@
                                                     <div style="padding-left: 36px;margin-top: 8px;">
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Cost of Replace: </label> 22
+                                                                <label style="width: 80px;">Cost of Replace: </label> {{currentWFList.workflow.costOfReplacement}}
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Percent: </label> <span style="width: 60px">22%</span>
+                                                                <label>Percent: </label> <span style="width: 60px">{{currentWFList.workflow.percentageOfReplacement}}%</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Amount: </label> 224
+                                                                <label style="width: 80px;">Amount: </label> 
                                                             </div>
                                                         </div>
                                                     </div>
@@ -267,13 +255,51 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-row" style="margin-top: 10px;margin-left: -22px;">
-                                        <div class="form-group">
-                                            <label style="width: 150px;">Total Work Flow Cost: </label>$30,000
+
+                                </div>
+                            </div>
+
+                            <div class="card" style="margin-top: 30px;">
+                                <div class="card-header" style="padding: 4px 10px;">
+                                    <h5 style="margin-bottom: 0;font-size: 15px;">Total Work Flow Cost</h5>
+                                </div>
+                                <div class="card-body" style="padding: 10px 20px 0;">
+                                    <div class="form-row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Material Cost: </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Expertise Cost: </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Charges: </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Other: </label>${{currentWFList.otherCost}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label style="width: 130px;">Total Work Flow Cost: </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label style="width: 130px;">% of BER Threshold: </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                           
                         </div>
                     </div>
                 </div>
@@ -286,397 +312,363 @@
                 </div>
 
                 <p-accordion [multiple]="true" class="p-accordion-cstm">
-                    <p-accordionTab header="Receive" [selected]="displayAccord1" (click)="onAccordTabClick1()">
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>PN</th>
-                                    <th>PN Description</th>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>UOM</th>
-                                    <th>Cond</th>
-                                    <th>Unit Cost</th>
-                                    <th>Ext. Cost</th>
-                                    <th>Provision</th>
-                                    <th>Deferred</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>45789</td>
-                                    <td>Engine</td>
-                                    <td>Mandatory</td>
-                                    <td>5</td>
-                                    <td>Each</td>
-                                    <td>New</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>Replace</td>
-                                    <td>Yes</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <p-accordionTab header="Assemble" [selected]="displayAccord1" (click)="onAccordTabClick1()">
+                        <div>
+                            <h5 class="po-head">Publications</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Pub ID</th>
+                                            <th>Pub Desc</th>
+                                            <th>Revision</th>
+                                            <th>Revision Date</th>
+                                            <th>Pub Type</th>
+                                            <th>Sequence</th>
+                                            <th>Source</th>
+                                            <th>Aircraft Manufacturer</th>
+                                            <th>Model</th>
+                                            <th>Dash Number</th>
+                                            <th>Location</th>
+                                            <th>Verified By</th>
+                                            <th>Verified Date</th>
+                                            <th>Status</th>
+                                            <th>Image</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>45789</td>
+                                            <td>Engine</td>
+                                            <td>123</td>
+                                            <td>5/5/19</td>
+                                            <td>Mandatory</td>
+                                            <td>2</td>
+                                            <td></td>
+                                            <td>Manufacturer</td>
+                                            <td>123</td>
+                                            <td>123</td>
+                                            <td>NY</td>
+                                            <td>John</td>
+                                            <td>5/6/19</td>
+                                            <td>Open</td>
+                                            <td><img src="" class="img-responsive" alt="" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Equipment ID</th>
-                                    <th>Equipment Description</th>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>45789</td>
-                                    <td>Engine</td>
-                                    <td>Mandatory</td>
-                                    <td>1</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div>
+                            <h5 class="po-head">Measurements</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>PN</th>
+                                            <th>Sequence</th>
+                                            <th>Stage</th>
+                                            <th>Min</th>
+                                            <th>Max</th>
+                                            <th>Expected</th>
+                                            <th>Diagram</th>
+                                            <th>Memo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>45789</td>
+                                            <td>123</td>
+                                            <td>123</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Memo Description</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Expertise Type</th>
-                                    <th>Estimated Hours</th>
-                                    <th>Standard Rate</th>
-                                    <th>Estimated Cost</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Mech</td>
-                                    <td>5</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Estimated Cost of Expertise List</td>
-                                    <td colspan="2">100.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div>
+                            <h5 class="po-head">Exclusions</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>EPN</th>
+                                            <th>EPN Description</th>
+                                            <th>Qty</th>
+                                            <th>Unit Cost</th>
+                                            <th>Extended</th>
+                                            <th>Estimated % Occurance</th>
+                                            <th>Memo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>45789</td>
+                                            <td>Description</td>
+                                            <td>2</td>
+                                            <td>10.00</td>
+                                            <td></td>
+                                            <td>11%</td>
+                                            <td>Memo Description</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>Unit Cost</th>
-                                    <th>Extended Cost</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Shipping Charges</td>
-                                    <td>5</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Ext. Cost of Charges</td>
-                                    <td colspan="2">20.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <h5>Total Cost for Receive Action : $220.00</h5>
+                        <div>
+                            <h5 class="po-head">Directions</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Action</th>
+                                            <th>Description</th>
+                                            <th>Sequence</th>
+                                            <th>Memo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td></td>
+                                            <td>Description</td>
+                                            <td>2</td>
+                                            <td>Memo Description</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 class="po-head">Expertise</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Expertise Type</th>
+                                            <th>Estimated Hours</th>
+                                            <th>Labor Direct Rate</th>
+                                            <th>Direct Labor Cost</th>
+                                            <th>OHead Burden(%)</th>
+                                            <th>OH Cost</th>
+                                            <th>Direct Labor and OH Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>Inspector</td>
+                                            <td>22</td>
+                                            <td>123</td>
+                                            <td>123</td>
+                                            <td>3%</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 class="po-head">Equipment</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Asset Id</th>
+                                            <th>Asset Type</th>
+                                            <th>Asset Description</th>
+                                            <th>Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>22</td>
+                                            <td>Type</td>
+                                            <td>Description</td>
+                                            <td>3</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 class="po-head">Charges</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th>Qty</th>
+                                            <th>Unit Cost</th>
+                                            <th>Extended Cost</th>
+                                            <th>Unit Price</th>
+                                            <th>Extended Price</th>
+                                            <th>Vendor Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>AOG Fee</td>
+                                            <td>Description</td>
+                                            <td>3</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>John</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 class="po-head">Material List</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>PN</th>
+                                            <th>Description</th>
+                                            <th>Cond</th>
+                                            <th>Mandatory / Supplemental</th>
+                                            <th>Item Classification</th>
+                                            <th>Qty</th>
+                                            <th>UOM</th>
+                                            <th>Unit Cost</th>
+                                            <th>Extended Cost</th>
+                                            <th>Price</th>
+                                            <th>Memo</th>
+                                            <th>Deferred</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>3433</td>
+                                            <td>Description</td>
+                                            <td>New</td>
+                                            <td>Mandatory</td>
+                                            <td></td>
+                                            <td>2</td>
+                                            <td></td>
+                                            <td>23</td>
+                                            <td>23</td>
+                                            <td>23</td>
+                                            <td>Memo Description</td>
+                                            <td>
+                                                <div class="checkbox-cstm">
+                                                    <label style="width: 50px;">
+                                                        <input type="checkbox" disabled="disabled">
+                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <h5>Total Cost for Assemble Action : $220.00</h5>
+                    </p-accordionTab>
+                    <p-accordionTab header="Cleaning" [selected]="displayAccord2" (click)="onAccordTabClick2()">
 
                     </p-accordionTab>
-                    <p-accordionTab header="Inspect" [selected]="displayAccord2" (click)="onAccordTabClick2()">
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>PN</th>
-                                    <th>PN Description</th>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>UOM</th>
-                                    <th>Cond</th>
-                                    <th>Unit Cost</th>
-                                    <th>Ext. Cost</th>
-                                    <th>Provision</th>
-                                    <th>Deferred</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>45789</td>
-                                    <td>Engine</td>
-                                    <td>Mandatory</td>
-                                    <td>5</td>
-                                    <td>Each</td>
-                                    <td>New</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>Replace</td>
-                                    <td>Yes</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Equipment ID</th>
-                                    <th>Equipment Description</th>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>45789</td>
-                                    <td>Engine</td>
-                                    <td>Mandatory</td>
-                                    <td>1</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Expertise Type</th>
-                                    <th>Estimated Hours</th>
-                                    <th>Standard Rate</th>
-                                    <th>Estimated Cost</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Mech</td>
-                                    <td>5</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Estimated Cost of Expertise List</td>
-                                    <td colspan="2">100.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>Unit Cost</th>
-                                    <th>Extended Cost</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Shipping Charges</td>
-                                    <td>5</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Ext. Cost of Charges</td>
-                                    <td colspan="2">20.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <h5>Total Cost for Inspect Action : $220.00</h5>
+                    <p-accordionTab header="DER" [selected]="displayAccord3" (click)="onAccordTabClick3()">
 
                     </p-accordionTab>
-                    <p-accordionTab header="Evaluate" [selected]="displayAccord3" (click)="onAccordTabClick3()">
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>PN</th>
-                                    <th>PN Description</th>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>UOM</th>
-                                    <th>Cond</th>
-                                    <th>Unit Cost</th>
-                                    <th>Ext. Cost</th>
-                                    <th>Provision</th>
-                                    <th>Deferred</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>45789</td>
-                                    <td>Engine</td>
-                                    <td>Mandatory</td>
-                                    <td>5</td>
-                                    <td>Each</td>
-                                    <td>New</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>Replace</td>
-                                    <td>Yes</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <p-accordionTab header="Disassemble" [selected]="displayAccord4" (click)="onAccordTabClick4()">
 
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Equipment ID</th>
-                                    <th>Equipment Description</th>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>45789</td>
-                                    <td>Engine</td>
-                                    <td>Mandatory</td>
-                                    <td>1</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    </p-accordionTab>
+                    <p-accordionTab header="Evaluate" [selected]="displayAccord5" (click)="onAccordTabClick5()">
 
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Expertise Type</th>
-                                    <th>Estimated Hours</th>
-                                    <th>Standard Rate</th>
-                                    <th>Estimated Cost</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Mech</td>
-                                    <td>5</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Estimated Cost of Expertise List</td>
-                                    <td colspan="2">100.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    </p-accordionTab>
+                    <p-accordionTab header="Inspect" [selected]="displayAccord6" (click)="onAccordTabClick6()">
 
-                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Qty</th>
-                                    <th>Unit Cost</th>
-                                    <th>Extended Cost</th>
-                                    <th>Perform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Shipping Charges</td>
-                                    <td>5</td>
-                                    <td>10.00</td>
-                                    <td>50.00</td>
-                                    <td>
-                                        <span>
-                                            <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Ext. Cost of Charges</td>
-                                    <td colspan="2">20.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <h5>Total Cost for Evaluate Action : $220.00</h5>
+                    </p-accordionTab>
+                    <p-accordionTab header="Part Out" [selected]="displayAccord7" (click)="onAccordTabClick7()">
+
+                    </p-accordionTab>
+                    <p-accordionTab header="QC" [selected]="displayAccord8" (click)="onAccordTabClick8()">
+
+                    </p-accordionTab>
+                    <p-accordionTab header="Receive" [selected]="displayAccord9" (click)="onAccordTabClick9()">
+
+                    </p-accordionTab>
+                    <p-accordionTab header="Shipping" [selected]="displayAccord10" (click)="onAccordTabClick10()">
+
+                    </p-accordionTab>
+                    <p-accordionTab header="Teardown" [selected]="displayAccord11" (click)="onAccordTabClick11()">
 
                     </p-accordionTab>
                 </p-accordion>
@@ -720,55 +712,516 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-bordered table-fixed wfl-table-popup-cstm">
-                    <thead>
-                        <tr>
-                            <th>Action</th>
-                            <th>PN</th>
-                            <th>PN Description</th>
-                            <th>Item Classification</th>
-                            <th>Qty</th>
-                            <th>UOM</th>
-                            <th>Cond</th>
-                            <th>Unit Cost</th>
-                            <th>Ext. Cost</th>
-                            <th>Provision</th>
-                            <th>Deferred</th>
-                            <th>Fig ID</th>
-                            <th>Perform</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Receive</td>
-                            <td>45789</td>
-                            <td>Engine</td>
-                            <td>Consumables</td>
-                            <td>5</td>
-                            <td>Each</td>
-                            <td>New</td>
-                            <td>10.00</td>
-                            <td>50.00</td>
-                            <td>Replace</td>
-                            <td>
-                                <div class="checkbox-cstm">
-                                    <label>
-                                        <input type="checkbox" checked disabled>
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>https://www.google.co.in/</td>
-                            <td>
-                                <span>
-                                    <a data-toggle="tooltip" pTooltip="History" tooltipPosition="bottom" title="" class="btn btn-success nobg" data-original-title="History">
-                                        <i class="fa fa-history"></i>
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-fixed wfl-table-popup-cstm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 90px;"></th>
+                                    <th>S.No</th>
+                                    <th>PN</th>
+                                    <th>Description</th>
+                                    <th>Cond</th>
+                                    <th>Mandatory / Supplemental</th>
+                                    <th>Item Classification</th>
+                                    <th>Qty</th>
+                                    <th>UOM</th>
+                                    <th>Unit Cost</th>
+                                    <th>Extended Cost</th>
+                                    <th>Price</th>
+                                    <th>Memo</th>
+                                    <th>Deferred</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Assemble</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Cleaning</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">DER</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Disassemble</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Evaluate</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Inspect</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Part Out</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">QC</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Receive</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Shipping</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><h5 class="po-head-wfl">Teardown</h5></td>
+                                    <td colspan="13"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.</td>
+                                    <td>3433</td>
+                                    <td>Description</td>
+                                    <td>New</td>
+                                    <td>Mandatory</td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>23</td>
+                                    <td>Memo Description</td>
+                                    <td>
+                                        <div class="checkbox-cstm">
+                                            <label style="width: 50px;">
+                                                <input type="checkbox" disabled="disabled">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
