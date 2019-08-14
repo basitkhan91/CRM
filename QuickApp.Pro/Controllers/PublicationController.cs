@@ -259,56 +259,33 @@ namespace QuickApp.Pro.Controllers
                 {
                     if (IMPNMapping == null)
                         return BadRequest($"{nameof(IMPNMapping)} cannot be null");
+                 
+                        
+                        PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                     for (int i = 0; i <= IMPNMapping.Length - 1; i++)
                     {
-                        PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
-                        if (_context.PublicationItemMasterMapping.Any(o => o.PublicationItemMasterMappingId == IMPNMapping[i].PublicationItemMasterMappingId))
-                        {
-                            var existingresule = _context.PublicationItemMasterMapping.Where(c => c.PublicationId == IMPNMapping[i].PublicationId).FirstOrDefault();
-                            
-                            cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
-                            cp.PublicationId = IMPNMapping[i].PublicationId;
-                            cp.PartNumber = IMPNMapping[i].PartNumber;
-                            cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
-                            cp.ItemClassification = IMPNMapping[i].ItemClassification;
-                            cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
-                            cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
-                            cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
-                            cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
-                            cp.CreatedBy = IMPNMapping[i].CreatedBy;
-                            cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
-                            cp.CreatedDate = DateTime.Now;
-                            cp.UpdatedDate = DateTime.Now;
-                            cp.IsActive = IMPNMapping[i].IsActive;
-                            _context.PublicationItemMasterMapping.Update(cp);
-                            _context.SaveChanges();
-                        }
-                        else
-                        {
-                            cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
-                            cp.PublicationId = IMPNMapping[i].PublicationId;
-                            cp.PartNumber = IMPNMapping[i].PartNumber;
-                            cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
-                            cp.ItemClassification = IMPNMapping[i].ItemClassification;
-                            cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
-                            cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
-                            cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
-                            cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
-                            cp.CreatedBy = IMPNMapping[i].CreatedBy;
-                            cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
-                            cp.CreatedDate = DateTime.Now;
-                            cp.UpdatedDate = DateTime.Now;
-                            cp.IsActive = IMPNMapping[i].IsActive;
+                        cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
+                        cp.PublicationId = IMPNMapping[i].PublicationId;
+                        cp.PartNumber = IMPNMapping[i].PartNumber;
+                        cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+                        cp.ItemClassification = IMPNMapping[i].ItemClassification;
+                        cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
+                        cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
+                        cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
+                        cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
+                        cp.CreatedBy = IMPNMapping[i].CreatedBy;
+                        cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
+                        cp.CreatedDate = DateTime.Now;
+                        cp.UpdatedDate = DateTime.Now;
+                        cp.IsActive = IMPNMapping[i].IsActive;
 
-                            _context.PublicationItemMasterMapping.Add(cp);
-                            _context.SaveChanges();
-                        }
+                        _context.PublicationItemMasterMapping.Add(cp);
+                        _context.SaveChanges();
                     }
-
-                }
+                        
+                  }
 
                 return Ok(ModelState);
-                { }
 
             }
             catch (Exception ex)

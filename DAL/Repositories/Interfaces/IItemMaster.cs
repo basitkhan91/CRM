@@ -33,8 +33,12 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getItemMasterData(long id);
 
         IEnumerable<object> getLegalEntityAccountsData(long id);
+        IEnumerable<object> getItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemMasterID, string AircraftTypeID, string AircraftModelID, string DashNumberId);
+        IEnumerable<object> getItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid, string ATAID, string ATASubID);
 
-        
+
+
+
 
     }
 }

@@ -483,6 +483,50 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> getItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemmasterId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        {
+            var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            var myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+            var data = (from it in _appContext.ItemMasterAircraftMapping
+                        where it.IsActive == true && it.ItemMasterId== ItemmasterId &&  myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId)
 
+                        select new
+                        {
+                            it.ItemMasterId,
+                            it.PartNumber,
+                            it.AircraftTypeId,
+                            it.AircraftModelId,
+                            it.DashNumberId,
+                            it.DashNumber,
+                            it.AircraftType,
+                            it.AircraftModel,
+                            it.Memo,
+                            it.MasterCompanyId,
+                            it.IsActive,
+                            it.IsDeleted
+                        }).ToList();
+            return data;
+        }
+
+        public IEnumerable<object> getItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid,string ATAID,string ATASubID)
+        {
+                long[] myATAID = ATAID.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+                long[] myATASubID = ATASubID.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+                var data = (from iM in _appContext.ItemMasterATAMapping
+                            where iM.ItemMasterId == ItemMasterid && myATAID.Contains(iM.ATAChapterId) && myATASubID.Contains(iM.ATASubChapterId) && iM.IsActive == true && iM.IsDeleted == false
+                            select new
+                            {
+                                iM.ItemMasterATAMappingId,
+                                iM.ItemMasterId,
+                                iM.ATAChapterId,
+                                iM.ATAChapterCode,
+                                iM.ATAChapterName,
+                                iM.PartNumber,
+                                iM.ATASubChapterId,
+                                iM.ATASubChapterDescription
+                            }).ToList();
+                return data;
+        }
     }
 }
