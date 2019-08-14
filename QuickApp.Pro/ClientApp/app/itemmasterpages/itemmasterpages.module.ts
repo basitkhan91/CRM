@@ -46,9 +46,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DashnumberComponent } from "../components/dashnumber/dashnumber.component";
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-    imports: [
+    imports: [        
+        TooltipModule,
         DropdownModule,
         RouterModule,
         KeyFilterModule,

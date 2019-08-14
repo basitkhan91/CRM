@@ -150,6 +150,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     fixedSalesPriceValue: boolean = true;
     collectionofItemMaster: any;
     value: number;
+    memoPopupText: any;
     partCollection: any[];
     allPartnumbersInfo: any[];
     name: string;
@@ -307,6 +308,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ManufacturerValue: any;
     alternatePn: any;
     ataform: FormGroup;
+    memoNotes: string = 'This is Itemmaster memo';
     manufacturerValue: FormGroup;
     ataChaptherSelected : any;
     newFields = {
@@ -533,8 +535,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             { field: 'ataChapterName', header: 'ATA Chapter' },
             { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
         ];
-        this.itemQuantity = Array(10).fill(1).map((x, i) => i + 1);
-        this.itemQuantitys = Array(6).fill(1).map((x, i) => i + 1);
+        this.itemQuantity = Array(100).fill(1).map((x, i) => i + 1);
+        this.itemQuantitys = Array(100).fill(1).map((x, i) => i + 1);
         this.items1 = [
             { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
             { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
@@ -805,15 +807,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     nonStock() {
         this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-non-stock');
     }
-    equipment() {
-        this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-equipment');
-    }
-    exchange() {
-        this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-exchange');
-    }
-    loan() {
-        this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-loan');
-    }
+    //equipment() {
+    //    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-equipment');
+    //}
+    //exchange() {
+    //    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-exchange');
+    //}
+    //loan() {
+    //    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-loan');
+    //}
 
 
     ngAfterViewInit() {
