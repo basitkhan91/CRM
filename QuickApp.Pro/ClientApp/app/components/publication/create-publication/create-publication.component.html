@@ -71,6 +71,7 @@
           <div class="form-group">
             <label for="Publicationtype">Publication Type</label>
             <p-dropdown class="pub-type-select" #pubType="ngModel"
+            [options]="publicationTypes"
               [(ngModel)]="sourcePublication.pubType"></p-dropdown>
           </div>
 
