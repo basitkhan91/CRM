@@ -106,7 +106,6 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
-
         public IEnumerable<object> GetAircraftMappingDataByMultiTypeId(long PublicationID,string AircraftTypeId)
         {
             var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
@@ -208,7 +207,6 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
-
         public IEnumerable<object> GetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationID, string AircraftTypeId, string AircraftModelId, string DashNumberId)
         {
             var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
@@ -237,5 +235,29 @@ namespace DAL.Repositories
             return data;
         }
 
+        public IEnumerable<object> GetATAMappingDataByMultiATAIdSUBATAID(long PublicationID, string ATAChapterId, string ATASubChapterID)
+        {
+            var myATAChapterId = ATAChapterId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var myATASubChapterID = ATASubChapterID.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            var data = (from it in _appContext.ItemMasterATAMapping
+                        join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myATAChapterId.Contains(it.ATAChapterId) && myATASubChapterID.Contains(it.ATASubChapterId)
+
+                        select new
+                        {
+                            PublicationItemMaster.ItemMasterId,
+                            PublicationItemMaster.PublicationId,
+                            it.PartNumber,
+                            it.ATAChapterId,
+                            it.ATAChapterCode,
+                            it.ATAChapterName,
+                            it.ATASubChapterId,
+                            it.ATASubChapterDescription,
+                            it.MasterCompanyId,
+                            it.IsActive,
+                            it.IsDeleted
+                        }).ToList();
+            return data;
+        }
     }
 }

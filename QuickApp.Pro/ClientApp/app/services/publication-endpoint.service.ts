@@ -27,6 +27,9 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _getAirMappingByMultiDashID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiDashID';
     private readonly _getAirMappingByMultiTypeIDModelID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiTypeIDModelID';
     private readonly _getAirMappingByMultiTypeIDModelIDDashID: string = '/api/Publication/getItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
+
+    private readonly _getATAMappingByMultiChapterIDSubID: string = '/api/Publication/getItemATAMappedByPublicationIdMultiATAIDSubChapterID';
+    private readonly _deleteItemMasterMappingByID: string = '/api/Publication/deletePublicationItemMasterMapping';
     
     
     
@@ -251,6 +254,21 @@ export class PublicationEndpointService extends EndpointFactory {
             .get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAtaMappedByMultiTypeIDModelIDDashID(PublicationID, AircraftTypeId, AircraftModelID, DashNumberId));
+            });
+    }
+    getAtaMappedByMultiATAIDSubChapterID<T>(PublicationID: number, ChapterID: string, SubChapterID): Observable<T> {
+        let endpointUrl = `${this._getATAMappingByMultiChapterIDSubID}/${PublicationID}/${ChapterID}/${SubChapterID}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaMappedByMultiATAIDSubChapterID(PublicationID, ChapterID, SubChapterID));
+            });
+    }
+    deleteitemMasterMappedEndpoint<T>(userObject: any): Observable<T> {
+        return this.http.post<T>(this._deleteItemMasterMappingByID, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteitemMasterMappedEndpoint(userObject));
             });
     }
     

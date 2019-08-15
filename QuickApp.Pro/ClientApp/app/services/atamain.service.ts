@@ -69,4 +69,7 @@ export class AtaMainService {
     getATASubDesc(Chid: number) {
         return this.ataMainEndpoint.getATASubByID<any>(Chid);
     }
+    getMultiATASubDesc(Chapterid: number) {
+        return this.ataMainEndpoint.getMultiATASubByID<any>(Chapterid);
+    }
 }

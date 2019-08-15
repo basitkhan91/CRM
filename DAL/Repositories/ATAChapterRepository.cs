@@ -48,6 +48,26 @@ namespace DAL.Repositories
             return data;
             throw new NotImplementedException();
         }
-
+        public IEnumerable<object> GetMultiATASUBS(string ChapterID)
+        {
+            var myATAIds = ChapterID.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var data = (from iM in _appContext.ATASubChapter
+                        join Mc in _appContext.ATAChapter on iM.ATAChapterId equals Mc.ATAChapterId
+                        where myATAIds.Contains(iM.ATAChapterId)
+                        select new
+                        {
+                            iM.ATASubChapterId,
+                            iM.ATASubChapterCode,
+                            iM.Description,
+                            iM.Memo,
+                            iM.ATAChapterId,
+                            iM.MasterCompanyId,
+                            Mc.ATAChapterName,
+                            Mc.ATAChapterCategory,
+                            Mc.ATAChapterCode
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
     }
 }
