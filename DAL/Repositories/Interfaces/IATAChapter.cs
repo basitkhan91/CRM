@@ -10,6 +10,7 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<ATAChapter> GetATAChapterData();
         IEnumerable<object> GetATASUBS(long ChID);
+        IEnumerable<object> GetMultiATASUBS(string ChapterID);
 
     }
 }

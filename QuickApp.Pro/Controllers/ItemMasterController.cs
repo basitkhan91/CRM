@@ -1188,7 +1188,8 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-       
+        
+        
         //To post data in ATA Chapter Tab in Item Master
         [HttpPost("ItemMasterATAPost")]
         public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping[] itemMasterATAMapping)
@@ -1294,7 +1295,7 @@ namespace QuickApp.Pro.Controllers
 
         }
         //updates
-        [HttpPost("ItemMasterAircraftUpdate/{id}")]
+        [HttpPut("ItemMasterAircraftUpdate/{id}")]
         public IActionResult UpdateItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping,long id)
         {
             if (ModelState.IsValid)
@@ -1329,7 +1330,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        [HttpPost("ItemMasterAtaUpdate/{id}")]
+        [HttpPut("ItemMasterAtaUpdate/{id}")]
         public IActionResult UpdateItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping,long id)
         {
             if (ModelState.IsValid)
@@ -1361,7 +1362,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        [HttpPost("ItemMasterPurcSaleUpdate/{id}")]
+        [HttpPut("ItemMasterPurcSaleUpdate/{id}")]
         public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale,long id)
         {
             if (ModelState.IsValid)
@@ -1442,6 +1443,91 @@ namespace QuickApp.Pro.Controllers
             }
         }
         
+        //DELETES
+        //To Delete Aircraft Info in Item Master Aircraft Mapping
+        [HttpPost("UpdateItemMasterAtaDeleteStatus/{id}")]
+        public IActionResult DeleteItemmasterATA(long id, [FromBody] ItemMasterATAMapping itemMasterATAMapping)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (_context.ItemMasterATAMapping.Any(o => o.ItemMasterATAMappingId == id))
+                {
+                    var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterATAMappingId == id).FirstOrDefault();
+                    existingresule.IsDeleted = itemMasterATAMapping.IsDeleted;
+                    existingresule.UpdatedDate = DateTime.Now;
+                    existingresule.UpdatedBy = itemMasterATAMapping.UpdatedBy;
+                    _unitOfWork.Repository<ItemMasterATAMapping>().Update(existingresule);
+                    _unitOfWork.SaveChanges();
+                    return Ok(itemMasterATAMapping);
+                }
+            }
+            else
+            {
+                return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
+            }
+
+            return Ok(ModelState);
+        }
+
+        [HttpPost("UpdateItemMasterAircraftDeleteStatus/{id}")]
+        public IActionResult DeleteItemmasterAircraft(long id, [FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    if (_context.ItemMasterAircraftMapping.Any(o => o.ItemMasterAircraftMappingId == id))
+                    {
+                        var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.ItemMasterAircraftMappingId == id).FirstOrDefault();
+                        existingresule.UpdatedDate = DateTime.Now;
+                        existingresule.IsDeleted = itemMasterAircraftMapping.IsDeleted;
+                        existingresule.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
+                        _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(existingresule);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterAircraftMapping);
+                    }
+                }
+                else
+                {
+                    return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
+                }
+            }catch(Exception ex)
+            {
+                throw;
+            }
+
+            return Ok(ModelState);
+        }
+        [HttpPost("UpdateItemMasterPurcSaletDeleteStatus/{id}")]
+        public IActionResult DeleteItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale, long id)
+        {
+            try { 
+            if (ModelState.IsValid)
+            {
+                if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterPurchaseSaleId == id))
+                {
+                    var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == id).FirstOrDefault();
+                    existingresule.IsDeleted = itemMasterPurchaseSale.IsDeleted;
+                    existingresule.UpdatedDate = DateTime.Now;
+                    existingresule.UpdatedBy = itemMasterPurchaseSale.UpdatedBy;
+                    _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
+                    _unitOfWork.SaveChanges();
+                    return Ok(itemMasterPurchaseSale);
+                }
+            }
+            else
+            {
+                return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
+            }
+        }catch(Exception ex)
+            {
+                throw;
+            }
+            return Ok(ModelState);
+        }
+
     }
 
 }

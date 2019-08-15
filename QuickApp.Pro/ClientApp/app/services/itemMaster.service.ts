@@ -298,4 +298,14 @@ export class ItemMasterService {
     getItemATAMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, ATAID: string, ATASubID: string) {
         return this.itemMasterEndpoint.getATAMappedByMultiATAIDATASUBID<any>(ItemmasterId, ATAID, ATASubID);
     }
+    deleteItemMasterATA(ItemMasterATAMappingId: number) {
+        return this.itemMasterEndpoint.deleteitemMasterMappedATAEndpoint<any>(ItemMasterATAMappingId);
+    }
+    deleteItemMasterAir(ItemMasterAirMappingId: number) {
+        return this.itemMasterEndpoint.deleteitemMasterMappedAirEndpoint<any>(ItemMasterAirMappingId);
+    }
+    deleteItemMasterPurcSale(ItemMasterPurcSaleId: number) {
+        return this.itemMasterEndpoint.deleteitemMasterMappedPurcSaleEndpoint<any>(ItemMasterPurcSaleId);
+    }
+
 }
