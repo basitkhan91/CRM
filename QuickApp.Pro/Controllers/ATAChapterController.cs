@@ -176,6 +176,12 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.ATAChapter.GetATASUBS(ChID);
             return Ok(result);
         }
+        [HttpGet("GetMultiATASUBSBYATAMainID/{ChapterID}")]
+        public IActionResult GetMultiATASub(string ChapterID)
+        {
+            var result = _unitOfWork.ATAChapter.GetMultiATASUBS(ChapterID);
+            return Ok(result);
+        }
     }
 
 

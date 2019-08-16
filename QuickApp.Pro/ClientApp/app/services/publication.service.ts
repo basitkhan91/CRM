@@ -129,4 +129,16 @@ export class PublicationService {
     getAirMappedByMultiTypeIdModelIDDashID(PublicationID: number, AircraftTypeID: string, AircraftModelID: string, DashNumberId: string) {
         return this.publicationEndpoint.getAtaMappedByMultiTypeIDModelIDDashID<any>(PublicationID, AircraftTypeID, AircraftModelID, DashNumberId);
     }
+    getATAMappedByMultiChapterIdSubChapterID(PublicationID: number, ChapterId: string, SubChapterId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiATAIDSubChapterID<any>(PublicationID, ChapterId, SubChapterId);
+    }
+    getATAMappedByMultiChapterId(PublicationID: number, ChapterId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiChapterID<any>(PublicationID, ChapterId);
+    }
+    getATAMappedByMultiSubChapterId(PublicationID: number, SubChapterId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiSubChapterID<any>(PublicationID, SubChapterId);
+    }
+    deleteItemMasterMapping(PublicationItemMasterMappingId: number) {
+        return this.publicationEndpoint.deleteitemMasterMappedEndpoint<any>(PublicationItemMasterMappingId);
+    }
 }

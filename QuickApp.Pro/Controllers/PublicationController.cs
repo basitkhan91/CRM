@@ -401,5 +401,72 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+        [HttpGet("getItemATAMappedByPublicationIdMultiATAIDSubChapterID/{PublicationId}/{ATAChapterID}/{SubATAChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiATASubId(long PublicationId, string ATAChapterID, string SubATAChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAIdSUBATAID(PublicationId, ATAChapterID, SubATAChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
+        [HttpGet("getItemATAMappedByPublicationIdMultiChapterID/{PublicationId}/{ATAChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiATAId(long PublicationId, string ATAChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAId(PublicationId, ATAChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemATAMappedByPublicationIdMultiSubChapterID/{PublicationId}/{SubChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiSubChapterId(long PublicationId, string SubChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAId(PublicationId, SubChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        //Delete
+        [HttpPost("deletePublicationItemMasterMapping/{id}")]
+        public IActionResult PublicationItemMasterMappingDelete([FromBody] PublicationItemMasterMapping publicationItemMasterMapping, long id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (_context.PublicationItemMasterMapping.Any(o => o.PublicationItemMasterMappingId == id))
+                    {
+                        var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
+                        existingResult.UpdatedDate = DateTime.Now;
+                        existingResult.UpdatedBy = publicationItemMasterMapping.UpdatedBy;
+                        existingResult.IsDeleted = publicationItemMasterMapping.IsDeleted;
+                        _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
+                        _unitOfWork.SaveChanges();
+                    }
+                }
+            }catch(Exception ex)
+            {
+                throw;
+            }
+            return Ok(ModelState);
+        }
     }
 }
