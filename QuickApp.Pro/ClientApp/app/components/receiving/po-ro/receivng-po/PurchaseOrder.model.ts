@@ -3,7 +3,7 @@ import { AddressModel } from "../../../../models/address.model";
 import { Dropdown } from "primeng/dropdown";
 
 export class PurchaseOrder {
-
+    purchaseOrderPartRecordId: number;
     purchaseOrderId: number;
     purchaseOrderNumber: string;
     referenceId: string;
@@ -75,6 +75,7 @@ export class PurchaseOrderPart {
     quantityRejected: string;
     uOMId: number;
     quantityOrdered: number;
+    quantityBackOrdered: number;
     unitCost: number;
     discountPerUnit: number;
     discountCostPerUnit: number;
@@ -122,7 +123,7 @@ export class PurchaseOrderPart {
     showStockLineGrid: boolean;
     quantityToReceive: number;
     isSameDetailsForAllParts: boolean;
-
+    isTimeLifeUpdateLater: boolean;
 }
 
 export class TimeLife {
@@ -228,6 +229,9 @@ export class StockLine
     shippingViaId: number;
     shippingAccountId: number;
     engineSerialNumber: string;
+    createdDate: Date;
+    purchaseOrderPartRecordId: number;
+
     //View Properties
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
@@ -241,6 +245,12 @@ export class StockLine
     CustomerList: DropDownData[];
     VendorList: DropDownData[];
     visible: boolean;
+}
+
+export class ReceiveParts {
+    purchaseOrderPartRecordId: number;
+    stockLines: StockLine[];
+    timeLife: TimeLife[];
 }
 
 export class DropDownData {
