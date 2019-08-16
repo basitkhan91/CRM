@@ -18,6 +18,8 @@ import { AtaMainService } from '../../../services/atamain.service';
 import { AircraftModelService } from '../../../services/aircraft-model/aircraft-model.service';
 import { AircraftManufacturerService } from '../../../services/aircraft-manufacturer/aircraftManufacturer.service';
 import { map } from 'rxjs/operator/map';
+import { DashNumberService } from '../../../services/dash-number/dash-number.service';
+import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 @Component({
   selector: 'app-create-publication',
   templateUrl: './create-publication.component.html',
@@ -37,7 +39,8 @@ export class CreatePublicationComponent implements OnInit {
   private isEditMode: boolean;
   selectedFile: File = null;
   public sourcePublication: any = {};
-  airCraftTypes = [];
+  generalInformationDetails: any = {};
+  airCraftTypesList = [];
   airCraftModels = [];
   dashModels = [];
   aircraftList: any = [];
@@ -51,17 +54,31 @@ export class CreatePublicationComponent implements OnInit {
     { field: 'PartNumberDescription', header: 'PN Description' },
     { field: 'ItemClassification', header: 'Item Classification' }
   ];
-  generalInformationDetails: any = {};
-  onFileChanged(event) {
-    this.selectedFile = event.target.files[0];
-  }
 
-  types = [
-    { label: 'SelectPublication ', value: 'Select publication' },
-    { label: 'CMM', value: 'CMM' },
-    { label: 'AD', value: 'AD' },
-    { label: 'SB', value: 'SB' }
-  ];
+  aircraftManufacturerList: { label: string; value: number }[];
+
+  // search function in aircraftInformation
+  selectAircraftManfacturer = [];
+  aircraftManfacturerIdsUrl: string = '';
+  aircraftModelList: any = [];
+  selectedAircraftModel = [];
+  aircraftModelsIdUrl: string = '';
+  dashNumberList: any = [];
+  selectedDashNumbers = [];
+  dashNumberIdUrl: string = '';
+  ataChapterList = []
+  selectedATAchapter = []
+
+  // dropdown
+
+  publicationTypes = [
+    {label: 'CMM' , value : 'CMM'},
+    {label: 'AD' , value : 'AD'},
+    {label: 'SB', value: 'SB'}
+  ]
+
+  // table columns for ata
+
   atacols = [
     { field: 'ataChapter', header: 'AtaChapter' },
     { field: 'ataSubChapter', header: 'AtaSubChapter' }
@@ -71,9 +88,12 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'Active', value: 'Active' },
     { label: 'In-Active', value: 'In-Active' }
   ];
+  searchParams: string;
+  ataSubChapterList: { label: string; value: number; }[];
   /** Create-publication ctor */
   constructor(
     private publicationService: PublicationService,
+    private atasubchapter1service: AtaSubChapter1Service,
     private alertService: AlertService,
     public ataMainSer: AtaMainService,
     public inteService: IntegrationService,
@@ -83,6 +103,8 @@ export class CreatePublicationComponent implements OnInit {
     private pubdashNumberService: PublicationService,
     private authService: AuthService,
     private itemMasterService: ItemMasterService,
+    private Dashnumservice: DashNumberService,
+    
     private route: Router
   ) {}
   cols: any[] = [
@@ -100,6 +122,10 @@ export class CreatePublicationComponent implements OnInit {
       : '';
   }
 
+  onFileChanged(event) {
+    this.selectedFile = event.target.files[0];
+  }
+
   changeOfTab(value) {
     if (value === 'General') {
       this.currentTab = 'General';
@@ -111,11 +137,14 @@ export class CreatePublicationComponent implements OnInit {
     } else if (value === 'Aircraft') {
       this.currentTab = 'Aircraft';
       this.activeMenuItem = 3;
-      this.getAllAircraftTypes();
-      this.getAircraftAllList();
+      this.getAllAircraftManufacturer();
+      this.getAllAircraftModels();
+      this.getAllDashNumbers();
     } else if (value === 'Atachapter') {
       this.currentTab = 'Atachapter';
       this.activeMenuItem = 4;
+      this.getAllATAChapter();
+      this.getAllSubChapters();
     }
   }
   private saveSuccessHelper(role?: any) {
@@ -185,25 +214,6 @@ export class CreatePublicationComponent implements OnInit {
     getCustomerClassificationList: CustomerClassification[]
   ) {}
 
-  // get All
-  getAllAircraftTypes() {
-    this.aircraftManufacturerService
-      .getAll()
-      .subscribe(aircraftManufacturer => {
-        this.showModelAircraftModel = false;
-        const responseData = aircraftManufacturer[0];
-        const typesOfAircraft = responseData.map(x => {
-          return {
-            value: x.aircraftTypeId,
-            label: x.description
-          };
-        });
-        this.airCraftTypes = [
-          { label: 'Select Aircraft', value: null },
-          ...typesOfAircraft
-        ];
-      });
-  }
   // get PartNumbers
   async getPartNumberList() {
     await this.itemMasterService.getPrtnumberslistList().subscribe(list => {
@@ -234,8 +244,8 @@ export class CreatePublicationComponent implements OnInit {
         UpdatedBy: this.userName,
         MasterCompanyId: obj.masterCompanyId,
         IsActive: true,
-          CreatedDate:  '2019-08-12',
-          UpdatedDate: '2019-08-12',
+        CreatedDate: '2019-08-12',
+        UpdatedDate: '2019-08-12'
       };
     });
     this.selectedPartNumbers = [];
@@ -247,40 +257,200 @@ export class CreatePublicationComponent implements OnInit {
       });
   }
 
-  getPartNumber;
+  searchByFieldUrlCreate() {
+    if (this.selectAircraftManfacturer.length > 0) {
+      const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
+        (acc, value) => {
+          return `${acc},${value}`;
+        },
+        ''
+      );
+      this.aircraftManfacturerIdsUrl = aircraftTypeIds.substr(1);
+    }
+    if (this.selectedAircraftModel.length > 0) {
+      const aircraftModelIds = this.selectedAircraftModel.reduce((acc, id) => {
+        return `${acc},${id}`;
+      }, '');
+      this.aircraftModelsIdUrl = aircraftModelIds.substr(1);
+    }
+    if (this.selectedDashNumbers.length > 0) {
+      const dashNumberIds = this.selectedDashNumbers.reduce((acc, id) => {
+        return `${acc},${id}`;
+      }, '');
+      this.dashNumberIdUrl = dashNumberIds.substr(1);
+    }
+  }
 
-  // get Aircraft Model By Type
-  getAircraftModelByType(aircraftTypeId) {
-    this.aircraftModelService
-      .getAircraftModelListByManufactureId(aircraftTypeId)
-      .subscribe(res => {
-        this.showModelAircraftModel = true;
-        const responseData = res[0];
-
-        this.airCraftModels = responseData.map(x => {
+  // get All
+  getAllAircraftManufacturer() {
+    this.aircraftManufacturerService
+      .getAll()
+      .subscribe(aircraftManufacturer => {
+        this.showModelAircraftModel = false;
+        const responseData = aircraftManufacturer[0];
+        this.airCraftTypesList = responseData.map(x => {
           return {
             value: x.aircraftTypeId,
-            label: x.modelName
+            label: x.description
           };
         });
       });
   }
+  // get all Aircraft Models
+  getAllAircraftModels() {
+    this.aircraftModelService.getAll().subscribe(models => {
+      const responseValue = models[0];
+      this.aircraftModelList = responseValue.map(models => {
+        return {
+          label: models.modelName,
+          value: models.aircraftModelId
+        };
+      });
+    });
+  }
 
-  getAircraftAllList() {
-    this.aircraftManufacturerService
-      .getAll()
-      .subscribe(
-        details => this.onDataLoadSuccessful(details[0]),
-        error => this.onDataLoadFailed(error)
-      );
+  // get aircraft information by publication id 
+  getAircraftInformationByPublicationId(){
+    this.publicationService.getAircraftMappedByPublicationId(this.generalInformationDetails.PublicationId).subscribe(res => {
+
+    })
   }
-  private onDataLoadSuccessful(allACList: any[]) {
-    this.alertService.stopLoadingMessage();
-    this.aircraftList = allACList;
-    console.log(this.aircraftList);
+
+
+  // get AircraftModels By manufacturer Type
+  async getAircraftModelByManfacturerType() {
+    // construct url from array
+    await this.searchByFieldUrlCreate();
+    // reset the dropdowns
+    this.aircraftModelList = [];
+    this.dashNumberList = [];
+    // checks where multi select is empty or not and calls the service
+    if (this.aircraftManfacturerIdsUrl !== '') {
+      this.aircraftModelService
+        .getAircraftModelListByManufactureId(2)
+        .subscribe(models => {
+          const responseValue = models[0];
+          this.aircraftModelList = responseValue.map(models => {
+            return {
+              label: models.modelName,
+              value: models.aircraftModelId
+            };
+          });
+        });
+    }
   }
-  private onDataLoadFailed(error: any) {
-    this.alertService.stopLoadingMessage();
-    //this.loadingIndicator = false;
+  // get all dashnumber
+  getAllDashNumbers() {
+    this.Dashnumservice.getAll().subscribe(dashnumbers => {
+      const responseData = dashnumbers[0];
+      this.dashNumberList = responseData.map(dashnumbers => {
+        return {
+          label: dashnumbers.dashNumber,
+          value: dashnumbers.dashNumberId
+        };
+      });
+    });
   }
+
+  async getDashNumberByManfacturerandModel() {
+    // construct url from array
+    await this.searchByFieldUrlCreate();
+    // reset dropdown
+    this.dashNumberList = [];
+    // checks where multi select is empty or not and calls the service
+    if (this.aircraftModelsIdUrl !== '') {
+      this.Dashnumservice.getDashNumberByModelTypeId(
+        this.aircraftModelsIdUrl,
+        2
+      ).subscribe(dashnumbers => {
+        const responseData = dashnumbers;
+        this.dashNumberList = responseData.map(dashnumbers => {
+          return {
+            label: dashnumbers.dashNumber,
+            value: dashnumbers.dashNumber
+          };
+        });
+      });
+    }
+  }
+
+  async searchAircraftInformation() {
+    await this.searchByFieldUrlCreate();
+    
+    // checks where multi select is empty or not and calls the service
+    if (
+      this.aircraftManfacturerIdsUrl !== '' &&
+      this.aircraftModelsIdUrl !== '' &&
+      this.dashNumberIdUrl !== ''
+    ) {
+      this.searchParams = `${this.aircraftManfacturerIdsUrl}/${
+        this.aircraftModelsIdUrl
+      }/${this.dashNumberIdUrl}`;
+    }
+    // search only by manfacturer and Model and  publicationId
+    else if (
+      this.aircraftManfacturerIdsUrl !== '' &&
+      this.aircraftModelsIdUrl !== ''
+    ) {
+      this.searchParams = `${this.aircraftManfacturerIdsUrl}/${
+        this.aircraftModelsIdUrl
+      }`;
+    } else if (this.aircraftManfacturerIdsUrl !== '') {
+      this.searchParams = this.aircraftManfacturerIdsUrl;
+    }
+    // search only by model and publicationId
+    else if (this.aircraftModelsIdUrl !== '') {
+      this.searchParams = this.aircraftModelsIdUrl;
+    }
+    // search only by dashNumber and publicationId
+    else if (this.dashNumberIdUrl !== '') {
+      this.searchParams = this.dashNumberIdUrl;
+    }
+
+    this.publicationService
+      .aircraftInformationSearch(this.searchParams)
+      .subscribe(res => {});
+  }
+
+  // get atachapter by publication id 
+  getAtaChapterByPublicationId(){
+    this.publicationService.getAtaMappedByPublicationId(this.generalInformationDetails.PublicationId).subscribe( res => {
+      
+    })
+  }
+
+ // get ata chapter for dropdown
+  getAllATAChapter(){
+    this.ataMainSer.getAtaMainList().subscribe(Atachapter => {
+   const response  = Atachapter[0];            
+     this.ataChapterList = response.map(x => {
+      return   { 
+        value: x.ataChapterId, 
+        label: x.ataChapterName }
+     })
+  });
+  }
+  // get all subchapter for dropdown
+  getAllSubChapters(){
+    this.atasubchapter1service.getAtaSubChapter1List().subscribe(atasubchapter => {
+      const responseData = atasubchapter[0];
+      this.ataSubChapterList = responseData.map(x => {
+          return {
+              label: x.description,
+              value: x.ataSubChapterId
+          }
+      })
+  })
+  }
+  getSubChapterByATAChapter() {
+    this.atasubchapter1service.getATASubChapterListByATAChapterId(16).subscribe(atasubchapter => {
+        const responseData = atasubchapter[0];
+        this.ataSubChapterList = responseData.map(x => {
+            return {
+                label: x.description,
+                value: x.ataSubChapterId
+            }
+        })
+    })
+}  
 }

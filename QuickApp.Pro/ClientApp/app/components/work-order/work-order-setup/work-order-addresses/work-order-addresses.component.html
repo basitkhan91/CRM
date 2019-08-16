@@ -6,7 +6,9 @@
           <div class="col-md-4">
             <h4 class="po-head ">Ship To</h4>
             <div class="form-group">
-              <label for="woID">Site Name </label>
+              <label for="woID"
+                >Site Name <i class="fa fa-plus-circle fa-lg"></i>
+              </label>
               <p-dropdown
                 [options]="siteDropdownMenu"
                 [(ngModel)]="addressesForm.shipTo.siteName"
@@ -78,7 +80,9 @@
           <div class="col-md-4 col-offset-3">
             <h4 class="po-head ">Bill To</h4>
             <div class="form-group">
-              <label for="woID">Site Name </label>
+              <label for="woID"
+                >Site Name <i class="fa fa-plus-circle fa-lg"></i>
+              </label>
               <p-dropdown
                 [options]="siteDropdownMenu"
                 [(ngModel)]="addressesForm.billTo.siteName"

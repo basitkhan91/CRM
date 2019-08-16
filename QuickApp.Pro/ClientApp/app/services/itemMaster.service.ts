@@ -4,7 +4,7 @@
 // ===============================
 
 import { Injectable } from '@angular/core';
-import { Router, NavigationExtras } from "@angular/router";
+import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -19,8 +19,11 @@ import { Role } from '../models/role.model';
 //import { ItemMaster } from '../models/itemMaster.model';
 import { AuditHistory } from '../models/audithistory.model';
 
-export type RolesChangedOperation = "add" | "delete" | "modify";
-export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
+export type RolesChangedOperation = 'add' | 'delete' | 'modify';
+export type RolesChangedEventArg = {
+  roles: Role[] | string[];
+  operation: RolesChangedOperation;
+};
 
 @Injectable()
 export class ItemMasterService {
@@ -276,5 +279,33 @@ export class ItemMasterService {
     newItemMasterExportInfoClass(action: any) {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
     }
-}
+   
+    updateItemMasterAircraft(ItemMasterAircraftMappingId: number) {
+        return this.itemMasterEndpoint.updateItemMasterAircraftEndpoint<any>(ItemMasterAircraftMappingId);
+    }
+    updateItemMasterATA(ItemMasterATAMappingId: number) {
+        return this.itemMasterEndpoint.updateItemMasterATAEndpoint<any>(ItemMasterATAMappingId);
+    }
+    updateItemMasterPurchaseSale(ItemMasterPurchaseSaleId: number) {
+        return this.itemMasterEndpoint.updateItemMasterPurchaseSaleEndpoint<any>(ItemMasterPurchaseSaleId);
+    }
+    postATAMapping(action: any) {
+        return this.itemMasterEndpoint.saveATAMapping<any>(action);
+    }
+    getItemAirMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, AircraftTypeID: string, AircraftModelID: string, DashNumberId: string) {
+        return this.itemMasterEndpoint.getAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId, AircraftTypeID, AircraftModelID, DashNumberId);
+    }
+    getItemATAMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, ATAID: string, ATASubID: string) {
+        return this.itemMasterEndpoint.getATAMappedByMultiATAIDATASUBID<any>(ItemmasterId, ATAID, ATASubID);
+    }
+    deleteItemMasterATA(ItemMasterATAMappingId: number) {
+        return this.itemMasterEndpoint.deleteitemMasterMappedATAEndpoint<any>(ItemMasterATAMappingId);
+    }
+    deleteItemMasterAir(ItemMasterAirMappingId: number) {
+        return this.itemMasterEndpoint.deleteitemMasterMappedAirEndpoint<any>(ItemMasterAirMappingId);
+    }
+    deleteItemMasterPurcSale(ItemMasterPurcSaleId: number) {
+        return this.itemMasterEndpoint.deleteitemMasterMappedPurcSaleEndpoint<any>(ItemMasterPurcSaleId);
+    }
 
+}

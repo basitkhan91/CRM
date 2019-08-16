@@ -49,14 +49,25 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly getAuditById: string = "/api/ItemMaster/audits";
     private readonly _itemclassificationUrlNew: string = "/api/ItemMaster/itemNonStockclasspost";
     private readonly _itemNonstockclassificationGetUrl: string = "/api/ItemMaster/GetNonStockClsiifications";
+    //post
     private readonly _itemPNMappingUrlNew: string = "/api/ItemMaster/PNIMMappingPost";
-    
     private readonly _ItemMasterAircraftPostUrlNew: string = "/api/ItemMaster/ItemMasterAircraftPost";
     private readonly _ItemMasterATAPostUrlNew: string = "/api/ItemMaster/ItemMasterATAPost";
     private readonly _ItemMasterPurcSaleUrlNew: string = "/api/ItemMaster/ItemMasterPurcSalePost";
+    //get
     private readonly _getAircraftMapped: string = "/api/ItemMaster/getAircraftMapped";
     private readonly _getATAMapped: string = "/api/ItemMaster/getATAMapped";
     private readonly _ItemMasterExportInfoUrlNew: string = "/api/ItemMaster/ExportInfoPostBy_IMastID";
+    //update
+    private readonly _ItemMasterAircraftUpdate: string = "/api/ItemMaster/ItemMasterAircraftUpdate";
+    private readonly _ItemMasterATAUpdate: string = "/api/ItemMaster/ItemMasterAtaUpdate";
+    private readonly _ItemMasterPurcSaleUpdate: string = "/api/ItemMaster/ItemMasterPurcSaleUpdate";
+    private readonly _getItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/getItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
+    private readonly _getItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/getItemATAMappedByItemMasterIDMultiATAIDATASubID';
+    private readonly _ItemMasterATAMappedDelete: string = "/api/ItemMaster/UpdateItemMasterAtaDeleteStatus";
+    private readonly _ItemMasterAircraftMappedDelete: string = "/api/ItemMaster/UpdateItemMasterAircraftDeleteStatus";
+    private readonly _ItemMasterPurcSaleMappedDelete: string = "/api/ItemMaster/UpdateItemMasterPurcSaletDeleteStatus";
+    
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -780,4 +791,73 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getNewitemExportInfoEndpoint(userObject));
             });
     }
+    updateItemMasterAircraftEndpoint<T>(ItemMasterAircraftMappingId: number,): Observable<T> {
+
+        return this.http.put<T>(this._ItemMasterAircraftUpdate, JSON.stringify(ItemMasterAircraftMappingId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterAircraftEndpoint(ItemMasterAircraftMappingId));
+            });
+    }
+    updateItemMasterATAEndpoint<T>(ItemMasterATAMappingId: number, ): Observable<T> {
+
+        return this.http.put<T>(this._ItemMasterATAUpdate, JSON.stringify(ItemMasterATAMappingId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterATAEndpoint(ItemMasterATAMappingId));
+            });
+    }
+    updateItemMasterPurchaseSaleEndpoint<T>(ItemMasterPurchaseSaleId: number, ): Observable<T> {
+
+        return this.http.put<T>(this._ItemMasterPurcSaleUpdate, JSON.stringify(ItemMasterPurchaseSaleId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterPurchaseSaleEndpoint(ItemMasterPurchaseSaleId));
+            });
+    }
+    
+    saveATAMapping<T>(mappedData: any):Observable<T>{
+        return this.http.post<T>(this._ItemMasterATAPostUrlNew, JSON.stringify(mappedData), this.getRequestHeaders())
+        .catch(err => {
+            return this.handleError( err , () => this.saveATAMapping(mappedData));
+        })
+
+    }
+    getAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number, AircraftTypeId: string, AircraftModelID: string, DashNumberId: string): Observable<T> {
+        let endpointUrl = `${this._getItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}${AircraftTypeId}/${AircraftModelID}/${DashNumberId}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAirMappedByMultiTypeIDModelIDDashID(ItemmasterId, AircraftTypeId, AircraftModelID, DashNumberId));
+            });
+    }
+    getATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number, ATAID: string, ATASubID: string): Observable<T> {
+        let endpointUrl = `${this._getItemATAMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}${ATAID}/${ATASubID}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATAMappedByMultiATAIDATASUBID(ItemmasterId, ATAID, ATASubID));
+            });
+    }
+   
+    deleteitemMasterMappedATAEndpoint<T>(userObject: any): Observable<T> {
+        return this.http.post<T>(this._ItemMasterATAMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(userObject));
+            });
+    }
+
+    deleteitemMasterMappedAirEndpoint<T>(userObject: any): Observable<T> {
+        return this.http.post<T>(this._ItemMasterAircraftMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(userObject));
+            });
+    }
+    deleteitemMasterMappedPurcSaleEndpoint<T>(userObject: any): Observable<T> {
+        return this.http.post<T>(this._ItemMasterPurcSaleMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteitemMasterMappedPurcSaleEndpoint(userObject));
+            });
+    }
+
+
 }

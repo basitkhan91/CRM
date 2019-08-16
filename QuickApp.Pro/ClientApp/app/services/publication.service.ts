@@ -101,4 +101,44 @@ export class PublicationService {
   postMappedPartNumbers(actionData) {
     return this.publicationEndpoint.postPartNumberMappedData(actionData);
   }
+  aircraftInformationSearch(searchUrl, publicationId?) {
+    return this.publicationEndpoint.getAircraftInformationBySearch(
+      searchUrl,
+      publicationId
+    );
+  }
+    getAircraftMappedByPublicationId(PublicationID: number) {
+        return this.publicationEndpoint.getAirMappedByPubId<any>(PublicationID);
+    }
+    getAtaMappedByPublicationId(PublicationID: number) {
+        return this.publicationEndpoint.getAtaMappedByPubId<any>(PublicationID);
+    }
+    getAirMappedByMultiTypeId(PublicationID: number,AircraftTypeID: string) {
+        return this.publicationEndpoint.getAirMappedByMultiTypeId<any>(PublicationID, AircraftTypeID);
+    }
+    getAirMappedByMultiModelId(PublicationID: number, AircraftModelID:string) {
+        return this.publicationEndpoint.getAtaMappedByMultiModelId<any>(PublicationID,AircraftModelID);
+    }
+    getAirMappedByMultiDashId(PublicationID: number, DashNumberId : string) {
+        return this.publicationEndpoint.getAtaMappedByMultiDashId<any>(PublicationID, DashNumberId );
+    }
+    getAirMappedByMultiTypeIdModelID(PublicationID: number, AircraftTypeID: string, AircraftModelID: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiTypeIDModelID<any>(PublicationID, AircraftTypeID, AircraftModelID);
+    }
+
+    getAirMappedByMultiTypeIdModelIDDashID(PublicationID: number, AircraftTypeID: string, AircraftModelID: string, DashNumberId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiTypeIDModelIDDashID<any>(PublicationID, AircraftTypeID, AircraftModelID, DashNumberId);
+    }
+    getATAMappedByMultiChapterIdSubChapterID(PublicationID: number, ChapterId: string, SubChapterId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiATAIDSubChapterID<any>(PublicationID, ChapterId, SubChapterId);
+    }
+    getATAMappedByMultiChapterId(PublicationID: number, ChapterId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiChapterID<any>(PublicationID, ChapterId);
+    }
+    getATAMappedByMultiSubChapterId(PublicationID: number, SubChapterId: string) {
+        return this.publicationEndpoint.getAtaMappedByMultiSubChapterID<any>(PublicationID, SubChapterId);
+    }
+    deleteItemMasterMapping(PublicationItemMasterMappingId: number) {
+        return this.publicationEndpoint.deleteitemMasterMappedEndpoint<any>(PublicationItemMasterMappingId);
+    }
 }

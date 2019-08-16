@@ -178,10 +178,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
-
-      
-
-        
+                
         [HttpPost("PubPNACMappingPost")]
         public IActionResult InsertPNACMapping([FromBody] PublicationPNACMappingModel PnAcMapping)
         {
@@ -253,53 +250,223 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("PNIMMappingPost")]
+        public IActionResult CreatePNIMast([FromBody] PublicationItemMasterMapping[] IMPNMapping)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (IMPNMapping == null)
+                        return BadRequest($"{nameof(IMPNMapping)} cannot be null");
+                 
+                        
+                        PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
+                    for (int i = 0; i <= IMPNMapping.Length - 1; i++)
+                    {
+                        cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
+                        cp.PublicationId = IMPNMapping[i].PublicationId;
+                        cp.PartNumber = IMPNMapping[i].PartNumber;
+                        cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+                        cp.ItemClassification = IMPNMapping[i].ItemClassification;
+                        cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
+                        cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
+                        cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
+                        cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
+                        cp.CreatedBy = IMPNMapping[i].CreatedBy;
+                        cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
+                        cp.CreatedDate = DateTime.Now;
+                        cp.UpdatedDate = DateTime.Now;
+                        cp.IsActive = IMPNMapping[i].IsActive;
 
-		[HttpPost("PNIMMappingPost")]
-		public IActionResult CreatePNIMast([FromBody] PublicationItemMasterMapping[] IMPNMapping)
-		{
-			try
-			{
+                        _context.PublicationItemMasterMapping.Add(cp);
+                        _context.SaveChanges();
+                    }
+                        
+                  }
 
-			
-				if (ModelState.IsValid)
-				{
-					if (IMPNMapping == null)
-						return BadRequest($"{nameof(IMPNMapping)} cannot be null");
-					for (int i = 0; i <= IMPNMapping.Length - 1; i++)
-					{
-						
+                return Ok(ModelState);
 
-						PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
-						cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
-						cp.PublicationId = IMPNMapping[i].PublicationId;
-						cp.PartNumber = IMPNMapping[i].PartNumber;
-						cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
-						cp.ItemClassification = IMPNMapping[i].ItemClassification;
-						cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
-						cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
-						cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
-						cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
-						cp.CreatedBy = IMPNMapping[i].CreatedBy;
-						cp.UpdatedBy = IMPNMapping[i].UpdatedBy;
-						cp.CreatedDate = DateTime.Now;
-						cp.UpdatedDate = DateTime.Now;
-						cp.IsActive = IMPNMapping[i].IsActive;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
-						_context.PublicationItemMasterMapping.Add(cp);
-						_context.SaveChanges();
-					}
-				}
+        }
 
-				return Ok(ModelState);
-				{ }
+        [HttpGet("getItemAircraftMappedByPublcationID/{PublicationId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult aircraftMapped(long PublicationId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataById(PublicationId);
 
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemATAMappedByPublcationID/{PublicationId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult ataMapped(long PublicationId)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataById(PublicationId);
 
-		}
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemAirMappedByPublicationIdMultiTypeID/{PublicationId}/{AircraftTypeId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiTypeId(long PublicationId,string AircraftTypeId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiTypeId(PublicationId, AircraftTypeId);
 
-	}
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemAirMappedByPublicationIdMultiModelID/{PublicationId}/{AircraftModelID}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiModelId(long PublicationId, string AircraftModelID)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiModelId(PublicationId, AircraftModelID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemAirMappedByPublicationIdMultiDashID/{PublicationId}/{DashNumberId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiDashId(long PublicationId, string DashNumberId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiDashId(PublicationId, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        //Publication and AircraftTypeId and AircraftModelId search 
+        [HttpGet("getItemAirMappedByPublicationIdMultiTypeIDModelID/{PublicationId}/{AircraftTypeID}/{AircraftModelID}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiDashId(long PublicationId, string AircraftTypeID, string AircraftModelID)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiTypeIdModelID(PublicationId, AircraftTypeID, AircraftModelID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemAirMappedByPublicationIdMultiTypeIDModelIDDashID/{PublicationId}/{AircraftTypeID}/{AircraftModelID}/{DashNumberId}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult AirMappedMultiDashId(long PublicationId, string AircraftTypeID, string AircraftModelID, string DashNumberId)
+        {
+            var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiTypeIdModelIDDashID(PublicationId, AircraftTypeID, AircraftModelID, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemATAMappedByPublicationIdMultiATAIDSubChapterID/{PublicationId}/{ATAChapterID}/{SubATAChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiATASubId(long PublicationId, string ATAChapterID, string SubATAChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAIdSUBATAID(PublicationId, ATAChapterID, SubATAChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
+        [HttpGet("getItemATAMappedByPublicationIdMultiChapterID/{PublicationId}/{ATAChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiATAId(long PublicationId, string ATAChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAId(PublicationId, ATAChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemATAMappedByPublicationIdMultiSubChapterID/{PublicationId}/{SubChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiSubChapterId(long PublicationId, string SubChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAId(PublicationId, SubChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        //Delete
+        [HttpPost("deletePublicationItemMasterMapping/{id}")]
+        public IActionResult PublicationItemMasterMappingDelete([FromBody] PublicationItemMasterMapping publicationItemMasterMapping, long id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (_context.PublicationItemMasterMapping.Any(o => o.PublicationItemMasterMappingId == id))
+                    {
+                        var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
+                        existingResult.UpdatedDate = DateTime.Now;
+                        existingResult.UpdatedBy = publicationItemMasterMapping.UpdatedBy;
+                        existingResult.IsDeleted = publicationItemMasterMapping.IsDeleted;
+                        _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
+                        _unitOfWork.SaveChanges();
+                    }
+                }
+            }catch(Exception ex)
+            {
+                throw;
+            }
+            return Ok(ModelState);
+        }
+    }
 }
