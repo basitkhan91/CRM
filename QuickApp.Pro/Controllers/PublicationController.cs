@@ -416,6 +416,34 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpGet("getItemATAMappedByPublicationIdMultiChapterID/{PublicationId}/{ATAChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiATAId(long PublicationId, string ATAChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAId(PublicationId, ATAChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemATAMappedByPublicationIdMultiSubChapterID/{PublicationId}/{SubChapterID}")]
+        [Produces(typeof(List<ItemMasterATAMapping>))]
+        public IActionResult ATAMappedMultiSubChapterId(long PublicationId, string SubChapterID)
+        {
+            var result = _unitOfWork.Publication.GetATAMappingDataByMultiATAId(PublicationId, SubChapterID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
         //Delete
         [HttpPost("deletePublicationItemMasterMapping/{id}")]
         public IActionResult PublicationItemMasterMappingDelete([FromBody] PublicationItemMasterMapping publicationItemMasterMapping, long id)
