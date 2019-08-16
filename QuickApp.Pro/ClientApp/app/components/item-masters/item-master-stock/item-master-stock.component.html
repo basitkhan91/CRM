@@ -585,10 +585,11 @@
                                         <h4 class="float-left">Search Dash Numbers</h4>
                                         <h4 class="float-right">
                                             Add Aircraft Information
-                                            <button type="button" data-toggle="modal"
+                                            <!--<button type="button" data-toggle="modal"
                                                     data-target="#ModalDashNumber" class="btn btn-primary btn-add1">
                                                 <i class="pi pi-plus"></i>
-                                            </button>
+                                            </button>-->
+                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
                                         </h4>
                                     </div>
                                     <div class="col-md-3">
@@ -635,7 +636,7 @@
 
                     <br />
                     <div class="card">
-                        <p-table [value]="aircraftListData" [rows]="6" [columns]="colst" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                        <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colskkk" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th>Id</th>
@@ -1233,48 +1234,35 @@
                     <h4 class="modal-title">Add Dash Number</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="col-md-12">
+                    <div class="form-row">
                         <div class="col-md-3">
-                            <div class="form-group ">
-                                <label class="fs12">Aircraft Type </label>
-                                <br />
-                                <span class="inline-block display-flex">
-                                    <p-dropdown class="imstock-pddowm" [options]="aircraftManufacturerList" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getModelvalues($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
-                                    <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon icon2"><i class="fa fa-plus"></i></a>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group ">
-                                <label class="fs12">Model</label>
-                                <br />
-                                <span class="inline-block display-flex">
-                                    <p-multiSelect [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
-                                                   class="pub-multi3" (onChange)="getDashNumber($event)"></p-multiSelect>
-                                    <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']" class="add-icon icon2"><i class="fa fa-plus"></i></a>
-                                </span>
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm">Aircraft Type <a href="/singlepages/singlepages/app-aircraft-manufacturer"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                <p-dropdown class="imstock-pddowm" [options]="aircraftManufacturerList" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getModelvalues($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="fs12">DashNumber</label>
-                                <br />
-                                <span class="inline-block display-flex">
-                                    <p-multiSelect [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"
-                                                   class="pub-multi3"></p-multiSelect>
-                                </span>
+                                <label class="popup-plusicon-cstm">Model <a href="/singlepages/singlepages/app-aircraft-manufacturer"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                <p-multiSelect class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
+                                               (onChange)="getDashNumber($event)"></p-multiSelect>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <br />
-                                <button type="button" class="btn btn-primary" (click)="adddashnumber()">ADD</button>
+                                <label style="float: none;">DashNumber</label>
+                                <p-multiSelect class="imstock-pmselect" [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"
+                                               ></p-multiSelect>
                             </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="adddashnumber()">Add</button>
                         </div>
                     </div>
+
+
+                    
                     <div class="card" *ngIf="viewTable">
-
-
                         <p-table [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
@@ -1302,8 +1290,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveAircraft()">Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
