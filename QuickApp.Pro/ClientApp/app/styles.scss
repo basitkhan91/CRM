@@ -12591,6 +12591,23 @@ table thead tr th:first-child input, table tr td:first-child input {
     background-color: #286090 !important;
     border-color: #204d74;
 }
+.btn-danger-cstm {
+    color: #fff;
+    background-color: #F8370E !important;
+    border-color: #F8370E;
+    border-radius: 4px !important;
+    padding: 6px 12px !important;
+}
+.btn-danger-cstm .ui-button-icon-left {
+    left: 9%;
+    top: 46%;
+}
+
+.btn-danger-cstm:hover {
+    color: #fff;
+    background-color: #DC2700 !important;
+    border-color: #DC2700;
+}
 .excel-upload-cstm label span {
     height: 31px;
     padding: 6px 0px !important;
@@ -13567,14 +13584,19 @@ body .ui-datepicker table td > a.ui-state-active {
     p-autocomplete .ui-autocomplete input.ui-inputtext {
         background-color: white !important;
     }
-
+.autocomplete-customer2 .ui-autocomplete {
+    width: 106% !important;
+}
 .autocomplete-customer .ui-autocomplete {
     margin-left: -5px !important;
     width: 100% !important;
     margin-top: -6px !important;
 }
 .autocomplete-customer .ui-autocomplete input.ui-inputtext {
-    border-radius: 5px !important;
+    border-radius: 5px 0px 0px 5px !important;
+}
+.autocomplete-customer .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
+    border-radius: 0px 5px 5px 0px !important;
 }
 .calender-border .ui-calendar.ui-calendar-w-btn .ui-inputtext {
     border-radius: 6px !important;
@@ -13726,11 +13748,16 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .autocomplete-customer1 .ui-autocomplete{
     min-width: 97% !important;
     margin-left: 5px !important;
-    margin-top: 5px;
+    margin-top: -6px;
     margin-left: -1px !important;
     width: 100% !important;
 }
-
+.autocomplete-customer1 .ui-autocomplete input.ui-inputtext {
+    border-radius: 5px 0px 0px 5px !important;
+}
+.autocomplete-customer1 .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
+    border-radius: 0px 5px 5px 0px !important;
+}
 .radio-cstm {
     display: block;
     position: relative;
@@ -13817,7 +13844,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-size: 12px !important;
 }
 .pub-multi3 {
-    width: 218px;
+    width: 231px;
 }
 
 .pub-multi3 .ui-chkbox {
