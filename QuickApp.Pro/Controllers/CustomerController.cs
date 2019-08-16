@@ -293,6 +293,9 @@ namespace QuickApp.Pro.Controllers
                 ct.CustomerTypeId = 1;
                 customerViewModel.MasterCompanyId = 1;
                 actionobject.IsActive = true;
+                actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
+                actionobject.CurrencyId = customerViewModel.CurrencyId;
+                actionobject.CreditTermsId = customerViewModel.CreditTermsId;
                 actionobject.Name = customerViewModel.Name;
                 actionobject.Parent = customerViewModel.Parent;
                 actionobject.Email = customerViewModel.Email;
