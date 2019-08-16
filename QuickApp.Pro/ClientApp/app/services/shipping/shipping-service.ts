@@ -12,7 +12,7 @@ import { ShippingReference } from '../../models/shipping-reference';
 import { ShippingVia } from '../../models/shipping-via';
 import { ShippingAccount } from '../../models/shipping-account';
 import { ShippingEndpoint } from './shipping-endpoint.service';
-import { PurchaseOrderPart, PurchaseOrder } from '../../components/receiving/po-ro/receivng-po/PurchaseOrder.model';
+import { PurchaseOrderPart, PurchaseOrder, StockLine, ReceiveParts } from '../../components/receiving/po-ro/receivng-po/PurchaseOrder.model';
 
 @Injectable()
 export class ShippingService {
@@ -35,8 +35,8 @@ export class ShippingService {
         return Observable.forkJoin(this.shippingService.getAllShippingAccount<ShippingAccount[]>());
     }
 
-    receiveParts(purchaseOrder: PurchaseOrder) {
-        return this.shippingService.receiveParts<any>(purchaseOrder);
+    receiveParts(receiveParts: ReceiveParts[]) {
+        return this.shippingService.receiveParts<any>(receiveParts);
     }
     
 }

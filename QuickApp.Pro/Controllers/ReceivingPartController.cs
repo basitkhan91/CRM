@@ -146,9 +146,27 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPost("receiveParts")]
-        public IActionResult ReceiveParts([FromBody] PurchaseOrder purchaseOrder)
+        public IActionResult ReceiveParts([FromBody] List<ReceiveParts> receiveParts)
         {
-
+            if (receiveParts != null)
+            {
+                foreach (var receivePart in receiveParts)
+                {
+                    foreach (var stockLine in receivePart.StockLines)
+                    { 
+                        stockLine.ShelfId = null;
+                        stockLine.WarehouseId = null;
+                        stockLine.BinId = null;
+                        stockLine.RepairOrderId = null;
+                        stockLine.LocationId = null;
+                    }
+                    unitOfWork.Repository<StockLine>().AddRange(receivePart.StockLines);
+                }
+                unitOfWork.SaveChanges();
+            }
+            else {
+                return BadRequest();
+            }
             return Ok();
         }
 
