@@ -28,11 +28,12 @@ namespace QuickApp.Pro.Controllers
         ApplicationDbContext db;
 
 		
-		public PublicationController(IUnitOfWork unitOfWork, ILogger<PublicationController> logger, IEmailer emailer)
+		public PublicationController(IUnitOfWork unitOfWork, ILogger<PublicationController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
+            _context = context;
         }
 		
 		// GET: api/values
@@ -446,21 +447,17 @@ namespace QuickApp.Pro.Controllers
         }
         //Delete
         [HttpPost("deletePublicationItemMasterMapping/{id}")]
-        public IActionResult PublicationItemMasterMappingDelete([FromBody] PublicationItemMasterMapping publicationItemMasterMapping, long id)
+        public IActionResult PublicationItemMasterMappingDelete(long id)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (_context.PublicationItemMasterMapping.Any(o => o.PublicationItemMasterMappingId == id))
-                    {
                         var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
                         existingResult.UpdatedDate = DateTime.Now;
-                        existingResult.UpdatedBy = publicationItemMasterMapping.UpdatedBy;
-                        existingResult.IsDeleted = publicationItemMasterMapping.IsDeleted;
+                        existingResult.IsDeleted = false;
                         _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
                         _unitOfWork.SaveChanges();
-                    }
                 }
             }catch(Exception ex)
             {

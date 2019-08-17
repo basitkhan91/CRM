@@ -358,12 +358,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.showLable = true;
             this.sourceItemMaster = this.itemser.listCollection;
             this.sourceItemMaster.itemMasterId = this.itemser.listCollection.itemMasterId;
+            console.log(this.sourceItemMaster.itemMasterId);
             this.sourceItemMaster.partdescription = this.itemser.listCollection.partDescription;
             this.sourceItemMaster.isHazardousMaterial = this.itemser.listCollection.isHazardousMaterial;
-
-            if (this.sourceItemMaster.ataChapterId) {
+         
+            this.itemser.getMappedATADetails(this.sourceItemMaster.itemMasterId);
+           /* if (this.sourceItemMaster.ataChapterId) {
                 this.getATASubChapterData(this.sourceItemMaster.ataChapterId);
-            }
+            }*/
             this.sourceItemMaster.expirationDate = this.itemser.listCollection.expirationDate;
             if (this.sourceItemMaster.manufacturer) {
                 this.sourceItemMaster.manufacturerId = this.itemser.listCollection.manufacturer.manufacturerId;
@@ -479,7 +481,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
     }];
 
-    colst: any[] = [
+    colskkk: any[] = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
         { field: "dashNumber", header: "Dash Numbers" },
@@ -512,6 +514,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         { field: 'tat', header: "TAT" },
         { field: 'memo', header: "MEMO" },
     ];
+    aircraftListDataValues: any;
     ngOnInit(): void {
         this.ataform = this.fb.group({
             'atanumber': new FormControl('', Validators.required),
@@ -519,6 +522,22 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
         this.manufacturerValue = this.fb.group({
             'manufacturerId': new FormControl('', Validators.required)
+        });
+        this.itemser.getMappedAirCraftDetails(this.sourceItemMaster.itemMasterId).subscribe(data => {
+            console.log(data);
+            this.aircraftListDataValues = data.map(x => {
+                return {
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+            // resetting popup Data
+            this.aircraftData = undefined;
+            this.selectedAircraftId = []
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
         });
         this.addFieldValue();
         this.getAtachapter();
@@ -582,6 +601,35 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
         this.getAllAircraftModels();
         this.getAllDashNumbers();
+
+        //cutom
+        this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
+            this.aircraftListData = data.map(x => {
+                return {
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+            // resetting popup Data
+            /*this.aircraftData = undefined;
+            this.selectedAircraftId = []
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;*/
+        })
+
+        //cutom
+        this.itemser.getMappedATADetails(this.ItemMasterId).subscribe(data => {
+            this.aircraftListData = data.map(x => {
+                return {
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+        })
     }
 
 
@@ -3747,7 +3795,28 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     return {
                                                  
                     }
-                })            
+            })        
+
+            //cutom
+            this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
+                const responseData = data;
+                console.log(data);
+                console.log(this.ItemMasterId);
+                this.aircraftListData = responseData.map(x => {
+                    return {
+                        aircraft: x.aircraftType,
+                        model: x.aircraftModel,
+                        dashNumber: x.dashNumber,
+                        memo: x.memo,
+                    }
+                })
+                // resetting popup Data
+                this.aircraftData = undefined;
+                this.selectedAircraftId = []
+                this.selectedModelId = undefined;
+                this.selectedDashnumber = undefined;
+            })
+            //cutom
         })
     }
     LoadValues: any[] = [];
@@ -4053,8 +4122,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.itemClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId)) {
             this.display = true;
             this.modelValue = true;
-        }
-        if ((this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.itemClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId)) {
+        } else {
 
             this.isSaving = true;
 
@@ -4072,6 +4140,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.savesuccessCompleted(this.sourceItemMaster);
                     if (data != null) {
                         this.ItemMasterId = data.itemMasterId;
+                        console.log(this.ItemMasterId);
+                        console.log(data.itemMasterId);
                         if (this.isSaveCapes == true) {
                             this.saveCapabilities();
                         }
@@ -4145,8 +4215,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.moveAircraftInformation();
                 })
             }
-        } else { }
-    }     
+        }
+    }
+
     salesfinalPrice(myValue, percentValue) {
         let afterpercent = percentValue / 100;
         let test = afterpercent * myValue;

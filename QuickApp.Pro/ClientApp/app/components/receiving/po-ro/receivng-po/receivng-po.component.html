@@ -214,16 +214,16 @@
                             <thead>
                                 <tr class="po-table-tr">
                                     <th></th>
-                                    <th>Line no <span class="clr-red">*</span></th>
-                                    <th>PN <span class="clr-red">*</span></th>
-                                    <th>Qty Ordered <span class="clr-red">*</span></th>
-                                    <th>Qty Received <span class="clr-red">*</span></th>
+                                    <th>Line no</th>
+                                    <th>PN</th>
+                                    <th>Qty Ordered </th>
+                                    <th>Qty Received</th>
                                     <th>Qty Actually Received</th>
                                     <th>Qty Rejected</th>
-                                    <th>Qty Backordered <span class="clr-red">*</span></th>
-                                    <th>Status <span class="clr-red">*</span></th>
+                                    <th>Qty Backordered </th>
+                                    <th>Status</th>
                                     <th colspan="3" class="text-center">User Name</th>
-                                    <th colspan="4">Management Structure <span class="clr-red">*</span></th>
+                                    <th colspan="4">Management Structure</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -261,17 +261,17 @@
                                     <tr class="basic-info splitshipment po-sub-tr" [hidden]="purchaseOrderData.purchaseOderPart[row_index+1] != undefined && !purchaseOrderData.purchaseOderPart[row_index+1].visible" *ngIf="part.isParent && purchaseOrderData.purchaseOderPart[row_index+1] != undefined && (!purchaseOrderData.purchaseOderPart[row_index+1].isParent)">
                                         <th></th>
                                         <th></th>
-                                        <th>PN <span class="clr-red">*</span></th>
-                                        <th>Qty Ordered <span class="clr-red">*</span></th>
-                                        <th>Qty Received <span class="clr-red">*</span></th>
-                                        <th>Qty Actually Received <span class="clr-red">*</span></th>
+                                        <th>PN  </th>
+                                        <th>Qty Ordered  </th>
+                                        <th>Qty Received  </th>
+                                        <th>Qty Actually Received  </th>
                                         <th>Qty Rejected</th>
-                                        <th>Qty Backordered <span class="clr-red">*</span></th>
-                                        <th>Status <span class="clr-red">*</span></th>
+                                        <th>Qty Backordered  </th>
+                                        <th>Status  </th>
                                         <th>User Type</th>
                                         <th>User Name</th>
-                                        <th>Address <span class="clr-red">*</span></th>
-                                        <th colspan="4">Management Structure <span class="clr-red">*</span></th>
+                                        <th>Address  </th>
+                                        <th colspan="4">Management Structure  </th>
                                         <th> </th>
                                     </tr>
 
@@ -325,13 +325,13 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <label>QTY To Receive</label>
+                                                        <label>Qty To Receive</label>
                                                         <input type="text" pInputText pKeyFilter="pnum" class="form-control" disabled="disabled" [value]="part.quantityOrdered" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <label>QTY Actually Received <span class="clr-red">*</span></label>
+                                                        <label>Qty Actually Received <span class="clr-red">*</span></label>
                                                         <input type="text" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
                                                     </div>
                                                 </div>
@@ -341,7 +341,7 @@
                                             <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <label>QTY Rejected <span class="clr-red">*</span></label>
+                                                        <label>Qty Rejected <span class="clr-red">*</span></label>
                                                         <input type="text"  [(ngModel)]="part.quantityRejected" pInputText pKeyFilter="pnum" class="form-control" required />
                                                     </div>
                                                 </div>
@@ -861,11 +861,11 @@
                                                     </div>
                                                 </section>
 
-                                                <div class="form-row">
+                                                <!--<div class="form-row">
                                                     <div class="col-md-12">
                                                         <a class="btn btn-primary-cstm" style="width: 58px; height: 28px; margin-bottom: 10px;">Save</a>
                                                     </div>
-                                                </div>
+                                                </div>-->
                                             </div>
 
                                         </td>

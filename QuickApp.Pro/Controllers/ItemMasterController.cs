@@ -1446,84 +1446,47 @@ namespace QuickApp.Pro.Controllers
         //DELETES
         //To Delete Aircraft Info in Item Master Aircraft Mapping
         [HttpPost("UpdateItemMasterAtaDeleteStatus/{id}")]
-        public IActionResult DeleteItemmasterATA(long id, [FromBody] ItemMasterATAMapping itemMasterATAMapping)
+        public IActionResult DeleteItemmasterATA(long id)
         {
             if (ModelState.IsValid)
             {
-
-                if (_context.ItemMasterATAMapping.Any(o => o.ItemMasterATAMappingId == id))
-                {
                     var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterATAMappingId == id).FirstOrDefault();
-                    existingresule.IsDeleted = itemMasterATAMapping.IsDeleted;
+                    existingresule.IsDeleted = true;
                     existingresule.UpdatedDate = DateTime.Now;
-                    existingresule.UpdatedBy = itemMasterATAMapping.UpdatedBy;
                     _unitOfWork.Repository<ItemMasterATAMapping>().Update(existingresule);
                     _unitOfWork.SaveChanges();
-                    return Ok(itemMasterATAMapping);
-                }
             }
             else
             {
-                return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
+                //return BadRequest($"{nameof(itemMasterATAMapping)} cannot be null");
             }
 
             return Ok(ModelState);
         }
 
         [HttpPost("UpdateItemMasterAircraftDeleteStatus/{id}")]
-        public IActionResult DeleteItemmasterAircraft(long id, [FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping)
+        public IActionResult DeleteItemmasterAircraft(long id)
         {
-            try
-            {
                 if (ModelState.IsValid)
                 {
-
-                    if (_context.ItemMasterAircraftMapping.Any(o => o.ItemMasterAircraftMappingId == id))
-                    {
                         var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.ItemMasterAircraftMappingId == id).FirstOrDefault();
                         existingresule.UpdatedDate = DateTime.Now;
-                        existingresule.IsDeleted = itemMasterAircraftMapping.IsDeleted;
-                        existingresule.UpdatedBy = itemMasterAircraftMapping.UpdatedBy;
+                        existingresule.IsDeleted = true;
                         _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(existingresule);
                         _unitOfWork.SaveChanges();
-                        return Ok(itemMasterAircraftMapping);
-                    }
                 }
-                else
-                {
-                    return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
-                }
-            }catch(Exception ex)
-            {
-                throw;
-            }
-
             return Ok(ModelState);
         }
         [HttpPost("UpdateItemMasterPurcSaletDeleteStatus/{id}")]
-        public IActionResult DeleteItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale, long id)
+        public IActionResult DeleteItemmasterPurcSale(long id)
         {
-            try { 
             if (ModelState.IsValid)
             {
-                if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterPurchaseSaleId == id))
-                {
                     var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == id).FirstOrDefault();
-                    existingresule.IsDeleted = itemMasterPurchaseSale.IsDeleted;
+                    existingresule.IsDeleted = true;
                     existingresule.UpdatedDate = DateTime.Now;
-                    existingresule.UpdatedBy = itemMasterPurchaseSale.UpdatedBy;
                     _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
                     _unitOfWork.SaveChanges();
-                    return Ok(itemMasterPurchaseSale);
-                }
-            }
-            else
-            {
-                return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
-            }
-        }catch(Exception ex)
-            {
-                throw;
             }
             return Ok(ModelState);
         }

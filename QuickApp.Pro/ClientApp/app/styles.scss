@@ -12936,6 +12936,9 @@ body .ui-datepicker table td > a.ui-state-active {
     p-multiselect .ui-multiselect-item {
         padding-top: 0 !important;
     }
+    p-multiselect .ui-multiselect-panel .ui-multiselect-header .ui-chkbox {
+        padding-left: 3px !important;
+    }
     p-checkbox .ui-chkbox .ui-chkbox-box.ui-state-active{
         border-color: #007ad9 !important;
         background-color: #007ad9 !important;
@@ -13870,7 +13873,48 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 
 .imstock-pddowm .ui-dropdown {
-    width: 120px !important;
+    width: 160px !important;
+    border-radius: 2px !important;
+    margin-top: 0;
+}
+.imstock-pddowm .ui-dropdown label {
+    padding: 4px 5px !important;
+}
+.imstock-pddowm .ui-dropdown .ui-dropdown-trigger {
+    background-color: #fff !important;
+}
+.imstock-pddowm .ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon {
+    font-size: 16px !important;
+    top: 43% !important;
+    left: 36% !important;
+}
+.imstock-pddowm .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight {
+    color: #fff !important;
+}
+.imstock-pmselect .ui-multiselect-panel .ui-multiselect-items .ui-multiselect-item .ui-chkbox {
+    float: left;
+    margin-top: 7px;
+}
+.imstock-pmselect .ui-multiselect-panel .ui-multiselect-items .ui-multiselect-item {
+    background-color: transparent !important;
+    clear: both;
+}
+.imstock-pmselect .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {
+    font-size: 18px !important;
+}
+.imstock-pmselect span {
+    font-size: 16px !important;
+}
+.popup-plusicon-cstm {
+    width: 100px !important;
+    float: none !important;
+}
+.popup-plusicon-cstm a i {
+    padding: 0 !important;
+}
+.plusicon-cstm i {
+    padding: 0 !important;
+    font-size: 20px !important;
 }
 
 .modal-full {
