@@ -107,7 +107,7 @@
 }
 .new-checkbox {
     margin-top: 10px !important;
-    margin-left: -38px;
+    margin-left: -39px;
 }
 .add-margin6 {
     margin-top: 10px;
@@ -224,7 +224,9 @@ td {
     padding-right: 2px;
     padding-left: 2px;
 }
-
+.col-new {
+    margin-left: 8px;
+}
 .upload .fa {
     margin-left: -2px;
     margin-top: -2px;
@@ -313,7 +315,7 @@ margin-top: 0px !important;
   width: 140px !important;
 }
 .text-item{
-  width: 96% !important;
+  width: 93% !important;
  margin-left: 5px;
 }
 .form-check-label{
@@ -326,4 +328,22 @@ margin-top: 0px !important;
 .select-value {
     margin-top: 6px;
 }
-
+.input-text-value {
+    margin-left: 4px !important;
+    border-radius: 5px !important;
+    width: 93% !important;
+}
+.snumber-block2 {
+    margin: 10px 0px;    
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+.control-alter1 {
+    margin-top: 5px;
+    }
+.spacing-label {
+    margin-top: 6px;
+}
+.control-bottom {
+    margin-bottom: 7px !important;
+}

@@ -3523,11 +3523,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.modal.close();
     }
-
-
-
     saveintegration() {
-
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
@@ -4102,12 +4098,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 IsDeleted: false
             }
         })
-        for (var i = 0; i <= data.length - 1; i++) {
-            this.itemser.newItemMasterPurcSaleClass(data[i]).subscribe(datas => {
+        
+            this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
                 console.log(datas);
             })
-        }
-       
+              
         
     }
     moveExportInformation1() {
@@ -4180,15 +4175,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 {
                     this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
                 }
-
-
                 if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
                 {
                     this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
                 }
-
-
-
                 this.sourceItemMaster.updatedBy = this.userName;
                 this.sourceItemMaster.masterCompanyId = 1;
                 this.sourceItemMaster.itemTypeId = 1;

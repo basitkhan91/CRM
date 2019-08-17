@@ -25,7 +25,7 @@
                     <div class="card">
                         <div class="form-row col-row">
                             <div class="col-md-3">
-                                <div class="form-group">
+                                <div class="form-group" style="margin-left: 13px">
                                     <div>
                                         <label for="customerName" class="control-label">
                                             PN<strong class="clr-red">*</strong>
@@ -80,7 +80,7 @@
                                         <input class="form-control text-field" maxlength="10" type="text" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.nationalStockNumber">
                                     </div>
-                                    <div class="inline-block display-flex">
+                                    <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Classification <strong class="clr-red">*</strong>
                                         </label>
@@ -95,7 +95,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="inline-block display-flex">
+                                    <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">Item Group </label>
                                         <span style="margin-left:-88px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
                                     </div>
@@ -108,7 +108,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="inline-block display-flex">
+                                    <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">Acquired?</label>
                                         <div class="radio-value">
                                             <label class="radio-inline">
@@ -123,7 +123,11 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="inline-block display-flex">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">Expiration Date</label>
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}"
@@ -136,99 +140,99 @@
                                     </div>
                                     <div class="snumber-block2" *ngIf="sourceItemMaster.isExpirationDateAvailable">
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label control-alter col-sm-4">Rec'd date</label>
+                                            <label class="control-label control-alter1 col-sm-5">Rec'd date</label>
                                             <div class="col-sm-7">
                                                 <label class="wauto">
-                                                    <input type="checkbox" name="exp-date-radio"
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
                                                            id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isReceivedDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
                                                        id="exp-rec-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.daysReceived">
-                                                <strong style="margin-left: 8px;"><span *ngIf="sourceItemMaster.isManufacturingDateAvailable">Days</span></strong>
+                                                <span *ngIf="sourceItemMaster.isReceivedDateAvailable" style="margin-left: 8px;">Days</span>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label control-alter col-sm-4">Mfg date</label>
+                                            <label class="control-label control-alter col-sm-5">Mfg date</label>
                                             <div class="col-sm-7">
                                                 <label class="wauto">
-                                                    <input type="checkbox" name="exp-date-radio"
+                                                    <input type="checkbox" style="margin-left:11px !important" name="exp-date-radio"
                                                            id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.isManufacturingDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
                                                        id="exp-rec-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.manufacturingDays">
-                                                <strong style="margin-left: 8px;"><span *ngIf="sourceItemMaster.isManufacturingDateAvailable">Days</span></strong>
+                                                <span *ngIf="sourceItemMaster.isManufacturingDateAvailable" style="margin-left: 8px;">Days</span>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label control-alter col-sm-4">Tag date</label>
+                                            <label class="control-label control-alter col-sm-5">Tag date</label>
                                             <div class="col-sm-7">
                                                 <label class="wauto">
-                                                    <input type="checkbox" name="exp-date-radio"
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
                                                            id="exp-tag-date-radio" [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.isTagDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isTagDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
                                                        id="exp-tag-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.tagDays">
-                                                <strong style="margin-left: 8px;"><span *ngIf="sourceItemMaster.isTagDateAvailable">Days</span></strong>
+                                                <span *ngIf="sourceItemMaster.isTagDateAvailable" style="margin-left: 8px;">Days</span>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label control-alter col-sm-4">Open date</label>
+                                            <label class="control-label control-alter col-sm-5">Open date</label>
                                             <div class="col-sm-7">
                                                 <label class="wauto">
-                                                    <input type="checkbox" name="exp-date-radio"
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
                                                            id="exp-open-date-radio" [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.isOpenDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isOpenDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
                                                        id="exp-open-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.openDays">
-                                                <strong style="margin-left: 8px;"><span *ngIf="sourceItemMaster.isOpenDateAvailable">Days</span></strong>
+                                                <span *ngIf="sourceItemMaster.isOpenDateAvailable" style="margin-left: 8px;">Days</span>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label control-alter col-sm-4">Shipped date</label>
+                                            <label class="control-label control-alter col-sm-5">Shipped date</label>
                                             <div class="col-sm-7">
                                                 <label class="wauto">
-                                                    <input type="checkbox" name="exp-date-radio" id="exp-shipped-date-radio"
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important" id="exp-shipped-date-radio"
                                                            [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.isShippedDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isShippedDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
                                                        id="exp-shipped-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.shippedDays">
-                                                <strong style="margin-left: 8px;"><span *ngIf="sourceItemMaster.isShippedDateAvailable">Days</span></strong>
+                                                <span *ngIf="sourceItemMaster.isShippedDateAvailable" style="margin-left: 8px;">Days</span>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label control-alter col-sm-4">Other date</label>
+                                            <label class="control-label control-alter col-sm-5">Other date</label>
                                             <div class="col-sm-7">
                                                 <label class="wauto">
-                                                    <input type="checkbox" name="exp-date-radio" id="exp-shipped-date-radio"
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important" id="exp-shipped-date-radio"
                                                            [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.isOtherDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isOtherDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
                                                        id="exp-shipped-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.otherDays">
-                                                <strong style="margin-left: 8px;"><span *ngIf="sourceItemMaster.isOtherDateAvailable">Days</span></strong>
+                                                <span *ngIf="sourceItemMaster.isOtherDateAvailable" style="margin-left: 8px;">Days</span>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
@@ -240,17 +244,13 @@
                                                [(ngModel)]="sourceItemMaster.shelfLifeAvailable">
                                         &nbsp;
                                         <input *ngIf="sourceItemMaster.shelfLifeAvailable"
-                                               class="form-control shelf1 number exp-date-inputs w50" type="text" pKeyFilter="num"
+                                               class="form-control shelf1 number exp-date-inputs w50" type="text" pKeyFilter="int"
                                                id="exp-shipped-date-input" name=""
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.otherDays">
                                         <strong class="shelf"><span *ngIf="sourceItemMaster.shelfLifeAvailable">Days</span></strong>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">                                    
-                                    <div class="inline-block display-flex inline-adjust" style="margin-top:2">
+                                    <div class="inline-block display-flex inline-adjust spacing-label">
                                         <label class="control-label">Provision </label>
                                         <span style="margin-left:-99px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="provisionope(contents)"></i></span>
                                     </div>
@@ -272,14 +272,29 @@
                                     <div class="inline-block display-flex">
                                         <label class="control-label">PMA</label>
                                         <input class="form-control new-checkbox" type="checkbox"
-                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.pma">
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.isPma">
                                     </div>
+                                    <div *ngIf="sourceItemMaster.isPma">                                       
+                                            <p-autoComplete [(ngModel)]="sourceItemMaster.pma"
+                                                            (onKeyUp)=alterPnHandler($event) 
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            [size]="32" [minLength]="1"
+                                                            [dropdown]="true" class="autocomplete-customer2">
+                                                <!--<ng-template let-partName pTemplate="part">
+                                                    <div class="ui-helper-clearfix">{{}}</div>
+                                                </ng-template>-->
+                                            </p-autoComplete>
+                                            <div *ngIf="disableSaveAlterumber" style="color:red">
+                                                Please Select From DropDown
+                                            </div>                                        
+                                    </div>
+                                    <div class="clear"></div>
                                     <div class="inline-block display-flex">
                                         <label class="control-label ">DER</label>
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.der">
                                     </div>
-                                    <div class="inline-block display-flex">
+                                    <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">Manufacturer <strong class="clr-red">*</strong></label>
                                         <span style="margin-left:-72px;margin-top:5px;cursor:pointer;">
                                             <i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass"
@@ -295,113 +310,34 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="inline-block display-flex">
+                                    <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">Schematic</label>
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.isSchematic">
                                     </div>
-                                    <div class="schematic-block" *ngIf="sourceItemMaster.isSchematic">
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Attach Drawing</label>
-                                            <div class="col-sm-6 upload">
-                                                <input type="file" name="upload[]" id="upload" class="inputfile upload-file"
-                                                       data-multiple-caption="{count} files selected" multiple="">
-                                                <label for="upload">
-                                                    <figure> <i class="fa fa-upload"></i></figure>
-                                                    <span>Choose a file…</span>
-                                                </label>
-                                            </div>
+                                    <div class="schematic-block form-group col-sm-12" *ngIf="sourceItemMaster.isSchematic">
+                                        <label class="control-label col-sm-6" style="margin-left: -6px">Attach Drawing</label>
+                                        <div class="col-sm-6 upload" style="margin-left: -8px; margin-top: 5px">
+                                            <input type="file" name="upload[]" id="upload" class="inputfile upload-file"
+                                                   data-multiple-caption="{count} files selected" multiple="">
+                                            <label for="upload">
+                                                <figure> <i class="fa fa-upload"></i></figure>
+                                                <span>Choose a file…</span>
+                                            </label>
                                         </div>
                                     </div>
-                                    <label class="control-label">NTE</label>
-                                    <div>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead style="text-align:center;">
-                                                    <tr>
-                                                        <th>Ovh</th>
-                                                        <th>Repair</th>
-                                                        <th>Bench Test</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <strong>Hours</strong>
-                                                            <br />
-                                                            <input type="text" pKeyFilter="num" class="form-control w50 time"
-                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
-                                                                   [(ngModel)]="sourceItemMaster.overhaulHours">
-                                                        </td>
-                                                        <td>
-                                                            <strong>Hours</strong>
-                                                            <br />
-                                                            <input type="text" pKeyFilter="num" class="form-control w50 time"
-                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
-                                                                   [(ngModel)]="sourceItemMaster.rpHours">
-                                                        </td>
-                                                        <td>
-                                                            <strong>Hours</strong>
-                                                            <br />
-                                                            <input type="text" pKeyFilter="num" maxlength="5" class="form-control w50 time"
-                                                                   [ngModelOptions]="{standalone: true}"
-                                                                   [(ngModel)]="sourceItemMaster.testHours">
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <label class="control-label">Turn Time</label>
-                                <div>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead style="text-align:center;">
-                                                <tr>
-                                                    <th>Ovh</th>
-                                                    <th>Repair</th>
-                                                    <th>Bench Test</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <strong>Days</strong>
-                                                        <br />
-                                                        <input maxlength="5" type="text" pKeyFilter="num" class="form-control w50 time"
-                                                               [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours">
-                                                    </td>
-                                                    <td>
-                                                        <strong>Days</strong>
-                                                        <br />
-                                                        <input maxlength="5" type="text" pKeyFilter="num" class="form-control w50 time"
-                                                               [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
-                                                    </td>
-                                                    <td>
-                                                        <strong>Days</strong>
-                                                        <br />
-                                                        <input maxlength="5" type="text" pKeyFilter="num" class="form-control w50 time"
-                                                               [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
+                                    <div class="clear"></div>
                                     <div class="inline-block display-flex">
                                         <label class="control-label">RFQ Tracking</label>
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.rfqTracking">
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <div class="inline-block display-flex inline-adjust">
                                         <label class="control-label">
                                             GL Acct.<strong class="clr-red">*</strong>
@@ -410,18 +346,17 @@
                                             <i class="fa fa-plus-circle fa-lg"
                                                [routerLink]="['/generalledgermodule/generalledgerpage/app-glaccount-create']"></i>
                                         </span>
-
                                     </div>
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}"
                                                 [(ngModel)]="sourceItemMaster.glAccountId">
                                             <option *ngFor="let glAccounts of allGlInfo"
-                                                    [ngValue]="glAccounts.glAccountId" title="Id:{{glAccounts.glAccountId}},Description:{{glAccounts.accountDescription}}">
-                                                {{glAccounts.accountName}}
+                                                    [ngValue]="glAccounts.glAccountId" title="{{glAccounts.accountDescription}}">
+                                                {{glAccounts.glAccountId}},{{glAccounts.accountName}}
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="inline-block display-flex inline-adjust" style="margin-top: 4px;">
+                                    <div class="inline-block display-flex inline-adjust spacing-label" style="margin-top: 4px;">
                                         <label class="control-label">
                                             Purchase UOM <strong class="clr-red">*</strong>
                                         </label>
@@ -439,7 +374,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="inline-block display-flex inline-adjust" style="margin-top: 4px;">
+                                    <div class="inline-block display-flex inline-adjust spacing-label" style="margin-top: 4px;">
                                         <label class="control-label">Stock UOM </label>
 
                                         <span style="margin-left:-88px;margin-top:5px;cursor:pointer;">
@@ -458,7 +393,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="inline-block display-flex inline-adjust" style="margin-top: 4px;">
+                                    <div class="inline-block display-flex inline-adjust spacing-label" style="margin-top: 4px;">
                                         <label class="control-label">Consume UOM </label>
                                         <a href="#">
                                             <i class="fa fa-plus"></i>
@@ -481,51 +416,58 @@
                                     <label class="control-label">Lead Time</label>
                                     <div class="col-md-7">
                                         <span style="font-size: 11px;">Days</span>
-                                        <input type="text" pInputText pKeyFilter="num" min="0" maxlength="10" class="input-value"
+                                        <input type="text" pInputText pKeyFilter="int" min="0" maxlength="10" class="input-value"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeDays">
                                     </div>
                                     <div class="col-md-5">
                                         <span style="font-size: 11px;">Hours</span>
-                                        <input type="text" pInputText pKeyFilter="num" class="input-value" [ngModelOptions]="{standalone: true}"
+                                        <input type="text" pInputText pKeyFilter="int" class="input-value" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeHours">
                                     </div>
-                                    <label class="control-label">Stock Level</label>
+                                    <div class="clear"></div>
+                                    <label class="control-label spacing-label">Stock Level</label>
                                     <div>
-                                        <input class="form-control input-value" min="0" maxlength="10" type="text" pKeyFilter="num" [ngModelOptions]="{standalone: true}"
+                                        <input class="form-control input-value" min="0" maxlength="10" type="text" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.stockLevel">
-                                    </div>
-                                    <label class="control-label">Reorder Point</label>
-                                    <div>
-                                        <span data-toggle="tooltip" title="" data-original-title="calculation field">
-                                            <input class="form-control input-value" value="1245" min="0" maxlength="10" type="text" pKeyFilter="num"
-                                                   [ngModelOptions]="{standalone: true}"
-                                                   [(ngModel)]="sourceItemMaster.reorderPoint">
-                                        </span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label">Reorder Qty</label>
+                                    <label class="control-label spacing-label">Reorder Point</label>
                                     <div>
-                                        <input class="form-control input-value" style="width:95%" type="text" pKeyFilter="num" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
+                                        <span data-toggle="tooltip" title="" data-original-title="calculation field">
+                                            <input class="form-control input-value" value="1245" min="0" maxlength="10" type="text" pKeyFilter="int"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.reorderPoint">
+                                        </span>
+                                    </div>
+                                    <label class="control-label spacing-label">Reorder Qty</label>
+                                    <div>
+                                        <input class="form-control input-value" type="text" pKeyFilter="int" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.reorderQuantiy">
                                     </div>
-                                    <label class="control-label">Min Order Qty</label>
+                                    <label class="control-label spacing-label">Min Order Qty</label>
                                     <div>
-                                        <input class="form-control input-value" style="width:95%" type="text" pKeyFilter="num" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
+                                        <input class="form-control input-value" type="text" pKeyFilter="int" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.minimumOrderQuantity">
                                     </div>
-                                    <label class="control-label">Priority </label>
+                                    <div class="inline-adjust inline-block display-flex">
+                                        <label class="control-label spacing-label">Priority </label>
+                                        <span style="margin-left:-112px;margin-top:2px;cursor:pointer;">
+                                            <i class="fa fa-plus-circle fa-lg"
+                                               [routerLink]="['/singlepages/singlepages/app-priority']"></i>
+                                        </span>
+                                    </div>                                  
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}" style="width:94%"
+                                        <select [ngModelOptions]="{standalone: true}"
                                                 [(ngModel)]="sourceItemMaster.priorityId">
                                             <option class="form-control" *ngFor="let priorityName of allPriorityInfo"
                                                     [ngValue]="priorityName.priorityId">
                                                 {{priorityName.description}}
                                             </option>
-                                        </select>                                        
+                                        </select>
                                     </div>
                                     <div class="inline-block display-flex">
                                         <label class="control-label">
@@ -542,17 +484,123 @@
                                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes"
                                                        [panelStyle]="{minWidth:'12em'}" class="pub-multi3"></p-multiSelect>
                                     </div>
-                                    <label class="control-label">Memo</label>                                    
+                                    <label class="control-label">Memo</label>
                                     <div class="memo-popup-cstm">
-                                        <span pTooltip="{{memoNotes}}" tooltipPosition="top"><input [ngModelOptions]="{standalone: true}"
-                                                  [(ngModel)]="sourceItemMaster.memo" type="text" pInputText class="form-control input-value"/></span>
-                                        <i class="fa memo fa-info-circle fa-lg" data-toggle="modal" data-target="#rro-memo"NTE></i>
+                                        <span pTooltip="{{memoNotes}}" tooltipPosition="top">
+                                            <input [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceItemMaster.memo" type="text" [disabled]="true" pInputText class="form-control input-value" />
+                                        </span>
+                                        <i class="fa memo fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top" data-toggle="modal" data-target="#rro-memo" NTE></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-new">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">NTE</label>
+                                    <div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead style="text-align:center;">
+                                                    <tr>
+                                                        <th>Overhaul</th>
+                                                        <th>Repair</th>
+                                                        <th>Mfg</th>
+                                                        <th>Bench Test</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Hours</strong>
+                                                            <br />
+                                                            <input type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [(ngModel)]="sourceItemMaster.overhaulHours">
+                                                        </td>
+                                                        <td>
+                                                            <strong>Hours</strong>
+                                                            <br />
+                                                            <input type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [(ngModel)]="sourceItemMaster.rpHours">
+                                                        </td>
+                                                        <td>
+                                                            <strong>Hours</strong>
+                                                            <br />
+                                                            <input type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [(ngModel)]="sourceItemMaster.mfgHours">
+                                                        </td>
+                                                        <td>
+                                                            <strong>Hours</strong>
+                                                            <br />
+                                                            <input type="text" pKeyFilter="int" maxlength="5" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.testHours">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Turn Time</label>
+                                    <div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead style="text-align:center;">
+                                                    <tr>
+                                                        <th>Overhaul</th>
+                                                        <th>Repair</th>
+                                                        <th>Mfg</th>
+                                                        <th>Bench Test</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Days</strong>
+                                                            <br />
+                                                            <input maxlength="5" type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours">
+                                                        </td>
+                                                        <td>
+                                                            <strong>Days</strong>
+                                                            <br />
+                                                            <input maxlength="5" type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
+                                                        </td>
+                                                        <td>
+                                                            <strong>Days</strong>
+                                                            <br />
+                                                            <input maxlength="5" type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
+                                                        </td>
+                                                        <td>
+                                                            <strong>Days</strong>
+                                                            <br />
+                                                            <input maxlength="5" type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-sm-12">
                         <div class="col-sm-6">
                         </div>
@@ -1016,7 +1064,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     <div class="col-sm-12">
                         <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
                         <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
@@ -1404,13 +1451,13 @@
 
                         <div class="col-sm-12">
                             <div class="col-sm-6">
-                                <button class="btn btn-success"
+                                <button class="btn btn-primary-cstm"
                                         data-dismiss="modal">
                                     SAVE
                                 </button>
                             </div>
                             <div class="col-sm-6 inline-block display-flex">
-                                <button class="btn btn-danger" style="margin-left: 172px"
+                                <button class="btn btn-danger-cstm" style="margin-left: 172px"
                                         data-dismiss="modal">
                                     Close
                                 </button>
@@ -1440,7 +1487,7 @@
                     <div class="col-sm-4">
                         <label for="name" class="control-label control-item"> Classification <span class="clr-red">*</span></label>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                         <p-autoComplete [(ngModel)]="itemName" [ngModelOptions]="{standalone: true}"
                                         (onKeyUp)=ItemHandler($event) (onSelect)="ItemClassficationCode($event)"
                                         [suggestions]="localCollection" (completeMethod)="filterItems($event)" [size]="30"
@@ -1458,7 +1505,7 @@
                             Item Classification Name<span class="clr-red">*</span>
                         </label>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                         <p-autoComplete (onSelect)="classificationId($event)" (onKeyUp)=classeventHandler($event)
                                         [(ngModel)]="className" [ngModelOptions]="{standalone: true}"
                                         [suggestions]="localNameCollection" (completeMethod)="filterItemNames($event)" [size]="30" class="autocomplete-customer1"
@@ -1474,7 +1521,7 @@
                     <div class="col-sm-4">
                         <label for="netDays" class="control-label control-item">Item Type<span class="clr-red">*</span></label>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                         <p-autoComplete (onSelect)="classificationtypeId($event)" class="autocomplete-customer1" (onKeyUp)=classeventtypeHandler($event)
                                         [(ngModel)]="itemTypeName" [ngModelOptions]="{standalone: true}"
                                         [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
@@ -1491,7 +1538,7 @@
                     <div class="col-sm-4">
                         <label for="description" class="control-label control-item">Memo</label>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                         <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
                                   [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                     </div>
@@ -1506,12 +1553,11 @@
                 </label>
             </div>
             <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveItemClassficationCode"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="disableSaveItemClassficationCode"
                         (click)="saveitemclassification()">
-                    Submit
+                    Save
                 </button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -1533,7 +1579,7 @@
                 <div class="col-sm-4">
                     <label for="name" class="control-label control-item">Item Group Id<span class="clr-red">*</span></label>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-5">
                     <p-autoComplete [(ngModel)]="itemGroupName" [ngModelOptions]="{standalone: true}"
                                     (onKeyUp)=ItemGroupHandler($event) (onSelect)="itemGroupCode($event)" [suggestions]="localgroup"
                                     (completeMethod)="filterItemgroups($event)" [size]="30" [minLength]="1" [dropdown]="true" class="autocomplete-customer1">
@@ -1550,8 +1596,8 @@
                         Item Group Description<span class="clr-red">*</span>
                     </label>
                 </div>
-                <div class="col-sm-8">
-                    <input type="text" name="description" class="form-control" style="width: 96% !important;margin-left: 4px; !important" required #description="ngModel"
+                <div class="col-sm-5">
+                    <input type="text" name="description" class="form-control input-text-value" style="width: 93% !important;" required #description="ngModel"
                            [(ngModel)]="sourceAction.description" minlength="2">
                 </div>
             </div>
@@ -1559,7 +1605,7 @@
                 <div class="col-sm-4">
                     <label for="description" class="control-label control-item">Memo</label>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-5">
                     <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
                               [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                 </div>
@@ -1574,11 +1620,11 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveItemGroup"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="disableSaveItemGroup"
                         (click)="saveitemgroup()">
-                    Submit
+                    Save
                 </button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -1602,7 +1648,7 @@
                     <div class="col-sm-4">
                         <label for="description" class="control-label control-item">Provision Name<span class="clr-red">*</span></label>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                         <p-autoComplete [(ngModel)]="provisionName" [ngModelOptions]="{standalone: true}"
                                         (onKeyUp)=ProvisionHandler($event) (onSelect)="ProvisionDescription($event)"
                                         [suggestions]="localprovision" (completeMethod)="filterprovisions($event)" [size]="30"
@@ -1618,7 +1664,7 @@
                     <div class="col-sm-4">
                         <label for="description" class="control-label">Memo</label>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                         <textarea placeholder="Memo" class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
                                   [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                         <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
@@ -1637,11 +1683,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveProvision"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="disableSaveProvision"
                         (click)="saveprovision()">
-                    Submit
+                    Save
                 </button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -1663,12 +1709,12 @@
                         Purchase Unit Of Measure<span class="clr-red">*</span>
                     </label>
                 </div>
-                <div class="col-sm-7">
+                <div class="col-sm-5">
                     <div class="inner-addon right-addon inline-block">
                         <p-autoComplete [(ngModel)]="unitName" [ngModelOptions]="{standalone: true}"
                                         (onKeyUp)=PurchaseUOMHandler($event) (onSelect)="PurchaseUOMdescription($event)"
                                         [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true">
+                                        [minLength]="1" [dropdown]="true" class="autocomplete-customer1">
                             <ng-template let-unitName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{unitName}}</div>
                             </ng-template>
@@ -1682,58 +1728,46 @@
                 <div class="col-sm-4">
                     <label for="shortName" class="control-label">Short Name<span class="clr-red">*</span></label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input type="text" name="shortName" class="form-control" #shortName="ngModel"
+                <div class="col-sm-5">
+                    <input type="text" name="shortName" style="width: 93% !important" class="form-control input-text-value" required #description="ngModel"
                            [(ngModel)]="sourceUOM.shortName" minlength="2">
-
                 </div>
-                <div class="clear"></div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="standard" class="control-label">Standard<span class="clr-red">*</span></label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input type="text" name="standard" class="form-control" #standard="ngModel"
+                <div class="col-sm-5">
+                    <input type="text" name="standard" style="width: 93% !important" class="form-control input-text-value" required #description="ngModel"
                            [(ngModel)]="sourceUOM.standard" minlength="2">
-
                 </div>
-                <div class="clear"></div>
             </div>
             <div class="form-group">
-                <label for="description" class="control-label">Memo</label>
-                <div class="inner-addon right-addon inline-block">
-                    <input placeholder="Memo" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-                           [(ngModel)]="sourceUOM.memo" minlength="2">
-
+                <div class="col-sm-4">
+                    <label for="description" class="control-label">Memo</label>
+                </div>
+                <div class="col-sm-5">
+                    <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
+                              [(ngModel)]="sourceUOM.memo" minlength="2"></textarea>
                 </div>
                 <div class="clear"></div>
             </div>
-
-            <div class="form-group">
-                <div class="col-sm-6">
-                    <label class="form-check-label" for="isActive">
-                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
-                               id="isActive" [(ngModel)]="sourceUOM.isActive"> Active
-                    </label>
-                </div>
-                <div class="clear"></div>
-            </div>
-
-
+            <div class="col-sm-12">
+                <label class="form-check-label" for="isActive">
+                    <input type="checkbox" name="isActive" style="width: 20px !important;" #isActive="ngModel" class="form-check-input" checked
+                           id="isActive" [(ngModel)]="sourceUOM.isActive"> Active
+                </label>
+            </div>         
             <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSavePurchaseUOM"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="disableSavePurchaseUOM"
                         (click)=" savePurchaseunitofmeasure()">
-                    Submit
+                    Save
                 </button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
 </ng-template>
-
-
 
 <ng-template #conmodel let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
@@ -1751,11 +1785,11 @@
                         Stock Unit Of Measure<span class="clr-red">*</span>
                     </label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
+                <div class="col-sm-5">
                     <p-autoComplete [(ngModel)]="unitName" [ngModelOptions]="{standalone: true}"
                                     (onKeyUp)=StockUOMHandler($event) (onSelect)="StockUOMdescription($event)"
                                     [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true">
+                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer1">
                         <ng-template let-unitName pTemplate="item">
                             <div class="ui-helper-clearfix">{{unitName}}</div>
                         </ng-template>
@@ -1768,53 +1802,42 @@
                 <div class="col-sm-4">
                     <label for="shortName" class="control-label">Short Name<span class="clr-red">*</span></label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input type="text" name="shortName" class="form-control" #shortName="ngModel"
+                <div class="col-sm-5">
+                    <input type="text" name="shortName" style="width: 93% !important" class="form-control input-text-value" #shortName="ngModel"
                            [(ngModel)]="sourceUOM.shortName" minlength="2">
-                </div>
-                <div class="clear"></div>
+                </div>               
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="standard" class="control-label">Standard<span class="clr-red">*</span></label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input type="text" name="standard" class="form-control" #standard="ngModel"
+                <div class="col-sm-5">
+                    <input type="text" name="standard" style="width: 93% !important" class="form-control input-text-value" #standard="ngModel"
                            [(ngModel)]="sourceUOM.standard" minlength="2">
-
-                </div>
-                <div class="clear"></div>
+                </div>               
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="description" class="control-label">Memo</label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input placeholder="Memo" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-                           [(ngModel)]="sourceUOM.memo" minlength="2">
-
+                <div class="col-sm-5">
+                    <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
+                              [(ngModel)]="sourceUOM.memo" minlength="2"></textarea>
                 </div>
                 <div class="clear"></div>
             </div>
-
-            <div class="form-group">
-                <div class="col-sm-4">
-                    <label class="form-check-label" for="isActive">
-                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
-                               id="isActive" [(ngModel)]="sourceUOM.isActive"> Active
-                    </label>
-                </div>
-                <div class="clear"></div>
+            <div class="col-sm-12">
+                <label class="form-check-label" for="isActive">
+                    <input type="checkbox" name="isActive" style="width: 20px !important;" #isActive="ngModel" class="form-check-input" checked
+                           id="isActive" [(ngModel)]="sourceUOM.isActive"> Active
+                </label>
             </div>
-
-
             <div class="modal-footer">
-
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveStockUOM"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="disableSaveStockUOM"
                         (click)=" saveStockunitofmeasure()">
-                    Submit
+                    Save
                 </button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -1837,11 +1860,11 @@
                         Consume Unit Of Measure<span class="clr-red">*</span>
                     </label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
+                <div class="col-sm-5">
                     <p-autoComplete [(ngModel)]="unitName" [ngModelOptions]="{standalone: true}"
                                     (onKeyUp)=ConsumeUOMHandler($event) (onSelect)="ConsumeUOMdescription($event)"
                                     [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true">
+                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer1">
                         <ng-template let-unitName pTemplate="item">
                             <div class="ui-helper-clearfix">{{unitName}}</div>
                         </ng-template>
@@ -1854,49 +1877,37 @@
                 <div class="col-sm-4">
                     <label for="shortName" class="control-label">Short Name<span class="clr-red">*</span></label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input type="text" name="shortName" class="form-control" #shortName="ngModel"
+                <div class="col-sm-5">
+                    <input type="text" name="shortName" style="width: 93% !important" class="form-control input-text-value" #shortName="ngModel"
                            [(ngModel)]="sourceUOM.shortName" minlength="2">
 
-                </div>
-                <div class="clear"></div>
+                </div>                
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="standard" class="control-label">Standard<span class="clr-red">*</span></label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input type="text" name="standard" class="form-control" #standard="ngModel"
+                <div class="col-sm-5">
+                    <input type="text" name="standard" style="width: 93% !important" class="form-control input-text-value" #standard="ngModel"
                            [(ngModel)]="sourceUOM.standard" minlength="2">
-
-                </div>
-                <div class="clear"></div>
+                </div>               
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="description" class="control-label">Memo</label>
                 </div>
-                <div class="inner-addon right-addon inline-block">
-                    <input placeholder="Memo" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-                           [(ngModel)]="sourceUOM.memo" minlength="2">
-
-                </div>
-                <div class="clear"></div>
+                <div class="col-sm-5">
+                    <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
+                              [(ngModel)]="sourceUOM.memo" minlength="2"></textarea>
+                </div>                
             </div>
-
-            <div class="form-group">
-                <div class="col-sm-6">
-                    <label class="form-check-label" for="isActive">
-                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
-                               id="isActive" [(ngModel)]="sourceUOM.isActive"> Active
-                    </label>
-                </div>
-                <div class="clear"></div>
+            <div class="col-sm-12">
+                <label class="form-check-label" for="isActive">
+                    <input type="checkbox" name="isActive" style="width: 20px !important;" #isActive="ngModel" class="form-check-input" checked
+                           id="isActive" [(ngModel)]="sourceUOM.isActive"> Active
+                </label>
             </div>
-
-
             <div class="modal-footer">
-
                 <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveConsume"
                         (click)=" saveConsumeunitofmeasure()">
                     Submit
@@ -1906,8 +1917,6 @@
         </form>
     </div>
 </ng-template>
-
-
 
 <ng-template #contextEdited let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
@@ -3031,34 +3040,36 @@
     </div>
     <div class="modal-body">
         <form [formGroup]="manufacturerValue" (ngSubmit)="onSubmit(manufacturerValue.value)">
-            <div class="form-group col-sm-12">
-                <label for="description" class="control-label col-sm-4">
-                    Manufacturer Name<span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <p-autoComplete formControlName="manufacturerValue" [(ngModel)]="sourcemanufacturer"
-                                    (onKeyUp)=ManufacturerHandler($event) (onSelect)="Manufacturerdescription($event)"
-                                    [suggestions]="localmanufacturer" (completeMethod)="filtermanufacturer($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer1" required>
-                        <ng-template let-name pTemplate="item">
-                            <div class="ui-helper-clearfix">{{name}}</div>
-                        </ng-template>
-                    </p-autoComplete>
-                    <div *ngIf="manufacturerValue.controls['manufacturerId'].touched && !manufacturerValue.controls['manufacturerId'].valid" class="clr-red">
-                        <span *ngIf="manufacturerValue.controls['manufacturerId'].hasError('required') " style="color:red">
-                            Please Enter Mandatory
-                        </span>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label control-item">Manufacturer Name<span class="clr-red">*</span></label>
                     </div>
-                    <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-                    <div class="clear"></div>
+                    <div class="col-sm-5">
+                        <p-autoComplete formControlName="manufacturerValue" [(ngModel)]="sourcemanufacturer"
+                                        (onKeyUp)=ManufacturerHandler($event) (onSelect)="Manufacturerdescription($event)"
+                                        [suggestions]="localmanufacturer" (completeMethod)="filtermanufacturer($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" class="autocomplete-customer1" required>
+                            <ng-template let-name pTemplate="item">
+                                <div class="ui-helper-clearfix">{{name}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="manufacturerValue.controls['manufacturerId'].touched && !manufacturerValue.controls['manufacturerId'].valid" class="clr-red">
+                            <span *ngIf="manufacturerValue.controls['manufacturerId'].hasError('required') " style="color:red">
+                                Please Enter Mandatory
+                            </span>
+                        </div>
+                        <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
+                        <div class="clear"></div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary pull-right submit-btn" [disabled]="!manufacturerValue.valid"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!manufacturerValue.valid"
                         type="submit">
                     Submit
                 </button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -3074,12 +3085,14 @@
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="createIntegration()">
             <div class="form-group">
-                <label for="url" class="control-label">WebSite url</label>
-                <div class="inner-addon right-addon inline-block">
+                <div class="col-sm-4">
+                    <label for="url" class="control-label">WebSite url</label>
+                </div>
+                <div class="col-sm-5">
                     <p-autoComplete (onSelect)="integrationPartnmId($event)" (onKeyUp)=integrationEventHandler($event)
                                     [(ngModel)]="portalURL" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection"
                                     (completeMethod)="filterIntegrationsSelect($event)" [size]="30" [minLength]="1"
-                                    [dropdown]="true">
+                                    [dropdown]="true" class="autocomplete-customer">
                         <ng-template let-integrationName pTemplate="item">
                             <div class="ui-helper-clearfix">{{integrationName}}</div>
                         </ng-template>
@@ -3089,33 +3102,49 @@
                 <div class="clear"></div>
             </div>
             <div class="form-group">
-                <label for="netDays" class="control-label">Integration</label>
+                <div class="col-sm-4">
+                    <label for="netDays" class="control-label">Integration</label>
+                </div>
                 <div>
-                    <input type="text" name="description" class="form-control" required #description="ngModel"
-                           [(ngModel)]="sourceIntegration.description" minlength="2">
-                    <div *ngIf="description.dirty && description.errors?.required && description.errors"
-                         class="invalid-form-error-message">
-                        Integration required.
-                    </div>
-                    <div *ngIf="description.dirty && description.errors?.minlength && description.errors"
-                         class="invalid-form-error-message">
-                        Integration must be at least 2 characters long.
+                    <div class="col-sm-5">
+                        <input type="text" name="description" style="width:93% !important" class="form-control input-text-value" required #description="ngModel"
+                               [(ngModel)]="sourceIntegration.description" minlength="2">
+                        <div *ngIf="description.dirty && description.errors?.required && description.errors"
+                             class="invalid-form-error-message">
+                            Integration required.
+                        </div>
+                        <div *ngIf="description.dirty && description.errors?.minlength && description.errors"
+                             class="invalid-form-error-message">
+                            Integration must be at least 2 characters long.
+                        </div>
                     </div>
                 </div>
-                <div class="clear"></div>
             </div>
             <div class="form-group">
-                <label for="description" class="control-label">Memo</label>
-                <div class="control-data">
-                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-                           [(ngModel)]="sourceIntegration.memo">
-
+                <div class="col-sm-4">
+                    <label for="description" class="control-label">Memo</label>
                 </div>
+                <div class="col-sm-5">
+                    <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
+                              [(ngModel)]="sourceIntegration.memo" minlength="2"></textarea>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <label class="form-check-label" for="isActive">
+                    <input type="checkbox" name="isActive" style="width: 20px !important;" #isActive="ngModel" class="form-check-input" checked
+                           id="isActive" [(ngModel)]="sourceIntegration.isActive"> Active
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="disableSaveProvision"
+                        (click)="saveintegration()">
+                    Save
+                </button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
 </ng-template>
-
 <div class="modal fade" id="rro-memo" role="dialog">
     <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
         <div class="modal-content">
