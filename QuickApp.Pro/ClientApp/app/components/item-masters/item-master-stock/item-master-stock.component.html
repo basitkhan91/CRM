@@ -20,8 +20,52 @@
         <div class="tab-content form-bg margin0 padding0">
             <div class="" id="menu3">
                 <div class="clear"></div>
-                <p-tabMenu [model]="items1" [activeItem]="items1[activeTab]" class="panel-menu"></p-tabMenu>
-                <div *ngIf="showGeneralData">
+                <div class="md-stepper-horizontal orange">
+                    <div class="md-step"
+                         [ngClass]="{ active: activeMenuItem >= 1 }" (click)="changeOfTab('General')"
+                         > 
+                        <div class="md-step-circle"><span>1</span></div>
+                        <div class="md-step-title">General Information</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step"
+                         [ngClass]="{ active: activeMenuItem >= 2 }" (click)="changeOfTab('AircraftInfo')"
+                         > 
+                        <div class="md-step-circle"><span>2</span></div>
+                        <div class="md-step-title">Aircraft Information</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step"
+                         [ngClass]="{ active: activeMenuItem >= 3 }" (click)="changeOfTab('Atachapter')"
+                         > 
+                        <div class="md-step-circle"><span>3</span></div>
+                        <div class="md-step-title">ATA Chapter</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step"
+                         [ngClass]="{ active: activeMenuItem >= 4 }" (click)="changeOfTab('PurchaseSales')"
+                         > 
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Purchase and Sales</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step"
+                         [ngClass]="{ active: activeMenuItem >= 5 }" (click)="changeOfTab('ExportInfo')"
+                         > 
+                        <div class="md-step-circle"><span>5</span></div>
+                        <div class="md-step-title">Export Information</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                </div>
+
+
+               <!-- <p-tabMenu [model]="items1" [activeItem]="items1[activeTab]" class="panel-menu"></p-tabMenu>-->
+                <div [ngClass]="{hideTab : currentTab !== 'General'}">
                     <div class="card">
                         <div class="form-row col-row">
                             <div class="col-md-3">
@@ -274,19 +318,19 @@
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.isPma">
                                     </div>
-                                    <div *ngIf="sourceItemMaster.isPma">                                       
-                                            <p-autoComplete [(ngModel)]="sourceItemMaster.pma"
-                                                            (onKeyUp)=alterPnHandler($event) 
-                                                            [ngModelOptions]="{standalone: true}"
-                                                            [size]="32" [minLength]="1"
-                                                            [dropdown]="true" class="autocomplete-customer2">
-                                                <!--<ng-template let-partName pTemplate="part">
-                                                    <div class="ui-helper-clearfix">{{}}</div>
-                                                </ng-template>-->
-                                            </p-autoComplete>
-                                            <div *ngIf="disableSaveAlterumber" style="color:red">
-                                                Please Select From DropDown
-                                            </div>                                        
+                                    <div *ngIf="sourceItemMaster.isPma">
+                                        <p-autoComplete [(ngModel)]="sourceItemMaster.pma"
+                                                        (onKeyUp)=alterPnHandler($event)
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        [size]="32" [minLength]="1"
+                                                        [dropdown]="true" class="autocomplete-customer2">
+                                            <!--<ng-template let-partName pTemplate="part">
+                                    <div class="ui-helper-clearfix">{{}}</div>
+                                </ng-template>-->
+                                        </p-autoComplete>
+                                        <div *ngIf="disableSaveAlterumber" style="color:red">
+                                            Please Select From DropDown
+                                        </div>
                                     </div>
                                     <div class="clear"></div>
                                     <div class="inline-block display-flex">
@@ -459,7 +503,7 @@
                                             <i class="fa fa-plus-circle fa-lg"
                                                [routerLink]="['/singlepages/singlepages/app-priority']"></i>
                                         </span>
-                                    </div>                                  
+                                    </div>
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}"
                                                 [(ngModel)]="sourceItemMaster.priorityId">
@@ -610,7 +654,7 @@
                     </div>
                 </div>
                 <!--Jyotsna Code-->
-                <div *ngIf="showAircraftData">
+                <div [ngClass]="{hideTab : currentTab !== 'AircraftInfo'}">
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
@@ -634,9 +678,9 @@
                                         <h4 class="float-right">
                                             Add Aircraft Information
                                             <!--<button type="button" data-toggle="modal"
-                                                    data-target="#ModalDashNumber" class="btn btn-primary btn-add1">
-                                                <i class="pi pi-plus"></i>
-                                            </button>-->
+                                        data-target="#ModalDashNumber" class="btn btn-primary btn-add1">
+                                    <i class="pi pi-plus"></i>
+                                </button>-->
                                             <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
                                         </h4>
                                     </div>
@@ -684,7 +728,7 @@
 
                     <br />
                     <div class="card">
-                        <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colskkk" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                        <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th>Id</th>
@@ -734,7 +778,7 @@
                         <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step"></button>
                     </div>
                 </div>
-                <div *ngIf="showAtachapter">
+                <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}">
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
@@ -768,7 +812,8 @@
                                     <div class="col-sm-12">
                                         <form [formGroup]="ataform" (ngSubmit)="onSubmit(ataform.value)">
                                             <div class="col-sm-3 inline-block display-flex">
-                                                <select class="select-option" formControlName="atanumber" [(ngModel)]="currentAtaNumber.ataChapterId" (change)="atasubchapterChange(currentAtaNumber.ataChapterId )">
+                                                <select class="select-option" formControlName="atanumber" (change)="atasubchapterChange(currentAtaNumber.ataChapterId )">
+                                                    <!--[(ngModel)]="currentAtaNumber.ataChapterId"-->
                                                     <option value=''> Select Chapter</option>
                                                     <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
                                                 </select>
@@ -881,7 +926,7 @@
 
                 </div>
 
-                <div *ngIf="showpurchaseData">
+                <div [ngClass]="{hideTab : currentTab !== 'PurchaseSales'}">
                     <!--New Changes in Purchase and Sales page-->
                     <div class="card">
                         <div class="col-sm-12 font-padding">
@@ -1070,7 +1115,7 @@
                     </div>
 
                 </div>
-                <div *ngIf="showexportData">
+                <div [ngClass]="{hideTab : currentTab !== 'ExportInfo'}">
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
@@ -1310,10 +1355,10 @@
 
                     
                     <div class="card" *ngIf="viewTable">
-                        <p-table [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th>Id</th>
+                                    <th></th>
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
@@ -1324,12 +1369,20 @@
                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                 <tr>
 
-                                    <td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>
+                                    <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
+                                    <td>
+                                        <span class="checkbox-cstm">
+                                            <label style="width: 10px;">
+                                                <input type="checkbox" (click)="onClickDNCheckbox(i)">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </span>
+                                    </td>
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
                                     <td>
-                                        <input type="text" [(ngModel)]="rowData.Memo" name="Memo" style="width:127px" />
+                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="i !== indexOfrow || enableDNMemo" />
                                     </td>
                                 </tr>
                             </ng-template>
