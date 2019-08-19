@@ -20,17 +20,17 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.Publication> GetPublications()
         {
-            return _appContext.Publication.Include("MasterCompany").Where(c=>c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.PublicationId).ToList();
+            return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.PublicationId).ToList();
         }
-        
+
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
-        public IEnumerable<object> GetDashNumber(string Mid,long Tid)
+        public IEnumerable<object> GetDashNumber(string Mid, long Tid)
         {
             {
                 int[] myMids = Mid.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            
+
                 var data = (from iM in _appContext.AircraftDashNumber
                             where myMids.ToString().Contains(Mid) && iM.AircraftTypeId == Tid
                             select new
@@ -44,9 +44,9 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetPubPNMappingData(string PNIds)
         {
-            string[] myPNids = PNIds.Split(',').Select(n => n).ToArray();
+            var myPNids = PNIds.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             var data = (from iM in _appContext.PublicationItemMasterMapping
-                        where myPNids.Contains(iM.PartNumber)
+                        where myPNids.Contains(iM.ItemMasterId)
                         select new
                         {
 
@@ -106,7 +106,7 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
-        public IEnumerable<object> GetAircraftMappingDataByMultiTypeId(long PublicationID,string AircraftTypeId)
+        public IEnumerable<object> GetAircraftMappingDataByMultiTypeId(long PublicationID, string AircraftTypeId)
         {
             var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             var data = (from it in _appContext.ItemMasterAircraftMapping
@@ -187,7 +187,7 @@ namespace DAL.Repositories
             var myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
             var data = (from it in _appContext.ItemMasterAircraftMapping
                         join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
-                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId)  && myAircraftModelId.Contains(it.AircraftModelId)
+                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId)
 
                         select new
                         {
@@ -283,7 +283,7 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
-        public IEnumerable<object> GetATAMappingDataByMultiSubChapterId(long PublicationID,  string ATASubChapterID)
+        public IEnumerable<object> GetATAMappingDataByMultiSubChapterId(long PublicationID, string ATASubChapterID)
         {
             var myATASubChapterID = ATASubChapterID.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
             var data = (from it in _appContext.ItemMasterATAMapping
