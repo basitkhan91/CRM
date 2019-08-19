@@ -27,22 +27,22 @@ namespace QuickApp.Pro.Controllers
         private const string GetActionByIdActionName = "GetActionById";
         ApplicationDbContext db;
 
-		
-		public PublicationController(IUnitOfWork unitOfWork, ILogger<PublicationController> logger, IEmailer emailer, ApplicationDbContext context)
+
+        public PublicationController(IUnitOfWork unitOfWork, ILogger<PublicationController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
             _context = context;
         }
-		
-		// GET: api/values
-		[HttpGet("Get")]
+
+        // GET: api/values
+        [HttpGet("Get")]
         [Produces(typeof(List<PublicationViewModel>))]
         public IActionResult Get()
         {
-		
-			var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
+
+            var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
             return Ok(Mapper.Map<IEnumerable<PublicationViewModel>>(allpublicationinfo));
 
         }
@@ -72,57 +72,57 @@ namespace QuickApp.Pro.Controllers
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] PublicationViewModel publicationViewModel)
         {
-			try
-			{
-				if (ModelState.IsValid)
-				{
-					if (publicationViewModel == null)
-						return BadRequest($"{nameof(publicationViewModel)} cannot be null");
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (publicationViewModel == null)
+                        return BadRequest($"{nameof(publicationViewModel)} cannot be null");
 
-					DAL.Models.Publication publicationobject = new DAL.Models.Publication();
-					publicationobject.PublicationRecordId = publicationViewModel.PublicationRecordId;
-					publicationobject.PublicationId = publicationViewModel.PublicationId;
-					publicationobject.Description = publicationViewModel.Description;
-					publicationobject.PartNumber = publicationViewModel.PartNumber;
-					publicationobject.Memo = publicationViewModel.Memo;
-					publicationobject.Platform = publicationViewModel.Platform;
-					publicationobject.Model = publicationViewModel.Model;
-					publicationobject.Description = publicationViewModel.Description;
-					publicationobject.ATAMain = publicationViewModel.ATAMain;
-					publicationobject.ATASubChapter = publicationViewModel.ATASubChapter;
-					publicationobject.ATAPositionZone = publicationViewModel.ATAPositionZone;
-					publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
-					publicationobject.IsActive = publicationViewModel.IsActive;
-					publicationobject.EntryDate = publicationViewModel.EntryDate;
-					publicationobject.revisionDate = publicationViewModel.revisionDate;
-					publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
-					publicationobject.ASD = publicationViewModel.ASD;
-					publicationobject.publishby = publicationViewModel.publishby;
-					publicationobject.location = publicationViewModel.location;
-					publicationobject.revision = publicationViewModel.revision;
-					publicationobject.verifiedby = publicationViewModel.verifiedby;
-					publicationobject.verifieddate = publicationViewModel.verifieddate;
-					publicationobject.employee = publicationViewModel.employee;
-					publicationobject.docpath = publicationViewModel.docpath;
-					publicationobject.CreatedDate = DateTime.Now;
-					publicationobject.UpdatedDate = DateTime.Now;
-					publicationobject.CreatedBy = publicationViewModel.CreatedBy;
-					publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
-					_unitOfWork.Publication.Add(publicationobject);
-					_unitOfWork.SaveChanges();
+                    DAL.Models.Publication publicationobject = new DAL.Models.Publication();
+                    publicationobject.PublicationRecordId = publicationViewModel.PublicationRecordId;
+                    publicationobject.PublicationId = publicationViewModel.PublicationId;
+                    publicationobject.Description = publicationViewModel.Description;
+                    publicationobject.PartNumber = publicationViewModel.PartNumber;
+                    publicationobject.Memo = publicationViewModel.Memo;
+                    publicationobject.Platform = publicationViewModel.Platform;
+                    publicationobject.Model = publicationViewModel.Model;
+                    publicationobject.Description = publicationViewModel.Description;
+                    publicationobject.ATAMain = publicationViewModel.ATAMain;
+                    publicationobject.ATASubChapter = publicationViewModel.ATASubChapter;
+                    publicationobject.ATAPositionZone = publicationViewModel.ATAPositionZone;
+                    publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
+                    publicationobject.IsActive = publicationViewModel.IsActive;
+                    publicationobject.EntryDate = publicationViewModel.EntryDate;
+                    publicationobject.revisionDate = publicationViewModel.revisionDate;
+                    publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
+                    publicationobject.ASD = publicationViewModel.ASD;
+                    publicationobject.publishby = publicationViewModel.publishby;
+                    publicationobject.location = publicationViewModel.location;
+                    publicationobject.revision = publicationViewModel.revision;
+                    publicationobject.verifiedby = publicationViewModel.verifiedby;
+                    publicationobject.verifieddate = publicationViewModel.verifieddate;
+                    publicationobject.employee = publicationViewModel.employee;
+                    publicationobject.docpath = publicationViewModel.docpath;
+                    publicationobject.CreatedDate = DateTime.Now;
+                    publicationobject.UpdatedDate = DateTime.Now;
+                    publicationobject.CreatedBy = publicationViewModel.CreatedBy;
+                    publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
+                    _unitOfWork.Publication.Add(publicationobject);
+                    _unitOfWork.SaveChanges();
 
 
-					return Ok(publicationobject);
-				}
+                    return Ok(publicationobject);
+                }
 
-				return Ok(ModelState);
-			}
-			catch (Exception ex)
-			{
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
 
-				throw;
-			}
-		}
+                throw;
+            }
+        }
         [HttpPut("publicationpost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] PublicationViewModel publicationViewModel)
         {
@@ -179,11 +179,11 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
-                
+
         [HttpPost("PubPNACMappingPost")]
         public IActionResult InsertPNACMapping([FromBody] PublicationPNACMappingModel PnAcMapping)
         {
-		
+
             if (ModelState.IsValid)
             {
                 if (PnAcMapping == null)
@@ -227,7 +227,7 @@ namespace QuickApp.Pro.Controllers
                 pnatabject.ATASubChapterId = PnAtaMapping.ATASubChapterId;
                 pnatabject.ATAChapterName = PnAtaMapping.ATAChapterName;
                 pnatabject.ATASubChapterDescription = PnAtaMapping.ATASubChapterDescription;
-                
+
                 pnatabject.MasterCompanyId = PnAtaMapping.MasterCompanyId;
                 pnatabject.IsActive = PnAtaMapping.IsActive;
                 pnatabject.CreatedDate = DateTime.Now;
@@ -242,7 +242,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpGet("GetPubPNMappedData_PNID/{PNIds}")]
+        [HttpGet("GetPubPNMappedData_ItemMasterID/{PNIds}")]
         public IActionResult PubPNMappedDetails(string PNIds)
         {
 
@@ -260,11 +260,12 @@ namespace QuickApp.Pro.Controllers
                 {
                     if (IMPNMapping == null)
                         return BadRequest($"{nameof(IMPNMapping)} cannot be null");
-                 
-                        
-                        PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
+
+
+
                     for (int i = 0; i <= IMPNMapping.Length - 1; i++)
                     {
+                        PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                         cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
                         cp.PublicationId = IMPNMapping[i].PublicationId;
                         cp.PartNumber = IMPNMapping[i].PartNumber;
@@ -283,15 +284,15 @@ namespace QuickApp.Pro.Controllers
                         _context.PublicationItemMasterMapping.Add(cp);
                         _context.SaveChanges();
                     }
-                        
-                  }
+
+                }
 
                 return Ok(ModelState);
 
             }
             catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
@@ -328,7 +329,7 @@ namespace QuickApp.Pro.Controllers
         }
         [HttpGet("getItemAirMappedByPublicationIdMultiTypeID/{PublicationId}/{AircraftTypeId}")]
         [Produces(typeof(List<ItemMasterAircraftMapping>))]
-        public IActionResult AirMappedMultiTypeId(long PublicationId,string AircraftTypeId)
+        public IActionResult AirMappedMultiTypeId(long PublicationId, string AircraftTypeId)
         {
             var result = _unitOfWork.Publication.GetAircraftMappingDataByMultiTypeId(PublicationId, AircraftTypeId);
 
@@ -453,13 +454,14 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                        var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
-                        existingResult.UpdatedDate = DateTime.Now;
-                        existingResult.IsDeleted = false;
-                        _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
-                        _unitOfWork.SaveChanges();
+                    var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
+                    existingResult.UpdatedDate = DateTime.Now;
+                    existingResult.IsDeleted = false;
+                    _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
+                    _unitOfWork.SaveChanges();
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw;
             }
