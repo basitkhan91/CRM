@@ -123,8 +123,8 @@
 
           <div class="form-group">
             <label for="workflowid">Employee</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.employee" />
+            <p-dropdown [options]="employeeList" class="pub-type-select" [(ngModel)]="sourcePublication.employee"  #pubID="ngModel"  [ngModelOptions]="{ standalone: true }"  ></p-dropdown>
+
           </div>
           <div class="form-group">
             <label for="workflowid">Verified By</label>
@@ -264,7 +264,7 @@
             <button
               class="btn btn-primary-cstm pull-right button-save"
               type="submit"
-              (click)="changeOfTab('Atachapter'); "
+              (click)="changeOfTab('Aircraft'); "
             >
               Next
             </button>
@@ -334,7 +334,7 @@
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
-                [columns]="cols"
+                [columns]="aircraftInformationCols"
                 [value]="aircraftList"
                 [paginator]="true"
                 [rows]="10"
@@ -387,7 +387,7 @@
               type="submit"
               (click)="changeOfTab('Atachapter')"
             >
-              Save & Next
+             Next
             </button>
           </div>
         </div>
@@ -436,7 +436,8 @@
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
-                [columns]="atacols"               
+                [columns]="atacols"  
+                [value]="ataList"             
                 [paginator]="true"
                 [rows]="10"
                 [first]="first"
@@ -484,13 +485,13 @@
             Previous
           </button>
 
-          <button
+          <!-- <button
             class="btn btn-primary-cstm pull-right button-save"
             type="submit"
             (click)="changeOfTab('Atachapter')"
           >
             Save
-          </button>
+          </button> -->
         </div>
       </div>
     </div>

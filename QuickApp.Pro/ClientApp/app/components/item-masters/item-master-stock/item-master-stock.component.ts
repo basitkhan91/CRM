@@ -1594,7 +1594,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemTypeName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -1604,7 +1603,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = new Priority();
@@ -1621,7 +1619,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = new ATAMain();

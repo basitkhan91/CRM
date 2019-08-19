@@ -20,6 +20,7 @@ import { AircraftManufacturerService } from '../../../services/aircraft-manufact
 import { map } from 'rxjs/operator/map';
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
+import { EmployeeService } from '../../../services/employee.service';
 @Component({
   selector: 'app-create-publication',
   templateUrl: './create-publication.component.html',
@@ -48,7 +49,9 @@ export class CreatePublicationComponent implements OnInit {
   partNumberList = [];
   selectedPartNumbers = [];
   pnMapping = [];
-  publicationRecordId: Number;
+  publicationRecordId: number;
+  employeeList = [];
+  ataList = [];
   headersforPNMapping = [
     { field: 'PartNumber', header: 'PN ID/Code' },
     { field: 'PartNumberDescription', header: 'PN Description' },
@@ -66,16 +69,16 @@ export class CreatePublicationComponent implements OnInit {
   dashNumberList: any = [];
   selectedDashNumbers = [];
   dashNumberIdUrl: string = '';
-  ataChapterList = []
-  selectedATAchapter = []
+  ataChapterList = [];
+  selectedATAchapter = [];
 
   // dropdown
 
   publicationTypes = [
-    {label: 'CMM' , value : 'CMM'},
-    {label: 'AD' , value : 'AD'},
-    {label: 'SB', value: 'SB'}
-  ]
+    { label: 'CMM', value: 'CMM' },
+    { label: 'AD', value: 'AD' },
+    { label: 'SB', value: 'SB' }
+  ];
 
   // table columns for ata
 
@@ -89,7 +92,8 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'In-Active', value: 'In-Active' }
   ];
   searchParams: string;
-  ataSubChapterList: { label: string; value: number; }[];
+  ataSubChapterList: { label: string; value: number }[];
+
   /** Create-publication ctor */
   constructor(
     private publicationService: PublicationService,
@@ -104,17 +108,19 @@ export class CreatePublicationComponent implements OnInit {
     private authService: AuthService,
     private itemMasterService: ItemMasterService,
     private Dashnumservice: DashNumberService,
-    
+    private employeeService: EmployeeService,
     private route: Router
   ) {}
-  cols: any[] = [
+  aircraftInformationCols: any[] = [
     { field: 'aircraft', header: 'Aircraft' },
     { field: 'model', header: 'Model' },
     { field: 'dashNumber', header: 'Dash Numbers' },
     { field: 'memo', header: 'Memo' }
   ];
   first: number = 0;
-  ngOnInit() {}
+  ngOnInit() {
+    this.getAllEmployeeList();
+  }
 
   get userName(): string {
     return this.authService.currentUser
@@ -146,6 +152,18 @@ export class CreatePublicationComponent implements OnInit {
       this.getAllATAChapter();
       this.getAllSubChapters();
     }
+  }
+
+  async getAllEmployeeList() {
+    await this.employeeService.getEmployeeList().subscribe(res => {
+      const responseData = res[0];
+      this.employeeList = responseData.map(x => {
+        return {
+          label: x.firstName,
+          value: x.employeeId
+        };
+      });
+    });
   }
   private saveSuccessHelper(role?: any) {
     this.isSaving = false;
@@ -228,7 +246,6 @@ export class CreatePublicationComponent implements OnInit {
     });
   }
   savePNMapping() {
-    console.log(this.publicationRecordId);
     this.pnMapping = this.selectedPartNumbers.map(obj => {
       return {
         PublicationRecordId: this.publicationRecordId,
@@ -253,7 +270,9 @@ export class CreatePublicationComponent implements OnInit {
     this.publicationService
       .postMappedPartNumbers(this.pnMapping)
       .subscribe(res => {
-        // this.alertService.startLoadingMessage('PN Mapping', '');
+        this.getAircraftInformationByPublicationId();
+        this.getAtaChapterByPublicationId();
+        // get aircraft mapped data by publication id
       });
   }
 
@@ -309,13 +328,22 @@ export class CreatePublicationComponent implements OnInit {
     });
   }
 
-  // get aircraft information by publication id 
-  getAircraftInformationByPublicationId(){
-    this.publicationService.getAircraftMappedByPublicationId(this.generalInformationDetails.PublicationId).subscribe(res => {
-
-    })
+  // get aircraft information by publication id
+  //
+  getAircraftInformationByPublicationId() {
+    this.publicationService
+      .getAircraftMappedByPublicationId(this.publicationRecordId)
+      .subscribe(res => {
+        this.aircraftList = res.map(x => {
+          return {
+            aircraft: x.aircraftType,
+            model: x.aircraftModel,
+            dashNumber: x.dashNumber,
+            memo: x.memo
+          };
+        });
+      });
   }
-
 
   // get AircraftModels By manufacturer Type
   async getAircraftModelByManfacturerType() {
@@ -376,7 +404,7 @@ export class CreatePublicationComponent implements OnInit {
 
   async searchAircraftInformation() {
     await this.searchByFieldUrlCreate();
-    
+
     // checks where multi select is empty or not and calls the service
     if (
       this.aircraftManfacturerIdsUrl !== '' &&
@@ -412,45 +440,62 @@ export class CreatePublicationComponent implements OnInit {
       .subscribe(res => {});
   }
 
-  // get atachapter by publication id 
-  getAtaChapterByPublicationId(){
-    this.publicationService.getAtaMappedByPublicationId(this.generalInformationDetails.PublicationId).subscribe( res => {
-      
-    })
+  // get atachapter by publication id
+
+  getAtaChapterByPublicationId() {
+    this.publicationService
+      .getAtaMappedByPublicationId(this.publicationRecordId)
+      .subscribe(res => {
+        const responseData = res;
+        this.ataList = responseData.map(x => {
+          return {
+            ataChapter: x.ataChapterName,
+            ataSubChapter: x.ataSubChapterDescription,
+            ataChapterCode: x.ataChapterCode,
+            ataSubChapterId: x.ataSubChapterId,
+            ataChapterId: x.ataChapterId
+          };
+        });
+      });
   }
 
- // get ata chapter for dropdown
-  getAllATAChapter(){
+  // get ata chapter for dropdown
+  getAllATAChapter() {
     this.ataMainSer.getAtaMainList().subscribe(Atachapter => {
-   const response  = Atachapter[0];            
-     this.ataChapterList = response.map(x => {
-      return   { 
-        value: x.ataChapterId, 
-        label: x.ataChapterName }
-     })
-  });
+      const response = Atachapter[0];
+      this.ataChapterList = response.map(x => {
+        return {
+          value: x.ataChapterId,
+          label: x.ataChapterName
+        };
+      });
+    });
   }
   // get all subchapter for dropdown
-  getAllSubChapters(){
-    this.atasubchapter1service.getAtaSubChapter1List().subscribe(atasubchapter => {
-      const responseData = atasubchapter[0];
-      this.ataSubChapterList = responseData.map(x => {
-          return {
-              label: x.description,
-              value: x.ataSubChapterId
-          }
-      })
-  })
-  }
-  getSubChapterByATAChapter() {
-    this.atasubchapter1service.getATASubChapterListByATAChapterId(16).subscribe(atasubchapter => {
+  getAllSubChapters() {
+    this.atasubchapter1service
+      .getAtaSubChapter1List()
+      .subscribe(atasubchapter => {
         const responseData = atasubchapter[0];
         this.ataSubChapterList = responseData.map(x => {
-            return {
-                label: x.description,
-                value: x.ataSubChapterId
-            }
-        })
-    })
-}  
+          return {
+            label: x.description,
+            value: x.ataSubChapterId
+          };
+        });
+      });
+  }
+  getSubChapterByATAChapter() {
+    this.atasubchapter1service
+      .getATASubChapterListByATAChapterId(16)
+      .subscribe(atasubchapter => {
+        const responseData = atasubchapter[0];
+        this.ataSubChapterList = responseData.map(x => {
+          return {
+            label: x.description,
+            value: x.ataSubChapterId
+          };
+        });
+      });
+  }
 }
