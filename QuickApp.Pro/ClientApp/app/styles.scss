@@ -5905,7 +5905,10 @@ input[type="text"] {
     }
 
     .mt5 {
-        margin-top: 5px !important
+        margin-top: 5px !important;
+    }
+    .mt8 {
+        margin-top: 8px !important;
     }
 
     .m-t-35 {
@@ -11049,6 +11052,10 @@ table thead tr th:first-child input, table tr td:first-child input {
         display: inline-block;
     }
 
+    .w48 {
+        width: 48px !important;
+        display: inline-block;
+    }
     .w50 {
         width: 50px !important;
         display: inline-block;
@@ -12752,14 +12759,20 @@ body .ui-datepicker table td > a.ui-state-active {
     p-autocomplete .ui-autocomplete-dropdown span.ui-clickable {
         padding: 0 !important;
     }
-
-    button {
-        background: #c1c1c1;
-        border: 1px solid #ccc;
-        cursor: pointer;
-        font-size: 12px;
-        padding: 5px;
+    p-autocomplete .ui-autocomplete input, p-calendar .ui-calendar input {
+        border-radius: 5px 0 0 5px !important;
     }
+    p-autocomplete .ui-autocomplete button, p-calendar .ui-calendar button {
+        border-radius: 0 5px 5px 0 !important;
+    }
+
+button {
+    background: #c1c1c1;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 5px;
+}
 
     button:focus {
         outline: none !important;
@@ -13728,6 +13741,17 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .ero-table-cstm {
     min-height: 300px;
+}
+.roview-table-cstm {
+    min-height: 300px;
+    text-align: center;
+}
+.roview-table-cstm .child-data td, .roview-table-cstm .parent-data td {
+    background: #fff !important;
+    padding: 3px;
+}
+.roview-table-cstm .child-header {
+    background: #fafafa !important;
 }
 
 .multi-general p-multiselect {

@@ -155,6 +155,8 @@ export class PurchaseSetupComponent {
 	sourceSplitShipment: any = {};
     name: any;
     orderQuantity: any;
+    pdata: any[] = [1, 2];
+
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
 
@@ -2476,7 +2478,11 @@ export class PurchaseSetupComponent {
 	quantityValueChange(event)
 	{
 		this.orderQuantity = event;
-	}
+    }
+
+    addPartNum() {
+        this.pdata.push(1);
+    }
 }
 
 

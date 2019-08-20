@@ -181,7 +181,7 @@
                                     </div>
                                     <div class="expdate-input"
                                          *ngIf="sourceItemMaster.isExpirationDateAvailable">
-                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" class="calender-border"
+                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
                                                     [(ngModel)]="sourceItemMaster.expirationDate"></p-calendar>
                                     </div>
                                     <div class="snumber-block2" *ngIf="sourceItemMaster.isExpirationDateAvailable">
@@ -194,7 +194,7 @@
                                                            [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isReceivedDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
+                                                       class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
                                                        id="exp-rec-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.daysReceived">
@@ -210,7 +210,7 @@
                                                            [(ngModel)]="sourceItemMaster.isManufacturingDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
+                                                       class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
                                                        id="exp-rec-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.manufacturingDays">
@@ -226,7 +226,7 @@
                                                            [(ngModel)]="sourceItemMaster.isTagDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isTagDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
+                                                       class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
                                                        id="exp-tag-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.tagDays">
@@ -242,7 +242,7 @@
                                                            [(ngModel)]="sourceItemMaster.isOpenDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isOpenDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
+                                                       class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
                                                        id="exp-open-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.openDays">
@@ -258,7 +258,7 @@
                                                            [(ngModel)]="sourceItemMaster.isShippedDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isShippedDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
+                                                       class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
                                                        id="exp-shipped-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.shippedDays">
@@ -274,7 +274,7 @@
                                                            [(ngModel)]="sourceItemMaster.isOtherDateAvailable">
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isOtherDateAvailable"
-                                                       class="form-control number exp-date-inputs w50" type="text" pKeyFilter="int"
+                                                       class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
                                                        id="exp-shipped-date-input" name=""
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.otherDays">
@@ -536,7 +536,7 @@
                                     <div>
                                         <p-multiSelect [options]="integrationvalues"
                                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes"
-                                                       [panelStyle]="{minWidth:'12em'}" class="pub-multi3"></p-multiSelect>
+                                                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                                     </div>
                                     <label class="control-label">Memo</label>
                                     <div class="memo-popup-cstm">
@@ -655,11 +655,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 mt8">
                         <div class="col-sm-6">
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveitemMasterclose()" icon="pi pi-angle-right" iconPos="right" label="Save & Next"></button>
+                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveitemMasterclose()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
                         </div>
                     </div>
                 </div>
@@ -783,9 +783,9 @@
                         </div>
 
                     </div>
-                    <div class="col-sm-12">
-                        <button class="btn btn-primary-cstmfloat-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step"></button>
+                    <div class="col-sm-12 mt8">
+                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}">
@@ -929,9 +929,9 @@
                         </p-table>
                         <br />
                     </div>
-                    <div class="col-sm-12">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+                    <div class="col-sm-12 mt8">
+                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
 
                 </div>
@@ -1119,9 +1119,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-sm-12">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step"></button>
+                    <div class="col-sm-12 mt8">
+                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
 
                 </div>
@@ -1244,19 +1244,17 @@
                         </div>                             
                             </div>
                            
-                            <div class="col-sm-12">
-                                <div class="col-sm-12">
+                            <div class="col-sm-12 mt8">
                                     <div class="col-sm-6">
-                                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="movePurchaseInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev"></button>
+                                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="movePurchaseInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
                                     </div>
-                                    <div class="col-sm-6 ">
+                                    <div class="col-sm-6">
                                         <span class="float-right">
-                                            <button class="btn btn-primary-cstm" pButton type="button" label="Save"></button>
+                                            <button class="btn btn-primary-cstm" pButton type="button" label="Save" style="padding: 0 !important;"></button>
                                             &nbsp;
-                                            <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New"></button>
+                                            <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
                                         </span>                                      
                                     </div>
-                                </div>
                             </div>
                         </div>
 
@@ -3164,8 +3162,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" >Save</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success-cstm" data-dismiss="modal" >Save</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
