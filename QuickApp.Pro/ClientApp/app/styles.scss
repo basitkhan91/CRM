@@ -13599,13 +13599,23 @@ body .ui-datepicker table td > a.ui-state-active {
 .autocomplete-customer2 .ui-autocomplete {
     width: 106% !important;
 }
+.autocomplete-customer3 .ui-autocomplete {
+    margin-left: -5px !important;
+    width: 104% !important;
+}
 .autocomplete-customer .ui-autocomplete {
     margin-left: -5px !important;
     width: 100% !important;
     margin-top: -6px !important;
 }
+.autocomplete-customer3 .ui-autocomplete input.ui-inputtext {
+    border-radius: 5px 0px 0px 5px !important;
+}
 .autocomplete-customer .ui-autocomplete input.ui-inputtext {
     border-radius: 5px 0px 0px 5px !important;
+}
+.autocomplete-customer3 .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
+    border-radius: 0px 5px 5px 0px !important;
 }
 .autocomplete-customer .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
     border-radius: 0px 5px 5px 0px !important;
