@@ -526,7 +526,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             'atasubchaptername': new FormControl('', Validators.required)
         });
         this.manufacturerValue = this.fb.group({
-            'manufacturerId': new FormControl('', Validators.required)
+            'manufacturer': new FormControl('', Validators.required)
         });
         this.itemser.getMappedAirCraftDetails(this.sourceItemMaster.itemMasterId).subscribe(data => {
             this.aircraftListDataValues = data.map(x => {
@@ -1868,7 +1868,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     Manufacturerdescription(event) {
-
         if (this.allManufacturerInfo) {
             for (let i = 0; i < this.allManufacturerInfo.length; i++) {
                 if (event == this.allManufacturerInfo[i].name) {
@@ -1876,7 +1875,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.disableSaveManufacturer = true;
                     this.selectedManufacturer = event;
                 }
-
             }
         }
     }
@@ -3501,7 +3499,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     savepriority() {
-
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
@@ -3509,8 +3506,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.description = this.priorityName;
             this.sourceAction.masterCompanyId = 1;
             this.priority.newPriority(this.sourceAction).subscribe(data => { this.priorityData() })
-
-
         }
         else {
 
@@ -3528,7 +3523,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
+            this.sourceAction.description = this.description;
             this.sourceAction.masterCompanyId = 1;
             this.inteService.newAction(this.sourceAction).subscribe(data => { this.integrationData() })
 
@@ -4247,8 +4242,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     saveManufacturer() {
         this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.sourcemanufacturer.masterCompanyId = 1;
+        if (this.isEditMode == false) {            
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.integrationName;
             this.sourceAction.masterCompanyId = 1;

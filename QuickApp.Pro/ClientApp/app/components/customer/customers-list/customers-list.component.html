@@ -1,102 +1,91 @@
 ﻿<div [@fadeInOut] class="page-content">
+                <div class="right_col" role="main">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="po-head" style="padding:0 10px;">Customer List</h4>
+                                    <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="customerPagination" [rows]="10"
+                                             [lazy]="true" (onLazyLoad)="loadCustomerPages($event)" [paginator]="true"
+                                             [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" 
+                                             [pageLinks]="pageLinks" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
+                                             [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                                        <ng-template pTemplate="caption">
+                                            <div style="text-align: right">
+                                                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                                <div class="inner-addon right-addon w200 inline-block  g-filter-search-cstm">
+                                                    <i class="fa fa-search"></i>
+                                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (blur)="inputGlobalFiledFilter($event.target.value, 'contains')" placeholder="Global Filter">
+                                                </div>
+                                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" *ngIf="selectedColumn" (click)="dt.exportCSV()"></button>
+                                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                                <a matTooltip="Create Customer" class="btn btn-success nobg btn-cstm" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
+                                                <div class="excel-upload excel-upload-cstm">
+                                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                                    <label for="upload">
+                                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <col *ngFor="let col of columns" style="width:140px">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                    {{col.header}}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                </th>
+                                                <th style="width:150px;position:sticky"></th>
+                                            </tr>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                    <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                                </th>
+                                                <th style="width:150px;position:sticky"></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                            <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
+                                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                                </td>
+                                                <td style="width:150px">
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                                    <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="Edit">
+                                                        <mat-icon>edit</mat-icon>
+                                                    </button>
+                                                    <i class="fa fa-users" mat-icon-button matTooltip="Contacts" (click)="openContactList(contentcontact,rowData)">
+                                                    </i>
+                                                    <i class="fa fa-map" mat-icon-button matTooltip="Sites" (click)="openSiteList(contentsites,rowData)"></i>
 
-    <div class="right_col" role="main">
-        <div class="x_content">
-            <h4 class="page-heading clr-green">Customer's List</h4>
-            <div class="right_col" role="main">
-
-                <p-table #dt [value]="customerPagination" [rows]="10"
-                         [lazy]="true" (onLazyLoad)="loadCustomerPages($event)" [paginator]="true"
-                         [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [loading]="loading"
-                         [pageLinks]="pageLinks" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
-                         [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
-                    <ng-template pTemplate="caption">
-
-                        <div style="text-align: right">
-                            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-
-
-                            <div class="inner-addon right-addon w200 inline-block">
-                                <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (blur)="inputGlobalFiledFilter($event.target.value, 'contains')" placeholder="Global Filter">
-                            </div>
-
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" *ngIf="selectedColumn" (click)="dt.exportCSV()"></button>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a matTooltip="Create Customer" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
-                            <div class="excel-upload">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
+                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+                                                        <mat-icon color="warn">delete</mat-icon>
+                                                    </button>
+                                                    <button class="btn-history" mat-icon-button matTooltip="History">
+                                                        <mat-icon color="green">history</mat-icon>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="summary" id="footer">
+                                            <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
+                                            &nbsp;&nbsp;
+                                            <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                        </ng-template>
+                                    </p-table>
+                                </div>
                             </div>
                         </div>
-
-
-                    </ng-template>
-                    <ng-template pTemplate="colgroup" let-columns>
-                        <colgroup>
-                            <col *ngFor="let col of columns" style="width:140px">
-                        </colgroup>
-                    </ng-template>
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-
-                            <th style="width:150px"></th>
-
-                        </tr>
-
-                        <tr>
-                            <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
-                            </th>
-                            <th style="width:150px"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
-                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                            </td>
-
-                            <td style="width:150px">
-                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-
-                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="Edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <i class="fa fa-users" mat-icon-button matTooltip="Contacts" (click)="openContactList(contentcontact,rowData)">
-
-                                </i>
-                                <i class="fa fa-map" mat-icon-button matTooltip="Sites" (click)="openSiteList(contentsites,rowData)"></i>
-
-                                <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
-
-                                <button class="btn-history" mat-icon-button matTooltip="History">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="summary" id="footer">
-                        <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
-                        &nbsp;&nbsp;
-                        <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
-
-                    </ng-template>                   
-                </p-table>
-
+                    </div>
+                </div>
             </div>
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
@@ -148,13 +137,10 @@
                                                     <p><span class="label"><b>Email: </b></span><span class="value">{{customerViewFeilds.email}}</span></p>
                                                 </div>
                                                 <div class="col-sm-6">
-
                                                     <p><span class="label"><b>Classification: </b></span><span class="value">{{customerViewFeilds.customerClassificationId}}</span></p>
                                                     <p><span class="label"><b>Contract Ref: </b></span><span class="value">{{customerViewFeilds.contractReference}}</span></p>
                                                     <p><span class="label"><b>PBH Customer: </b></span><span class="value">{{customerViewFeilds.pbhCustomerMemo}}</span></p>
                                                     <p><span class="label"><b>Restrict PMA: </b></span><span class="value">{{customerViewFeilds.restrictPMAMemo}}</span></p>
-
-
                                                     <p><span class="label"><b>URL to Customer site: </b></span><span class="value">{{customerViewFeilds.customerURL}}</span></p>
                                                 </div>
                                             </div>
@@ -217,7 +203,7 @@
                                             <div class="col-sm-6">
                                                 <p><span class="label"><b>EDI: </b></span><span class="value">{{customerVfinanceiewFeilds.ediDescription}}</span></p>
                                                 <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
-                                                <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
+                                        <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
                                                 <p><span class="label"><b>Currency: </b></span><span class="value">{{currencyId}}</span></p>
                                             </div>
                                         </div>
@@ -328,17 +314,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </ng-template>
 
-
-
-        </div>
-
-    </div>
-</div>
 <ng-template #contentcontact>
 
     <div class="panel-heading">
