@@ -1492,6 +1492,37 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [HttpGet("searchGetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID/{ItemMasterID}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult orAirMappedMultiDashId(long ItemMasterID, string AircraftTypeID, string AircraftModelID, string DashNumberId)
+        {
+            var result = _unitOfWork.itemMaster.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(ItemMasterID, AircraftTypeID, AircraftModelID, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID/{ItemMasterID}")]
+        [Produces(typeof(List<ItemMasterAircraftMapping>))]
+        public IActionResult orATAMappedMultiATASUBId(long ItemMasterID, string ATAChapterId, string ATASubChapterID)
+        {
+            var result = _unitOfWork.itemMaster.searchgetItemATAMappingDataByMultiTypeIdATAIDATASUBID(ItemMasterID, ATAChapterId, ATASubChapterID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
     }
 
 }

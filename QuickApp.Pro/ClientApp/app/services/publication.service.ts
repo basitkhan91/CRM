@@ -183,5 +183,11 @@ export class PublicationService {
     return this.publicationEndpoint.deleteitemMasterMappedEndpoint<any>(
       PublicationItemMasterMappingId
     );
-  }
+    }
+    searchgetAirMappedByMultiTypeIdModelIDDashID(PublicationID: number) {
+        return this.publicationEndpoint.searchgetAirMappedByMultiTypeIDModelIDDashID<any>(PublicationID);
+    }
+    searchgetATAMappedByMultiSubChapterId(PublicationID: number) {
+        return this.publicationEndpoint.searchgetAtaMappedByMultiSubChapterID<any>( PublicationID);
+    } 
 }

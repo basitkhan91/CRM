@@ -20,6 +20,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetATAMappingDataByMultiATAIdSUBATAID(long PublicationId, string ATAChapterID, string SubATAChapterID);
         IEnumerable<object> GetATAMappingDataByMultiATAId(long PublicationId, string ATAChapterID);
         IEnumerable<object> GetATAMappingDataByMultiSubChapterId(long PublicationId, string SubATAChapterID);
+        IEnumerable<object> searchgetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationId, string aircraftTypeID, string aircraftModelID, string dashNumberId);
+        IEnumerable<object> searchGetATAMappingDataByMultiATAIdSUBATAID(long PublicationId, string ATAChapterID, string SubATAChapterID);
 
 
 

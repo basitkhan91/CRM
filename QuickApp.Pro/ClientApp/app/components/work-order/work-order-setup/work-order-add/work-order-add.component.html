@@ -189,8 +189,9 @@
                                                 <span class="clr-red">*</span>
                                             </label>
 
-                                            <input type="text" class="form-control" [(ngModel)]="workOrderGeneralInformation.customerReference">
+                                            <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.doingBusinessAsName">
                                         </div>
+                                        
                                     </div>
                                     <div class="col-md-3">
                                             <div class="form-group">
