@@ -307,53 +307,50 @@ namespace DAL.Repositories
             return data;
         }
 
-        public IEnumerable<object> orGetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationID, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        public IEnumerable<object> searchgetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationID, string AircraftTypeId, string AircraftModelId, string DashNumberId)
         {
             long[] myAircraftTypeId=null;
             long[] myAircraftModelId = null;
             long[] myDashNumberId = null;
-            if (AircraftTypeId!=null)
+            if (AircraftTypeId != null && AircraftTypeId != "")
                 myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-            if (AircraftModelId != null)
+            if (AircraftModelId != null && AircraftModelId != "")
                 myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
-            if (DashNumberId != null)
+            if (DashNumberId != null && DashNumberId !="")
                 myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
-            if (AircraftTypeId !=null && AircraftModelId != null && DashNumberId != null)
+            if (myAircraftTypeId !=null && myAircraftModelId != null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId)  && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
                             return data;
-            }
-            if (AircraftTypeId !=null && AircraftModelId != null && DashNumberId == null)
+            } else if (myAircraftTypeId !=null && myAircraftModelId != null && myDashNumberId == null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId,    PublicationItemMaster.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId,it.DashNumberId,it.DashNumber, it.AircraftType,it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                             return data;
-            }
-            if (AircraftTypeId !=null && AircraftModelId == null && DashNumberId == null)
+            }else if (myAircraftTypeId !=null && myAircraftModelId == null && myDashNumberId == null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType, it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive, it.IsDeleted}).ToList();
                             return data;
-            }
-            if (AircraftTypeId !=null && AircraftModelId == null && DashNumberId != null)
+            }else if (myAircraftTypeId !=null && myAircraftModelId == null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
                             select new{ PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId, it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel, it.Memo,it.MasterCompanyId,it.IsActive, it.IsDeleted }).ToList();
                             return data;
             }
-            if (AircraftTypeId ==null && AircraftModelId != null && DashNumberId != null)
+            else if (myAircraftTypeId ==null && myAircraftModelId != null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId)  && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
                             select new{ PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId, it.PartNumber, it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber, it.AircraftType, it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive, it.IsDeleted }).ToList();
                             return data;
             }
-            if (AircraftTypeId ==null && AircraftModelId == null && DashNumberId != null)
+            else if (myAircraftTypeId ==null && myAircraftModelId == null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
@@ -369,13 +366,13 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> orGetATAMappingDataByMultiATAIdSUBATAID(long PublicationID, string ATAChapterId, string ATASubChapterID)
+        public IEnumerable<object> searchGetATAMappingDataByMultiATAIdSUBATAID(long PublicationID, string ATAChapterId, string ATASubChapterID)
         {
             long[] myATAChapterId = null;
             long[] myATASubChapterID = null;
-            if (ATAChapterId != null)
+            if (ATAChapterId != null && ATAChapterId != "")
                 myATAChapterId =ATAChapterId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-            if (ATASubChapterID != null)
+            if (ATASubChapterID != null && ATASubChapterID != "")
                 myATASubChapterID = ATASubChapterID.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
 
             if (myATAChapterId != null && myATASubChapterID != null)
