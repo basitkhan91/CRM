@@ -4137,6 +4137,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.itemTypeId = 1;
 
                 this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
+                    // go to next tab
+                    this.changeOfTab('AircraftInfo');
                     // response Data after save 
                     this.collectionofItemMaster = data;
                     //console.log(this.collectionofItemMaster);

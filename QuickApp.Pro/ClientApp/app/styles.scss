@@ -3043,6 +3043,7 @@ input[type="text"] {
         background: #169F85
     }
 
+
     .btn-dark {
         color: #E9EDEF;
         background-color: #4B5F71;
@@ -12582,6 +12583,14 @@ table thead tr th:first-child input, table tr td:first-child input {
     border-radius: 4px !important;
     padding: 6px 12px !important;
 }
+
+.btn-success-cstm{
+    color: #fff !important;
+    background-color: green !important;
+    border-color: #2e6da4;
+    border-radius: 4px !important;
+    padding: 6px 12px !important;
+}
 .btn-primary-cstm .ui-button-icon-left {
     left: 9%;
     top: 46%;
@@ -13674,6 +13683,7 @@ body .ui-datepicker table td > a.ui-state-active {
     right: 0;
     z-index: 1;
     padding-left: 5px;
+    position: sticky;
 }
 .rro-table-cstm tbody td:last-child {
     position: -webkit-sticky;
@@ -13932,4 +13942,8 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .margintop {
     margin-top: 7px !important;
+}
+
+.rounder-corners-cstm {
+    border-radius: 5px !important
 }

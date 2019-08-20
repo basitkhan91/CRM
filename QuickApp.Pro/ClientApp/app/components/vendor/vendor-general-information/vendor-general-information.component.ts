@@ -96,6 +96,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     disablesaveForClassification: boolean;
     selectedClass: any;
 
+
     ngOnInit(): void {
         this.matSpinner = false;
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
@@ -112,6 +113,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             center: { lat: 36.890257, lng: 30.707417 },
             zoom: 12
         };
+        this.sourceVendor.vendorTypeId = 1;
         if (this.workFlowtService.isEditMode == false) {
             this.sourceVendor.vendorTypeId = 2;
             this.viewName = "Create";
