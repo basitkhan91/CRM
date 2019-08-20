@@ -47,7 +47,13 @@ export class PublicationEndpointService extends EndpointFactory {
   private readonly _publicationPNMappingData: string =
     '/api/Publication/GetPubPNMappedData_PNID';
   private readonly _AircraftInformationSearch: string =
-    'getDashListBy_MUTLI_MID_TID_DID/';
+        'getDashListBy_MUTLI_MID_TID_DID/';
+
+    private readonly _orgetAirMappingByMultiTypeIDModelIDDashID: string =
+        '/api/Publication/orGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
+
+    private readonly _orgetATAMappingByMultiChapterIDSubID: string =
+        '/api/Publication/orGetItemATAMappedByPublicationIdMultiATAIDSubChapterID';
   get getCodeUrl() {
     return this.configurations.baseUrl + this._publicationGetUrl;
   }
@@ -315,7 +321,8 @@ export class PublicationEndpointService extends EndpointFactory {
           )
         );
       });
-  }
+    }
+    
   getAtaMappedByMultiATAIDSubChapterID<T>(
     PublicationID: number,
     ChapterID: string,
@@ -382,5 +389,27 @@ export class PublicationEndpointService extends EndpointFactory {
           this.deleteitemMasterMappedEndpoint(userObject)
         );
       });
-  }
+    }
+
+    orgetAirMappedByMultiTypeIDModelIDDashID<T>(PublicationID: number): Observable<T> {
+        let endpointUrl = `${
+            this._orgetAirMappingByMultiTypeIDModelIDDashID}/${PublicationID}`;
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {return this.handleError(error, () =>
+                    this.orgetAirMappedByMultiTypeIDModelIDDashID(PublicationID)
+                );
+            });
+    }
+    orgetAtaMappedByMultiSubChapterID<T>(PublicationID: number): Observable<T> {
+        let endpointUrl = `${
+            this._orgetATAMappingByMultiChapterIDSubID}/${PublicationID}`;
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () =>
+                    this.orgetAtaMappedByMultiSubChapterID(PublicationID)
+                );
+            });
+    }
 }
