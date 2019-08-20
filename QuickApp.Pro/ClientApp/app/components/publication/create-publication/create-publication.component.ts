@@ -411,30 +411,32 @@ export class CreatePublicationComponent implements OnInit {
       this.aircraftModelsIdUrl !== '' &&
       this.dashNumberIdUrl !== ''
     ) {
-      this.searchParams = `${this.aircraftManfacturerIdsUrl}/${
-        this.aircraftModelsIdUrl
-      }/${this.dashNumberIdUrl}`;
+      this.searchParams = `aircrafttypeid=${
+        this.aircraftManfacturerIdsUrl
+      }&aircraftmodelid=${this.aircraftModelsIdUrl}&dashNumberId=${
+        this.dashNumberIdUrl
+      }`;
     }
     // search only by manfacturer and Model and  publicationId
     else if (
       this.aircraftManfacturerIdsUrl !== '' &&
       this.aircraftModelsIdUrl !== ''
     ) {
-      this.searchParams = `${this.aircraftManfacturerIdsUrl}/${
-        this.aircraftModelsIdUrl
-      }`;
+      this.searchParams = `aircrafttypeid=${
+        this.aircraftManfacturerIdsUrl
+      }&aircraftmodelid=${this.aircraftModelsIdUrl}`;
     } else if (this.aircraftManfacturerIdsUrl !== '') {
-      this.searchParams = this.aircraftManfacturerIdsUrl;
+      this.searchParams = `aircrafttypeid=${this.aircraftManfacturerIdsUrl}`;
     }
     // search only by model and publicationId
     else if (this.aircraftModelsIdUrl !== '') {
-      this.searchParams = this.aircraftModelsIdUrl;
+      this.searchParams = `aircraftmodelid=${this.aircraftModelsIdUrl}`;
     }
     // search only by dashNumber and publicationId
     else if (this.dashNumberIdUrl !== '') {
-      this.searchParams = this.dashNumberIdUrl;
+      this.searchParams = `&dashNumberId=${this.dashNumberIdUrl}`;
     }
-
+    console.log(this.searchParams);
     this.publicationService
       .aircraftInformationSearch(this.searchParams)
       .subscribe(res => {});
