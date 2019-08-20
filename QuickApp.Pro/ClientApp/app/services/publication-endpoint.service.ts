@@ -47,13 +47,13 @@ export class PublicationEndpointService extends EndpointFactory {
   private readonly _publicationPNMappingData: string =
     '/api/Publication/GetPubPNMappedData_PNID';
   private readonly _AircraftInformationSearch: string =
-        'getDashListBy_MUTLI_MID_TID_DID/';
+    'searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
 
-    private readonly _searchgetAirMappingByMultiTypeIDModelIDDashID: string =
-        '/api/Publication/searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
+  private readonly _searchgetAirMappingByMultiTypeIDModelIDDashID: string =
+    '/api/Publication/searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
 
-    private readonly _searchgetATAMappingByMultiChapterIDSubID: string =
-        '/api/Publication/searchGetItemATAMappedByPublicationIdMultiATAIDSubChapterID';
+  private readonly _searchgetATAMappingByMultiChapterIDSubID: string =
+    '/api/Publication/searchGetItemATAMappedByPublicationIdMultiATAIDSubChapterID';
   get getCodeUrl() {
     return this.configurations.baseUrl + this._publicationGetUrl;
   }
@@ -172,7 +172,7 @@ export class PublicationEndpointService extends EndpointFactory {
       });
   }
 
-  getPubPNById<T>(PNid: string): Observable<T> {
+  getPubPNById<T>(PNid: number): Observable<T> {
     let endpointUrl = `${this._publicationPNMappingData}/${PNid}`;
 
     return this.http
@@ -197,10 +197,12 @@ export class PublicationEndpointService extends EndpointFactory {
       });
   }
 
-  getAircraftInformationBySearch<T>(searchUrl, publicationId?): Observable<T> {
+  getAircraftInformationBySearch<T>(searchUrl, publicationId): Observable<T> {
     console.log(searchUrl);
     return this.http
-      .get<T>(`${this._AircraftInformationSearch}${searchUrl}`)
+      .get<T>(
+        `${this._AircraftInformationSearch}/${publicationId}?${searchUrl}`
+      )
       .catch(err => {
         return this.handleError(err, () =>
           this.getAircraftInformationBySearch(searchUrl, publicationId)
@@ -321,8 +323,8 @@ export class PublicationEndpointService extends EndpointFactory {
           )
         );
       });
-    }
-    
+  }
+
   getAtaMappedByMultiATAIDSubChapterID<T>(
     PublicationID: number,
     ChapterID: string,
@@ -389,27 +391,34 @@ export class PublicationEndpointService extends EndpointFactory {
           this.deleteitemMasterMappedEndpoint(userObject)
         );
       });
-    }
+  }
 
-    searchgetAirMappedByMultiTypeIDModelIDDashID<T>(PublicationID: number): Observable<T> {
-        let endpointUrl = `${
-            this._searchgetAirMappingByMultiTypeIDModelIDDashID}/${PublicationID}`;
-        return this.http
-            .get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {return this.handleError(error, () =>
-                    this.searchgetAirMappedByMultiTypeIDModelIDDashID(PublicationID)
-                );
-            });
-    }
-    searchgetAtaMappedByMultiSubChapterID<T>(PublicationID: number): Observable<T> {
-        let endpointUrl = `${
-            this._searchgetATAMappingByMultiChapterIDSubID}/${PublicationID}`;
-        return this.http
-            .get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () =>
-                    this.searchgetAtaMappedByMultiSubChapterID(PublicationID)
-                );
-            });
-    }
+  searchgetAirMappedByMultiTypeIDModelIDDashID<T>(
+    PublicationID: number
+  ): Observable<T> {
+    let endpointUrl = `${
+      this._searchgetAirMappingByMultiTypeIDModelIDDashID
+    }/${PublicationID}`;
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.searchgetAirMappedByMultiTypeIDModelIDDashID(PublicationID)
+        );
+      });
+  }
+  searchgetAtaMappedByMultiSubChapterID<T>(
+    PublicationID: number
+  ): Observable<T> {
+    let endpointUrl = `${
+      this._searchgetATAMappingByMultiChapterIDSubID
+    }/${PublicationID}`;
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.searchgetAtaMappedByMultiSubChapterID(PublicationID)
+        );
+      });
+  }
 }

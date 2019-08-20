@@ -246,7 +246,7 @@ export class CreatePublicationComponent implements OnInit {
     });
   }
   savePNMapping() {
-    this.pnMapping = this.selectedPartNumbers.map(obj => {
+    const mapData = this.selectedPartNumbers.map(obj => {
       return {
         PublicationRecordId: this.publicationRecordId,
         PublicationId: this.generalInformationDetails.PublicationId,
@@ -267,13 +267,16 @@ export class CreatePublicationComponent implements OnInit {
     });
     this.selectedPartNumbers = [];
     // PNMapping Save
-    this.publicationService
-      .postMappedPartNumbers(this.pnMapping)
-      .subscribe(res => {
-        this.getAircraftInformationByPublicationId();
-        this.getAtaChapterByPublicationId();
-        // get aircraft mapped data by publication id
-      });
+    this.publicationService.postMappedPartNumbers(mapData).subscribe(res => {
+      this.publicationService
+        .getPublicationPNMapping(this.publicationRecordId)
+        .subscribe(res => {
+          console.log(res);
+        });
+      this.getAircraftInformationByPublicationId();
+      this.getAtaChapterByPublicationId();
+      // get aircraft mapped data by publication id
+    });
   }
 
   searchByFieldUrlCreate() {
@@ -355,7 +358,7 @@ export class CreatePublicationComponent implements OnInit {
     // checks where multi select is empty or not and calls the service
     if (this.aircraftManfacturerIdsUrl !== '') {
       this.aircraftModelService
-        .getAircraftModelListByManufactureId(2)
+        .getAircraftModelListByManufactureId(1)
         .subscribe(models => {
           const responseValue = models[0];
           this.aircraftModelList = responseValue.map(models => {
@@ -438,7 +441,7 @@ export class CreatePublicationComponent implements OnInit {
     }
     console.log(this.searchParams);
     this.publicationService
-      .aircraftInformationSearch(this.searchParams)
+      .aircraftInformationSearch(this.searchParams, this.publicationRecordId)
       .subscribe(res => {});
   }
 
