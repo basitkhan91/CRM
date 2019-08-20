@@ -184,10 +184,10 @@ export class PublicationService {
       PublicationItemMasterMappingId
     );
     }
-    orgetAirMappedByMultiTypeIdModelIDDashID(PublicationID: number) {
-        return this.publicationEndpoint.orgetAirMappedByMultiTypeIDModelIDDashID<any>(PublicationID);
+    searchgetAirMappedByMultiTypeIdModelIDDashID(PublicationID: number) {
+        return this.publicationEndpoint.searchgetAirMappedByMultiTypeIDModelIDDashID<any>(PublicationID);
     }
-    orgetATAMappedByMultiSubChapterId(PublicationID: number) {
-        return this.publicationEndpoint.orgetAtaMappedByMultiSubChapterID<any>( PublicationID);
+    searchgetATAMappedByMultiSubChapterId(PublicationID: number) {
+        return this.publicationEndpoint.searchgetAtaMappedByMultiSubChapterID<any>( PublicationID);
     } 
 }

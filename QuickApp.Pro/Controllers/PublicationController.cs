@@ -467,11 +467,11 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(ModelState);
         }
-        [HttpGet("orGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID/{PublicationId}")]
+        [HttpGet("searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID/{PublicationId}")]
         [Produces(typeof(List<ItemMasterAircraftMapping>))]
-        public IActionResult OrAirMappedMultiDashId(long PublicationId, string aircraftTypeID, string aircraftModelID, string dashNumberId)
+        public IActionResult SearchAirMappedMultiDashId(long PublicationId, string aircraftTypeID, string aircraftModelID, string dashNumberId)
         {
-            var result = _unitOfWork.Publication.orGetAircraftMappingDataByMultiTypeIdModelIDDashID(PublicationId, aircraftTypeID, aircraftModelID, dashNumberId);
+            var result = _unitOfWork.Publication.searchgetAircraftMappingDataByMultiTypeIdModelIDDashID(PublicationId, aircraftTypeID, aircraftModelID, dashNumberId);
 
             if (result == null)
             {
@@ -482,11 +482,11 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
-        [HttpGet("orGetItemATAMappedByPublicationIdMultiATAIDSubChapterID/{PublicationId}")]
+        [HttpGet("searchGetItemATAMappedByPublicationIdMultiATAIDSubChapterID/{PublicationId}")]
         [Produces(typeof(List<ItemMasterAircraftMapping>))]
-        public IActionResult OrATArMappedMultiDashId(long PublicationId, string ataChapterID, string subATAChapterID)
+        public IActionResult SearchATArMappedMultiDashId(long PublicationId, string ataChapterID, string subATAChapterID)
         {
-            var result = _unitOfWork.Publication.orGetATAMappingDataByMultiATAIdSUBATAID(PublicationId, ataChapterID, subATAChapterID);
+            var result = _unitOfWork.Publication.searchGetATAMappingDataByMultiATAIdSUBATAID(PublicationId, ataChapterID, subATAChapterID);
 
             if (result == null)
             {

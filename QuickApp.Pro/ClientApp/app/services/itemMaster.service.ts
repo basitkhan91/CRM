@@ -307,11 +307,11 @@ export class ItemMasterService {
     deleteItemMasterPurcSale(ItemMasterPurcSaleId: number) {
         return this.itemMasterEndpoint.deleteitemMasterMappedPurcSaleEndpoint<any>(ItemMasterPurcSaleId);
     }
-    orgetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
-        return this.itemMasterEndpoint.orgetAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId);
+    searchgetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
+        return this.itemMasterEndpoint.searchGetAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId);
     }
-    orgetATAMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
-        return this.itemMasterEndpoint.orgetATAMappedByMultiATAIDATASUBID<any>(ItemmasterId);
+    searchgetATAMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
+        return this.itemMasterEndpoint.searchgetATAMappedByMultiATAIDATASUBID<any>(ItemmasterId);
     }
     
 }

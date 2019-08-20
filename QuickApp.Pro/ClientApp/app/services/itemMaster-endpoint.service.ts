@@ -68,8 +68,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _ItemMasterAircraftMappedDelete: string = "/api/ItemMaster/UpdateItemMasterAircraftDeleteStatus";
     private readonly _ItemMasterPurcSaleMappedDelete: string = "/api/ItemMaster/UpdateItemMasterPurcSaletDeleteStatus";
 
-    private readonly _orgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/orGetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
-    private readonly _orgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/orGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
+    private readonly _searchgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchgetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
+    private readonly _searchgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
 
     
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
@@ -861,22 +861,22 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteitemMasterMappedPurcSaleEndpoint(userObject));
             });
     }
-    orgetAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number): Observable<T> {
-        let endpointUrl = `${this._orgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
+    searchGetAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number): Observable<T> {
+        let endpointUrl = `${this._searchgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
 
         return this.http
             .get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.orgetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId));
+                return this.handleError(error, () => this.searchGetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId));
             });
     }
-    orgetATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number): Observable<T> {
-        let endpointUrl = `${this._orgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
+    searchgetATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number): Observable<T> {
+        let endpointUrl = `${this._searchgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
 
         return this.http
             .get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.orgetATAMappedByMultiATAIDATASUBID(ItemmasterId));
+                return this.handleError(error, () => this.searchgetATAMappedByMultiATAIDATASUBID(ItemmasterId));
             });
     }
 
