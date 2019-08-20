@@ -198,8 +198,10 @@ $theme: mat-light-theme($primary, $accent);
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-
-
+/*style form round borders form dropdown*/
+.select-value-drop{
+    border-radius: 5px !important;
+}
 .ui-widget {
     padding: 6px;
 }
@@ -12573,7 +12575,7 @@ table thead tr th:first-child input, table tr td:first-child input {
 .btn-cstm {
     color: #fff;
     border-radius: 4px !important;
-    padding: 7px 12px !important;
+    padding: 6px 12px !important;
 }
 .btn-primary-cstm {
     color: #fff !important;
@@ -12602,7 +12604,9 @@ table thead tr th:first-child input, table tr td:first-child input {
     left: 9%;
     top: 46%;
 }
-
+.text-area-size {
+    width: 94%;
+}
 .btn-danger-cstm:hover {
     color: #fff;
     background-color: #DC2700 !important;
@@ -13593,10 +13597,10 @@ body .ui-datepicker table td > a.ui-state-active {
 .autocomplete-customer3 .ui-autocomplete {
     margin-left: -5px !important;
     width: 104% !important;
+    margin-top: -6px !important;
 }
 .autocomplete-customer .ui-autocomplete {
-    margin-left: -5px !important;
-    width: 100% !important;
+    margin-left: -5px !important;   
     margin-top: -6px !important;
 }
 .autocomplete-customer3 .ui-autocomplete input.ui-inputtext {
@@ -13663,6 +13667,9 @@ body .ui-datepicker table td > a.ui-state-active {
 .rro-table-cstm .ui-table-wrapper table {
     position: relative;
     border-collapse: collapse;
+}
+.input-field-value {
+    border-radius: 5px !important;
 }
 .rro-table-cstm .ui-table-wrapper thead th {
     position: -webkit-sticky;

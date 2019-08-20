@@ -62,8 +62,6 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                 </div>
-
-
                <!-- <p-tabMenu [model]="items1" [activeItem]="items1[activeTab]" class="panel-menu"></p-tabMenu>-->
                 <div [ngClass]="{hideTab : currentTab !== 'General'}">
                     <div class="card">
@@ -1007,7 +1005,7 @@
 
                                 <tr *ngFor="let field of fieldArray; let i = index">
                                     <td>
-                                        <select class="form-control w80" id="" name="" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
                                             <option value="NEW" selected="1">NEW</option>
                                             <option value="AS-IS">AS-IS</option>
                                             <option value="REPAIR">REPAIR</option>
@@ -1017,7 +1015,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control w80" id="" name="" [(ngModel)]="field.PP_UOMId" [ngModelOptions]="{standalone: true}">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.PP_UOMId" [ngModelOptions]="{standalone: true}">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1025,7 +1023,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select [ngModelOptions]="{standalone: true}" class="form-control w80" id="" name=""
+                                        <select [ngModelOptions]="{standalone: true}" class="form-control w80 select-value-drop1" id="" name=""
                                                 [(ngModel)]="field.PP_CurrencyId">
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
@@ -1034,30 +1032,30 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_FXRatePerc" />
+                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_FXRatePerc" />
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
+                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
                                     </td>
                                     <td>
-                                        <input type="date" [(ngModel)]="field.PP_LastListPriceDate" [ngModelOptions]="{standalone: true}">
+                                        <input type="date" class="input-field-value" [(ngModel)]="field.PP_LastListPriceDate" [ngModelOptions]="{standalone: true}">
                                     </td>
                                     <td>
-                                        <select class="form-control w80" id="" name="" [(ngModel)]="field.PP_PurchaseDiscPerc" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.PP_PurchaseDiscPerc" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
                                             <option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="num" maxlength="15" value="{{field.PP_PurchaseDiscAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_PurchaseDiscAmount" [disabled]="true" />
+                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="num" maxlength="15" value="{{field.PP_PurchaseDiscAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_PurchaseDiscAmount" [disabled]="true" />
                                     </td>
                                     <td>
-                                        <input type="date" [(ngModel)]="field.PP_LastPurchaseDiscDate" [ngModelOptions]="{standalone: true}">
+                                        <input type="date" class="input-field-value"  [(ngModel)]="field.PP_LastPurchaseDiscDate" [ngModelOptions]="{standalone: true}">
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="num" maxlength="15" value="{{field.PP_UnitPurchasePrice}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_UnitPurchasePrice" [disabled]="true" />
+                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="int" maxlength="15" value="{{field.PP_UnitPurchasePrice}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_UnitPurchasePrice" [disabled]="true" />
                                     </td>
                                     <td>
-                                        <select class="form-control w80" id="" name="" [(ngModel)]="field.SP_FSP_UOMId" [ngModelOptions]="{standalone: true}">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_FSP_UOMId" [ngModelOptions]="{standalone: true}">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1065,7 +1063,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control w80" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_CurrencyId">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_CurrencyId">
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
                                                 {{currencyName.symbol}}
@@ -1073,41 +1071,41 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FXRatePerc" />
+                                        <input type="text" class="input-field-value"  pInputText  pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FXRatePerc" />
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
+                                        <input type="text" class="input-field-value"  pInputText  pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
                                     </td>
                                     <td>
-                                        <input type="date" [(ngModel)]="field.SP_FSP_LastFlatPriceDate" [ngModelOptions]="{standalone: true}">
+                                        <input type="date" class="input-field-value"  [(ngModel)]="field.SP_FSP_LastFlatPriceDate" [ngModelOptions]="{standalone: true}">
                                     </td>
                                     <td>
-                                        <select class="form-control w80" id="" name="" [(ngModel)]="field.SP_CalSPByPP_MarkUpPercOnListPrice" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_MarkUpPercOnListPrice" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
                                             <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
                                         </select> %
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_MarkUpAmount" value="{{field.markupAmount}}" />
+                                        <input type="text" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_MarkUpAmount" value="{{field.markupAmount}}" />
                                     </td>
                                     <td>
-                                        <input type="date" [(ngModel)]="field.SP_CalSPByPP_LastMarkUpDate" [ngModelOptions]="{standalone: true}" />
+                                        <input type="date" class="input-field-value"  [(ngModel)]="field.SP_CalSPByPP_LastMarkUpDate" [ngModelOptions]="{standalone: true}" />
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="money" maxlength="15" [(ngModel)]="field.SP_CalSPByPP_BaseSalePrice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
+                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="money" maxlength="15" [(ngModel)]="field.SP_CalSPByPP_BaseSalePrice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
                                     </td>
                                     <td>
-                                        <select class="form-control w50" id="" name="" [(ngModel)]="field.SP_CalSPByPP_SaleDiscPerc" [ngModelOptions]="{standalone: true}" (change)="salePercent(field)">
+                                        <select class="form-control w50 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_SaleDiscPerc" [ngModelOptions]="{standalone: true}" (change)="salePercent(field)">
                                             <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
                                         </select> %
                                     </td>
                                     <td>
-                                        <input type="text" pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_SaleDiscAmount" value="{{field.SP_CalSPByPP_SaleDiscAmount}}" />
+                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_SaleDiscAmount" value="{{field.SP_CalSPByPP_SaleDiscAmount}}" />
                                     </td>
                                     <td>
-                                        <input type="date" [(ngModel)]="field.SP_CalSPByPP_LastSalesDiscDate" [ngModelOptions]="{standalone: true}">
+                                        <input type="date" class="input-field-value"  [(ngModel)]="field.SP_CalSPByPP_LastSalesDiscDate" [ngModelOptions]="{standalone: true}">
                                     </td>
                                     <td>
-                                        <input type="text" [disabled]="true" pKeyFilter="num" [(ngModel)]="field.SP_CalSPByPP_UnitSalePrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.SP_CalSPByPP_UnitSalePrice}}" />
+                                        <input type="text" class="input-field-value"  pInputText [disabled]="true" pKeyFilter="num" [(ngModel)]="field.SP_CalSPByPP_UnitSalePrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.SP_CalSPByPP_UnitSalePrice}}" />
                                     </td>
                                     <td>
                                         <button class="btn btn-danger nobg" (click)="delete(i)">
@@ -1158,7 +1156,7 @@
                                     <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" />
                                     <label class="control-label">Country <span style="color: red">*</span></label>
                                     <p-autoComplete [(ngModel)]="sourceAction.countries_name" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer3 autocomplete-customer">
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer3">
                                         <ng-template let-countryName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{countryName}}</div>
                                         </ng-template>
@@ -1177,7 +1175,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="eccn" class="control-label">
+                                    <label for="weight" class="control-label">
                                         Weight <strong class="clr-red">*</strong>
                                     </label>
                                     <span class="display-flex inline-block">
@@ -3051,16 +3049,16 @@
                         <label for="description" class="control-label control-item">Manufacturer Name<span class="clr-red">*</span></label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete formControlName="manufacturerValue" [(ngModel)]="sourcemanufacturer"
+                        <p-autoComplete  [(ngModel)]="sourcemanufacturer"
                                         (onKeyUp)=ManufacturerHandler($event) (onSelect)="Manufacturerdescription($event)"
-                                        [suggestions]="localmanufacturer" (completeMethod)="filtermanufacturer($event)" [size]="30"
+                                        [suggestions]="localmanufacturer" (completeMethod)="filtermanufacturer($event)" formControlName="manufacturer" [size]="30"
                                         [minLength]="1" [dropdown]="true" class="autocomplete-customer1" required>
                             <ng-template let-name pTemplate="item">
                                 <div class="ui-helper-clearfix">{{name}}</div>
                             </ng-template>
                         </p-autoComplete>
-                        <div *ngIf="manufacturerValue.controls['manufacturerId'].touched && !manufacturerValue.controls['manufacturerId'].valid" class="clr-red">
-                            <span *ngIf="manufacturerValue.controls['manufacturerId'].hasError('required') " style="color:red">
+                        <div *ngIf="manufacturerValue.controls['manufacturer'].touched && !manufacturerValue.controls['manufacturer'].valid" class="clr-red">
+                            <span *ngIf="manufacturerValue.controls['manufacturer'].hasError('required') " style="color:red">
                                 Please Enter Mandatory
                             </span>
                         </div>
@@ -3070,7 +3068,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!manufacturerValue.valid"
+                <button class="btn btn-primary-cstm pull-right" [disabled]="!manufacturerValue.valid" (click)="saveManufacturer()"
                         type="submit">
                     Submit
                 </button>
@@ -3090,9 +3088,7 @@
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="createIntegration()">
             <div class="form-group">
-                <div class="col-sm-4">
-                    <label for="url" class="control-label">WebSite url</label>
-                </div>
+                <label for="url" class="control-label col-sm-4">WebSite url</label>
                 <div class="col-sm-5">
                     <p-autoComplete (onSelect)="integrationPartnmId($event)" (onKeyUp)=integrationEventHandler($event)
                                     [(ngModel)]="portalURL" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection"
@@ -3105,41 +3101,35 @@
                     <div *ngIf="disableSave" style="color:red">Already Exists</div>
                 </div>
                 <div class="clear"></div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                    <label for="netDays" class="control-label">Integration</label>
-                </div>
-                <div>
-                    <div class="col-sm-5">
-                        <input type="text" name="description" style="width:93% !important" class="form-control input-text-value" required #description="ngModel"
-                               [(ngModel)]="sourceIntegration.description" minlength="2">
-                        <div *ngIf="description.dirty && description.errors?.required && description.errors"
-                             class="invalid-form-error-message">
-                            Integration required.
-                        </div>
-                        <div *ngIf="description.dirty && description.errors?.minlength && description.errors"
-                             class="invalid-form-error-message">
-                            Integration must be at least 2 characters long.
-                        </div>
+                <label for="netDays" class="control-label col-sm-4">Integration</label>
+                <div class="col-sm-5">
+                    <input type="text" pInputText name="description" class="text-item" style="width: 94% !important" required #description="ngModel"
+                           [(ngModel)]="sourceIntegration.description" minlength="2">
+                    <div *ngIf="description.dirty && description.errors?.required && description.errors"
+                         class="invalid-form-error-message">
+                        Integration required.
+                    </div>
+                    <div *ngIf="description.dirty && description.errors?.minlength && description.errors"
+                         class="invalid-form-error-message">
+                        Integration must be at least 2 characters long.
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                    <label for="description" class="control-label">Memo</label>
-                </div>
+                <div class="clear"></div>
+                <label for="description" class="control-label col-sm-4">Memo</label>
                 <div class="col-sm-5">
                     <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
                               [(ngModel)]="sourceIntegration.memo" minlength="2"></textarea>
                 </div>
-            </div>
-            <div class="col-sm-12">
-                <label class="form-check-label" for="isActive">
-                    <input type="checkbox" name="isActive" style="width: 20px !important;" #isActive="ngModel" class="form-check-input" checked
-                           id="isActive" [(ngModel)]="sourceIntegration.isActive"> Active
-                </label>
-            </div>
+                <div class="clear"></div>
+                <div class="checkbox-cstm">
+                    <label>
+                        <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceIntegration.isActive">
+                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                        Active
+                    </label>
+                </div>
+            </div>    
+            <div class="clear"></div>
             <div class="modal-footer">
                 <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="disableSaveProvision"
                         (click)="saveintegration()">
