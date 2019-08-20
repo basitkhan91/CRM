@@ -382,7 +382,7 @@ namespace DAL.Repositories
                             select new{PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId,it.PartNumber,it.ATAChapterId,it.ATAChapterCode,it.ATAChapterName,it.ATASubChapterId,it.ATASubChapterDescription,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
                             return data;
             }
-            if (myATAChapterId != null && myATASubChapterID == null)
+            else if (myATAChapterId != null && myATASubChapterID == null)
             {
                             var data = (from it in _appContext.ItemMasterATAMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
@@ -390,7 +390,7 @@ namespace DAL.Repositories
                             select new{PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId,it.PartNumber,it.ATAChapterId,it.ATAChapterCode,it.ATAChapterName,it.ATASubChapterId,it.ATASubChapterDescription,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
                             return data;
             }
-            if (myATAChapterId == null && myATASubChapterID != null)
+            else if (myATAChapterId == null && myATASubChapterID != null)
             {
                             var data = (from it in _appContext.ItemMasterATAMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
