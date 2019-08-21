@@ -109,7 +109,7 @@ export class DashNumberEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getDASHLISTByID(Mid, Tid, Did));
             });
     }
-    getDashNumberByModelTypeId<T>(Mid: string, Tid: number): Observable<T> {
+    getDashNumberByModelTypeId<T>(Mid: string, Tid: string): Observable<T> {
         let endpointUrl = `${this.getDash}/${Mid}/${Tid}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {

@@ -90,55 +90,48 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetAllAircraftModelData(string id)
         {
+            try
+            {
+                int[] myInts = id.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                // int[] myInts1 = { 63, 62 };
+                //var q =
 
+                //  from x in _appContext.AircraftModel join ad in _appContext.AircraftType on x.AircraftTypeId equals ad.AircraftTypeId
 
-            int[] myInts = id.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                //  where myInts.Contains(x.AircraftTypeId)
 
-           // int[] myInts1 = { 63, 62 };
-            //var q =
+                //  select new
+                //  {
+                //      t.AircraftModelId,
+                //      t.ModelName,
+                //      t.AircraftTypeId,
+                //      ad.Description,
+                //      ad,
+                //      t
+                //  }).ToList();
+                var q =
 
-            //  from x in _appContext.AircraftModel join ad in _appContext.AircraftType on x.AircraftTypeId equals ad.AircraftTypeId
-
-            //  where myInts.Contains(x.AircraftTypeId)
-
-            //  select new
-            //  {
-            //      t.AircraftModelId,
-            //      t.ModelName,
-            //      t.AircraftTypeId,
-            //      ad.Description,
-            //      ad,
-            //      t
-            //  }).ToList();
-            var q =
-
-               from x in _appContext.AircraftModel
-               join ad in _appContext.AircraftType on x.AircraftTypeId equals ad.AircraftTypeId
-
-               where myInts.Contains(x.AircraftTypeId)
-
-
-               //                // select new { t, ad, vt }).ToList();
-               select new
-               {
-                   x.AircraftModelId,
-                   x.ModelName,
-                   x.AircraftTypeId,
-                   ad.Description,
-                   ad,
-                   x
-               };
-            
-
-
-
-
-            //for (int i = 0; i < count; i++)
-            //{
-            //    Finallist = list[i];
-            //}
-
+                   from x in _appContext.AircraftModel
+                   join ad in _appContext.AircraftType on x.AircraftTypeId equals ad.AircraftTypeId
+                   where myInts.Contains(x.AircraftTypeId) && x.IsDeleted != true
+                   select new
+                   {
+                       x.AircraftModelId,
+                       x.AircraftTypeId,
+                       x.ModelName,
+                       x.Memo,
+                       x.IsActive,
+                       x.IsDeleted,
+                       ad.Description
+                       
+                   };
+           
             return q.ToArray();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
         }
 

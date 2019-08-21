@@ -325,47 +325,60 @@ namespace DAL.Repositories
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId)  && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                            return uniquedata;
             } else if (myAircraftTypeId !=null && myAircraftModelId != null && myDashNumberId == null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId,    PublicationItemMaster.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId,it.DashNumberId,it.DashNumber, it.AircraftType,it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
-                            return data;
-            }else if (myAircraftTypeId !=null && myAircraftModelId == null && myDashNumberId == null)
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                            return uniquedata;
+            }
+            else if (myAircraftTypeId !=null && myAircraftModelId == null && myDashNumberId == null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType, it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive, it.IsDeleted}).ToList();
-                            return data;
-            }else if (myAircraftTypeId !=null && myAircraftModelId == null && myDashNumberId != null)
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                            return uniquedata;
+            }
+            else if (myAircraftTypeId !=null && myAircraftModelId == null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
                             select new{ PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId, it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel, it.Memo,it.MasterCompanyId,it.IsActive, it.IsDeleted }).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                            return uniquedata;
             }
             else if (myAircraftTypeId ==null && myAircraftModelId != null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId)  && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
                             select new{ PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId, it.PartNumber, it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber, it.AircraftType, it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive, it.IsDeleted }).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                            return uniquedata;
             }
             else if (myAircraftTypeId ==null && myAircraftModelId == null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType, it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                            return uniquedata;
+                
             }
             else
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true
+                            
                             select new{PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId,it.PartNumber, it.AircraftTypeId,it.AircraftModelId,it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo,it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId,item.DashNumberId}).Select(group => group.First()).ToList();
+                            return uniquedata;
+                            
             }
+            
         }
 
         public IEnumerable<object> searchGetATAMappingDataByMultiATAIdSUBATAID(long PublicationID, string ATAChapterId, string ATASubChapterID)
@@ -382,7 +395,8 @@ namespace DAL.Repositories
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true  && myATAChapterId.Contains(it.ATAChapterId) && myATASubChapterID.Contains(it.ATASubChapterId)
                             select new{PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId,it.PartNumber,it.ATAChapterId,it.ATAChapterCode,it.ATAChapterName,it.ATASubChapterId,it.ATASubChapterDescription,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId}).Select(group => group.First()).ToList();
+                            return uniquedata;
             }
             else if (myATAChapterId != null && myATASubChapterID == null)
             {
@@ -390,7 +404,8 @@ namespace DAL.Repositories
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true && myATAChapterId.Contains(it.ATAChapterId) 
                             select new{PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId,it.PartNumber,it.ATAChapterId,it.ATAChapterCode,it.ATAChapterName,it.ATASubChapterId,it.ATASubChapterDescription,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                            return uniquedata;
             }
             else if (myATAChapterId == null && myATASubChapterID != null)
             {
@@ -398,7 +413,9 @@ namespace DAL.Repositories
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true &&  myATASubChapterID.Contains(it.ATASubChapterId)
                             select new{PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId,it.PartNumber,it.ATAChapterId,it.ATAChapterCode,it.ATAChapterName,it.ATASubChapterId,it.ATASubChapterDescription,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                            return uniquedata;
+
             }
             else
             {
@@ -406,7 +423,9 @@ namespace DAL.Repositories
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true
                             select new{PublicationItemMaster.ItemMasterId,PublicationItemMaster.PublicationId,it.PartNumber,it.ATAChapterId,it.ATAChapterCode,it.ATAChapterName,it.ATASubChapterId,it.ATASubChapterDescription,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            return data;
+                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                            return uniquedata;
+
             }
         }
     }
