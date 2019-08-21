@@ -94,14 +94,14 @@ export class PublicationService {
   newPNATAMappingAction(action: Publication) {
     return this.publicationEndpoint.postPNATAMapping<Publication>(action);
   }
-  getPublicationPNMapping(PNid: string) {
+  getPublicationPNMapping(PNid: number) {
     return this.publicationEndpoint.getPubPNById<any>(PNid);
   }
   // Save Part Number Mapping
   postMappedPartNumbers(actionData) {
     return this.publicationEndpoint.postPartNumberMappedData(actionData);
   }
-  aircraftInformationSearch(searchUrl, publicationId?) {
+  aircraftInformationSearch(searchUrl, publicationId) {
     return this.publicationEndpoint.getAircraftInformationBySearch(
       searchUrl,
       publicationId
@@ -183,11 +183,15 @@ export class PublicationService {
     return this.publicationEndpoint.deleteitemMasterMappedEndpoint<any>(
       PublicationItemMasterMappingId
     );
-    }
-    searchgetAirMappedByMultiTypeIdModelIDDashID(PublicationID: number) {
-        return this.publicationEndpoint.searchgetAirMappedByMultiTypeIDModelIDDashID<any>(PublicationID);
-    }
-    searchgetATAMappedByMultiSubChapterId(PublicationID: number) {
-        return this.publicationEndpoint.searchgetAtaMappedByMultiSubChapterID<any>( PublicationID);
-    } 
+  }
+  searchgetAirMappedByMultiTypeIdModelIDDashID(PublicationID: number) {
+    return this.publicationEndpoint.searchgetAirMappedByMultiTypeIDModelIDDashID<
+      any
+    >(PublicationID);
+  }
+  searchgetATAMappedByMultiSubChapterId(PublicationID: number) {
+    return this.publicationEndpoint.searchgetAtaMappedByMultiSubChapterID<any>(
+      PublicationID
+    );
+  }
 }
