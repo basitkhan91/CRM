@@ -48,13 +48,14 @@ namespace DAL.Repositories
             return data;
             throw new NotImplementedException();
         }
-        public IEnumerable<object> GetDashNoByID(string Mid, long Tid)
+        public IEnumerable<object> GetDashNoByID(string Mid, string Tid)
         {
             long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            long[] myTids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             var data = (from iM in _appContext.AircraftDashNumber
                         join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
                         join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
-                        where myMids.Contains(iM.AircraftModelId) && iM.AircraftTypeId == Tid
+                        where myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId)
                         select new
                         {
                             iM.DashNumber,

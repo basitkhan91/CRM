@@ -151,6 +151,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getModelsByManufacturerId/{id}")]
         public IActionResult getAircraftModelsByManufacturerId(string id)
         {
+
 			//var aircraftModel = unitOfWork.Repository<AircraftModel>().Find(x => x.AircraftTypeId == id && x.IsDeleted != true);
 			var aircraftModel = unitOfWork.aircraftModel.GetAllAircraftModelData(id);
 			return Ok(aircraftModel);

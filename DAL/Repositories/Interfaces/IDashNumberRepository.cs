@@ -12,7 +12,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<AircraftDashNumber> GetDashNumbers();
         new IQueryable<AircraftDashNumber> GetPaginationData();
         IEnumerable<object> getDashListByIDS(string Mid, long Tid, string Did);
-        IEnumerable<object> GetDashNoByID(string Mid, long Tid);
+        IEnumerable<object> GetDashNoByID(string Mid, string Tid);
         IEnumerable<object> getDashListBy_MUTLIIDs(string Mid, string Tid, string Did);
     }
 }

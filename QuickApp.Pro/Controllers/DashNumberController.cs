@@ -166,7 +166,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
         [HttpGet("GetDashNoBy_Model_TypeID/{Mid}/{Tid}")]
-        public IActionResult GetDashNumb(string Mid, long Tid)
+        public IActionResult GetDashNumb(string Mid, string Tid)
         {
             var result = unitOfWork.DashNumberRepository.GetDashNoByID(Mid, Tid);
             return Ok(result);

@@ -90,7 +90,6 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetAllAircraftModelData(string id)
         {
-
 			int[] myInts = id.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
 			// int[] myInts1 = { 63, 62 };
 			//var q =
@@ -128,6 +127,8 @@ namespace DAL.Repositories
 			return q.ToArray();
 
 		}
+
+
 
         public IEnumerable<DAL.Models.AircraftModel> GetAllAircraftModel()
         {
