@@ -59,6 +59,7 @@ export class WorkOrderAddComponent implements OnInit {
   filteredEmployeeNames: any[];
   employees: any[];
   contactInfo: any;
+  sourceVendor: any;
   mpnFlag: boolean;
   isDetailedView: boolean;
   selectedRadioButtonValue: boolean;
