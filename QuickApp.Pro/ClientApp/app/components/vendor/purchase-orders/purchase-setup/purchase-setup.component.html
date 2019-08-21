@@ -201,10 +201,11 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Memo</label>
-                            <textarea class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcePoApproval.notes"></textarea>
-                        </div>
+                            <div class="form-group memo-popup-cstm">
+                                <label>Memo</label>
+                                <span pTooltip="{{sourcePoApproval.notes}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{sourcePoApproval.notes}}" disabled /></span>
+                                <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourcePoApproval.notes}}" tooltipPosition="top"></i>
+                            </div>                     
                     </div>
                 </div>
             </form>
@@ -289,6 +290,221 @@
             </p-tabPanel>
         </p-tabView>
     </div>-->
+
+<p-tabView class="pas-tabview">
+    <p-tabPanel header="Parts List">
+        <button (click)="addPartNum()" class="btn btn-primary-cstm">Add Part Number</button>
+        <div class="table-responsive pas-table-cstm roview-table-cstm">
+            <table class="table table-bordered " id="po-table">
+                <thead>
+                    <tr class="partsList-table-tr">
+                        <th><input type="checkbox" /></th>
+                        <th>Split Shipment</th>
+                        <th>PN</th>
+                        <th>Alt PN</th>
+                        <th>PN Description</th>
+                        <th>Item Type</th>
+                        <th>Mfr</th>
+                        <th>GL Account</th>
+                        <th>UOM</th>
+                        <th>Need By</th>
+                        <th>Cond</th>
+                        <th>Order Qty</th>
+                        <th>Unit Cost</th>
+                        <th>Disc./unit</th>
+                        <th>Disc. Cost/unit</th>
+                        <th>Ext Cost</th>
+                        <th>Functional CUR</th>
+                        <th>FX Rate</th>
+                        <th>Report CUR</th>
+                        <th>WO</th>
+                        <th>RO</th>
+                        <th>SO</th>
+                        <th>Company</th>
+                        <th>BU</th>
+                        <th>Division</th>
+                        <th>Dept</th>
+                        <th>Memo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="parent-data" *ngFor="let d of pdata">
+                        <td><input type="checkbox" /></td>
+                        <td><input type="checkbox" /></td>
+                        <td></td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td>Drum towing winch</td>
+                        <td>Stock</td>
+                        <td>123</td>
+                        <td>5</td>
+                        <td>3</td>
+                        <td><p-calendar [showIcon]="true"></p-calendar></td>
+                        <td>
+                            <select class="form-control">
+                                <option value="NEW">NEW</option>
+                                <option value="AS-IS">AS-IS</option>
+                                <option value="REP">REP</option>
+                                <option value="SRV">SRV</option>
+                                <option value="OVH">OVH</option>
+                                <option value="AR">AR</option>
+                            </select>
+                        </td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td>
+                            <select class="form-control">
+                                <option value="select">Select</option>
+                            </select>
+                        </td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td>
+                            <select class="form-control">
+                                <option value="select">Select</option>
+                            </select>
+                        </td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td><input class="form-control" type="text" /></td>
+                        <td>
+                            <select class="form-control">
+                                <option value="select">Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control">
+                                <option value="select">Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control">
+                                <option value="select">Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control">
+                                <option value="select">Select</option>
+                            </select>
+                        </td>
+                        <td><input class="form-control" type="text" /></td>
+                    </tr>
+                    <!--<tr class="child-header">
+                    <th></th>
+                    <th>PN</th>
+                    <th colspan="2">PN Description</th>
+                    <th>User Type</th>
+                    <th>Name</th>
+                    <th colspan="7">Address</th>
+                    <th>Item Type</th>
+                    <th>UOM</th>
+                    <th>Qty to Repair</th>
+                    <th>Need By</th>
+                    <th colspan="12"></th>
+                </tr>
+                <tr class="child-data splitship-child">
+                    <td></td>
+                    <td>SL-33653</td>
+                    <td colspan="2">single drum towing winch</td>
+                    <td>Customer</td>
+                    <td>Shabbir</td>
+                    <td colspan="7">10656 S De Anza Blvd, Suite 859, Cupertino, CA, 95014, USA</td>
+                    <td>Stock</td>
+                    <td>Each</td>
+                    <td>5</td>
+                    <td>01/24/2019</td>
+                    <td colspan="12"></td>
+                </tr>-->
+                </tbody>
+            </table>
+
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="Approve">
+        <h5>Approve Content Not given</h5>
+    </p-tabPanel>
+    <p-tabPanel header="Vendor Capes">
+        <h5>Vendor Capes Content Not given</h5>
+    </p-tabPanel>
+    <p-tabPanel header="Address">
+        <div class="form-row ro-view-address">
+            <div class="col-md-3">
+                <h5 class="po-head">Ship To</h5>
+                <div class="form-group">
+                    <label>Site Name</label>
+                    <input class="form-control" type="text" value="NewYork Location" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input class="form-control" type="text" value="438 Cherry Hill Road, 8996 X Eisenhower PkwyAnn Arbor" disabled>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input class="form-control" type="text" value="Bloomfield Hills" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Primary State/Province</label>
+                    <input class="form-control" type="text" value="MI" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Postal</label>
+                    <input class="form-control" type="text" value="48302" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input class="form-control" type="text" value="USA" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Contact</label>
+                    <input class="form-control" type="text" value="Shabbir" disabled>
+                </div>
+                <div class="form-group memo-popup-cstm">
+                    <label>Memo</label>
+                    <span pTooltip="{{'memoNotes'}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{'memoNotes'}}" disabled /></span>
+                    <i class="fa fa-info-circle fa-lg" pTooltip="{{'memoNotes'}}" tooltipPosition="top"></i>
+                </div>
+                
+            </div>
+            <div class="col-md-3">
+                <h5 class="po-head">Bill To</h5>
+                <div class="form-group">
+                    <label>Site Name</label>
+                    <input class="form-control" type="text" value="NewYork Location" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input class="form-control" type="text" value="438 Cherry Hill Road, 8996 X Eisenhower PkwyAnn Arbor" disabled>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input class="form-control" type="text" value="Bloomfield Hills" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Primary State/Province</label>
+                    <input class="form-control" type="text" value="MI" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Postal</label>
+                    <input class="form-control" type="text" value="48302" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input class="form-control" type="text" value="USA" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Contact</label>
+                    <input class="form-control" type="text" value="Shabbir" disabled>
+                </div>
+                <div class="form-group memo-popup-cstm">
+                    <label>Memo</label>
+                    <span pTooltip="{{'memoNotes'}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{'memoNotes'}}" disabled /></span>
+                    <i class="fa fa-info-circle fa-lg" pTooltip="{{'memoNotes'}}" tooltipPosition="top"></i>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>
 
     <div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
         <div class="x_panel">
@@ -1765,3 +1981,24 @@
 
 
     </ng-template>
+
+    <div class="modal fade" id="cpo-memo" role="dialog">
+        <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Memo</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Memo</label>
+                        <textarea class="form-control">{{sourcePoApproval.notes}}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success-cstm" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -14,7 +14,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 })
 /** create-po component*/
 export class CreatePoComponent implements OnInit {
-
+    first: number = 0;
 	isEditMode: boolean=false;
 	vendorCode: any = "";
 	vendorname: any = "";
@@ -91,6 +91,9 @@ export class CreatePoComponent implements OnInit {
     selectedShippingColumns: any[];
     selectedContactColumns: any[];
     selectedPaymentColumns: any[];
+    cols: any[];
+    selectedColumn: any[];
+
 	constructor(public workFlowtService: VendorService, public _router: Router, private modalService: NgbModal, public priority: PriorityService, private alertService: AlertService, private route: Router)  {
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-create-po';
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -102,7 +105,20 @@ export class CreatePoComponent implements OnInit {
 		this.sourcePo.contactPhone = ''
 		this.sourcePo.city = ''
 		this.sourcePo.state = ''
-		this.sourcePo.postalCode = ''
+        this.sourcePo.postalCode = ''
+        this.cols = [
+            { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'vendorCode', header: 'Vendor Code' },
+            { field: 'firstName', header: 'Full Name' },
+            { field: 'vendorContact', header: 'Vendor Contact' },
+            { field: 'vendorType', header: 'Vendor Type' },
+            { field: 'contactPhone', header: 'Contact Phone' },
+            { field: 'email', header: 'Email' },
+            { field: 'city', header: 'City' },
+            { field: 'stateOrProvince', header: 'State' },
+            { field: 'postalCode', header: 'Postal Code' },
+        ];
+        this.getListByDetails();
 
 		this.loadData();
 		// debugger;
@@ -119,17 +135,38 @@ export class CreatePoComponent implements OnInit {
 		//debugger;
 		this.vendorList = [];
 		this.workFlowtService.getVendordataForPo(this.sourcePo).subscribe(data => {
-			let getlist = data[0];
-			if (getlist.length >= 0) {
-				for (let i = 0; i < getlist.length; i++) {
-					this.vendorList.push(getlist[i])
-				}
-			}
-			console.log(this.vendorList)
+            const getlist = data[0];
+            this.vendorList = getlist.map(x => {
+                return {
+                    vendorName: x.vendorName === null ? '-' : x.vendorName,
+                    vendorCode: x.vendorCode === null ? '-' : x.vendorCode,
+                    firstName: x.firstName === null ? '-' : x.firstName,
+                    vendorContact: x.im.vendorContact === null ? '-' : x.im.vendorContact,
+                    vendorType: this.getVendorType(x.im.vendorTypeId),
+                    contactPhone: x.im.vendorPhone === null ? '-' : x.im.vendorPhone,
+                    email: x.email === null ? '-' : x.email,
+                    city: x.city === null ? '-' : x.city,
+                    stateOrProvince: x.stateOrProvince === null ? '-' : x.stateOrProvince,
+                    postalCode: x.ps.postalCode === null ? '-' : x.ps.postalCode,                    
+                }
+            })
 		});
-	
+    }
 
-	}
+    getVendorType(id) {
+        if (id !== null) {
+            if (id === 1) {
+                return 'Internal';
+            }
+            if (id === 2) {
+                return 'External';
+            }
+            if (id === 3) {
+                return 'Affliate';
+            }
+        }
+
+    }
 	private priorityData() {
 	
 		this.priority.getPriorityList().subscribe(
@@ -306,15 +343,12 @@ export class CreatePoComponent implements OnInit {
 	//}
 
 	openContactList(content,row) {
-
 		
 		this.loadContactDataData(row.vendorId);
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-
-
 	}
 
 	openView(content, row) {
@@ -474,6 +508,10 @@ export class CreatePoComponent implements OnInit {
 		this.showGeneralData = false;
 		this.showcontactdata = false;
 		this.showfinancialdata = true;
-	}
+    }
+
+    onCreatePO() {
+        this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
+    }
 
 }

@@ -70,6 +70,7 @@ import { AuthService } from "../services/auth.service";
 import { RolesGuardService } from "../services/roles-guard.service";
 import { ValidateAccessModule } from "../validateaccess/validateaccess.module";
 import { KeyFilterModule } from "primeng/keyfilter";
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @NgModule({
@@ -98,7 +99,8 @@ import { KeyFilterModule } from "primeng/keyfilter";
 		TreeModule,
         TreeTableModule,
         ValidateAccessModule,
-        TabViewModule
+        TabViewModule,
+        TooltipModule
 
 	],
 	declarations: [
