@@ -5910,6 +5910,7 @@ input[type="text"] {
     .mt5 {
         margin-top: 5px !important;
     }
+
     .mt8 {
         margin-top: 8px !important;
     }
@@ -12778,6 +12779,15 @@ body .ui-datepicker table td > a.ui-state-active {
     p-autocomplete .ui-autocomplete button, p-calendar .ui-calendar button {
         border-radius: 0 5px 5px 0 !important;
     }
+    .pauto-cpo-grid .ui-autocomplete button {
+        width: 36px !important;
+        border: none;
+    }
+    .pcal-cpo-grid .ui-calendar button {
+        width: 25px !important;
+        border: none;
+        padding: 4px;
+    }
 
 button {
     background: #c1c1c1;
@@ -13067,6 +13077,7 @@ button {
         height: 16px;
         float: left;
         margin-right: .5em;
+        background-color: #fff;
     }
 
     .checkbox-cstm .cr .cr-icon {
@@ -13087,6 +13098,9 @@ button {
 
     .checkbox-cstm label input[type="checkbox"]:checked + .cr > .cr-icon {
         opacity: 1;
+    }
+    .form-control:disabled {
+        background-color: #e9ecef !important;
     }
 
     .workflow-measurement-select .ui-autocomplete-panel, .workflow-equip-select .ui-autocomplete-panel {

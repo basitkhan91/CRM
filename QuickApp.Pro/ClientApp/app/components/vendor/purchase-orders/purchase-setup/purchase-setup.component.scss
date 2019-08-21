@@ -23,6 +23,13 @@ textarea {
 .partsList-table-tr th {
     min-width: 80px;
 }
+.addpn-btn {
+    padding: 5px 10px !important;
+    font-size: 13px;
+}
+a.fa.fa-plus-circle {
+    color: green !important;
+}
 
 @media (min-width: 768px) {
     .col-md-3 {

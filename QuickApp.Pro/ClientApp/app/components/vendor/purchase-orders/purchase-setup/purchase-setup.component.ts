@@ -155,7 +155,11 @@ export class PurchaseSetupComponent {
 	sourceSplitShipment: any = {};
     name: any;
     orderQuantity: any;
-    pdata: any[] = [1, 2];
+    pdata: any[] = [1];
+    usertypecustomer: boolean = false;
+    usertypecompany: boolean = false;
+    usertypevendor: boolean = false;
+    enablePNChildRow: boolean = false;
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
@@ -239,8 +243,8 @@ export class PurchaseSetupComponent {
 
 
 			}
-			console.log(this.partListData);
-			console.log(this.editChildList);
+			//console.log(this.partListData);
+			//console.log(this.editChildList);
 
 
 		}
@@ -338,10 +342,14 @@ export class PurchaseSetupComponent {
 		this.loadUOMData();
 		this.employeedata();
 		this.ptnumberlistdata();
-		this.loadcustomerData();
+        this.loadcustomerData();
+        this.sourcePoApproval.masterCompanyId = 0;
+        this.sourcePoApproval.buid1 = 0;
+        this.sourcePoApproval.divid1 = 0;
+        this.sourcePoApproval.depid1 = 0;
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
-		}
+        }
 	}
 	private priorityData() {
 
@@ -369,22 +377,20 @@ export class PurchaseSetupComponent {
 			for (let i = 0; i < this.array.length; i++) {
 
 				this.workFlowtService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
-					if (returndata[0].length > 0) {
+                    if (returndata[0].length > 0) {
 						for (let k = 0; k < returndata[0].length; k++) {
-							this.returnPartsListArray.push(returndata[0][k]);
-							for (let j = 0; j < this.array.length; j++) {
-								if (this.array[j] == returndata[0][k].partNumber) {
-									this.array.splice(j, 1)
-								}
-								else {
-									//this.returnPartsListArray.push({ "partNumber": this.array[j] });
-								}
-							}
+                            this.returnPartsListArray.push(returndata[0][k]);
+							//for (let j = 0; j < this.array.length; j++) {
+							//	if (this.array[j] == returndata[0][k].partNumber) {
+							//		this.array.splice(j, 1)
+							//	}
+							//	else {
+							//		//this.returnPartsListArray.push({ "partNumber": this.array[j] });
+							//	}
+							//}
 						}
 
 					}
-					console.log(this.array);
-
 				});
 
 
@@ -393,7 +399,7 @@ export class PurchaseSetupComponent {
 		}
 
 
-		console.log(this.partNumbers);
+		//console.log(this.partNumbers);
     }
     
 	savePurchaseOrder() {
@@ -531,8 +537,8 @@ export class PurchaseSetupComponent {
 
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.allPartnumbersInfo = allWorkFlows;
-
+        this.allPartnumbersInfo = allWorkFlows;
+        console.log(this.allPartnumbersInfo);
 
 
 	}
@@ -1438,7 +1444,7 @@ export class PurchaseSetupComponent {
                 this.mainPartcompanylist.push(this.allManagemtninfo[i]);
                 
 
-				this.sourcePoApproval.buid1 = null;
+				//this.sourcePoApproval.buid1 = null;
 				this.partList.buid1 = null;
 			}
 
@@ -1740,7 +1746,7 @@ export class PurchaseSetupComponent {
 			poPartSplitState: '',
 			poPartSplitPostalCode: '',
 			poPartSplitCountry: '',
-			managementStructureId: 0, // hey, take a break, and call me after u done with lunch ok ? ok-cool cya. ca
+			managementStructureId: 0,
 			createdBy: '',
 			updatedBy: '',
 			createdDate: '',
@@ -2482,6 +2488,44 @@ export class PurchaseSetupComponent {
 
     addPartNum() {
         this.pdata.push(1);
+    }
+
+    onSelectUsertype(event) {
+        if (event.target.value === '1') {
+            this.usertypecustomer = true;
+            this.usertypecompany = false;
+            this.usertypevendor = false;
+        }
+        if (event.target.value === '2') {
+            this.usertypecompany = false;
+            this.usertypecustomer = false;
+            this.usertypevendor = true;
+        }
+        if (event.target.value === '3') {
+            this.usertypevendor = false;
+            this.usertypecustomer = false;
+            this.usertypecompany = true;
+        }
+    }
+
+    addPageCustomer() {
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
+    }
+
+    onClickSplitshipment(event) {
+        if (event.target.checked) {
+            this.enablePNChildRow = true;
+        } else {
+            this.enablePNChildRow = false;
+        }
+    }
+
+    onAddPNChildRow() {
+
+    }
+
+    onDelPNChildRow() {
+
     }
 }
 
