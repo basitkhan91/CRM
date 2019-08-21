@@ -124,6 +124,7 @@ import {PaginatorModule} from 'primeng/paginator';
 import { CreatePublicationComponent } from "../components/publication/create-publication/create-publication.component";
 import { PaginationComponent } from "../shared/pagination/pagination/pagination.component";
 import { PaginationService } from "../services/pagination/pagination.service";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
 	imports: [
@@ -134,6 +135,7 @@ import { PaginationService } from "../services/pagination/pagination.service";
         CommonModule,
         SinglePagesRoutingModule,
         TableModule,
+        TooltipModule,
         ButtonModule,
         SelectButtonModule,
         InputTextModule,
