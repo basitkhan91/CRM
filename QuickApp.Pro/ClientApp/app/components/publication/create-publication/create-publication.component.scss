@@ -24,3 +24,6 @@ textarea {
   height: 24px !important;
   border-radius: 5px !important;
 }
+.isDisabled {
+  pointer-events: none;
+}

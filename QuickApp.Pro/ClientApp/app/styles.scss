@@ -13315,6 +13315,7 @@ button {
     }
 
     .md-stepper-horizontal .md-step.editable .md-step-circle {
+        background-color: green !important;
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);

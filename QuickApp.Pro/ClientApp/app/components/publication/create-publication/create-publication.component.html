@@ -1,7 +1,7 @@
 ﻿<div class="md-stepper-horizontal orange">
   <div
     class="md-step "
-    [ngClass]="{ active: activeMenuItem >= 1 }"
+    [ngClass]="{ active: activeMenuItem >= 1 ,  editable : activeMenuItem === 1 }"
     (click)="changeOfTab('General')"
   >
     <div class="md-step-circle"><span>1</span></div>
@@ -11,7 +11,11 @@
   </div>
   <div
   class="md-step"
-  [ngClass]="{ active: activeMenuItem >= 2 }"
+  [ngClass]="{ active: activeMenuItem >= 2 ,  editable : activeMenuItem === 2 }"
+   id="step2"  
+
+   [class.isDisabled]="!isDisabledSteps"
+   (click)="changeOfTab('PnMap')"
 
 >
   <div class="md-step-circle"><span>2</span></div>
@@ -21,8 +25,10 @@
   <div class="md-step-bar-right"></div>
 </div>
   <div
-    class="md-step   "
-    [ngClass]="{ active: activeMenuItem >= 3 }"
+    class="md-step"
+    [ngClass]="{ active: activeMenuItem >= 3 ,   editable : activeMenuItem === 3 }"
+    (click)="changeOfTab('Aircraft')"
+    [class.isDisabled]="!isDisabledSteps"
 
   >
     <div class="md-step-circle"><span>3</span></div>
@@ -33,7 +39,9 @@
   </div>
   <div
     class="md-step "
-    [ngClass]="{ active: activeMenuItem >= 4 }"
+    [ngClass]="{ active: activeMenuItem >= 4 ,  editable : activeMenuItem === 4 }"
+    (click)="changeOfTab('Atachapter')"
+    [class.isDisabled]="!isDisabledSteps"
   >
     <div class="md-step-circle"><span>4</span></div>
     <div class="md-step-title">ATA Chapter</div>
@@ -171,12 +179,12 @@
                 
                 <div class="col-md-4" >
                   <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto; ">Publication ID</label>
+                    <label class="control-label labels-font-header" style="width: auto; ">Publication ID:  </label>
                <span class="span-header-red"> {{this.generalInformationDetails.PublicationId }} </span> </p>
                 </div>
                 <div class="col-md-4">
                   <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto; ">Publication Description</label>
+                    <label class="control-label labels-font-header" style="width: auto; ">Publication Description:  </label>
                     <span class="span-header-red"> {{this.generalInformationDetails.description }} </span> </p>
                 </div>  
                 <div  class="col-md-4">
@@ -213,7 +221,7 @@
             <div class="shadow-Box">
               <p-table
                 [columns]="headersforPNMapping"
-                [value]="pnMapping"
+                [value]="pnMappingList"
                 [paginator]="true"
                 [rows]="10"
                 [first]="first"
@@ -304,7 +312,8 @@
                   <p-multiSelect
                     [options]="aircraftModelList"
                     [(ngModel)]="selectedAircraftModel"
-                    (onChange)="getDashNumberByManfacturerandModel()"
+                    [selectionLimit]="30"
+                    (onChange)="getDashNumberByManfacturerandModel(); multiSelectMaxLengthAlert();"
                     class="pub-multi"
                   ></p-multiSelect>
                 </div>
@@ -314,7 +323,9 @@
                     <label class="fs12">DashNumber </label>
                     <p-multiSelect
                       [options]="dashNumberList"
+                      [selectionLimit]="30"
                       [(ngModel)]="selectedDashNumbers"
+                      (onChange)="multiSelectMaxLengthAlert();"
                       class="pub-multi"
                     ></p-multiSelect>
                   </div>
@@ -418,13 +429,14 @@
                   <label class="fs12">ATA SubChapter</label>
                   <p-multiSelect
                     [options]="ataSubChapterList"
+                    [(ngModel)]="selectedATASubChapter"
                     class="pub-multi"
                   ></p-multiSelect>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
-                  <button class="btn btn-primary mtop20">
+                  <button class="btn btn-primary mtop20" (click)="searchATA()">
                     <i class="pi pi-search pi-search"></i>
                   </button>
                 </div>

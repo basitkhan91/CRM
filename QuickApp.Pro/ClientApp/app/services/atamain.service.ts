@@ -25,51 +25,51 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class AtaMainService {
-    public static readonly roleAddedOperation: RolesChangedOperation = "add";
-    public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
-    public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
+  public static readonly roleAddedOperation: RolesChangedOperation = "add";
+  public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
+  public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
-    private _rolesChanged = new Subject<RolesChangedEventArg>();
+  private _rolesChanged = new Subject<RolesChangedEventArg>();
 
-    constructor(
-        private router: Router,
-        private http: HttpClient,
-        private authService: AuthService,
-        private ataMainEndpoint: ATAMainEndpoint) { }
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private authService: AuthService,
+    private ataMainEndpoint: ATAMainEndpoint) { }
 
-    getAtaMainList() {
-		return Observable.forkJoin(
-			this.ataMainEndpoint.getATAMainEndpoint<ATAChapter[]>());
-    }
+  getAtaMainList() {
+    return Observable.forkJoin(
+      this.ataMainEndpoint.getATAMainEndpoint<ATAChapter[]>());
+  }
 
-	newATAMain(ataMain: ATAChapter) {
-		return this.ataMainEndpoint.getNewATAMainEndpoint<ATAChapter>(ataMain);
-    }
+  newATAMain(ataMain: ATAChapter) {
+    return this.ataMainEndpoint.getNewATAMainEndpoint<ATAChapter>(ataMain);
+  }
 
-	historyATAMain(ataChapterId: number) {
-		return Observable.forkJoin(this.ataMainEndpoint.getHistoryATAMainEndpoint<AuditHistory[]>(ataChapterId));
-    }
+  historyATAMain(ataChapterId: number) {
+    return Observable.forkJoin(this.ataMainEndpoint.getHistoryATAMainEndpoint<AuditHistory[]>(ataChapterId));
+  }
 
-    getATAMain(ataMainId?: number) {
-		return this.ataMainEndpoint.getEditATAMainEndpoint<ATAChapter>(ataMainId);
-    }
+  getATAMain(ataMainId?: number) {
+    return this.ataMainEndpoint.getEditATAMainEndpoint<ATAChapter>(ataMainId);
+  }
 
-	updateATAMain(ataMain: ATAChapter) {
-		return this.ataMainEndpoint.getUpdateATAMainEndpoint(ataMain, ataMain.ataChapterId);
-    }
+  updateATAMain(ataMain: ATAChapter) {
+    return this.ataMainEndpoint.getUpdateATAMainEndpoint(ataMain, ataMain.ataChapterId);
+  }
 
-	deleteATAMain(ataChapterId: number) {
+  deleteATAMain(ataChapterId: number) {
 
-		return this.ataMainEndpoint.getDeleteATAMainEndpoint(ataChapterId);
-    }
-    
-    getAtaChapterAudit(ataChapterId: number) {
-        return this.ataMainEndpoint.getAtaChapterAuditById<any>(ataChapterId);
-    }
-    getATASubDesc(Chid: number) {
-        return this.ataMainEndpoint.getATASubByID<any>(Chid);
-    }
-    getMultiATASubDesc(Chapterid: number) {
-        return this.ataMainEndpoint.getMultiATASubByID<any>(Chapterid);
-    }
+    return this.ataMainEndpoint.getDeleteATAMainEndpoint(ataChapterId);
+  }
+
+  getAtaChapterAudit(ataChapterId: number) {
+    return this.ataMainEndpoint.getAtaChapterAuditById<any>(ataChapterId);
+  }
+  getATASubDesc(Chid: number) {
+    return this.ataMainEndpoint.getATASubByID<any>(Chid);
+  }
+  getMultiATASubDesc(Chapterids: string) {
+    return this.ataMainEndpoint.getMultiATASubByID<any>(Chapterids);
+  }
 }

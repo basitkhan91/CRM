@@ -13,7 +13,7 @@ import { AircraftModel } from "../../models/aircraft-model.model";
 
 @Injectable()
 export class AircraftModelService {
-  constructor(private aircraftModelEndpoint: AircraftModelEndpointService) {}
+  constructor(private aircraftModelEndpoint: AircraftModelEndpointService) { }
 
   getAll() {
     return Observable.forkJoin(
@@ -54,7 +54,7 @@ export class AircraftModelService {
     return this.aircraftModelEndpoint.getAudit<any[]>(aircraftModelId);
   }
 
-  getAircraftModelListByManufactureId(aircraftModelId: number) {
+  getAircraftModelListByManufactureId(aircraftModelId: string) {
     return Observable.forkJoin(
       this.aircraftModelEndpoint.getAircraftModelListByAircraftManufacturerId<
         AircraftModel[]

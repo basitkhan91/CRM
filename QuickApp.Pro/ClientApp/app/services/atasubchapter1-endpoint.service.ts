@@ -18,6 +18,8 @@ export class ATASubChapter1Endpoint extends EndpointFactory {
     private readonly getSubChaptersListById: string = "/api/ATASubChapter1/ATASubChapterByATAChapterId";
 
 
+
+
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {

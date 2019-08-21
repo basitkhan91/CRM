@@ -8,7 +8,7 @@ import { AircraftDashNumber } from '../../models/dashnumber.model';
 
 @Injectable()
 export class DashNumberService {
-  constructor(private dashNumberEndpoint: DashNumberEndpointService) {}
+  constructor(private dashNumberEndpoint: DashNumberEndpointService) { }
 
   getAll() {
     return Observable.forkJoin(

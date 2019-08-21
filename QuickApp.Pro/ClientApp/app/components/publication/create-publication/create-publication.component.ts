@@ -21,6 +21,7 @@ import { map } from 'rxjs/operator/map';
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 import { EmployeeService } from '../../../services/employee.service';
+
 @Component({
   selector: 'app-create-publication',
   templateUrl: './create-publication.component.html',
@@ -48,7 +49,7 @@ export class CreatePublicationComponent implements OnInit {
   showModelAircraftModel: boolean = false;
   partNumberList = [];
   selectedPartNumbers = [];
-  pnMapping = [];
+  pnMappingList = [];
   publicationRecordId: number;
   employeeList = [];
   ataList = [];
@@ -71,7 +72,13 @@ export class CreatePublicationComponent implements OnInit {
   dashNumberIdUrl: string = '';
   ataChapterList = [];
   selectedATAchapter = [];
-
+  ataChapterIdUrl: string = '';
+  selectedATASubChapter = [];
+  ataSubchapterIdUrl: string = '';
+  searchParams: string = '';
+  ataSubChapterList: { label: string; value: number }[];
+  searchATAParams: string = '';
+  isDisabledSteps = false;
   // dropdown
 
   publicationTypes = [
@@ -91,8 +98,6 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'Active', value: 'Active' },
     { label: 'In-Active', value: 'In-Active' }
   ];
-  searchParams: string;
-  ataSubChapterList: { label: string; value: number }[];
 
   /** Create-publication ctor */
   constructor(
@@ -110,7 +115,7 @@ export class CreatePublicationComponent implements OnInit {
     private Dashnumservice: DashNumberService,
     private employeeService: EmployeeService,
     private route: Router
-  ) {}
+  ) { }
   aircraftInformationCols: any[] = [
     { field: 'aircraft', header: 'Aircraft' },
     { field: 'model', header: 'Model' },
@@ -120,6 +125,8 @@ export class CreatePublicationComponent implements OnInit {
   first: number = 0;
   ngOnInit() {
     this.getAllEmployeeList();
+
+
   }
 
   get userName(): string {
@@ -152,7 +159,11 @@ export class CreatePublicationComponent implements OnInit {
       this.getAllATAChapter();
       this.getAllSubChapters();
     }
+
   }
+
+
+
 
   async getAllEmployeeList() {
     await this.employeeService.getEmployeeList().subscribe(res => {
@@ -205,11 +216,12 @@ export class CreatePublicationComponent implements OnInit {
     if (this.sourcePublication.docpath != '') {
       let formData = new FormData();
       formData.append('image', this.selectedFile, event.files.name);
-      this.http.post('~/upload', formData).subscribe(val => {});
+      this.http.post('~/upload', formData).subscribe(val => { });
     }
   }
   editItemCloseModel() {
-    if (this.sourcePublication.PublicationId != '') {
+
+    if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
       this.generalInformationDetails = this.sourcePublication;
 
       {
@@ -220,17 +232,22 @@ export class CreatePublicationComponent implements OnInit {
           .subscribe(res => {
             const { publicationRecordId } = res;
             this.publicationRecordId = publicationRecordId;
+
             this.changeOfTab('PnMap'),
               role => this.saveSuccessHelper(role),
               error => this.saveFailedHelper(error);
           });
       }
+    } else {
+      this.changeOfTab('PnMap');
     }
+
+
   }
-  private loadCustomerClassifiData() {}
+  private loadCustomerClassifiData() { }
   private onDataLoadClassifiSuccessful(
     getCustomerClassificationList: CustomerClassification[]
-  ) {}
+  ) { }
 
   // get PartNumbers
   async getPartNumberList() {
@@ -266,20 +283,32 @@ export class CreatePublicationComponent implements OnInit {
       };
     });
     this.selectedPartNumbers = [];
+
     // PNMapping Save
     this.publicationService.postMappedPartNumbers(mapData).subscribe(res => {
+      this.isDisabledSteps = true;
       this.publicationService
         .getPublicationPNMapping(this.publicationRecordId)
         .subscribe(res => {
-          console.log(res);
+          this.pnMappingList = res.map(x => {
+            return {
+              ...x,
+              PartNumber: x.partNumber,
+              PartNumberDescription: x.partNumberDescription,
+              ItemClassification: x.itemClassification
+            };
+          });
         });
+
       this.getAircraftInformationByPublicationId();
       this.getAtaChapterByPublicationId();
       // get aircraft mapped data by publication id
     });
   }
 
-  searchByFieldUrlCreate() {
+  searchByFieldUrlCreateforAircraftInformation() {
+
+
     if (this.selectAircraftManfacturer.length > 0) {
       const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
         (acc, value) => {
@@ -288,18 +317,24 @@ export class CreatePublicationComponent implements OnInit {
         ''
       );
       this.aircraftManfacturerIdsUrl = aircraftTypeIds.substr(1);
+    } else {
+      this.aircraftManfacturerIdsUrl = '';
     }
     if (this.selectedAircraftModel.length > 0) {
       const aircraftModelIds = this.selectedAircraftModel.reduce((acc, id) => {
         return `${acc},${id}`;
       }, '');
       this.aircraftModelsIdUrl = aircraftModelIds.substr(1);
+    } else {
+      this.aircraftModelsIdUrl = '';
     }
     if (this.selectedDashNumbers.length > 0) {
       const dashNumberIds = this.selectedDashNumbers.reduce((acc, id) => {
         return `${acc},${id}`;
       }, '');
       this.dashNumberIdUrl = dashNumberIds.substr(1);
+    } else {
+      this.dashNumberIdUrl = '';
     }
   }
 
@@ -331,8 +366,22 @@ export class CreatePublicationComponent implements OnInit {
     });
   }
 
+
+  // get all dashnumber
+  getAllDashNumbers() {
+    this.Dashnumservice.getAll().subscribe(dashnumbers => {
+      const responseData = dashnumbers[0];
+      this.dashNumberList = responseData.map(dashnumbers => {
+        return {
+          label: dashnumbers.dashNumber,
+          value: dashnumbers.dashNumberId
+        };
+      });
+    });
+  }
+
   // get aircraft information by publication id
-  //
+
   getAircraftInformationByPublicationId() {
     this.publicationService
       .getAircraftMappedByPublicationId(this.publicationRecordId)
@@ -351,14 +400,16 @@ export class CreatePublicationComponent implements OnInit {
   // get AircraftModels By manufacturer Type
   async getAircraftModelByManfacturerType() {
     // construct url from array
-    await this.searchByFieldUrlCreate();
+    await this.searchByFieldUrlCreateforAircraftInformation();
     // reset the dropdowns
-    this.aircraftModelList = [];
-    this.dashNumberList = [];
+    this.selectedAircraftModel = []
+    this.selectedDashNumbers = []
+    this.aircraftModelList = []
+    this.dashNumberList = []
     // checks where multi select is empty or not and calls the service
     if (this.aircraftManfacturerIdsUrl !== '') {
       this.aircraftModelService
-        .getAircraftModelListByManufactureId(1)
+        .getAircraftModelListByManufactureId(this.aircraftManfacturerIdsUrl)
         .subscribe(models => {
           const responseValue = models[0];
           this.aircraftModelList = responseValue.map(models => {
@@ -368,31 +419,27 @@ export class CreatePublicationComponent implements OnInit {
             };
           });
         });
+    } else {
+      this.getAllAircraftModels();
+      this.getAllDashNumbers();
     }
+
+
   }
-  // get all dashnumber
-  getAllDashNumbers() {
-    this.Dashnumservice.getAll().subscribe(dashnumbers => {
-      const responseData = dashnumbers[0];
-      this.dashNumberList = responseData.map(dashnumbers => {
-        return {
-          label: dashnumbers.dashNumber,
-          value: dashnumbers.dashNumberId
-        };
-      });
-    });
-  }
+
 
   async getDashNumberByManfacturerandModel() {
     // construct url from array
-    await this.searchByFieldUrlCreate();
+    await this.searchByFieldUrlCreateforAircraftInformation();
     // reset dropdown
-    this.dashNumberList = [];
+    this.selectedDashNumbers = []
+    this.dashNumberList = []
     // checks where multi select is empty or not and calls the service
-    if (this.aircraftModelsIdUrl !== '') {
+
+    if (this.aircraftManfacturerIdsUrl !== '' && this.aircraftModelsIdUrl !== '') {
       this.Dashnumservice.getDashNumberByModelTypeId(
         this.aircraftModelsIdUrl,
-        2
+        this.aircraftManfacturerIdsUrl
       ).subscribe(dashnumbers => {
         const responseData = dashnumbers;
         this.dashNumberList = responseData.map(dashnumbers => {
@@ -406,7 +453,9 @@ export class CreatePublicationComponent implements OnInit {
   }
 
   async searchAircraftInformation() {
-    await this.searchByFieldUrlCreate();
+    await this.searchByFieldUrlCreateforAircraftInformation();
+
+    this.searchParams = '';
 
     // checks where multi select is empty or not and calls the service
     if (
@@ -416,9 +465,9 @@ export class CreatePublicationComponent implements OnInit {
     ) {
       this.searchParams = `aircrafttypeid=${
         this.aircraftManfacturerIdsUrl
-      }&aircraftmodelid=${this.aircraftModelsIdUrl}&dashNumberId=${
+        }&aircraftmodelid=${this.aircraftModelsIdUrl}&dashNumberId=${
         this.dashNumberIdUrl
-      }`;
+        }`;
     }
     // search only by manfacturer and Model and  publicationId
     else if (
@@ -427,7 +476,7 @@ export class CreatePublicationComponent implements OnInit {
     ) {
       this.searchParams = `aircrafttypeid=${
         this.aircraftManfacturerIdsUrl
-      }&aircraftmodelid=${this.aircraftModelsIdUrl}`;
+        }&aircraftmodelid=${this.aircraftModelsIdUrl}`;
     } else if (this.aircraftManfacturerIdsUrl !== '') {
       this.searchParams = `aircrafttypeid=${this.aircraftManfacturerIdsUrl}`;
     }
@@ -439,10 +488,9 @@ export class CreatePublicationComponent implements OnInit {
     else if (this.dashNumberIdUrl !== '') {
       this.searchParams = `&dashNumberId=${this.dashNumberIdUrl}`;
     }
-    console.log(this.searchParams);
     this.publicationService
       .aircraftInformationSearch(this.searchParams, this.publicationRecordId)
-      .subscribe(res => {});
+      .subscribe(res => { });
   }
 
   // get atachapter by publication id
@@ -462,6 +510,38 @@ export class CreatePublicationComponent implements OnInit {
           };
         });
       });
+  }
+
+  // ata search by publication id
+
+  searchByFieldUrlCreateforATA() {
+
+    if (this.selectedATAchapter.length > 0) {
+      const ataIds = this.selectedATAchapter.reduce((acc, value) => {
+        return `${acc},${value}`;
+      }, '');
+      this.ataChapterIdUrl = ataIds.substr(1);
+    } else {
+      this.ataChapterIdUrl = '';
+    }
+    if (this.selectedATASubChapter.length > 0) {
+      const ataSubchapterIds = this.selectedATASubChapter.reduce((acc, id) => {
+        return `${acc},${id}`;
+      }, '');
+      this.ataSubchapterIdUrl = ataSubchapterIds.substr(1);
+    } else {
+      this.ataSubchapterIdUrl = '';
+    }
+  }
+
+  multiSelectMaxLengthAlert() {
+    if (this.selectedAircraftModel.length >= 30) {
+      alert('You have Selected Max Number of Models');
+    }
+    if (this.selectedDashNumbers.length >= 30) {
+      alert('You have Selected Max Number of DashNumbers');
+    }
+
   }
 
   // get ata chapter for dropdown
@@ -490,15 +570,59 @@ export class CreatePublicationComponent implements OnInit {
         });
       });
   }
+
   getSubChapterByATAChapter() {
-    this.atasubchapter1service
-      .getATASubChapterListByATAChapterId(16)
-      .subscribe(atasubchapter => {
-        const responseData = atasubchapter[0];
-        this.ataSubChapterList = responseData.map(x => {
+    this.searchByFieldUrlCreateforATA();
+
+    if (this.ataChapterIdUrl !== '') {
+      this.ataMainSer
+        .getMultiATASubDesc(this.ataChapterIdUrl)
+        .subscribe(atasubchapter => {
+
+          const responseData = atasubchapter;
+
+          this.ataSubChapterList = responseData.map(x => {
+            return {
+              label: x.description,
+              value: x.ataSubChapterId
+            };
+          });
+        });
+
+    } else {
+      this.getAllSubChapters();
+    }
+  }
+
+  async searchATA() {
+    await this.searchByFieldUrlCreateforATA();
+    this.searchATAParams = '';
+    // checks where multi select is empty or not and calls the service
+    if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '') {
+      this.searchATAParams = `ATAChapterId=${
+        this.ataChapterIdUrl
+        }&ATASubChapterID=${this.ataSubchapterIdUrl}`;
+    }
+    else if (this.ataChapterIdUrl !== '') {
+      this.searchATAParams = `ATAChapterId=${this.ataChapterIdUrl}`;
+    }
+    else if (this.ataSubchapterIdUrl !== '') {
+      this.searchATAParams = `ATASubChapterID=${this.ataSubchapterIdUrl}`;
+    }
+    this.publicationService
+      .searchgetATAMappedByMultiSubChapterId(
+        this.searchATAParams,
+        this.publicationRecordId
+      )
+      .subscribe(res => {
+
+        this.ataList = res.map(x => {
           return {
-            label: x.description,
-            value: x.ataSubChapterId
+            ataChapter: x.ataChapterName,
+            ataSubChapter: x.ataSubChapterDescription,
+            ataChapterCode: x.ataChapterCode,
+            ataSubChapterId: x.ataSubChapterId,
+            ataChapterId: x.ataChapterId
           };
         });
       });

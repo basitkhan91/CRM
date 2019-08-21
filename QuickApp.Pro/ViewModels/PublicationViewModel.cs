@@ -49,8 +49,8 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsDelete { get; set; }
 
 
-        public string revisionDate { get; set; }
-        public string nextreviewDate { get; set; }
+        public DateTime revisionDate { get; set; }
+        public DateTime nextreviewDate { get; set; }
 
         public string ASD { get; set; }
         public string publishby { get; set; }

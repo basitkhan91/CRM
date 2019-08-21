@@ -62,16 +62,16 @@ export class AtaSubChapter1Service {
 
 		return this.ataSubChapter1Endpoint.getDeleteATASubChapter1Endpoint(ataSubChapterId);
 
-    }
-    
-    getAtaSubChapterAudit(ataSubChapterId: number) {
-        return this.ataSubChapter1Endpoint.getATASubChapterAuditById<any>(ataSubChapterId);
-    }
+	}
+
+	getAtaSubChapterAudit(ataSubChapterId: number) {
+		return this.ataSubChapter1Endpoint.getATASubChapterAuditById<any>(ataSubChapterId);
+	}
 
 
-    getATASubChapterListByATAChapterId(ataChapterId: number) {
-        return Observable.forkJoin(
-            this.ataSubChapter1Endpoint.getAtaSubChaptersListByAtaChapterId<ATASubChapter[]>(ataChapterId));
-    }
+	getATASubChapterListByATAChapterId(ataChapterId: number) {
+		return Observable.forkJoin(
+			this.ataSubChapter1Endpoint.getAtaSubChaptersListByAtaChapterId<ATASubChapter[]>(ataChapterId));
+	}
 
 }
