@@ -45,7 +45,7 @@ export class PublicationEndpointService extends EndpointFactory {
     '/api/Publication/getItemATAMappedByPublicationIdMultiSubChapterID';
 
   private readonly _publicationPNMappingData: string =
-    '/api/Publication/GetPubPNMappedData_PNID';
+    '/api/Publication/GetPubPNMappedDataByPublicationRecordIds';
   private readonly _AircraftInformationSearch: string =
     'searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
 

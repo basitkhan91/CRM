@@ -242,11 +242,11 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpGet("GetPubPNMappedData_ItemMasterID/{PNIds}")]
-        public IActionResult PubPNMappedDetails(string PNIds)
+        [HttpGet("GetPubPNMappedDataByPublicationRecordIds/{PublicationRecordIds}")]
+        public IActionResult PubPNMappedDetails(string PublicationRecordIds)
         {
 
-            var result = _unitOfWork.Publication.GetPubPNMappingData(PNIds);
+            var result = _unitOfWork.Publication.GetPubPNMappingData(PublicationRecordIds);
             return Ok(result);
 
         }

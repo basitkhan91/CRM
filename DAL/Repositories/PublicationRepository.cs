@@ -42,14 +42,13 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetPubPNMappingData(string PNIds)
+        public IEnumerable<object> GetPubPNMappingData(string PublicationRecordIds)
         {
-            var myPNids = PNIds.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var myPNids = PublicationRecordIds.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             var data = (from iM in _appContext.PublicationItemMasterMapping
-                        where myPNids.Contains(iM.ItemMasterId)
+                        where myPNids.Contains(iM.PublicationRecordId) && iM.IsDeleted != true && iM.IsActive==true
                         select new
                         {
-
                             iM.ItemMasterId,
                             iM.PublicationId,
                             iM.PartNumber,
@@ -57,8 +56,11 @@ namespace DAL.Repositories
                             iM.ItemClassification,
                             iM.ItemClassificationId,
                             iM.ItemGroupId,
-                            iM.MasterCompanyId
-
+                            iM.PublicationItemMasterMappingId,
+                            iM.PublicationRecordId,
+                            iM.MasterCompanyId,
+                            iM.IsActive,
+                            iM.IsDeleted
 
                         }).ToList();
             return data;
