@@ -93,11 +93,11 @@ export class ATAMainEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getATASubByID(Chid));
             });
     }
-    getMultiATASubByID<T>(Chapterid: number): Observable<T> {
-        let endpointUrl = `${this.getMultiATAUrl}/${Chapterid}`;
+    getMultiATASubByID<T>(Chapterids: string): Observable<T> {
+        let endpointUrl = `${this.getMultiATAUrl}/${Chapterids}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getMultiATASubByID(Chapterid));
+                return this.handleError(error, () => this.getMultiATASubByID(Chapterids));
             });
     }
     

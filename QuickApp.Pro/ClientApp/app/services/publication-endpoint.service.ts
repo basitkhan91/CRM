@@ -47,7 +47,7 @@ export class PublicationEndpointService extends EndpointFactory {
   private readonly _publicationPNMappingData: string =
     '/api/Publication/GetPubPNMappedDataByPublicationRecordIds';
   private readonly _AircraftInformationSearch: string =
-    'searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
+    '/api/Publication/searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
 
   private readonly _searchgetAirMappingByMultiTypeIDModelIDDashID: string =
     '/api/Publication/searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
@@ -238,7 +238,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getAirMappingByMultiTypeID
-    }/${PublicationID}${AircraftTypeId}`;
+      }/${PublicationID}${AircraftTypeId}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -254,7 +254,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getAirMappingByMultiModelID
-    }/${PublicationID}${AircraftModelID}`;
+      }/${PublicationID}${AircraftModelID}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -270,7 +270,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getAirMappingByMultiDashID
-    }/${PublicationID}${DashNumberId}`;
+      }/${PublicationID}${DashNumberId}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -287,7 +287,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getAirMappingByMultiTypeIDModelID
-    }/${PublicationID}${AircraftTypeId}/${AircraftModelID}`;
+      }/${PublicationID}${AircraftTypeId}/${AircraftModelID}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -309,7 +309,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getAirMappingByMultiTypeIDModelIDDashID
-    }/${PublicationID}${AircraftTypeId}/${AircraftModelID}/${DashNumberId}`;
+      }/${PublicationID}${AircraftTypeId}/${AircraftModelID}/${DashNumberId}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -332,7 +332,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getATAMappingByMultiChapterIDSubID
-    }/${PublicationID}/${ChapterID}/${SubChapterID}`;
+      }/${PublicationID}/${ChapterID}/${SubChapterID}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -352,7 +352,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getATAMappingByMultiChapterID
-    }/${PublicationID}/${ChapterID}`;
+      }/${PublicationID}/${ChapterID}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -368,7 +368,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._getATAMappingByMultiSubChapterID
-    }/${PublicationID}/${SubChapterID}`;
+      }/${PublicationID}/${SubChapterID}`;
 
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
@@ -398,7 +398,7 @@ export class PublicationEndpointService extends EndpointFactory {
   ): Observable<T> {
     let endpointUrl = `${
       this._searchgetAirMappingByMultiTypeIDModelIDDashID
-    }/${PublicationID}`;
+      }/${PublicationID}`;
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
       .catch(error => {
@@ -408,16 +408,17 @@ export class PublicationEndpointService extends EndpointFactory {
       });
   }
   searchgetAtaMappedByMultiSubChapterID<T>(
+    searchUrl: string,
     PublicationID: number
   ): Observable<T> {
     let endpointUrl = `${
       this._searchgetATAMappingByMultiChapterIDSubID
-    }/${PublicationID}`;
+      }/${PublicationID}?${searchUrl}`;
     return this.http
       .get<T>(endpointUrl, this.getRequestHeaders())
       .catch(error => {
         return this.handleError(error, () =>
-          this.searchgetAtaMappedByMultiSubChapterID(PublicationID)
+          this.searchgetAtaMappedByMultiSubChapterID(searchUrl, PublicationID)
         );
       });
   }

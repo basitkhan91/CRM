@@ -101,8 +101,8 @@ export class AircraftModelEndpointService extends EndpointFactory {
             });
     }
 
-    
-    getAircraftModelListByAircraftManufacturerId<T>(aircraftManufacturerId:number): Observable<T> {
+
+    getAircraftModelListByAircraftManufacturerId<T>(aircraftManufacturerId: string): Observable<T> {
         let endpointUrl = `${this.getModelsListById}/${aircraftManufacturerId}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
@@ -112,11 +112,10 @@ export class AircraftModelEndpointService extends EndpointFactory {
 
     //getAircraftModelsRecords<T>(data: any) Observable<T>{
     //}
-    getAircraftModelsRecords<T>(paginationOption: any): Observable<T>
-    {
+    getAircraftModelsRecords<T>(paginationOption: any): Observable<T> {
         let endpointUrl = this.paginate;
         //let endpointUrl = `${this.getPaginationData}/${data}`;
-        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption) ,this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAircraftModelsRecords(paginationOption));
             });

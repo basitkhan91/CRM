@@ -189,8 +189,12 @@ export class PublicationService {
       any
     >(PublicationID);
   }
-  searchgetATAMappedByMultiSubChapterId(PublicationID: number) {
+  searchgetATAMappedByMultiSubChapterId(
+    searchUrl: string,
+    PublicationID: number
+  ) {
     return this.publicationEndpoint.searchgetAtaMappedByMultiSubChapterID<any>(
+      searchUrl,
       PublicationID
     );
   }
