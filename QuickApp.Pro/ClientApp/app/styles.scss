@@ -324,7 +324,7 @@ p {
 }
 input[type="text"] {
     background-color: white !important;
-    border-radius: 2px !important;
+    border-radius: 5px !important;
 }
 .ui-autocomplete .ui-autocomplete-dropdown {    
     height: 24px;
@@ -13639,6 +13639,12 @@ button {
 .autocomplete-customer .ui-autocomplete {
     margin-left: -5px !important;   
     margin-top: -6px !important;
+    width: 100% !important;
+}
+.autocomplete-width .ui-autocomplete {
+    margin-left: -5px !important;
+    margin-top: -6px !important;
+    width: 105% !important;
 }
 .autocomplete-customer3 .ui-autocomplete input.ui-inputtext {
     border-radius: 5px 0px 0px 5px !important;
@@ -13646,10 +13652,16 @@ button {
 .autocomplete-customer .ui-autocomplete input.ui-inputtext {
     border-radius: 5px 0px 0px 5px !important;
 }
+.autocomplete-width .ui-autocomplete input.ui-inputtext {
+    border-radius: 5px 0px 0px 5px !important;
+}
 .autocomplete-customer3 .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
     border-radius: 0px 5px 5px 0px !important;
 }
 .autocomplete-customer .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
+    border-radius: 0px 5px 5px 0px !important;
+}
+.autocomplete-width .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
     border-radius: 0px 5px 5px 0px !important;
 }
 .calender-border .ui-calendar.ui-calendar-w-btn .ui-inputtext {

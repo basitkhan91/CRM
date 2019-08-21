@@ -28,7 +28,9 @@ export class AssetStatusComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
-
+    memoNotes: string;
+    memoPopupText: string;
+    updateMode: boolean;
     constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService) {
 
     
@@ -68,14 +70,18 @@ export class AssetStatusComponent implements OnInit {
         });
 
     }
-
+    onAddMemoToPopup() {
+        this.memoPopupText = this.memoNotes;
+    }
     setAssetStatusToUpdate(editAssetStatusPopup: any, id: number): void {
         this.assetStatusToUpdate = Object.assign({}, this.assetStatusList.filter(function (asset) {
             return asset.id == id;
         })[0]);
         this.modal = this.modalService.open(editAssetStatusPopup, { size: 'sm' });
     }
-
+    onSaveMemo() {
+        this.memoNotes = this.memoPopupText;
+    }
     updateAssetStatus(): void {
         this.currentAssetStatus.updatedBy = this.userName;
         this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
