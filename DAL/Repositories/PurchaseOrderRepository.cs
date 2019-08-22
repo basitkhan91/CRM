@@ -14,7 +14,15 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.PurchaseOrder> GetPurchaseOrderlist()
         {
-            return _appContext.PurchaseOrder.OrderByDescending(c => c.PurchaseOrderId).ToList();
+            var purchaseOrderList = _appContext.PurchaseOrder.Include("PurchaseOderPart").Include("Vendor").OrderByDescending(c => c.PurchaseOrderId).ToList();
+            purchaseOrderList.ForEach(x => {
+                if (x.Vendor != null)
+                {
+                    x.Vendor.VendorContact = _appContext.VendorContact.Include("Contact").Where(vendorContact => vendorContact.VendorId == x.VendorId).ToList();
+                }
+            });
+
+            return purchaseOrderList;
         }
 
 

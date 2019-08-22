@@ -17,11 +17,16 @@ namespace DAL.Models
     {
         [Key]
         public long VendorContactId { get; set; }
+
+        [ForeignKey("VendorId")]
         public long VendorId { get; set; }
+
+        [ForeignKey("ContactId")]
         public Nullable<long> ContactId { get; set; }
+
         public bool IsDefaultContact { get; set; }
+
         public int MasterCompanyId { get; set; }
-    
         public System.DateTime RecordCreateDate { get; set; }
         public Nullable<System.DateTime> RecordModifiedDate { get; set; }
         //public int LastModifiedBy { get; set; }
@@ -30,7 +35,7 @@ namespace DAL.Models
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
-    
-        //public virtual Vendor Vendor { get; set; }
+
+        public virtual Contact Contact { get; set; }
     }
 }

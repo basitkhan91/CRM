@@ -49,8 +49,7 @@ export class PurchaseOrder {
     stockLine: StockLine[];
 }
 
-export class PartStockLineMapper
-{
+export class PartStockLineMapper {
     id: number;
     purchaseOrderPartRecordId: number;
     stockLineId: number;
@@ -108,7 +107,7 @@ export class PurchaseOrderPart {
     itemMaster: any;
     visible: boolean;
     conditionId: number;
-   
+
     public stocklineListObj: StockLine[];
     public timeLifeList: TimeLife[];
     poPartSplitAddress: AddressModel;
@@ -150,8 +149,7 @@ export class TimeLife {
     isActive: boolean;
 }
 
-export class StockLine
-{
+export class StockLine {
     stockLineId: number;
     partNumber: string;
     stockLineNumber: string;

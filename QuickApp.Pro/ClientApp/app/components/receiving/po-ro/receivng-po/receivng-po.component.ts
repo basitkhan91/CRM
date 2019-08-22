@@ -174,7 +174,8 @@ export class ReceivngPoComponent implements OnInit {
         private alertService: AlertService,
         private accountService: AccountService,
         private glAccountService: GlAccountService,
-        private shippingService: ShippingService) {
+        private shippingService: ShippingService
+    ) {
         this.getAllSite();
         this.getCustomers();
         this.getVendors();
@@ -200,6 +201,26 @@ export class ReceivngPoComponent implements OnInit {
         this.getAllCreditTerms();
         this.getAllPriority();
         this.getStatus();
+    }
+
+    private getItemMasterById(type: string, part: PurchaseOrderPart) {
+        this.itemmaster.getItemMasterByItemMasterId(part.itemMaster.itemMasterId).subscribe(
+            result => {
+                if (result != undefined && result[0] != undefined) {
+                    if (type == 'serialized')
+                        part.itemMaster.isSerialized = result[0].isSerialized;
+                    else
+                        part.itemMaster.isTimeLife = result[0].isTimeLife;
+                }
+
+                if (type == 'serialized' && !result[0].isSerialized) {
+                    this.alertService.showMessage(this.pageTitle, 'Serialized is not enabled', MessageSeverity.info);
+                }
+                if (type == 'timelife' && !result[0].isTimeLife) {
+                    this.alertService.showMessage(this.pageTitle, 'Time Life is not enabled', MessageSeverity.info);
+                }
+            }
+        )
     }
 
     private getShippingReference(): void {
@@ -290,7 +311,7 @@ export class ReceivngPoComponent implements OnInit {
             if (address.country)
                 addr += address.country;
         }
-        
+
         return addr;
     }
 
@@ -307,10 +328,15 @@ export class ReceivngPoComponent implements OnInit {
                 var allParentParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.isParent == true);
                 for (let parent of allParentParts) {
                     var splitParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.isParent != true && x.itemMaster.partNumber == parent.itemMaster.partNumber);
-                    for (let childPart of splitParts) {
-                        childPart.managementStructureId = parent.managementStructureId;
-                        childPart.managementStructureName = parent.managementStructureName;
+                    parent.quantityOrdered = 0;
+                    if (splitParts.length > 0) {
+                        for (let childPart of splitParts) {
+                            childPart.managementStructureId = parent.managementStructureId;
+                            childPart.managementStructureName = parent.managementStructureName;
+                            parent.quantityOrdered += childPart.quantityOrdered;
+                        }
                     }
+
                 }
                 for (let part of this.purchaseOrderData.purchaseOderPart) {
                     //part.managementStructureId
@@ -557,6 +583,18 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     private partQuantityChange(event: any, part: PurchaseOrderPart): void {
+        if (event.target.value == "0" || event.target.value == "") {
+            event.target.value = "";
+            part.stocklineListObj = []
+            part.timeLifeList = [];
+            part.isSameDetailsForAllParts = false;
+            this.currentSLIndex = 0;
+            this.currentTLIndex = 0;
+            this.currentSERIndex = 0;
+            this.addStockLine(part);
+            return;
+        }
+
         let quantity: number = <number>event.target.value;
 
         var POParts = this.purchaseOrderData.purchaseOderPart.filter(x =>
@@ -584,14 +622,9 @@ export class ReceivngPoComponent implements OnInit {
             }
         }
 
-        if (quantity == 0) {
-            event.target.value = "";
-            this.alertService.showMessage(this.pageTitle, "Quantity receieve can not be zero", MessageSeverity.error);
-            return;
-        }
 
-        if (part.itemMaster.isSerialized)
-        {
+
+        if (part.itemMaster.isSerialized) {
             part.stocklineListObj = [];
             part.timeLifeList = [];
             for (var i = 0; i < quantity; i++) {
@@ -641,14 +674,16 @@ export class ReceivngPoComponent implements OnInit {
             part.timeLifeList.push(timeLife);
         }
 
-        
-
         part.stocklineListObj[this.currentSLIndex].visible = true;
 
         part.isSameDetailsForAllParts = false;
         this.currentSLIndex = 0;
         this.currentTLIndex = 0;
         this.currentSERIndex = 0;
+
+        if (part.itemMaster.isSerialized || part.itemMaster.isTimeLife) {
+            this.addStockLine(part);
+        }
     }
 
     private paginatorFocusOut(event: any, part: PurchaseOrderPart): void {
@@ -690,13 +725,10 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     moveStockLinePage(increment: number, part: PurchaseOrderPart): void {
-        let index: number = (part.isSameDetailsForAllParts ? this.currentTLIndex : this.currentSLIndex) + increment;
+        let index: number = this.currentSLIndex + increment;
         if (index >= 0 && index < part.stocklineListObj.length) {
-            if (!part.isSameDetailsForAllParts) {
-                this.currentSLIndex = index;
-                this.currentSERIndex = index;
-            }
 
+            this.currentSLIndex = index;
             this.currentTLIndex = index;
             this.currentSERIndex = index;
         }
@@ -1017,16 +1049,17 @@ export class ReceivngPoComponent implements OnInit {
                     item.stocklineListObj[i].quantityRejected = toInteger(item.quantityRejected);
 
                     if (item.stocklineListObj[i].managementStructureEntityId == undefined || item.stocklineListObj[i].managementStructureEntityId == 0) {
-                        errorMessages.push("Please select Company in Receiving Qty - " + (i+1).toString());
+                        errorMessages.push("Please select Company in Receiving Qty - " + (i + 1).toString());
                     }
 
                     if (item.stocklineListObj[i].siteId == undefined || item.stocklineListObj[i].siteId == 0) {
-                        errorMessages.push("Please select Site in Receiving Qty - " + (i+1).toString());
+                        errorMessages.push("Please select Site in Receiving Qty - " + (i + 1).toString());
                     }
 
                     if (item.stocklineListObj[i].manufacturerId == undefined || item.stocklineListObj[i].manufacturerId == 0) {
-                        errorMessages.push("Please select MFG in Receiving Qty - " + (i+1).toString());
+                        errorMessages.push("Please select MFG in Receiving Qty - " + (i + 1).toString());
                     }
+
                 }
             }
         }
@@ -1130,7 +1163,7 @@ export class ReceivngPoComponent implements OnInit {
 
     toggleSameDetailsForAllParts(event: any, part: PurchaseOrderPart): void {
         part.isSameDetailsForAllParts = !part.isSameDetailsForAllParts;
-        
+
         for (var i = this.currentSLIndex; i < part.stocklineListObj.length; i++) {
             var stockLineToCopy = { ...part.stocklineListObj[this.currentSLIndex] };
             part.stocklineListObj[i] = stockLineToCopy;
