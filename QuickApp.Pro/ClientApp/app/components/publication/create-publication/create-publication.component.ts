@@ -278,6 +278,7 @@ export class CreatePublicationComponent implements OnInit {
         UpdatedBy: this.userName,
         MasterCompanyId: obj.masterCompanyId,
         IsActive: true,
+        IsDelete: false,
         CreatedDate: '2019-08-12',
         UpdatedDate: '2019-08-12'
       };

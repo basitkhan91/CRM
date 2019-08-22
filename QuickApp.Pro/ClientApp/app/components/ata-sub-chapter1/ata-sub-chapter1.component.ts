@@ -32,7 +32,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** AtaSubChapter1 component*/
 export class AtaSubChapter1Component implements OnInit, AfterViewInit {
-	
+
 	memo: any = "";
 	createdBy: any = "";
 	updatedBy: any = "";
@@ -44,9 +44,9 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 	selectedActionName: any;
 	disableSave: boolean;
 	actionamecolle: any[] = [];
-    description: string;
-    ataChapterCode: any;
-    AuditDetails: SingleScreenAuditDetails[];
+	description: string;
+	ataChapterCode: any;
+	AuditDetails: SingleScreenAuditDetails[];
 	/** AtaSubChapter1 ctor */
 	ngOnInit(): void {
 		this.loadData();
@@ -58,7 +58,7 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
-	displayedColumns = ['memo','createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+	displayedColumns = ['memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
 	dataSource: MatTableDataSource<ATASubChapter>;
 	allATAMaininfo: ATASubChapter[] = [];
 	allComapnies: MasterCompany[] = [];
@@ -104,10 +104,10 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
 
-        this.cols = [
-            { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },
+		this.cols = [
+			{ field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },
 			{ field: 'description', header: 'Description' },
-			//{ field: 'ataChapterName', header: 'ATA Chapter Name' },
+			// { field: 'ataChapterName', header: 'ATA Chapter Name' },
 			//{ field: 'ataChapterCategory', header: 'ATA Chapter Category' },
 			{ field: 'memo', header: 'Memo' },
 			{ field: 'createdBy', header: 'Created By' },
@@ -417,7 +417,7 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 		this.modal.close();
 	}
 
-	
+
 
 	//partnmId(event) {
 	//	//debugger;
@@ -493,22 +493,22 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 		} else {
 			return `with: ${reason}`;
 		}
-    }
+	}
 
-    showAuditPopup(template, id): void {
-        this.auditAtaSubchapter(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
+	showAuditPopup(template, id): void {
+		this.auditAtaSubchapter(id);
+		this.modal = this.modalService.open(template, { size: 'sm' });
+	}
 
-    auditAtaSubchapter(ataSubChapterId: number): void {
-        this.AuditDetails = [];
-        this.ataSubChapter1Service.getAtaSubChapterAudit(ataSubChapterId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["ataSubChapterAuditId", "ataSubChapterId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
-    }
+	auditAtaSubchapter(ataSubChapterId: number): void {
+		this.AuditDetails = [];
+		this.ataSubChapter1Service.getAtaSubChapterAudit(ataSubChapterId).subscribe(audits => {
+			if (audits.length > 0) {
+				this.AuditDetails = audits;
+				this.AuditDetails[0].ColumnsToAvoid = ["ataSubChapterAuditId", "ataSubChapterId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+			}
+		});
+	}
 }
 
 
