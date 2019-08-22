@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DAL.Models
 {
-    public class WorkOrderLabor : PasBaseAuditing
+    public class WorkOrderLabor 
     {
+        [Key]
         public Int64 ID { get; set; }
         public Int64 WorkOrderId { get; set; }
         public string DataEnteredBy { get; set; }
@@ -19,11 +21,11 @@ namespace DAL.Models
         public bool AssignTotalHoursToWorkOrder { get; set; }
         public string Memo { get; set; }
         public int MasterCompanyId { get; set; }
-        //public string CreatedBy { get; set; }
-        //public string UpdatedBy { get; set; }
-        //public DateTime CreatedDate { get; set; }
-        //public DateTime UpdatedDate { get; set; }
-        //public bool IsActive { get; set; }
-        //public bool IsDelete { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

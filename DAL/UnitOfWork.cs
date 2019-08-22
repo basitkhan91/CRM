@@ -186,7 +186,7 @@ namespace DAL
         IGLAccountNodeRepository glAccountNode;
 
         IDashNumberRepository dashNumberRepository;
-        
+        IWorkOrderRepository workOrderRepository;
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
         public UnitOfWork(ApplicationDbContext context)
@@ -1644,6 +1644,16 @@ namespace DAL
                 return dashNumberRepository;
             }
         }
+        public IWorkOrderRepository WorkOrderRepository
+        {
+            get
+            {
+                if (workOrderRepository == null)
+                    workOrderRepository = new WorkOrderRepository(_context);
+                return workOrderRepository;
+            }
+        }
+        
     }
 }
 
