@@ -262,235 +262,245 @@
         <button (click)="addPartNum()" class="btn btn-primary-cstm addpn-btn">Add Part Number</button>
         <button data-toggle="modal" data-target="#add-multiple-partnum" class="btn btn-primary-cstm addpn-btn">Add Multiple Part Numbers</button>
         <div class="table-responsive pas-table-cstm roview-table-cstm" style="margin-top: 5px;">
-            <table class="table table-bordered " id="po-table">
-                <thead>
-                    <tr class="partsList-table-tr">
-                        <th style="padding-bottom: 2px !important;min-width: 50px;">
-                            <span class="checkbox-cstm">
-                                <label style="width: 20px;">
-                                    <input type="checkbox">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                </label>
-                            </span>
-                        </th>
-                        <th>Split Shipment</th>
-                        <th>PN</th>
-                        <th>Alt PN</th>
-                        <th>PN Description</th>
-                        <th>Item Type</th>
-                        <th>Mfr</th>
-                        <th>GL Account</th>
-                        <th>UOM</th>
-                        <th>Need By</th>
-                        <th>Cond</th>
-                        <th>Order Qty</th>
-                        <th>Unit Cost</th>
-                        <th>Disc./unit</th>
-                        <th>Disc. Cost/unit</th>
-                        <th>Ext Cost</th>
-                        <th>Functional CUR</th>
-                        <th>FX Rate</th>
-                        <th>Report CUR</th>
-                        <th>WO</th>
-                        <th>RO</th>
-                        <th>SO</th>
-                        <th>Company</th>
-                        <th>BU</th>
-                        <th>Division</th>
-                        <th>Dept</th>
-                        <th>Memo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let d of pdata">
-                        <tr class="parent-data">
-                            <td>
+            
+                <table class="table table-bordered " id="po-table">
+                    <thead>
+                        <tr class="partsList-table-tr">
+                            <th style="padding-bottom: 2px !important;min-width: 50px;">
                                 <span class="checkbox-cstm">
                                     <label style="width: 20px;">
-                                        <input type="checkbox">
+                                        <input type="checkbox" [(ngModel)]="checkAllPartsList" (click)="checkAllPartDetails()">
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                     </label>
                                 </span>
-                            </td>
-                            <td>
-                                <span class="checkbox-cstm">
-                                    <label style="width: 20px;">
-                                        <input type="checkbox" (click)="onClickSplitshipment($event)">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    </label>
-                                </span>
-                            </td>
-                            <td>
-                                <p-autoComplete [(ngModel)]="partList.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true">
-                                    <ng-template let-partName pTemplate="part">
-                                        <div class="ui-helper-clearfix">{{partName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                            </td>
-                            <td><input class="form-control" type="text" /></td>
-                            <td>Drum towing winch</td>
-                            <td>Stock</td>
-                            <td>123</td>
-                            <td>5</td>
-                            <td>3</td>
-                            <td><p-calendar class="pcal-cpo-grid" [showIcon]="true"></p-calendar></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="NEW">NEW</option>
-                                    <option value="AS-IS">AS-IS</option>
-                                    <option value="REP">REP</option>
-                                    <option value="SRV">SRV</option>
-                                    <option value="OVH">OVH</option>
-                                    <option value="AR">AR</option>
-                                </select>
-                            </td>
-                            <td><input class="form-control" type="text" pKeyFilter="pint" /></td>
-                            <td><input class="form-control" type="text" pKeyFilter="pint" /></td>
-                            <td><input class="form-control" type="text" /></td>
-                            <td><input class="form-control" type="text" pKeyFilter="pint" /></td>
-                            <td><input class="form-control" type="text" pKeyFilter="pint" /></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td><input class="form-control" type="text" pKeyFilter="pint" /></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td><input class="form-control" type="text" /></td>
-                            <td><input class="form-control" type="text" /></td>
-                            <td><input class="form-control" type="text" /></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td><input class="form-control" type="text" /></td>
-                        </tr>
-                        <tr class="child-header" *ngIf="enablePNChildRow">
-                            <th></th>
-                            <th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" (click)="onAddPNChildRow()" style="padding: 4px 8px !important;"></i></th>
+                            </th>
+                            <th>Split Shipment</th>
                             <th>PN</th>
+                            <th>Alt PN</th>
                             <th>PN Description</th>
-                            <th>User Type</th>
-                            <th>Name</th>
-                            <th>Select Address</th>
+                            <th>Item Type</th>
+                            <th>Mfr</th>
+                            <th>GL Account</th>
                             <th>UOM</th>
-                            <th>Order Qty</th>
                             <th>Need By</th>
+                            <th>Cond</th>
+                            <th>Order Qty</th>
+                            <th>Unit Cost</th>
+                            <th>Disc./unit</th>
+                            <th>Disc. Cost/unit</th>
+                            <th>Ext Cost</th>
+                            <th>Functional CUR</th>
+                            <th>FX Rate</th>
+                            <th>Report CUR</th>
+                            <th>WO</th>
+                            <th>RO</th>
+                            <th>SO</th>
                             <th>Company</th>
                             <th>BU</th>
                             <th>Division</th>
                             <th>Dept</th>
-                            <th colspan="13"></th>
+                            <th>Memo</th>
                         </tr>
-                        <tr class="child-data splitship-child" *ngIf="enablePNChildRow">
-                            <td></td>
-                            <td><i class="fa fa-trash" (click)="onDelPNChildRow()" style="color: red;font-size: 15px;cursor: pointer;"></i></td>
-                            <td>SL-33653</td>
-                            <td>single drum towing winch</td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" (change)="onSelectUsertype($event)">
-                                        <option value="0">Select</option>
-                                        <option value="1">Customer</option>
-                                        <option value="2">Vendor</option>
-                                        <option value="3">Company</option>
-                                    </select>
+                    </thead>
+                    <tbody>
+                   <ng-container *ngFor="let partList of createPOPartsList; let row_index = index;">
+                <tr class="parent-data">
+                    <td>
+                        <span class="checkbox-cstm">
+                            <label style="width: 20px;">
+                                <input type="checkbox" [(ngModel)]="partList.checkPartList" [ngModelOptions]="{standalone: true}">
+                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="checkbox-cstm">
+                            <label style="width: 20px;">
+                                <input type="checkbox" [(ngModel)]="partList.isSplitShipment" [ngModelOptions]="{standalone: true}" #splitshipmentcheck>
+                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td>
+                        <p-autoComplete [(ngModel)]="partList.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-partName pTemplate="part">
+                                <div class="ui-helper-clearfix">{{partName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                    </td>
+                    <td><input class="form-control" type="text" [(ngModel)]="partList.altPartNumber" [ngModelOptions]="{standalone: true}" /></td>
+                    <td>{{ partList.pnDescription === null ? '-' : partList.pnDescription }}</td>
+                    <td>{{ partList.itemType === null ? '-' : partList.itemType }}</td>
+                    <td>{{ partList.mfr === null ? '-' : partList.mfr }}</td>
+                    <td>{{ partList.glAccount === null ? '-' : partList.glAccount }}</td>
+                    <td>{{ partList.uom === null ? '-' : partList.uom }}</td>
+                    <td><p-calendar class="pcal-cpo-grid" [(ngModel)]="partList.needBy" [ngModelOptions]="{standalone: true}" [showIcon]="true"></p-calendar></td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partList.cond" [ngModelOptions]="{standalone: true}">
+                            <option value="NEW">NEW</option>
+                            <option value="AS-IS">AS-IS</option>
+                            <option value="REP">REP</option>
+                            <option value="SRV">SRV</option>
+                            <option value="OVH">OVH</option>
+                            <option value="AR">AR</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.orderQty" [ngModelOptions]="{standalone: true}" /></td>
+                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.unitCost" [ngModelOptions]="{standalone: true}" /></td>
+                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.discPerUnit" [ngModelOptions]="{standalone: true}" /></td>
+                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.discCostPerUnit" [ngModelOptions]="{standalone: true}" /></td>
+                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.extCost" [ngModelOptions]="{standalone: true}" /></td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partList.functionalCUR" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.fxRate" [ngModelOptions]="{standalone: true}" /></td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partList.reportCUR" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" [(ngModel)]="partList.wo" [ngModelOptions]="{standalone: true}" /></td>
+                    <td><input class="form-control" type="text" [(ngModel)]="partList.ro" [ngModelOptions]="{standalone: true}" /></td>
+                    <td><input class="form-control" type="text" [(ngModel)]="partList.so" [ngModelOptions]="{standalone: true}" /></td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partList.company" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partList.bu" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partList.division" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partList.dept" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" [(ngModel)]="partList.memo" [ngModelOptions]="{standalone: true}" /></td>
+                </tr>
+                <tr class="child-header" *ngIf="splitshipmentcheck.checked">
+                    <th></th>
+                    <th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" (click)="onAddPNChildRow(row_index)" style="padding: 4px 8px !important;"></i></th>
+                    <th>PN</th>
+                    <th>PN Description</th>
+                    <th>User Type</th>
+                    <th>Name</th>
+                    <th>Select Address</th>
+                    <th>UOM</th>
+                    <th>Order Qty</th>
+                    <th>Need By</th>
+                    <th>Company</th>
+                    <th>BU</th>
+                    <th>Division</th>
+                    <th>Dept</th>
+                    <th colspan="13"></th>
+                </tr>
+                <tr class="child-data splitship-child" [hidden]="!splitshipmentcheck.checked" *ngFor="let partListDetail of partList.partListDetails; let srow_index=index;">
+                    <!--enablePNChildRow-->
+                    <td></td>
+                    <td><i class="fa fa-trash" (click)="onDelPNChildRow(row_index, srow_index)" style="color: red;font-size: 15px;cursor: pointer;"></i></td>
+                    <td>{{ partListDetail.partNumber === null ? '-' : partListDetail.partNumber }}</td>
+                    <td>{{ partListDetail.pnDescription === null ? '-' : partListDetail.pnDescription }}</td>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control" [(ngModel)]="partListDetail.userType">
+                                <option value="0">Select</option>
+                                <option value="1">Customer</option>
+                                <option value="2">Vendor</option>
+                                <option value="3">Company</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="form-row" *ngIf="partListDetail.userType === '1'">
+                                <div class="col-sm-11">
+                                    <p-autoComplete class="pauto-cpo-grid"
+                                                    [size]="32"
+                                                    [minLength]="1"
+                                                    [dropdown]="true"
+                                                    [(ngModel)]="partListDetail.name"
+                                                    [ngModelOptions]="{standalone: true}">
+                                        <ng-template let-Value pTemplate="customer">
+                                            <div class="ui-helper-clearfix">
+                                                {{
+            Value
+                                                }}
+                                            </div>
+                                        </ng-template>
+                                    </p-autoComplete>
                                 </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <div class="form-row" *ngIf="usertypecustomer">
-                                        <div class="col-sm-11">
-                                            <p-autoComplete class="pauto-cpo-grid"
-                                                            [size]="32"
-                                                            [minLength]="1"
-                                                            [dropdown]="true">
-                                                <ng-template let-Value pTemplate="customer">
-                                                    <div class="ui-helper-clearfix">{{Value}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                        </div>
-                                        <div class="col-sm-1" style="margin: 8px -13px;">
-                                            <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-row" *ngIf="usertypevendor">
-                                        <div class="col-sm-11">
-                                            <p-autoComplete class="pauto-cpo-grid"
-                                                            [size]="32"
-                                                            [minLength]="1"
-                                                            [dropdown]="true">
-                                                <ng-template let-Value pTemplate="vendor">
-                                                    <div class="ui-helper-clearfix">{{Value}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                        </div>
-                                        <div class="col-sm-1" style="margin: 8px -13px;">
-                                            <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg"></a></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-row" *ngIf="usertypecompany">
-                                        <div class="col-sm-12">
-                                            <input class="form-control" type="text" pInputText>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-1" style="margin: 8px -13px;">
+                                    <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
                                 </div>
-                            </td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td>kg</td>
-                            <td><input class="form-control" type="text" pKeyFilter="pint" /></td>
-                            <td><p-calendar class="pcal-cpo-grid" [showIcon]="true"></p-calendar></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="select">Select</option>
-                                </select>
-                            </td>
-                            <td colspan="13"></td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-
+                            </div>
+                            <div class="form-row" *ngIf="partListDetail.userType === '2'">
+                                <div class="col-sm-11">
+                                    <p-autoComplete class="pauto-cpo-grid"
+                                                    [size]="32"
+                                                    [minLength]="1"
+                                                    [dropdown]="true"
+                                                    [(ngModel)]="partListDetail.name"
+                                                    [ngModelOptions]="{standalone: true}">
+                                        <ng-template let-Value pTemplate="vendor">
+                                            <div class="ui-helper-clearfix">{{Value}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                                <div class="col-sm-1" style="margin: 8px -13px;">
+                                    <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg"></a></div>
+                                </div>
+                            </div>
+                            <div class="form-row" *ngIf="partListDetail.userType === '3'">
+                                <div class="col-sm-12">
+                                    <input class="form-control" type="text" pInputText [(ngModel)]="partListDetail.name" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partListDetail.address" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td>{{ partListDetail.uom === null ? '-' : partListDetail.uom }}</td>
+                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partListDetail.orderQty" [ngModelOptions]="{standalone: true}" /></td>
+                    <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partListDetail.needBy" [ngModelOptions]="{standalone: true}"></p-calendar></td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partListDetail.company" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partListDetail.bu" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partListDetail.division" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" [(ngModel)]="partListDetail.dept" [ngModelOptions]="{standalone: true}">
+                            <option value="select">Select</option>
+                        </select>
+                    </td>
+                    <td colspan="13"></td>
+                </tr>
+            </ng-container>
+            </tbody>
+                </table>
+           
         </div>
     </p-tabPanel>
     <p-tabPanel header="Approve">
@@ -577,8 +587,8 @@
         </div>
     </p-tabPanel>
 </p-tabView>
-<div class="mt10">
-    <a class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()">Save</a>
+<div>
+    <a class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">Save</a>
 </div>
 
     <!--<div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
@@ -1961,9 +1971,9 @@
                             <tbody>
                                 <tr *ngFor="let obj of returnPartsListArray">
                                     <td>
-                                        <span class="checkbox-cstm">
+                                        <span class="checkbox-cstm" *ngIf="!multiplePNDetails">
                                             <label style="width: 20px;margin-top: 5px;">
-                                                <input type="checkbox">
+                                                <input type="checkbox" >
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
@@ -1976,8 +1986,23 @@
                                     <td>{{obj.aircraftManufacturer === null ? '-':obj.aircraftManufacturer}}</td>
                                     <td>{{obj.nsn === null ? '-':obj.nsn}}</td>
                                     <td>{{obj.priorityId === null ? '-':obj.priorityId}}</td>
-                                    <td></td>
+                                    <td><a href="#" class="clr-red" target="_blank" *ngIf="multiplePNDetails" (click)="onAddPartNum()">Add Part Number</a></td>
                                 </tr>
+                                <!-- TODO: Remove dummy content -->
+                                <tr>
+                                    <td></td>
+                                    <td style="padding: 6px;">PN98510</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><a href="#" class="clr-red" target="_blank" (click)="onAddPartNum()">Add Part Number</a></td>
+                                </tr>
+                                <!-- ./TODO: Remove dummy content -->
+
                                 <!--<tr *ngFor="let obj of array">
                                     <th>{{obj.enterdPart}}</th>
                                     <td>{{obj}}</td>
