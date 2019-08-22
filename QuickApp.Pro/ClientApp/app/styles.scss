@@ -13628,8 +13628,10 @@ button {
     p-autocomplete .ui-autocomplete input.ui-inputtext {
         background-color: white !important;
     }
-.autocomplete-customer2 .ui-autocomplete {
-    width: 106% !important;
+.autocomplete-value .ui-autocomplete {
+    margin-top: -12px;
+    width: 108% !important;
+    margin-left: -7px;
 }
 .autocomplete-customer3 .ui-autocomplete {
     margin-left: -5px !important;
@@ -13717,6 +13719,30 @@ button {
     position: relative;
     border-collapse: collapse;
 }
+
+.ata-table-cstm {
+    overflow-y: hidden;
+}
+
+.ata-table-cstm th {
+    width: 110px;
+    padding: 8px 5px !important;
+}
+
+.ata-table-cstm .ui-table {
+    padding-bottom: 60px;
+}
+
+.ata-table-cstm .ui-table-wrapper {
+    max-width: 100%;  
+    position: relative;
+    padding: 0;
+}
+
+.ata-table-cstm .ui-table-wrapper table {
+    position: relative;
+    border-collapse: collapse;
+}
 .input-field-value {
     border-radius: 5px !important;
 }
@@ -13726,6 +13752,7 @@ button {
     top: -1px;
     background: #0d57b0;
 }
+
 .rro-table-cstm thead th:last-child {
     right: 0;
     z-index: 1;
@@ -13820,6 +13847,11 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     min-width: 95% !important;
     margin-left: 5px !important;
     margin-top: 10px;
+}
+.autocomplete-value .ui-autocomplete .ui-autocomplete-panel {
+    min-width: 95% !important;
+    margin-left: 5px !important;
+    margin-top: 8px;
 }
 .autocomplete-customer1 .ui-autocomplete .ui-autocomplete-panel {
     min-width: 97% !important;
