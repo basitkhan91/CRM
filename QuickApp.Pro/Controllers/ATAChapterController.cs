@@ -100,6 +100,7 @@ namespace QuickApp.Pro.Controllers
                 ataMainobject.Memo = ataMainViewModel.Memo;
                 ataMainobject.MasterCompanyId = 1;
                 ataMainobject.IsActive = ataMainViewModel.IsActive;
+                ataMainobject.IsDelete = ataMainViewModel.IsDelete;
                 ataMainobject.CreatedDate = DateTime.Now;
                 ataMainobject.UpdatedDate = DateTime.Now;
                 ataMainobject.CreatedBy = ataMainViewModel.CreatedBy;
@@ -143,7 +144,7 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpDelete("actions/{id}")]
+        [HttpDelete("deleteATAMAIN/{id}")]
         [Produces(typeof(ATAChapterViewModel))]
         public IActionResult DeleteAction(long id)
         {
