@@ -20,7 +20,7 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.Publication> GetPublications()
         {
-            return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.PublicationId).ToList();
+            return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.PublicationId).ToList();
         }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

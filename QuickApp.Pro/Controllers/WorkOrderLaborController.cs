@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workOrderList = unitOfWork.Repository<WorkOrderLabor>()
                 .GetAll()
-                .Where(x => x.IsActive == true && x.IsDelete == false)
+                .Where(x => x.IsActive == true && x.IsDeleted == false)
                 .OrderByDescending(x => x.ID)
                 .ToList();
             return Ok(workOrderList);
@@ -52,7 +52,7 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 workOrderLabor.IsActive = true;
-                workOrderLabor.IsDelete = false;
+                workOrderLabor.IsDeleted = false;
                 workOrderLabor.CreatedDate = DateTime.Now;
                 unitOfWork.Repository<WorkOrderLabor>().Add(workOrderLabor);
                 unitOfWork.SaveChanges();
@@ -87,7 +87,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workOrderLabor = unitOfWork.Repository<WorkOrderLabor>().Find(x => x.ID == id).FirstOrDefault();
             workOrderLabor.IsActive = false;
-            workOrderLabor.IsDelete = true;
+            workOrderLabor.IsDeleted = true;
             workOrderLabor.UpdatedDate = DateTime.Now;
 
             unitOfWork.Repository<WorkOrderLabor>().Update(workOrderLabor);
