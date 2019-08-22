@@ -103,12 +103,12 @@ namespace DAL.Repositories
         {
 
             {
-                var data = (from iM in _appContext.ItemMasterAircraftManufacturer
-                            where iM.ItemMasterId == id
+                var data = (from iM in _appContext.ItemMasterAircraftMapping
+							where iM.ItemMasterId == id
 
                             select new
                             {
-                                iM.ItemMasterAircraftManufacturerId,
+                                iM.ItemMasterAircraftMappingId,
                                 iM.ItemMasterId,
                                 iM.AircraftTypeId,
                                 iM.IsActive
