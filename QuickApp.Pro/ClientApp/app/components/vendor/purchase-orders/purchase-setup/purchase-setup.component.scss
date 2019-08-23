@@ -1,7 +1,7 @@
 ﻿label {
     font-size: 12px !important;
     text-align: left;
-    width: 110px;
+    width: 150px;
     margin-right: 0;
     font-weight: normal;
 }
@@ -30,6 +30,12 @@ textarea {
 a.fa.fa-plus-circle {
     color: green !important;
 }
+.partsList-modal .form-group {
+    margin-bottom: 6px !important;
+}
+.rpo-table-cstm th {
+    padding: 8px 5px !important;
+}
 
 @media (min-width: 768px) {
     .col-md-3 {
@@ -37,3 +43,4 @@ a.fa.fa-plus-circle {
         margin-right: 15px;
     }
 }
+
