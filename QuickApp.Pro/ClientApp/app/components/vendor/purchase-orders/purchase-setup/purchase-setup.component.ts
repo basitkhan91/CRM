@@ -21,6 +21,7 @@ import { TreeNode, MessageService } from 'primeng/api';
 import { SiteService } from '../../../../services/site.service';
 import { WarehouseService } from '../../../../services/warehouse.service';
 import { Site } from '../../../../models/site.model';
+import { CreatePOPartsList, PartDetails } from '../../../../models/create-po-partslist.model';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -155,17 +156,17 @@ export class PurchaseSetupComponent {
 	sourceSplitShipment: any = {};
     name: any;
     orderQuantity: any;
-    pdata: any[] = [1];
-    usertypecustomer: boolean = false;
-    usertypecompany: boolean = false;
-    usertypevendor: boolean = false;
-    enablePNChildRow: boolean = false;
+    createPOPartsList: any[];
+    checkAllPartsList: boolean;
+    multiplePNDetails: boolean;
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
 
 		this.loadcustomerData();
 		this.loadData();
+        this.createPOPartsList = [new CreatePOPartsList()];   
+        console.log(this.createPOPartsList);      
 
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
@@ -350,6 +351,7 @@ export class PurchaseSetupComponent {
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
         }
+
 	}
 	private priorityData() {
 
@@ -377,6 +379,14 @@ export class PurchaseSetupComponent {
 			for (let i = 0; i < this.array.length; i++) {
 
 				this.workFlowtService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
+                //console.log(returndata[0]);
+                returndata[0].map(x => {
+                  if (x.partDescription === null && x.itemTypeId === null && x.isHazardousMaterial === null && x.manufacturerId === null && x.priorityId === null) {
+                                this.multiplePNDetails = true;
+                            }
+                });
+
+
                     if (returndata[0].length > 0) {
 						for (let k = 0; k < returndata[0].length; k++) {
                             this.returnPartsListArray.push(returndata[0][k]);
@@ -391,9 +401,8 @@ export class PurchaseSetupComponent {
 						}
 
 					}
+
 				});
-
-
 
 			}
 		}
@@ -2486,48 +2495,37 @@ export class PurchaseSetupComponent {
 		this.orderQuantity = event;
     }
 
-    addPartNum() {
-        this.pdata.push(1);
-    }
-
-    onSelectUsertype(event) {
-        if (event.target.value === '1') {
-            this.usertypecustomer = true;
-            this.usertypecompany = false;
-            this.usertypevendor = false;
-        }
-        if (event.target.value === '2') {
-            this.usertypecompany = false;
-            this.usertypecustomer = false;
-            this.usertypevendor = true;
-        }
-        if (event.target.value === '3') {
-            this.usertypevendor = false;
-            this.usertypecustomer = false;
-            this.usertypecompany = true;
-        }
-    }
-
     addPageCustomer() {
         this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
 
-    onClickSplitshipment(event) {
-        if (event.target.checked) {
-            this.enablePNChildRow = true;
+    addPartNum() {
+        this.createPOPartsList.push(new CreatePOPartsList());
+    }
+
+    onAddPNChildRow(index) {
+        this.createPOPartsList[index].partListDetails.push(new PartDetails());
+    }
+
+    onDelPNChildRow(index, subIndex) {
+        this.createPOPartsList[index].partListDetails.splice(subIndex, 1);
+    }
+
+    checkAllPartDetails() {
+        this.createPOPartsList.map(x => {
+        if (!this.checkAllPartsList) {
+            x.checkPartList = true;
         } else {
-            this.enablePNChildRow = false;
+            x.checkPartList = false;
         }
+        })
     }
 
-    onAddPNChildRow() {
-
-    }
-
-    onDelPNChildRow() {
-
+    onAddPartNum() {
+        this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
     }
 }
+
 
 
 //this.testData = this.makeNestedObj(this.allManagemtninfo, true);

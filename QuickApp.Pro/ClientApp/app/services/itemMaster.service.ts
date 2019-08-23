@@ -297,11 +297,11 @@ export class ItemMasterService {
     postATAMapping(action: any) {
         return this.itemMasterEndpoint.saveATAMapping<any>(action);
     }
-    getItemAirMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, AircraftTypeID: string, AircraftModelID: string, DashNumberId: string) {
-        return this.itemMasterEndpoint.getAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId, AircraftTypeID, AircraftModelID, DashNumberId);
+    getItemAirMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, searchUrl:string) {
+        return this.itemMasterEndpoint.getAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId, searchUrl );
     }
-    getItemATAMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, ATAID: string, ATASubID: string) {
-        return this.itemMasterEndpoint.getATAMappedByMultiATAIDATASUBID<any>(ItemmasterId, ATAID, ATASubID);
+    getItemATAMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, searchUrl: string,) {
+        return this.itemMasterEndpoint.getATAMappedByMultiATAIDATASUBID<any>(ItemmasterId, searchUrl);
     }
     deleteItemMasterATA(ItemMasterATAMappingId: number) {
         return this.itemMasterEndpoint.deleteitemMasterMappedATAEndpoint<any>(ItemMasterATAMappingId);

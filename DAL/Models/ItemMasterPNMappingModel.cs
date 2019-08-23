@@ -20,15 +20,15 @@ namespace DAL.Models
         [Key]
         public long PublicationItemMasterMappingId  { get; set; }
         public long ItemMasterId { get; set; }
-        public long ItemClassificationId { get; set; }
+        public Nullable<long> ItemClassificationId { get; set; }
         public long ItemGroupId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate  { get; set; }
         public System.DateTime  UpdatedDate { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        public Nullable<bool> IsDeleted { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         public string ItemClassification { get; set; }
         public string PartNumberDescription { get; set; }
         public string PartNumber { get; set; }

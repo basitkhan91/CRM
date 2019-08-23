@@ -237,7 +237,7 @@ namespace DAL
         IWorkFlowRepositoryTest workFlowRepositoryTest { get; }
         //IPurchaseOrderPartRepository PurchaseOrderPartRepository { get; }
         IStocklineIntegrationPortalRepository StocklineIntegrationPortalRepository { get; }
-
+        IWorkOrderRepository WorkOrderRepository { get; }
         ICapabilityTypeRepository capabilityTypeRepository { get; }
         IAssetRepository Asset { get; }
 

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class WorkOrder : PasBaseAuditing
+    public class WorkOrder 
     {
         [Key]
         public long ID { get; set; }
@@ -62,5 +62,13 @@ namespace DAL.Models
         public string SalesPerson { get; set; }
 
         public int MasterCompanyId { get; set; }
+
+        public string CreatedBy { get; set; }
+        public Nullable<DateTime> CreatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }

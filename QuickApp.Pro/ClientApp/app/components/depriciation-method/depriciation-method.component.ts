@@ -29,7 +29,7 @@ export class DepriciationMethodComponent implements OnInit {
     selectedColumns: any[];
     cols: any[];
     memoPopupText: string;
-    memoNotes: string = 'This is Itemmaster memo';
+    memoNotes: string = 'This is  memo';
     AuditDetails: SingleScreenAuditDetails[];
     /** DepriciationMethod ctor */
     constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal) {

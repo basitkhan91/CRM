@@ -43,7 +43,7 @@ namespace QuickApp.Pro.Controllers
         {
 
             var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<PublicationViewModel>>(allpublicationinfo));
+            return Ok((allpublicationinfo));
 
         }
 
@@ -83,16 +83,12 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.PublicationRecordId = publicationViewModel.PublicationRecordId;
                     publicationobject.PublicationId = publicationViewModel.PublicationId;
                     publicationobject.Description = publicationViewModel.Description;
-                    publicationobject.PartNumber = publicationViewModel.PartNumber;
                     publicationobject.Memo = publicationViewModel.Memo;
                     publicationobject.Platform = publicationViewModel.Platform;
-                    publicationobject.Model = publicationViewModel.Model;
                     publicationobject.Description = publicationViewModel.Description;
-                    publicationobject.ATAMain = publicationViewModel.ATAMain;
-                    publicationobject.ATASubChapter = publicationViewModel.ATASubChapter;
-                    publicationobject.ATAPositionZone = publicationViewModel.ATAPositionZone;
                     publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
                     publicationobject.IsActive = publicationViewModel.IsActive;
+                    publicationobject.IsDeleted= publicationViewModel.IsDeleted;
                     publicationobject.EntryDate = publicationViewModel.EntryDate;
                     publicationobject.revisionDate = publicationViewModel.revisionDate;
                     publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
@@ -110,7 +106,6 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
                     _unitOfWork.Publication.Add(publicationobject);
                     _unitOfWork.SaveChanges();
-
 
                     return Ok(publicationobject);
                 }
@@ -136,17 +131,14 @@ namespace QuickApp.Pro.Controllers
                 existingResult.UpdatedBy = publicationViewModel.UpdatedBy;
                 existingResult.PublicationId = publicationViewModel.PublicationId;
                 existingResult.Description = publicationViewModel.Description;
-                existingResult.PartNumber = publicationViewModel.PartNumber;
                 existingResult.Platform = publicationViewModel.Platform;
                 existingResult.Memo = publicationViewModel.Memo;
-                existingResult.Model = publicationViewModel.Model;
                 existingResult.Description = publicationViewModel.Description;
-                existingResult.ATAMain = publicationViewModel.ATAMain;
-                existingResult.ATASubChapter = publicationViewModel.ATASubChapter;
-                existingResult.ATAPositionZone = publicationViewModel.ATAPositionZone;
                 existingResult.MasterCompanyId = publicationViewModel.MasterCompanyId;
                 existingResult.IsActive = publicationViewModel.IsActive;
                 existingResult.MasterCompanyId = publicationViewModel.MasterCompanyId;
+
+                
                 _unitOfWork.Publication.Update(existingResult);
                 _unitOfWork.SaveChanges();
 
@@ -159,7 +151,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.Publication.GetSingleOrDefault(c => c.PublicationRecordId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.Publication.Update(existingResult);
             //_unitOfWork.Publication.Remove(existingResult);
             _unitOfWork.SaveChanges();
@@ -260,15 +252,11 @@ namespace QuickApp.Pro.Controllers
                 {
                     if (IMPNMapping == null)
                         return BadRequest($"{nameof(IMPNMapping)} cannot be null");
-
-
-
                     for (int i = 0; i <= IMPNMapping.Length - 1; i++)
                     {
                         PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                         cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
                         cp.PublicationId = IMPNMapping[i].PublicationId;
-                        cp.PartNumber = IMPNMapping[i].PartNumber;
                         cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
                         cp.ItemClassification = IMPNMapping[i].ItemClassification;
                         cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
@@ -280,7 +268,7 @@ namespace QuickApp.Pro.Controllers
                         cp.CreatedDate = DateTime.Now;
                         cp.UpdatedDate = DateTime.Now;
                         cp.IsActive = IMPNMapping[i].IsActive;
-
+                        cp.IsActive = IMPNMapping[i].IsDeleted;
                         _context.PublicationItemMasterMapping.Add(cp);
                         _context.SaveChanges();
                     }
@@ -288,7 +276,6 @@ namespace QuickApp.Pro.Controllers
                 }
 
                 return Ok(ModelState);
-
             }
             catch (Exception ex)
             {
