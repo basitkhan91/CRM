@@ -4,7 +4,6 @@ export class ATASubChapter {
     ataChapterCode: any;
 	// Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
 	constructor(ataChapterId?: number, masterCompany?: MasterCompany, ataSubChapterId?: number, description?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, memo?: string) {
-
 		this.ataSubChapterId = ataSubChapterId;
 		this.description = description;
 		this.ataChapterId = ataChapterId,
@@ -16,9 +15,7 @@ export class ATASubChapter {
 		this.masterCompany = masterCompany;
 		this.isActive = isActive;
 		this.memo = memo;
-
 	}
-
 	public ataSubChapterId: number;
 	public ataChapterId: number;
 	public description: string;

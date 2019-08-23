@@ -22,13 +22,14 @@ const itemmasterPagesRoutes: Routes = [
 			{ path: "app-item-master-list", component: ItemMasterListComponent, data: { title: "ItemMaster's List" } },
 			{ path: "app-item-master-setup", component: ItemMasterSetupComponent, data: { title: "Item Master's Setup" } },
 			{ path: "app-item-master-stock", component: ItemMasterStockComponent, data: { title: "Item Master's Stock" } },
+			{ path: "app-item-master-stock/edit/:id", component: ItemMasterStockComponent, data: { title: "Item Master's Stock" } },
 			{ path: "app-item-master-non-stock", component: ItemMasterNonStockComponent, data: { title: "Item Master's Non Stock" } },
 			{ path: "app-item-master-equipment", component: ItemMasterEquipmentComponent, data: { title: "Item Master's Equipment" } },
 			{ path: "app-item-master-exchange", component: ItemMasterExchangeComponent, data: { title: "Item Master's Exchange" } },
 			{ path: "app-item-master-loan", component: ItemMasterLoanComponent, data: { title: "Item Master's Loan" } },
 			{ path: "app-item-master-capabilities-list", component: ItemMasterCapabilitiesListComponent, data: { title: "Item Master's Capabilities List" } },
 			{ path: "app-item-master-create-capabilities", component: ItemMasterCreateCapabilitiesComponent, data: { title: "Item Master's Capabilities Create" } },
-			
+
 		]
 	}
 ];

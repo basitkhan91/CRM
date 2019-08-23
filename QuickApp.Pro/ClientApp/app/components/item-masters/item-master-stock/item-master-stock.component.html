@@ -1,4 +1,8 @@
-﻿<div class="x_content add-customer-work">
+﻿
+
+
+
+<div class="x_content add-customer-work">
     <div class="form-group row form-bg">
         <label class="control-label col-sm-2">Item Type </label>
         <div class="col-sm-8 mleft25" style="margin-top:3px;">
@@ -22,7 +26,7 @@
                 <div class="clear"></div>
                 <div class="md-stepper-horizontal orange">
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 1 }" (click)="changeOfTab('General')"
+                         [ngClass]="{ active: activeMenuItem >= 1 , editable : activeMenuItem === 1}" (click)="changeOfTab('General')"
                          > 
                         <div class="md-step-circle"><span>1</span></div>
                         <div class="md-step-title">General Information</div>
@@ -30,7 +34,9 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 2 }" 
+                         [ngClass]="{ active: activeMenuItem >= 2, editable : activeMenuItem === 2 }" 
+                         (click)="changeOfTab('AircraftInfo')"
+                         [class.isDisabled]="!isDisabledSteps"
                          > 
                         <div class="md-step-circle"><span>2</span></div>
                         <div class="md-step-title">Aircraft Information</div>
@@ -38,7 +44,9 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 3 }" 
+                         [ngClass]="{ active: activeMenuItem >= 3 , editable : activeMenuItem === 3 }" 
+                         (click)="changeOfTab('Atachapter')"
+                         [class.isDisabled]="!isDisabledSteps"
                          > 
                         <div class="md-step-circle"><span>3</span></div>
                         <div class="md-step-title">ATA Chapter</div>
@@ -46,7 +54,9 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 4 }" 
+                         [ngClass]="{ active: activeMenuItem >= 4 , editable : activeMenuItem === 4}" 
+                         (click)="changeOfTab('PurchaseSales')"
+                         [class.isDisabled]="!isDisabledSteps"
                          > 
                         <div class="md-step-circle"><span>4</span></div>
                         <div class="md-step-title">Purchase and Sales</div>
@@ -54,7 +64,9 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 5 }" 
+                         [ngClass]="{ active: activeMenuItem >= 5 , editable : activeMenuItem === 5 }" 
+                         (click)="changeOfTab('ExportInfo')"
+                         [class.isDisabled]="!isDisabledSteps"
                          > 
                         <div class="md-step-circle"><span>5</span></div>
                         <div class="md-step-title">Export Information</div>
@@ -400,7 +412,7 @@
                                                 [(ngModel)]="sourceItemMaster.glAccountId">
                                             <option *ngFor="let glAccounts of allGlInfo"
                                                     [ngValue]="glAccounts.glAccountId" title="{{glAccounts.accountDescription}}">
-                                                {{glAccounts.glAccountId}},{{glAccounts.accountName}}
+                                                {{glAccounts.oldAccountCode}} - {{glAccounts.accountName}}
                                             </option>
                                         </select>
                                     </div>
@@ -635,14 +647,14 @@
                                                             <br />
                                                             <input maxlength="5" type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
                                                                    [ngModelOptions]="{standalone: true}"
-                                                                   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeMfg">
                                                         </td>
                                                         <td>
                                                             <strong>Days</strong>
                                                             <br />
                                                             <input maxlength="5" type="text" pKeyFilter="int" class="form-control w50 time control-bottom"
                                                                    [ngModelOptions]="{standalone: true}"
-                                                                   [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeBenchTest">
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -657,7 +669,7 @@
                         <div class="col-sm-6">
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveitemMasterclose()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
+                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
                         </div>
                     </div>
                 </div>
@@ -695,7 +707,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group ">
                                             <label class="fs12">Aircraft </label>
-                                            <p-multiSelect [options]="aircraftManufacturerList" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftIdvalue" (onChange)="getModelIdvalues()"
+                                            <p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"
                                                            class="pub-multi"></p-multiSelect>
                                         </div>
                                     </div>
@@ -704,15 +716,15 @@
                                             <label class="fs12">
                                                 Aircraft Model
                                             </label>
-                                            <p-multiSelect [options]="LoadModelidValues" [(ngModel)]="selectedModelIdvalue" [ngModelOptions]="{standalone: true}"
-                                                           class="pub-multi" (onChange)="getDashNumberValues()"></p-multiSelect>
+                                            <p-multiSelect [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
+                                                           class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()"   [selectionLimit]="30" ></p-multiSelect>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="fs12">DashNumber </label>
-                                            <p-multiSelect [options]="LoadDashnumberValues" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}"
-                                                           class="pub-multi"></p-multiSelect>
+                                            <p-multiSelect [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
+                                                           class="pub-multi"   [selectionLimit]="30"></p-multiSelect>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -723,7 +735,7 @@
                                     </div>
                                     <div class="col-md-1 add-new-align">
                                         <div class="form-group">
-                                            <button class="btn btn-primary mtop20">
+                                            <button class="btn btn-primary mtop20" (click)="searchAircraftInformation()">
                                                 <i class="pi pi-search pi-search"></i>
                                             </button>
                                         </div>
@@ -782,7 +794,7 @@
 
                     </div>
                     <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
                         <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
                 </div>
@@ -820,7 +832,7 @@
                                     <div class="col-sm-12">
                                         <form [formGroup]="ataform" (ngSubmit)="onSubmit(ataform.value)">
                                             <div class="col-sm-3 inline-block display-flex">
-                                                <select class="select-option" formControlName="atanumber" (change)="atasubchapterChange(currentAtaNumber.ataChapterId )">
+                                                <select class="select-option" formControlName="atanumber" (change)="atasubchapterChange()">
                                                     <!--[(ngModel)]="currentAtaNumber.ataChapterId"-->
                                                     <option value=''> Select Chapter</option>
                                                     <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
@@ -834,8 +846,8 @@
                                                 <a [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']" class="add-icon"><i class="fa fa-plus"></i></a>
                                             </div>
                                             <div class="col-sm-3">
-                                                <button type="button" class="btn btn-primary btn-add" [disabled]="!ataform.valid">
-                                                    <i class="pi pi-plus" (click)="addATAMapping()">Add</i>
+                                                <button type="button" class="btn btn-primary btn-add" [disabled]="!ataform.valid" (click)="addATAMapping()">
+                                                    <i class="pi pi-plus" >Add</i>
                                                 </button>
                                             </div>
                                         </form>
@@ -879,16 +891,16 @@
                                     <div class="col-sm-12">
                                         <div class="col-sm-3 inline-block display-flex">
                                             <p-multiSelect class="panel-style pub-multi4" [options]="LoadAtachapter"
-                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedATachapter" (onChange)="selectedAtachapterID()"
+                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedATAchapter" (onChange)=" getSubChapterByATAChapter()"
                                                            [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                                         </div>
                                         <div class="col-sm-3 inline-block display-flex">
                                             <p-multiSelect [options]="atasubchapterValues" [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="selectedModelValues" [panelStyle]="{minWidth:'12em'}"
+                                                           [(ngModel)]="selectedATASubChapter" [panelStyle]="{minWidth:'12em'}"
                                                            class="panel-style pub-multi4"></p-multiSelect>
                                         </div>
                                         <div class="col-sm-3">
-                                            <button type="button" class="btn btn-primary btn-search-new">
+                                            <button type="button" class="btn btn-primary btn-search-new" (click)="searchATA()">
                                                 <i class="pi pi-search"></i>
                                             </button>
                                         </div>
@@ -928,7 +940,7 @@
                         <br />
                     </div>
                     <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
                         <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
 
@@ -1277,14 +1289,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm">Aircraft Type <a href="/singlepages/singlepages/app-aircraft-manufacturer"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                <p-dropdown class="imstock-pddowm" [options]="aircraftManufacturerList" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getModelvalues($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
+                                <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm">Model <a href="/singlepages/singlepages/app-aircraft-manufacturer"><i class="fa fa-plus-circle fa-lg"></i></a></label>
                                 <p-multiSelect class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
-                                               (onChange)="getDashNumber($event)"></p-multiSelect>
+                                               (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
                             </div>
                         </div>
                         <div class="col-md-3">

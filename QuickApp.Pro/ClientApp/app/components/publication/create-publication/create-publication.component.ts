@@ -228,7 +228,12 @@ export class CreatePublicationComponent implements OnInit {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
         this.sourcePublication.masterCompanyId = 1;
         this.publicationService
-          .newAction(this.sourcePublication)
+          .newAction({
+            ...this.sourcePublication, CreatedBy: this.userName,
+            UpdatedBy: this.userName,
+            IsActive: true,
+            IsDeleted: false,
+          })
           .subscribe(res => {
             const { publicationRecordId } = res;
             this.publicationRecordId = publicationRecordId;
@@ -278,8 +283,9 @@ export class CreatePublicationComponent implements OnInit {
         UpdatedBy: this.userName,
         MasterCompanyId: obj.masterCompanyId,
         IsActive: true,
-        CreatedDate: '2019-08-12',
-        UpdatedDate: '2019-08-12'
+        IsDeleted: false,
+        CreatedDate: new Date(),
+        UpdatedDate: new Date()
       };
     });
     this.selectedPartNumbers = [];

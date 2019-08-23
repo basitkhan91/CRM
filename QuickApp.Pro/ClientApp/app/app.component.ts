@@ -224,15 +224,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         { label: 'Disposal', routerLink: '/#' },
                         ]
                     },
-                    {
-                        label: 'Asset Maintenance', items: [
-                            { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
-                            { label: 'Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
-                            { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
-                            { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
-                            { label: 'Intagible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type-single-screen' },
-                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },]
-                    },
+                    
                 ]
             },
             {
@@ -627,6 +619,15 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
                             { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
                         ]
+                    },
+                    {
+                        label: 'Asset Mgmt Maintenance', items: [
+                            { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
+                            { label: 'Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
+                            { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
+                            { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
+                            { label: 'Intagible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type-single-screen' },
+                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },]
                     },
                     {
                         label: 'Asset Attributes', items: [

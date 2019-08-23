@@ -114,6 +114,7 @@ namespace QuickApp.Pro.Controllers
             }catch(Exception ex)
             {
                 throw;
+
             }
             return Ok(ModelState);
         }
@@ -149,7 +150,7 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpDelete("actions/{id}")]
+        [HttpDelete("deleteATAMAIN/{id}")]
         [Produces(typeof(ATAChapterViewModel))]
         public IActionResult DeleteAction(long id)
         {

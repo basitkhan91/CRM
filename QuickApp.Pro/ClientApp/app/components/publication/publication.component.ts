@@ -15,6 +15,8 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { zip } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-publication',
@@ -24,7 +26,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class PublicationComponent implements OnInit, AfterViewInit {
-    allpublic: any[]=[];
+    allpublic: any[] = [];
     selectedreason: any;
     publication_Name: any = "";
     description: any = "";
@@ -50,7 +52,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     displayedColumns = ['PublicationId', 'PartNumber', 'description'];
     //, 'Sequence', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'
     dataSource: MatTableDataSource<Publication>;
-    allpublicationInfo: Publication[] = [];
+    allpublicationInfo: any = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
     public sourceAction: Publication;
@@ -75,7 +77,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService
+        , private router: Router
+    ) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new Publication();
@@ -84,24 +88,21 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.loadData();
         this.cols = [
-            
-            //{ field: 'publicationRecordId', header: 'PublicationRecordId' },
+
             { field: 'publicationId', header: 'Publication ID' },
-            { field: 'partNumber', header: 'Part Number' },
+            // { field: 'partNumber', header: 'Part Number' },
             { field: 'description', header: 'Description' },
-            { field: 'model', header: 'Model' },
-            { field: 'ataMain', header: 'ATA Main' },
-            { field: 'ataSubChapter', header: 'ATA SubChapter' },
-            { field: 'ataPositionZone', header: 'ATA Position Zone' },
-            { field: 'platform', header: 'Platform' },
+            // { field: 'model', header: 'Model' },
+            // { field: 'ataMain', header: 'ATA Main' },
+            // { field: 'ataSubChapter', header: 'ATA SubChapter' },
+            { field: 'emailAddress', header: 'Company Email' },
+            { field: 'companyName', header: 'CompanyName' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-publication';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-publication';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
     }
     ngAfterViewInit() {
@@ -131,7 +132,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             else {
                 this.disableSave = false;
             }
-       }
+        }
     }
 
 
@@ -169,12 +170,28 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
+
+
+
+
     private onDataLoadSuccessful(allWorkFlows: Publication[]) {
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-        this.allpublicationInfo = allWorkFlows;
+        this.allpublicationInfo = allWorkFlows.map(x => {
+            return {
+                publicationRecordId: x.publicationRecordId,
+                publicationId: x.publicationId,
+                memo: x.memo == null ? '-' : x.memo,
+                description: x.description == '' ? '-' : x.description,
+                companyName: x.masterCompany.companyName,
+                emailAddress: x.masterCompany.emailAddress,
+                createdBy: x.createdBy,
+                updatedBy: x.updatedBy
+            }
+        });
+
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -198,10 +215,10 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.isDeleteMode = false;
 
         this.isSaving = true;
-		this.loadMasterCompanies();
-		this.disableSave = false;
-		this.sourceAction = new Publication();
-		this.sourceAction.isActive = true;
+        this.loadMasterCompanies();
+        this.disableSave = false;
+        this.sourceAction = new Publication();
+        this.sourceAction.isActive = true;
         this.publicationName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -254,7 +271,14 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
     openEdit(content, row) {
-		this.disableSave = false;
+        const { publicationRecordId } = row;
+
+        // this.router.navigateByUrl(`/singlepages/singlepages/app-publication/app-create-publication/edit/${publicationRecordId}`);
+
+
+
+
+        this.disableSave = false;
         this.isEditMode = true;
         this.isSaving = true;
         this.loadMasterCompanies();
@@ -278,7 +302,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                     "publicationId": this.allpublicationInfo[i].publicationId,
                     "publicationName": publicationName
                 }]),
-                this.localCollection.push(publicationName);
+                    this.localCollection.push(publicationName);
             }
         }
     }
@@ -397,7 +421,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     }
 
-   
+
     private saveSuccessHelper(role?: Publication) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);

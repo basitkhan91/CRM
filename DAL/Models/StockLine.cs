@@ -13,7 +13,7 @@ namespace DAL.Models
         public string PartNumber { get; set; }
         public string StockLineNumber { get; set; }
         public string ControlNumber { get; set; }
-        
+
         //[FK]
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
@@ -132,7 +132,7 @@ namespace DAL.Models
         public virtual TimeLife TimeLifeObject { get; set; }
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
-        
+
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }
 
     }

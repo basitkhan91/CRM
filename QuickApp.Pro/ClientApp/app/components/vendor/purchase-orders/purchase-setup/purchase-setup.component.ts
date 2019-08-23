@@ -21,6 +21,7 @@ import { TreeNode, MessageService } from 'primeng/api';
 import { SiteService } from '../../../../services/site.service';
 import { WarehouseService } from '../../../../services/warehouse.service';
 import { Site } from '../../../../models/site.model';
+import { CreatePOPartsList, PartDetails } from '../../../../models/create-po-partslist.model';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -155,17 +156,28 @@ export class PurchaseSetupComponent {
 	sourceSplitShipment: any = {};
     name: any;
     orderQuantity: any;
-    pdata: any[] = [1];
-    usertypecustomer: boolean = false;
-    usertypecompany: boolean = false;
-    usertypevendor: boolean = false;
-    enablePNChildRow: boolean = false;
+    createPOPartsList: any[];
+    checkAllPartsList: boolean;
+    multiplePNDetails: boolean;
+    shipUserTypeCustomer: boolean = false;
+    shipUserTypeVendor: boolean = false;
+    shipUserTypeCompany: boolean = false;
+    billUserTypeCustomer: boolean = false;
+    billUserTypeVendor: boolean = false;
+    billUserTypeCompany: boolean = false;
+    addressMemoLabel: string;
+    enableSiteName: boolean;
+    addressHeader: string;
+    vendorCapesCols: any[];
+    vendorCapesInfo: any[] = [];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
 
 		this.loadcustomerData();
 		this.loadData();
+        this.createPOPartsList = [new CreatePOPartsList()];   
+        console.log(this.createPOPartsList);      
 
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
@@ -350,6 +362,26 @@ export class PurchaseSetupComponent {
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
         }
+
+        this.vendorCapesCols = [
+            { field: 'vcid', header: 'VCID' },
+            { field: 'ranking', header: 'Ranking' },
+            { field: 'pn', header: 'PN' },
+            { field: 'pnDescription', header: 'PN Description' },
+            { field: 'capabilityType', header: 'Capability Type' },
+            { field: 'cost', header: 'Cost' },
+            { field: 'tat', header: 'TAT' },
+            { field: 'pnMfg', header: 'PN Mfg' },
+            { field: 'updatedDate', header: 'Updated Date' },
+        ];
+        this.vendorCapesInfo = [
+            { 'vcid': 1, 'ranking': 11},
+            { 'vcid': 2, 'ranking': 11},
+            { 'vcid': 3, 'ranking': 11},
+        ];
+
+        console.log(this.sourcePoApproval);
+
 	}
 	private priorityData() {
 
@@ -377,6 +409,14 @@ export class PurchaseSetupComponent {
 			for (let i = 0; i < this.array.length; i++) {
 
 				this.workFlowtService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
+                //console.log(returndata[0]);
+                returndata[0].map(x => {
+                  if (x.partDescription === null && x.itemTypeId === null && x.isHazardousMaterial === null && x.manufacturerId === null && x.priorityId === null) {
+                                this.multiplePNDetails = true;
+                            }
+                });
+
+
                     if (returndata[0].length > 0) {
 						for (let k = 0; k < returndata[0].length; k++) {
                             this.returnPartsListArray.push(returndata[0][k]);
@@ -391,9 +431,8 @@ export class PurchaseSetupComponent {
 						}
 
 					}
+
 				});
-
-
 
 			}
 		}
@@ -407,7 +446,7 @@ export class PurchaseSetupComponent {
         this.userName = 'admin';
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
-		this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
+        this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
 			{
 				this.savePurchaseorderPart(saveddata.purchaseOrderId)
@@ -2486,48 +2525,116 @@ export class PurchaseSetupComponent {
 		this.orderQuantity = event;
     }
 
-    addPartNum() {
-        this.pdata.push(1);
-    }
-
-    onSelectUsertype(event) {
-        if (event.target.value === '1') {
-            this.usertypecustomer = true;
-            this.usertypecompany = false;
-            this.usertypevendor = false;
-        }
-        if (event.target.value === '2') {
-            this.usertypecompany = false;
-            this.usertypecustomer = false;
-            this.usertypevendor = true;
-        }
-        if (event.target.value === '3') {
-            this.usertypevendor = false;
-            this.usertypecustomer = false;
-            this.usertypecompany = true;
-        }
-    }
-
     addPageCustomer() {
         this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
 
-    onClickSplitshipment(event) {
-        if (event.target.checked) {
-            this.enablePNChildRow = true;
+    addPartNum() {
+        this.createPOPartsList.push(new CreatePOPartsList());
+    }
+
+    onDelPNRow(index) {
+        this.createPOPartsList.splice(index, 1);
+    }
+
+    onAddPNChildRow(index) {
+        this.createPOPartsList[index].partListDetails.push(new PartDetails());
+    }
+
+    onDelPNChildRow(index, subIndex) {
+        this.createPOPartsList[index].partListDetails.splice(subIndex, 1);
+    }
+
+    checkAllPartDetails() {
+        this.createPOPartsList.map(x => {
+        if (!this.checkAllPartsList) {
+            x.checkPartList = true;
         } else {
-            this.enablePNChildRow = false;
+            x.checkPartList = false;
+        }
+        })
+    }
+
+    onAddPartNum() {
+        this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
+    }
+
+    shipUserType(event) {
+        if (event.target.value === '1') {
+            this.shipUserTypeCustomer = true;
+            this.shipUserTypeCompany = false;
+            this.shipUserTypeVendor = false;
+        }
+        if (event.target.value === '2') {
+            this.shipUserTypeCompany = false;
+            this.shipUserTypeCustomer = false;
+            this.shipUserTypeVendor = true;
+        }
+        if (event.target.value === '3') {
+            this.shipUserTypeVendor = false;
+            this.shipUserTypeCustomer = false;
+            this.shipUserTypeCompany = true;
         }
     }
 
-    onAddPNChildRow() {
+    billUserType(event) {
+            if (event.target.value === '1') {
+                this.billUserTypeCustomer = true;
+                this.billUserTypeCompany = false;
+                this.billUserTypeVendor = false;
+            }
+            if (event.target.value === '2') {
+                this.billUserTypeCompany = false;
+                this.billUserTypeCustomer = false;
+                this.billUserTypeVendor = true;
+            }
+            if (event.target.value === '3') {
+                this.billUserTypeVendor = false;
+                this.billUserTypeCustomer = false;
+                this.billUserTypeCompany = true;
+            }
+        }
 
+    onClickShipMemo() {
+        this.addressMemoLabel = 'Edit Ship';
     }
 
-    onDelPNChildRow() {
-
+    onClickBillMemo() {
+        this.addressMemoLabel = 'Edit Bill';
     }
+
+    onClickPartsListAddress(value) {
+        this.enableSiteName = false;
+        if (value === 'Add') {
+            this.addressHeader = 'Add Split Shipment Address';
+        }
+        if (value === 'Edit') {
+            this.addressHeader = 'Edit Split Shipment Address';        
+        }        
+    }
+
+    onClickShipSiteName(value) {
+        this.enableSiteName = true;
+        if (value === 'Add') {
+            this.addressHeader = 'Add Ship To Details';
+        }
+        if (value === 'Edit') {
+            this.addressHeader = 'Edit Ship To Details';       
+        }        
+    }
+
+    onClickBillSiteName(value) {
+        this.enableSiteName = true;
+        if (value === 'Add') {
+            this.addressHeader = 'Add Bill To Details';
+        }
+        if (value === 'Edit') {
+            this.addressHeader = 'Edit Bill To Details';      
+        }        
+    }
+
 }
+
 
 
 //this.testData = this.makeNestedObj(this.allManagemtninfo, true);
