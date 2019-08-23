@@ -257,7 +257,8 @@ namespace QuickApp.Pro.Controllers
                         PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                         cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
                         cp.PublicationId = IMPNMapping[i].PublicationId;
-                        cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+						cp.PartNumber = IMPNMapping[i].PartNumber;
+						cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
                         cp.ItemClassification = IMPNMapping[i].ItemClassification;
                         cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
                         cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
@@ -268,7 +269,7 @@ namespace QuickApp.Pro.Controllers
                         cp.CreatedDate = DateTime.Now;
                         cp.UpdatedDate = DateTime.Now;
                         cp.IsActive = IMPNMapping[i].IsActive;
-                        cp.IsActive = IMPNMapping[i].IsDeleted;
+                        cp.IsDeleted = IMPNMapping[i].IsDeleted;
                         _context.PublicationItemMasterMapping.Add(cp);
                         _context.SaveChanges();
                     }

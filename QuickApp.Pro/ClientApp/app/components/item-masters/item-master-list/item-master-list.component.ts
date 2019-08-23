@@ -17,7 +17,7 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 })
 /** item-master-list component*/
 export class ItemMasterListComponent implements OnInit, AfterViewInit {
-    viewItemMaster: any;
+	viewItemMaster: any;
 	EquipmentDelete: boolean = false;
 	isDeleteMode: boolean = false;
 	allitemstockinfo: any[] = [];
@@ -70,43 +70,43 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	updatedBy: any = "";
 	createddate: any = "";
 	updatedDate: any = "";
-	
+
 	EquipmentView: boolean = false;
 	partdescription: any = "";
 	itemClassificationCode: any = "";
 	isActive: any = "";
 	currencyId: any = "";
-	exportCurrencyId: any=""
+	exportCurrencyId: any = ""
 	discountPurchasePercent: any = "";
 	unitCost: any = "";
 	listPrice: any = "";
 	priceDate: any = "";
-    descriptionName: any="";
-    manufacturingDays: any;
+	descriptionName: any = "";
+	manufacturingDays: any;
 	salesMarkUpOnListPrice: any = "";
 	EquipmentAdd: boolean = false;
 	EquipmentUpdate: boolean = false;
 	NonstockDelete: boolean = false;
 	selectedColumns1: any[];
-    cols1: any[];
+	cols1: any[];
 	cols2: any[];
 	selectedstockColumn: any[];
 	selectedNonstockColumn: any[];
 	selectedEquipmentColumn: any[];
-    selectedColumns2: any[];
-    getSelectedCollection: any;
+	selectedColumns2: any[];
+	getSelectedCollection: any;
 	NonstockView: boolean = false;
-	NonstockAdd: boolean = false;priorityId: any;
-    exportCountryId: any;
-    memo: any;
-    exportWeight: any;
-    exportValue: any;
-    exportSizeLength: any;
-    exportClassificationId: any;
-    description: any;
-    exportSizeWidth: any;
-    exportSizeHeight: any;
-;
+	NonstockAdd: boolean = false; priorityId: any;
+	exportCountryId: any;
+	memo: any;
+	exportWeight: any;
+	exportValue: any;
+	exportSizeLength: any;
+	exportClassificationId: any;
+	description: any;
+	exportSizeWidth: any;
+	exportSizeHeight: any;
+	;
 	NonstockUpdate: boolean = false;
 	Delete: boolean = false;
 	View: boolean = false;
@@ -154,7 +154,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 			this.nonStockTable = true;
 			//this.nonstockList();
 		}
-		
+
 	}
 	ngOnInit(): void {
 		if (this.itemMasterService.listStock == true) { this.loaddata('Stock'); }
@@ -164,10 +164,6 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//this.StockList();
 		//this.EuipmentList();
 		this.loadRolesData();
-
-
-
-
 	}
 	openHist() {
 		alert("Functionality not yet done");
@@ -176,16 +172,16 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 
 	openEdit(row) {
 
+		const { itemMasterId } = row;
+		// this.itemMasterService.isEditMode = true;
 
-		this.itemMasterService.isEditMode = true;
+		// this.sourceItemMaster = row;
 
-		this.sourceItemMaster = row;
-
-		this.itemMasterService.listCollection = this.sourceItemMaster;
+		// this.itemMasterService.listCollection = this.sourceItemMaster;
 		this.activeIndex = 0;
 
 		//this.itemMasterService.indexObj.next(this.activeIndex);
-		this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
+		this.router.navigateByUrl(`/itemmastersmodule/itemmasterpages/app-item-master-stock/edit/${itemMasterId}`);
 		// this.actionName = this.sourceItemMaster.description;
 
 	}
@@ -203,16 +199,15 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-    openEdits(row)
-    {
+	openEdits(row) {
 
 
-        this.itemMasterService.isEditMode = true;
+		this.itemMasterService.isEditMode = true;
 
-        this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
-            this.getSelectedCollection = data;
-            this.itemMasterService.capsCollection = this.getSelectedCollection;
-        });
+		this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
+			this.getSelectedCollection = data;
+			this.itemMasterService.capsCollection = this.getSelectedCollection;
+		});
 
 		this.sourceItemMaster = row;
 
@@ -235,7 +230,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 
 		this.sourceItemMaster = row;
 
-       
+
 
 		this.itemMasterService.listEquipmentCollection = this.sourceItemMaster;
 		this.activeIndex = 2;
@@ -328,7 +323,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//debugger;
 		if (value == "Stock") {
 			this.stockTable = true;
-			this.cols = [				
+			this.cols = [
 				{ field: 'partNumber', header: 'PN' },
 				{ field: 'partDescription', header: 'PN Description' },
 				{ field: 'isHazardousMaterial', header: 'Is Hazardous Material' },
@@ -668,14 +663,13 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 
 		this.viewItemMaster = row;
 		this.partNumber = row.partNumber;
-        this.description = row.partDescription;
-        if (row.isAlternatePartChecked) {
-            this.isAlternatePartChecked = true;
-        }
-        else
-        {
-            this.isAlternatePartChecked = false;
-        }
+		this.description = row.partDescription;
+		if (row.isAlternatePartChecked) {
+			this.isAlternatePartChecked = true;
+		}
+		else {
+			this.isAlternatePartChecked = false;
+		}
 		this.isSerialized = row.isSerialized;
 		this.isTimeLife = row.isTimeLife;
 		this.nha = row.nha;
@@ -736,7 +730,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.der = row.der;
 		this.ataMainId = row.ataMainId;
 		this.isSchematic = row.isSchematic;
-		this.overhaulHours = row.overhaulHours	;
+		this.overhaulHours = row.overhaulHours;
 		this.rpHours = row.rpHours;
 		this.testHours = row.testHours;
 		this.turnTimeOverhaulHours = row.turnTimeOverhaulHours;
@@ -773,28 +767,28 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.exportCountryId = row.exportCountryId;
 		this.memo = row.memo;
 		this.createddate = row.createdDate;
-        this.updatedDate = row.updatedDate;
+		this.updatedDate = row.updatedDate;
 
-        //Purchase Price List
-        //this.listPrice = row.listPrice
-        //this.purchaseCurrencyId = row.purchaseCurrencyId
-        //this.purchaseDiscountOffListPrice = row.purchaseDiscountOffListPrice
-        //this.purchaseLastDiscountPercentDate = row.purchaseLastDiscountPercentDate
-        //this.purchaseLastListPriceAfterDiscountDate = row.purchaseLastListPriceAfterDiscountDate
-        //this.purchaseListPriceAfterDiscount = row.purchaseListPriceAfterDiscount
+		//Purchase Price List
+		//this.listPrice = row.listPrice
+		//this.purchaseCurrencyId = row.purchaseCurrencyId
+		//this.purchaseDiscountOffListPrice = row.purchaseDiscountOffListPrice
+		//this.purchaseLastDiscountPercentDate = row.purchaseLastDiscountPercentDate
+		//this.purchaseLastListPriceAfterDiscountDate = row.purchaseLastListPriceAfterDiscountDate
+		//this.purchaseListPriceAfterDiscount = row.purchaseListPriceAfterDiscount
 
-        //Sales Price
-        //this.salesPrice = row.salesPrice
-        //this.salesBaselineSalesPrice = row.salesBaselineSalesPrice
-        //this.salesCurrencyId = row.salesCurrencyId
-        //this.salesDiscountPercent = row.salesDiscountPercent
-        //this.salesIsFixedPrice = row.salesIsFixedPrice
-        //this.salesLastBaselineSalesPriceDate = row.salesLastBaselineSalesPriceDate
-        //this.salesLastMakUpPercentOnListPriceAfterDiscDate = row.salesLastMakUpPercentOnListPriceAfterDiscDate
-        //this.salesLastMarkUpPercentOnListPriceDate = row.salesLastMarkUpPercentOnListPriceDate
-        //this.salesLastSalePriceDate = row.salesLastSalePriceDate
-        //this.salesLastSalesDiscountPercentDate = row.salesLastSalesDiscountPercentDate
-        //this.salesMarkUpOnListPriceAfterDisc = row.salesMarkUpOnListPriceAfterDisc
+		//Sales Price
+		//this.salesPrice = row.salesPrice
+		//this.salesBaselineSalesPrice = row.salesBaselineSalesPrice
+		//this.salesCurrencyId = row.salesCurrencyId
+		//this.salesDiscountPercent = row.salesDiscountPercent
+		//this.salesIsFixedPrice = row.salesIsFixedPrice
+		//this.salesLastBaselineSalesPriceDate = row.salesLastBaselineSalesPriceDate
+		//this.salesLastMakUpPercentOnListPriceAfterDiscDate = row.salesLastMakUpPercentOnListPriceAfterDiscDate
+		//this.salesLastMarkUpPercentOnListPriceDate = row.salesLastMarkUpPercentOnListPriceDate
+		//this.salesLastSalePriceDate = row.salesLastSalePriceDate
+		//this.salesLastSalesDiscountPercentDate = row.salesLastSalesDiscountPercentDate
+		//this.salesMarkUpOnListPriceAfterDisc = row.salesMarkUpOnListPriceAfterDisc
 
 
 		this.loadMasterCompanies();
@@ -806,7 +800,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	openViewforNonstock(content, row) {
 
 		//this.sourceAction = row;
-		this.partNumber = row.partNumber;		
+		this.partNumber = row.partNumber;
 		this.description = row.partDescription;
 		if (row.itemClassification) {
 			this.itemClassificationId = row.itemClassification.description;
