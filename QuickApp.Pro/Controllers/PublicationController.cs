@@ -192,6 +192,7 @@ namespace QuickApp.Pro.Controllers
                 pnacbject.AircraftType = PnAcMapping.AircraftType;
                 pnacbject.MasterCompanyId = PnAcMapping.MasterCompanyId;
                 pnacbject.IsActive = PnAcMapping.IsActive;
+                pnacbject.IsDeleted = PnAcMapping.IsDeleted;
                 pnacbject.CreatedDate = DateTime.Now;
                 pnacbject.UpdatedDate = DateTime.Now;
                 pnacbject.CreatedBy = PnAcMapping.CreatedBy;
@@ -268,7 +269,7 @@ namespace QuickApp.Pro.Controllers
                         cp.CreatedDate = DateTime.Now;
                         cp.UpdatedDate = DateTime.Now;
                         cp.IsActive = IMPNMapping[i].IsActive;
-                        cp.IsActive = IMPNMapping[i].IsDeleted;
+                        cp.IsDeleted = IMPNMapping[i].IsDeleted;
                         _context.PublicationItemMasterMapping.Add(cp);
                         _context.SaveChanges();
                     }
@@ -443,7 +444,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
                     existingResult.UpdatedDate = DateTime.Now;
-                    existingResult.IsDeleted = false;
+                    existingResult.IsDeleted = true;
                     _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
                     _unitOfWork.SaveChanges();
                 }
