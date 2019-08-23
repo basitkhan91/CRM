@@ -129,21 +129,21 @@ export class TimeLife {
 
     timeLifeCyclesId: number;
 
-    cyclesRemaining: number;
-    cyclesSinceNew: number;
-    cyclesSinceOVH: number;
-    cyclesSinceInspection: number;
-    cyclesSinceRepair: number;
+    cyclesRemaining: string;
+    cyclesSinceNew: string;
+    cyclesSinceOVH: string;
+    cyclesSinceInspection: string;
+    cyclesSinceRepair: string;
 
-    timeRemaining: number;
-    timeSinceNew: number;
-    timeSinceOVH: number;
-    timeSinceInspection: number;
-    timeSinceRepair: number;
+    timeRemaining: string;
+    timeSinceNew: string;
+    timeSinceOVH: string;
+    timeSinceInspection: string;
+    timeSinceRepair: string;
 
-    lastSinceNew: number;
-    lastSinceOVH: number;
-    lastSinceInspection: number;
+    lastSinceNew: string;
+    lastSinceOVH: string;
+    lastSinceInspection: string;
 
     masterCompanyId: number;
     isActive: boolean;
@@ -243,6 +243,7 @@ export class StockLine {
     CustomerList: DropDownData[];
     VendorList: DropDownData[];
     visible: boolean;
+    serialNumberNotProvided: boolean;
 }
 
 export class ReceiveParts {

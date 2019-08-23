@@ -750,9 +750,10 @@
                                                         </div>
                                                     </div>
                                                 </section>
-                                                <section (click)="getItemMasterById('serialized', part)"> Reload Serialized <i class="fa fa-refresh" aria-hidden="true"></i></section>
+                                                <br />
+                                                <h4 (click)="getItemMasterById('serialized', part)"> Reload Serialized <i class="fa fa-refresh" aria-hidden="true"></i></h4>
                                                 <section>
-                                                    <h3 class="add-details-heading" style="text-align: left;" *ngIf="part.itemMaster.isSerialized">Serialized</h3>
+                                                    <h4 class="add-details-heading" style="text-align: left;" *ngIf="part.itemMaster.isSerialized">Serialized</h4>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
                                                         <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(-1, part)"></i>
                                                         <input [value]="currentTLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
@@ -763,18 +764,19 @@
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Serial Num</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSERIndex].serialNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" disabled="{{part.stocklineListObj[currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[currentSERIndex].serialNumber" type="text" pInputText pKeyFilter="pnum">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
-                                                                        <input type="checkbox" class="form-control" (click)="onChangeTimeLife(part)">
-                                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span> Time Life details not provided
+                                                                        <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[currentSERIndex])">
+                                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span> Serial Number not provided
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </section>
-                                                <section (click)="getItemMasterById('timelife', part)"> Reload Time Life <i class="fa fa-refresh" aria-hidden="true"></i></section>
+                                                <br />
+                                                <h4 (click)="getItemMasterById('timelife', part)"> Reload Time Life <i class="fa fa-refresh" aria-hidden="true"></i></h4>
                                                 <section *ngIf="part.itemMaster.isTimeLife">
                                                     <h3 class="add-details-heading">Time Life - {{ currentTLIndex + 1 }}  of part {{ part.itemMaster?.partNumber }} </h3>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
@@ -789,7 +791,7 @@
                                                             <div class="form-group">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
-                                                                        <input type="checkbox" class="form-control" (click)="onChangeTimeLife(part)">
+                                                                        <input type="checkbox" [(ngModel)]="part.isTimeLifeUpdateLater" class="form-control" (click)="onChangeTimeLife(part)">
                                                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span> Time Life details not provided
                                                                     </label>
                                                                 </div>

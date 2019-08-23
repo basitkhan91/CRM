@@ -85,6 +85,7 @@ export class ReceivngPoComponent implements OnInit {
     currentSERIndex: number = 0;
     pageTitle: string = "Receive PO";
     isDisabledTLboxes: boolean = false;
+    isDisabledSNboxes: boolean = false;
 
     obtainfromcustomer: boolean = false;
     obtainfromother: boolean = false;
@@ -207,10 +208,14 @@ export class ReceivngPoComponent implements OnInit {
         this.itemmaster.getItemMasterByItemMasterId(part.itemMaster.itemMasterId).subscribe(
             result => {
                 if (result != undefined && result[0] != undefined) {
-                    if (type == 'serialized')
+                    if (type == 'serialized') {
                         part.itemMaster.isSerialized = result[0].isSerialized;
-                    else
+                        part.serialNumber = '';
+                    }
+                    else {
                         part.itemMaster.isTimeLife = result[0].isTimeLife;
+                        part.timeLifeList = [];
+                    }
                 }
 
                 if (type == 'serialized' && !result[0].isSerialized) {
@@ -588,6 +593,7 @@ export class ReceivngPoComponent implements OnInit {
             part.stocklineListObj = []
             part.timeLifeList = [];
             part.isSameDetailsForAllParts = false;
+            part.isTimeLifeUpdateLater = false;
             this.currentSLIndex = 0;
             this.currentTLIndex = 0;
             this.currentSERIndex = 0;
@@ -647,10 +653,25 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.shippingAccountId = 0;
                 stockLine.conditionId = 0;
                 stockLine.masterCompanyId = 1;
+                stockLine.serialNumberNotProvided = false;
                 this.getStockLineSite(stockLine);
                 part.stocklineListObj.push(stockLine);
 
                 let timeLife: TimeLife = new TimeLife();
+                timeLife.cyclesRemaining = '';
+                timeLife.cyclesSinceInspection = '';
+                timeLife.cyclesSinceNew = '';
+                timeLife.cyclesSinceOVH = '';
+                timeLife.cyclesSinceRepair = '';
+                timeLife.timeRemaining = '';
+                timeLife.timeSinceInspection = '';
+                timeLife.timeSinceNew = '';
+                timeLife.timeSinceOVH = '';
+                timeLife.timeSinceRepair = '';
+                timeLife.lastSinceNew = '';
+                timeLife.lastSinceInspection = '';
+                timeLife.lastSinceOVH = '';
+
                 part.timeLifeList.push(timeLife);
             }
         }
@@ -969,6 +990,12 @@ export class ReceivngPoComponent implements OnInit {
 
     isTimeLifeUpdateLater: Boolean;
 
+    onSerialNumberNotProvided(stockLine: StockLine) {
+        this.isDisabledSNboxes = !this.isDisabledSNboxes;
+        stockLine.serialNumber = '';
+        stockLine.serialNumberNotProvided = !stockLine.serialNumberNotProvided;
+    }
+
     onChangeTimeLife(part: PurchaseOrderPart) {
         this.isTimeLifeUpdateLater = !this.isTimeLifeUpdateLater;
         this.isDisabledTLboxes = !this.isDisabledTLboxes;
@@ -982,11 +1009,7 @@ export class ReceivngPoComponent implements OnInit {
         let msg = '';
         var index = 0;
         if (errorMessages.length > 0) {
-            for (let errorMessage of errorMessages) {
-                msg += (index + 1).toString() + ") " + errorMessage + '</br>';
-                index++;
-            }
-            this.alertService.showMessage(this.pageTitle, msg, MessageSeverity.error);
+            this.alertService.showMessage(this.pageTitle, errorMessages[0], MessageSeverity.error);
             return;
         }
         let partsToPost: ReceiveParts[] = this.extractAllAllStockLines();
@@ -1060,8 +1083,35 @@ export class ReceivngPoComponent implements OnInit {
                         errorMessages.push("Please select MFG in Receiving Qty - " + (i + 1).toString());
                     }
 
+                    if (!item.stocklineListObj[i].serialNumberNotProvided) {
+                        errorMessages.push("Please select Serial Number in Receiving Qty - " + (i + 1).toString());
+                    }
                 }
             }
+
+            if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
+                for (var i = 0; i < item.timeLifeList.length; i++) {
+                    if (!item.isTimeLifeUpdateLater) {
+                        if (item.timeLifeList[i].cyclesRemaining == "") {
+                            errorMessages.push("Please select Remaining Cycle in Receiving Qty - " + (i + 1).toString());
+                        }
+                        if (item.timeLifeList[i].cyclesSinceNew == "" && item.timeLifeList[i].cyclesSinceOVH == "" && item.timeLifeList[i].cyclesSinceInspection == "" && item.timeLifeList[i].cyclesSinceRepair == "") {
+                            errorMessages.push("Aleast one of Since New, Since Ovh,Since Insp or Since Repair is required in Receiving Qty - " + (i + 1).toString());
+                        }
+
+                        if (item.timeLifeList[i].timeRemaining == "") {
+                            errorMessages.push("Please select Remaining Time in Receiving Qty - " + (i + 1).toString());
+                        }
+                        if (item.timeLifeList[i].timeSinceNew == "" && item.timeLifeList[i].timeSinceOVH == "" && item.timeLifeList[i].timeSinceInspection == "" && item.timeLifeList[i].timeSinceRepair == "") {
+                            errorMessages.push("Aleast one of Since New, Since Ovh,Since Insp or Since Repair is required in Receiving Qty - " + (i + 1).toString());
+                        }
+                        if (item.timeLifeList[i].lastSinceInspection == "" && item.timeLifeList[i].lastSinceNew == "" && item.timeLifeList[i].lastSinceOVH == "") {
+                            errorMessages.push("Aleast one of Since New, Since Ovh,Since Insp is required in Receiving Qty - " + (i + 1).toString());
+                        }
+                    }
+                }
+            }
+
         }
         return errorMessages;
     }
