@@ -53,7 +53,11 @@ export class PublicationService {
       this.publicationEndpoint.getpublicationEndpoint<Publication[]>()
     );
   }
-
+    getAllbyIdPublications() {
+        return Observable.forkJoin(
+            this.publicationEndpoint.getpublicationbyIdEndpoint<Publication[]>()
+        );
+    }
   newAction(action: Publication) {
     return this.publicationEndpoint.getNewpublicationEndpoint<Publication>(
       action
@@ -185,9 +189,7 @@ export class PublicationService {
     );
   }
   searchgetAirMappedByMultiTypeIdModelIDDashID(PublicationID: number) {
-    return this.publicationEndpoint.searchgetAirMappedByMultiTypeIDModelIDDashID<
-      any
-    >(PublicationID);
+    return this.publicationEndpoint.searchgetAirMappedByMultiTypeIDModelIDDashID<any>(PublicationID);
   }
   searchgetATAMappedByMultiSubChapterId(
     searchUrl: string,
