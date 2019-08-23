@@ -88,27 +88,33 @@ namespace QuickApp.Pro.Controllers
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] ATAChapterViewModel ataMainViewModel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                if (ataMainViewModel == null)
-                    return BadRequest($"{nameof(ataMainViewModel)} cannot be null");
+                if (ModelState.IsValid)
+                {
+                    if (ataMainViewModel == null)
+                        return BadRequest($"{nameof(ataMainViewModel)} cannot be null");
 
-                DAL.Models.ATAChapter ataMainobject = new DAL.Models.ATAChapter();
-                ataMainobject.ATAChapterCategory = ataMainViewModel.ATAChapterCategory;
-                ataMainobject.ATAChapterName = ataMainViewModel.ATAChapterName;
-                ataMainobject.ATAChapterCode = ataMainViewModel.ATAChapterCode;
-                ataMainobject.Memo = ataMainViewModel.Memo;
-                ataMainobject.MasterCompanyId = 1;
-                ataMainobject.IsActive = ataMainViewModel.IsActive;
-                ataMainobject.CreatedDate = DateTime.Now;
-                ataMainobject.UpdatedDate = DateTime.Now;
-                ataMainobject.CreatedBy = ataMainViewModel.CreatedBy;
-                ataMainobject.UpdatedBy = ataMainViewModel.UpdatedBy;
-                _unitOfWork.ATAChapter.Add(ataMainobject);
-                _unitOfWork.SaveChanges();
+                    DAL.Models.ATAChapter ataMainobject = new DAL.Models.ATAChapter();
+                    ataMainobject.ATAChapterCategory = ataMainViewModel.ATAChapterCategory;
+                    ataMainobject.ATAChapterName = ataMainViewModel.ATAChapterName;
+                    ataMainobject.ATAChapterCode = ataMainViewModel.ATAChapterCode;
+                    ataMainobject.Memo = ataMainViewModel.Memo;
+                    ataMainobject.MasterCompanyId = 1;
+                    ataMainobject.IsActive = ataMainViewModel.IsActive;
+                    ataMainobject.IsDelete = ataMainViewModel.IsDelete;
+                    ataMainobject.CreatedDate = DateTime.Now;
+                    ataMainobject.UpdatedDate = DateTime.Now;
+                    ataMainobject.CreatedBy = ataMainViewModel.CreatedBy;
+                    ataMainobject.UpdatedBy = ataMainViewModel.UpdatedBy;
+                    _unitOfWork.ATAChapter.Add(ataMainobject);
+                    _unitOfWork.SaveChanges();
 
+                }
+            }catch(Exception ex)
+            {
+                throw;
             }
-
             return Ok(ModelState);
         }
         [HttpPut("actions/{id}")]
@@ -147,14 +153,21 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(ATAChapterViewModel))]
         public IActionResult DeleteAction(long id)
         {
-            var existingResult = _unitOfWork.ATAChapter.GetSingleOrDefault(c => c.ATAChapterId == id);
-            existingResult.IsDelete = true;
-            _unitOfWork.ATAChapter.Update(existingResult);
-            //_unitOfWork.ATAMains.Remove(existingResult);
+            try
+            {
+                var existingResult = _unitOfWork.ATAChapter.GetSingleOrDefault(c => c.ATAChapterId == id);
+                existingResult.IsDelete = true;
+                existingResult.UpdatedDate = DateTime.Now;
+                _unitOfWork.ATAChapter.Update(existingResult);
+                //_unitOfWork.ATAMains.Remove(existingResult);
 
-            _unitOfWork.SaveChanges();
+                _unitOfWork.SaveChanges();
 
-            return Ok(id);
+                return Ok(id);
+            }catch(Exception ex)
+            {
+                throw;
+            }
         }
 
         [HttpGet("audits/{id}")]
