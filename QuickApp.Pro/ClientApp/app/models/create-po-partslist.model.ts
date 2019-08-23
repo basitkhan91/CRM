@@ -51,10 +51,10 @@ export class CreatePOPartsList {
         this.wo = '';
         this.ro = '';
         this.so = '';
-        this.company = '';
-        this.bu = '';
-        this.division = '';
-        this.dept = '';
+        this.company = '0';
+        this.bu = '0';
+        this.division = '0';
+        this.dept = '0';
         this.memo = '';
         this.partListDetails = [new PartDetails()];
     }
@@ -83,10 +83,10 @@ export class PartDetails {
             this.uom = '';
             this.orderQty = null;
             this.needBy = new Date();
-            this.company = '';
-            this.bu = '';
-            this.division = '';
-            this.dept = '';
+            this.company = '0';
+            this.bu = '0';
+            this.division = '0';
+            this.dept = '0';
         }
     
 }
