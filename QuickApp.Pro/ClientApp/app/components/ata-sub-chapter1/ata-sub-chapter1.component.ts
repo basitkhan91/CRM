@@ -59,8 +59,8 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 
 	displayedColumns = ['memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-	dataSource: MatTableDataSource<ATASubChapter>;
-	allATAMaininfo: ATASubChapter[] = [];
+    dataSource: MatTableDataSource<ATASubChapter>;
+    allATAMaininfo: ATASubChapter[] =[];
 	allComapnies: MasterCompany[] = [];
 	allATAMaininfo1: any[];
 	private isSaving: boolean;
@@ -105,10 +105,11 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 		);
 
 		this.cols = [
-			{ field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },
-			{ field: 'description', header: 'Description' },
-			// { field: 'ataChapterName', header: 'ATA Chapter Name' },
-			//{ field: 'ataChapterCategory', header: 'ATA Chapter Category' },
+            { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },
+            { field: 'ataChapter', header: 'ATA Chapter' },
+            { field: 'description', header: 'ATA SubChapter' },
+            { field: 'ataSubChapterdesc', header: 'ATA Subchapter Description' },            
+            { field: 'ataChapterdesc', header: 'ATA Chapter Description'},
 			{ field: 'memo', header: 'Memo' },
 			{ field: 'createdBy', header: 'Created By' },
 			{ field: 'updatedBy', header: 'Updated By' }
@@ -159,8 +160,19 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.dataSource.data = getAtaSubChapter1List;
-		this.allATAMaininfo = getAtaSubChapter1List;
+        this.dataSource.data = getAtaSubChapter1List;
+       this.allATAMaininfo = getAtaSubChapter1List;
+        //const respData = getAtaSubChapter1List;
+        //this.allATAMaininfo = respData.map(x => {
+        //    return {
+        //        ataSubChapterCode: x.ataSubChapterCode,
+        //        description: x.description,
+        //        ataSubChapterdesc: `${x.ataSubChapterCode}-${x.description}`,
+        //        memo: x.memo,
+        //        createdBy: x.createdBy,
+        //        updatedBy: x.updatedBy
+        //    }
+        //})		
 	}
 
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {

@@ -207,7 +207,6 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     }
 
     open(content) {
-
         this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disableSave = false;
