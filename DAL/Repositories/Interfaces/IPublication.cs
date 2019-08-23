@@ -9,6 +9,7 @@ namespace DAL.Repositories.Interfaces
     public interface IPublication : IRepository<DAL.Models.Publication>
     {
         IEnumerable<object> GetPublications();
+        IEnumerable<object> GetPublicationsById(long id);
         IEnumerable<object> GetPubPNMappingData(string id);
         IEnumerable<object> GetAircraftMappingDataById(long Publicationid);
         IEnumerable<object> GetATAMappingDataById(long Publicationid);

@@ -47,7 +47,14 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("GetPublicationById/{id}")]
+        [Produces(typeof(List<PublicationViewModel>))]
+        public IActionResult GetByID(long id)
+        {
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsById(id); //.GetAllCustomersData();
+            return Ok((allpublicationinfo));
 
+        }
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
@@ -106,15 +113,12 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
                     _unitOfWork.Publication.Add(publicationobject);
                     _unitOfWork.SaveChanges();
-
                     return Ok(publicationobject);
                 }
-
                 return Ok(ModelState);
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }

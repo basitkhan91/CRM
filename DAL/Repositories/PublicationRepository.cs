@@ -76,6 +76,49 @@ namespace DAL.Repositories
             //return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.PublicationId).ToList();
         }
 
+        public IEnumerable<object> GetPublicationsById(long ID)
+        {
+            try
+            {
+                var data = (from Mainpub in _appContext.Publication
+                            where Mainpub.IsActive == true && Mainpub.IsDeleted != true && Mainpub.PublicationRecordId==ID
+                            select new
+                            {
+                                Mainpub.PublicationRecordId,
+                                Mainpub.PublicationId,
+                                Mainpub.Memo,
+                                Mainpub.Platform,
+                                Mainpub.Description,
+                                Mainpub.MasterCompanyId,
+                                Mainpub.revision,
+                                Mainpub.revisionDate,
+                                Mainpub.nextreviewDate,
+                                Mainpub.verifieddate,
+                                Mainpub.CreatedBy,
+                                Mainpub.UpdatedBy,
+                                Mainpub.CreatedDate,
+                                Mainpub.UpdatedDate,
+                                Mainpub.EntryDate,
+                                Mainpub.IsActive,
+                                Mainpub.IsDeleted,
+                                Mainpub.ASD,
+                                Mainpub.publishby,
+                                Mainpub.location,
+                                Mainpub.verifiedby,
+                                Mainpub.employee,
+                            }).ToList();
+                
+                return data;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+
+            //return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.PublicationId).ToList();
+        }
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
