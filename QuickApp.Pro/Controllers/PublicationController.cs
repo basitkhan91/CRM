@@ -262,7 +262,8 @@ namespace QuickApp.Pro.Controllers
                         PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                         cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
                         cp.PublicationId = IMPNMapping[i].PublicationId;
-                        cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+						cp.PartNumber = IMPNMapping[i].PartNumber;
+						cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
                         cp.ItemClassification = IMPNMapping[i].ItemClassification;
                         cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
                         cp.ItemGroupId = IMPNMapping[i].ItemGroupId;

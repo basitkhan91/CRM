@@ -379,6 +379,11 @@ const singlePagesRoutes: Routes = [
         path: "app-create-publication",
         component: CreatePublicationComponent,
         data: { title: "create publication" }
+      },
+      {
+        path: "app-create-publication/edit/:id",
+        component: CreatePublicationComponent,
+        data: { title: "create publication" }
       }
     ]
   }
@@ -395,4 +400,4 @@ const singlePagesRoutes: Routes = [
   ],
   providers: [AuthService, AuthGuard]
 })
-export class SinglePagesRoutingModule {}
+export class SinglePagesRoutingModule { }

@@ -70,7 +70,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
 
     private readonly _searchgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchgetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
     private readonly _searchgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
-
+    private readonly _getItemMasterDetails: string = '/api/ItemMaster/Get';
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -95,11 +95,20 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
     get getNonstockList() { return this.configurations.baseUrl + this._itemNonstockclassificationGetUrl; }
+    get ItemMasterDetails() { return this.configurations.baseUrl + this._getItemMasterDetails };
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+
+
+    getItemMasterDetailsById<T>(id: number): Observable<T> {
+        return this.http.get<T>(`${this.ItemMasterDetails}/${id}`, this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.getItemMasterDetailsById(id));
+            })
     }
 
     getItemMasterById<T>(id: number): Observable<T> {
