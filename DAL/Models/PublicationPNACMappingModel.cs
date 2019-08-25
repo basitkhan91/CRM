@@ -30,6 +30,7 @@ namespace DAL.Models
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
         public string AircraftType { get; set; }
         public string PartNumber { get; set; }
         public string PublicationId { get; set; }

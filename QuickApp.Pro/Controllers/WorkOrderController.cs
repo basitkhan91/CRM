@@ -184,7 +184,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workScopes = unitOfWork.Repository<WorkScope>()
                 .GetAll()
-                .Where(x => x.IsActive == true && x.IsDeleted == false)
+                .Where(x => x.IsActive == true && x.IsDelete == false)
                 .ToList();
             return Ok(workScopes);
         }
