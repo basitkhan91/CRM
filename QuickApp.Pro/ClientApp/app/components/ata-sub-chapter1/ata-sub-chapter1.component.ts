@@ -104,21 +104,20 @@ export class AtaSubChapter1Component implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
 
-		this.cols = [
-            { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },
-            { field: 'ataChapter', header: 'ATA Chapter' },
+		this.cols = [           
+            { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },            
             { field: 'description', header: 'ATA SubChapter' },
-            { field: 'ataSubChapterdesc', header: 'ATA Subchapter Description' },            
+            { field: 'ataSubChapterdesc', header: 'ATA Subchapter Description' },     
+            { field: 'ataChapter', header: 'ATA Chapter' },
+            { field: 'ataChaptercode', header: 'ATA Chapter Code' },                        
             { field: 'ataChapterdesc', header: 'ATA Chapter Description'},
-			{ field: 'memo', header: 'Memo' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' }
+            { field: 'memo', header: 'Memo' },
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' }
 		];
 
 		this.selectedColumns = this.cols;
-
 	}
-
 	private loadMasterCompanies() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;

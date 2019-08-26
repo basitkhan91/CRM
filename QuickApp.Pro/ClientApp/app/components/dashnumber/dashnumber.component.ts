@@ -27,7 +27,7 @@ export class DashnumberComponent implements OnInit{
     dashNumberToUpdate: AircraftDashNumber;
     dashNumberTypeToRemove: AircraftDashNumber;
     dashNumberList: AircraftDashNumber[];
-
+    dashnumberInfo: AircraftDashNumber[];
     aircraftManufacturerList: AircraftType[];
     modal: NgbModalRef;
     display: boolean = false;
@@ -47,17 +47,8 @@ export class DashnumberComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        //this.dashNumberService.getAll().subscribe(dashNumbers => {
-        //    this.dashNumberList = dashNumbers[0];
-        //    this.dashNumberList.forEach(function (dashNumber) {
-        //        dashNumber.isActive = dashNumber.isActive == false ? false : true;
-        //    });
-        //});
-
-        //this.getMessages();
-
+        this.getAlldashnumbers();
         this.currentDashNumberType = new AircraftDashNumber();
-
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
             this.aircraftManufacturerList = aircraftManufacturer[0];
         });
@@ -66,6 +57,12 @@ export class DashnumberComponent implements OnInit{
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
+    getAlldashnumbers() {
+        this.dashNumberService.getAll().subscribe((data) => {
+            console.log(data);
+        })
     }
 
     addDashNumber(): void {

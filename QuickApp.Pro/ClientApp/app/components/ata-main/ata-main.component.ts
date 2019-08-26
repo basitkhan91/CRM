@@ -346,14 +346,12 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     partnmId(event) {
    
 		if (this.allATAMaininfo) {
-
 			for (let i = 0; i < this.allATAMaininfo.length; i++) {
 				if (event == this.allATAMaininfo[i].capabilityName) {
 					this.sourceAction.ataChapterName = this.allATAMaininfo[i].ataChapterName;
 					this.disableSave = true;
 					this.selectedActionName = event;
 				}
-
 			}
 		}
 	}
