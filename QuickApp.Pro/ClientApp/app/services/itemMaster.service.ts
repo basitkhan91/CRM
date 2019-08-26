@@ -281,9 +281,9 @@ export class ItemMasterService {
     getMappedATADetails(ItemmasterId: number) {
         return this.itemMasterEndpoint.getATAMappingEndpoint<any>(ItemmasterId);
     }
-    newItemMasterExportInfoClass(action: any) {
-        return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
-    }
+    // newItemMasterExportInfoClass(action: any) {
+    //     return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
+    // }
 
     updateItemMasterAircraft(ItemMasterAircraftMappingId: number) {
         return this.itemMasterEndpoint.updateItemMasterAircraftEndpoint<any>(ItemMasterAircraftMappingId);
@@ -297,11 +297,11 @@ export class ItemMasterService {
     postATAMapping(action: any) {
         return this.itemMasterEndpoint.saveATAMapping<any>(action);
     }
-    getItemAirMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, searchUrl: string) {
-        return this.itemMasterEndpoint.getAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId, searchUrl);
+    searchAirMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, searchUrl: string) {
+        return this.itemMasterEndpoint.searchAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId, searchUrl);
     }
-    getItemATAMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, searchUrl: string, ) {
-        return this.itemMasterEndpoint.getATAMappedByMultiATAIDATASUBID<any>(ItemmasterId, searchUrl);
+    searchATAMappedByMultiTypeIdModelIDDashID(ItemmasterId: number, searchUrl: string, ) {
+        return this.itemMasterEndpoint.searchATAMappedByMultiATAIDATASUBID<any>(ItemmasterId, searchUrl);
     }
     deleteItemMasterATA(ItemMasterATAMappingId: number) {
         return this.itemMasterEndpoint.deleteitemMasterMappedATAEndpoint<any>(ItemMasterATAMappingId);
@@ -312,14 +312,16 @@ export class ItemMasterService {
     deleteItemMasterPurcSale(ItemMasterPurcSaleId: number) {
         return this.itemMasterEndpoint.deleteitemMasterMappedPurcSaleEndpoint<any>(ItemMasterPurcSaleId);
     }
-    searchgetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
-        return this.itemMasterEndpoint.searchGetAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId);
-    }
-    searchgetATAMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
-        return this.itemMasterEndpoint.searchgetATAMappedByMultiATAIDATASUBID<any>(ItemmasterId);
-    }
+    // searchgetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
+    //     return this.itemMasterEndpoint.searchGetAirMappedByMultiTypeIDModelIDDashID<any>(ItemmasterId);
+    // }
+    // searchgetATAMappedByMultiTypeIDModelIDDashID(ItemmasterId: number) {
+    //     return this.itemMasterEndpoint.searchgetATAMappedByMultiATAIDATASUBID<any>(ItemmasterId);
+    // }
     getItemMasterDetailById(ItemMasterId: number) {
         return this.itemMasterEndpoint.getItemMasterDetailsById<any>(ItemMasterId);
     }
+
+
 
 }

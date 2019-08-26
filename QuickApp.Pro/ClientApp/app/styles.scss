@@ -13749,7 +13749,15 @@ button {
     border-collapse: collapse;
 }
 .input-field-value {
+    background-color: white !important;
     border-radius: 5px !important;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 .rro-table-cstm .ui-table-wrapper thead th {
     position: -webkit-sticky;
