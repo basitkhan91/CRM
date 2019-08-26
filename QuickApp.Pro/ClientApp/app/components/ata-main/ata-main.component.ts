@@ -210,8 +210,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disableSave = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
+        this.isSaving = true;        
 		this.sourceAction = new ATAChapter();
 		this.sourceAction.isActive = true;
 		this.ataChapterName = "";
@@ -346,14 +345,12 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     partnmId(event) {
    
 		if (this.allATAMaininfo) {
-
 			for (let i = 0; i < this.allATAMaininfo.length; i++) {
 				if (event == this.allATAMaininfo[i].capabilityName) {
 					this.sourceAction.ataChapterName = this.allATAMaininfo[i].ataChapterName;
 					this.disableSave = true;
 					this.selectedActionName = event;
 				}
-
 			}
 		}
 	}
