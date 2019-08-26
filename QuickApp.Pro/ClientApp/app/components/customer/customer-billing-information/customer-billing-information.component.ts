@@ -113,9 +113,9 @@ export class CustomerBillingInformationComponent
 			this.local = this.workFlowtService.listCollection.t;
 		}
         this.dataSource = new MatTableDataSource();
-        if (this.workFlowtService.generalCollection){
-            if (this.workFlowtService.generalCollection.isAddressForBillingAndShipping == true) {
-                this.local = this.workFlowtService.generalCollection;
+        if (this.local){
+           // if (this.workFlowtService.generalCollection.isAddressForBillingAndShipping == true) {
+                //this.local = this.workFlowtService.generalCollection;
                 this.sourceCustomer.siteName = this.local.name;
                 this.sourceCustomer.address1 = this.local.address.line1;
                 this.sourceCustomer.address2 = this.local.address.line2;
@@ -124,7 +124,7 @@ export class CustomerBillingInformationComponent
                 this.sourceCustomer.country = this.local.address.country;
                 this.sourceCustomer.stateOrProvince = this.local.address.stateOrProvince;
                 this.sourceCustomer.postalCode = this.local.address.postalCode;
-            }
+            //}
         }
 	}
 
@@ -494,11 +494,13 @@ export class CustomerBillingInformationComponent
 		//debugger;
 		this.workFlowtService.updateCustomerBillingAddressDetails(updateObj, this.local.customerId).subscribe(data => {
 			this.customerBillingdetails = data;
-			this.workFlowtService.newBillingAddWithAddress(this.sourceCustomer, this.customerBillingAddressdetails.customerBillingAddressId).subscribe(data => {
-				this.localCollection = data;
-				this.updateCustomerBillingAddress(this.localCollection);
+            this.workFlowtService
+                .newBillingAddWithAddress(this.sourceCustomer,
+                    this.customerBillingAddressdetails.customerBillingAddressId).subscribe(data => {
+                    this.localCollection = data;
+                    this.updateCustomerBillingAddress(this.localCollection);
 
-			})
+                });
 			this.loadData();
 		})
 	}
@@ -603,7 +605,7 @@ export class CustomerBillingInformationComponent
         this.sourceAction.createdBy = this.userName;
         this.sourceAction.updatedBy = this.userName;
 
-        this.workFlowtService.newCountry(this.sourceAction).subscribe(data => { this.countrieslist() })
+        this.workFlowtService.newCountry(this.sourceAction).subscribe(data => { this.countrieslist() });
 
 
     }
@@ -618,9 +620,10 @@ export class CustomerBillingInformationComponent
         this.countryName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-	}
+                console.log('When user closes');
+            },
+            () => { console.log('Backdrop click') });
+    }
 
     // on country selected
     onCountrieselected(event) {
@@ -660,10 +663,11 @@ export class CustomerBillingInformationComponent
 		this.updatedDate = row.updatedDate;
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+        this.modal.result.then(() => {
+                console.log('When user closes');
+            },
+            () => { console.log('Backdrop click') });
+    }
 }
 
 
