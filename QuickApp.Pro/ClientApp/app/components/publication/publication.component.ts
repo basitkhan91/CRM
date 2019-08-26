@@ -88,18 +88,16 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.loadData();
         this.cols = [
-
             { field: 'publicationId', header: 'Publication ID' },
-            // { field: 'partNumber', header: 'Part Number' },
             { field: 'description', header: 'Description' },
-            // { field: 'model', header: 'Model' },
-            // { field: 'ataMain', header: 'ATA Main' },
-            // { field: 'ataSubChapter', header: 'ATA SubChapter' },
-            { field: 'emailAddress', header: 'Company Email' },
-            { field: 'companyName', header: 'CompanyName' },
+            { field: 'aircraftModel', header: 'Aircraft Model' },
+            { field: 'aircraftType', header: 'Aircraft Type' },
+            { field: 'ataChapterName', header: 'ATAChapter Name' },
+            { field: 'ataSubChapterDescription', header: 'ATA SubChapter' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
+
         ];
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-publication';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
@@ -174,23 +172,30 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
 
 
-    private onDataLoadSuccessful(allWorkFlows: Publication[]) {
+    private onDataLoadSuccessful(allWorkFlows) {
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-        this.allpublicationInfo = allWorkFlows.map(x => {
-            return {
-                publicationRecordId: x.publicationRecordId,
-                publicationId: x.publicationId,
-                memo: x.memo == null ? '-' : x.memo,
-                description: x.description == '' ? '-' : x.description,
-                companyName: x.masterCompany.companyName,
-                emailAddress: x.masterCompany.emailAddress,
-                createdBy: x.createdBy,
-                updatedBy: x.updatedBy
-            }
-        });
+        this.allpublicationInfo = allWorkFlows;
+
+
+
+        // allWorkFlows.map(x => {
+        //     return {
+        //         publicationRecordId: x.publicationRecordId,
+        //         publicationId: x.publicationId,
+        //         memo: x.memo == null ? '-' : x.memo,
+        //         description: x.description == '' ? '-' : x.description,
+        //         companyName: x.masterCompany.companyName,
+        //         emailAddress: x.masterCompany.emailAddress,
+        //         ataSubChapterDescription: x.ataSubChapterDescription,
+        //         aircraftType : x.aircraftType ,
+
+        //         createdBy: x.createdBy,
+        //         updatedBy: x.updatedBy
+        //     }
+        // });
 
     }
 
