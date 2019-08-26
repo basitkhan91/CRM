@@ -5,6 +5,7 @@ export class AircraftDashNumber {
     dashNumberId: number;
     aircraftTypeId: number;
     aircraftModelId: number;
+    memo: string;
     dashNumber: string;
     createdBy: string;
     updatedBy: string;

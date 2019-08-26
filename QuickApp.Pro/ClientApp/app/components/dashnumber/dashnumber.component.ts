@@ -27,44 +27,107 @@ export class DashnumberComponent implements OnInit{
     dashNumberToUpdate: AircraftDashNumber;
     dashNumberTypeToRemove: AircraftDashNumber;
     dashNumberList: AircraftDashNumber[];
-    dashnumberInfo: AircraftDashNumber[];
+    dashnumberInfo: any;
     aircraftManufacturerList: AircraftType[];
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
-
+    aircrafttype: any = " ";
+    aircraft_Model: any = " ";
+    dashnumber: any = " ";
+    memo: any = " ";
+    createdBy: any = "";
+    updatedBy: any = "";
+    createdDate: any = "";
+    updatedDate: any = "";
+    selectedColumns: any[];
+    loadingIndicator: boolean;
     //added for test pagination
     messages: AircraftDashNumber[];
     loading = false;
     total = 20;
     page = 3;
     limit = 2;
+    cols: any;
+    LoadValues: any[] = [];
+    newValue: any;
+    selectedAircraftId: any;
+    public sourceAction: any;
+    isActive: string = 'Active';
     //added for test pagination end
-
-    constructor(private paginationService: PaginationService,private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private dashNumberService: DashNumberService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
-
+    private isEditMode: boolean = false;
+    private isDelete: boolean = false;
+    //Active: string = "Active";
+    constructor(private paginationService: PaginationService, private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private dashNumberService: DashNumberService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
+        this.sourceAction = new AircraftDashNumber();
     }
 
-    ngOnInit(): void {
-        this.getAlldashnumbers();
+    ngOnInit(): void {       
         this.currentDashNumberType = new AircraftDashNumber();
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
             this.aircraftManufacturerList = aircraftManufacturer[0];
         });
+        this.loadData();
     }
-
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    getAlldashnumbers() {
-        this.dashNumberService.getAll().subscribe((data) => {
-            console.log(data);
+    private loadData(): void {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.dashNumberService.getAll().subscribe(
+             results => this.onDataLoadSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+        );
+        this.cols = [
+            { field: 'aircraftType', header: 'Aircraft Manufacturer' },
+            { field: 'aircraftModel', header: 'Model Name' },
+            { field: 'dashNumber', header: 'Dash Number' },      
+            { field: 'memo',header: 'Memo'}
+        ];
+        this.selectedColumns = this.cols;
+
+    }
+    private onDataLoadSuccessful(getDashnumbers: AircraftDashNumber[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        // this.dataSource.data = getAtaMainList;
+        this.dashnumberInfo = getDashnumbers;
+        console.log(this.dashnumberInfo);
+        const response = getDashnumbers;
+        this.dashnumberInfo = response.map(x => {
+            return {
+                aircraftType: x.aircraftType.description,
+                aircraftModel: x.aircraftModel.modelName,
+                dashNumber: x.dashNumber,    
+                memo: x.memo,
+                isActive: x.isActive,
+            }
         })
     }
+    getAircraftModelByManfacturer(value) {
+        this.newValue = value.originalEvent.target.textContent;
+        this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
+            const responseValue = models[0];
+            this.LoadValues = responseValue.map(models => {
+                return {
+                    label: models.modelName,
+                    value: models
+                }
+            });
+        });
 
+    }
+    private onDataLoadFailed(error: any) {
+        // alert(error);
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+    }
     addDashNumber(): void {
         if (!(this.currentDashNumberType.aircraftTypeId && this.currentDashNumberType.aircraftModelId && this.currentDashNumberType.dashNumber)) {
             this.display = true;
@@ -127,6 +190,48 @@ export class DashnumberComponent implements OnInit{
             }
         
         );
+    }
+    open(content) {
+        this.isEditMode = false;
+        this.isDelete = false;
+        this.sourceAction.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+
+    }
+
+    openDelete(content, row) {
+        this.isEditMode = false;        
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    openEdit(content, row) {
+        this.isEditMode = true;
+        this.isDelete = false;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    openView(content, row) {
+        this.sourceAction = row;
+        this.aircrafttype = row.aircraftType;
+        this.aircraft_Model = row.aircraftModel;
+        this.dashnumber = row.dashNumber;
+        this.memo = row.memo;
+        this.createdBy = row.createdBy;
+        this.updatedBy = row.updatedBy;
+        this.createdDate = row.createdDate;
+        this.updatedDate = row.updatedDate;
+        //this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
 
     removeDashNumber(): void {
