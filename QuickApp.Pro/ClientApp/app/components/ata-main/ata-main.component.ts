@@ -210,8 +210,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disableSave = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
+        this.isSaving = true;        
 		this.sourceAction = new ATAChapter();
 		this.sourceAction.isActive = true;
 		this.ataChapterName = "";
