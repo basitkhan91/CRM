@@ -301,210 +301,243 @@
                         </tr>
                     </thead>
                     <tbody>
-                   <ng-container *ngFor="let partList of createPOPartsList; let row_index = index;"> <!--partListData-->
-                <tr class="parent-data">
-                    <td><i class="fa fa-trash" (click)="onDelPNRow(row_index)" style="color: red;font-size: 15px;cursor: pointer;"></i></td>
-                    <td>
-                        <span class="checkbox-cstm">
-                            <label style="width: 20px;">
-                                <input type="checkbox" [(ngModel)]="partList.checkPartList" [ngModelOptions]="{standalone: true}">
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                            </label>
-                        </span>
-                    </td>
-                    <td>
-                        <span class="checkbox-cstm">
-                            <label style="width: 20px;">
-                                <input type="checkbox" [(ngModel)]="partList.isSplitShipment" [ngModelOptions]="{standalone: true}" #splitshipmentcheck>
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                            </label>
-                        </span>
-                    </td>
-                    <td>
-                        <p-autoComplete [(ngModel)]="partList.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true">
-                            <ng-template let-partName pTemplate="part">
-                                <div class="ui-helper-clearfix">{{partName}}</div>
-                            </ng-template>
-                        </p-autoComplete>
-                    </td>
-                    <td><input class="form-control" type="text" [(ngModel)]="partList.altPartNumber" [ngModelOptions]="{standalone: true}" /></td>
-                    <td>{{ partList.pnDescription === null ? '-' : partList.pnDescription }}</td>
-                    <td>{{ partList.itemType === null ? '-' : partList.itemType }}</td>
-                    <td>{{ partList.mfr === null ? '-' : partList.mfr }}</td>
-                    <td>{{ partList.glAccount === null ? '-' : partList.glAccount }}</td>
-                    <td>{{ partList.uom === null ? '-' : partList.uom }}</td>
-                    <td><p-calendar class="pcal-cpo-grid" [(ngModel)]="partList.needBy" [ngModelOptions]="{standalone: true}" [showIcon]="true"></p-calendar></td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partList.cond" [ngModelOptions]="{standalone: true}">
-                            <option value="NEW">NEW</option>
-                            <option value="AS-IS">AS-IS</option>
-                            <option value="REP">REP</option>
-                            <option value="SRV">SRV</option>
-                            <option value="OVH">OVH</option>
-                            <option value="AR">AR</option>
-                        </select>
-                    </td>
-                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.orderQty" [ngModelOptions]="{standalone: true}" /></td>
-                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.unitCost" [ngModelOptions]="{standalone: true}" /></td>
-                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.discPerUnit" [ngModelOptions]="{standalone: true}" /></td>
-                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.discCostPerUnit" [ngModelOptions]="{standalone: true}" /></td>
-                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.extCost" [ngModelOptions]="{standalone: true}" /></td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partList.functionalCUR" [ngModelOptions]="{standalone: true}">
-                            <option value="select">Select</option>
-                        </select>
-                    </td>
-                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partList.fxRate" [ngModelOptions]="{standalone: true}" /></td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partList.reportCUR" [ngModelOptions]="{standalone: true}">
-                            <option value="select">Select</option>
-                        </select>
-                    </td>
-                    <td><input class="form-control" type="text" [(ngModel)]="partList.wo" [ngModelOptions]="{standalone: true}" /></td>
-                    <td><input class="form-control" type="text" [(ngModel)]="partList.ro" [ngModelOptions]="{standalone: true}" /></td>
-                    <td><input class="form-control" type="text" [(ngModel)]="partList.so" [ngModelOptions]="{standalone: true}" /></td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partList.company" [ngModelOptions]="{standalone: true}" style="min-width: 80px;">
-                            <option value="0">Select Company</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partList.bu" [ngModelOptions]="{standalone: true}" style="min-width: 80px;">
-                            <option value="0">Select BU</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partList.division" [ngModelOptions]="{standalone: true}" style="min-width: 80px;">
-                            <option value="0">Select Division</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partList.dept" [ngModelOptions]="{standalone: true}" style="min-width: 80px;">
-                            <option value="0">Select Dept</option>
-                        </select>
-                    </td>
-                    <td><input class="form-control" type="text" [(ngModel)]="partList.memo" [ngModelOptions]="{standalone: true}" /></td>
-                </tr>
-                <tr class="child-header" *ngIf="splitshipmentcheck.checked">
-                    <th></th>
-                    <th></th>
-                    <th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" (click)="onAddPNChildRow(row_index)" style="padding: 4px 8px !important;"></i></th>
-                    <th>PN</th>
-                    <th>PN Description</th>
-                    <th>User Type</th>
-                    <th>Name</th>
-                    <th colspan="5">Select Address</th>
-                    <th>UOM</th>
-                    <th>Order Qty</th>
-                    <th>Need By</th>
-                    <th colspan="4">Management Structure</th>
-                    <th colspan="9"></th>
-                </tr>
-                <tr class="child-data splitship-child" [hidden]="!splitshipmentcheck.checked" *ngFor="let partListDetail of partList.partListDetails; let srow_index=index;">
-                    <!--enablePNChildRow-->
-                    <td></td>
-                    <td></td>
-                    <td><i class="fa fa-trash" (click)="onDelPNChildRow(row_index, srow_index)" style="color: red;font-size: 15px;cursor: pointer;"></i></td>
-                    <td>{{ partListDetail.partNumber === null ? '-' : partListDetail.partNumber }}</td>
-                    <td>{{ partListDetail.pnDescription === null ? '-' : partListDetail.pnDescription }}</td>
-                    <td>
-                        <div class="form-group">
-                            <select class="form-control" [(ngModel)]="partListDetail.userType">
-                                <option value="0">Select</option>
-                                <option value="1">Customer</option>
-                                <option value="2">Vendor</option>
-                                <option value="3">Company</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <div class="form-row" *ngIf="partListDetail.userType === '1'">
-                                <div class="col-sm-11">
-                                    <p-autoComplete class="pauto-cpo-grid"
-                                                    [size]="32"
-                                                    [minLength]="1"
-                                                    [dropdown]="true"
-                                                    [(ngModel)]="partListDetail.name"
-                                                    [ngModelOptions]="{standalone: true}">
-                                        <ng-template let-Value pTemplate="customer">
-                                            <div class="ui-helper-clearfix">
-                                                {{
-            Value
-                                                }}
-                                            </div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <div class="col-sm-1" style="margin: 8px -13px;">
-                                    <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
-                                </div>
-                            </div>
-                            <div class="form-row" *ngIf="partListDetail.userType === '2'">
-                                <div class="col-sm-11">
-                                    <p-autoComplete class="pauto-cpo-grid"
-                                                    [size]="32"
-                                                    [minLength]="1"
-                                                    [dropdown]="true"
-                                                    [(ngModel)]="partListDetail.name"
-                                                    [ngModelOptions]="{standalone: true}">
-                                        <ng-template let-Value pTemplate="vendor">
-                                            <div class="ui-helper-clearfix">{{Value}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <div class="col-sm-1" style="margin: 8px -13px;">
-                                    <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg"></a></div>
-                                </div>
-                            </div>
-                            <div class="form-row" *ngIf="partListDetail.userType === '3'">
-                                <div class="col-sm-12">
-                                    <input class="form-control" type="text" pInputText [(ngModel)]="partListDetail.name" [ngModelOptions]="{standalone: true}">
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="5">
-                        <div class="form-row">
-                            <div class="col-sm-10">
-                                <select class="form-control" [(ngModel)]="partListDetail.address" [ngModelOptions]="{standalone: true}">
-                                    <option value="select">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-1" style="margin: 2px -10px;">
-                                <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Add')"></a></div>
-                            </div>
-                            <div class="col-sm-1" style="margin: 5px 0;">
-                                <div style="cursor:pointer; font-size:12px;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Edit')"></a></div>
-                            </div>
-                        </div>                      
-                    </td>
-                    <td>{{ partListDetail.uom === null ? '-' : partListDetail.uom }}</td>
-                    <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partListDetail.orderQty" [ngModelOptions]="{standalone: true}" /></td>
-                    <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partListDetail.needBy" [ngModelOptions]="{standalone: true}"></p-calendar></td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partListDetail.company" [ngModelOptions]="{standalone: true}">
-                            <option value="0">Select Company</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partListDetail.bu" [ngModelOptions]="{standalone: true}">
-                            <option value="0">Select BU</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partListDetail.division" [ngModelOptions]="{standalone: true}">
-                            <option value="0">Select Division</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control" [(ngModel)]="partListDetail.dept" [ngModelOptions]="{standalone: true}">
-                            <option value="0">Select Dept</option>
-                        </select>
-                    </td>
-                    <td colspan="9"></td>
-                </tr>
+                   <ng-container *ngFor="let partList of partListData;let row_index=index;"> <!--createPOPartsList-->
+                       <tr class="parent-data">
+                           <td><i class="fa fa-trash" style="color: red;font-size: 15px;cursor: pointer;"></i></td> <!--onDelPNRow(row_index)-->
+                           <td>
+                               <span class="checkbox-cstm">
+                                   <label style="width: 20px;">
+                                       <input type="checkbox">
+                                       <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                   </label>
+                               </span>
+                           </td>
+                           <td>
+                               <span class="checkbox-cstm">
+                                   <label style="width: 20px;">
+                                       <input type="checkbox" class="splitship" [(ngModel)]="partList.ifSplitShip" (change)="getCheckboxvalue(partList)">
+                                       <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                   </label>
+                               </span>
+                           </td>
+                           <td>
+                               <div class="inner-addon inline-block">
+                                   <!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
+                <option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
+            </select>-->
+                                   <p-autoComplete [(ngModel)]="partList.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                   [minLength]="1" [dropdown]="true">
+                                       <ng-template let-partName pTemplate="part">
+                                           <div class="ui-helper-clearfix">{{partName}}</div>
+                                       </ng-template>
+                                   </p-autoComplete>
+
+                               </div>
+                           </td>
+                           <td>
+                               <div class="inner-addon right-addon autosuggesions-add inline-block w80">
+                                   <i class="fa fa-search"></i>
+                                   <input type="text" class="form-control numberids ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="partList.partAlternatePartId" [ngModelOptions]="{standalone: true}">
+                               </div>
+                           </td>
+                           <td>{{partList?.partdescription}}</td>
+                           <td *ngIf="partList?.itemTypeId==1">Stock</td>
+                           <td *ngIf="partList?.itemTypeId==2">Non Stock</td>
+                           <td *ngIf="partList?.itemTypeId==3">Equipment</td>
+                           <td *ngIf="partList?.itemTypeId==0"></td>
+                           <td>{{partList?.name}}</td>
+                           <td>
+                               {{partList?.glAccountId}}
+                           </td>
+                           <td>
+                               <!--<select class="w80" [(ngModel)]="partList.uomId">
+            <option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+        </select>-->
+                               {{partList?.shortName}}
+                           </td>
+                           <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partList.needByDate"></p-calendar></td>
+                           <td>
+                               <select class="form-control" [(ngModel)]="partList.conditionCode" [ngModelOptions]="{standalone: true}">
+                                   <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}} </option>
+                               </select>
+                           </td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.quantityOrdered" [ngModelOptions]="{standalone: true}" pKeyFilter="pint"></td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" [ngModelOptions]="{standalone: true}" pKeyFilter="pint"></td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.discountPerUnit" [ngModelOptions]="{standalone: true}" pKeyFilter="pint"></td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.discountCostPerUnit" [ngModelOptions]="{standalone: true}" pKeyFilter="pint"></td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.extendedCost" [ngModelOptions]="{standalone: true}" pKeyFilter="pint"></td>
+                           <td>
+                               <select class="form-control" [(ngModel)]="partList.functionalCurrencyId" [ngModelOptions]="{standalone: true}">
+                                   <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+                               </select>
+                           </td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.foreignExchangeRate" [ngModelOptions]="{standalone: true}" pKeyFilter="pint"></td>
+                           <td>
+                               <select class="form-control" [(ngModel)]="partList.transactionalCurrencyId" [ngModelOptions]="{standalone: true}">
+                                   <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+                               </select>
+                           </td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.workOrderId" [ngModelOptions]="{standalone: true}"></td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.repairOrderId" [ngModelOptions]="{standalone: true}"></td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.salesOrderId" [ngModelOptions]="{standalone: true}"></td>
+                           <td style="min-width: 90px;">
+                               <select class="form-control" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
+                                   <option value="0">Select</option>
+                                   <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
+                               </select>
+                           </td>
+                           <td style="min-width: 90px;">
+                               <select class="form-control" [(ngModel)]="partList.partBusinessUnitId" [ngModelOptions]="{standalone: true}" (change)="onPartBusinessUnitChange(partList)">
+                                   <option value="0">Select</option>
+                                   <option *ngFor="let businessUnit of partList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
+                               </select>
+                           </td>
+                           <td style="min-width: 90px;">
+                               <select class="form-control" [(ngModel)]="partList.partDivisionId" [ngModelOptions]="{standalone: true}" (change)="onPartDivisionChange(partList)">
+                                   <option value="0">Select</option>
+                                   <option *ngFor="let division of partList.partDivisionList" value="{{division.managementStructureId}}">{{division.code}}</option>
+                               </select>
+                           </td>
+                           <td style="min-width: 90px;">
+                               <select class="form-control" [(ngModel)]="partList.partDepartmentId" [ngModelOptions]="{standalone: true}" (change)="onPartDepartmentChange(partList)">
+                                   <option value="0">Select</option>
+                                   <option *ngFor="let department of partList.partDepartmentList " value="{{department.managementStructureId}}">{{department.code}}</option>
+                               </select>
+                           </td>
+                           <td><input type="text" class="form-control" [(ngModel)]="partList.memo" [ngModelOptions]="{standalone: true}"></td>
+                       </tr>
+                       <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
+                           <th></th>
+                           <th></th>
+                           <th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" style="padding: 4px 8px !important;" (click)="addRow(partList)"></i></th><!--onAddPNChildRow(row_index)-->
+                           <th>PN</th>
+                           <th>PN Description</th>
+                           <th>User Type</th>
+                           <th>Name</th>
+                           <th colspan="5">Select Address</th>
+                           <th>UOM</th>
+                           <th>Order Qty</th>
+                           <th>Need By</th>
+                           <th colspan="4">Management Structure</th>
+                           <th colspan="9"></th>
+                       </tr>
+                       <tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index" [hidden]="!partList.ifSplitShip">
+                           <!--enablePNChildRow-->
+                           <td></td>
+                           <td></td>
+                           <td><i class="fa fa-trash" style="color: red;font-size: 15px;cursor: pointer;" (click)="deleteSplitShipment(partChildList,row_no,row_index)"></i></td> <!--onDelPNChildRow(row_index, srow_index)-->
+                           <td>{{partList?.partNumber}}</td>
+                           <td>{{partList?.partdescription}}</td>
+                           <td>
+                               <select [(ngModel)]="partChildList.poPartSplitUserTypeId">
+                                   <option value="1">Customer</option>
+                                   <option value="2">Vendor</option>
+                                   <option value="3">Company</option>
+                               </select>
+                           </td>
+                           <td>
+                               <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==1">
+                                   <div class="col-sm-11">
+                                       <p-autoComplete field="customername"
+                                                       [(ngModel)]="ddlModel"
+                                                       (onSelect)="onCustomerNameChange(partChildList,$event)"
+                                                       (onKeyUp)=customereventHandler($event)
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [suggestions]="partChildList.customers"
+                                                       (completeMethod)="getPartyNames(partChildList,$event)"
+                                                       [size]="30"
+                                                       [minLength]="1"
+                                                       [dropdown]="true">
+
+                                       </p-autoComplete>
+                                   </div>
+                                   <div class="col-sm-1">
+                                       <div class="child-add-icon"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                   </div>
+                               </div>
+                               <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==2">
+                                   <div class="col-sm-11">
+                                       <p-autoComplete field="vendorName"
+                                                       (onSelect)="onVendorNameChange(partChildList,$event)"
+                                                       (onKeyUp)=vendoreventHandler($event)
+                                                       [(ngModel)]="ddlVendorModel"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [suggestions]="partChildList.vendors"
+                                                       (completeMethod)="getVendorPartyNames(partChildList,$event)"
+                                                       [size]="30"
+                                                       [minLength]="1" [dropdown]="true">
+
+                                       </p-autoComplete>
+                                   </div>
+                                   <div class="col-sm-1">
+                                       <div class="child-add-icon"><a class="fa fa-plus-circle fa-lg"></a></div>
+                                   </div>
+                               </div>
+                               <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.poPartSplitUserTypeId==3">
+                                   <i class="fa fa-search"></i>
+                                   <input type="text" [(ngModel)]="partChildList.poPartSplitId" [ngModelOptions]="{standalone: true}" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
+                               </div>
+                           </td>
+                           <td colspan="5">
+                               <div class="form-row">
+                                   <div class="col-sm-10">
+                                       <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.poPartSplitAddressId" [ngModelOptions]="{standalone: true}">
+                                           <option value="0">Select</option>
+                                           <option *ngFor="let object of partChildList.addressData" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
+                                       </select>
+                                   </div>
+                                   <div class="col-sm-1" style="margin: 2px -10px;">
+                                       <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Add')"></a></div>
+                                   </div>
+                                   <div class="col-sm-1" style="margin: 5px 0;">
+                                       <div style="cursor:pointer; font-size:12px;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Edit')"></a></div>
+                                   </div>
+                               </div>
+                           </td>
+                           <td>{{partList?.shortName}}</td>
+                           <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" [ngModelOptions]="{standalone: true}" /></td>
+                           <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" [ngModelOptions]="{standalone: true}"></p-calendar></td>
+                           <td>
+                               <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                       [(ngModel)]="partChildList.companyId"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (change)="onPartCompanyChange(partChildList)">
+                                   <option value="0">select</option>
+                                   <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
+                               </select>
+                           </td>
+                           <td>
+                               <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                       [(ngModel)]="partChildList.partBusinessUnitId"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (change)="onPartBusinessUnitChange(partChildList)">
+                                   <option value="0">select</option>
+                                   <option *ngFor="let businessUnit of partChildList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
+                               </select>
+                           </td>
+                           <td>
+                               <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                       [(ngModel)]="partChildList.partDivisionId"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (change)="onPartDivisionChange(partChildList)">
+                                   <option value="0">select</option>
+                                   <option *ngFor="let division of partChildList.partDivisionList"
+                                           value="{{division.managementStructureId}}">
+                                       {{division.code}}
+                                   </option>
+                               </select>
+                           </td>
+                           <td>
+                               <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                       [(ngModel)]="partChildList.partDepartmentId"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (change)="onPartDepartmentChange(partChildList)">
+                                   <option value="0">select</option>
+                                   <option *ngFor="let department of partChildList.partDepartmentList" value="{{department.managementStructureId}}">{{department.code}}</option>
+                               </select>
+                           </td>
+                           <td colspan="9"></td>
+                       </tr>
             </ng-container>
             </tbody>
                 </table>
@@ -765,6 +798,753 @@
 
 <div>
     <a class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">Save</a>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
+    <div class="x_panel">
+        <ul class="nav nav-pills">
+            <li class="active"><a data-toggle="tab" href="#tab1">Parts List</a></li>
+            <li><a data-toggle="tab" href="#tab2">Approve</a></li>
+            <li><a data-toggle="tab" href="#tab3">Vendor Capes</a></li>
+            <li class="vaddress"><a data-toggle="tab" href="#tab4">Address</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab1" class="tab-pane  active">
+                <div id="adminsearchlocationajax" class="default-bg clear ro-grid-table">
+                    <button (click)="addPartNumber()" class="add-row-btn">Add Part Number</button>
+                    <button data-toggle="modal" data-target="#add-multiple-pn" class="add-multiple-pn-btn" (click)="addMultiplePartNumbers(contentMultipleParts)">Add Multiple Part Numbers</button>
+                    <div class="table-responsive mleft60" style="height:150px;">
+                        <div class="clear mtop5"></div>
+                        <table class="table table-bordered table-striped po-ro-setup-table col2-fix">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th><input type="checkbox" id="checkall" class="po1 pocheck"></th>
+                                    <th>Spilt Shipment</th>
+                                    <th>PN</th>
+                                    <th>Alt PN</th>
+                                    <th>PN Des.</th>
+                                    <th>Serial No.</th>
+                                    <th>Item Type</th>
+                                    <th>Mfr</th>
+                                    <th>GL Accout</th>
+                                    <th>UOM</th>
+                                    <th>Need By</th>
+                                    <th>Cond</th>
+                                    <th>Order Qty</th>
+                                    <th>Unit Cost</th>
+                                    <th>Disc. /unit</th>
+                                    <th>Disc. Cost/unit</th>
+                                    <th>Ext Cost</th>
+                                    <th>Functional CUR</th>
+                                    <th>FX Rate</th>
+                                    <th>Report CUR</th>
+                                    <th>WO </th>
+                                    <th>RO </th>
+                                    <th>SO </th>
+                                    <th class="from-item-master">Company</th>
+                                    <th class="from-item-master">BU</th>
+                                    <th class="from-item-master">Division</th>
+                                    <th class="from-item-master">Dept</th>
+
+                                    <th>Memo</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let partList of partListData;let row_index=index">
+                                <tr class="parent-data">
+                                    <td></td>
+                                    <td><input type="checkbox" class="pcheck" checked=""></td>
+                                    <td><input type="checkbox" class="splitship" [(ngModel)]="partList.ifSplitShip" (change)="getCheckboxvalue(partList)"></td>
+                                    <td>
+                                        <div class="inner-addon inline-block">
+                                            <!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
+                                                <option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
+                                            </select>-->
+                                            <p-autoComplete [(ngModel)]="partList.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                            [minLength]="1" [dropdown]="true">
+                                                <ng-template let-partName pTemplate="part">
+                                                    <div class="ui-helper-clearfix">{{partName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w80">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="form-control numberids ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="partList.partAlternatePartId">
+                                        </div>
+                                    </td>
+                                    <td>{{partList?.partdescription}}</td>
+
+                                    <td>{{partList?.serialNumber}}</td>
+                                    <td *ngIf="partList?.itemTypeId==1">Stock</td>
+                                    <td *ngIf="partList?.itemTypeId==2">Non Stock</td>
+                                    <td *ngIf="partList?.itemTypeId==3">Equipment</td>
+                                    <td *ngIf="partList?.itemTypeId==0"></td>
+                                    <td>{{partList?.name}}</td>
+                                    <td>
+                                        {{partList?.glAccountId}}
+                                    </td>
+                                    <td>
+                                        <!--<select class="w80" [(ngModel)]="partList.uomId">
+                                            <option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+                                        </select>-->
+                                        {{partList?.shortName}}
+                                    </td>
+                                    <!--<td><input type="date" class="form-control datepicker w90 hasDatepicker" [(ngModel)]="partList.needByDate"></td>-->
+                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partList.needByDate"></p-calendar>
+                                    <td>
+                                        <select class="w80" [(ngModel)]="partList.conditionCode">
+                                            <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}} </option>
+                                        </select>
+                                    </td>
+
+                                    <td><input type="number" class="form-control w90" [(ngModel)]="partList.quantityOrdered"></td>
+
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.unitCost"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.discountPerUnit"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.discountCostPerUnit"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.extendedCost"></td>
+                                    <td>
+                                        <select class="w80" [(ngModel)]="partList.functionalCurrencyId">
+                                            <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+                                        </select>
+                                    </td>
+
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.foreignExchangeRate"></td>
+                                    <td>
+                                        <select class="w80" [(ngModel)]="partList.transactionalCurrencyId">
+                                            <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.workOrderId"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.repairOrderId"></td>
+                                    <td><input type="text" class="form-control w90" [(ngModel)]="partList.salesOrderId"></td>
+                                    <!--<td>
+                                            <select class="w70" [(ngModel)]="partList.managementStructureId" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let ataName of allManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                            </select>
+                                    </td>-->
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.companyId" [ngModelOptions]="{standalone: true}" (change)="onPartCompanyChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
+                                            <!--<option *ngFor="let company of partList.companyList" value="{{company.managementStructureId}}" >{{company.code}}</option>-->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.partBusinessUnitId" [ngModelOptions]="{standalone: true}" (change)="onPartBusinessUnitChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let businessUnit of partList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.partDivisionId" [ngModelOptions]="{standalone: true}" (change)="onPartDivisionChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let division of partList.partDivisionList" value="{{division.managementStructureId}}">{{division.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control w90" [(ngModel)]="partList.partDepartmentId" [ngModelOptions]="{standalone: true}" (change)="onPartDepartmentChange(partList)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let department of partList.partDepartmentList " value="{{department.managementStructureId}}">{{department.code}}</option>
+                                        </select>
+                                    </td>
+                                    <!--<td>
+                                        <select class="w80">
+                                            <option value="">Adso</option>
+                                            <option value="">Aerospace</option>
+                                            <option value="">ILS</option>
+                                            <option value="">PArts Base</option>
+                                            <option value="">PAS</option>
+                                            <option value="">Silverxis</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="w80">
+                                            <option value="Broker">Broker</option>
+                                            <option value="BusJet">BusJet</option>
+                                            <option value="Cargo">Cargo</option>
+                                            <option value="Commercial">Commercial</option>
+                                            <option value="Distributor">Distributor</option>
+                                            <option value="General Aviation (GA)">General Aviation (GA)</option>
+                                            <option value="Military">Military</option>
+                                            <option value="MRO">MRO</option>
+                                            <option value="OEM">OEM</option>
+                                            <option value="Rotary">Rotary</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="w80">
+                                            <option value="">Department</option>
+                                            <option value="">Auditor</option>
+                                            <option value="">Engineer</option>
+                                            <option value="">Inspector</option>
+                                            <option value="">Mech</option>
+                                            <option value="">Quality</option>
+                                            <option value="">Receiver</option>
+                                            <option value="">Tech</option>
+                                        </select>
+                                    </td>-->
+
+                                    <td><input type="text" class="w100" [(ngModel)]="partList.memo"></td>
+                                </tr>
+                                <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>PN</th>
+                                    <th>PN Des.</th>
+                                    <th>User Type</th>
+                                    <th>Name</th>
+                                    <th>Select Address</th>
+                                    <th>UOM</th>
+                                    <!--<th>Address 1</th>
+                                    <th>Address 2</th>
+                                    <th>Address 3</th>
+                                    <th>City</th>
+                                    <th>State/Prov</th>
+                                    <th>Postal Code</th>
+                                    <th>Country</th>-->
+                                    <!--<th>Item Type</th>-->
+
+                                    <th>Order Qty</th>
+                                    <th>Need By </th>
+                                    <th>Company </th>
+                                    <th>BU </th>
+                                    <th>Division</th>
+                                    <th>Dept</th>
+                                    <th colspan="20"><button type="button" class="btn btn-success btn-xs" (click)="addRow(partList)"><i class="fa fa-plus"></i></button></th>
+                                </tr>
+                                <tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index" [hidden]="!partList.ifSplitShip">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{partList?.partNumber}}</td>
+                                    <td>{{partList?.partdescription}}</td>
+                                    <td>
+                                        <select [(ngModel)]="partChildList.poPartSplitUserTypeId">
+                                            <option value="1">Customer</option>
+                                            <option value="2">Vendor</option>
+                                            <option value="3">Company</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==1">
+                                            <i class="fa fa-search"></i>
+                                            <p-autoComplete field="customername"
+                                                            [(ngModel)]="ddlModel"
+                                                            (onSelect)="onCustomerNameChange(partChildList,$event)"
+                                                            (onKeyUp)=customereventHandler($event)
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            [suggestions]="partChildList.customers"
+                                                            (completeMethod)="getPartyNames(partChildList,$event)"
+                                                            [size]="30"
+                                                            [minLength]="1"
+                                                            [dropdown]="true">
+
+                                            </p-autoComplete>
+                                        </div>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==2">
+                                            <p-autoComplete field="vendorName"
+                                                            (onSelect)="onVendorNameChange(partChildList,$event)"
+                                                            (onKeyUp)=vendoreventHandler($event)
+                                                            [(ngModel)]="ddlVendorModel"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            [suggestions]="partChildList.vendors"
+                                                            (completeMethod)="getVendorPartyNames(partChildList,$event)"
+                                                            [size]="30"
+                                                            [minLength]="1" [dropdown]="true">
+
+                                            </p-autoComplete>
+                                        </div>
+                                        <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.poPartSplitUserTypeId==3">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" [(ngModel)]="partChildList.poPartSplitId" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.poPartSplitAddressId">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let object of partChildList.addressData" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
+                                        </select>
+
+                                        <!--<a href="#" data-toggle="modal" data-target="#add-split-ship" class="add-icon add-icon-in-table" (click)="openedit(partChildList,contentSplitShipmentAddress)"><i class="fa fa-plus"></i></a>
+                                        <a href="#" data-toggle="modal" data-target="#edit-split-ship" class="add-icon edit-btn m0">Edit</a>-->
+                                    </td>
+                                    <!--<td><input type="text" name="" id="" [(ngModel)]="partChildList.poPartSplitAddress1" class="form-control"></td>
+                                    <td><input type="text" name="" id="" [(ngModel)]="partChildList.poPartSplitAddress2" class="form-control"></td>
+                                    <td><input type="text" name="" id="" [(ngModel)]="partChildList.poPartSplitAddress3" class="form-control"></td>
+                                    <td><input type="text" name="" id="" [(ngModel)]="partChildList.poPartSplitCity" class="form-control"></td>
+                                    <td><input type="text" name="" id="" [(ngModel)]="partChildList.poPartSplitState" class="form-control"></td>
+                                    <td><input type="text" name="" id="" [(ngModel)]="partChildList.poPartSplitPostalCode" class="form-control"></td>
+                                    <td><input type="text" name="" id="" [(ngModel)]="partChildList.poPartSplitCountry" class="form-control"></td>-->
+                                    <!--<td>{{partChildList.ite}}</td>-->
+                                    <!--<td *ngIf="partWithId?.itemTypeId==1 || partChildList?.itemTypeId==1">IdStock</td>
+                                    <td *ngIf="partWithId?.itemTypeId==2 || partChildList?.itemTypeId==2">Non Stock</td>
+                                    <td *ngIf="partWithId?.itemTypeId==3 || partChildList?.itemTypeId==3">Equipment</td>-->
+                                    <!--<td *ngIf="partList?.itemTypeId==0"></td>-->
+                                    <td>
+                                        <!--<select class="w80" [(ngModel)]="partChildList.uomId">
+                                                <option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+                                        </select>-->
+                                        {{partList?.shortName}}
+                                    </td>
+                                    <td><input type="number" min="1" max="1000" name="" id="" [(ngModel)]="partChildList.quantityOrdered" class="form-control"></td>
+                                    <!--<td><input type="date" name="" id="dp1547623339385" [(ngModel)]="partChildList.needByDate" class="form-control datepicker hasDatepicker"></td>-->
+                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="partChildList.needByDate"></p-calendar>
+                                    <td>
+                                        <style>
+                                            .ui-autocomplete .ui-autocomplete-panel {
+                                                position: absolute;
+                                            }
+                                        </style>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.companyId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartCompanyChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.partBusinessUnitId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartBusinessUnitChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let businessUnit of partChildList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.partDivisionId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartDivisionChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let division of partChildList.partDivisionList"
+                                                    value="{{division.managementStructureId}}">
+                                                {{division.code}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
+                                                [(ngModel)]="partChildList.partDepartmentId"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onPartDepartmentChange(partChildList)">
+                                            <option value="0">select</option>
+                                            <option *ngFor="let department of partChildList.partDepartmentList" value="{{department.managementStructureId}}">{{department.code}}</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="20"><a (click)="deleteSplitShipment(partChildList,row_no,row_index)"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div id="tab2" class="tab-pane fade">
+                <h3>Approve Content Not given</h3>
+            </div>
+            <div id="tab3" class="tab-pane fade">
+                <h3>Vendor Capes Content Not given</h3>
+            </div>
+            <div id="tab4" class="tab-pane fade">
+                <!--<div class="col-sm-4">
+                    <h5 class="heading">Issued To </h5>
+                    <hr>
+                    <div class="issue">
+                        <div class="form-group col-sm-12 input-icon2">
+                            <label class="control-label col-sm-4">Select Address  <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                <i class="fa fa-caret-down"></i>
+                                <select class="w175" (change)="getValue(selectedValue)" [(ngModel)]="selectedValue">
+
+                                    <option *ngFor="let object of addressData" [ngValue]="object">{{object.address1}} {{object.stateOrProvince}} {{object.city}} {{object.postalCode}}   </option>
+
+                                </select>
+                            </div>
+
+                            <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openClassification(contentEdits)"><i class="fa fa-plus"></i></a>
+                            <a href="#" data-toggle="modal" data-target="#edit-shipto" class="add-icon edit-btn" (click)="opencloseissued(contentclose,selectedValue)">Edit</a>
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Address</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{issuedToAddress?.address1}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4"> City <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{issuedToAddress?.city}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Primary State/Province <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{issuedToAddress?.stateOrProvince}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Postal <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{issuedToAddress?.postalCode}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Country <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{issuedToAddress?.country}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Contact Name <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <div class="inner-addon right-addon autosuggesions-add inline-block">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Memo <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <textarea class="h80"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="col-sm-4">
+                    <h5 class="heading">Ship To</h5>
+                    <hr>
+                    <div class="shipping">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">User Type <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block">
+                                <select [(ngModel)]="sourcePoApproval.shipToUserType">
+                                    <option value="1">Customer</option>
+                                    <option value="2">Vendor</option>
+                                    <option value="3">Company</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.shipToUserType==1">
+                            <label class="control-label col-sm-4">Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block">
+                                <i class="fa fa-search"></i>
+                                <p-autoComplete (onSelect)="onshipCustomerNameselected($event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-name pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{name}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.shipToUserType==2">
+                            <label class="control-label col-sm-4">Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block">
+                                <p-autoComplete (onSelect)="onVendorselectedForShipTo($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-vendorName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{vendorName}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.shipToUserType==3">
+                            <label class="control-label col-sm-4">Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" [(ngModel)]="sourcePoApproval.shipToUserName" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.shipToUserType==1">
+                            <label class="control-label col-sm-4">Site Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block display-flex">
+                                <select class="w175" (change)="getValueforShipTo(selectedValue1)" [(ngModel)]="selectedValue1">
+                                    <option>-- Select --</option>
+                                    <option *ngFor="let object of shipToCusData" [ngValue]="object">{{object.siteName}}   </option>
+                                </select>
+                                <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openedit(contentEdit)"><i class="fa fa-plus"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#edit-shipto" class="add-icon edit-btn" (click)="openEditissued(contentmodel,selectedValue1)">Edit</a>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.shipToUserType==2">
+                            <label class="control-label col-sm-4">Site Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block display-flex">
+                                <select class="w175" (change)="getValueforShipTo(selectedValue1)" [(ngModel)]="selectedValue1">
+                                    <option>-- Select --</option>
+                                    <option *ngFor="let object of vendorSelected" [ngValue]="object">{{object.siteName}}   </option>
+                                </select>
+                                <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openSiteedit(contentSiteEdit)"><i class="fa fa-plus"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#edit-shipto" class="add-icon edit-btn" (click)="openEditissued(contentmodel,selectedValue1)">Edit</a>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.shipToUserType==3">
+                            <label class="control-label col-sm-4">Site Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block display-flex">
+                                <!--<select class="w175" (change)="getValueforShipTo(selectedValue1)" [(ngModel)]="selectedValue1">
+                                    <option *ngFor="let object of allManagementSiteData" [ngValue]="object">{{object.siteName}}   </option>
+                                </select>-->
+                                <select [(ngModel)]="selectedValue1" [ngModelOptions]="{standalone: true}" (change)="siteValueChange(selectedValue1)">
+                                    <!--(change)="siteValueChange($event.target.value)"-->
+
+                                    <option *ngFor="let site of allManagementSiteData" [ngValue]="site.siteId">{{site.siteName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+
+                                </select>
+                                <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openedit(contentSiteEdit)"><i class="fa fa-plus"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#edit-shipto" class="add-icon edit-btn" (click)="openEditissued(contentmodel,selectedValue1)">Edit</a>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Address</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{shipToAddress?.address1}}">
+                            </div>
+                            <label class="control-label col-sm-4"> City <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{shipToAddress?.city}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Primary State/Province <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{shipToAddress?.stateOrProvince}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Postal <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{shipToAddress?.postalCode}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Country <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{shipToAddress?.country}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Contact Name <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <div class="inner-addon right-addon autosuggesions-add">
+                                    <!--<i class="fa fa-search"></i>-->
+                                    <!--<input type="text" class="form-control names ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="sourcePoApproval.shipToContactName">-->
+                                    <!--<div class="inner-addon right-addon autosuggesions-add inline-block">
+                                        <i class="fa fa-search"></i>
+                                        <p-autoComplete [(ngModel)]="sourcePoApproval.shipToContactName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNamesShipTo" (completeMethod)="filterFirstNamesforshipto($event)" [size]="30"
+                                                        [minLength]="1" [dropdown]="true">
+                                            <ng-template let-firstName pTemplate="item">
+                                                <div class="ui-helper-clearfix">{{firstName}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                    </div>-->
+                                    <div class="inner-addon right-addon autosuggesions-add inline-block" *ngIf="sourcePoApproval.shipToUserType==1">
+                                        <i class="fa fa-search"></i>
+                                        <p-autoComplete [(ngModel)]="sourcePoApproval.shipToContactName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNamesShipTo" (completeMethod)="filterFirstNamesforshipto($event)" [size]="30"
+                                                        [minLength]="1" [dropdown]="true">
+                                            <ng-template let-firstName pTemplate="item">
+                                                <div class="ui-helper-clearfix">{{firstName}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                        <!--<input type="text" class="form-control names ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="sourcePoApproval.billToContactName">-->
+                                    </div>
+                                    <div class="inner-addon right-addon autosuggesions-add inline-block" *ngIf="sourcePoApproval.shipToUserType==2">
+                                        <i class="fa fa-search"></i>
+                                        <p-autoComplete [(ngModel)]="sourcePoApproval.shipToContactName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNamesShipTo1" (completeMethod)="filterFirstNamesforshipto1($event)" [size]="30"
+                                                        [minLength]="1" [dropdown]="true">
+                                            <ng-template let-firstName pTemplate="item">
+                                                <div class="ui-helper-clearfix">{{firstName}}</div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                        <!--<input type="text" class="form-control names ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="sourcePoApproval.billToContactName">-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Memo <span class="clr-red">*</span></label>
+                                <div class="col-sm-7">
+                                    <textarea class="h80" [(ngModel)]="sourcePoApproval.shipToMemo"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="clear"></div>-->
+                <div class="col-sm-4">
+                    <h5 class="heading">Bill To </h5>
+                    <hr>
+                    <div class="billing">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">User Type <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block">
+                                <select [(ngModel)]="sourcePoApproval.billToUserType">
+                                    <option value="1">Customer</option>
+                                    <option value="2">Vendor</option>
+                                    <option value="3">Company</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.billToUserType==1">
+                            <label class="control-label col-sm-4">Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block">
+                                <i class="fa fa-search"></i>
+                                <p-autoComplete (onSelect)="onBillToCustomerNameselected($event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="sourcePoApproval.billToUserName" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-name pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{name}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.billToUserType==2">
+                            <label class="control-label col-sm-4">Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block ">
+                                <p-autoComplete (onSelect)="onVendorselectedForBillTo($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.billToUserName" [ngModelOptions]="{standalone: true}" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-vendorName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{vendorName}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.billToUserType==3">
+                            <label class="control-label col-sm-4">Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" [(ngModel)]="sourcePoApproval.billToUserName" class="form-control names ui-autocomplete-input" name="" autocomplete="off">
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.billToUserType==1">
+                            <label class="control-label col-sm-4">Site Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block display-flex">
+                                <select class="w175" (change)="getValueforBillTo(selectedValue2)" [(ngModel)]="selectedValue2">
+                                    <option>-- Select --</option>
+                                    <option *ngFor="let object of billToCusData" [ngValue]="object">{{object.siteName}} </option>
+                                </select>
+                                <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openeditmodel(content)"><i class="fa fa-plus"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#edit-billto" class="add-icon edit-btn" (click)="openEditissued1(cmodel,selectedValue2)">Edit</a>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.billToUserType==2">
+                            <label class="control-label col-sm-4">Site Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block display-flex">
+                                <select class="w175" (change)="getValueforBillTo(selectedValue2)" [(ngModel)]="selectedValue2">
+                                    <option>-- Select --</option>
+                                    <option *ngFor="let object of vendorSelectedForBillTo" [ngValue]="object">{{object.siteName}} </option>
+                                </select>
+                                <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openeditmodel(content)"><i class="fa fa-plus"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#edit-billto" class="add-icon edit-btn" (click)="openEditissued1(cmodel,selectedValue2)">Edit</a>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" *ngIf="sourcePoApproval.billToUserType==3">
+                            <label class="control-label col-sm-4">Site Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon col-sm-7 inline-block display-flex">
+                                <!--<select class="w175" (change)="getValueforShipTo(selectedValue1)" [(ngModel)]="selectedValue1">
+                                    <option *ngFor="let object of allManagementSiteData" [ngValue]="object">{{object.siteName}}   </option>
+                                </select>-->
+                                <select [(ngModel)]="selectedValue2" [ngModelOptions]="{standalone: true}" (change)="siteValueChange1(selectedValue2)">
+                                    <!--(change)="siteValueChange($event.target.value)"-->
+
+                                    <option *ngFor="let site of allManagementSiteData" [ngValue]="site.siteId">{{site.siteName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+
+                                </select>
+                                <a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openedit(contentSiteEdit)"><i class="fa fa-plus"></i></a>
+                                <a href="#" data-toggle="modal" data-target="#edit-shipto" class="add-icon edit-btn" (click)="openEditissued(contentmodel,selectedValue1)">Edit</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Address</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{billToAddress?.address1}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4"> City <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{billToAddress?.city}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Primary State/Province <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{billToAddress?.stateOrProvince}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Postal <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{billToAddress?.postalCode}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Country <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="text" disabled="" value="{{billToAddress?.country}}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Contact Name <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <div class="inner-addon right-addon autosuggesions-add" *ngIf="sourcePoApproval.billToUserType==1">
+                                    <i class="fa fa-search"></i>
+                                    <p-autoComplete [(ngModel)]="sourcePoApproval.billToContactName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNamesbillTo" (completeMethod)="filterFirstNamesforbillto($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-firstName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{firstName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <!--<input type="text" class="form-control names ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="sourcePoApproval.billToContactName">-->
+                                </div>
+                                <div class="inner-addon right-addon autosuggesions-add inline-block" *ngIf="sourcePoApproval.billToUserType==2">
+                                    <i class="fa fa-search"></i>
+                                    <p-autoComplete [(ngModel)]="sourcePoApproval.billToContactName" [ngModelOptions]="{standalone: true}" [suggestions]="firstNamesbillTo1" (completeMethod)="filterFirstNamesforbillto1($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-firstName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{firstName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <!--<input type="text" class="form-control names ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="sourcePoApproval.billToContactName">-->
+                                    <i class="fa fa-search"></i>
+                                    <!--<input type="text" class="form-control names ui-autocomplete-input" name="" autocomplete="off" [(ngModel)]="sourcePoApproval.billToContactName">-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label col-sm-4">Memo <span class="clr-red">*</span></label>
+                            <div class="col-sm-7">
+                                <textarea class="h80" [(ngModel)]="sourcePoApproval.billToMemo"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        <div class="clear"></div>
+        <hr>
+        <a class="btn btn-success pull-right" (click)="savePurchaseOrder()">Save</a>
+        <div class="clear"></div>
+
+    </div>
 </div>
    
     <ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
