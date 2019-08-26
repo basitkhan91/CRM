@@ -15,7 +15,7 @@ import { WorkOrder } from '../../models/work-order.model';
 export class WorkOrderEndpointService extends EndpointFactory {
 
     private readonly getAllURL: string = "/api/WorkOrder/getAll";
-    private readonly getByIdURL: string = "/api/WorkOrder/get";
+    private readonly getByIdURL: string = "/api/WorkOrder/getWorkOrderDataByID";
     private readonly addURL: string = "/api/WorkOrder/WorkOrderPost";
     private readonly updateURL: string = "/api/WorkOrder/updateWO";
     private readonly removeByIdURL: string = "/api/WorkOrder/remove";

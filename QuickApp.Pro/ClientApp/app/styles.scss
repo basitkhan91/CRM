@@ -13633,6 +13633,11 @@ button {
     width: 108% !important;
     margin-left: -7px;
 }
+.autocomplete-value1 .ui-autocomplete {
+    margin-top: -4px;
+    width: 108% !important;
+    margin-left: -7px;
+}
 .autocomplete-customer3 .ui-autocomplete {
     margin-left: -5px !important;
     width: 104% !important;
@@ -13744,7 +13749,15 @@ button {
     border-collapse: collapse;
 }
 .input-field-value {
+    background-color: white !important;
     border-radius: 5px !important;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 .rro-table-cstm .ui-table-wrapper thead th {
     position: -webkit-sticky;
@@ -13997,6 +14010,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-size: 16px !important;
     top: 43% !important;
     left: 36% !important;
+}
+.new-margin {
+    margin-top: 10px;
 }
 .imstock-pddowm .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight {
     color: #fff !important;

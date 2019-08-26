@@ -159,14 +159,24 @@ export class PurchaseSetupComponent {
     createPOPartsList: any[];
     checkAllPartsList: boolean;
     multiplePNDetails: boolean;
+    shipUserTypeCustomer: boolean = false;
+    shipUserTypeVendor: boolean = false;
+    shipUserTypeCompany: boolean = false;
+    billUserTypeCustomer: boolean = false;
+    billUserTypeVendor: boolean = false;
+    billUserTypeCompany: boolean = false;
+    addressMemoLabel: string;
+    enableSiteName: boolean;
+    addressHeader: string;
+    vendorCapesCols: any[];
+    vendorCapesInfo: any[] = [];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
 
 		this.loadcustomerData();
 		this.loadData();
-        this.createPOPartsList = [new CreatePOPartsList()];   
-        console.log(this.createPOPartsList);      
+        this.createPOPartsList = [new CreatePOPartsList()];     
 
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
@@ -175,6 +185,7 @@ export class PurchaseSetupComponent {
 			this.pocollection = workFlowtService.purchasepartcollection;
 			if (this.pocollection.length > 0) {
 				this.sourcePoApproval = this.pocollection[0];
+                console.log(this.sourcePoApproval); 
 
 				this.sourcePoApproval.dateRequested = new Date(this.sourcePoApproval.dateRequested);
 				this.sourcePoApproval.dateApprovied = new Date(this.sourcePoApproval.dateApprovied);
@@ -352,6 +363,25 @@ export class PurchaseSetupComponent {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
         }
 
+        this.vendorCapesCols = [
+            { field: 'vcid', header: 'VCID' },
+            { field: 'ranking', header: 'Ranking' },
+            { field: 'pn', header: 'PN' },
+            { field: 'pnDescription', header: 'PN Description' },
+            { field: 'capabilityType', header: 'Capability Type' },
+            { field: 'cost', header: 'Cost' },
+            { field: 'tat', header: 'TAT' },
+            { field: 'pnMfg', header: 'PN Mfg' },
+            { field: 'updatedDate', header: 'Updated Date' },
+        ];
+        this.vendorCapesInfo = [
+            { 'vcid': 1, 'ranking': 11},
+            { 'vcid': 2, 'ranking': 11},
+            { 'vcid': 3, 'ranking': 11},
+        ];
+
+        console.log(this.sourcePoApproval);
+
 	}
 	private priorityData() {
 
@@ -416,11 +446,10 @@ export class PurchaseSetupComponent {
         this.userName = 'admin';
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
-		this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
+        this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
-			{
-				this.savePurchaseorderPart(saveddata.purchaseOrderId)
-			}
+            console.log(saveddata);
+			this.savePurchaseorderPart(saveddata.purchaseOrderId);
 		});
 
 	}
@@ -1478,6 +1507,14 @@ export class PurchaseSetupComponent {
 
 		//this.sourcePoApproval.buid1 = null;
 
+        for(let i=0; i < this.partListData.length; i++) {
+            if (this.partListData[i].companyId == 0) {
+                this.partListData[i].companyId = masterCompanyId;
+                this.onPartCompanyChange(this.partListData[i]);
+            }           
+        }
+        
+
 		console.log(this.bulist);
 
 	}
@@ -1533,34 +1570,46 @@ export class PurchaseSetupComponent {
 		this.divisionlist = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
 			if (this.allManagemtninfo[i].parentId == buid) {
-				this.departmentList.push(this.allManagemtninfo[i]);
-			}
-		}
-
-		this.sourcePoApproval.depid1 = null;
-
-		console.log(this.departmentList);
-	}
-
-	getDivisionlist(depid)
-	{
-		this.sourcePoApproval.managementStructureEntityId = depid; //Saving Management Structure Id if there Company Id
-
-		this.divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == depid) {
 				this.divisionlist.push(this.allManagemtninfo[i]);
 			}
 		}
 
-		this.sourcePoApproval.divid1 = true;
+		//this.sourcePoApproval.depid1 = null;
+        for(let i=0; i < this.partListData.length; i++) {
+            this.partListData[i].partBusinessUnitId = buid;
+            this.onPartBusinessUnitChange(this.partListData[i]);
+        }
 
 		console.log(this.divisionlist);
 	}
 
-	getDivisionChangeManagementCode(divisionId)
+	getDivisionlist(divid)
 	{
-		this.sourcePoApproval.managementStructureEntityId = divisionId;
+		this.sourcePoApproval.managementStructureEntityId = divid; //Saving Management Structure Id if there Company Id
+
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == divid) {
+				this.departmentList.push(this.allManagemtninfo[i]);
+			}
+		}
+
+		//this.sourcePoApproval.divid1 = true;
+        for(let i=0; i < this.partListData.length; i++) {
+            this.partListData[i].partDivisionId = divid;
+            this.onPartDivisionChange(this.partListData[i]);
+        }
+
+		console.log(this.departmentList);
+	}
+
+	getDivisionChangeManagementCode(depid)
+	{
+		this.sourcePoApproval.managementStructureEntityId = depid;
+        for(let i=0; i < this.partListData.length; i++) {
+            this.partListData[i].partDepartmentId = depid;
+            this.onPartDepartmentChange(this.partListData[i]);
+        }
 	}
 	private onprioritySuccessful(getPriorityList: any[]) {
 
@@ -2499,16 +2548,8 @@ export class PurchaseSetupComponent {
         this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
 
-    addPartNum() {
-        this.createPOPartsList.push(new CreatePOPartsList());
-    }
-
-    onAddPNChildRow(index) {
-        this.createPOPartsList[index].partListDetails.push(new PartDetails());
-    }
-
-    onDelPNChildRow(index, subIndex) {
-        this.createPOPartsList[index].partListDetails.splice(subIndex, 1);
+    onDelPNRow(index) {
+        this.partListData.splice(index, 1);
     }
 
     checkAllPartDetails() {
@@ -2524,6 +2565,81 @@ export class PurchaseSetupComponent {
     onAddPartNum() {
         this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
     }
+
+    shipUserType(event) {
+        if (event.target.value === '1') {
+            this.shipUserTypeCustomer = true;
+            this.shipUserTypeCompany = false;
+            this.shipUserTypeVendor = false;
+        }
+        if (event.target.value === '2') {
+            this.shipUserTypeCompany = false;
+            this.shipUserTypeCustomer = false;
+            this.shipUserTypeVendor = true;
+        }
+        if (event.target.value === '3') {
+            this.shipUserTypeVendor = false;
+            this.shipUserTypeCustomer = false;
+            this.shipUserTypeCompany = true;
+        }
+    }
+
+    billUserType(event) {
+            if (event.target.value === '1') {
+                this.billUserTypeCustomer = true;
+                this.billUserTypeCompany = false;
+                this.billUserTypeVendor = false;
+            }
+            if (event.target.value === '2') {
+                this.billUserTypeCompany = false;
+                this.billUserTypeCustomer = false;
+                this.billUserTypeVendor = true;
+            }
+            if (event.target.value === '3') {
+                this.billUserTypeVendor = false;
+                this.billUserTypeCustomer = false;
+                this.billUserTypeCompany = true;
+            }
+        }
+
+    onClickShipMemo() {
+        this.addressMemoLabel = 'Edit Ship';
+    }
+
+    onClickBillMemo() {
+        this.addressMemoLabel = 'Edit Bill';
+    }
+
+    onClickPartsListAddress(value) {
+        this.enableSiteName = false;
+        if (value === 'Add') {
+            this.addressHeader = 'Add Split Shipment Address';
+        }
+        if (value === 'Edit') {
+            this.addressHeader = 'Edit Split Shipment Address';        
+        }        
+    }
+
+    onClickShipSiteName(value) {
+        this.enableSiteName = true;
+        if (value === 'Add') {
+            this.addressHeader = 'Add Ship To Details';
+        }
+        if (value === 'Edit') {
+            this.addressHeader = 'Edit Ship To Details';       
+        }        
+    }
+
+    onClickBillSiteName(value) {
+        this.enableSiteName = true;
+        if (value === 'Add') {
+            this.addressHeader = 'Add Bill To Details';
+        }
+        if (value === 'Edit') {
+            this.addressHeader = 'Edit Bill To Details';      
+        }        
+    }
+
 }
 
 

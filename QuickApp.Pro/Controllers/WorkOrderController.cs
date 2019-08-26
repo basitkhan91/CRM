@@ -38,7 +38,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(workOrderList);
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("getWorkOrderDataByID/{id}")]
         public IActionResult GetById(long id)
         {
             var workOrder = unitOfWork.Repository<WorkOrder>()
@@ -105,27 +105,27 @@ namespace QuickApp.Pro.Controllers
                     var workorderObj = unitOfWork.WorkOrderRepository.GetSingleOrDefault(c => c.ID == id);
                     workOrder.MasterCompanyId = 1;
                     workorderObj.Contract = workOrder.Contract;
-                    workorderObj.CreatedBy = workOrder.CreatedBy;
-                    workorderObj.CreatedDate = workOrder.CreatedDate;
+
                     workorderObj.CreditLimit = workOrder.CreditLimit;
                     workorderObj.CreditTermsId = workOrder.CreditTermsId;
                     workorderObj.CustomerContactId = workOrder.CustomerContactId;
                     workorderObj.CustomerId = workOrder.CustomerId;
                     workorderObj.EmployeeId = workOrder.EmployeeId;
-                    workorderObj.IsActive = workOrder.IsActive;
                     workorderObj.IsContractAvl = workOrder.IsContractAvl;
-                    workorderObj.IsDeleted = workOrder.IsDeleted;
                     workorderObj.IsSinglePN = workOrder.IsSinglePN;
                     workorderObj.MasterCompanyId = workOrder.MasterCompanyId;
                     workorderObj.OpenDate = workOrder.OpenDate;
                     workorderObj.Quantity = workOrder.Quantity;
                     workorderObj.SalesPerson = workOrder.SalesPerson;
-                    workorderObj.UpdatedBy = workOrder.UpdatedBy;
-                    workorderObj.UpdatedDate = workOrder.UpdatedDate;
                     workorderObj.WorkOrderNum = workOrder.WorkOrderNum;
                     workorderObj.WorkOrderStatusId = workOrder.WorkOrderStatusId;
                     workorderObj.WorkOrderTypeId = workOrder.WorkOrderTypeId;
-                    workorderObj.UpdatedDate = DateTime.Now;
+                    workorderObj.UpdatedBy = workOrder.UpdatedBy;
+                    workorderObj.UpdatedDate = workOrder.UpdatedDate;
+                    workorderObj.CreatedBy = workOrder.CreatedBy;
+                    workorderObj.CreatedDate = workOrder.CreatedDate;
+                    workorderObj.IsActive = workOrder.IsActive;
+                    workorderObj.IsDeleted = workOrder.IsDeleted;
 
                     unitOfWork.Repository<WorkOrder>().Update(workorderObj);
                     unitOfWork.SaveChanges();
@@ -142,14 +142,12 @@ namespace QuickApp.Pro.Controllers
             //return Ok();
         }
 
-        [HttpDelete("remove/{id}")]
+        [HttpPost("remove/{id}")]
         public IActionResult Delete(long id)
         {
             var workOrder = unitOfWork.Repository<WorkOrder>().Find(xx => xx.ID == id).FirstOrDefault();
-            workOrder.IsActive = false;
             workOrder.IsDeleted = true;
             workOrder.UpdatedDate = DateTime.Now;
-
             unitOfWork.Repository<WorkOrder>().Update(workOrder);
             unitOfWork.SaveChanges();
             return Ok(workOrder);
@@ -166,7 +164,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workOrderTypes = unitOfWork.Repository<WorkOrderType>()
                 .GetAll()
-                .Where(x => x.IsActive == true & x.IsDelete == false)
+                .Where(x => x.IsActive == true & x.IsDeleted == false)
                 .ToList();
             return Ok(workOrderTypes);
         }
@@ -176,7 +174,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workOrderStatus = unitOfWork.Repository<WorkOrderStatus>()
                 .GetAll()
-                .Where(x => x.IsActive == true && x.IsDelete == false)
+                .Where(x => x.IsActive == true && x.IsDeleted == false)
                 .ToList();
             return Ok(workOrderStatus);
         }
@@ -196,7 +194,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workOrderStages = unitOfWork.Repository<WorkOrderStage>()
                 .GetAll()
-                .Where(x => x.IsActive == true && x.IsDelete == false)
+                .Where(x => x.IsActive == true && x.IsDeleted == false)
                 .ToList();
             return Ok(workOrderStages);
         }

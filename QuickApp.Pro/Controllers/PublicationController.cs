@@ -47,7 +47,14 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("GetPublicationById/{id}")]
+        [Produces(typeof(List<PublicationViewModel>))]
+        public IActionResult GetByID(long id)
+        {
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsById(id); //.GetAllCustomersData();
+            return Ok((allpublicationinfo));
 
+        }
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
@@ -106,15 +113,12 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
                     _unitOfWork.Publication.Add(publicationobject);
                     _unitOfWork.SaveChanges();
-
                     return Ok(publicationobject);
                 }
-
                 return Ok(ModelState);
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -192,6 +196,7 @@ namespace QuickApp.Pro.Controllers
                 pnacbject.AircraftType = PnAcMapping.AircraftType;
                 pnacbject.MasterCompanyId = PnAcMapping.MasterCompanyId;
                 pnacbject.IsActive = PnAcMapping.IsActive;
+                pnacbject.IsDeleted = PnAcMapping.IsDeleted;
                 pnacbject.CreatedDate = DateTime.Now;
                 pnacbject.UpdatedDate = DateTime.Now;
                 pnacbject.CreatedBy = PnAcMapping.CreatedBy;
@@ -257,7 +262,8 @@ namespace QuickApp.Pro.Controllers
                         PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                         cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
                         cp.PublicationId = IMPNMapping[i].PublicationId;
-                        cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
+						cp.PartNumber = IMPNMapping[i].PartNumber;
+						cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
                         cp.ItemClassification = IMPNMapping[i].ItemClassification;
                         cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
                         cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
@@ -268,7 +274,7 @@ namespace QuickApp.Pro.Controllers
                         cp.CreatedDate = DateTime.Now;
                         cp.UpdatedDate = DateTime.Now;
                         cp.IsActive = IMPNMapping[i].IsActive;
-                        cp.IsActive = IMPNMapping[i].IsDeleted;
+                        cp.IsDeleted = IMPNMapping[i].IsDeleted;
                         _context.PublicationItemMasterMapping.Add(cp);
                         _context.SaveChanges();
                     }
@@ -443,7 +449,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
                     existingResult.UpdatedDate = DateTime.Now;
-                    existingResult.IsDeleted = false;
+                    existingResult.IsDeleted = true;
                     _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
                     _unitOfWork.SaveChanges();
                 }

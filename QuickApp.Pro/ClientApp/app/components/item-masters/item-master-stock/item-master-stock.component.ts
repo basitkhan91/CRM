@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { ItemMasterService } from '../../../services/itemMaster.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
 import { ItemClassificationService } from '../../../services/item-classfication.service';
@@ -287,28 +287,28 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataChaptherSelected: any;
     newFields = {
         Condition: "NEW",
-        PP_UOMId: "2",
-        PP_CurrencyId: "208",
-        PP_FXRatePerc: "",
-        PP_VendorListPrice: "",
-        PP_LastListPriceDate: "",
-        PP_PurchaseDiscPerc: "",
-        PP_LastPurchaseDiscDate: "",
-        PP_PurchaseDiscAmount: "",
-        PP_UnitPurchasePrice: "",
-        SP_FSP_UOMId: "2",
-        SP_FSP_CurrencyId: "208",
-        SP_FSP_FXRatePerc: "",
-        SP_FSP_FlatPriceAmount: "",
-        SP_FSP_LastFlatPriceDate: "",
-        SP_CalSPByPP_MarkUpPercOnListPrice: "",
-        SP_CalSPByPP_MarkUpAmount: "",
-        SP_CalSPByPP_LastMarkUpDate: "",
-        SP_CalSPByPP_BaseSalePrice: "",
-        SP_CalSPByPP_SaleDiscPerc: "",
-        SP_CalSPByPP_SaleDiscAmount: "",
-        SP_CalSPByPP_LastSalesDiscDate: "",
-        SP_CalSPByPP_UnitSalePrice: ""
+        PP_UOMId: 2,
+        PP_CurrencyId: 208,
+        PP_FXRatePerc: null,
+        PP_VendorListPrice: null,
+        PP_LastListPriceDate: '',
+        PP_PurchaseDiscPerc: null,
+        PP_LastPurchaseDiscDate: '',
+        PP_PurchaseDiscAmount: null,
+        PP_UnitPurchasePrice: null,
+        SP_FSP_UOMId: 2,
+        SP_FSP_CurrencyId: 208,
+        SP_FSP_FXRatePerc: null,
+        SP_FSP_FlatPriceAmount: null,
+        SP_FSP_LastFlatPriceDate: '',
+        SP_CalSPByPP_MarkUpPercOnListPrice: null,
+        SP_CalSPByPP_MarkUpAmount:  null,
+        SP_CalSPByPP_LastMarkUpDate: '',
+        SP_CalSPByPP_BaseSalePrice: null,
+        SP_CalSPByPP_SaleDiscPerc: null,
+        SP_CalSPByPP_SaleDiscAmount: null,
+        SP_CalSPByPP_LastSalesDiscDate: '',
+        SP_CalSPByPP_UnitSalePrice: null
     }
     aircraftData: any;
     selectedAtAChapther: ATAChapter[];
@@ -338,119 +338,153 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataSubchapterIdUrl: any = '';
     searchATAParams: string = '';
     isDisabledSteps = false;
+    isEdit: boolean = false;
+    itemMasterId: number;
+
+    exportInfo = {
+        ExportECCN  : '',
+        ITARNumber : '',
+        ExportUomId: null,
+        ExportCountryId : null,
+        ExportValue : null,
+        ExportCurrencyId : null,
+        ExportWeight : null,
+        ExportWeightUnit: null,
+        ExportSizeLength : null,
+        ExportSizeWidth : null,
+        ExportSizeHeight : null,
+
+        }
 
     constructor(private fb: FormBuilder, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
-        public currency: CurrencyService,
+        public currency: CurrencyService, private _actRoute: ActivatedRoute,
         public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
+
         //Adding Below Code for By Default Date Should be current Date while Creation
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
-        //end
-        if (this.itemser.listCollection != null && this.itemser.isEditMode == true) {
+        // checks the params id with the url 
+        this.itemMasterId = this._actRoute.snapshot.params['id'];
+        if (this.itemMasterId !== undefined) {
+            // get the itemmaster data by id
+            this.isEdit = true;
+            this.itemser.getItemMasterDetailById(this.itemMasterId).subscribe(res => {
+                console.log(res);
+                this.isDisabledSteps = true;
+                this.sourceItemMaster = res;
 
-            this.isDisabledSteps = true;
-            this.showLable = true;
-            this.sourceItemMaster = this.itemser.listCollection;
-            this.sourceItemMaster.itemMasterId = this.itemser.listCollection.itemMasterId;
-            this.sourceItemMaster.partdescription = this.itemser.listCollection.partDescription;
-            this.sourceItemMaster.isHazardousMaterial = this.itemser.listCollection.isHazardousMaterial;
-
-            this.itemser.getMappedATADetails(this.sourceItemMaster.itemMasterId);
-            /* if (this.sourceItemMaster.ataChapterId) {
-                 this.getATASubChapterData(this.sourceItemMaster.ataChapterId);
-             }*/
-            this.sourceItemMaster.expirationDate = this.itemser.listCollection.expirationDate;
-            if (this.sourceItemMaster.manufacturer) {
-                this.sourceItemMaster.manufacturerId = this.itemser.listCollection.manufacturer.manufacturerId;
-            }
-            if (this.sourceItemMaster.salesMarkUpOnPurchaseListPriceActive == true) {
-
-                this.markupListPrice();
-            }
-            else {
-                this.markUpListPriceAfterDisk();
-            }
-
-            if (this.sourceItemMaster.salesIsFixedPrice == true) {
-                this.onFixedSalesPrice()
-            }
-            else { this.onCalculatedUsingPurchasePrice() }
-            if (this.sourceItemMaster.purchaseLastListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceDate == undefined || this.sourceItemMaster.purchaseLastListPriceDate == "undefined") {
-                this.sourceItemMaster.purchaseLastListPriceDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.purchaseLastListPriceDate = new Date(this.sourceItemMaster.purchaseLastListPriceDate);
-            }
-            if (this.sourceItemMaster.purchaseLastDiscountPercentDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastDiscountPercentDate == undefined || this.sourceItemMaster.purchaseLastDiscountPercentDate == "undefined") {
-                this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date(this.sourceItemMaster.purchaseLastDiscountPercentDate);
-            }
-            if (this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == undefined || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "undefined") {
-                this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date(this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate);
-            }
-            if (this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == undefined || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "undefined") {
-                this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date(this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate);
-            }
-            if (this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == undefined || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "undefined") {
-                this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date(this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate);
-            }
-            if (this.sourceItemMaster.salesLastBaselineSalesPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastBaselineSalesPriceDate == undefined || this.sourceItemMaster.salesLastBaselineSalesPriceDate == "undefined") {
-                this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date(this.sourceItemMaster.salesLastBaselineSalesPriceDate);
-            }
-            if (this.sourceItemMaster.salesLastSalesDiscountPercentDate == "0001-01-01T00:00:00") {
-                this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date(this.sourceItemMaster.salesLastSalesDiscountPercentDate);
-            }
-            if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
-                this.sourceItemMaster.expirationDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-            }
-            if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
-                this.sourceItemMaster.expirationDate = new Date();
-            }
-            else {
-                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-            }
-            if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
-                this.sourceItemMaster.salesLastSalePriceDate = new Date();
-                this.sourceItemMaster.salesLastSalePriceDate = Date.now();
-                //this.sourceItemMaster.salesLastSalePriceDate.setValue(new Date().toISOString());
-            }
-            else {
-                this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
-            }
-
-            //adding for Currency
-            if (this.sourceItemMaster.purchaseCurrencyId) {
-                this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
-            }
+                this.getAircraftMappedDataByItemMasterId();
+                this.getATAMappedDataByItemMasterId();
+            })
 
         }
+
+        //end
+        // if (this.itemser.listCollection != null && this.itemser.isEditMode == true) {
+
+        //     this.isDisabledSteps = true;
+        //     this.showLable = true;
+        //     this.sourceItemMaster = this.itemser.listCollection;
+        //     this.sourceItemMaster.itemMasterId = this.itemser.listCollection.itemMasterId;
+        //     this.sourceItemMaster.partdescription = this.itemser.listCollection.partDescription;
+        //     this.sourceItemMaster.isHazardousMaterial = this.itemser.listCollection.isHazardousMaterial;
+
+        //     this.itemser.getMappedATADetails(this.sourceItemMaster.itemMasterId);
+        //     /* if (this.sourceItemMaster.ataChapterId) {
+        //          this.getATASubChapterData(this.sourceItemMaster.ataChapterId);
+        //      }*/
+        //     this.sourceItemMaster.expirationDate = this.itemser.listCollection.expirationDate;
+        //     if (this.sourceItemMaster.manufacturer) {
+        //         this.sourceItemMaster.manufacturerId = this.itemser.listCollection.manufacturer.manufacturerId;
+        //     }
+        //     if (this.sourceItemMaster.salesMarkUpOnPurchaseListPriceActive == true) {
+
+        //         this.markupListPrice();
+        //     }
+        //     else {
+        //         this.markUpListPriceAfterDisk();
+        //     }
+
+        //     if (this.sourceItemMaster.salesIsFixedPrice == true) {
+        //         this.onFixedSalesPrice()
+        //     }
+        //     else { this.onCalculatedUsingPurchasePrice() }
+        //     if (this.sourceItemMaster.purchaseLastListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceDate == undefined || this.sourceItemMaster.purchaseLastListPriceDate == "undefined") {
+        //         this.sourceItemMaster.purchaseLastListPriceDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.purchaseLastListPriceDate = new Date(this.sourceItemMaster.purchaseLastListPriceDate);
+        //     }
+        //     if (this.sourceItemMaster.purchaseLastDiscountPercentDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastDiscountPercentDate == undefined || this.sourceItemMaster.purchaseLastDiscountPercentDate == "undefined") {
+        //         this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date(this.sourceItemMaster.purchaseLastDiscountPercentDate);
+        //     }
+        //     if (this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == undefined || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "undefined") {
+        //         this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date(this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate);
+        //     }
+        //     if (this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == undefined || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "undefined") {
+        //         this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date(this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate);
+        //     }
+        //     if (this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == undefined || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "undefined") {
+        //         this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date(this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate);
+        //     }
+        //     if (this.sourceItemMaster.salesLastBaselineSalesPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastBaselineSalesPriceDate == undefined || this.sourceItemMaster.salesLastBaselineSalesPriceDate == "undefined") {
+        //         this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date(this.sourceItemMaster.salesLastBaselineSalesPriceDate);
+        //     }
+        //     if (this.sourceItemMaster.salesLastSalesDiscountPercentDate == "0001-01-01T00:00:00") {
+        //         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date(this.sourceItemMaster.salesLastSalesDiscountPercentDate);
+        //     }
+        //     if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
+        //         this.sourceItemMaster.expirationDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
+        //     }
+        //     if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
+        //         this.sourceItemMaster.expirationDate = new Date();
+        //     }
+        //     else {
+        //         this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
+        //     }
+        //     if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
+        //         this.sourceItemMaster.salesLastSalePriceDate = new Date();
+        //         this.sourceItemMaster.salesLastSalePriceDate = Date.now();
+        //         //this.sourceItemMaster.salesLastSalePriceDate.setValue(new Date().toISOString());
+        //     }
+        //     else {
+        //         this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
+        //     }
+
+        //     //adding for Currency
+        //     if (this.sourceItemMaster.purchaseCurrencyId) {
+        //         this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
+        //     }
+
+        // }
 
 
     }
@@ -669,6 +703,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             results => this.onDataLoadaircraftManfacturerSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    changeValueStringToInt(value) {
+
+        return parseFloat(value);
     }
 
     private onDataLoadaircraftManfacturerSuccessful(allWorkFlows: any[]) //While loading
@@ -3859,7 +3898,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else {
             this.dashNumberIdUrl = '';
         }
-        console.log(this.dashNumberIdUrl);
+
     }
 
 
@@ -3905,9 +3944,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             ).subscribe(dashnumbers => {
                 const responseData = dashnumbers;
                 this.dashNumberList = responseData.map(dashnumbers => {
+
                     return {
                         label: dashnumbers.dashNumber,
-                        value: dashnumbers.dashNumber
+                        value: dashnumbers.dashNumberId
                     };
                 });
             });
@@ -3958,7 +3998,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.LoadDashnumber = responseData.map(dashnumbers => {
                 return {
                     label: dashnumbers.dashNumber,
-                    value: dashnumbers.dashNumber
+                    value: dashnumbers.dashNumberId
                 }
             });
         });
@@ -3978,29 +4018,30 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.aircraftModelsIdUrl !== '' &&
             this.dashNumberIdUrl !== ''
         ) {
-            this.searchAircraftParams = `/${this.aircraftManfacturerIdsUrl}/${this.aircraftModelsIdUrl}/${this.dashNumberIdUrl}`;
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}&dashNumberId=${this.dashNumberIdUrl}`;
         }
         // search only by manfacturer and Model and  publicationId
         else if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== ''
         ) {
-            this.searchAircraftParams = `/${this.aircraftManfacturerIdsUrl}/${this.aircraftModelsIdUrl}`;
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}`;
         } else if (this.aircraftManfacturerIdsUrl !== '') {
-            this.searchAircraftParams = `/${this.aircraftManfacturerIdsUrl}`;
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}`;
         }
         // search only by model and publicationId
         else if (this.aircraftModelsIdUrl !== '') {
-            this.searchAircraftParams = `/${this.aircraftModelsIdUrl}`;
+            this.searchAircraftParams = `aircraftModelID=${this.aircraftModelsIdUrl}`;
         }
         // search only by dashNumber and publicationId
         else if (this.dashNumberIdUrl !== '') {
-            this.searchAircraftParams = `/${this.dashNumberIdUrl}`;
+            this.searchAircraftParams = `dashNumberId=${this.dashNumberIdUrl}`;
         }
-        console.log(this.searchAircraftParams)
 
-        this.itemser.getItemAirMappedByMultiTypeIdModelIDDashID(this.collectionofItemMaster.itemMasterId, this.searchAircraftParams).subscribe(res => {
-            this.aircraftListData = res.map(x => {
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+
+        this.itemser.searchAirMappedByMultiTypeIdModelIDDashID(ItemMasterID, this.searchAircraftParams).subscribe(res => {
+            this.aircraftListDataValues = res.map(x => {
                 return {
                     aircraft: x.aircraftType,
                     model: x.aircraftModel,
@@ -4067,10 +4108,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     selectedMemo: any;
     saveAircraft() {
+
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         const data = this.aircraftData.map(obj => {
             return {
                 ...obj,
-                ItemMasterId: this.collectionofItemMaster.itemMasterId,
+                ItemMasterId: ItemMasterID,
                 PartNumber: this.pnvalue,
                 MasterCompanyId: 1,
                 CreatedBy: this.sourceItemMaster.createdBy,
@@ -4083,28 +4126,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         })
         // posting the DashNumber Mapped data from Popup
+        // Used to get the Data Posted in the Popup
         this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
-            // Used to get the Data Posted in the Popup
-            this.itemser.getMappedAirCraftDetails(this.collectionofItemMaster.itemMasterId).subscribe(data => {
-                const responseData = data;
-                console.log(data);
-                this.aircraftListDataValues = responseData.map(x => { //aircraftListData
-                    return {
-                        aircraft: x.aircraftType,
-                        model: x.aircraftModel,
-                        dashNumber: x.dashNumber,
-                        memo: x.memo,
-                    }
-                })
-                console.log(this.aircraftListDataValues);
-                // resetting popup Data
-                this.aircraftData = undefined;
-                this.selectedAircraftId = []
-                this.selectedModelId = undefined;
-                this.selectedDashnumber = undefined;
+            // get aircraft Mapped Data 
+            this.getAircraftMappedDataByItemMasterId();
 
-
-            })
         })
 
 
@@ -4112,6 +4138,29 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //this.activeMenuItem = 2;
         this.changeOfTab('AircraftInfo');
 
+    }
+
+    getAircraftMappedDataByItemMasterId() {
+        // check whether edit or create and send and passes ItemMasterId
+        const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        this.itemser.getMappedAirCraftDetails(id).subscribe(data => {
+            const responseData = data;
+            this.aircraftListDataValues = responseData.map(x => { //aircraftListData
+                return {
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+            // resetting popup Data
+            this.aircraftData = undefined;
+            this.selectedAircraftId = []
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+
+
+        })
     }
     moveAtachapter() {
         this.changeOfTab('Atachapter');
@@ -4135,10 +4184,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     addATAMapping() {
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         //console.log(this.selectedModels, this.ataChaptherSelected);
         const ataMappingData = this.selectedModels.map(x => {
             return {
-                ItemMasterId: this.collectionofItemMaster.itemMasterId,
+                ItemMasterId: ItemMasterID,
                 ATAChapterId: this.ataChaptherSelected[0].ataChapterId,
                 ATASubChapterId: x.ataSubChapterId,
                 ATAChapterCode: this.ataChaptherSelected[0].ataChapterCode,
@@ -4156,19 +4206,25 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         })
 
         this.itemser.postATAMapping(ataMappingData).subscribe(res => {
-            this.itemser.getMappedATADetails(this.collectionofItemMaster.itemMasterId).subscribe(res => {
-                this.ataMappedList = res.map(x => {
-                    return {
-                        ataChapterName: x.ataChapterName,
-                        ataSubChapterDescription: x.ataSubChapterDescription
-                    }
-                })
-
-            })
-
+            this.getATAMappedDataByItemMasterId();
 
         })
 
+    }
+
+
+    getATAMappedDataByItemMasterId() {
+        // check whether edit or create and send and passes ItemMasterId
+        const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        this.itemser.getMappedATADetails(id).subscribe(res => {
+            this.ataMappedList = res.map(x => {
+                return {
+                    ataChapterName: x.ataChapterName,
+                    ataSubChapterDescription: x.ataSubChapterDescription
+                }
+            })
+
+        })
     }
 
     // get all Aircraft Models
@@ -4266,19 +4322,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.searchATAParams = '';
         // checks where multi select is empty or not and calls the service
         if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '') {
-            this.searchATAParams = `/${
+            this.searchATAParams = `ataChapterId=${
                 this.ataChapterIdUrl
-                }/${this.ataSubchapterIdUrl}`;
+                }&ataSubChapterId=${this.ataSubchapterIdUrl}`;
         }
         else if (this.ataChapterIdUrl !== '') {
-            this.searchATAParams = `/${this.ataChapterIdUrl}`;
+            this.searchATAParams = `ataChapterId=${this.ataChapterIdUrl}`;
         }
         else if (this.ataSubchapterIdUrl !== '') {
-            this.searchATAParams = `/${this.ataSubchapterIdUrl}`;
+            this.searchATAParams = `ataSubChapterId=${this.ataSubchapterIdUrl}`;
         }
+
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         this.itemser
-            .getItemATAMappedByMultiTypeIdModelIDDashID(
-                this.collectionofItemMaster.itemMasterId,
+            .searchATAMappedByMultiTypeIdModelIDDashID(
+                ItemMasterID,
                 this.searchATAParams,
             )
             .subscribe(res => {
@@ -4296,29 +4354,30 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     movePurchaseInformation() {
-        this.activeTab = 3;
-        this.showpurchaseData = true;
-        this.showGeneralData = false;
-        this.showexportData = false;
-        this.showAircraftData = false;
-        this.showAtachapter = false;
+        this.changeOfTab('PurchaseSales');
+        // this.showpurchaseData = true;
+        // this.showGeneralData = false;
+        // this.showexportData = false;
+        // this.showAircraftData = false;
+        // this.showAtachapter = false;
     }
 
     moveExportInformation() {
-        this.showpurchaseData = false;
-        this.showGeneralData = false;
-        this.showexportData = true;
-        this.showAircraftData = false;
-        this.showAtachapter = false;
-        this.activeTab = 4;
+        // this.showpurchaseData = false;
+        // this.showGeneralData = false;
+        // this.showexportData = true;
+        // this.showAircraftData = false;
+        // this.showAtachapter = false;
+
         this.savePurchaseandSales();
 
     }
     savePurchaseandSales() {
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         const data = this.fieldArray.map(obj => {
             return {
                 ...obj,
-                ItemMasterId: this.collectionofItemMaster.itemMasterId,
+                ItemMasterId: ItemMasterID,
                 PartNumber: this.pnvalue,
                 MasterCompanyId: 1,
                 CreatedBy: this.sourceItemMaster.createdBy,
@@ -4329,8 +4388,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 IsDeleted: false
             }
         })
+        console.log(data);
 
         this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
+            this.alertService.showMessage(
+                'Success',
+                `Saved Purchase and Sale Successfully `,
+                MessageSeverity.success
+              );
+            this.changeOfTab('ExportInfo');
             // console.log(datas);
         })
 
@@ -4346,6 +4412,20 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showpurchaseData = false;
         this.showGeneralData = true;
         this.showexportData = false;
+    }
+
+    saveExportInformation(){
+        console.log(this.exportInfo)
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+   const data = {...this.exportInfo , ExportCountryId : 20 ,  ItemMasterId : ItemMasterID  }
+
+   this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
+    this.alertService.showMessage(
+        'Success',
+        `Saved Export Information Successfully `,
+        MessageSeverity.success
+      );
+     })
     }
 
 
@@ -4376,7 +4456,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                     // get aircraft Mapped Information by ItemMasterId
                     this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-                        this.aircraftListData = data.map(x => {
+                        this.aircraftListDataValues = data.map(x => {
                             return {
                                 aircraft: x.aircraftType,
                                 model: x.aircraftModel,
@@ -4996,9 +5076,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     addFieldValue(): void {
         if (this.fieldArray.length <= 5) {
             this.fieldArray = [...this.fieldArray, { ...this.newFields }]
-            //console.log(this.fieldArray);
         }
+
+
     }
+
+    // checkDropDownValueExists(value) {
+
+    //     const data = this.fieldArray.filter(x => {
+    //         if (x.Condition === value) {
+    //             return value;
+    //         }
+    //     })
+    //     return data.length > 0 ? true : false;
+
+    // }
     delete(i) {
         if (this.fieldArray.length > 0) {
             this.fieldArray.splice(i, 1);
@@ -5028,23 +5120,27 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ////}
     percentValue(field) {
         if (field.PP_VendorListPrice && field.PP_PurchaseDiscPerc && !field.SP_FSP_FlatPriceAmount) {
-            field.PP_PurchaseDiscAmount = field.PP_VendorListPrice * field.PP_PurchaseDiscPerc
+            field.PP_PurchaseDiscAmount = ((field.PP_VendorListPrice * field.PP_PurchaseDiscPerc) / 100)
         }
         if (field.PP_PurchaseDiscAmount) {
-            field.PP_UnitPurchasePrice = field.PP_PurchaseDiscAmount - field.PP_VendorListPrice
+            field.PP_UnitPurchasePrice = field.PP_VendorListPrice - field.PP_PurchaseDiscAmount
         }
         if (field.SP_CalSPByPP_MarkUpPercOnListPrice && field.PP_VendorListPrice) {
-            field.SP_CalSPByPP_MarkUpAmount = field.PP_VendorListPrice * field.SP_CalSPByPP_MarkUpPercOnListPrice;
+            field.SP_CalSPByPP_MarkUpAmount = ((field.SP_FSP_FlatPriceAmount * field.SP_CalSPByPP_MarkUpPercOnListPrice) / 100)
+        }
+        if (field.PP_UnitPurchasePrice && field.SP_CalSPByPP_MarkUpAmount) {
+
+            field.SP_CalSPByPP_BaseSalePrice = field.PP_UnitPurchasePrice + field.SP_CalSPByPP_MarkUpAmount
         }
 
     }
     salePercent(field) {
         if (field.SP_CalSPByPP_BaseSalePrice && field.SP_CalSPByPP_SaleDiscPerc) {
-            field.SP_CalSPByPP_SaleDiscAmount = field.SP_CalSPByPP_BaseSalePrice * field.SP_CalSPByPP_BaseSalePrice;
+            field.SP_CalSPByPP_SaleDiscAmount = ((field.SP_CalSPByPP_BaseSalePrice * field.SP_CalSPByPP_SaleDiscPerc) / 100);
         }
 
         if (field.SP_CalSPByPP_SaleDiscAmount && field.SP_CalSPByPP_BaseSalePrice) {
-            field.SP_CalSPByPP_UnitSalePrice = field.SP_CalSPByPP_SaleDiscAmount - field.SP_CalSPByPP_BaseSalePrice;
+            field.SP_CalSPByPP_UnitSalePrice = field.SP_CalSPByPP_BaseSalePrice - field.SP_CalSPByPP_SaleDiscAmount;
 
         }
     }

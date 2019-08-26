@@ -18,11 +18,107 @@ namespace DAL.Repositories
         public PublicationRepository(ApplicationDbContext context) : base(context)
         { }
 
-        public IEnumerable<DAL.Models.Publication> GetPublications()
+        public IEnumerable<object> GetPublications()
         {
-            return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.PublicationId).ToList();
+            try
+            {
+                var data = (from Mainpub in _appContext.Publication
+                            join PublicationItemMaster in _appContext.PublicationItemMasterMapping on Mainpub.PublicationRecordId equals PublicationItemMaster.PublicationRecordId
+                            join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
+                            join ItemMasterAircraft in _appContext.ItemMasterAircraftMapping on it.ItemMasterId equals ItemMasterAircraft.ItemMasterId
+                            where Mainpub.IsActive == true && Mainpub.IsDeleted != true
+                            select new
+                            {
+                                Mainpub.PublicationRecordId,
+                                Mainpub.PublicationId,
+                                Mainpub.Memo,
+                                Mainpub.Platform,
+                                Mainpub.Description,
+                                Mainpub.MasterCompanyId,
+                                Mainpub.revision,
+                                Mainpub.revisionDate,
+                                Mainpub.nextreviewDate,
+                                Mainpub.verifieddate,
+                                Mainpub.CreatedBy,
+                                Mainpub.UpdatedBy,
+                                Mainpub.CreatedDate,
+                                Mainpub.UpdatedDate,
+                                Mainpub.EntryDate,
+                                Mainpub.IsActive,
+                                Mainpub.IsDeleted,
+                                Mainpub.ASD,
+                                Mainpub.publishby,
+                                Mainpub.location,
+                                Mainpub.verifiedby,
+                                Mainpub.employee,
+
+                                PublicationItemMaster.PartNumberDescription,
+                                ItemMasterAircraft.AircraftModel,
+                                ItemMasterAircraft.AircraftType,
+                                it.ItemMasterId,
+                                it.PartNumber,
+                                it.ATAChapterId,
+                                it.ATAChapterCode,
+                                it.ATAChapterName,
+                                it.ATASubChapterId,
+                                it.ATASubChapterDescription,
+                            }).ToList();
+                            var uniquedata = data.GroupBy(item => new { item.PartNumber }).Select(group => group.First()).ToList();
+                            return uniquedata;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            
+            //return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.PublicationId).ToList();
         }
 
+        public IEnumerable<object> GetPublicationsById(long ID)
+        {
+            try
+            {
+                var data = (from Mainpub in _appContext.Publication
+                            where Mainpub.IsActive == true && Mainpub.IsDeleted != true && Mainpub.PublicationRecordId==ID
+                            select new
+                            {
+                                Mainpub.PublicationRecordId,
+                                Mainpub.PublicationId,
+                                Mainpub.Memo,
+                                Mainpub.Platform,
+                                Mainpub.Description,
+                                Mainpub.MasterCompanyId,
+                                Mainpub.revision,
+                                Mainpub.revisionDate,
+                                Mainpub.nextreviewDate,
+                                Mainpub.verifieddate,
+                                Mainpub.CreatedBy,
+                                Mainpub.UpdatedBy,
+                                Mainpub.CreatedDate,
+                                Mainpub.UpdatedDate,
+                                Mainpub.EntryDate,
+                                Mainpub.IsActive,
+                                Mainpub.IsDeleted,
+                                Mainpub.ASD,
+                                Mainpub.publishby,
+                                Mainpub.location,
+                                Mainpub.verifiedby,
+                                Mainpub.employee,
+                            }).ToList();
+                
+                return data;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+
+            //return _appContext.Publication.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.PublicationId).ToList();
+        }
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
@@ -428,5 +524,7 @@ namespace DAL.Repositories
 
             }
         }
+
+     
     }
 }

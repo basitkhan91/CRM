@@ -70,7 +70,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
 
     private readonly _searchgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchgetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
     private readonly _searchgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
-
+    private readonly _getItemMasterDetails: string = '/api/ItemMaster/Get';
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -95,11 +95,20 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
     get getNonstockList() { return this.configurations.baseUrl + this._itemNonstockclassificationGetUrl; }
+    get ItemMasterDetails() { return this.configurations.baseUrl + this._getItemMasterDetails };
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+
+
+    getItemMasterDetailsById<T>(id: number): Observable<T> {
+        return this.http.get<T>(`${this.ItemMasterDetails}/${id}`, this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.getItemMasterDetailsById(id));
+            })
     }
 
     getItemMasterById<T>(id: number): Observable<T> {
@@ -822,22 +831,22 @@ export class ItemMasterEndpoint extends EndpointFactory {
             })
 
     }
-    getAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number, searchUrl: string): Observable<T> {
-        let endpointUrl = `${this._getItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}${searchUrl}`;
+    searchAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number, searchUrl: string): Observable<T> {
+        let endpointUrl = `${this._searchgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}?${searchUrl}`;
 
         return this.http
             .get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAirMappedByMultiTypeIDModelIDDashID(ItemmasterId, searchUrl));
+                return this.handleError(error, () => this.searchAirMappedByMultiTypeIDModelIDDashID(ItemmasterId, searchUrl));
             });
     }
-    getATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number, searchUrl: string): Observable<T> {
-        let endpointUrl = `${this._getItemATAMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}${searchUrl}`;
+    searchATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number, searchUrl: string): Observable<T> {
+        let endpointUrl = `${this._searchgetItemATAMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}?${searchUrl}`;
 
         return this.http
             .get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getATAMappedByMultiATAIDATASUBID(ItemmasterId, searchUrl));
+                return this.handleError(error, () => this.searchATAMappedByMultiATAIDATASUBID(ItemmasterId, searchUrl));
             });
     }
 
@@ -860,23 +869,23 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteitemMasterMappedPurcSaleEndpoint(userObject));
             });
     }
-    searchGetAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number): Observable<T> {
-        let endpointUrl = `${this._searchgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
+    // searchGetAirMappedByMultiTypeIDModelIDDashID<T>(ItemmasterId: number): Observable<T> {
+    //     let endpointUrl = `${this._searchgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
 
-        return this.http
-            .get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.searchGetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId));
-            });
-    }
-    searchgetATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number): Observable<T> {
-        let endpointUrl = `${this._searchgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
+    //     return this.http
+    //         .get<T>(endpointUrl, this.getRequestHeaders())
+    //         .catch(error => {
+    //             return this.handleError(error, () => this.searchGetAirMappedByMultiTypeIDModelIDDashID(ItemmasterId));
+    //         });
+    // }
+    // searchgetATAMappedByMultiATAIDATASUBID<T>(ItemmasterId: number): Observable<T> {
+    //     let endpointUrl = `${this._searchgetItemAirMappingByMultiTypeIDModelIDDashID}/${ItemmasterId}`;
 
-        return this.http
-            .get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.searchgetATAMappedByMultiATAIDATASUBID(ItemmasterId));
-            });
-    }
+    //     return this.http
+    //         .get<T>(endpointUrl, this.getRequestHeaders())
+    //         .catch(error => {
+    //             return this.handleError(error, () => this.searchgetATAMappedByMultiATAIDATASUBID(ItemmasterId));
+    //         });
+    // }
 
 }

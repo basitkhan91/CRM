@@ -1,4 +1,8 @@
-﻿<div class="x_content add-customer-work">
+﻿
+
+
+
+<div class="x_content add-customer-work">
     <div class="form-group row form-bg">
         <label class="control-label col-sm-2">Item Type </label>
         <div class="col-sm-8 mleft25" style="margin-top:3px;">
@@ -408,7 +412,7 @@
                                                 [(ngModel)]="sourceItemMaster.glAccountId">
                                             <option *ngFor="let glAccounts of allGlInfo"
                                                     [ngValue]="glAccounts.glAccountId" title="{{glAccounts.accountDescription}}">
-                                                {{glAccounts.oldAccountCode}} - {{glAccounts.accountName}}
+                                                {{glAccounts.accountCode}} - {{glAccounts.accountName}}
                                             </option>
                                         </select>
                                     </div>
@@ -690,7 +694,7 @@
                             <div class="col-md-12 ">
                                 <div class="shadow-Box">
                                     <div class="col-sm-12">
-                                        <h4 class="float-left">Search Dash Numbers</h4>
+                                        <h4 class="float-left">Search Aircraft Information</h4>
                                         <h4 class="float-right">
                                             Add Aircraft Information
                                             <!--<button type="button" data-toggle="modal"
@@ -790,7 +794,7 @@
 
                     </div>
                     <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
                         <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
                 </div>
@@ -937,7 +941,7 @@
                     </div>
                     <div class="col-sm-12 mt8">
                         <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
 
                 </div>
@@ -964,7 +968,7 @@
                         </div>
                         <div class="col-sm-12">
                             <span class="float-right">
-                                <button type="button" (click)="addFieldValue()" class="btn btn-primary">Add</button>
+                                <button type="button" (click)="addFieldValue(); " class="btn btn-primary">Add</button>
                             </span>
                         </div>
                     </div>
@@ -1013,9 +1017,10 @@
 
                                 <tr *ngFor="let field of fieldArray; let i = index">
                                     <td>
+                                           
                                         <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
-                                            <option value="NEW" selected="1">NEW</option>
-                                            <option value="AS-IS">AS-IS</option>
+                                            <option value="NEW" selected="1"  >NEW</option>
+                                            <option value="AS-IS" >AS-IS </option>
                                             <option value="REPAIR">REPAIR</option>
                                             <option value="SRV">SRV</option>
                                             <option value="OVERHAUL">OVERHAUL</option>
@@ -1023,7 +1028,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.PP_UOMId" [ngModelOptions]="{standalone: true}">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.PP_UOMId" [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1032,7 +1037,7 @@
                                     </td>
                                     <td>
                                         <select [ngModelOptions]="{standalone: true}" class="form-control w80 select-value-drop1" id="" name=""
-                                                [(ngModel)]="field.PP_CurrencyId">
+                                                [(ngModel)]="field.PP_CurrencyId"   (change)="changeValueStringToInt($event.target.value)" >
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
                                                 {{currencyName.symbol}}
@@ -1040,10 +1045,10 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_FXRatePerc" />
+                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_FXRatePerc" />
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
+                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
                                     </td>
                                     <td>
                                         <input type="date" class="input-field-value" [(ngModel)]="field.PP_LastListPriceDate" [ngModelOptions]="{standalone: true}">
@@ -1054,16 +1059,16 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="num" maxlength="15" value="{{field.PP_PurchaseDiscAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_PurchaseDiscAmount" [disabled]="true" />
+                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="num" maxlength="15" value="{{field.PP_PurchaseDiscAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_PurchaseDiscAmount" [disabled]="true" />
                                     </td>
                                     <td>
                                         <input type="date" class="input-field-value"  [(ngModel)]="field.PP_LastPurchaseDiscDate" [ngModelOptions]="{standalone: true}">
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="int" maxlength="15" value="{{field.PP_UnitPurchasePrice}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_UnitPurchasePrice" [disabled]="true" />
+                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="int" maxlength="15" value="{{field.PP_UnitPurchasePrice}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_UnitPurchasePrice" [disabled]="true" />
                                     </td>
                                     <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_FSP_UOMId" [ngModelOptions]="{standalone: true}">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_FSP_UOMId" [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1071,7 +1076,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_CurrencyId">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_CurrencyId" (change)="changeValueStringToInt($event.target.value)"   >
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
                                                 {{currencyName.symbol}}
@@ -1079,41 +1084,41 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText  pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FXRatePerc" />
+                                        <input type="number" class="input-field-value"  pInputText  pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FXRatePerc" />
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText  pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
+                                        <input type="number" class="input-field-value"  pInputText  pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
                                     </td>
                                     <td>
                                         <input type="date" class="input-field-value"  [(ngModel)]="field.SP_FSP_LastFlatPriceDate" [ngModelOptions]="{standalone: true}">
                                     </td>
                                     <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_MarkUpPercOnListPrice" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_MarkUpPercOnListPrice" [ngModelOptions]="{standalone: true}" (change)="percentValue(field); changeValueStringToInt($event.target.value); ">
                                             <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
                                         </select> %
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_MarkUpAmount" value="{{field.markupAmount}}" />
+                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_MarkUpAmount" value="{{field.markupAmount}}" />
                                     </td>
                                     <td>
                                         <input type="date" class="input-field-value"  [(ngModel)]="field.SP_CalSPByPP_LastMarkUpDate" [ngModelOptions]="{standalone: true}" />
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="money" maxlength="15" [(ngModel)]="field.SP_CalSPByPP_BaseSalePrice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
+                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="money" maxlength="15" [(ngModel)]="field.SP_CalSPByPP_BaseSalePrice" [ngModelOptions]="{standalone: true}"   (input)="salePercent(field)" />
                                     </td>
                                     <td>
-                                        <select class="form-control w50 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_SaleDiscPerc" [ngModelOptions]="{standalone: true}" (change)="salePercent(field)">
+                                        <select class="form-control w50 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_SaleDiscPerc" [ngModelOptions]="{standalone: true}" (change)="salePercent(field); changeValueStringToInt($event.target.value);">
                                             <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
                                         </select> %
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_SaleDiscAmount" value="{{field.SP_CalSPByPP_SaleDiscAmount}}" />
+                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_SaleDiscAmount" value="{{field.SP_CalSPByPP_SaleDiscAmount}}" />
                                     </td>
                                     <td>
                                         <input type="date" class="input-field-value"  [(ngModel)]="field.SP_CalSPByPP_LastSalesDiscDate" [ngModelOptions]="{standalone: true}">
                                     </td>
                                     <td>
-                                        <input type="text" class="input-field-value"  pInputText [disabled]="true" pKeyFilter="num" [(ngModel)]="field.SP_CalSPByPP_UnitSalePrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.SP_CalSPByPP_UnitSalePrice}}" />
+                                        <input type="number" class="input-field-value"  pInputText [disabled]="true" pKeyFilter="num" [(ngModel)]="field.SP_CalSPByPP_UnitSalePrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.SP_CalSPByPP_UnitSalePrice}}" />
                                     </td>
                                     <td>
                                         <button class="btn btn-danger nobg" (click)="delete(i)">
@@ -1157,23 +1162,23 @@
                                     <label for="eccn" class="control-label">
                                         ECCN
                                     </label>
-                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" />
+                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
                                     <label class="control-label">
                                         ITAR Num <strong class="clr-red">*</strong>
                                     </label>
-                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" />
+                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum"  [(ngModel)]="exportInfo.ITARNumber" name="itarNumber"/>
                                     <label class="control-label">Country <span style="color: red">*</span></label>
                                     <p-autoComplete [(ngModel)]="sourceAction.countries_name" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer3">
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" [(ngModel)]="exportInfo.ExportCountryId">
                                         <ng-template let-countryName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{countryName}}</div>
                                         </ng-template>
                                     </p-autoComplete>
-                                    <label class="control-label">Value <span style="color: red">*</span></label>
-                                    <input type="text" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" />
+                                    <label class="control-label">Value <span style="color: red">*</span></label> 
+                                    <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15"  [(ngModel)]="exportInfo.ExportValue" name="exportValue"/>
                                     <label class="control-label">Currency <span style="color: red">*</span></label>                        
-                                    <select [ngModelOptions]="{standalone: true}" class="select-value-drop1"
-                                            [(ngModel)]="sourceItemMaster.exportCurrencyId">
+                                    <select  class="select-value-drop1"
+                                            [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId">
                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                 [ngValue]="currencyName.currencyId">
                                             {{currencyName.symbol}}
@@ -1187,8 +1192,8 @@
                                         Weight <strong class="clr-red">*</strong>
                                     </label>
                                     <span class="display-flex inline-block">
-                                        <input type="text" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" />
-                                        <select class="form-control w80 select-value-drop" id="" name="">
+                                        <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10"  [(ngModel)]="exportInfo.ExportWeight" name="exportWeight"/>
+                                        <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1200,7 +1205,8 @@
                                         <span style="margin-left:3px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal"
                                                data-target="#ModalUnit" ></i></span>
                                     </label>
-                                    <select class="select-value-drop1" id="" name="">
+                                    <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"  
+                                    (change)="changeValueStringToInt($event.target.value)" name="exportUOMId">
                                         <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                 [ngValue]="unitName.unitOfMeasureId">
                                             {{unitName.shortName}}
@@ -1208,9 +1214,9 @@
                                     </select>
                                     <label class="control-label">Size (L,W,H)</label>
                                     <div class="inline-block display-flex">
-                                        <input type="text" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" />&nbsp;
-                                        <input type="text" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" />&nbsp;
-                                        <input type="text" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" />
+                                        <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10"  [(ngModel)]="exportInfo.ExportSizeLength"/>&nbsp;
+                                        <input type="number"  name ="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10"   [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
+                                        <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10"   [(ngModel)]="exportInfo.ExportSizeHeight"/>
                                     </div>
                                     <label class="control-label">Classification <span style="color:red;">*</span></label>
                                     <div class="inline-block display-flex">
@@ -1256,7 +1262,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <span class="float-right">
-                                            <button class="btn btn-primary-cstm" pButton type="button" label="Save" style="padding: 0 !important;"></button>
+                                            <button class="btn btn-primary-cstm" pButton type="button" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
                                             &nbsp;
                                             <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
                                         </span>                                      
