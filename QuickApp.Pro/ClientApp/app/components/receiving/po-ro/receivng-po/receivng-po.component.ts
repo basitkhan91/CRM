@@ -215,6 +215,25 @@ export class ReceivngPoComponent implements OnInit {
                     else {
                         part.itemMaster.isTimeLife = result[0].isTimeLife;
                         part.timeLifeList = [];
+
+                        for (var i = 0; i < part.stocklineListObj.length; i++) {
+                            let timeLife: TimeLife = new TimeLife();
+                            timeLife.cyclesRemaining = '';
+                            timeLife.cyclesSinceInspection = '';
+                            timeLife.cyclesSinceNew = '';
+                            timeLife.cyclesSinceOVH = '';
+                            timeLife.cyclesSinceRepair = '';
+                            timeLife.timeRemaining = '';
+                            timeLife.timeSinceInspection = '';
+                            timeLife.timeSinceNew = '';
+                            timeLife.timeSinceOVH = '';
+                            timeLife.timeSinceRepair = '';
+                            timeLife.lastSinceNew = '';
+                            timeLife.lastSinceInspection = '';
+                            timeLife.lastSinceOVH = '';
+
+                            part.timeLifeList.push(timeLife);
+                        }
                     }
                 }
 
