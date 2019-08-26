@@ -176,8 +176,7 @@ export class PurchaseSetupComponent {
 
 		this.loadcustomerData();
 		this.loadData();
-        this.createPOPartsList = [new CreatePOPartsList()];   
-        console.log(this.createPOPartsList);      
+        this.createPOPartsList = [new CreatePOPartsList()];     
 
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
@@ -186,6 +185,7 @@ export class PurchaseSetupComponent {
 			this.pocollection = workFlowtService.purchasepartcollection;
 			if (this.pocollection.length > 0) {
 				this.sourcePoApproval = this.pocollection[0];
+                console.log(this.sourcePoApproval); 
 
 				this.sourcePoApproval.dateRequested = new Date(this.sourcePoApproval.dateRequested);
 				this.sourcePoApproval.dateApprovied = new Date(this.sourcePoApproval.dateApprovied);
@@ -448,9 +448,8 @@ export class PurchaseSetupComponent {
         this.sourcePoApproval.updatedBy = this.userName;
         this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
-			{
-				this.savePurchaseorderPart(saveddata.purchaseOrderId)
-			}
+            console.log(saveddata);
+			this.savePurchaseorderPart(saveddata.purchaseOrderId);
 		});
 
 	}
@@ -1508,6 +1507,14 @@ export class PurchaseSetupComponent {
 
 		//this.sourcePoApproval.buid1 = null;
 
+        for(let i=0; i < this.partListData.length; i++) {
+            if (this.partListData[i].companyId == 0) {
+                this.partListData[i].companyId = masterCompanyId;
+                this.onPartCompanyChange(this.partListData[i]);
+            }           
+        }
+        
+
 		console.log(this.bulist);
 
 	}
@@ -1563,34 +1570,46 @@ export class PurchaseSetupComponent {
 		this.divisionlist = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
 			if (this.allManagemtninfo[i].parentId == buid) {
-				this.departmentList.push(this.allManagemtninfo[i]);
-			}
-		}
-
-		this.sourcePoApproval.depid1 = null;
-
-		console.log(this.departmentList);
-	}
-
-	getDivisionlist(depid)
-	{
-		this.sourcePoApproval.managementStructureEntityId = depid; //Saving Management Structure Id if there Company Id
-
-		this.divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == depid) {
 				this.divisionlist.push(this.allManagemtninfo[i]);
 			}
 		}
 
-		this.sourcePoApproval.divid1 = true;
+		//this.sourcePoApproval.depid1 = null;
+        for(let i=0; i < this.partListData.length; i++) {
+            this.partListData[i].partBusinessUnitId = buid;
+            this.onPartBusinessUnitChange(this.partListData[i]);
+        }
 
 		console.log(this.divisionlist);
 	}
 
-	getDivisionChangeManagementCode(divisionId)
+	getDivisionlist(divid)
 	{
-		this.sourcePoApproval.managementStructureEntityId = divisionId;
+		this.sourcePoApproval.managementStructureEntityId = divid; //Saving Management Structure Id if there Company Id
+
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == divid) {
+				this.departmentList.push(this.allManagemtninfo[i]);
+			}
+		}
+
+		//this.sourcePoApproval.divid1 = true;
+        for(let i=0; i < this.partListData.length; i++) {
+            this.partListData[i].partDivisionId = divid;
+            this.onPartDivisionChange(this.partListData[i]);
+        }
+
+		console.log(this.departmentList);
+	}
+
+	getDivisionChangeManagementCode(depid)
+	{
+		this.sourcePoApproval.managementStructureEntityId = depid;
+        for(let i=0; i < this.partListData.length; i++) {
+            this.partListData[i].partDepartmentId = depid;
+            this.onPartDepartmentChange(this.partListData[i]);
+        }
 	}
 	private onprioritySuccessful(getPriorityList: any[]) {
 
@@ -2529,20 +2548,8 @@ export class PurchaseSetupComponent {
         this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
 
-    addPartNum() {
-        this.createPOPartsList.push(new CreatePOPartsList());
-    }
-
     onDelPNRow(index) {
-        this.createPOPartsList.splice(index, 1);
-    }
-
-    onAddPNChildRow(index) {
-        this.createPOPartsList[index].partListDetails.push(new PartDetails());
-    }
-
-    onDelPNChildRow(index, subIndex) {
-        this.createPOPartsList[index].partListDetails.splice(subIndex, 1);
+        this.partListData.splice(index, 1);
     }
 
     checkAllPartDetails() {
