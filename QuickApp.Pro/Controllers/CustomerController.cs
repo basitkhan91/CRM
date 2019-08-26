@@ -251,6 +251,11 @@ namespace QuickApp.Pro.Controllers
 
                 DAL.Models.DiscountModel discObj = new DAL.Models.DiscountModel();
                 discObj.DiscontValue = discountViewModel.DiscontValue;
+                discObj.MasterCompanyId = 1;
+                discObj.CreatedBy = discountViewModel.CreatedBy;
+                discObj.UpdatedBy = discountViewModel.UpdatedBy;
+                discObj.CreatedDate = System.DateTime.UtcNow;
+                discObj.UpdatedDate = discountViewModel.UpdatedDate;
                 _unitOfWork.Discount.Add(discObj);
                 _unitOfWork.SaveChanges();
             }
@@ -721,6 +726,7 @@ namespace QuickApp.Pro.Controllers
                 address.UpdatedBy = Customershipping.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
+                address.IsActive = Customershipping.IsActive;
                 _unitOfWork.Address.Add(address);
                 _unitOfWork.SaveChanges();
                 long? id = address.AddressId;
@@ -1209,6 +1215,7 @@ namespace QuickApp.Pro.Controllers
                 address.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
+                address.IsActive = customerBillingAddressViewModel.IsActive;
                 _unitOfWork.Address.Add(address);
                 _unitOfWork.SaveChanges();
                 long? id = address.AddressId;
@@ -1292,7 +1299,10 @@ namespace QuickApp.Pro.Controllers
                 addressObj.Country = customerBillingAddressViewModel.Country;
                 addressObj.MasterCompanyId = 1;
                 // addressObj.RecordCreateDate = DateTime.Now;
-                addressObj.CreatedBy = customerBillingAddressViewModel.CreatedBy;
+
+                //created by is not needed as the record is already created and the viewmodel returns null
+                //addressObj.CreatedBy = customerBillingAddressViewModel.CreatedBy;
+
                 addressObj.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
                 //addressObj.CreatedDate = DateTime.Now;
                 addressObj.UpdatedDate = DateTime.Now;
