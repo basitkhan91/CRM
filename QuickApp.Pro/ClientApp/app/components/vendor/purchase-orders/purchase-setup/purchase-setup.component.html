@@ -777,7 +777,7 @@
     <a class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">Save</a>
 </div>
 
-<!--<div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
+<div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
     <div class="x_panel">
         <ul class="nav nav-pills">
             <li class="active"><a data-toggle="tab" href="#tab1">Parts List</a></li>
@@ -1362,7 +1362,7 @@
         <div class="clear"></div>
 
     </div>
-</div>-->
+</div>
    
     <ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
@@ -2221,46 +2221,46 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
-                        <div>
+                        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateissued()">
                             <div class="form-group col-md-12" *ngIf="enableSiteName">
                                 <label class="col-md-6">Site Name:</label>
-                                <select class="form-control col-md-6">
+                                <select class="form-control col-md-6" name="siteName" [(ngModel)]="sourceissued.siteName">
                                     <option value="0">Select</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Address 1:</label>
-                                <input type="text" class="form-control col-md-6">
+                                <input type="text" class="form-control col-md-6" name="address1" [(ngModel)]="sourceissued.address1">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Address 2:</label>
-                                <input type="text" class="form-control col-md-6">
+                                <input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="sourceissued.address2">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Address 3:</label>
-                                <input type="text" class="form-control col-md-6">
+                                <input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="sourceissued.address3">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">City:</label>
-                                <input type="text" class="form-control col-md-6">
+                                <input type="text" class="form-control col-md-6" name="city" [(ngModel)]="sourceissued.city">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">State:</label>
-                                <input type="text" class="form-control col-md-6">
+                                <input type="text" class="form-control col-md-6" name="stateOrProvince" [(ngModel)]="sourceissued.stateOrProvince">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Postal:</label>
-                                <input type="text" class="form-control col-md-6">
+                                <input type="text" class="form-control col-md-6" name="postalCode" [(ngModel)]="sourceissued.postalCode">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Country:</label>
-                                <input type="text" class="form-control col-md-6">
+                                <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="sourceissued.country">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm">Save to Vendor/Customer/Company Table</button>
-                                <button type="button" class="btn btn-primary-cstm">Save to this PO</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid">Save to Vendor/Customer/Company Table</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid">Save to this PO</button>
                             </div>
-                        </div>
+                        </form>
                         </div>
                     </div>
                 <div class="modal-footer">

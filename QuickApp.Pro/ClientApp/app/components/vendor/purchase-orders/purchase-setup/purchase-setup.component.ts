@@ -172,7 +172,7 @@ export class PurchaseSetupComponent {
     vendorCapesInfo: any[] = [];
 
 	/** po-approval ctor */
-	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public workFlowtService1: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public workFlowtService: VendorService, public priority: PriorityService, private alertService: AlertService) {
+	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService) {
 
 		this.loadcustomerData();
 		this.loadData();
@@ -181,8 +181,8 @@ export class PurchaseSetupComponent {
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
 		}
-		if (this.workFlowtService.purchasepartcollection) {
-			this.pocollection = workFlowtService.purchasepartcollection;
+		if (this.vendorService.purchasepartcollection) {
+			this.pocollection = vendorService.purchasepartcollection;
 			if (this.pocollection.length > 0) {
 				this.sourcePoApproval = this.pocollection[0];
                 console.log(this.sourcePoApproval); 
@@ -190,50 +190,50 @@ export class PurchaseSetupComponent {
 				this.sourcePoApproval.dateRequested = new Date(this.sourcePoApproval.dateRequested);
 				this.sourcePoApproval.dateApprovied = new Date(this.sourcePoApproval.dateApprovied);
 				this.sourcePoApproval.needByDate = new Date(this.sourcePoApproval.needByDate);
-				//this.allManagemtninfo = this.workFlowtService.purchasepartcollection;
-                for (let i = 0; i < this.workFlowtService.purchasepartcollection.length; i++) {
+				//this.allManagemtninfo = this.vendorService.purchasepartcollection;
+                for (let i = 0; i < this.vendorService.purchasepartcollection.length; i++) {
                    
 
      
                        
-                    if (this.workFlowtService.purchasepartcollection[i].pop.isParent == true) {
+                    if (this.vendorService.purchasepartcollection[i].pop.isParent == true) {
                       
 
-						if (this.workFlowtService.purchasepartcollection[i].pop.needByDate) {
-							this.workFlowtService.purchasepartcollection[i].pop.needByDate = new Date(this.workFlowtService.purchasepartcollection[i].pop.needByDate);
+						if (this.vendorService.purchasepartcollection[i].pop.needByDate) {
+							this.vendorService.purchasepartcollection[i].pop.needByDate = new Date(this.vendorService.purchasepartcollection[i].pop.needByDate);
 						}
 						else {
-							this.workFlowtService.purchasepartcollection[i].pop.needByDate = new Date();
+							this.vendorService.purchasepartcollection[i].pop.needByDate = new Date();
 						}
-						this.workFlowtService.purchasepartcollection[i].pop.partId = workFlowtService.purchasepartcollection[i].partId;
-						this.workFlowtService.purchasepartcollection[i].pop.partdescription = workFlowtService.purchasepartcollection[i].partDescription;
-						this.workFlowtService.purchasepartcollection[i].pop.itemTypeId = workFlowtService.purchasepartcollection[i].itemTypeId;
-						this.workFlowtService.purchasepartcollection[i].pop.name = workFlowtService.purchasepartcollection[i].name;
-						this.workFlowtService.purchasepartcollection[i].pop.glAccountId = workFlowtService.purchasepartcollection[i].glAccountId;
-						this.workFlowtService.purchasepartcollection[i].pop.serialNumber = workFlowtService.purchasepartcollection[i].serialNumber;
-						this.workFlowtService.purchasepartcollection[i].pop.partNumber = workFlowtService.purchasepartcollection[i].partNumber;
-                        this.workFlowtService.purchasepartcollection[i].pop.shortName = workFlowtService.purchasepartcollection[i].shortName;
+						this.vendorService.purchasepartcollection[i].pop.partId = vendorService.purchasepartcollection[i].partId;
+						this.vendorService.purchasepartcollection[i].pop.partdescription = vendorService.purchasepartcollection[i].partDescription;
+						this.vendorService.purchasepartcollection[i].pop.itemTypeId = vendorService.purchasepartcollection[i].itemTypeId;
+						this.vendorService.purchasepartcollection[i].pop.name = vendorService.purchasepartcollection[i].name;
+						this.vendorService.purchasepartcollection[i].pop.glAccountId = vendorService.purchasepartcollection[i].glAccountId;
+						this.vendorService.purchasepartcollection[i].pop.serialNumber = vendorService.purchasepartcollection[i].serialNumber;
+						this.vendorService.purchasepartcollection[i].pop.partNumber = vendorService.purchasepartcollection[i].partNumber;
+                        this.vendorService.purchasepartcollection[i].pop.shortName = vendorService.purchasepartcollection[i].shortName;
 
-						this.workFlowtService.purchasepartcollection[i].pop["childList"] = [];
-						this.partListData.push(this.workFlowtService.purchasepartcollection[i].pop)
+						this.vendorService.purchasepartcollection[i].pop["childList"] = [];
+						this.partListData.push(this.vendorService.purchasepartcollection[i].pop)
 
 					}
 					else {
-						if (this.workFlowtService.purchasepartcollection[i].pop.needByDate) {
-							this.workFlowtService.purchasepartcollection[i].pop.needByDate = new Date(this.workFlowtService.purchasepartcollection[i].pop.needByDate);
+						if (this.vendorService.purchasepartcollection[i].pop.needByDate) {
+							this.vendorService.purchasepartcollection[i].pop.needByDate = new Date(this.vendorService.purchasepartcollection[i].pop.needByDate);
 						}
 						else {
-							this.workFlowtService.purchasepartcollection[i].pop.needByDate = new Date();
+							this.vendorService.purchasepartcollection[i].pop.needByDate = new Date();
 						}
-						this.workFlowtService.purchasepartcollection[i].pop.shortName = workFlowtService.purchasepartcollection[i].shortName;
-						this.workFlowtService.purchasepartcollection[i].pop.partId = workFlowtService.purchasepartcollection[i].partId;
-						this.workFlowtService.purchasepartcollection[i].pop.partdescription = workFlowtService.purchasepartcollection[i].partDescription;
-						this.workFlowtService.purchasepartcollection[i].pop.itemTypeId = workFlowtService.purchasepartcollection[i].itemTypeId;
-						this.workFlowtService.purchasepartcollection[i].pop.name = workFlowtService.purchasepartcollection[i].name;
-						this.workFlowtService.purchasepartcollection[i].pop.glAccountId = workFlowtService.purchasepartcollection[i].glAccountId;
-						this.workFlowtService.purchasepartcollection[i].pop.serialNumber = workFlowtService.purchasepartcollection[i].serialNumber;
-						this.workFlowtService.purchasepartcollection[i].pop.partNumber = workFlowtService.purchasepartcollection[i].partNumber;
-						this.editChildList.push(this.workFlowtService.purchasepartcollection[i].pop)
+						this.vendorService.purchasepartcollection[i].pop.shortName = vendorService.purchasepartcollection[i].shortName;
+						this.vendorService.purchasepartcollection[i].pop.partId = vendorService.purchasepartcollection[i].partId;
+						this.vendorService.purchasepartcollection[i].pop.partdescription = vendorService.purchasepartcollection[i].partDescription;
+						this.vendorService.purchasepartcollection[i].pop.itemTypeId = vendorService.purchasepartcollection[i].itemTypeId;
+						this.vendorService.purchasepartcollection[i].pop.name = vendorService.purchasepartcollection[i].name;
+						this.vendorService.purchasepartcollection[i].pop.glAccountId = vendorService.purchasepartcollection[i].glAccountId;
+						this.vendorService.purchasepartcollection[i].pop.serialNumber = vendorService.purchasepartcollection[i].serialNumber;
+						this.vendorService.purchasepartcollection[i].pop.partNumber = vendorService.purchasepartcollection[i].partNumber;
+						this.editChildList.push(this.vendorService.purchasepartcollection[i].pop)
 
 					}
 				}
@@ -261,17 +261,17 @@ export class PurchaseSetupComponent {
 
 		}
 
-		if (workFlowtService.isEditMode == true) {
-			this.localCollection = workFlowtService.vendorForPoCollection;
+		if (vendorService.isEditMode == true) {
+			this.localCollection = vendorService.vendorForPoCollection;
 			this.sourcePoApproval = this.localCollection;
 			console.log(this.localCollection);
 			this.itemTypeId = 0;
 		}
-		this.workFlowtService.ShowPtab = false;
+		this.vendorService.ShowPtab = false;
 		//this.itemTypeId = 0;
-		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-purchase-setup';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-purchase-setup';
+		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 	}
 	makeNestedObj(arr, parent) {
 		var out = []
@@ -310,7 +310,7 @@ export class PurchaseSetupComponent {
 
 		//Calling for Get ManagementSite Data Based on Company Structure Selection
 
-		this.workFlowtService.getManagementSiteDataByCompanyId(companyId).subscribe(
+		this.vendorService.getManagementSiteDataByCompanyId(companyId).subscribe(
 			results => this.onManagemtntSitedataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -324,7 +324,7 @@ export class PurchaseSetupComponent {
 		}
 
 		if (this.gridData.length == 0) {
-			this.workFlowtService1.getManagemententity().subscribe(
+			this.legalEntityService.getManagemententity().subscribe(
 				results => this.onManagemtntdataLoad(results[0]),
 				error => this.onDataLoadFailed(error)
 			);
@@ -393,7 +393,7 @@ export class PurchaseSetupComponent {
 
 	private getAddresses() {
 
-		this.workFlowtService.getSiteAddresses().subscribe(
+		this.vendorService.getSiteAddresses().subscribe(
 			results => this.onaddressDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -408,7 +408,7 @@ export class PurchaseSetupComponent {
 		if (this.array.length > 0) {
 			for (let i = 0; i < this.array.length; i++) {
 
-				this.workFlowtService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
+				this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
                 //console.log(returndata[0]);
                 returndata[0].map(x => {
                   if (x.partDescription === null && x.itemTypeId === null && x.isHazardousMaterial === null && x.manufacturerId === null && x.priorityId === null) {
@@ -446,11 +446,19 @@ export class PurchaseSetupComponent {
         this.userName = 'admin';
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
-        this.workFlowtService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
+        this.sourcePoApproval.requestedBy = this.userName;
+        console.log(this.sourcePoApproval);
+        this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
             console.log(saveddata);
 			this.savePurchaseorderPart(saveddata.purchaseOrderId);
 		});
+
+        /*this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
+			        this.savedInfo = saveddata;
+                    console.log(saveddata);
+			        this.savePurchaseorderPart(saveddata.purchaseOrderId);
+		        });*/
 
 	}
 	private loadcustomerData() {
@@ -641,7 +649,7 @@ export class PurchaseSetupComponent {
 
 					//For Getting Data After Part Selected
 
-					this.workFlowtService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
+					this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
 						data1 => {
 							if (data1[0][0]) {
 								this.partWithId = data1[0][0];
@@ -669,7 +677,7 @@ export class PurchaseSetupComponent {
     ddlModel: any;
     savePurchaseorderPart(purId) {
 
-		if (this.workFlowtService.isEditMode == false) {
+		if (this.vendorService.isEditMode == false) {
 			for (let i = 0; i < this.partListData.length; i++) {
 				if (this.partListData[i].purchaseOrderPartRecordId) {
 					//alert("exists");
@@ -732,7 +740,7 @@ export class PurchaseSetupComponent {
 							}
 						}
 					}
-					this.workFlowtService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
+					this.vendorService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
 						this.savedPurchasedPart = saveddata1;
 						if (childDataList.length > 0) {
 							for (let k = 0; k < childDataList.length; k++) {
@@ -787,7 +795,7 @@ export class PurchaseSetupComponent {
 										//isActive: this.childDataList[k].purchaseOrderPartRecordId,
 										isParent: childDataList[k].isParent,
 									}
-									this.workFlowtService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+									this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 										this.savedPurchasedPart = saveddata2;
 
 									})
@@ -844,7 +852,7 @@ export class PurchaseSetupComponent {
 										//isActive: childDataList[k].purchaseOrderPartRecordId,
 										isParent: childDataList[k].isParent,
 									}
-									this.workFlowtService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+									this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 										this.savedPurchasedPart = saveddata2;
 
 									})
@@ -915,7 +923,7 @@ export class PurchaseSetupComponent {
 							}
 						}
 					}
-					this.workFlowtService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
+					this.vendorService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
 						this.savedPurchasedPart = saveddata1;
 						if (childDataList.length > 0) {
 							for (let k = 0; k < childDataList.length; k++) {
@@ -969,7 +977,7 @@ export class PurchaseSetupComponent {
 									//isActive: childDataList[k].purchaseOrderPartRecordId,
 									isParent: childDataList[k].isParent,
 								}
-								this.workFlowtService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+								this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 									this.savedPurchasedPart = saveddata2;
 
 								})
@@ -982,7 +990,7 @@ export class PurchaseSetupComponent {
 			}
 			this.saveSuccessHelper(this.partListData[0])
 		}
-		if (this.partListData.length > 0 && this.workFlowtService.isEditMode == true) {
+		if (this.partListData.length > 0 && this.vendorService.isEditMode == true) {
 			//let index: number = 0;
 			//index++;
 			for (let i = 0; i < this.partListData.length; i++) {
@@ -1046,7 +1054,7 @@ export class PurchaseSetupComponent {
 						}
 					}
 				}
-				this.workFlowtService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
+				this.vendorService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
 					this.savedPurchasedPart = saveddata1;
 					if (this.childDataList.length > 0) {
 						for (let k = 0; k < this.childDataList.length; k++) {
@@ -1101,7 +1109,7 @@ export class PurchaseSetupComponent {
 								//isActive: this.childDataList[k].purchaseOrderPartRecordId,
 								isParent: this.childDataList[k].isParent,
 							}
-							this.workFlowtService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+							this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 								this.savedPurchasedPart = saveddata2;
 
 							})
@@ -1224,7 +1232,7 @@ export class PurchaseSetupComponent {
     }
     onVendorNameChange(part, vendor): void {
         part.poPartSplitUserId = vendor.vendorId;
-        this.workFlowtService.getVendorShipAddressGet(vendor.vendorId).subscribe(
+        this.vendorService.getVendorShipAddressGet(vendor.vendorId).subscribe(
             vendorAddresses => {
                 this.vendorSelectedforSplit = vendorAddresses[0];
                 part.addressData = vendorAddresses[0];;
@@ -1264,7 +1272,7 @@ export class PurchaseSetupComponent {
     deleteSplitShipment(childata, index, mainindex) {
  
         if (childata.purchaseOrderPartRecordId) {
-            this.workFlowtService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
+            this.vendorService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
 
             })
         }
@@ -1336,7 +1344,7 @@ export class PurchaseSetupComponent {
 					returnddataforbill => {
 						this.billToCusData = returnddataforbill[0];
 					});
-				this.workFlowtService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
+				this.vendorService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
 					this.shipToContactData = data[0];
 				});
 			}
@@ -1352,7 +1360,7 @@ export class PurchaseSetupComponent {
 					returnddataforbill => {
 						this.shipToCusData = returnddataforbill[0];
 					});
-				this.workFlowtService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
+				this.vendorService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
 		
 					this.billToContactData = data[0];
 				});
@@ -1374,7 +1382,7 @@ export class PurchaseSetupComponent {
 	private loadManagementdata() {
 
 
-		this.workFlowtService1.getManagemententity().subscribe(
+		this.legalEntityService.getManagemententity().subscribe(
 			results => this.onManagemtntdataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -1642,7 +1650,7 @@ export class PurchaseSetupComponent {
 	getPartValue(parentdata, data) {
 		this.partWithId = [];
 		this.itemTypeId = 1;
-		this.workFlowtService.getPartDetailsWithid(data).subscribe(
+		this.vendorService.getPartDetailsWithid(data).subscribe(
 			data1 => {
 				if (data1[0][0]) {
 					this.partWithId = data1[0][0];
@@ -1661,7 +1669,7 @@ export class PurchaseSetupComponent {
 	getPartValueForPart(parentdata, data) {
 		this.partWithId = [];
 		this.itemTypeId = 1;
-		this.workFlowtService.getPartDetailsWithidForSinglePart(data).subscribe(
+		this.vendorService.getPartDetailsWithidForSinglePart(data).subscribe(
 			data1 => {
 				if (data1[0][0]) {
 					this.partWithId = data1[0][0];
@@ -1714,8 +1722,8 @@ export class PurchaseSetupComponent {
 	}
 
 	private loadPartListData() {
-		if (this.workFlowtService.purchasepartcollection) {
-			if (this.workFlowtService.purchasepartcollection.length > 0) {
+		if (this.vendorService.purchasepartcollection) {
+			if (this.vendorService.purchasepartcollection.length > 0) {
 				this.unitofmeasureService.getUnitOfMeasureList().subscribe(uomdata => {
 					this.allUomdata = uomdata[0];
 				});
@@ -1881,7 +1889,7 @@ export class PurchaseSetupComponent {
 		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
-				this.workFlowtService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
+				this.vendorService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
 					returdaa => {
 						this.vendorSelectedforSplit = returdaa[0];
 						partChildList["addressData"] = returdaa[0];;
@@ -1895,11 +1903,11 @@ export class PurchaseSetupComponent {
 		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
-				this.workFlowtService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
+				this.vendorService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
 					returdaa => {
 						this.vendorSelected = returdaa[0];
 					})
-				this.workFlowtService.getContacts(this.VendorNamecoll[i][0].vendorId).subscribe(
+				this.vendorService.getContacts(this.VendorNamecoll[i][0].vendorId).subscribe(
 					returdaa => {
 						this.vendorContactsForshipTo = returdaa[0];
 					})
@@ -1912,11 +1920,11 @@ export class PurchaseSetupComponent {
 		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
-				this.workFlowtService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
+				this.vendorService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
 					returdaa => {
 						this.vendorSelectedForBillTo = returdaa[0];
 					})
-				this.workFlowtService.getContacts(this.VendorNamecoll[i][0].vendorId).subscribe(
+				this.vendorService.getContacts(this.VendorNamecoll[i][0].vendorId).subscribe(
 					returdaa => {
 						this.vendorContactsForBillTO = returdaa[0];
 					})
@@ -2010,7 +2018,7 @@ export class PurchaseSetupComponent {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService.getWorkFlows().subscribe(
+		this.vendorService.getWorkFlows().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -2022,11 +2030,11 @@ export class PurchaseSetupComponent {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService.getPartDetails().subscribe(
+		this.vendorService.getPartDetails().subscribe(
 			data => {
 				this.allPartDetails = data[0];
 				this.loadPartListData();
-				if (this.workFlowtService.isEditMode == false) {
+				if (this.vendorService.isEditMode == false) {
 
 					for (let i = 0; i < this.partListData.length; i++) {
 						this.partListData[i].partListObj = this.allPartDetails;
@@ -2320,7 +2328,7 @@ export class PurchaseSetupComponent {
 			this.sourceissued.masterCompanyId = 1;
 			//	this.sourcePoApproval.isActive = true;
 			this.sourceissued.vendorId = this.sourcePoApproval.vendorId;
-			this.workFlowtService.newShippingAdd(this.sourceissued).subscribe(data => {
+			this.vendorService.newShippingAdd(this.sourceissued).subscribe(data => {
 				this.localCollection = data;
 				this.loadData();
 				this.savesuccessCompleted(this.sourceissued);
@@ -2350,7 +2358,7 @@ export class PurchaseSetupComponent {
 			this.sourceissued.masterCompanyId = 1;
 			//	this.sourcePoApproval.isActive = true;
 			this.sourceissued.vendorId = this.sourcePoApproval.vendorId;
-			this.workFlowtService.newShippingAdd(this.sourceissued).subscribe(data => {
+			this.vendorService.newShippingAdd(this.sourceissued).subscribe(data => {
 				this.localCollection = data;
 				this.loadData();
 				this.savesuccessCompleted(this.sourceissued);
@@ -2381,7 +2389,7 @@ export class PurchaseSetupComponent {
 			this.sourceissued.masterCompanyId = 1;
 			//	this.sourcePoApproval.isActive = true;
 			this.sourceissued.vendorId = this.sourcePoApproval.vendorId;
-			this.workFlowtService.newShippingAdd(this.sourceissued).subscribe(data => {
+			this.vendorService.newShippingAdd(this.sourceissued).subscribe(data => {
 				this.localCollection = data;
 				this.loadData();
 				this.savesuccessCompleted(this.sourceissued);
@@ -2401,7 +2409,7 @@ export class PurchaseSetupComponent {
 		this.sourceissued.updatedBy = this.userName;
 
 		this.sourcePoApproval.masterCompanyId = 1;
-		this.workFlowtService.updateshippinginfo(this.sourceissued).subscribe(data => {
+		this.vendorService.updateshippinginfo(this.sourceissued).subscribe(data => {
 			this.updatedCollection = data;
 			this.loadData();
 
@@ -2645,31 +2653,31 @@ export class PurchaseSetupComponent {
 
 
 //this.testData = this.makeNestedObj(this.allManagemtninfo, true);
-				//for (let i = 0; i < this.workFlowtService.purchasepartcollection.length; i++) {
-				//	if (this.workFlowtService.purchasepartcollection[i].pop.isParent == true) {
-				//		this.partListData.push(this.workFlowtService.purchasepartcollection[i].pop)
-				//		this.partListData[i].partId = workFlowtService.purchasepartcollection[i].partId;
-				//		this.partListData[i].partdescription = workFlowtService.purchasepartcollection[i].description;
-				//		this.partListData[i].itemTypeId = workFlowtService.purchasepartcollection[i].itemTypeId;
-				//		this.partListData[i].name = workFlowtService.purchasepartcollection[i].name;
-				//		this.partListData[i].glAccountId = workFlowtService.purchasepartcollection[i].glAccountId;
-				//		this.partListData[i].serialNumber = workFlowtService.purchasepartcollection[i].serialNumber;
-				//		this.partListData[i].partNumber = workFlowtService.purchasepartcollection[i].partNumber;
+				//for (let i = 0; i < this.vendorService.purchasepartcollection.length; i++) {
+				//	if (this.vendorService.purchasepartcollection[i].pop.isParent == true) {
+				//		this.partListData.push(this.vendorService.purchasepartcollection[i].pop)
+				//		this.partListData[i].partId = vendorService.purchasepartcollection[i].partId;
+				//		this.partListData[i].partdescription = vendorService.purchasepartcollection[i].description;
+				//		this.partListData[i].itemTypeId = vendorService.purchasepartcollection[i].itemTypeId;
+				//		this.partListData[i].name = vendorService.purchasepartcollection[i].name;
+				//		this.partListData[i].glAccountId = vendorService.purchasepartcollection[i].glAccountId;
+				//		this.partListData[i].serialNumber = vendorService.purchasepartcollection[i].serialNumber;
+				//		this.partListData[i].partNumber = vendorService.purchasepartcollection[i].partNumber;
 				//		//this.partListData[i]["childList"] = [];
 
 				//	}
-				//	if (i == this.workFlowtService.purchasepartcollection.length - 1) {
+				//	if (i == this.vendorService.purchasepartcollection.length - 1) {
 				//		alert("over")
 				//		for (let j = 0; j < this.partListData.length; j++) {
-				//		for (let m = 0; m < this.workFlowtService.purchasepartcollection.length; m++) {
+				//		for (let m = 0; m < this.vendorService.purchasepartcollection.length; m++) {
 
-				//			if (this.workFlowtService.purchasepartcollection[m].pop.isParent == false) {
-				//				if (this.partListData[j].itemMasterId == this.workFlowtService.purchasepartcollection[m].pop.itemMasterId) {
+				//			if (this.vendorService.purchasepartcollection[m].pop.isParent == false) {
+				//				if (this.partListData[j].itemMasterId == this.vendorService.purchasepartcollection[m].pop.itemMasterId) {
 				//					this.partListData[j]["childList"] = [];
 				//					this.partListData[j].ifSplitShip = true;
-				//					this.workFlowtService.purchasepartcollection[m].pop.itemTypeId = workFlowtService.purchasepartcollection[m].itemTypeId;
-				//					this.partListData[j]["childList"].push(this.workFlowtService.purchasepartcollection[m].pop);
-				//					//this.partListData[j]["childList"].itemTypeId = workFlowtService.purchasepartcollection[i].itemTypeId;
+				//					this.vendorService.purchasepartcollection[m].pop.itemTypeId = vendorService.purchasepartcollection[m].itemTypeId;
+				//					this.partListData[j]["childList"].push(this.vendorService.purchasepartcollection[m].pop);
+				//					//this.partListData[j]["childList"].itemTypeId = vendorService.purchasepartcollection[i].itemTypeId;
 
 				//				}
 				//			}
