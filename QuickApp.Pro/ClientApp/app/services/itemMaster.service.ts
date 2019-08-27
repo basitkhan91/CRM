@@ -275,6 +275,9 @@ export class ItemMasterService {
     newItemMasterPurcSaleClass(action: any) {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
     }
+    newItemMasterExportInformation(action: any) {
+        return this.itemMasterEndpoint.getNewitemExportInfoEndpoint<any>(action);
+    }
     getMappedAirCraftDetails(ItemmasterId: number) {
         return this.itemMasterEndpoint.getAircraftMappingEndpoint<any>(ItemmasterId);
     }

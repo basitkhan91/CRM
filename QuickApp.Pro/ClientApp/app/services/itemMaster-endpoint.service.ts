@@ -795,11 +795,12 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getATAMappingEndpoint(ItemmasterId));
             });
     }
-    getNewitemExportInfoEndpoint<T>(userObject: any): Observable<T> {
+    getNewitemExportInfoEndpoint<T>(Object: any): Observable<T> {
+        const { ItemMasterId } = Object;
 
-        return this.http.post<T>(this._ItemMasterExportInfoUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+        return this.http.post<T>(`${this._ItemMasterExportInfoUrlNew}/${ItemMasterId}`, JSON.stringify(Object), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getNewitemExportInfoEndpoint(userObject));
+                return this.handleError(error, () => this.getNewitemExportInfoEndpoint(Object));
             });
     }
     updateItemMasterAircraftEndpoint<T>(ItemMasterAircraftMappingId: number, ): Observable<T> {
