@@ -259,7 +259,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataMainchapter: ATAChapter[]
     showAircraftData: boolean = false;
     showAtachapter: boolean = false;
-    selectedAircraftId: any = [];
+    selectedAircraftId: any;
     selectedModelId: any;
     //new code-- for purchase and sales calculation
     itemQuantitys = [];
@@ -3890,7 +3890,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     newValue: any;
     // get aircraft model by type 
     getAircraftModelByManfacturer(value) {
-        this.newValue = value.originalEvent.target.textContent;
+        // this.newValue = value.originalEvent.target.textContent;
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
             const responseValue = models[0];
             this.LoadValues = responseValue.map(models => {
@@ -3900,6 +3900,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             });
         });
+        this.selectedModelId = undefined;
+        this.selectedDashnumber = undefined;
+
 
     }
     selectedAircraftIdvalue: any;
@@ -3944,10 +3947,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     // get AircraftModels By manufacturer Type
     async getAircraftModelByManfacturerType() {
+
+
+
         // construct url from array
         await this.searchByFieldUrlCreateforAircraftInformation();
         // reset the dropdowns
-
+        this.selectedAircraftModel = [];
+        this.selectedDashNumbers = []
         // checks where multi select is empty or not and calls the service
         if (this.aircraftManfacturerIdsUrl !== '') {
             this.aircraftModelService
@@ -3973,7 +3980,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // construct url from array
         await this.searchByFieldUrlCreateforAircraftInformation();
         // reset dropdown
-
+        this.selectedDashNumbers = []
         // checks where multi select is empty or not and calls the service
 
         if (this.aircraftManfacturerIdsUrl !== '' && this.aircraftModelsIdUrl !== '') {
@@ -4144,10 +4151,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 IsChecked: false
             }]
         }
-        // reset poupup aircraft information
-        this.selectedAircraftId = []
-        this.selectedModelId = undefined;
-        this.selectedDashnumber = undefined;
+
+
+
 
     }
     selectedMemo: any;
@@ -4159,15 +4165,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 return x;
             }
         })
-        console.log(aircraftData);
         const data = aircraftData.map(obj => {
+            console.log(obj);
+
             return {
-                AircraftType: obj.AircraftType,
-                AircraftModel: obj.AircraftModel,
-                DashNumber: obj.DashNumber,
-                AircraftModelId: obj.AircraftModelId,
-                DashNumberId: obj.DashNumberId,
-                Memo: obj.Memo,
+                ...obj,
                 ItemMasterId: ItemMasterID,
                 PartNumber: this.pnvalue,
                 MasterCompanyId: 1,
@@ -4185,7 +4187,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // Used to get the Data Posted in the Popup
         this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
 
-
+            // reset poupup aircraft information
+            this.aircraftData = undefined;
+            this.selectedAircraftId = undefined;
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
 
             // get aircraft Mapped Data 
             this.getAircraftMappedDataByItemMasterId();
@@ -4212,11 +4218,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     memo: x.memo,
                 }
             })
-            // resetting popup Data
-            this.aircraftData = undefined;
-            this.selectedAircraftId = []
-            this.selectedModelId = undefined;
-            this.selectedDashnumber = undefined;
+
 
 
         })
@@ -4260,6 +4262,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     addATAMapping() {
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        const PartNumber = this.isEdit === true ? this.pnvalue : this.collectionofItemMaster.partNumber
         //console.log(this.selectedModels, this.ataChaptherSelected);
         const ataMappingData = this.selectedModels.map(x => {
             return {
@@ -4274,7 +4277,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 UpdatedBy: this.userName,
                 CreatedDate: new Date(),
                 UpdatedDate: new Date(),
-                PartNumber: this.collectionofItemMaster.partNumber,
+                PartNumber: PartNumber,
                 IsActive: true,
                 IsDeleted: false,
             }
