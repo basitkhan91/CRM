@@ -71,6 +71,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _searchgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchgetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
     private readonly _searchgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
     private readonly _getItemMasterDetails: string = '/api/ItemMaster/Get';
+private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPurchSaleByItemMasterID';
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -850,7 +851,16 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.searchATAMappedByMultiATAIDATASUBID(ItemmasterId, searchUrl));
             });
     }
+    getPurcSaleByItemMasterID<T>(ItemmasterId: number): Observable<T> {
+        let endpointUrl = `${this._getPurcSaleDetails}/${ItemmasterId}`;
 
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPurcSaleByItemMasterID(ItemmasterId));
+            });
+    }
+    
     deleteitemMasterMappedATAEndpoint<T>(userObject: any): Observable<T> {
         return this.http.post<T>(this._ItemMasterATAMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {

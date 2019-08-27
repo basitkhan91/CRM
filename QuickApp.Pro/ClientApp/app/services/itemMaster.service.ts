@@ -324,7 +324,10 @@ export class ItemMasterService {
     getItemMasterDetailById(ItemMasterId: number) {
         return this.itemMasterEndpoint.getItemMasterDetailsById<any>(ItemMasterId);
     }
+    getPurcSaleDetailById(ItemMasterId: number) {
+        return this.itemMasterEndpoint.getPurcSaleByItemMasterID<any>(ItemMasterId);
+    }
 
-
+    
 
 }

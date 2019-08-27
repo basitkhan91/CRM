@@ -645,5 +645,27 @@ namespace DAL.Repositories
 
             }
         }
+
+        public IEnumerable<object> gePurcSaleByItemMasterID(long ItemMasterid)
+        {
+
+                var data = (from iM in _appContext.ItemMasterPurchaseSale
+                            where iM.ItemMasterId == ItemMasterid && iM.IsActive == true && iM.IsDeleted == false
+                            select new
+                            {
+                                iM.Condition,iM.ItemMasterId,
+                                iM.ItemMasterPurchaseSaleId,iM.PartNumber,iM.PP_CurrencyId,iM.PP_FXRatePerc,iM.PP_LastListPriceDate,
+                                iM.PP_LastPurchaseDiscDate,iM.PP_PurchaseDiscAmount,iM.PP_PurchaseDiscPerc,iM.PP_UnitPurchasePrice,
+                                iM.PP_UOMId,iM.PP_VendorListPrice,iM.SP_CalSPByPP_BaseSalePrice,iM.SP_CalSPByPP_LastMarkUpDate,
+                                iM.SP_CalSPByPP_LastSalesDiscDate,iM.SP_CalSPByPP_MarkUpAmount,iM.SP_CalSPByPP_MarkUpPercOnListPrice,
+                                iM.SP_CalSPByPP_SaleDiscAmount,iM.SP_CalSPByPP_SaleDiscPerc,iM.SP_CalSPByPP_UnitSalePrice,
+                                iM.SP_FSP_CurrencyId,iM.SP_FSP_FlatPriceAmount,iM.SP_FSP_FXRatePerc,iM.SP_FSP_LastFlatPriceDate,
+                                iM.SP_FSP_UOMId,iM.UpdatedBy,iM.UpdatedDate,iM.IsActive,iM.IsDeleted,iM.CreatedBy,iM.CreatedDate,
+
+
+
+                            }).ToList();
+                return data;
+        }
     }
 }

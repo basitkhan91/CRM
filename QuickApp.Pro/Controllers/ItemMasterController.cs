@@ -1542,6 +1542,21 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+        [HttpGet("getItemMasterPurchSaleByItemMasterID/{ItemMasterID}")]
+        [Produces(typeof(List<ItemMasterPurchaseSale>))]
+        public IActionResult getItemMasterPurchaseSaleByItemMasterID(long ItemMasterID)
+        {
+            var result = _unitOfWork.itemMaster.gePurcSaleByItemMasterID(ItemMasterID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
 
     }
 
