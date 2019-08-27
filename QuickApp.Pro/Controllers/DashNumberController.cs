@@ -162,6 +162,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetDashList(string Mid, long Tid, string Did)
         {
+			Console.WriteLine(Mid, Tid, Did);
             var result = unitOfWork.DashNumberRepository.getDashListByIDS(Mid, Tid, Did);
             return Ok(result);
         }
