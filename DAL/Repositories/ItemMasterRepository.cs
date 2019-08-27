@@ -49,7 +49,7 @@ namespace DAL.Repositories
             }
         }
         
-              public IEnumerable<object> getItemMasterData(long id)
+        public IEnumerable<object> getItemMasterData(long id)
         {
 
             {
@@ -75,7 +75,6 @@ namespace DAL.Repositories
                 return data;
             }
         }
-
 
         public IEnumerable<object> GetSelectedAircraftModeldata(long id)
         {
@@ -118,7 +117,6 @@ namespace DAL.Repositories
                 return data;
             }
         }
-
 
         public IEnumerable<object> getAllItemMasterdata()
         {
@@ -579,6 +577,14 @@ namespace DAL.Repositories
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
             }
+            else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId == null)
+            {
+                var data = (from it in _appContext.ItemMasterAircraftMapping
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftModelId.Contains(it.AircraftModelId) && it.IsDeleted != true
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
             else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId != null)
             {
                             var data = (from it in _appContext.ItemMasterAircraftMapping
@@ -610,7 +616,6 @@ namespace DAL.Repositories
                             select new{iM.ItemMasterATAMappingId,iM.ItemMasterId,iM.ATAChapterId,iM.ATAChapterCode,iM.ATAChapterName,iM.PartNumber,iM.ATASubChapterId,iM.ATASubChapterDescription}).ToList();
                             var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                             return uniquedata;
-
             }
             else if (ATAChapterId != null && ATASubChapterID == null)
             {

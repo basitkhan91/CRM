@@ -26,7 +26,7 @@ namespace DAL.Repositories
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on Mainpub.PublicationRecordId equals PublicationItemMaster.PublicationRecordId
                             join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                             join ItemMasterAircraft in _appContext.ItemMasterAircraftMapping on it.ItemMasterId equals ItemMasterAircraft.ItemMasterId
-                            where Mainpub.IsActive == true && Mainpub.IsDeleted != true
+                            where  Mainpub.IsDeleted != true
                             select new
                             {
                                 Mainpub.PublicationRecordId,
@@ -452,6 +452,15 @@ namespace DAL.Repositories
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId)  && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
                             select new{ PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId, it.PartNumber, it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber, it.AircraftType, it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive, it.IsDeleted }).ToList();
+                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                            return uniquedata;
+            }
+            else if (myAircraftTypeId == null && myAircraftModelId != null && myDashNumberId == null)
+            {
+                            var data = (from it in _appContext.ItemMasterAircraftMapping
+                            join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId) && it.IsDeleted != true
+                            select new { PublicationItemMaster.ItemMasterId, PublicationItemMaster.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
             }
