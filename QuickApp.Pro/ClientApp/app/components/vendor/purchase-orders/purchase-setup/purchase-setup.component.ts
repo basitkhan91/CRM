@@ -447,18 +447,13 @@ export class PurchaseSetupComponent {
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
         this.sourcePoApproval.requestedBy = this.userName;
+        this.sourcePoApproval.DeferredReceiver = this.userName;
         console.log(this.sourcePoApproval);
         this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
             console.log(saveddata);
 			this.savePurchaseorderPart(saveddata.purchaseOrderId);
 		});
-
-        /*this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
-			        this.savedInfo = saveddata;
-                    console.log(saveddata);
-			        this.savePurchaseorderPart(saveddata.purchaseOrderId);
-		        });*/
 
 	}
 	private loadcustomerData() {
@@ -664,6 +659,7 @@ export class PurchaseSetupComponent {
 								parentdata.shortName = this.partWithId.shortName;
 								parentdata.listPrice = this.partWithId.listPrice; //Initial Value
 								parentdata.purchaseDiscountOffListPrice = this.partWithId.purchaseDiscountOffListPrice; //Percentage
+                                parentdata.UOMId = this.partWithId.purchaseUnitOfMeasureId;
 
 								this.partList.unitCost = this.partWithId.purchaseListPriceAfterDiscount; //After Discount Value
 
@@ -694,11 +690,10 @@ export class PurchaseSetupComponent {
 						approver: this.sourcePoApproval.approver,
 						approvedDate: this.sourcePoApproval.dateApprovied,
 						needByDate: this.partListData[i].needByDate,
-						manufacturer: this.partListData[i].manufacturer,
+						manufacturerId: this.partListData[i].manufacturerId,
 						status: this.sourcePoApproval.statusId,
 						trace: this.partListData[i].trace,
 						conditionCode: this.partListData[i].conditionCode,
-						uomId: this.partListData[i].uomId,
 						quantityOrdered: this.partListData[i].quantityOrdered,
 						unitCost: this.partListData[i].unitCost,
 						discountPerUnit: this.partListData[i].discountPerUnit,
@@ -710,7 +705,8 @@ export class PurchaseSetupComponent {
 						workOrderId: this.partListData[i].workOrderId,
 						repairOrderId: this.partListData[i].repairOrderId,
 						salesOrderId: this.partListData[i].salesOrderId,
-						generalLedgerAccounId: this.partListData[i].generalLedgerAccounId,
+                        GeneralLedgerAccounId: this.partListData[i].glAccountId,
+						UOMId: this.partListData[i].UOMId,
 						memo: this.partListData[i].memo,
 						poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
 						poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
@@ -761,7 +757,7 @@ export class PurchaseSetupComponent {
 										status: this.sourcePoApproval.statusId,
 										trace: this.partListData[i].trace,
 										conditionCode: this.partListData[i].conditionCode,
-										uomId: childDataList[k].uomId,
+						                UOMId: this.partListData[i].UOMId,
 										quantityOrdered: childDataList[k].quantityOrdered,
 										//unitCost: this.partListData[i].unitCost,
 										//discountPerUnit: this.partListData[i].discountPerUnit,
@@ -818,7 +814,7 @@ export class PurchaseSetupComponent {
 										status: this.sourcePoApproval.statusId,
 										trace: this.partListData[i].trace,
 										conditionCode: this.partListData[i].conditionCode,
-										uomId: childDataList[k].uomId,
+						                UOMId: this.partListData[i].UOMId,
 										quantityOrdered: childDataList[k].quantityOrdered,
 										//unitCost: this.partListData[i].unitCost,
 										//discountPerUnit: this.partListData[i].discountPerUnit,
@@ -881,7 +877,7 @@ export class PurchaseSetupComponent {
 						status: this.sourcePoApproval.statusId,
 						trace: this.partListData[i].trace,
 						conditionCode: this.partListData[i].conditionCode,
-						uomId: this.partListData[i].uomId,
+						UOMId: this.partListData[i].UOMId,
 						quantityOrdered: this.partListData[i].quantityOrdered,
 						unitCost: this.partListData[i].unitCost,
 						discountPerUnit: this.partListData[i].discountPerUnit,
@@ -943,7 +939,7 @@ export class PurchaseSetupComponent {
 									status: this.sourcePoApproval.statusId,
 									trace: this.partListData[i].trace,
 									conditionCode: this.partListData[i].conditionCode,
-									uomId: childDataList[k].uomId,
+						            UOMId: this.partListData[i].UOMId,
 									quantityOrdered: childDataList[k].quantityOrdered,
 									//unitCost: this.partListData[i].unitCost,
 									//discountPerUnit: this.partListData[i].discountPerUnit,

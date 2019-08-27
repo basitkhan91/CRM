@@ -334,9 +334,9 @@
                            </td>
                            <td>
                                <!--<select class="w80" [(ngModel)]="partList.uomId">
-            <option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
-        </select>-->
-                               {{partList?.shortName}}
+        <option *ngFor="let unitName of allUomdata" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+    </select>-->
+                               {{partList?.UOMId}}
                            </td>
                            <td><p-calendar class="pcal-cpo-grid" [showIcon]="true"name="needByDate" [(ngModel)]="partList.needByDate"></p-calendar></td>
                            <td>
@@ -477,7 +477,7 @@
                                    </div>
                                </div>
                            </td>
-                           <td>{{partList?.shortName}}</td>
+                           <td>{{partList?.UOMId}}</td>
                            <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="quantityOrdered" /></td>
                            <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="needByDate"></p-calendar></td>
                            <td>

@@ -549,6 +549,13 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("saveVendorpurchases")]
         public IActionResult saveVendorpurchases([FromBody] PurchaseOrderViewModel poViewModel, Address address, VendorType vt)
         {
+            if (!ModelState.IsValid) {
+                string messages = string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage));
+                Console.WriteLine(messages);
+            }
+
             if (ModelState.IsValid)
             {
 
@@ -701,7 +708,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Approver = poViewModel.Approver;
                     actionobject.ApprovedDate = poViewModel.ApprovedDate;
                     actionobject.NeedByDate = poViewModel.NeedByDate;
-                    actionobject.Manufacturer = poViewModel.Manufacturer;
+                    actionobject.ManufacturerId = poViewModel.ManufacturerId;
                     actionobject.Status = poViewModel.Status;
                     actionobject.Trace = poViewModel.Trace;
                     actionobject.ConditionCode = poViewModel.ConditionCode;
@@ -754,7 +761,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Approver = poViewModel.Approver;
                     actionobject.ApprovedDate = poViewModel.ApprovedDate;
                     actionobject.NeedByDate = poViewModel.NeedByDate;
-                    actionobject.Manufacturer = poViewModel.Manufacturer;
+                    actionobject.ManufacturerId = poViewModel.ManufacturerId;
                     actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
                     actionobject.Status = poViewModel.Status;
                     actionobject.Trace = poViewModel.Trace;

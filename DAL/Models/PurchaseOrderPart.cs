@@ -20,7 +20,7 @@ namespace DAL.Models
         public string Approver { get; set; }
         public Nullable<System.DateTime> ApprovedDate { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
-        public string Manufacturer { get; set; }
+        public long ManufacturerId { get; set; }
         public string Status { get; set; }
         public string Trace { get; set; }
         public string ConditionCode { get; set; }
