@@ -17,11 +17,11 @@
                             <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status: <span class="clr-red">*</span></label>
                             <div>
                                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
-                                    <!--<label class="radio-cstm wauto">-->
-                                    <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" required>
+                                    <label class="radio-cstm wauto">
+                                    <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" disabled required>
                                     <span class="checkmark"></span>
                                     {{status.Value}}
-                                    <!--</label>-->
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -751,7 +751,14 @@
                                                     </div>
                                                 </section>
                                                 <br />
-                                                <h4 (click)="getItemMasterById('serialized', part)"> Reload Serialized <i class="fa fa-refresh" aria-hidden="true"></i></h4>
+                                                <section *ngIf="part.itemMaster != null">
+                                                    <h4>
+                                                        Update Part's Is Serialized feature in ItemMaster
+                                                        <p-inputSwitch *ngIf="part.itemMaster.isSerialized == true" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
+                                                        <p-inputSwitch *ngIf="part.itemMaster.isSerialized == false"  [(ngModel)]="part.itemMaster.isSerialized" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
+                                                        <p-inputSwitch *ngIf="part.itemMaster.isSerialized == null"  [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
+                                                    </h4>
+                                                </section>
                                                 <section>
                                                     <h4 class="add-details-heading" style="text-align: left;" *ngIf="part.itemMaster.isSerialized">Serialized</h4>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
@@ -776,7 +783,14 @@
                                                     </div>
                                                 </section>
                                                 <br />
-                                                <h4 (click)="getItemMasterById('timelife', part)"> Reload Time Life <i class="fa fa-refresh" aria-hidden="true"></i></h4>
+                                                <section *ngIf="part.itemMaster != null">
+                                                    <h4>
+                                                        Update Part's Is TimeLife feature in ItemMaster
+                                                        <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == true" [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                                        <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == false" [(ngModel)]="part.itemMaster.isTimeLife"  pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                                        <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == null" [(ngModel)]="part.itemMaster.isTimeLife"  pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                                    </h4>
+                                                </section>
                                                 <section *ngIf="part.itemMaster.isTimeLife">
                                                     <h3 class="add-details-heading">Time Life - {{ currentTLIndex + 1 }}  of part {{ part.itemMaster?.partNumber }} </h3>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
@@ -872,10 +886,10 @@
                                                 </section>
 
                                                 <!--<div class="form-row">
-                                                    <div class="col-md-12">
-                                                        <a class="btn btn-primary-cstm" style="width: 58px; height: 28px; margin-bottom: 10px;">Save</a>
-                                                    </div>
-                                                </div>-->
+        <div class="col-md-12">
+            <a class="btn btn-primary-cstm" style="width: 58px; height: 28px; margin-bottom: 10px;">Save</a>
+        </div>
+    </div>-->
                                             </div>
 
                                         </td>
