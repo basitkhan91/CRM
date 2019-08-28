@@ -14045,6 +14045,23 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .autocomp-customer-cstm .ui-autocomplete {
     padding: 0 !important;
 }
+.p-dialog-cstm .ui-dialog-titlebar {
+    min-height: 30px;
+}
+.p-dialog-cstm .ui-dialog-content {
+    margin-bottom: 0 !important;
+}
+.p-dialog-cstm .ui-widget.ui-widget-content {
+    min-height: 110px !important;
+}
+.label-cstm {
+    width: auto;
+    float: left;
+    font-size: 12px !important;
+    text-align: left;
+    margin-right: 0;
+    font-weight: normal;
+}
 
 .modal-full {
     max-width: 700px !important;
