@@ -35,8 +35,8 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetItemById(long itemMasterId)
         {
             var item = _unitOfWork.Repository<ItemMaster>().Get(itemMasterId);
-            
-            if(item == null) {
+
+            if (item == null) {
                 return BadRequest();
             }
 
@@ -51,7 +51,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allPartDetails);
         }
 
-        
+
         [HttpGet("GetRolesData")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetRolesData()
@@ -1169,28 +1169,28 @@ namespace QuickApp.Pro.Controllers
                 .ToList();
             return Ok(itemMasters);
         }
-        
+
         //To Insert Aircraft Info in Item Master Aricraft Mapping
         [HttpPost("ItemMasterAircraftPost")]
         public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping[] itemMasterAircraftMapping)
         {
-               if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                for (int i = 0; i < itemMasterAircraftMapping.Length; i++)
                 {
-                    for (int i = 0; i < itemMasterAircraftMapping.Length; i++)
-                    {
-                        _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping[i]);
-                        _unitOfWork.SaveChanges();
-                    }
+                    _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping[i]);
+                    _unitOfWork.SaveChanges();
                 }
-                else
-                {
-                    return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
-                }
+            }
+            else
+            {
+                return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
+            }
 
             return Ok(ModelState);
         }
-        
-        
+
+
         //To post data in ATA Chapter Tab in Item Master
         [HttpPost("ItemMasterATAPost")]
         public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping[] itemMasterATAMapping)
@@ -1209,12 +1209,12 @@ namespace QuickApp.Pro.Controllers
             }
 
             return Ok(ModelState);
-           
-        }
-    
 
-    //To post data in Purchase Sale Tab in Item Master
-    [HttpPost("ItemMasterPurcSalePost")]
+        }
+
+
+        //To post data in Purchase Sale Tab in Item Master
+        [HttpPost("ItemMasterPurcSalePost")]
         public IActionResult InsertItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale)
         {
             try
@@ -1232,13 +1232,13 @@ namespace QuickApp.Pro.Controllers
                 {
                     return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 throw;
             }
-                 return Ok(ModelState);
+            return Ok(ModelState);
         }
-        
+
         //To GET data From ItemMasterAircraftMapping with ItemMasterId
         [HttpGet("getAircraftMapped/{ItemMasterid}")]
         [Produces(typeof(List<ItemMasterAircraftMapping>))]
@@ -1297,7 +1297,7 @@ namespace QuickApp.Pro.Controllers
         }
         //updates
         [HttpPut("ItemMasterAircraftUpdate/{id}")]
-        public IActionResult UpdateItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping,long id)
+        public IActionResult UpdateItemmasterAircraft([FromBody] ItemMasterAircraftMapping itemMasterAircraftMapping, long id)
         {
             if (ModelState.IsValid)
             {
@@ -1309,11 +1309,11 @@ namespace QuickApp.Pro.Controllers
                     existingresule.AircraftModelId = itemMasterAircraftMapping.AircraftModelId;
                     existingresule.AircraftType = itemMasterAircraftMapping.AircraftType;
                     existingresule.AircraftTypeId = itemMasterAircraftMapping.AircraftTypeId;
-                    existingresule.UpdatedDate= itemMasterAircraftMapping.UpdatedDate;
+                    existingresule.UpdatedDate = itemMasterAircraftMapping.UpdatedDate;
                     existingresule.CreatedDate = itemMasterAircraftMapping.CreatedDate;
-                    existingresule.DashNumber= itemMasterAircraftMapping.DashNumber;
-                    existingresule.DashNumberId= itemMasterAircraftMapping.DashNumberId;
-                    existingresule.IsActive= itemMasterAircraftMapping.IsActive;
+                    existingresule.DashNumber = itemMasterAircraftMapping.DashNumber;
+                    existingresule.DashNumberId = itemMasterAircraftMapping.DashNumberId;
+                    existingresule.IsActive = itemMasterAircraftMapping.IsActive;
                     existingresule.IsDeleted = itemMasterAircraftMapping.IsDeleted;
                     existingresule.ItemMasterId = itemMasterAircraftMapping.ItemMasterId;
                     existingresule.Memo = itemMasterAircraftMapping.Memo;
@@ -1332,7 +1332,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("ItemMasterAtaUpdate/{id}")]
-        public IActionResult UpdateItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping,long id)
+        public IActionResult UpdateItemmasterATA([FromBody] ItemMasterATAMapping itemMasterATAMapping, long id)
         {
             if (ModelState.IsValid)
             {
@@ -1347,7 +1347,7 @@ namespace QuickApp.Pro.Controllers
                     existingresule.ATAChapterName = itemMasterATAMapping.ATAChapterName;
                     existingresule.ATASubChapterId = itemMasterATAMapping.ATASubChapterId;
                     existingresule.IsDeleted = itemMasterATAMapping.IsDeleted;
-                    existingresule.IsActive= itemMasterATAMapping.IsActive;
+                    existingresule.IsActive = itemMasterATAMapping.IsActive;
                     existingresule.ATASubChapterDescription = itemMasterATAMapping.ATASubChapterDescription;
                     existingresule.UpdatedDate = DateTime.Now;
                     existingresule.UpdatedBy = itemMasterATAMapping.UpdatedBy;
@@ -1364,7 +1364,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("ItemMasterPurcSaleUpdate/{id}")]
-        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale,long id)
+        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale, long id)
         {
             if (ModelState.IsValid)
             {
@@ -1373,30 +1373,30 @@ namespace QuickApp.Pro.Controllers
                     var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == id).FirstOrDefault();
                     existingresule.ItemMasterId = itemMasterPurchaseSale.ItemMasterId;
                     existingresule.PartNumber = itemMasterPurchaseSale.PartNumber;
-                    existingresule.PP_CurrencyId= itemMasterPurchaseSale.PP_CurrencyId;
-                    existingresule.PP_FXRatePerc= itemMasterPurchaseSale.PP_FXRatePerc;
-                    existingresule.PP_LastListPriceDate= itemMasterPurchaseSale.PP_LastListPriceDate;
+                    existingresule.PP_CurrencyId = itemMasterPurchaseSale.PP_CurrencyId;
+                    existingresule.PP_FXRatePerc = itemMasterPurchaseSale.PP_FXRatePerc;
+                    existingresule.PP_LastListPriceDate = itemMasterPurchaseSale.PP_LastListPriceDate;
                     existingresule.PP_LastPurchaseDiscDate = itemMasterPurchaseSale.PP_LastPurchaseDiscDate;
                     existingresule.PP_PurchaseDiscAmount = itemMasterPurchaseSale.PP_PurchaseDiscAmount;
-                    existingresule.PP_PurchaseDiscPerc= itemMasterPurchaseSale.PP_PurchaseDiscPerc;
-                    existingresule.PP_UnitPurchasePrice= itemMasterPurchaseSale.PP_UnitPurchasePrice;
-                    existingresule.PP_UOMId= itemMasterPurchaseSale.PP_UOMId;
+                    existingresule.PP_PurchaseDiscPerc = itemMasterPurchaseSale.PP_PurchaseDiscPerc;
+                    existingresule.PP_UnitPurchasePrice = itemMasterPurchaseSale.PP_UnitPurchasePrice;
+                    existingresule.PP_UOMId = itemMasterPurchaseSale.PP_UOMId;
                     existingresule.PP_VendorListPrice = itemMasterPurchaseSale.PP_VendorListPrice;
-                    existingresule.SP_CalSPByPP_BaseSalePrice= itemMasterPurchaseSale.SP_CalSPByPP_BaseSalePrice;
-                    existingresule.SP_CalSPByPP_LastMarkUpDate= itemMasterPurchaseSale.SP_CalSPByPP_LastMarkUpDate;
-                    existingresule.SP_CalSPByPP_LastSalesDiscDate= itemMasterPurchaseSale.SP_CalSPByPP_LastSalesDiscDate;
-                    existingresule.SP_CalSPByPP_MarkUpAmount= itemMasterPurchaseSale.SP_CalSPByPP_MarkUpAmount;
-                    existingresule.SP_CalSPByPP_MarkUpPercOnListPrice= itemMasterPurchaseSale.SP_CalSPByPP_MarkUpPercOnListPrice;
-                    existingresule.SP_CalSPByPP_SaleDiscAmount= itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscAmount;
+                    existingresule.SP_CalSPByPP_BaseSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_BaseSalePrice;
+                    existingresule.SP_CalSPByPP_LastMarkUpDate = itemMasterPurchaseSale.SP_CalSPByPP_LastMarkUpDate;
+                    existingresule.SP_CalSPByPP_LastSalesDiscDate = itemMasterPurchaseSale.SP_CalSPByPP_LastSalesDiscDate;
+                    existingresule.SP_CalSPByPP_MarkUpAmount = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpAmount;
+                    existingresule.SP_CalSPByPP_MarkUpPercOnListPrice = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpPercOnListPrice;
+                    existingresule.SP_CalSPByPP_SaleDiscAmount = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscAmount;
 
-                    existingresule.SP_CalSPByPP_SaleDiscPerc= itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscPerc;
-                    existingresule.SP_CalSPByPP_UnitSalePrice= itemMasterPurchaseSale.SP_CalSPByPP_UnitSalePrice;
-                    existingresule.SP_FSP_CurrencyId= itemMasterPurchaseSale.SP_FSP_CurrencyId;
-                    existingresule.SP_FSP_FlatPriceAmount= itemMasterPurchaseSale.SP_FSP_FlatPriceAmount;
+                    existingresule.SP_CalSPByPP_SaleDiscPerc = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscPerc;
+                    existingresule.SP_CalSPByPP_UnitSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_UnitSalePrice;
+                    existingresule.SP_FSP_CurrencyId = itemMasterPurchaseSale.SP_FSP_CurrencyId;
+                    existingresule.SP_FSP_FlatPriceAmount = itemMasterPurchaseSale.SP_FSP_FlatPriceAmount;
 
-                    existingresule.SP_FSP_FXRatePerc= itemMasterPurchaseSale.SP_FSP_FXRatePerc;
-                    existingresule.SP_FSP_LastFlatPriceDate= itemMasterPurchaseSale.SP_FSP_LastFlatPriceDate;
-                    existingresule.SP_FSP_UOMId= itemMasterPurchaseSale.SP_FSP_UOMId;
+                    existingresule.SP_FSP_FXRatePerc = itemMasterPurchaseSale.SP_FSP_FXRatePerc;
+                    existingresule.SP_FSP_LastFlatPriceDate = itemMasterPurchaseSale.SP_FSP_LastFlatPriceDate;
+                    existingresule.SP_FSP_UOMId = itemMasterPurchaseSale.SP_FSP_UOMId;
 
                     existingresule.UpdatedDate = DateTime.Now;
                     existingresule.UpdatedBy = itemMasterPurchaseSale.UpdatedBy;
@@ -1413,7 +1413,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-         [HttpGet("getItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID/{ItemMasterID}/{AircraftTypeID}/{AircraftModelID}/{DashNumberId}")]
+        [HttpGet("getItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID/{ItemMasterID}/{AircraftTypeID}/{AircraftModelID}/{DashNumberId}")]
         [Produces(typeof(List<ItemMasterAircraftMapping>))]
         public IActionResult AirMappedMultiDashId(long ItemMasterID, string AircraftTypeID, string AircraftModelID, string DashNumberId)
         {
@@ -1443,7 +1443,7 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
-        
+
         //DELETES
         //To Delete Aircraft Info in Item Master Aircraft Mapping
         [HttpPost("UpdateItemMasterAtaDeleteStatus/{id}")]
@@ -1451,11 +1451,11 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                    var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterATAMappingId == id).FirstOrDefault();
-                    existingresule.IsDeleted = true;
-                    existingresule.UpdatedDate = DateTime.Now;
-                    _unitOfWork.Repository<ItemMasterATAMapping>().Update(existingresule);
-                    _unitOfWork.SaveChanges();
+                var existingresule = _context.ItemMasterATAMapping.Where(c => c.ItemMasterATAMappingId == id).FirstOrDefault();
+                existingresule.IsDeleted = true;
+                existingresule.UpdatedDate = DateTime.Now;
+                _unitOfWork.Repository<ItemMasterATAMapping>().Update(existingresule);
+                _unitOfWork.SaveChanges();
             }
             else
             {
@@ -1468,14 +1468,14 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("UpdateItemMasterAircraftDeleteStatus/{id}")]
         public IActionResult DeleteItemmasterAircraft(long id)
         {
-                if (ModelState.IsValid)
-                {
-                        var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.ItemMasterAircraftMappingId == id).FirstOrDefault();
-                        existingresule.UpdatedDate = DateTime.Now;
-                        existingresule.IsDeleted = true;
-                        _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(existingresule);
-                        _unitOfWork.SaveChanges();
-                }
+            if (ModelState.IsValid)
+            {
+                var existingresule = _context.ItemMasterAircraftMapping.Where(c => c.ItemMasterAircraftMappingId == id).FirstOrDefault();
+                existingresule.UpdatedDate = DateTime.Now;
+                existingresule.IsDeleted = true;
+                _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(existingresule);
+                _unitOfWork.SaveChanges();
+            }
             return Ok(ModelState);
         }
         [HttpPost("UpdateItemMasterPurcSaletDeleteStatus/{id}")]
@@ -1483,11 +1483,11 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                    var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == id).FirstOrDefault();
-                    existingresule.IsDeleted = true;
-                    existingresule.UpdatedDate = DateTime.Now;
-                    _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
-                    _unitOfWork.SaveChanges();
+                var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == id).FirstOrDefault();
+                existingresule.IsDeleted = true;
+                existingresule.UpdatedDate = DateTime.Now;
+                _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
+                _unitOfWork.SaveChanges();
             }
             return Ok(ModelState);
         }
@@ -1521,6 +1521,28 @@ namespace QuickApp.Pro.Controllers
             {
                 return Ok(result);
             }
+        }
+
+        [HttpGet("itemMasterSerialized/{itemMasterId}/{active}")]
+        public IActionResult updateIsSerialized(long itemMasterId, bool active)
+        {
+            var item = _unitOfWork.Repository<ItemMaster>().Get(itemMasterId);
+            item.IsSerialized = active;
+            _unitOfWork.Repository<ItemMaster>().Update(item);
+            _unitOfWork.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpGet("itemMasterTimeLife/{itemMasterId}/{active}")]
+        public IActionResult updateTimeLife(long itemMasterId, bool active)
+        {
+            var item = _unitOfWork.Repository<ItemMaster>().Get(itemMasterId);
+            item.IsTimeLife = active;
+            _unitOfWork.Repository<ItemMaster>().Update(item);
+            _unitOfWork.SaveChanges();
+
+            return Ok();
         }
 
     }

@@ -41,7 +41,7 @@ namespace DAL.Models
         public string BillToContactName { get; set; }
         public string BillToMemo { get; set; }
         public int? MasterCompanyId { get; set; }
-        public int ManagementStructureId { get; set; }
+        public int? ManagementStructureId { get; set; }
         public Int16? ShipToUserType { get; set; }
         public Int16? BillToUserType { get; set; }
         public string ShipToUserName { get; set; }

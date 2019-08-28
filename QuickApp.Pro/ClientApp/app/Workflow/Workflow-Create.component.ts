@@ -334,7 +334,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                     this.sourceWorkFlow.customerName = "";
                     this.sourceWorkFlow.customerCode = "";
                 }
-                
+
                 if (this.sourceWorkFlow.costOfNew && this.sourceWorkFlow.percentageOfNew) {
                     this.onPercentOfNew(this.sourceWorkFlow.costOfNew, this.sourceWorkFlow.percentageOfNew);
 
@@ -1027,11 +1027,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 let defaultConditionId: any = this.allconditioninfo.filter(x => x.description.trim() == name)[0].conditionId;
                 return defaultConditionId;
                 //this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
-                 
+
             })
         }
 
-       
+
     }
 
     private loadConditionData() {
@@ -1039,7 +1039,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.allconditioninfo = data[0];
         })
     }
-   
+
     private getDefaultUOMId(name: string): string {
         let defaultUOM: any = this.allUomdata.filter(x => x.shortName == name);
 
@@ -1801,6 +1801,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.sourceWorkFlow.materialList = [];
             this.sourceWorkFlow.measurements = [];
             this.sourceWorkFlow.publication = [];
+
+            this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
+                this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
+                this.sourceWorkFlow.workflowId = result.workflowId;
+                this.UpdateMode = true;
+            });
+
+            return;
         }
         else {
             var tasks = this.workFlowList.filter(x => x.selectedItems.length > 0);
@@ -1811,15 +1819,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
-                if (isHeaderUpdate) {
-                    this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
-                    this.sourceWorkFlow.workflowId = data.workflowId;
-                    this.UpdateMode = true;
-                }
-                else {
-                    this.alertService.showMessage(this.title, "Work Flow added successfully.", MessageSeverity.success);
-                    this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
-                }
+                this.alertService.showMessage(this.title, "Work Flow added successfully.", MessageSeverity.success);
+                this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
             },
             error => {
                 var message = '';
@@ -1848,19 +1849,21 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.sourceWorkFlow.materialList = [];
             this.sourceWorkFlow.measurements = [];
             this.sourceWorkFlow.publication = [];
+
+            this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
+                this.alertService.showMessage(this.title, "Work Flow header updated successfully.", MessageSeverity.success);
+                this.sourceWorkFlow.workflowId = result.workflowId;
+                this.UpdateMode = true;
+            });
+
+            return;
         }
 
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             result => {
-                if (isHeaderUpdate) {
-                    this.alertService.showMessage(this.title, "Work Flow header updated successfully.", MessageSeverity.success);
-                    this.sourceWorkFlow.workflowId = result.workflowId;
-                    this.UpdateMode = true;
-                }
-                else {
-                    this.alertService.showMessage(this.title, "Work Flow updated successfully.", MessageSeverity.success);
-                    this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
-                }
+
+                this.alertService.showMessage(this.title, "Work Flow updated successfully.", MessageSeverity.success);
+                this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
             },
             error => {
                 var message = '';
