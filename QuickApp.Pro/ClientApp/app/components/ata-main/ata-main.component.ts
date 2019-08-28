@@ -34,7 +34,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 export class AtaMainComponent implements OnInit, AfterViewInit {
     selectedActionName: any;
     disableSave: boolean;
-    actionamecolle: any[]=[];
+    actionamecolle: any[] = [];
     ataChapter_Name: any = "";
     ataChapterCategory = "";
     memo: any = "";
@@ -42,44 +42,44 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
-    capabilityNamecolle: any[]=[];
-    AuditDetails: SingleScreenAuditDetails[];   
+    capabilityNamecolle: any[] = [];
+    AuditDetails: SingleScreenAuditDetails[];
     ataPagination: ATAMain[];
     ataPaginationList: any[] = [];
     pageSearch: { query: any; field: any; };
     first: number;
     rows: number;
-    paginatorState: any;    
+    paginatorState: any;
     totalRecords: number;
     totalpages: number;
     loading: boolean;
     ngOnInit(): void {
-		this.loadData();
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-ata-main';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        this.loadData();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-ata-main';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-	displayedColumns = ['ataChapterId','ataChapterCode', 'ataChapterName', 'ataChapterCategory', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-	dataSource: MatTableDataSource<ATAChapter>;
-    allATAMaininfo: any[];   
+    displayedColumns = ['ataChapterId', 'ataChapterCode', 'ataChapterName', 'ataChapterCategory', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    dataSource: MatTableDataSource<ATAChapter>;
+    allATAMaininfo: any[];
     allComapnies: MasterCompany[] = [];
-	private isSaving: boolean;
-	public sourceAction: any;
+    private isSaving: boolean;
+    public sourceAction: any;
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
     loadingIndicator: boolean;
-	closeResult: string;
-	selectedColumn: any[];
+    closeResult: string;
+    selectedColumn: any[];
     selectedColumns: any[];
     cols: any[];
     title: string = "Create";
     id: number;
     errorMessage: any;
     modal: NgbModalRef;
-	ataChapterName: string;
-	ataChapterCode: string;
+    ataChapterName: string;
+    ataChapterCode: string;
     filteredBrands: any[];
     localCollection: any[] = [];
 
@@ -88,16 +88,16 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     Active: string = "Active";
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainService : AtaMainService,  private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		this.displayedColumns.push('action');
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainService: AtaMainService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
-		this.sourceAction = new ATAChapter();
+        this.sourceAction = new ATAChapter();
     }
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
-	public allWorkFlows: ATAChapter[] = [];
+    public allWorkFlows: ATAChapter[] = [];
 
     private loadData() {
         this.alertService.startLoadingMessage();
@@ -109,11 +109,11 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 
         this.cols = [
             { field: 'ataChapterCode', header: 'ATA Chapter Code' },
-            { field: 'ataChapterName', header: 'ATA Chapter Name' }, 
+            { field: 'ataChapterName', header: 'ATA Chapter Name' },
             { field: 'ataChapterCategory', header: 'ATA Chapter Category' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' }, 
+            { field: 'updatedBy', header: 'Updated By' },
         ];
 
         this.selectedColumns = this.cols;
@@ -138,12 +138,12 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     private refresh() {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
-	}
-	private onDataLoadSuccessful(getAtaMainList: ATAChapter[]) {
+    }
+    private onDataLoadSuccessful(getAtaMainList: ATAChapter[]) {
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-       // this.dataSource.data = getAtaMainList;
+        // this.dataSource.data = getAtaMainList;
         this.allATAMaininfo = getAtaMainList;
         //this.totalRecords = this.allATAMaininfo.totalRecordsCount;
         //this.totalPages = Math.ceil(this.totalRecords / this.rows);
@@ -208,20 +208,20 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 
     open(content) {
         this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.disableSave = false;
-        this.isSaving = true;        
-		this.sourceAction = new ATAChapter();
-		this.sourceAction.isActive = true;
-		this.ataChapterName = "";
+        this.isDeleteMode = false;
+        this.disableSave = false;
+        this.isSaving = true;
+        this.sourceAction = new ATAChapter();
+        this.sourceAction.isActive = true;
+        this.ataChapterName = "";
         this.ataChapterCode = "";
-        this.ataChapterCategory = "";        
+        this.ataChapterCategory = "";
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-       
+
     }
 
 
@@ -238,13 +238,13 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 
     openEdit(content, row) {
         this.isEditMode = true;
-		this.isSaving = true;
-		this.disableSave = false;
+        this.isSaving = true;
+        this.disableSave = false;
         this.loadMasterCompanies();
         this.sourceAction = row;
-		this.ataChapterName = this.sourceAction.ataChapterName;
-		this.ataChapterCode = this.sourceAction.ataChapterCode;
-		this.ataChapterCategory = this.sourceAction.ataChapterCategory;
+        this.ataChapterName = this.sourceAction.ataChapterName;
+        this.ataChapterCode = this.sourceAction.ataChapterCode;
+        this.ataChapterCategory = this.sourceAction.ataChapterCategory;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -253,8 +253,8 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     }
     openView(content, row) {
         this.sourceAction = row;
-		this.ataChapter_Name = row.ataChapterName;
-		this.ataChapterCode = row.ataChapterCode;
+        this.ataChapter_Name = row.ataChapterName;
+        this.ataChapterCode = row.ataChapterCode;
         this.ataChapterCategory = row.ataChapterCategory;
         this.memo = row.memo;
         this.createdBy = row.createdBy;
@@ -285,8 +285,8 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 
 
         //this.isSaving = true;
-		// debugger;
-		this.ataMainService.historyATAMain(this.sourceAction.ataCahpterId).subscribe(
+        // debugger;
+        this.ataMainService.historyATAMain(this.sourceAction.ataCahpterId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
 
@@ -297,13 +297,13 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     editItemAndCloseModel() {
 
         // debugger;
-        
+
         this.isSaving = true;
 
-        if (this.isEditMode == false) {      
+        if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
             this.sourceAction.ataChapterName = this.ataChapterName;
             this.ataMainService.newATAMain({ ...this.sourceAction, isDelete: this.isDeleteMode, createdDate: new Date(), updatedDate: new Date() }).subscribe(
                 response => this.saveCompleted(this.sourceAction),
@@ -312,8 +312,8 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.ataChapterName = this.ataChapterName;			
-            this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.ataChapterName = this.ataChapterName;
+            this.sourceAction.masterCompanyId = 1;
             this.ataMainService.updateATAMain(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -324,7 +324,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
-		this.sourceAction.updatedBy = this.userName;
+        this.sourceAction.updatedBy = this.userName;
         this.ataMainService.deleteATAMain(this.sourceAction.ataChapterId).subscribe(
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
@@ -333,7 +333,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {               
+            if (value == this.selectedActionName.toLowerCase()) {
                 this.disableSave = true;
             }
             else {
@@ -343,30 +343,30 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 
     }
     partnmId(event) {
-   
-		if (this.allATAMaininfo) {
-			for (let i = 0; i < this.allATAMaininfo.length; i++) {
-				if (event == this.allATAMaininfo[i].capabilityName) {
-					this.sourceAction.ataChapterName = this.allATAMaininfo[i].ataChapterName;
-					this.disableSave = true;
-					this.selectedActionName = event;
-				}
-			}
-		}
-	}
-    filterAtamains(event) {
-		this.localCollection = [];
-		for (let i = 0; i < this.allATAMaininfo.length; i++) {
-			let ataChapterName = this.allATAMaininfo[i].ataChapterName;
-			if (ataChapterName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.capabilityNamecolle.push([{
-					"ataChapterId": this.allATAMaininfo[i].ataChapterId,
-					"ataChapterName": ataChapterName
-				}]),
-					this.localCollection.push(ataChapterName)
 
-			}
-		}
+        if (this.allATAMaininfo) {
+            for (let i = 0; i < this.allATAMaininfo.length; i++) {
+                if (event == this.allATAMaininfo[i].capabilityName) {
+                    this.sourceAction.ataChapterName = this.allATAMaininfo[i].ataChapterName;
+                    this.disableSave = true;
+                    this.selectedActionName = event;
+                }
+            }
+        }
+    }
+    filterAtamains(event) {
+        this.localCollection = [];
+        for (let i = 0; i < this.allATAMaininfo.length; i++) {
+            let ataChapterName = this.allATAMaininfo[i].ataChapterName;
+            if (ataChapterName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.capabilityNamecolle.push([{
+                    "ataChapterId": this.allATAMaininfo[i].ataChapterId,
+                    "ataChapterName": ataChapterName
+                }]),
+                    this.localCollection.push(ataChapterName)
+
+            }
+        }
     }
 
     dismissModel() {
