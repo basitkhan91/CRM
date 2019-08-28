@@ -4317,7 +4317,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             return {
                 ...obj,
                 DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
-                AircraftModelId : obj.AircraftModel === 'Unknown' ? null : obj.AircraftModel,
+                AircraftModelId : obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
                 ItemMasterId: ItemMasterID,
                 PartNumber: this.pnvalue,
                 MasterCompanyId: 1,
