@@ -624,6 +624,15 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.StockLevel = itemMasterViewModel.StockLevel;
                 itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
                 itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
+                itemmaserObj.ShelfLifeAvailable = itemMasterViewModel.ShelfLifeAvailable;
+                itemmaserObj.isPma= itemMasterViewModel.isPma;
+                itemmaserObj.mfgHours= itemMasterViewModel.mfgHours;
+                itemmaserObj.turnTimeMfg = itemMasterViewModel.turnTimeMfg;
+                itemmaserObj.turnTimeBenchTest= itemMasterViewModel.turnTimeBenchTest;
+                itemmaserObj.IsExportUnspecified= itemMasterViewModel.IsExportUnspecified;
+                itemmaserObj.IsExportNOMilitary = itemMasterViewModel.IsExportNOMilitary;
+                itemmaserObj.IsExportMilitary= itemMasterViewModel.IsExportMilitary;
+                itemmaserObj.IsExportDual= itemMasterViewModel.IsExportDual;
                 itemmaserObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
                 if (manufacturer.Comments != null)
                 {
@@ -823,6 +832,15 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
                 itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
                 itemmaserObj.StockLevel = itemMasterViewModel.StockLevel;
+                itemmaserObj.ShelfLifeAvailable = itemMasterViewModel.ShelfLifeAvailable;
+                itemmaserObj.isPma = itemMasterViewModel.isPma;
+                itemmaserObj.mfgHours = itemMasterViewModel.mfgHours;
+                itemmaserObj.turnTimeMfg = itemMasterViewModel.turnTimeMfg;
+                itemmaserObj.turnTimeBenchTest = itemMasterViewModel.turnTimeBenchTest;
+                itemmaserObj.IsExportUnspecified = itemMasterViewModel.IsExportUnspecified;
+                itemmaserObj.IsExportNOMilitary = itemMasterViewModel.IsExportNOMilitary;
+                itemmaserObj.IsExportMilitary = itemMasterViewModel.IsExportMilitary;
+                itemmaserObj.IsExportDual = itemMasterViewModel.IsExportDual;
                 //itemmaserObj.PartAlternatePartId = itemMasterViewModel.PartAlternatePartId;
 
                 if (itemMasterViewModel.AircraftTypeId != null)
@@ -961,7 +979,7 @@ namespace QuickApp.Pro.Controllers
                 if (itemMasterViewModel == null)
                     return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
                 var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
-                itemmaserObj.IsDelete = false;
+                itemmaserObj.IsDelete = true;
 
                 _unitOfWork.itemMaster.Update(itemmaserObj);
                 _unitOfWork.SaveChanges();
@@ -1274,7 +1292,6 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("ExportInfoPostBy_IMastID/{id}")]
         public IActionResult ExportInfoupdate(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
         {
-
 			try
 			{
 				if (ModelState.IsValid)
@@ -1292,7 +1309,13 @@ namespace QuickApp.Pro.Controllers
 						existingresule.ExportUomId = itemMasterViewModel.ExportUomId;
 						existingresule.ExportValue = itemMasterViewModel.ExportValue;
 						existingresule.ExportECCN = itemMasterViewModel.ExportECCN;
-						existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
+                        //existingresule.ExportClassification = itemMasterViewModel.ExportClassification;
+                        existingresule.ExportWeight = itemMasterViewModel.ExportWeight;
+                        existingresule.ExportWeightUnit= itemMasterViewModel.ExportWeightUnit;
+                        existingresule.ExportCurrencyId = itemMasterViewModel.ExportCurrencyId;
+                        existingresule.ExportClassificationId= itemMasterViewModel.ExportClassificationId;
+
+                        existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
 						_unitOfWork.Repository<ItemMaster>().Update(existingresule);
 						_unitOfWork.SaveChanges();
 						return Ok(itemMasterViewModel);
@@ -1312,8 +1335,6 @@ namespace QuickApp.Pro.Controllers
 			{
 				throw;
 			}
- 
-
         }
         //updates
         [HttpPut("ItemMasterAircraftUpdate/{id}")]
