@@ -182,7 +182,7 @@ namespace QuickApp.Pro.ViewModels
 
         public Byte? ExportClassificationId { get; set; }
 
-        //public virtual ExportClassification ExportClassification { get; set; }
+        public virtual ExportClassification ExportClassification { get; set; }
 
         public decimal? PurchaseListPrice { get; set; }
 
