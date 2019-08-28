@@ -129,7 +129,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     fixedSalesPriceValue: boolean = true;
     collectionofItemMaster: any;
     value: number;
-    memoPopupText: any;
+
     partCollection: any[];
     oempnCollection: any[];   
     manufacturerCollection: any[];
@@ -296,29 +296,31 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     memoNotes: string = 'This is Itemmaster memo';
     manufacturerValue: FormGroup;
     ataChaptherSelected: any;
+    modelUnknown = false;
+    dashNumberUnknown = false;
     newFields = {
         Condition: "NEW",
         PP_UOMId: 2,
         PP_CurrencyId: 208,
         PP_FXRatePerc: null,
         PP_VendorListPrice: null,
-        PP_LastListPriceDate: '',
+        PP_LastListPriceDate: new Date(),
         PP_PurchaseDiscPerc: null,
-        PP_LastPurchaseDiscDate: '',
+        PP_LastPurchaseDiscDate: new Date(),
         PP_PurchaseDiscAmount: null,
         PP_UnitPurchasePrice: null,
         SP_FSP_UOMId: 2,
         SP_FSP_CurrencyId: 208,
         SP_FSP_FXRatePerc: null,
         SP_FSP_FlatPriceAmount: null,
-        SP_FSP_LastFlatPriceDate: '',
+        SP_FSP_LastFlatPriceDate: new Date(),
         SP_CalSPByPP_MarkUpPercOnListPrice: null,
         SP_CalSPByPP_MarkUpAmount: null,
-        SP_CalSPByPP_LastMarkUpDate: '',
+        SP_CalSPByPP_LastMarkUpDate: new Date(),
         SP_CalSPByPP_BaseSalePrice: null,
         SP_CalSPByPP_SaleDiscPerc: null,
         SP_CalSPByPP_SaleDiscAmount: null,
-        SP_CalSPByPP_LastSalesDiscDate: '',
+        SP_CalSPByPP_LastSalesDiscDate: new Date(),
         SP_CalSPByPP_UnitSalePrice: null
     }
     aircraftData: any;
@@ -351,6 +353,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     isDisabledSteps = false;
     isEdit: boolean = false;
     itemMasterId: number;
+    fieldArray: any = [];
+    row: any;
+    Delete = true;
 
     exportInfo = {
         ExportECCN: '',
@@ -393,6 +398,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 console.log(res);
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = res;
+                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate)
 
                 // binding the export information data on edit
                 this.exportInfo = {
@@ -419,6 +425,39 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.pnDescription = this.sourceItemMaster.partDescription;
                 this.ManufacturerValue = this.sourceItemMaster.name;
                 this.alternatePn = this.sourceItemMaster.partAlternatePartId;
+
+                this.itemser.getPurcSaleDetailById(this.itemMasterId).subscribe(res => {
+                    console.log(res);
+
+                    this.fieldArray = res.map(x => {
+                        return {
+                            Condition: x.condition,
+                            PP_UOMId: x.pP_UOMId,
+                            PP_CurrencyId: x.pP_CurrencyId,
+                            PP_FXRatePerc: x.pP_FXRatePerc,
+                            PP_VendorListPrice: x.pP_VendorListPrice,
+                            PP_LastListPriceDate: x.pP_LastListPriceDate,
+                            PP_PurchaseDiscPerc: x.pP_PurchaseDiscPerc,
+                            PP_LastPurchaseDiscDate: x.pP_LastPurchaseDiscDate,
+                            PP_PurchaseDiscAmount: x.pP_PurchaseDiscAmount,
+                            PP_UnitPurchasePrice: x.pP_UnitPurchasePrice,
+                            SP_FSP_UOMId: x.sP_FSP_UOMId,
+                            SP_FSP_CurrencyId: x.sP_FSP_CurrencyId,
+                            SP_FSP_FXRatePerc: x.sP_FSP_FXRatePerc,
+                            SP_FSP_FlatPriceAmount: x.sP_FSP_FlatPriceAmount,
+                            SP_FSP_LastFlatPriceDate: x.sP_FSP_LastFlatPriceDate,
+                            SP_CalSPByPP_MarkUpPercOnListPrice: x.sP_CalSPByPP_MarkUpPercOnListPrice,
+                            SP_CalSPByPP_MarkUpAmount: x.sP_CalSPByPP_MarkUpAmount,
+                            SP_CalSPByPP_LastMarkUpDate: x.sP_CalSPByPP_LastMarkUpDate,
+                            SP_CalSPByPP_BaseSalePrice: x.sP_CalSPByPP_BaseSalePrice,
+                            SP_CalSPByPP_SaleDiscPerc: x.sP_CalSPByPP_SaleDiscPerc,
+                            SP_CalSPByPP_SaleDiscAmount: x.sP_CalSPByPP_SaleDiscAmount,
+                            SP_CalSPByPP_LastSalesDiscDate: x.sP_CalSPByPP_LastSalesDiscDate,
+                            SP_CalSPByPP_UnitSalePrice: x.sP_CalSPByPP_UnitSalePrice
+                        }
+                    })
+
+                })
 
                 this.getAircraftMappedDataByItemMasterId();
                 this.getATAMappedDataByItemMasterId();
@@ -591,8 +630,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     aircraftListDataValues: any;
     ngOnInit(): void {
         this.ataform = this.fb.group({
-            'atanumber': new FormControl('', Validators.required),
-            'atasubchaptername': new FormControl('', Validators.required)
+            atanumber: new FormControl('', Validators.required),
+            atasubchaptername: new FormControl('', Validators.required)
         });
         this.manufacturerValue = this.fb.group({
             'manufacturer': new FormControl('', Validators.required)
@@ -3968,7 +4007,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     newValue: any;
     // get aircraft model by type 
     getAircraftModelByManfacturer(value) {
-        // this.newValue = value.originalEvent.target.textContent;
+        this.newValue = value.originalEvent.target.textContent;
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
             const responseValue = models[0];
             this.LoadValues = responseValue.map(models => {
@@ -3977,6 +4016,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     value: models
                 }
             });
+          
         });
         this.selectedModelId = undefined;
         this.selectedDashnumber = undefined;
@@ -4125,6 +4165,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     value: dashnumbers.dashNumberId
                 }
             });
+            
         });
     }
 
@@ -4230,6 +4271,33 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }]
         }
 
+        if(this.selectedAircraftId !== undefined && this.modelUnknown){
+            this.aircraftData = [{
+                AircraftType:  this.newValue ,
+                AircraftModel: 'Unknown',
+                DashNumber: 'Unknown',
+                AircraftModelId: '',
+                DashNumberId: '',
+                Memo: '',
+                IsChecked: false
+            }]
+        }
+
+            if(this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown){
+                this.aircraftData = this.selectedModelId.map(x => {
+                    return {
+                        AircraftType: this.newValue,
+                        AircraftModel: x.modelName,
+                        DashNumber: 'Unknown',
+                        AircraftModelId: x.modelid,
+                        DashNumberId: '',
+                        Memo: '',
+                        IsChecked: false
+                    }
+                }) 
+            }
+
+
 
 
 
@@ -4248,11 +4316,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
             return {
                 ...obj,
+                DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
+                AircraftModelId : obj.AircraftModel === 'Unknown' ? null : obj.AircraftModel,
                 ItemMasterId: ItemMasterID,
                 PartNumber: this.pnvalue,
                 MasterCompanyId: 1,
-                CreatedBy: this.sourceItemMaster.createdBy,
-                UpdatedBy: this.sourceItemMaster.updatedBy,
+                CreatedBy: this.userName,
+                UpdatedBy: this.userName,
                 CreatedDate: new Date(),
                 UpdatedDate: new Date(),
                 AircraftTypeId: this.selectedAircraftId,
@@ -4290,6 +4360,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             const responseData = data;
             this.aircraftListDataValues = responseData.map(x => { //aircraftListData
                 return {
+                    ...x,
                     aircraft: x.aircraftType,
                     model: x.aircraftModel,
                     dashNumber: x.dashNumber,
@@ -4301,7 +4372,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         })
     }
-    // 
+
+
+
+    deleteAircraftMapped(data) {
+
+
+        this.itemser.deleteItemMasterAir(data.itemMasterAircraftMappingId).subscribe(res => {
+            this.getAircraftMappedDataByItemMasterId();
+            this.alertService.showMessage(
+                'Success',
+                `Deleted Successfully`,
+                MessageSeverity.success
+            );
+        })
+    }
     moveAtachapter() {
         this.changeOfTab('Atachapter');
         // this.activeTab = 2
@@ -4362,6 +4447,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         })
 
         this.itemser.postATAMapping(ataMappingData).subscribe(res => {
+            this.ataform.reset();
             this.getATAMappedDataByItemMasterId();
 
         })
@@ -4375,6 +4461,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemser.getMappedATADetails(id).subscribe(res => {
             this.ataMappedList = res.map(x => {
                 return {
+                    ...x,
                     ataChapterName: x.ataChapterName,
                     ataSubChapterDescription: x.ataSubChapterDescription
                 }
@@ -4382,6 +4469,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         })
     }
+    deleteATAMapped(data) {
+        this.itemser.deleteItemMasterATA(data.itemMasterATAMappingId).subscribe(res => {
+            this.getATAMappedDataByItemMasterId();
+            this.alertService.showMessage(
+                'Success',
+                `Deleted Successfully`,
+                MessageSeverity.success
+            );
+        })
+    }
+
 
     // get all Aircraft Models
     getAllAircraftModels() {
@@ -4544,17 +4642,28 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 IsDeleted: false
             }
         })
-        console.log(data);
+        const isValid = data.map(x => {
+            const _ObjectKeys = Object.keys(x);
 
-        this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
-            this.alertService.showMessage(
-                'Success',
-                `Saved Purchase and Sale Successfully `,
-                MessageSeverity.success
-            );
-            this.changeOfTab('ExportInfo');
-            // console.log(datas);
+            for (let i = 0; i < _ObjectKeys.length; i++) {
+                if (x[_ObjectKeys[i]] === null || x[_ObjectKeys[i]] === undefined || x[_ObjectKeys[i]] === '') {
+                    return alert('Some Fields are Missing');
+                }
+            }
+
+            this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
+                this.alertService.showMessage(
+                    'Success',
+                    `Saved Purchase and Sale Successfully `,
+                    MessageSeverity.success
+                );
+                this.changeOfTab('ExportInfo');
+                // console.log(datas);
+            })
+
         })
+
+
 
 
     }
@@ -4581,6 +4690,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 `Saved Export Information Successfully `,
                 MessageSeverity.success
             );
+            this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-list'])
         })
     }
 
@@ -5256,10 +5366,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     onSchematic(e) {
         this.schematic = e.target.checked;
     }
-    //new code for calculation in purchase and sales
-    fieldArray: any = [];
-    row: any;
-    Delete = true;
+
+
     addFieldValue(): void {
         if (this.fieldArray.length <= 5) {
             this.fieldArray = [...this.fieldArray, { ...this.newFields }]
