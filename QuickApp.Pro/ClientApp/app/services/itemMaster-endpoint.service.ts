@@ -71,7 +71,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _searchgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchgetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
     private readonly _searchgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
     private readonly _getItemMasterDetails: string = '/api/ItemMaster/Get';
-private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPurchSaleByItemMasterID';
+    private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPurchSaleByItemMasterID';
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -860,18 +860,18 @@ private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPur
                 return this.handleError(error, () => this.getPurcSaleByItemMasterID(ItemmasterId));
             });
     }
-    
-    deleteitemMasterMappedATAEndpoint<T>(userObject: any): Observable<T> {
-        return this.http.post<T>(this._ItemMasterATAMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
+
+    deleteitemMasterMappedATAEndpoint<T>(id: any): Observable<T> {
+        return this.http.post<T>(`${this._ItemMasterATAMappedDelete}/${id}`, JSON.stringify({}), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(userObject));
+                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(id));
             });
     }
 
-    deleteitemMasterMappedAirEndpoint<T>(userObject: any): Observable<T> {
-        return this.http.post<T>(this._ItemMasterAircraftMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
+    deleteitemMasterMappedAirEndpoint<T>(id: any): Observable<T> {
+        return this.http.post<T>(`${this._ItemMasterAircraftMappedDelete}/${id}`, JSON.stringify({}), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(userObject));
+                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(id));
             });
     }
     deleteitemMasterMappedPurcSaleEndpoint<T>(userObject: any): Observable<T> {
