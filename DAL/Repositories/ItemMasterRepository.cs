@@ -51,8 +51,6 @@ namespace DAL.Repositories
         
         public IEnumerable<object> getItemMasterData(long id)
         {
-
-            {
                 var data = (from iM in _appContext.ItemMaster
                             where iM.ItemMasterId == id
 
@@ -68,12 +66,12 @@ namespace DAL.Repositories
                                 iM.ItemMasterId,
                                 iM.GLAccountId,
                                 iM.ManufacturerId,
-                                iM.Manufacturer
-
-
+                                iM.Manufacturer,
+                                iM.ShelfLifeAvailable,
+                                iM.isPma,iM.mfgHours,iM.turnTimeMfg ,iM.turnTimeBenchTest ,iM.IsExportUnspecified,
+                                iM.IsExportNOMilitary ,iM.IsExportMilitary ,iM.IsExportDual 
                             }).ToList();
                 return data;
-            }
         }
 
         public IEnumerable<object> GetSelectedAircraftModeldata(long id)
@@ -155,6 +153,14 @@ namespace DAL.Repositories
                             IM.NationalStockNumber,
                             IM.IsHazardousMaterial,
                             IM.ItemMasterId,
+                            IM.isPma,
+                            IM.mfgHours,
+                            IM.turnTimeMfg,
+                            IM.turnTimeBenchTest,
+                            IM.IsExportUnspecified,
+                            IM.IsExportNOMilitary,
+                            IM.IsExportMilitary,
+                            IM.IsExportDual
                         }).ToList();
             return data;
 
