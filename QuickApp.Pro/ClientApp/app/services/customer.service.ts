@@ -129,6 +129,12 @@ export class CustomerService {
             this.customerEndpoint.getAircraftmodels<any[]>());
     }
 
+    getMappedAirCraftDetails(customerId: number) {
+        return this.customerEndpoint.getAircraftMappingEndpoint<any>(customerId);
+    }
+    getMappedATADetails(customerId: number) {
+        return this.customerEndpoint.getATAMappingEndpoint<any>(customerId);
+    }
     getFinalObj() {
         return Observable.forkJoin(
             this.customerEndpoint.getFinalrobj<any>());
