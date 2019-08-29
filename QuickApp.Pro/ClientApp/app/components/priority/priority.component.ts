@@ -236,26 +236,15 @@ export class PriorityComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
     priorityId(event) {
         for (let i = 0; i < this.allpriority.length; i++) {
             if (event == this.allpriority[i][0].priorityName) {
-
                 this.disableSave = true;
                 this.selectedreason = event;
             }
-
-
-
-
         }
     }
-
-
-
     filterpriorities(event) {
-
         this.localCollection = [];
         for (let i = 0; i < this.allPriorityInfo.length; i++) {
             let priorityName = this.allPriorityInfo[i].description;

@@ -165,7 +165,7 @@ namespace DAL.Models
         public decimal? turnTimeMfg { get; set; }
         public decimal? turnTimeBenchTest { get; set; }
         public bool? IsExportUnspecified { get; set; }
-        public bool? IsExportNOMilitary { get; set; }
+        public bool? IsExportNONMilitary { get; set; }
         public bool? IsExportMilitary { get; set; }
         public bool? IsExportDual { get; set; }
         
