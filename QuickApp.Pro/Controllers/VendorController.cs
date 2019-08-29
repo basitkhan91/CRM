@@ -590,6 +590,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Notes = poViewModel.Notes;
                     actionobject.ShipToCompanyId = poViewModel.ShipToCompanyId;
                     actionobject.ShipViaAccountId = poViewModel.ShipViaAccountId;
+                    actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
                     //actionobject.IssuedToAddressId = poViewModel.IssuedToAddressId;
                     //actionobject.IssuedToContactName = poViewModel.IssuedToContactName;
                     //actionobject.IssuedToMemo = poViewModel.IssuedToMemo;
@@ -640,6 +641,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Terms = poViewModel.Terms;
                     actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
                     actionobject.IsActive = true;
+                    actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
                     //actionobject.DateApprovied = poViewModel.DateApprovied;
                     actionobject.Notes = poViewModel.Notes;
                     actionobject.ShipToCompanyId = poViewModel.ShipToCompanyId;
