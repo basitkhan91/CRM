@@ -590,6 +590,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Notes = poViewModel.Notes;
                     actionobject.ShipToCompanyId = poViewModel.ShipToCompanyId;
                     actionobject.ShipViaAccountId = poViewModel.ShipViaAccountId;
+                    actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
                     //actionobject.IssuedToAddressId = poViewModel.IssuedToAddressId;
                     //actionobject.IssuedToContactName = poViewModel.IssuedToContactName;
                     //actionobject.IssuedToMemo = poViewModel.IssuedToMemo;
@@ -640,6 +641,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Terms = poViewModel.Terms;
                     actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
                     actionobject.IsActive = true;
+                    actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
                     //actionobject.DateApprovied = poViewModel.DateApprovied;
                     actionobject.Notes = poViewModel.Notes;
                     actionobject.ShipToCompanyId = poViewModel.ShipToCompanyId;
@@ -1895,8 +1897,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
-
+        
         [HttpPost("paymentDefaultPost")]
         public IActionResult CreateDefaultmethod([FromBody] VendorPaymentViewModel vendorPaymentViewModel)
         {
@@ -1947,15 +1948,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-
-
-
-
-
-
-
-
-
+                
         [HttpPost("vendorInternationalPayment")]
         public IActionResult UpdateInternationalpaymentToVendor([FromBody] VendorInternationlWirePaymentViewModel vendorInternationlWirePaymentViewModel)
         {
@@ -1982,9 +1975,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
-
-
+        
         [HttpDelete("vendorContact/{id}")]
         [Produces(typeof(VendorContactViewModel))]
         public IActionResult DeleteAction(long id)
@@ -2695,7 +2686,14 @@ namespace QuickApp.Pro.Controllers
                 }
                 
             }
-        
+        [HttpGet("getvendorContactByVendorID/{vendorid}/{isDContact}")]
+        [Produces(typeof(List<VendorCapabiltiyAircraftModel>))]
+        public IActionResult GetVendorByID(long vendorid,bool isDContact)
+        {
+            var vendorcontactdata = _unitOfWork.Vendor.getVendorByID(vendorid, isDContact); 
+            return Ok(vendorcontactdata);
+
+        }
 
         #endregion Private Methods
 

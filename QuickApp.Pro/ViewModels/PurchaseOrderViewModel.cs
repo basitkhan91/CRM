@@ -50,6 +50,8 @@ namespace QuickApp.Pro.ViewModels
         public bool? DeferredReceiver { get; set; }
         public bool? Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
+
+        public int ManagementStructureId { get; set; }
     }
 }
 

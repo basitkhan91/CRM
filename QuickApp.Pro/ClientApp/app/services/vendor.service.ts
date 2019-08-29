@@ -535,4 +535,9 @@ export class VendorService {
         return this.actionEndpoint.deleteVendorCapabilityEndpoint(actionId);
 
     }
+    getVendorContactList(vendorId: any,isDContact: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorContactEndpoint<any[]>(vendorId, isDContact));
+    }
+
 }
