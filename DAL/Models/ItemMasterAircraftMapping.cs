@@ -20,9 +20,9 @@ namespace DAL.Models
         [Key]
         public long ItemMasterAircraftMappingId { get; set; }
         public long ItemMasterId { get; set; }
-        public long AircraftModelId { get; set; }
+        public long? AircraftModelId { get; set; }
         public int AircraftTypeId { get; set; }
-        public long DashNumberId { get; set; }
+        public long? DashNumberId { get; set; }
         public string PartNumber { get; set; }
         public string DashNumber { get; set; }
         public string AircraftType { get; set; }
