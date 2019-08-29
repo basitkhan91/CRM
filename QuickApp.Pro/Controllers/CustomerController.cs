@@ -1472,7 +1472,85 @@ namespace QuickApp.Pro.Controllers
 
         //}
 
+        #region AircraftInformation
+        
+        //GET data from CustomerAircraftMapping with customerId
+        [HttpGet("getCustomerAircraftMapped/{customerId}")]
+        [Produces(typeof(List<CustomerAircraftMapping>))]
+        public IActionResult AircraftMapped(long customerId)
+        {
+            var result = _unitOfWork.Customer.GetAircraftMapped(customerId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
 
+        [HttpPost("CustomerAircraftPost")]
+        public IActionResult InsertCustomerAircraftInfo([FromBody] CustomerAircraftMapping[] customerAircraftMapping)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var aircraftMapping in customerAircraftMapping)
+                {
+                    _unitOfWork.Repository<CustomerAircraftMapping>().Add(aircraftMapping);
+                    _unitOfWork.SaveChanges();
+                }
+                
+            }
+            else
+            {
+                return BadRequest($"{nameof(customerAircraftMapping)} cannot be null");
+            }
+
+            return Ok(ModelState);
+        }
+        
+
+        #endregion
+
+        #region ATA Chapter
+        [HttpGet("getCustomerATAMapped/{customerId}")]
+        [Produces(typeof(List<CustomerATAMapping>))]
+        public IActionResult ataMapped(long customerId)
+        {
+            var result = _unitOfWork.Customer.GetATAMapped(customerId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+
+        }
+
+        [HttpPost("CustomerATAPost")]
+        public IActionResult InsertCustomerATA([FromBody] CustomerATAMapping[] customerATAMapping)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var customerAtaMapping in customerATAMapping)
+                {
+                     _unitOfWork.Repository<CustomerATAMapping>().Add(customerAtaMapping);
+                    _unitOfWork.SaveChanges();
+                }
+            }
+            else
+            {
+                return BadRequest($"{nameof(customerATAMapping)} cannot be null");
+            }
+
+            return Ok(ModelState);
+
+        }
+
+        #endregion
 
         [HttpPut("customerSalesPost/{id}")]
         public IActionResult UpdateSales(long id, [FromBody] CustomerViewModel customerViewModel)

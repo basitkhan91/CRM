@@ -86,7 +86,12 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly getAllCustomersInfoURL: string = "/api/customer/getAllCustomersInfo";
     private readonly getCustomer: string = "/api/customer/pagination";
     private readonly getGlobalCustomer: string = "/api/customer/globalSearch";
+    
 
+    private readonly _getAircraftMapped: string = "/api/Customer/getAircraftMapped";
+    private readonly _CustomerAircraftPostUrl: string = "/api/Customer/CustomerAircraftPost";
+    private readonly _CustomerATAPostUrl: string = "/api/Customer/CustomerATAPost";
+    private readonly _getATAMapped: string = "/api/Customer/getATAMapped";
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
@@ -126,8 +131,8 @@ export class CustomerEndpoint extends EndpointFactory {
     get getIntegrationUrl() { return this.configurations.baseUrl + this._getIntegrationUrl; }
     get listsUrl() { return this.configurations.baseUrl + this._listsUrl; }
 
-
-
+    get getCustomerAircrafPosttUrl() { return this.configurations.baseUrl + this._CustomerAircraftPostUrl }
+    get getCustomerATAPosttUrl() { return this.configurations.baseUrl + this._CustomerATAPostUrl }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -140,6 +145,23 @@ export class CustomerEndpoint extends EndpointFactory {
     //            return this.handleError(error, () => this.getcustomerEndpoint());
     //        });
     //}
+
+    getNewitemAircraftEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._CustomerAircraftPostUrl, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemAircraftEndpoint(userObject));
+            });
+    }
+
+    getNewitemATAEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._CustomerATAPostUrl, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemATAEndpoint(userObject));
+            });
+    }
+
     getcustomerEndpoint<T>(): Observable<T> {
 
         return this.http.get<T>(this.customersUrl, this.getRequestHeaders())
@@ -268,7 +290,18 @@ export class CustomerEndpoint extends EndpointFactory {
             }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
+    //getNewCustomerContactInfo<T>(param: any): Observable<any> {
+    //    //debugger;
+    //    delete param.contactId;
+    //    delete param.masterCompanyId;
+    //    let body = JSON.stringify(param);
+    //    let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+    //    return this.http.post(this._CustomerContctUrl, body, this.getRequestHeaders())
+    //        .map((response: Response) => {
+    //            return <any>response;
 
+    //        }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    //}
 
     getNewcustomerEndpoint<T>(userObject: any): Observable<T> {
 
@@ -436,6 +469,24 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getBillviaHistory(customerId));
+            });
+    }
+
+    getAircraftMappingEndpoint<T>(customerId: number): Observable<T> {
+        let endpointUrl = `${this._getAircraftMapped}/${customerId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAircraftMappingEndpoint(customerId));
+            });
+    }
+
+    getATAMappingEndpoint<T>(customerId: number): Observable<T> {
+        let endpointUrl = `${this._getATAMapped}/${customerId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATAMappingEndpoint(customerId));
             });
     }
 

@@ -361,6 +361,8 @@ namespace DAL
         public DbSet<PublicationPNACMappingModel> PublicationPNACMappingModel { get; set; }
         public DbSet<PublicationPNATAMappingModel> PublicationPNATAMappingModel { get; set; }
 
+        public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
+        public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
