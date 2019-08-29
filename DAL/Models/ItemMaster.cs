@@ -168,7 +168,8 @@ namespace DAL.Models
         public bool? IsExportNOMilitary { get; set; }
         public bool? IsExportMilitary { get; set; }
         public bool? IsExportDual { get; set; }
-
+        
+        public int? oemPNId { get; set; }
 
         public virtual Manufacturer Manufacturer { get;set;}
         public virtual Provision Provision {get;set;}
