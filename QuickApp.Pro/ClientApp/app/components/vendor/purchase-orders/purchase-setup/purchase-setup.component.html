@@ -19,15 +19,15 @@
                             <input class="form-control" type="text" name="purchaseOrderNumber" value="Creating" disabled [(ngModel)]="sourcePoApproval.purchaseOrderNumber">
                         </div>
                         <div class="form-group">
-                            <label>Open Date</label>
+                            <label>Open Date <span class="clr-red">*</span></label>
                             <p-calendar class="pas-clder" [showIcon]="true" name="dateRequested" [(ngModel)]="sourcePoApproval.dateRequested"></p-calendar>
                         </div>
                         <div class="form-group">
-                            <label>Need By</label>
+                            <label>Need By <span class="clr-red">*</span></label>
                             <p-calendar class="pas-clder" [showIcon]="true" name="needByDate" [(ngModel)]="sourcePoApproval.needByDate"></p-calendar>
                         </div>
                         <div class="form-group">
-                            <label>Priority</label>
+                            <label>Priority <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
                                 <select class="form-control" name="priorityId" [(ngModel)]="sourcePoApproval.priorityId">
                                     <option *ngFor="let priorityName of allPriorityInfo" [ngValue]="priorityName.priorityId">{{priorityName.description}}</option>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Vendor Num</label>
+                            <label>Vendor Code <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
                                 <p-autoComplete class="pautocomp-cstm" name="vendor num" (onSelect)="onVendorCodeselected($event)" (onKeyUp)=eventvendorHandler($event) [(ngModel)]="sourcePoApproval.vendorCode" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
                                                 [minLength]="1" [dropdown]="true">
@@ -58,13 +58,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Vendor Name</label>
+                            <label>Vendor Name <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
-                                <p-autoComplete class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorName" name="vednor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true">
-                                    <ng-template let-vendorName pTemplate="item">
+                                <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorId" name="vednor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" (onSelect)="selectedVendor($event)">
+                                    <!--<ng-template let-vendorName pTemplate="item">
                                         <div class="ui-helper-clearfix">{{vendorName}}</div>
-                                    </ng-template>
+                                    </ng-template>-->
                                 </p-autoComplete>
                                 <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
                             </div>
@@ -115,8 +115,14 @@
                             <p-calendar class="pas-clder" [showIcon]="true" name="date approved" [(ngModel)]="sourcePoApproval.dateApprovied"></p-calendar>
                         </div>
                         <div class="form-group">
-                            <label>Status</label>
-                            <input class="form-control" type="text" name="status" [(ngModel)]="sourcePoApproval.statusId" value="1">
+                            <label>Status <span class="clr-red">*</span></label>
+                            <select class="form-control" name="status" [(ngModel)]="sourcePoApproval.statusId">
+                                <option value="1">Open</option>
+                                <option value="2">Pending</option>
+                                <option value="3">Fulfilling</option>
+                                <option value="4">Closed</option>
+                            </select>
+                            <!--<input class="form-control" type="text" name="status" [(ngModel)]="sourcePoApproval.statusId" value="1">-->
                         </div>
                         <div class="form-group">
                             <label>Credit Limit &amp; Terms</label>
@@ -135,7 +141,7 @@
                     <div class="col-md-3">
                         <div class="card" style="margin-top: 20px;">
                             <div class="card-header" style="padding: 10px 12px;">
-                                <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
+                                <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
                             </div>
                             <div class="card-body" style="padding: 12px 12px 4px;">
                                 <div class="form-group">
@@ -259,27 +265,27 @@
                                 </span>
                             </th>
                             <th>Split Shipment</th>
-                            <th>PN</th>
+                            <th>PN <span class="clr-red">*</span></th>
                             <th>Alt PN</th>
                             <th>PN Description</th>
                             <th>Item Type</th>
                             <th>Mfr</th>
                             <th>GL Account</th>
                             <th>UOM</th>
-                            <th>Need By</th>
-                            <th>Cond</th>
-                            <th>Order Qty</th>
-                            <th>Unit Cost</th>
+                            <th>Need By <span class="clr-red">*</span></th>
+                            <th>Cond <span class="clr-red">*</span></th>
+                            <th>Order Qty <span class="clr-red">*</span></th>
+                            <th>Unit Cost <span class="clr-red">*</span></th>
                             <th>Disc./unit</th>
                             <th>Disc. Cost/unit</th>
-                            <th>Ext Cost</th>
+                            <th>Ext Cost <span class="clr-red">*</span></th>
                             <th>Functional CUR</th>
                             <th>FX Rate</th>
                             <th>Report CUR</th>
                             <th>WO</th>
                             <th>RO</th>
                             <th>SO</th>
-                            <th colspan="4">Management Structure</th>
+                            <th colspan="4">Management Structure <span class="clr-red">*</span></th>
                             <th>Memo</th>
                         </tr>
                     </thead>
@@ -395,8 +401,8 @@
                            <th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" style="padding: 4px 8px !important;" (click)="addRow(partList)"></i></th>
                            <th>PN</th>
                            <th>PN Description</th>
-                           <th>User Type</th>
-                           <th>Name</th>
+                           <th>User Type <span class="clr-red">*</span></th>
+                           <th>Name <span class="clr-red">*</span></th>
                            <th colspan="5">Select Address</th>
                            <th>UOM</th>
                            <th>Order Qty</th>
@@ -856,7 +862,7 @@
                                     <td *ngIf="partList?.itemTypeId==2">Non Stock</td>
                                     <td *ngIf="partList?.itemTypeId==3">Equipment</td>
                                     <td *ngIf="partList?.itemTypeId==0"></td>
-                                    <td>{{partList?.name}}</td>
+                                    <td>{{partList?.manufacturerId}}</td>
                                     <td>
                                         {{partList?.glAccountId}}
                                     </td>

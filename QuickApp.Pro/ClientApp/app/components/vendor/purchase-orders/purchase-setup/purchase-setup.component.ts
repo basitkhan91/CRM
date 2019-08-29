@@ -170,6 +170,8 @@ export class PurchaseSetupComponent {
     addressHeader: string;
     vendorCapesCols: any[];
     vendorCapesInfo: any[] = [];
+    tempVendorId: number;
+    vName: any;
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService) {
@@ -444,14 +446,14 @@ export class PurchaseSetupComponent {
 	savePurchaseOrder() {
         
         this.userName = 'admin';
+        this.sourcePoApproval.vendorId = this.tempVendorId;
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
-        this.sourcePoApproval.requestedBy = this.userName;
-        this.sourcePoApproval.DeferredReceiver = this.userName;
         console.log(this.sourcePoApproval);
         this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
             console.log(saveddata);
+            this.tempVendorId = null;
 			this.savePurchaseorderPart(saveddata.purchaseOrderId);
 		});
 
@@ -645,7 +647,8 @@ export class PurchaseSetupComponent {
 					//For Getting Data After Part Selected
 
 					this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
-						data1 => {
+                        data1 => {
+                            //console.log(data1);
 							if (data1[0][0]) {
 								this.partWithId = data1[0][0];
 								parentdata.partAlternatePartId = this.partWithId.partAlternatePartId;
@@ -660,6 +663,7 @@ export class PurchaseSetupComponent {
 								parentdata.listPrice = this.partWithId.listPrice; //Initial Value
 								parentdata.purchaseDiscountOffListPrice = this.partWithId.purchaseDiscountOffListPrice; //Percentage
                                 parentdata.UOMId = this.partWithId.purchaseUnitOfMeasureId;
+                                parentdata.manufacturerId = this.partWithId.manufacturerId;
 
 								this.partList.unitCost = this.partWithId.purchaseListPriceAfterDiscount; //After Discount Value
 
@@ -689,8 +693,8 @@ export class PurchaseSetupComponent {
 						requisitionedDate: this.sourcePoApproval.requisitionedDate,
 						approver: this.sourcePoApproval.approver,
 						approvedDate: this.sourcePoApproval.dateApprovied,
-						needByDate: this.partListData[i].needByDate,
-						manufacturerId: this.partListData[i].manufacturerId,
+                        needByDate: this.partListData[i].needByDate,
+                        manufacturerId: this.partListData[i].manufacturerId,
 						status: this.sourcePoApproval.statusId,
 						trace: this.partListData[i].trace,
 						conditionCode: this.partListData[i].conditionCode,
@@ -752,7 +756,8 @@ export class PurchaseSetupComponent {
 										requisitionedDate: this.sourcePoApproval.requisitionedDate,
 										approver: this.sourcePoApproval.approver,
 										approvedDate: this.sourcePoApproval.dateApprovied,
-										needByDate: this.partListData[i].needByDate,
+                                        needByDate: this.partListData[i].needByDate,
+                                        manufacturerId: this.partListData[i].manufacturerId,
 										manufacturer: this.partListData[i].manufacturer,
 										status: this.sourcePoApproval.statusId,
 										trace: this.partListData[i].trace,
@@ -783,7 +788,7 @@ export class PurchaseSetupComponent {
 										poPartSplitCountry: childDataList[k].poPartSplitCountry,
 										createdBy: this.userName,
 										updatedBy: this.userName,
-										//managementStructureId: this.partListData[i].managementStructureId,
+										managementStructureId: this.partListData[i].managementStructureId, //new
 										//createdBy: this.childDataList[k].createdBy,
 										//updatedBy: this.childDataList[k].updatedBy,
 										//createdDate: this.childDataList[k].createdDate,
@@ -809,7 +814,8 @@ export class PurchaseSetupComponent {
 										requisitionedDate: this.sourcePoApproval.requisitionedDate,
 										approver: this.sourcePoApproval.approver,
 										approvedDate: this.sourcePoApproval.dateApprovied,
-										needByDate: this.partListData[i].needByDate,
+                                        needByDate: this.partListData[i].needByDate,
+                                        manufacturerId: this.partListData[i].manufacturerId,
 										manufacturer: this.partListData[i].manufacturer,
 										status: this.sourcePoApproval.statusId,
 										trace: this.partListData[i].trace,
@@ -840,7 +846,7 @@ export class PurchaseSetupComponent {
 										poPartSplitCountry: childDataList[k].poPartSplitCountry,
 										createdBy: this.userName,
 										updatedBy: this.userName,
-										//managementStructureId: this.partListData[i].managementStructureId,
+										managementStructureId: this.partListData[i].managementStructureId, //new
 										//createdBy: childDataList[k].createdBy,
 										//updatedBy: childDataList[k].updatedBy,
 										//createdDate: childDataList[k].createdDate,
@@ -872,7 +878,8 @@ export class PurchaseSetupComponent {
 						requisitionedDate: this.sourcePoApproval.requisitionedDate,
 						approver: this.sourcePoApproval.approver,
 						approvedDate: this.sourcePoApproval.dateApprovied,
-						needByDate: this.partListData[i].needByDate,
+                        needByDate: this.partListData[i].needByDate,
+                        manufacturerId: this.partListData[i].manufacturerId,
 						manufacturer: this.partListData[i].manufacturer,
 						status: this.sourcePoApproval.statusId,
 						trace: this.partListData[i].trace,
@@ -934,7 +941,8 @@ export class PurchaseSetupComponent {
 									requisitionedDate: this.sourcePoApproval.requisitionedDate,
 									approver: this.sourcePoApproval.approver,
 									approvedDate: this.sourcePoApproval.dateApprovied,
-									needByDate: this.partListData[i].needByDate,
+                                    needByDate: this.partListData[i].needByDate,
+                                    manufacturerId: this.partListData[i].manufacturerId,
 									manufacturer: this.partListData[i].manufacturer,
 									status: this.sourcePoApproval.statusId,
 									trace: this.partListData[i].trace,
@@ -965,7 +973,7 @@ export class PurchaseSetupComponent {
 									poPartSplitCountry: childDataList[k].poPartSplitCountry,
 									createdBy: this.userName,
 									updatedBy: this.userName,
-									//managementStructureId: this.partListData[i].managementStructureId,
+									managementStructureId: this.partListData[i].managementStructureId, //new
 									//createdBy: childDataList[k].createdBy,
 									//updatedBy: childDataList[k].updatedBy,
 									//createdDate: childDataList[k].createdDate,
@@ -1003,7 +1011,8 @@ export class PurchaseSetupComponent {
 					requisitionedDate: this.sourcePoApproval.requisitionedDate,
 					approver: this.sourcePoApproval.approver,
 					approvedDate: this.sourcePoApproval.dateApprovied,
-					needByDate: this.partListData[i].needByDate,
+                    needByDate: this.partListData[i].needByDate,
+                    manufacturerId: this.partListData[i].manufacturerId,
 					manufacturer: this.partListData[i].manufacturer,
 					status: this.sourcePoApproval.statusId,
 					trace: this.partListData[i].trace,
@@ -1066,7 +1075,8 @@ export class PurchaseSetupComponent {
 								requisitionedDate: this.sourcePoApproval.requisitionedDate,
 								approver: this.sourcePoApproval.approver,
 								approvedDate: this.sourcePoApproval.dateApprovied,
-								needByDate: this.partListData[i].needByDate,
+                                needByDate: this.partListData[i].needByDate,
+                                manufacturerId: this.partListData[i].manufacturerId,
 								manufacturer: this.partListData[i].manufacturer,
 								status: this.sourcePoApproval.statusId,
 								trace: this.partListData[i].trace,
@@ -1497,7 +1507,7 @@ export class PurchaseSetupComponent {
 	}
 	getBUList(masterCompanyId)
 	{
-		this.sourcePoApproval.managementStructureEntityId = masterCompanyId; //Saving Management Structure Id if there Company Id
+		this.sourcePoApproval.managementStructureId = masterCompanyId; //Saving Management Structure Id if there Company Id
 
 		this.bulist = [];
 		this.departmentList = [];
@@ -1539,7 +1549,7 @@ export class PurchaseSetupComponent {
     }
 
     onPartBusinessUnitChange(part) {
-        this.partList.managementStructureEntityId = part.partDepartmentId; //Saving Management Structure Id if there Company Id
+        this.partList.managementStructureId = part.partDepartmentId; //Saving Management Structure Id if there Company Id
 
         part.partDeparmentId = 0;
         part.partDepartmentList = [];
@@ -1552,7 +1562,7 @@ export class PurchaseSetupComponent {
 
     onPartDivisionChange(part):void
 	{
-        this.partList.managementStructureEntityId = part.partDivisionId; //Saving Management Structure Id if there Company Id
+        this.partList.managementStructureId = part.partDivisionId; //Saving Management Structure Id if there Company Id
         part.partDepartmentId = 0;
         part.managementStructureId = part.partDivisionId;
         part.partDepartmentList = this.allManagemtninfo.filter(function (management) {
@@ -1564,11 +1574,11 @@ export class PurchaseSetupComponent {
 
     onPartDepartmentChange(part):void {
         part.managementStructureId = part.partDepartmentId;
-		//this.partList.managementStructureEntityId = divisionId;
+		//this.partList.managementStructureId = divisionId;
 	}
 
 	getDepartmentlist(buid) {
-		this.sourcePoApproval.managementStructureEntityId = buid; //Saving Management Structure Id if there Company Id
+        this.sourcePoApproval.managementStructureId = buid; //Saving Management Structure Id if there Company Id
 
 		this.departmentList = [];
 		this.divisionlist = [];
@@ -1589,7 +1599,7 @@ export class PurchaseSetupComponent {
 
 	getDivisionlist(divid)
 	{
-		this.sourcePoApproval.managementStructureEntityId = divid; //Saving Management Structure Id if there Company Id
+        this.sourcePoApproval.managementStructureId = divid; //Saving Management Structure Id if there Company Id
 
 		this.departmentList = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -1609,7 +1619,7 @@ export class PurchaseSetupComponent {
 
 	getDivisionChangeManagementCode(depid)
 	{
-		this.sourcePoApproval.managementStructureEntityId = depid;
+        this.sourcePoApproval.managementStructureId = depid;
         for(let i=0; i < this.partListData.length; i++) {
             this.partListData[i].partDepartmentId = depid;
             this.onPartDepartmentChange(this.partListData[i]);
@@ -1948,9 +1958,18 @@ export class PurchaseSetupComponent {
 	}
 
 	filterVendorNames(event) {
+        this.vendorNames = [];
+        this.vendorNames = this.allActions;
 
-		this.vendorNames = [];
-		if (this.allActions) {
+        const vendorFilterData = [...this.allActions.filter(x => {
+            return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.vendorNames = vendorFilterData;
+
+
+
+
+/*		if (this.allActions) {
 			for (let i = 0; i < this.allActions.length; i++) {
 				let vendorName = this.allActions[i].vendorName;
 				if (event.query) {
@@ -1974,8 +1993,15 @@ export class PurchaseSetupComponent {
 					//}
 				}
 			}
-		}
-	}
+		}*/
+    }
+  
+    selectedVendor(value) {
+        //console.log(value);
+        this.sourcePoApproval.vendorName = value.vendorName;
+        this.sourcePoApproval.vendorCode = value.vendorCode;
+        this.tempVendorId = value.vendorId;
+    }
 
 	private onDataLoadSuccessful(allWorkFlows: any[]) {
 
@@ -2063,7 +2089,8 @@ export class PurchaseSetupComponent {
 
 	}
 
-	onVendorCodeselected(event) {
+    onVendorCodeselected(event) {
+        
 		for (let i = 0; i < this.VendorCodesColl.length; i++) {
 			if (event == this.VendorCodesColl[i][0].vendorCode) {
 
@@ -2072,7 +2099,22 @@ export class PurchaseSetupComponent {
 				this.selectedVendorCode = event;
 			}
 		}
-		console.log(this.allSelectedParts);
+		//console.log(this.allSelectedParts);
+
+        
+        //this.vendorNames = [];
+        //this.vendorNames = this.allActions;
+        //console.log(this.allActions);
+
+        //const vendorNameFilterData = [...this.allActions.filter(x => {
+        //    if (x.vendorCode === event) {
+        //        this.vName = x.vendorName;
+        //        console.log(this.vName)
+        //        return this.vName;
+        //    }           
+        //})]
+        //this.sourcePoApproval.vendorName = vendorNameFilterData;
+        
 	}
 
 	filterVendorCodes(event) {
