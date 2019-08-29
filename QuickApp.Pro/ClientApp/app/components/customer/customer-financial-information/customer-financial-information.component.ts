@@ -509,6 +509,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+    openTaxRateStateProv(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.sourceAction.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
     openCrediTerms(content) {
         this.isEditMode = false;
 		this.isDeleteMode = false;
