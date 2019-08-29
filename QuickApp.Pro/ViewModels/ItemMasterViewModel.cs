@@ -361,15 +361,15 @@ namespace QuickApp.Pro.ViewModels
         public string EquipmentDescription { get; set; }
         public string[] AircraftTypeId { get; set; }
 
-        public decimal ShelfLifeAvailable { get; set; }
-        public bool isPma   { get; set; }
-        public decimal mfgHours { get; set; }
-        public decimal turnTimeMfg { get; set; }
-        public decimal turnTimeBenchTest { get; set; }
-        public bool IsExportUnspecified { get; set; }
-        public bool IsExportNOMilitary { get; set; }
-        public bool IsExportMilitary { get; set; }
-        public bool IsExportDual { get; set; }
+        public decimal? ShelfLifeAvailable { get; set; }
+        public bool? isPma   { get; set; }
+        public decimal? mfgHours { get; set; }
+        public decimal? turnTimeMfg { get; set; }
+        public decimal? turnTimeBenchTest { get; set; }
+        public bool? IsExportUnspecified { get; set; }
+        public bool? IsExportNONMilitary { get; set; }
+        public bool? IsExportMilitary { get; set; }
+        public bool? IsExportDual { get; set; }
 
         public string[] IntegrationPortalId { get; set; }
         public class ItemMasterViewModelValidator : AbstractValidator<ItemMasterViewModel>

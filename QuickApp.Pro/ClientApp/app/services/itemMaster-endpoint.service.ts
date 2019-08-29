@@ -355,6 +355,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
 
         let endpointUrl = `${this._actionsUrlNew}/${roleObject.itemMasterId}`;
         let finalobj = {
+            'oemPNId': roleObject.oemPN,
             'exportCurrencyId': roleObject.exportCurrencyId,
             'aircraftTypeId': roleObject.AircraftTypeId,
             'itemMasterId': roleObject.itemMasterId,

@@ -51,28 +51,38 @@ namespace DAL.Repositories
         
         public IEnumerable<object> getItemMasterData(long id)
         {
-                var data = (from iM in _appContext.ItemMaster
-                            where iM.ItemMasterId == id
+			var data = (from iM in _appContext.ItemMaster
+						join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds
+						join country in _appContext.Countries on iM.ExportCountryId equals country.countries_id
+						where iM.ItemMasterId == id
 
-                            select new
-                            {
-                                iM,
-                                iM.PartDescription,
-                                iM.IsSerialized,
-                                iM.TagDays,
-                                iM.PMA,
-                                iM.DER,
-                                iM.IsTimeLife,
-                                iM.ItemMasterId,
-                                iM.GLAccountId,
-                                iM.ManufacturerId,
-                                iM.Manufacturer,
-                                iM.ShelfLifeAvailable,
-                                iM.isPma,iM.mfgHours,iM.turnTimeMfg ,iM.turnTimeBenchTest ,iM.IsExportUnspecified,
-                                iM.IsExportNOMilitary ,iM.IsExportMilitary ,iM.IsExportDual 
-                            }).ToList();
-                return data;
-        }
+						select new
+						{
+							iM,
+							iM.PartDescription,
+							iM.IsSerialized,
+							iM.TagDays,
+							iM.PMA,
+							iM.DER,
+							iM.IsTimeLife,
+							iM.ItemMasterId,
+							iM.GLAccountId,
+							iM.ManufacturerId,
+							iM.Manufacturer,
+							iM.ShelfLifeAvailable,
+							country.countries_name,
+							iM.isPma,
+							iM.mfgHours,
+							iM.turnTimeMfg,
+							iM.turnTimeBenchTest,
+							iM.IsExportUnspecified,
+							iM.IsExportNONMilitary,
+							iM.IsExportMilitary,
+							iM.IsExportDual,
+							IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList()
+						}).ToList();
+			return data;
+		}
 
         public IEnumerable<object> GetSelectedAircraftModeldata(long id)
         {
@@ -158,7 +168,7 @@ namespace DAL.Repositories
                             IM.turnTimeMfg,
                             IM.turnTimeBenchTest,
                             IM.IsExportUnspecified,
-                            IM.IsExportNOMilitary,
+                            IM.IsExportNONMilitary,
                             IM.IsExportMilitary,
                             IM.IsExportDual
                         }).ToList();
