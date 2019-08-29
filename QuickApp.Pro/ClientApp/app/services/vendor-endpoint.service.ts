@@ -120,6 +120,8 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _deleteVendorCapabilityAircraftManufacturer: string = "/api/Vendor/deleteVendorCapabilityAircraftManafacturer";
     private readonly _deleteVendorCapabilityAircraftModel: string = "/api/Vendor/deleteVendorCapabilityAircraftModel";
     private readonly _deleteVendorCapability: string = "/api/Vendor/deleteVendorCapability";
+
+    private readonly _getVendorContactByID: string = "/api/Vendor/getvendorContactByVendorID";
     
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -1135,6 +1137,13 @@ export class VendorEndpointService extends EndpointFactory {
         return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.deletePOPart(capabilityid));
+            });
+    }
+    getVendorContactEndpoint<T>(vendorId: any, isDContact: any): Observable<T> {
+        let url = `${this._getVendorContactByID}/${vendorId}/${isDContact}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorContactEndpoint(vendorId, isDContact));
             });
     }
 }

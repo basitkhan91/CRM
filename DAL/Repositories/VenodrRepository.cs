@@ -461,6 +461,24 @@ namespace DAL.Repositories
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
-
+        public IEnumerable<object> getVendorByID(long vendorId, bool isDefaultContact)
+        {
+            var data = (from it in _appContext.VendorContact
+                        where it.VendorId == vendorId && it.IsActive == true && it.IsDefaultContact == isDefaultContact
+                        select new
+                        {
+                            it.VendorContactId,
+                            it.VendorId,
+                            it.ContactId,
+                            it.IsDefaultContact,
+                            it.MasterCompanyId,
+                            it.CreatedDate,
+                            it.CreatedBy,
+                            it.UpdatedDate,
+                            it.UpdatedBy,
+                            it.IsActive
+                        }).ToList();
+            return data;
+        }
     }
 }

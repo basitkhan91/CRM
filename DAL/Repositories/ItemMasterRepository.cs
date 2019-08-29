@@ -51,25 +51,27 @@ namespace DAL.Repositories
         
         public IEnumerable<object> getItemMasterData(long id)
         {
-                var data = (from iM in _appContext.ItemMaster
-                            where iM.ItemMasterId == id
+            var data = (from iM in _appContext.ItemMaster
+                        join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds
+                        where iM.ItemMasterId == id
 
-                            select new
-                            {
-                                iM,
-                                iM.PartDescription,
-                                iM.IsSerialized,
-                                iM.TagDays,
-                                iM.PMA,
-                                iM.DER,
-                                iM.IsTimeLife,
-                                iM.ItemMasterId,
-                                iM.GLAccountId,
-                                iM.ManufacturerId,
-                                iM.Manufacturer,
-                                iM.ShelfLifeAvailable,
-                                iM.isPma,iM.mfgHours,iM.turnTimeMfg ,iM.turnTimeBenchTest ,iM.IsExportUnspecified,
-                                iM.IsExportNOMilitary ,iM.IsExportMilitary ,iM.IsExportDual 
+                        select new
+                        {
+                            iM,
+                            iM.PartDescription,
+                            iM.IsSerialized,
+                            iM.TagDays,
+                            iM.PMA,
+                            iM.DER,
+                            iM.IsTimeLife,
+                            iM.ItemMasterId,
+                            iM.GLAccountId,
+                            iM.ManufacturerId,
+                            iM.Manufacturer,
+                            iM.ShelfLifeAvailable,
+                            iM.isPma, iM.mfgHours, iM.turnTimeMfg, iM.turnTimeBenchTest, iM.IsExportUnspecified,
+                            iM.IsExportNOMilitary, iM.IsExportMilitary, iM.IsExportDual,
+                            IPortalIDS= iPortalIds.Select(e => e.IntegrationPortalId).ToList()
                             }).ToList();
                 return data;
         }
