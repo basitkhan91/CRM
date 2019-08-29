@@ -1,4 +1,4 @@
-﻿import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
+﻿import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog, SELECT_MULTIPLE_PANEL_PADDING_X } from '@angular/material';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -259,7 +259,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataMainchapter: ATAChapter[]
     showAircraftData: boolean = false;
     showAtachapter: boolean = false;
-    selectedAircraftId: any = [];
+    selectedAircraftId: any;
     selectedModelId: any;
     //new code-- for purchase and sales calculation
     itemQuantitys = [];
@@ -302,7 +302,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         SP_FSP_FlatPriceAmount: null,
         SP_FSP_LastFlatPriceDate: '',
         SP_CalSPByPP_MarkUpPercOnListPrice: null,
-        SP_CalSPByPP_MarkUpAmount:  null,
+        SP_CalSPByPP_MarkUpAmount: null,
         SP_CalSPByPP_LastMarkUpDate: '',
         SP_CalSPByPP_BaseSalePrice: null,
         SP_CalSPByPP_SaleDiscPerc: null,
@@ -342,19 +342,22 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     itemMasterId: number;
 
     exportInfo = {
-        ExportECCN  : '',
-        ITARNumber : '',
+        ExportECCN: '',
+        ITARNumber: '',
         ExportUomId: null,
-        ExportCountryId : null,
-        ExportValue : null,
-        ExportCurrencyId : null,
-        ExportWeight : null,
+        ExportCountryId: null,
+        ExportValue: null,
+        ExportCurrencyId: null,
+        ExportWeight: null,
         ExportWeightUnit: null,
-        ExportSizeLength : null,
-        ExportSizeWidth : null,
-        ExportSizeHeight : null,
-
-        }
+        ExportSizeLength: null,
+        ExportSizeWidth: null,
+        ExportSizeHeight: null,
+        IsExportUnspecified: false,
+        IsExportMilitary: false,
+        IsExportNONMilitary: false,
+        IsExportDual: false,
+    }
 
     constructor(private fb: FormBuilder, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
@@ -379,6 +382,32 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 console.log(res);
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = res;
+
+                // binding the export information data on edit
+                this.exportInfo = {
+                    ExportECCN: this.sourceItemMaster.exportECCN,
+                    ITARNumber: this.sourceItemMaster.itarNumber,
+                    ExportUomId: this.sourceItemMaster.exportUomId,
+                    ExportCountryId: this.sourceItemMaster.exportCountryId,
+                    ExportValue: this.sourceItemMaster.exportValue,
+                    ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
+                    ExportWeight: this.sourceItemMaster.exportWeight,
+                    ExportWeightUnit: this.sourceItemMaster.exportWeightUnit,
+                    ExportSizeLength: this.sourceItemMaster.exportSizeLength,
+                    ExportSizeWidth: this.sourceItemMaster.exportSizeWidth,
+                    ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
+                    IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
+                    IsExportMilitary: this.sourceItemMaster.isExportMilitary,
+                    IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
+                    IsExportDual: this.sourceItemMaster.isExportDual,
+                }
+                console.log(this.exportInfo);
+
+                // assign the header values
+                this.pnvalue = this.sourceItemMaster.partNumber;
+                this.pnDescription = this.sourceItemMaster.partDescription;
+                this.ManufacturerValue = this.sourceItemMaster.name;
+                this.alternatePn = this.sourceItemMaster.partAlternatePartId;
 
                 this.getAircraftMappedDataByItemMasterId();
                 this.getATAMappedDataByItemMasterId();
@@ -573,7 +602,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //     this.selectedDashnumber = undefined;
         // });
         this.addFieldValue();
-        this.getAtachapter();
+        // this.getAtachapter();
         this.modalDash = [
             { field: 'aircraft', header: 'Aircraft' },
             { field: 'model', header: 'Model' },
@@ -589,13 +618,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         ];
         this.itemQuantity = Array(100).fill(1).map((x, i) => i + 1);
         this.itemQuantitys = Array(100).fill(1).map((x, i) => i + 1);
-        this.items1 = [
-            { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
-            { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
-            { label: 'ATA Chapter', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAtachapter() },
-            { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
-            { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },
-        ];
+        // this.items1 = [
+        //     { label: 'General Information', icon: 'fa fa-fw fa-info-circle', command: (onclick: any) => this.moveGeneralInfromation() },
+        //     { label: 'Aircraft Information', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAircraftInformation() },
+        //     { label: 'ATA Chapter', icon: 'fa fa-fw fa-paper-plane', command: (onclick: any) => this.moveAtachapter() },
+        //     { label: 'Purchase and Sales', icon: 'fa fa-fw fa-shopping-cart', command: (onclick: any) => this.movePurchaseInformation() },
+        //     { label: 'Export Information', icon: 'fa fa-fw fa-external-link', command: (onclick: any) => this.moveExportInformation() },
+        // ];
         this.loadManagementdata();
         this.manufacturerdata();
         // get all aircraft Manfacturer
@@ -635,6 +664,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
         this.getAllAircraftModels();
         this.getAllDashNumbers();
+        this.getAllATAChapter();
+        this.getAllATASubChapter();
+        this.getAllSubChapters();
 
         // //cutom
         // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
@@ -692,6 +724,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     get exchangeFormArray(): FormArray {
         return this.capabilitiesForm.get('exchangeForm') as FormArray;
+    }
+
+
+    selectedCountry(event) {
+        console.log(event);
     }
 
     // get All Aircraft 
@@ -2775,38 +2812,40 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
-    editItemAndCloseModel() {
+    // editItemAndCloseModel() {
 
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemClassificationCode = this.itemName;
-            this.sourceAction.masterCompanyId = 1;
+    //     console.log(this.sourceItemMaster.AircraftTypeId);
 
-            if (this.selectedAircraftTypes != null) //separting Array which is having ","
-            {
-                this.sourceAction.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
-            }
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-            this.activeIndex = 0;
-        }
-        else {
-            //Adding when we select Multiple Aircrafts 
-            if (this.selectedAircraftTypes != null) //separting Array whic is having ","
-            {
-                this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
-            }
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemClassificationCode = this.itemName;
-            this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
-    }
+    //     this.isSaving = true;
+    //     if (this.isEditMode == false) {
+    //         this.sourceAction.createdBy = this.userName;
+    //         this.sourceAction.updatedBy = this.userName;
+    //         this.sourceAction.itemClassificationCode = this.itemName;
+    //         this.sourceAction.masterCompanyId = 1;
+
+    //         if (this.selectedAircraftTypes != null) //separting Array which is having ","
+    //         {
+    //             // this.sourceAction.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
+    //         }
+    //         this.workFlowtService.newAction(this.sourceAction).subscribe(
+    //             role => this.saveSuccessHelper(role),
+    //             error => this.saveFailedHelper(error));
+    //         this.activeIndex = 0;
+    //     }
+    //     else {
+    //         //Adding when we select Multiple Aircrafts 
+    //         if (this.selectedAircraftTypes != null) //separting Array whic is having ","
+    //             // {
+    //             //     this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
+    //             // }
+    //             this.sourceAction.updatedBy = this.userName;
+    //         this.sourceAction.itemClassificationCode = this.itemName;
+    //         this.sourceAction.masterCompanyId = 1;
+    //         this.workFlowtService.updateAction(this.sourceAction).subscribe(
+    //             response => this.saveCompleted(this.sourceAction),
+    //             error => this.saveFailedHelper(error));
+    //     }
+    // }
 
 
     deleteItemAndCloseModel() {
@@ -3795,17 +3834,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     moveAircraftInformation() {
         //console.log(this.sourceItemMaster.partId);
-        this.activeTab = 1;
+        // this.activeTab = 1;
         this.pnvalue = this.sourceItemMaster.partNumber;
         this.pnDescription = this.sourceItemMaster.partDescription;
         this.ManufacturerValue = this.sourceItemMaster.name;
         //console.log(this.sourceItemMaster.name);
         this.alternatePn = this.sourceItemMaster.partAlternatePartId;
-        this.showAircraftData = true;
-        this.showGeneralData = false;
-        this.showpurchaseData = false;
-        this.showexportData = false;
-        this.showAtachapter = false;
+        // this.showAircraftData = true;
+        // this.showGeneralData = false;
+        // this.showpurchaseData = false;
+        // this.showexportData = false;
+        // this.showAtachapter = false;
         this.currentDashNumberType = new AircraftDashNumber();
         // this.getAircraftAllList();
         // this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
@@ -3851,7 +3890,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     newValue: any;
     // get aircraft model by type 
     getAircraftModelByManfacturer(value) {
-        this.newValue = value.originalEvent.target.textContent;
+        // this.newValue = value.originalEvent.target.textContent;
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
             const responseValue = models[0];
             this.LoadValues = responseValue.map(models => {
@@ -3861,6 +3900,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             });
         });
+        this.selectedModelId = undefined;
+        this.selectedDashnumber = undefined;
+
 
     }
     selectedAircraftIdvalue: any;
@@ -3905,10 +3947,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     // get AircraftModels By manufacturer Type
     async getAircraftModelByManfacturerType() {
+
+
+
         // construct url from array
         await this.searchByFieldUrlCreateforAircraftInformation();
         // reset the dropdowns
-
+        this.selectedAircraftModel = [];
+        this.selectedDashNumbers = []
         // checks where multi select is empty or not and calls the service
         if (this.aircraftManfacturerIdsUrl !== '') {
             this.aircraftModelService
@@ -3934,7 +3980,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // construct url from array
         await this.searchByFieldUrlCreateforAircraftInformation();
         // reset dropdown
-
+        this.selectedDashNumbers = []
         // checks where multi select is empty or not and calls the service
 
         if (this.aircraftManfacturerIdsUrl !== '' && this.aircraftModelsIdUrl !== '') {
@@ -4061,7 +4107,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.newDashnumValue = value.originalEvent.target.textContent;
     }
 
-    adddashnumber() {
+    mapAircraftInformation() {
         this.viewTable = true;
         //console.log(this.newModelValue);        
         if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
@@ -4076,8 +4122,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                         AircraftModelId: x.modelid,
                         DashNumberId: x.dashNumberId,
                         Memo: '',
-
-
+                        IsChecked: false
                     }
                 })
             })
@@ -4091,6 +4136,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     AircraftModelId: x.modelid,
                     DashNumberId: '',
                     Memo: '',
+                    IsChecked: false
                 }
             })
         }
@@ -4102,15 +4148,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 AircraftModelId: '',
                 DashNumberId: '',
                 Memo: '',
+                IsChecked: false
             }]
         }
+
+
+
 
     }
     selectedMemo: any;
     saveAircraft() {
 
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const data = this.aircraftData.map(obj => {
+        const aircraftData = this.aircraftData.filter(x => {
+            if (x.IsChecked) {
+                return x;
+            }
+        })
+        const data = aircraftData.map(obj => {
+            console.log(obj);
+
             return {
                 ...obj,
                 ItemMasterId: ItemMasterID,
@@ -4123,11 +4180,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 AircraftTypeId: this.selectedAircraftId,
                 IsActive: true,
                 IsDeleted: false
+
             }
         })
         // posting the DashNumber Mapped data from Popup
         // Used to get the Data Posted in the Popup
         this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
+
+            // reset poupup aircraft information
+            this.aircraftData = undefined;
+            this.selectedAircraftId = undefined;
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+
             // get aircraft Mapped Data 
             this.getAircraftMappedDataByItemMasterId();
 
@@ -4153,15 +4218,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     memo: x.memo,
                 }
             })
-            // resetting popup Data
-            this.aircraftData = undefined;
-            this.selectedAircraftId = []
-            this.selectedModelId = undefined;
-            this.selectedDashnumber = undefined;
+
 
 
         })
     }
+    // 
     moveAtachapter() {
         this.changeOfTab('Atachapter');
         // this.activeTab = 2
@@ -4172,6 +4234,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // this.showexportData = false;
         // Created ATA Main
         this.currentAtaNumber = new ATAChapter();
+        this.getAllATAChapter();
+
+    }
+
+    getAllATAChapter() {
         this.atamain.getAtaMainList().subscribe(Atachapter => {
             this.ataMainchapter = Atachapter[0];
             for (let i = 0; i < this.ataMainchapter.length; i++) {
@@ -4182,9 +4249,20 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         });
     }
 
+    getAllATASubChapter() {
+        this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
+            this.atasubchapter = res[0].map(x => {
+                return {
+                    label: x.description,
+                    value: x
+                }
+            })
+        })
+    }
 
     addATAMapping() {
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        const PartNumber = this.isEdit === true ? this.pnvalue : this.collectionofItemMaster.partNumber
         //console.log(this.selectedModels, this.ataChaptherSelected);
         const ataMappingData = this.selectedModels.map(x => {
             return {
@@ -4199,7 +4277,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 UpdatedBy: this.userName,
                 CreatedDate: new Date(),
                 UpdatedDate: new Date(),
-                PartNumber: this.collectionofItemMaster.partNumber,
+                PartNumber: PartNumber,
                 IsActive: true,
                 IsDeleted: false,
             }
@@ -4231,7 +4309,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     getAllAircraftModels() {
         this.aircraftModelService.getAll().subscribe(models => {
             const responseValue = models[0];
-            this.LoadModelidValues = responseValue.map(models => {
+            this.aircraftModelList = responseValue.map(models => {
                 return {
                     label: models.modelName,
                     value: models.aircraftModelId
@@ -4245,7 +4323,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     getAllDashNumbers() {
         this.Dashnumservice.getAll().subscribe(dashnumbers => {
             const responseData = dashnumbers[0];
-            this.LoadDashnumberValues = responseData.map(dashnumbers => {
+            this.dashNumberList = responseData.map(dashnumbers => {
                 return {
                     label: dashnumbers.dashNumber,
                     value: dashnumbers.dashNumberId
@@ -4380,8 +4458,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 ItemMasterId: ItemMasterID,
                 PartNumber: this.pnvalue,
                 MasterCompanyId: 1,
-                CreatedBy: this.sourceItemMaster.createdBy,
-                UpdatedBy: this.sourceItemMaster.updatedBy,
+                CreatedBy: this.userName,
+                UpdatedBy: this.userName,
                 CreatedDate: new Date(),
                 UpdatedDate: new Date(),
                 IsActive: true,
@@ -4395,7 +4473,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 'Success',
                 `Saved Purchase and Sale Successfully `,
                 MessageSeverity.success
-              );
+            );
             this.changeOfTab('ExportInfo');
             // console.log(datas);
         })
@@ -4414,18 +4492,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showexportData = false;
     }
 
-    saveExportInformation(){
-        console.log(this.exportInfo)
-        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-   const data = {...this.exportInfo , ExportCountryId : 20 ,  ItemMasterId : ItemMasterID  }
+    saveExportInformation() {
 
-   this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
-    this.alertService.showMessage(
-        'Success',
-        `Saved Export Information Successfully `,
-        MessageSeverity.success
-      );
-     })
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        const data = { ...this.exportInfo, ExportCountryId: 20, ItemMasterId: ItemMasterID }
+
+        this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
+            this.alertService.showMessage(
+                'Success',
+                `Saved Export Information Successfully `,
+                MessageSeverity.success
+            );
+        })
     }
 
 
@@ -4486,10 +4564,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                 })
 
-                if (this.selectedAircraftTypes != null) //separting Array whic is having ","
-                {
-                    this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
-                }
+                // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
+                // {
+                // this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
+                // }
 
                 if (this.selectedIntegrationTypes != null) //separting Array which is having ","
                 {
@@ -4500,10 +4578,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
             else //for Edit Screen
             {
-                if (this.selectedAircraftTypes != null) //separting Array whic is having ","
-                {
-                    this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
-                }
+                // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
+                // {
+                //     this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
+                // }
                 if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
                 {
                     this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
@@ -4512,6 +4590,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.masterCompanyId = 1;
                 this.sourceItemMaster.itemTypeId = 1;
                 this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
+                    this.changeOfTab('AircraftInfo');
                     this.collectionofItemMaster = data;
                     this.saveCompleted(this.sourceItemMaster);
                     if (data != null) {
@@ -5017,7 +5096,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     // New code for loading dropdown
 
-    atasubchapterChange(atachapterId?) {
+    getATASubChapterByATAChapter(atachapterId?) {
         const selectedATAChapterId = this.ataform.value.atanumber;
         this.ataChaptherSelected = this.ataMainchapter.filter(x => {
             if (x.ataChapterId === selectedATAChapterId) {
@@ -5126,11 +5205,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             field.PP_UnitPurchasePrice = field.PP_VendorListPrice - field.PP_PurchaseDiscAmount
         }
         if (field.SP_CalSPByPP_MarkUpPercOnListPrice && field.PP_VendorListPrice) {
-            field.SP_CalSPByPP_MarkUpAmount = ((field.SP_FSP_FlatPriceAmount * field.SP_CalSPByPP_MarkUpPercOnListPrice) / 100)
+            field.SP_CalSPByPP_MarkUpAmount = ((field.PP_VendorListPrice * field.SP_CalSPByPP_MarkUpPercOnListPrice) / 100)
         }
         if (field.PP_UnitPurchasePrice && field.SP_CalSPByPP_MarkUpAmount) {
 
-            field.SP_CalSPByPP_BaseSalePrice = field.PP_UnitPurchasePrice + field.SP_CalSPByPP_MarkUpAmount
+            field.SP_CalSPByPP_BaseSalePrice = field.PP_VendorListPrice + field.SP_CalSPByPP_MarkUpAmount;
         }
 
     }
@@ -5167,18 +5246,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.aircraftList = allACList;
     }
-    private atachapterList: any[];
-    getAtachapter() {
-        this.atamain.getAtaMainList().subscribe(data => {
-            const responseData = data[0].map(x => {
-                return {
-                    atachapter: x.ataChapterName,
-                    atasubchapter: ""
-                };
-            });
-            this.atachapterList = responseData;
-        });
-    }
+
+    // getAtachapter() {
+    //     this.atamain.getAtaMainList().subscribe(data => {
+    //         const responseData = data[0].map(x => {
+    //             return {
+    //                 atachapter: x.ataChapterName,
+    //                 atasubchapter: ""
+    //             };
+    //         });
+    //         this.atachapterList = responseData;
+    //     });
+    // }
 
     private countrylist() {
         this.alertService.startLoadingMessage();
@@ -5193,7 +5272,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allCountryinfo = allWorkFlows;
+
         this.countrycollection = [];
+
+
+
         if (this.allCountryinfo.length > 0) {
             for (let i = 0; i < this.allCountryinfo.length; i++) {
                 let countryName = this.allCountryinfo[i].nice_name;
@@ -5205,6 +5288,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     filtercountry(event) {
         this.countrycollection = [];
+
         for (let i = 0; i < this.allCountryinfo.length; i++) {
             let countryName = this.allCountryinfo[i].nice_name;
             if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
@@ -5223,10 +5307,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    onClickDNCheckbox(rowIndex) {
-        this.indexOfrow = rowIndex;
-        this.enableDNMemo = !this.enableDNMemo;
-    }
+    // onClickDNCheckbox(rowIndex) {
+    //     this.indexOfrow = rowIndex;
+    //     this.enableDNMemo = !this.enableDNMemo;
+    // }
 
     changeOfTab(value) {
         if (value === 'General') {

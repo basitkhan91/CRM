@@ -71,6 +71,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _searchgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchgetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
     private readonly _searchgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
     private readonly _getItemMasterDetails: string = '/api/ItemMaster/Get';
+private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPurchSaleByItemMasterID';
 
     private readonly _updateItemMasterSerialzed: string = '/api/itemmaster/itemMasterSerialized';
     private readonly _updateItemMasterTimeLife: string = '/api/itemmaster/itemMasterTimeLife';
@@ -801,11 +802,12 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getATAMappingEndpoint(ItemmasterId));
             });
     }
-    getNewitemExportInfoEndpoint<T>(userObject: any): Observable<T> {
+    getNewitemExportInfoEndpoint<T>(Object: any): Observable<T> {
+        const { ItemMasterId } = Object;
 
-        return this.http.post<T>(this._ItemMasterExportInfoUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+        return this.http.post<T>(`${this._ItemMasterExportInfoUrlNew}/${ItemMasterId}`, JSON.stringify(Object), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getNewitemExportInfoEndpoint(userObject));
+                return this.handleError(error, () => this.getNewitemExportInfoEndpoint(Object));
             });
     }
     updateItemMasterAircraftEndpoint<T>(ItemMasterAircraftMappingId: number, ): Observable<T> {
@@ -855,7 +857,16 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.searchATAMappedByMultiATAIDATASUBID(ItemmasterId, searchUrl));
             });
     }
+    getPurcSaleByItemMasterID<T>(ItemmasterId: number): Observable<T> {
+        let endpointUrl = `${this._getPurcSaleDetails}/${ItemmasterId}`;
 
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPurcSaleByItemMasterID(ItemmasterId));
+            });
+    }
+    
     deleteitemMasterMappedATAEndpoint<T>(userObject: any): Observable<T> {
         return this.http.post<T>(this._ItemMasterATAMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {

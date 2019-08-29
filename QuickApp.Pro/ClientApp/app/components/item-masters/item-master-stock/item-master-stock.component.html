@@ -832,7 +832,7 @@
                                     <div class="col-sm-12">
                                         <form [formGroup]="ataform" (ngSubmit)="onSubmit(ataform.value)">
                                             <div class="col-sm-3 inline-block display-flex">
-                                                <select class="select-option" formControlName="atanumber" (change)="atasubchapterChange()">
+                                                <select class="select-option" formControlName="atanumber" (change)="getATASubChapterByATAChapter()">
                                                     <!--[(ngModel)]="currentAtaNumber.ataChapterId"-->
                                                     <option value=''> Select Chapter</option>
                                                     <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
@@ -963,9 +963,7 @@
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
                         </div>
-                        <div class="col-sm-12 add-colors font">
-                            <span>Purchase and Sales Price Information</span>
-                        </div>
+
                         <div class="col-sm-12">
                             <span class="float-right">
                                 <button type="button" (click)="addFieldValue(); " class="btn btn-primary">Add</button>
@@ -1152,9 +1150,7 @@
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
                         </div>
-                        <div class="col-sm-12 add-colors font">
-                            <span>Create Export Information</span>
-                        </div>
+
                         <br />
                         <div class="form-row col-row">
                             <div class="col-md-3" style="margin-left: 13px">
@@ -1168,17 +1164,21 @@
                                     </label>
                                     <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum"  [(ngModel)]="exportInfo.ITARNumber" name="itarNumber"/>
                                     <label class="control-label">Country <span style="color: red">*</span></label>
-                                    <p-autoComplete [(ngModel)]="sourceAction.countries_name" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+
+
+                                    <p-autoComplete  [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" [(ngModel)]="exportInfo.ExportCountryId">
                                         <ng-template let-countryName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{countryName}}</div>
                                         </ng-template>
                                     </p-autoComplete>
+
                                     <label class="control-label">Value <span style="color: red">*</span></label> 
                                     <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15"  [(ngModel)]="exportInfo.ExportValue" name="exportValue"/>
                                     <label class="control-label">Currency <span style="color: red">*</span></label>                        
                                     <select  class="select-value-drop1"
                                             [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId">
+                                            <option value= null > Select Currency</option>
                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                 [ngValue]="currencyName.currencyId">
                                             {{currencyName.symbol}}
@@ -1222,14 +1222,14 @@
                                     <div class="inline-block display-flex">
                                         <div class="checkbox-cstm check-value">
                                             <label class="control-label">
-                                                <input  type="checkbox" id="" >
+                                                <input  type="checkbox" id=""  name="unspecified"  [(ngModel)]="exportInfo.IsExportUnspecified"  >
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                 Unspecified
                                             </label>
                                         </div>
                                         <div class="checkbox-cstm check-value">
                                             <label class="control-label">
-                                                <input  type="checkbox" id="" >
+                                                <input  type="checkbox" id=""  name="nonmilitary" [(ngModel)]="exportInfo.IsExportNONMilitary">
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                 NON-Military
                                             </label>
@@ -1238,14 +1238,14 @@
                                     <div class="inline-block display-flex">
                                         <div class="checkbox-cstm check-value">
                                             <label class="control-label">
-                                                <input type="checkbox" id="" >
+                                                <input type="checkbox" id=""  name="miltary" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" >
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                 Miltary
                                             </label>
                                         </div>
                                         <div class="checkbox-cstm check-value">
                                             <label class="control-label">
-                                                <input type="checkbox" id="">
+                                                <input type="checkbox" id=""  name="dual"  [(ngModel)]="exportInfo.IsExportDual">
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                 Dual
                                             </label>
@@ -1284,7 +1284,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add Dash Number</h4>
+                    <h4 class="modal-title">Add Aircraft Information</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
@@ -1294,6 +1294,7 @@
                                 <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
                         </div>
+             
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm">Model <a href="/singlepages/singlepages/app-aircraft-manufacturer"><i class="fa fa-plus-circle fa-lg"></i></a></label>
@@ -1309,7 +1310,7 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="adddashnumber()">Add</button>
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
                         </div>
                     </div>
 
@@ -1334,7 +1335,8 @@
                                     <td>
                                         <span class="checkbox-cstm">
                                             <label style="width: 10px;">
-                                                <input type="checkbox" (click)="onClickDNCheckbox(i)">
+                                                <input type="checkbox"  [(ngModel)]="rowData.IsChecked" >
+                        
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
@@ -1344,7 +1346,7 @@
                                         {{rowData[col.field]}}
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="i !== indexOfrow || enableDNMemo" />
+                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
                                     </td>
                                 </tr>
                             </ng-template>

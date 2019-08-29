@@ -26,7 +26,7 @@ import { CustomerService } from '../../../services/customer.service';
 @Component({
     selector: 'app-customer-contacts',
     templateUrl: './customer-contacts.component.html',
-   // styleUrls: ['./customers-contacts.component.scss'],
+    styleUrls: ['./customer-contacts.component.scss'],
     animations: [fadeInOut]
 })
 /** CustomerEdit component*/

@@ -275,6 +275,9 @@ export class ItemMasterService {
     newItemMasterPurcSaleClass(action: any) {
         return this.itemMasterEndpoint.getNewitemPurcSaleEndpoint<any>(action);
     }
+    newItemMasterExportInformation(action: any) {
+        return this.itemMasterEndpoint.getNewitemExportInfoEndpoint<any>(action);
+    }
     getMappedAirCraftDetails(ItemmasterId: number) {
         return this.itemMasterEndpoint.getAircraftMappingEndpoint<any>(ItemmasterId);
     }
@@ -321,11 +324,14 @@ export class ItemMasterService {
     getItemMasterDetailById(ItemMasterId: number) {
         return this.itemMasterEndpoint.getItemMasterDetailsById<any>(ItemMasterId);
     }
+    getPurcSaleDetailById(ItemMasterId: number) {
+        return this.itemMasterEndpoint.getPurcSaleByItemMasterID<any>(ItemMasterId);
+    }
 
     updateItemMasterSerialized<T>(itemMasterId: number, active: boolean): Observable<T> {
         return this.itemMasterEndpoint.updateItemMasterSerialized(itemMasterId, active);
     }
-
+    
     updateItemMasterTimeLife<T>(itemMasterId: number, active: boolean): Observable<T> {
         return this.itemMasterEndpoint.updateItemMasterTimeLife(itemMasterId, active);
     }

@@ -49,6 +49,8 @@ import { InputSwitchModule } from "primeng/inputswitch";
 import { CalendarModule } from "primeng/calendar";
 import { DropdownModule } from 'primeng/dropdown';
 import { KeyFilterModule } from "primeng/keyfilter";
+import { TooltipModule } from 'primeng/tooltip';
+
 
 
 @NgModule({
@@ -69,7 +71,7 @@ import { KeyFilterModule } from "primeng/keyfilter";
 		AutoCompleteModule,
 		CalendarModule,
         GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule,
-        DropdownModule
+        DropdownModule, TooltipModule
     ],
     declarations: [
         CustomerPagesComponent,
