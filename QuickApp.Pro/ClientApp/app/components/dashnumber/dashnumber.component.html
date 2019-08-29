@@ -1,4 +1,6 @@
 ﻿
+
+
 <div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="x_panel">
@@ -15,7 +17,7 @@
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                                maxSelectedLabels="1"   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                                   maxSelectedLabels="1" selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
 
                                     <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                         <i class="fa fa-search"></i>
@@ -88,162 +90,163 @@
     </div>
 </div>
 
-        <ng-template #auditContent let-c="close" let-d="dismiss">
-            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-            </div>
-        </ng-template>
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
 
-        <ng-template #content let-c="close" let-d="dismiss">
-            <div class="modal-header">
-                <h4 class="modal-title">Are you sure you want to delete Dash Number ?</h4>
-                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you sure you want to delete Dash Number ?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" (click)="removeDashNumber()">Yes</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-            </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="removeDashNumber()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
 
-        </ng-template>
+</ng-template>
 
-        <ng-template #dashNumberModel let-c="close" let-d="dismiss">
+<ng-template #dashNumberModel let-c="close" let-d="dismiss">
 
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title"> Edit</h4>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+            <h4 class="modal-title"> Edit</h4>
+        </div>
+        <div class="modal-body">
+
+            <p>
+                <span class="col-sm-3"><b>Aircraft Manufacturer: </b></span> <span class="col-sm-6">
+                    <select [(ngModel)]="dashNumberToUpdate.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(dashNumberToUpdate.aircraftTypeId)">
+                        <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+                    </select>
+                </span>
+            </p>
+            <p>
+                <span class="col-sm-3"><b>Aircraft Model Name: </b></span> <span class="col-sm-6">
+                    <select [(ngModel)]="dashNumberToUpdate.aircraftModelId" [ngModelOptions]="{standalone: true}">
+                        <option>select</option>
+                        <option *ngFor="let model of aircraftModelsList" [ngValue]="model.aircraftModelId">{{model.modelName}}</option>
+                    </select>
+                </span>
+            </p>
+            <p>
+                <span class="col-sm-3"><b>Dash NUmber: </b></span> <span class="col-sm-6">
+                    <input type="text" [(ngModel)]="dashNumberToUpdate.dashNumber" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                </span>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" (click)="updateDashNumber()" class="btn btn-success" data-dismiss="modal">Update</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+</ng-template>
+
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>
+
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isEditMode">Edit ATA Chapter</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add ATA Chapter</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
+            <div class="form-row col-row">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">
+                        Aircraft Manufacturer <strong class="clr-red">*</strong>
+                    </label>
+                    <select class="col-sm-5" [(ngModel)]="selectedAircraftId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange()">
+                        <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+                    </select>
                 </div>
-                <div class="modal-body">
-
-                    <p>
-                        <span class="col-sm-3"><b>Aircraft Manufacturer: </b></span> <span class="col-sm-6">
-                            <select [(ngModel)]="dashNumberToUpdate.aircraftTypeId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange(dashNumberToUpdate.aircraftTypeId)">
-                                <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
-                            </select>
-                        </span>
-                    </p>
-                    <p>
-                        <span class="col-sm-3"><b>Aircraft Model Name: </b></span> <span class="col-sm-6">
-                            <select [(ngModel)]="dashNumberToUpdate.aircraftModelId" [ngModelOptions]="{standalone: true}">
-                                <option>select</option>
-                                <option *ngFor="let model of aircraftModelsList" [ngValue]="model.aircraftModelId">{{model.modelName}}</option>
-                            </select>
-                        </span>
-                    </p>
-                    <p>
-                        <span class="col-sm-3"><b>Dash NUmber: </b></span> <span class="col-sm-6">
-                            <input type="text" [(ngModel)]="dashNumberToUpdate.dashNumber" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
-                        </span>
-                    </p>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">
+                        Aircraft Model <strong class="clr-red">*</strong>
+                    </label>
+                    <p-multiSelect class="col-sm-5 pub-multi3" [options]="aircraftModelsList" [(ngModel)]="selectedAircraftModel" name="modelname"
+                                   (onChange)="getDashNumberByManfacturerandModel()"></p-multiSelect>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" (click)="updateDashNumber()" class="btn btn-success" data-dismiss="modal">Update</button>
-                    <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">
+                        Dash Number <strong class="clr-red">*</strong>
+                    </label>
+                    <input type="text" class="col-sm-5" pInputText pKeyFilter="int" [(ngModel)]="selectedDashnumber" name="dashnumber" />
                 </div>
-            </div>
-
-        </ng-template>
-
-        <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-                  [width]="350" [minWidth]="200" [responsive]="true"
-                  [minY]="1050" [baseZIndex]="1100000">
-            <h5 [ngStyle]="{'color':'red'}">
-                Please Enter (*) Mandatory Fields
-            </h5>
-            <p-footer>
-                <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-            </p-footer>
-
-        </p-dialog>
-
-        <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-            <div class="modal-header">
-                <h4 class="modal-title" *ngIf="isEditMode">Edit ATA Chapter</h4>
-                <h4 class="modal-title" *ngIf="!isEditMode">Add ATA Chapter</h4>
-                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-                    <div class="form-row col-row">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">
-                                Aircraft Manufacturer <strong class="clr-red">*</strong>
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">
+                        Memo <strong class="clr-red">*</strong>
+                    </label>
+                    <textarea class="input-field-value col-sm-5" rows="3" cols="10" [(ngModel)]="selectedMemo" name="memo"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="checkbox-cstm check-value">
+                            <label>
+                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                Active
                             </label>
-                            <select class="col-sm-5" [(ngModel)]="selectedAircraftId" [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange()">
-                                <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">
-                                Aircraft Model <strong class="clr-red">*</strong>
-                            </label>
-                            <p-multiSelect class="col-sm-5 pub-multi3" [options]="aircraftModelsList" [(ngModel)]="selectedAircraftModel" name="modelname"
-                                           (onChange)="getDashNumberByManfacturerandModel()" ></p-multiSelect>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">
-                                Dash Number <strong class="clr-red">*</strong>
-                            </label>
-                            <input type="text" class="col-sm-5" pInputText pKeyFilter="int" [(ngModel)]="selectedDashnumber" name="dashnumber" />
-                        </div>
-                       <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">
-                                Memo <strong class="clr-red">*</strong>
-                            </label>
-                            <textarea class="input-field-value col-sm-5" rows="3" cols="10" [(ngModel)]="selectedMemo" name="memo"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <div class="checkbox-cstm check-value">
-                                    <label>
-                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                        Active
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary-cstm" [disabled]="disableSave">Save</button>
-                        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-                    </div>
-                </form>
-            </div>
-        </ng-template>
-
-
-        <ng-template #view class="modal fade " id="view" role="dialog">
-
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                    <h4 class="modal-title">Dash Number Details</h4>
-                </div>
-                <div class="modal-body viewform">
-                    <div class="col-sm-12">
-                        <p><span class="label"><b>Aircraft Manufacturer: </b></span><span class="value">{{aircrafttype}}</span></p>
-                        <p><span class="label"><b>Model Name: </b></span><span class="value">{{aircraft_Model}}</span></p>
-                        <p><span class="label"><b>Dash Number: </b></span><span class="value">{{dashnumber}}</span></p>
-                        <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
-                        <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
-                        <p><span class="label"><b>Created Date: </b></span><span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                        <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
-                        <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                    </div>
-
                     <div class="clear"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary-cstm" [disabled]="disableSave">Save</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+
+<ng-template #view class="modal fade " id="view" role="dialog">
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+            <h4 class="modal-title">Dash Number Details</h4>
+        </div>
+        <div class="modal-body viewform">
+            <div class="col-sm-12">
+                <p><span class="label"><b>Aircraft Manufacturer: </b></span><span class="value">{{aircrafttype}}</span></p>
+                <p><span class="label"><b>Model Name: </b></span><span class="value">{{aircraft_Model}}</span></p>
+                <p><span class="label"><b>Dash Number: </b></span><span class="value">{{dashnumber}}</span></p>
+                <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
+                <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
+                <p><span class="label"><b>Created Date: </b></span><span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
+                <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
+                <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
             </div>
 
-        </ng-template>
+            <div class="clear"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+
+</ng-template>
+

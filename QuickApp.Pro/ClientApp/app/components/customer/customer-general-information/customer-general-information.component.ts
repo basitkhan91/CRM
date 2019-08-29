@@ -1570,6 +1570,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     onClickPopupSave() {
+        console.log(this.memoPopupValue);
         if (this.memoPopupValue == 'PBHCustomer') {
             this.sourceCustomer.pbhCustomerMemo = this.memoPopupContent;
         }

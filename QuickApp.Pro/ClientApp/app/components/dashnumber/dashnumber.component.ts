@@ -18,7 +18,7 @@ import { PaginationService } from "../../services/pagination/pagination.service"
     animations: [fadeInOut]
 })
 /** dashnumber component*/
-export class DashnumberComponent implements OnInit{
+export class DashnumberComponent implements OnInit {
     Title: string = "Dash Number";
     aircraftModelsList: any;
     /** dashnumber ctor */
@@ -45,7 +45,7 @@ export class DashnumberComponent implements OnInit{
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
-    selectedMemo: any;    
+    selectedMemo: any;
     selectedDashnumber: any;
     loadingIndicator: boolean;
     private isSaving: boolean;
@@ -70,7 +70,7 @@ export class DashnumberComponent implements OnInit{
         this.sourceAction = new AircraftDashNumber();
     }
 
-    ngOnInit(): void {       
+    ngOnInit(): void {
         this.currentDashNumberType = new AircraftDashNumber();
         this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
             this.aircraftManufacturerList = aircraftManufacturer[0];
@@ -86,14 +86,14 @@ export class DashnumberComponent implements OnInit{
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.dashNumberService.getAll().subscribe(
-             results => this.onDataLoadSuccessful(results[0]),
-                error => this.onDataLoadFailed(error)
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
         );
         this.cols = [
             { field: 'aircraftType', header: 'Aircraft Manufacturer' },
             { field: 'aircraftModel', header: 'Model Name' },
-            { field: 'dashNumber', header: 'Dash Number' },      
-            { field: 'memo',header: 'Memo'}
+            { field: 'dashNumber', header: 'Dash Number' },
+            { field: 'memo', header: 'Memo' }
         ];
         this.selectedColumns = this.cols;
 
@@ -110,7 +110,7 @@ export class DashnumberComponent implements OnInit{
             return {
                 aircraftType: x.aircraftType.description,
                 aircraftModel: x.aircraftModel.modelName,
-                dashNumber: x.dashNumber,    
+                dashNumber: x.dashNumber,
                 memo: x.memo,
                 isActive: x.isActive,
             }
@@ -195,18 +195,18 @@ export class DashnumberComponent implements OnInit{
                 }
                 this.alertService.showMessage(this.Title, message, MessageSeverity.error);
             }
-        
+
         );
     }
     open(content) {
         this.isEditMode = false;
         this.isDeleted = false;
         this.sourceAction.isActive = true;
-        this.sourceAction = new AircraftDashNumber();       
-        this.isSaving = true;  
+        this.sourceAction = new AircraftDashNumber();
+        this.isSaving = true;
         this.aircrafttype = "";
         this.aircraft_Model = "";
-        this.dashnumber ="";
+        this.dashnumber = "";
         this.memo = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -235,11 +235,11 @@ export class DashnumberComponent implements OnInit{
 
     openView(content, row) {
         this.sourceAction = row;
-        this.aircrafttype = row.aircraftType;        
+        this.aircrafttype = row.aircraftType;
         this.aircraft_Model = row.aircraftModel;
         this.dashnumber = row.dashNumber;
         this.memo = row.memo;
-        this.createdBy = row.createdBy;        
+        this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
@@ -262,7 +262,7 @@ export class DashnumberComponent implements OnInit{
     //        });
     //    });
 
-   
+
     resetAddAircraftDashNumber(): void {
         this.currentDashNumberType = new AircraftDashNumber();
     }
@@ -290,8 +290,7 @@ export class DashnumberComponent implements OnInit{
         this.updateDashNumber();
     }
 
-    aircraftManufacturerChange()
-    {
+    aircraftManufacturerChange() {
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(dashNumbers => {
             const responseValue = dashNumbers[0];
             this.aircraftModelsList = responseValue.map(x => {
@@ -334,7 +333,7 @@ export class DashnumberComponent implements OnInit{
 
         if (this.isDeleted == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleted= false;
+            this.isDeleted = false;
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
@@ -366,7 +365,7 @@ export class DashnumberComponent implements OnInit{
             this.sourceAction.Memo = this.selectedMemo;
             this.dashNumberService.add({ ...this.sourceAction, isDeleted: this.isDeleted, createdDate: new Date(), UpdatedDate: new Date() }).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));           
+                error => this.saveFailedHelper(error));
         }
         else {
             this.sourceAction.createdBy = this.userName;
@@ -375,13 +374,13 @@ export class DashnumberComponent implements OnInit{
             this.dashNumberService.update(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-         
+
         }
 
         this.modal.close();
     }
 
-  
+
 
     //pagination code start
     //getMessages(): void {
