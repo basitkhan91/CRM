@@ -1030,6 +1030,50 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        //[HttpPost("vendor")]
+        //public IActionResult CreateAction([FromBody] VendorViewModel vendorViewModel, Address address, VendorType vt)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (vendorViewModel == null)
+        //            return BadRequest($"{nameof(vendorViewModel)} cannot be null");
+        //        DAL.Models.Vendor actionobject = new DAL.Models.Vendor();
+        //        vt.VendorTypeId = 1;
+        //        vendorViewModel.MasterCompanyId = 1;
+        //        actionobject.VendorId = vendorViewModel.VendorId;
+        //        actionobject.VendorName = vendorViewModel.VendorName;
+        //        actionobject.LicenseNumber = vendorViewModel.LicenseNumber;
+        //        actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
+        //        actionobject.capabilityId = vendorViewModel.capabilityId;
+        //        actionobject.VendorPhone = vendorViewModel.VendorPhone;
+        //        actionobject.VendorTypeId = vendorViewModel.VendorTypeId;
+        //        actionobject.IsPreferredVendor = vendorViewModel.IsPreferredVendor;
+        //        actionobject.Parent = vendorViewModel.Parent;
+        //        actionobject.IsVendorAlsoCustomer = vendorViewModel.IsVendorAlsoCustomer;
+        //        actionobject.VendorEmail = vendorViewModel.VendorEmail;
+        //        actionobject.VendorCode = vendorViewModel.VendorCode;
+        //        actionobject.VendorContractReference = vendorViewModel.VendorContractReference;
+        //        actionobject.DoingBusinessAsName = vendorViewModel.DoingBusinessAsName;
+        //        actionobject.VendorURL = vendorViewModel.VendorURL;
+        //        actionobject.IsCertified = vendorViewModel.IsCertified;
+        //        actionobject.VendorAudit = vendorViewModel.VendorAudit;
+        //        actionobject.MasterCompanyId = vendorViewModel.MasterCompanyId;
+        //        actionobject.IsActive = true;
+        //        actionobject.CreditTermsId = vendorViewModel.CreditTermsId;
+        //        actionobject.CreatedDate = DateTime.Now;
+        //        actionobject.UpdatedDate = DateTime.Now;
+        //        actionobject.CreatedBy = vendorViewModel.CreatedBy;
+        //        actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
+        //        //actionobject.vendorc
+        //        AddAddress(vendorViewModel);
+        //        actionobject.AddressId = vendorViewModel.AddressId.Value;
+        //        _unitOfWork.Vendor.Add(actionobject);
+        //        _unitOfWork.SaveChanges();
+        //        return Ok(actionobject);
+        //    }
+
+        //    return Ok(ModelState);
+        //}
 
         [HttpPost("vendorPost")]
         public IActionResult CreateAction([FromBody] VendorViewModel vendorViewModel, Address address, VendorType vt)
@@ -1127,6 +1171,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("vendorUpdate/{id}")]
         public IActionResult UpdateVendorList(long id, [FromBody] VendorViewModel vendorViewModel, VendorType vt)
         {
@@ -1174,8 +1219,8 @@ namespace QuickApp.Pro.Controllers
                 address.Country = vendorViewModel.Country;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = vendorViewModel.CreatedBy;
-                address.UpdatedBy = vendorViewModel.UpdatedBy;
+                address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
+                address.UpdatedBy = vendorViewModel.UpdatedBy?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(address);
@@ -1232,8 +1277,8 @@ namespace QuickApp.Pro.Controllers
             address.MasterCompanyId = 1;
             address.IsActive = true;
             address.RecordCreateDate = DateTime.Now;
-            address.CreatedBy = vendorViewModel.CreatedBy;
-            address.UpdatedBy = vendorViewModel.UpdatedBy;
+            address.CreatedBy = vendorViewModel.CreatedBy??"Admin"; //Hotfix
+            address.UpdatedBy = vendorViewModel.UpdatedBy??"Admin"; //Hotfix
             address.CreatedDate = DateTime.Now;
             address.UpdatedDate = DateTime.Now;
             _unitOfWork.Address.Add(address);
@@ -1518,8 +1563,8 @@ namespace QuickApp.Pro.Controllers
                 address.MasterCompanyId = 1;
                 address.IsActive = true;
                 address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = vendorshipping.CreatedBy;
-                address.UpdatedBy = vendorshipping.UpdatedBy;
+                address.CreatedBy = vendorshipping.CreatedBy??"Admin"; //Hotfix
+                address.UpdatedBy = vendorshipping.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
                 _context.Address.Add(address);
@@ -1616,10 +1661,11 @@ namespace QuickApp.Pro.Controllers
                 address.Country = checkPaymentViewModel.Country;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = checkPaymentViewModel.CreatedBy;
-                address.UpdatedBy = checkPaymentViewModel.UpdatedBy;
+                address.CreatedBy = checkPaymentViewModel.CreatedBy??"Admin"; //HotFix
+                address.UpdatedBy = checkPaymentViewModel.UpdatedBy??"Admin"; //HotFix
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
+                address.IsActive = true;
                 _unitOfWork.Address.Add(address);
                 _unitOfWork.SaveChanges();
                 checkPaymentObj.AddressId = address.AddressId.Value;
@@ -1720,10 +1766,11 @@ namespace QuickApp.Pro.Controllers
                 address.Country = domesticWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = domesticWirePaymentViewModel.CreatedBy;
-                address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy;
+                address.CreatedBy = domesticWirePaymentViewModel.CreatedBy??"Admin";//Hotfix
+                address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
+                address.IsActive = domesticWirePaymentObj.IsActive ?? true;
                 _unitOfWork.Address.Add(address);
                 _unitOfWork.SaveChanges();
                 domesticWirePaymentObj.BankAddressId = address.AddressId.Value;
@@ -1764,8 +1811,8 @@ namespace QuickApp.Pro.Controllers
                 address.Country = domesticWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = domesticWirePaymentViewModel.CreatedBy;
-                address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy;
+                address.CreatedBy = domesticWirePaymentViewModel.CreatedBy??"Admin";//Hotfix
+                address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy??"Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(address);
@@ -1807,8 +1854,8 @@ namespace QuickApp.Pro.Controllers
                 address.Country = internationalWirePaymentmodel.Country;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = internationalWirePaymentmodel.CreatedBy;
-                address.UpdatedBy = internationalWirePaymentmodel.UpdatedBy;
+                address.CreatedBy = internationalWirePaymentmodel.CreatedBy??"Admin"; //Hotfix
+                address.UpdatedBy = internationalWirePaymentmodel.UpdatedBy??"Admin"; //Hotfix
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(address);
@@ -1873,10 +1920,11 @@ namespace QuickApp.Pro.Controllers
                 address.Country = internationalWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
                 address.RecordCreateDate = DateTime.Now;
-                address.CreatedBy = internationalWirePaymentViewModel.CreatedBy;
-                address.UpdatedBy = internationalWirePaymentViewModel.UpdatedBy;
+                address.CreatedBy = internationalWirePaymentViewModel.CreatedBy??"Admin";
+                address.UpdatedBy = internationalWirePaymentViewModel.UpdatedBy??"Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
+                address.IsActive = internationalWirePaymentViewModel.IsActive ?? true;//Hotfix
                 _unitOfWork.Address.Add(address);
                 _unitOfWork.SaveChanges();
                 internationalWirePaymentObj.BankAddressId = address.AddressId.Value;
@@ -1905,6 +1953,7 @@ namespace QuickApp.Pro.Controllers
                 defaultPaymentObj.VendorId = vendorPaymentViewModel.VendorId;
                 defaultPaymentObj.CreatedDate = DateTime.Now;
                 defaultPaymentObj.UpdatedDate = DateTime.Now;
+                defaultPaymentObj.CreatedBy = vendorPaymentViewModel.CreatedBy;
                 //_unitOfWork.SaveChanges();
                 _context.VendorPayment.Add(defaultPaymentObj);
                 _unitOfWork.SaveChanges();
@@ -1967,6 +2016,7 @@ namespace QuickApp.Pro.Controllers
                 vendorInternationalPaymentobj.UpdatedDate = DateTime.Now;
                 vendorInternationalPaymentobj.CreatedBy = vendorInternationlWirePaymentViewModel.CreatedBy;
                 vendorInternationalPaymentobj.UpdatedBy = vendorInternationlWirePaymentViewModel.UpdatedBy;
+                
                 _unitOfWork.vendorInternationalWirePaymentRepository.Add(vendorInternationalPaymentobj);
                 _unitOfWork.SaveChanges();
 

@@ -291,9 +291,9 @@ export class VendorService {
 		return this.actionEndpoint.deleteCheckPayment(actionId);
 
 	}
-	deleteAcion(actionId: any) {
+	deleteAcion(vendorId: any) {
 
-		return this.actionEndpoint.getDeletevendorEndpoint(actionId);
+		return this.actionEndpoint.getDeletevendorEndpoint(vendorId);
 
 	}
 	deletePurchaseorderpart(purchaseOrderPartRecordId: any) {

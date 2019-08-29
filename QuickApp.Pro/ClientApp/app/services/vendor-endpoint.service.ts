@@ -16,7 +16,9 @@ export class VendorEndpointService extends EndpointFactory {
 
     private readonly _vendorUrl: string = "/api/Vendor/Get";
     private readonly _vendorCapabilityUrl: string = "/api/Vendor/getVendorCapabilityList";
-    
+    private readonly _vendorUrlNew: string = "/api/Vendor/vendor";
+
+
 	private readonly _partDetails: string = "/api/Vendor/Getpartdetails";
 	private readonly _partDetailswithid: string = "/api/Vendor/GetpartdetailsWithid";
 	private readonly _partDetailswithidForsinglePart ="/api/Vendor/GetpartdetailsWithidForSinglePart"
@@ -172,7 +174,34 @@ export class VendorEndpointService extends EndpointFactory {
         super(http, configurations, injector);
 	}
 
-   
+
+    getNewvendorEndpoint<T>(userObject: any): Observable<T> {
+
+
+        return this.http.post<T>(this._vendorUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewvendorEndpoint(userObject));
+            });
+    }
+
+    getEditvendorEndpoint<T>(vendorId?: number): Observable<T> {
+        let endpointUrl = vendorId ? `${this._vendorUrlNew}/${vendorId}` : this._vendorUrlNew;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getEditvendorEndpoint(vendorId));
+            });
+    }
+
+    getDeletevendorEndpoint<T>(vendorId: number): Observable<T> {
+        let endpointUrl = `${this._vendorUrlNew}/${vendorId}`;
+
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDeletevendorEndpoint(vendorId));
+            });
+    }
+
     getvendorCapabilityListEndpoint<T>(): Observable<T> {
         return this.http.get<T>(this.vendorCapabilityListsUrl, this.getRequestHeaders())
             .catch(error => {
@@ -698,14 +727,7 @@ export class VendorEndpointService extends EndpointFactory {
        
     }
 
-    getEditvendorEndpoint<T>(vendorId?: number): Observable<T> {
-        let endpointUrl = vendorId ? `${this._vendorsUrlNew}/${vendorId}` : this._vendorsUrlNew;
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getEditvendorEndpoint(vendorId));
-            });
-    }
-
+    
     getUpdatevendorEndpoint<T>(roleObject: any,addressId:any, vendorId: number): Observable<T> {
         let endpointUrl = `${this._vendorsUrlNew}/${addressId}/${vendorId}`;
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
@@ -782,11 +804,11 @@ export class VendorEndpointService extends EndpointFactory {
 	}
     
 
-	getDeletevendorEndpoint<T>(roleObject: any): Observable<T> {
+	getDeletevendorContactEndpoint<T>(roleObject: any): Observable<T> {
 		let endpointUrl = `${this._vendorContactUrlNew}/${roleObject.vendorShippingAddressId}`;
 		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject) ,this.getRequestHeaders())
             .catch(error => {
-				return this.handleError(error, () => this.getDeletevendorEndpoint(roleObject));
+				return this.handleError(error, () => this.getDeletevendorContactEndpoint(roleObject));
             });
 	}
 	deletePOPart<T>(roleObject: any): Observable<T> {
