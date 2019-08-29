@@ -51,7 +51,7 @@ import { DashNumberService } from '../../../services/dash-number/dash-number.ser
 
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
-
+    dataSourceValue: MatTableDataSource<Priority>;
     disables: boolean = false;
     disable1: boolean = true;
     disabled: boolean = false;
@@ -111,6 +111,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedATAChapter: any;
     disableSavePriority: boolean;
     selectedPriority: any;
+    selectedIntegration: any;
     disableSaveStockUOM: boolean;
     selectedStockUOM: any;
     disableSaveConsume: boolean;
@@ -119,7 +120,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     disableSavepn: boolean;
     selectedSOLD: any;
     disableSaveIntegration: boolean;
-    selectedIntegration: any;
     selectedItemCode: any;
     descriptionCollection: any[];
     selectedActionName: any;
@@ -130,7 +130,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     fixedSalesPriceValue: boolean = true;
     collectionofItemMaster: any;
     value: number;
-
+    actionamecolle: any[] = [];
     partCollection: any[];
     oempnCollection: any[];
     manufacturerCollection: any[];
@@ -139,7 +139,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     name: string;
     allglAccountInfo: any[];
     glAccountcla: any[];
-    localmanufacturer: any[];
+    localmanufacturer: any[] = [];
     sourcemanufacturer: any = {};
     allManufacturerInfo: any[];
     allActions: any[];
@@ -171,7 +171,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     localgroup: any[] = [];
     allProvisonInfo: Provision[];
     activeTab: number = 0;
-    // New Code -- Jyotsna
     itemQuantity = [];
     items1: MenuItem[];
     activeItem: MenuItem;
@@ -209,7 +208,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     allCountryinfo: any[];
     public sourceActions: any = {};
     allATAMaininfo: ATAChapter[];
-    allPriorityInfo: Priority[];
+    allPriorityInfo: Priority[] = [];
     allUnitOfMeasureinfo: any[];
     allPurchaseUnitOfMeasureinfo: any[];
     allStockUnitOfMeasureinfo: any[];
@@ -263,11 +262,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     allSubChapter: ATAChapter[];
     disableSaveNHANumber: boolean;
     disableSaveAlterumber: boolean;
-    portalURL: any = "";
+    portalURL: any;
     public sourceIntegration: any = {};
     integrationNamecolle: any[] = [];
     cols1: any[];
-
     ataMainchapter: ATAChapter[]
     showAircraftData: boolean = false;
     showAtachapter: boolean = false;
@@ -357,8 +355,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     fieldArray: any = [];
     row: any;
     Delete = true;
-    // isValidationForPS: boolean = false;
-
+    allpriority: any[] = [];  
+    allIntegration: any[] = [];
+    selectedreason: any;
     exportInfo = {
         ExportECCN: '',
         ITARNumber: '',
@@ -380,7 +379,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     tempExportCountryId: number;
     // errorLogForPS: string = '';
 
-    constructor(private fb: FormBuilder, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
+    constructor(private fb: FormBuilder, public priorityService: PriorityService,public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
         public currency: CurrencyService, private _actRoute: ActivatedRoute,
@@ -1010,6 +1009,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     public allWorkFlows: any[] = [];
 
+    public allWorkFlowValues: Integration[] = [];
+
     //loading itemClassification data//
     private itemclass() {
         this.alertService.startLoadingMessage();
@@ -1518,7 +1519,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private integrationData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.inteService.getWorkFlows().subscribe(
             results => this.onDatainteSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -1527,18 +1527,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    private onDatainteSuccessful(allWorkFlows: Integration[]) {
-
+    private onDatainteSuccessful(allWorkFlowValues: Integration[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allIntegrationInfo = allWorkFlows;
+        this.allIntegrationInfo = allWorkFlowValues;        
     }
 
 
     private provisiondata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.proService.getProvisionList().subscribe(
             results => this.onprodataSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -1702,11 +1700,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
 
-        //allWorkFlows.forEach(element => {
-        //    this.allAircraftinfo.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId });
-        //    //capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
-        //});
-
+     
     }
 
 
@@ -1838,15 +1832,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
+  
     ManufacturerHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedActionName) {
                 if (value == this.selectedActionName.toLowerCase()) {
-                    this.disableSaveManufacturer = true;
+                    this.disableManufacturer = true;
                 }
                 else {
-                    this.disableSaveManufacturer = false;
+                    this.disableManufacturer = false;
 
                 }
             }
@@ -1904,10 +1899,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.selectedActionName = event;
                 }
             }
-
         }
     }
-
+  
     manufacturerId(event) {
         if (this.manufacturerNumber) {
             for (let i = 0; i < this.manufacturerNumber.length; i++) {
@@ -1917,9 +1911,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.selectedActionName = event;
                 }
             }
-
         }
     }
+  
     partEventHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -2023,7 +2017,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     ProvisionDescription(event) {
         if (this.allProvisonInfo) {
-
             for (let i = 0; i < this.allProvisonInfo.length; i++) {
                 if (event == this.allProvisonInfo[i].description) {
                     this.sourceItemMaster.description = this.allProvisonInfo[i].description;
@@ -2180,16 +2173,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 if (event == this.allStockUnitOfMeasureinfo[i].description) {
                     this.sourceItemMaster.itemClassificationCode = this.allStockUnitOfMeasureinfo[i].description;
                     this.disableSaveStockUOM = true;
-
                     this.selectedStockUOM = event;
                 }
 
             }
         }
     }
-
-
-
     ConsumeUOMHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -2209,9 +2198,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     ConsumeUOMdescription(event) {
-
         if (this.allConsumeUnitOfMeasureinfo) {
-
             for (let i = 0; i < this.allConsumeUnitOfMeasureinfo.length; i++) {
                 if (event == this.allConsumeUnitOfMeasureinfo[i].description) {
                     this.sourceItemMaster.itemClassificationCode = this.allConsumeUnitOfMeasureinfo[i].description;
@@ -2786,8 +2773,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
-
-
     filterItemgroups(event) {
 
         this.localgroup = [];
@@ -2800,11 +2785,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
-
     filterprovisions(event) {
-
         this.localprovision = [];
         if (this.allProvisonInfo) {
             for (let i = 0; i < this.allProvisonInfo.length; i++) {
@@ -2815,26 +2796,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
-
-    filterpriorities(event) {
-
-        this.localpriority = [];
-        if (this.allPriorityInfo) {
-            for (let i = 0; i < this.allPriorityInfo.length; i++) {
-                let priorityName = this.allPriorityInfo[i].description;
-                if (priorityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.localpriority.push(priorityName);
-                }
-            }
-        }
-    }
-
-
-
     filterAtamains(event) {
-
         this.localatamain = [];
         if (this.allATAMaininfo) {
             for (let i = 0; i < this.allATAMaininfo.length; i++) {
@@ -2845,29 +2807,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
     setvalue() {
-
         this.markupListPriceValue = true;
     }
-
-
-    filterintegrations(event) {
-
-        this.localintegration = [];
-        if (this.allIntegrationInfo) {
-            for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-                let integrationName = this.allIntegrationInfo[i].description;
-                if (integrationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.localintegration.push(integrationName);
-                }
-            }
-        }
-    }
-
-
-
     handleChange(rowData, e) {
         if (e.checked == false) {
             this.sourceAction = rowData;
@@ -3381,7 +3323,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-
+        this.loadPriority();
         this.isSaving = true;
         this.disableSave = false;
         this.loadMasterCompanies();
@@ -3401,9 +3343,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-
-
-
+        this.loadPriority();
         this.sourceAction = row;
         this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();
@@ -3468,6 +3408,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
         this.loadData();
+        
     }
 
 
@@ -3525,10 +3466,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.modal.close();
     }
 
-
     saveprovision() {
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -3538,10 +3477,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
         else {
-
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.provisionName;
-
             this.proService.updateProvision(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -3697,23 +3634,20 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.modal.close();
     }
-
-
-
     savepriority() {
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.sourceAction.masterCompanyId = 1;
-            this.priority.newPriority(this.sourceAction).subscribe(data => { this.priorityData() })
+            this.priorityService.newPriority(this.sourceAction).subscribe(                 
+                (data) => { this.loadPriority() },
+                response => this.saveCompleted(this.sourceAction));
         }
         else {
-
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.priority.updatePriority(this.sourceAction).subscribe(
+            this.priorityService.updatePriority(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
@@ -5300,11 +5234,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     addIntegrationModelSingle(integration) {
         this.isEditMode = false;
         this.isDeleteMode = false;
-        this.isSaving = true;
+        this.isSaving = true;       
         this.loadMasterCompanies();
         this.sourceUOM = new UnitOfMeasure();
         this.sourceUOM.isActive = true;
-        this.unitName = "";
+        this.portalURL = "";
+        this.integrationName = "";
+        this.sourceAction.description = "";
         this.modal = this.modalService.open(integration, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -5331,46 +5267,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.modal.close();
     }
 
-    integrationEventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-                //alert("Action Name already Exists");
-                this.disableIntegrationSave = true;
-            }
-            else {
-                this.disableIntegrationSave = false;
-            }
-        }
-
-    }
 
 
 
-    integrationPartnmId(event) {
-        //debugger;
-        for (let i = 0; i < this.integrationNamecolle.length; i++) {
-            if (event == this.integrationNamecolle[i][0].integrationName) {
-                //alert("Action Name already Exists");
-                this.disableIntegrationSave = true;
-                this.selectedActionName = event;
-            }
-        }
-    }
-    filterIntegrationsSelect(event) {
-
-        this.localCollection = [];
-        for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-            let integrationName = this.allIntegrationInfo[i].description;
-            if (integrationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.integrationNamecolle.push([{
-                    "chargeId": this.allIntegrationInfo[i].integrationPortalId,
-                    "integrationName": integrationName
-                }]),
-                    this.localCollection.push(integrationName);
-            }
-        }
-    }
     // New code for loading dropdown
 
     getATASubChapterByATAChapter(atachapterId?) {
@@ -5617,7 +5516,152 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.activeMenuItem = 5;
         }
     }
+    //New Priority
+    private loadPriority() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.priorityService.getPriorityList().subscribe(
+            results => this.onDataSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onDataSuccessful(getPriorityList: Priority[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        //this.dataSourceValue = getPriorityList;
+        this.allPriorityInfo = getPriorityList;
+       
+    }
+    priorityeventHandler(event) {
+        let value = event.target.value.toLowerCase()
+        if (this.selectedreason) {
+            if (value == this.selectedreason.toLowerCase()) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    } 
+    priorityId(event) {
+        for (let i = 0; i < this.allpriority.length; i++) {
+            if (event == this.allpriority[i][0].priorityName) {
+                this.disableSave = true;
+                this.selectedreason = event;
+            }
+        }
+    }
+    filterpriorities(event) {
+        this.localCollection = [];
+        for (let i = 0; i < this.allPriorityInfo.length; i++) {
+            let priorityName = this.allPriorityInfo[i].description;
+            if (priorityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.allpriority.push([{
+                    "priorityId": this.allPriorityInfo[i].priorityId,
+                    "priorityName": priorityName
+                }]),
+                    this.localCollection.push(priorityName);
+            }
+        }
+    }
+    // Add Integration  
 
+    integrationopen(content) {
+        this.sourceAction = {};
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.disableSave = false;
+        this.isSaving = true;
+        this.integrationData();
+        this.loadMasterCompanies();       
+        this.sourceAction.isActive = true;
+        this.portalURL = "";
+        this.integrationName = "";
+        this.sourceAction.description = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    integrationopenEdit(content, row) {
+        this.isEditMode = true;
+        this.isSaving = true;
+        this.disableSave = false;
+        this.loadMasterCompanies();
+        this.integrationData();
+        this.sourceAction = row;
+        this.integrationName = this.sourceAction.description;
+        this.portalURL = row.portalURL;
+        this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    integrationeventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+
+    }
+    integrationId(event) {
+        //debugger;
+        for (let i = 0; i < this.actionamecolle.length; i++) {
+            if (event == this.actionamecolle[i][0].integrationName) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+
+    filterintegrations(event) {        
+        this.localmanufacturer = [];        
+        for (let i = 0; i < this.allIntegrationInfo.length; i++) {           
+            let integrationName = this.allIntegrationInfo[i].description;           
+            if (integrationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.actionamecolle.push([{
+                    "chargeId": this.allIntegrationInfo[i].integrationPortalId,
+                    "integrationName": integrationName
+                }]),
+                    this.localmanufacturer.push(integrationName);
+            }
+        }
+    }
+
+    saveIntegration() {
+
+        this.isSaving = true;
+
+        if (this.isEditMode == false) {
+            this.sourceAction.createdBy = this.userName;
+            this.sourceAction.updatedBy = this.userName;            
+            this.sourceAction.portalURL = this.portalURL;
+            this.integrationService.newAction(this.sourceAction).subscribe((data) => { this.Integration();},
+                role => this.saveSuccessHelper(role)
+                );
+        }
+        else {
+
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.description = this.integrationName;
+            this.sourceAction.portalURL = this.portalURL;
+            this.integrationService.updateAction(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+
+        this.modal.close();
+    }
     onSubmit(value) {
 
     }

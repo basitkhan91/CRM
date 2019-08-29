@@ -710,15 +710,17 @@ input[type="text"] {
         margin-bottom: 10px;
         float: left
     }
-
-    .main_menu span.fa {
-        float: right;
-        text-align: center;
-        margin-top: 1px;
-        font-size: 10px;
-        min-width: inherit;
-        color: #C4CFDA
-    }
+.ui-calendar .ui-datepicker{
+    width: 100% !important;
+}
+.main_menu span.fa {
+    float: right;
+    text-align: center;
+    margin-top: 1px;
+    font-size: 10px;
+    min-width: inherit;
+    color: #C4CFDA
+}
 
     .active a span.fa {
         text-align: right !important;
@@ -12757,14 +12759,15 @@ body .ui-datepicker table td > a.ui-state-active {
         display: flex;
         min-width: 100px;
     }
+.ui-autocomplete .ui-autocomplete-panel{
+    width :100%;
+}
 
-
-
-    p-autocomplete .ui-autocomplete-dropdown {
-        position: relative;
-        width: 15% !important;
-        padding: 3px 5px;
-    }
+p-autocomplete .ui-autocomplete-dropdown {
+    position: relative;
+    width: 15% !important;
+    padding: 3px 5px;
+}
 
     p-autocomplete .ui-autocomplete-dropdown span.pi {
         font-size: 13px;
@@ -13648,6 +13651,11 @@ button {
     margin-top: -6px !important;
     width: 100% !important;
 }
+.autocomplete-item .ui-autocomplete .ui-autocomplete-panel {
+    min-width: 94% !important;
+    margin-left: 5px;
+    margin-top: 7px;
+}
 .autocomplete-width .ui-autocomplete {
     margin-left: -5px !important;
     margin-top: -6px !important;
@@ -13862,7 +13870,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     margin-top: 10px;
 }
 .autocomplete-value .ui-autocomplete .ui-autocomplete-panel {
-    min-width: 95% !important;
+    min-width: 93% !important;
     margin-left: 5px !important;
     margin-top: 8px;
 }
