@@ -48,7 +48,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     customerPhoneError: boolean;
     customerCodeError: boolean;
     customerNameError: boolean;
-    mobnumPattern = "^((\\+91-?)|0)?[0-9]{13}$";
+    //mobnumPattern = "^((\\+91-?)|0)?[0-9]{13}$";
     emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
 
     allSubChapter: ATAChapter[];
@@ -209,6 +209,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     ngOnInit(): void
     {
+        this.sourceCustomer.isAddressForBilling = true;
+        this.sourceCustomer.isAddressForShipping = true;
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         //steps Code  Start
@@ -1052,7 +1054,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
         ))
         {
-            this.display = true;
+            //this.display = true;
             this.modelValue = true;
 
             if (!this.sourceCustomer.address1) {

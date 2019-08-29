@@ -23,7 +23,7 @@ declare const google: any;
 @Component({
     selector: 'app-customer-shipping-information',
     templateUrl: './customer-shipping-information.component.html',
-    // styleUrls: ['./customers-shipping-information.component.scss'],
+     styleUrls: ['./customer-shipping-information.component.scss'],
     animations: [fadeInOut]
 })
 /** anys component*/

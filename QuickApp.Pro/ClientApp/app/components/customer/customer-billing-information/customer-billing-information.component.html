@@ -1,312 +1,335 @@
 ﻿<div [@fadeInOut] class="page-content">
-	<div class="right_col" role="main">
-		<div class="x_panel" style="">
-			<div class="x_content">
-				
-					<div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-						<p class="fs10">
-							<label class="control-label w100">Customer Name:</label>
-							{{local?.name}}
-						</p>
-					</div>
-					<div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-						<p class="fs10">
-							<label class="control-label w100">Customer Code:</label>
-							{{local?.customerCode}}
-						</p>
-					</div>
-					
-					<div class="table-responsive">
-						<p class="lead"></p>
-						<p-table #dt [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
-							<ng-template pTemplate="caption">
+    <div class="right_col" role="main">
+        <div class="x_panel" style="">
+            <div class="x_content">
 
-								<div style="text-align: right">
-									<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-												   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-									<div class="inner-addon right-addon w200 inline-block">
-										<i class="fa fa-search"></i>
-										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
-									</div>
-									<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-									<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label w100">Customer Name:</label>
+                        {{local?.name}}
+                    </p>
+                </div>
+                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label w100">Customer Code:</label>
+                        {{local?.customerCode}}
+                    </p>
+                </div>
 
-									<div class="excel-upload">
-										<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-										<label for="upload">
-											<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-										</label>
-									</div>
-								</div>
+                <div>
+                    <div class="col-md-12" style="margin-bottom: -10px;">
+                        <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3>
+                        <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addBillingInfo">Add Billing Information</button>
+                    </div>
+                    <div class="clear"></div>
+                    <hr />
+                </div>
 
+                <div class="table-responsive">
+                    <!--<p class="lead"></p>-->
+                    <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                        <ng-template pTemplate="caption">
 
-							</ng-template>
+                            <div style="text-align: right">
+                                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
+                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
+                                </div>
+                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
 
-							<ng-template pTemplate="header" let-columns>
-								<tr>
-
-									<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-										{{col.header}}
-										<p-sortIcon [field]="col.field"></p-sortIcon>
-									</th>
-
-									<th></th>
-
-								</tr>
-							</ng-template>
-
-							<ng-template pTemplate="body" let-rowData let-columns="columns">
-								<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+                                <div class="excel-upload excel-upload-cstm">
+                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                    <label for="upload">
+                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                    </label>
+                                </div>
+                            </div>
 
 
-									<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-										{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-									</td>
+                        </ng-template>
 
-									<td>
-										<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-										<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-										<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-										<!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
-										<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
-										<button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
-											<mat-icon>edit</mat-icon>
-										</button>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
 
-										<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData)">
-											<mat-icon color="warn">delete</mat-icon>
-										</button>
+                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </th>
 
-										<!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
-										<button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentHist,rowData)">
-											<mat-icon color="green">history</mat-icon>
-										</button>
+                                <th></th>
 
-									</td>
+                            </tr>
+                        </ng-template>
 
-								</tr>
-							</ng-template>
-						</p-table>
-						<div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
-
-							No Records
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
 
 
-						</div>
-					</div>
+                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                </td>
 
-					<div class="clear"></div>
-					<div class="x_panel">
-						<p class="lead" style="font-size:medium">Add Billing Information</p>
-						<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
-							<div class="form-group row form-bg" style="padding:8px 5px 5px 5px;border: 1px solid #ccc;">
-						
-							</div>
-							<div class="col-md-12 col-sm-12 col-12">
-								
-								<div class="tab-content form-bg">
-                                    <div class="tab-pane active" id="menu3">
-                                        <p class="lead" style="font-size:medium">Billing Information</p>
-                                        <div class="col-sm-6 w400">
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Primary</label>
-                                                <div class="col-sm-7">
-                                                    <input type="checkbox" value="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isPrimary">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Site Name <strong class="clr-red">*</strong></label>
-                                                <div class="col-sm-7 cust-name">
-                                                    <input class="form-control" type="text" id="cssitename" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.siteName">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Bill To Address 1 <strong class="clr-red">*</strong></label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" type="text" id="csaddress1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.address1">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Bill To Address 2</label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" type="text" id="csaddress2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.address2">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Bill To Address 3</label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" type="text" id="csaddress3" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.address3">
-                                                </div>
-                                            </div>
+                                <td>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
+                                    <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
 
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Bill To City <strong class="clr-red">*</strong></label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" type="text" id="cscity" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.city">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Bill To State/Prov <strong class="clr-red">*</strong> </label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" type="text" id="csstate" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.stateOrProvince">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Bill To Postal Code <strong class="clr-red">*</strong> </label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" type="text" id="cspostal" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.postalCode">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Bill To Country <strong class="clr-red">*</strong></label>
-                                                <div class="col-sm-7">
-                                                    <div class="inner-addon right-addon inline-block">
-                                                        <p-autoComplete class="autocomplete-customer" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                                        [minLength]="1" [dropdown]="true">
-                                                            <ng-template let-countryName pTemplate="item">
-                                                                <div class="ui-helper-clearfix">{{countryName}}</div>
-                                                            </ng-template>
-                                                        </p-autoComplete>
-                                                        <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData)">
+                                        <mat-icon color="warn">delete</mat-icon>
+                                    </button>
 
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">&nbsp;</label>
-                                                <div class="checkbox col-sm-7">
-                                                    <button type="button" class="btn btn-warning" id="vbill-map-check" (click)="getlatlng(sourceCustomer.address1+sourceCustomer.address2)">Check Address</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 w400 map vbill-map" id="map">
-                                            <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
-                                            <div class="checkbox col-sm-12">
-                                                <label>
-                                                    <input type="checkbox" value="" id="">
-                                                    Validate Address
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="clear"></div>
-                                        <button type="button" class="btn btn-success pull-right" [disabled]="disablesave" (click)="editItemAndCloseModel()">Save</button>
-                                        <div class="clear"></div>
-                                        <hr>
-                                        <div class="clear"></div>
-                                    </div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-						</form>
-						<div class="modal fade success-msg" id="success-popup" role="dialog">
-							<div class="modal-dialog modal-sm popup-timeout">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-										<h4> <i class="fa fa-check"></i>&nbsp; You Added Successfully !</h4>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<p-dialog [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-							  [width]="350" [minWidth]="200" [responsive]="true"
-							  [minY]="1050" [baseZIndex]="1100000">
+                                    <!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentHist,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
+                        No Records
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
+                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+
+                <div class="clear"></div>
+                <div class="modal fade success-msg" id="success-popup" role="dialog">
+                    <div class="modal-dialog modal-sm popup-timeout">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <h4> <i class="fa fa-check"></i>&nbsp; You Added Successfully !</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p-dialog class="p-dialog-cstm" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+                          [width]="350" [minWidth]="200" [responsive]="true"
+                          [minY]="1050" [baseZIndex]="1100000">
 
 
-						<h5 [ngStyle]="{'color':'red'}">
-							Please Enter (*) Mandatory Fields
-						</h5>
-						<p-footer>
-							<button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-						</p-footer>
+                    <h5 [ngStyle]="{'color':'red'}">
+                        Please Enter (*) Mandatory Fields
+                    </h5>
+                    <p-footer>
+                        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+                    </p-footer>
 
-					</p-dialog>
+                </p-dialog>
 
-					<ng-template #modelEdits let-c="close" let-d="dismiss" style="width:auto">
-						<div class="modal-header">
-							<h4 class="modal-title" *ngIf="isEditMode">Edit Country</h4>
-							<h4 class="modal-title" *ngIf="!isEditMode">Add Country</h4>
-							<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCountryList()">
+                <ng-template #modelEdits let-c="close" let-d="dismiss" style="width:auto">
+                    <div class="modal-header">
+                        <h4 class="modal-title" *ngIf="isEditMode">Edit Country</h4>
+                        <h4 class="modal-title" *ngIf="!isEditMode">Add Country</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCountryList()">
 
-								<div class="form-group">
-									<label for="name" class="control-label">Country Name<strong class="clr-red">*</strong></label>
-									<p-autoComplete [(ngModel)]="sourceAction.nice_name" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-													[minLength]="1" [dropdown]="true">
-										<ng-template let-countryName pTemplate="item">
-											<div class="ui-helper-clearfix">{{countryName}}</div>
-										</ng-template>
-									</p-autoComplete>
-								</div>
-								<div class="form-group">
-									<label for="description" class="control-label">countries_iso_code</label>
-									<div class="control-data">
-										<input placeholder="Memo" #countries_iso_code="ngModel" id="countries_iso_code" minlength="2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.countries_iso_code">
+                            <div class="form-group">
+                                <label for="name" class="control-label">Country Name<strong class="clr-red">*</strong></label>
+                                <p-autoComplete [(ngModel)]="sourceAction.nice_name" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-countryName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{countryName}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="control-label">countries_iso_code</label>
+                                <div class="control-data">
+                                    <input placeholder="Memo" #countries_iso_code="ngModel" id="countries_iso_code" minlength="2" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.countries_iso_code">
 
-									</div>
-									<div class="clear"></div>
-								</div>
-								<div class="form-group">
-									<div class="col-sm-6">
-										<label class="form-check-label" for="isActive">
-											<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-										</label>
-									</div>
-									<div class="clear"></div>
-								</div>
-
-
-								<div class="modal-footer">
-
-									<button class="btn btn-success">Submit</button>
-									<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-								</div>
-							</form>
-						</div>
-
-					</ng-template>
-
-					<ng-template #view class="modal fade " id="view" role="dialog">
-
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-								<h4 class="modal-title">Details of Customer Billing Information</h4>
-							</div>
-							<div class="table-responsive default-bg clear">
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label class="form-check-label" for="isActive">
+                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                                    </label>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
 
 
-								<div class="col-sm-4">
-									<p><span class="label"><b>Site Name: </b></span><span class="value">{{sourcebillingInfo.siteName}}</span></p>
-									<p><span class="label"><b>Bill To Address 1: </b></span><span class="value">{{sourcebillingInfo.address1}}</span></p>
-									<p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{sourcebillingInfo.address2}}</span></p>
-									<p><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{sourcebillingInfo.address3}}</span></p>
-									<p><span class="label"><b>Bill To City: </b></span><span class="value">{{sourcebillingInfo.city}}</span></p>
-									<p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{sourcebillingInfo.stateOrProvince}}</span></p>
-									<p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{sourcebillingInfo.postalCode}}</span></p>
-									<p><span class="label"><b>Bill To Country: </b></span><span class="value">{{sourcebillingInfo.country}}</span></p>
+                            <div class="modal-footer">
 
-									<div class="clear"></div>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-							</div>
-						</div>
+                                <button class="btn btn-success">Submit</button>
+                                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                            </div>
+                        </form>
+                    </div>
 
-					</ng-template>
+                </ng-template>
 
-				</div>
-			</div>
-		<button type="button" class="btn btn-success pull-right" (click)="nextClick()">Next</button>
-		<button type="button" class="btn btn-success pull-right submit-btn" (click)="backClick()">Previous</button>
-	</div>
-	</div>
+                <ng-template #view class="modal fade " id="view" role="dialog">
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                            <h4 class="modal-title">Details of Customer Billing Information</h4>
+                        </div>
+                        <div class="modal-body viewform-cstm">
 
 
-	
+                            <div class="col-sm-12">
+                                <p><span class="label"><b>Site Name: </b></span><span class="value">{{sourcebillingInfo.siteName}}</span></p>
+                                <p><span class="label"><b>Bill To Address 1: </b></span><span class="value">{{sourcebillingInfo.address1}}</span></p>
+                                <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{sourcebillingInfo.address2}}</span></p>
+                                <p><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{sourcebillingInfo.address3}}</span></p>
+                                <p><span class="label"><b>Bill To City: </b></span><span class="value">{{sourcebillingInfo.city}}</span></p>
+                                <p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{sourcebillingInfo.stateOrProvince}}</span></p>
+                                <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{sourcebillingInfo.postalCode}}</span></p>
+                                <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{sourcebillingInfo.country}}</span></p>
+
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+                        </div>
+                    </div>
+
+                </ng-template>
+
+                <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">History of Action</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered cus-contact-table">
+                                <thead>
+                                    <tr>
+                                        <th>Site Name</th>
+                                        <th>Address 1</th>
+                                        <th>Address 2</th>
+                                        <th>Address 3</th>
+                                        <th>City</th>
+                                        <th>State/Prov</th>
+                                        <th>Postal Code</th>
+                                        <th>Country</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Address1</td>
+                                    <td>Address2</td>
+                                    <td>Address3</td>
+                                    <td>City</td>
+                                    <td>State</td>
+                                    <td>Postal Code</td>
+                                    <td>Country</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                    </div>
+                </ng-template>
+
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="modal fade" id="addBillingInfo" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Billing Information</h4>
+            </div>
+            <form #addBillingForm="ngForm" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Site Name <span class="clr-red">*</span></label>
+                                <input class="form-control" id="cssitename" type="text" name="siteName" [(ngModel)]="sourceCustomer.siteName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Bill To Address 1 <span class="clr-red">*</span></label>
+                                <input class="form-control" id="csaddress1" type="text" name="address1" [(ngModel)]="sourceCustomer.address1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Bill To Address 2</label>
+                                <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="sourceCustomer.address2">
+                            </div>
+                            <div class="form-group">
+                                <label>Bill To Address 3</label>
+                                <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="sourceCustomer.address3">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
+                                    <div class="label-cstm" style="margin-right: 10px;">Primary</div>
+                                    <span class="checkbox-cstm">
+                                        <label style="width: 20px;">
+                                            <input type="checkbox" name="isPrimary" [(ngModel)]="sourceCustomer.isPrimary">
+                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Bill To City <span class="clr-red">*</span></label>
+                                <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="sourceCustomer.city" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Bill To State/Prov <span class="clr-red">*</span></label>
+                                <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="sourceCustomer.stateOrProvince" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Bill To Postal Code <span class="clr-red">*</span></label>
+                                <input class="form-control" id="cspostal" type="text" name="postalCode" [(ngModel)]="sourceCustomer.postalCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Bill To Country <span class="clr-red">*</span></label>
+                                <div class="inner-addon right-addon inline-block">
+                                    <p-autoComplete class="autocomp-customer-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" name="country" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                        <ng-template let-countryName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{countryName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="disablesave || !addBillingForm.valid" (click)="editItemAndCloseModel()">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
