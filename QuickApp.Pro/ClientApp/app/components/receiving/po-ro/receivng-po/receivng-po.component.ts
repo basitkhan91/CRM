@@ -647,11 +647,10 @@ export class ReceivngPoComponent implements OnInit {
             }
         }
 
-
+        part.stocklineListObj = [];
+        part.timeLifeList = [];
 
         if (part.itemMaster.isSerialized) {
-            part.stocklineListObj = [];
-            part.timeLifeList = [];
             for (var i = 0; i < quantity; i++) {
                 let stockLine: StockLine = new StockLine();
                 this.setStockLineManagementStructure(part.managementStructureId, stockLine);
@@ -1016,10 +1015,23 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     onChangeTimeLife(part: PurchaseOrderPart) {
-        this.isTimeLifeUpdateLater = !this.isTimeLifeUpdateLater;
+        part.isTimeLifeUpdateLater = !part.isTimeLifeUpdateLater;
         this.isDisabledTLboxes = !this.isDisabledTLboxes;
         for (let i = 0; i < part.timeLifeList.length; i++) {
             part.timeLifeList[i] = new TimeLife();
+            part.timeLifeList[i].cyclesRemaining = '';
+            part.timeLifeList[i].cyclesSinceInspection = '';
+            part.timeLifeList[i].cyclesSinceNew = '';
+            part.timeLifeList[i].cyclesSinceOVH = '';
+            part.timeLifeList[i].cyclesSinceRepair = '';
+            part.timeLifeList[i].timeRemaining = '';
+            part.timeLifeList[i].timeSinceInspection = '';
+            part.timeLifeList[i].timeSinceNew = '';
+            part.timeLifeList[i].timeSinceOVH = '';
+            part.timeLifeList[i].timeSinceRepair = '';
+            part.timeLifeList[i].lastSinceNew = '';
+            part.timeLifeList[i].lastSinceInspection = '';
+            part.timeLifeList[i].lastSinceOVH = '';
         }
     }
 
@@ -1110,7 +1122,7 @@ export class ReceivngPoComponent implements OnInit {
 
             if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
                 for (var i = 0; i < item.timeLifeList.length; i++) {
-                    if (!item.isTimeLifeUpdateLater) {
+                    if (item.isTimeLifeUpdateLater == undefined || ! item.isTimeLifeUpdateLater) {
                         if (item.timeLifeList[i].cyclesRemaining == "") {
                             errorMessages.push("Please select Remaining Cycle in Receiving Qty - " + (i + 1).toString());
                         }
@@ -1237,6 +1249,38 @@ export class ReceivngPoComponent implements OnInit {
             var stockLineToCopy = { ...part.stocklineListObj[this.currentSLIndex] };
             part.stocklineListObj[i] = stockLineToCopy;
         }
+    }
+
+    togglePartSerialized(part: PurchaseOrderPart): void {
+
+        if (part.itemMaster.isSerialized == null) {
+            part.itemMaster.isSerialized == false;
+        }
+
+        this.itemmaster.updateItemMasterSerialized(part.itemMasterId, part.itemMaster.isSerialized).subscribe(
+            result => {
+                this.alertService.showMessage(this.pageTitle, "Part " + part.itemMaster.partNumber + " IsSerialized feature " + (part.itemMaster.isSerialized ? "enabled" : "disabled") + " successfully.", MessageSeverity.success);
+            },
+            error => {
+                part.itemMaster.isSerialized = !part.itemMaster.isSerialized;
+                this.alertService.showMessage(this.pageTitle, 'Something went wrong while update Item Master', MessageSeverity.error);
+            });
+    }
+
+    togglePartTimeLife(part: PurchaseOrderPart): void {
+
+        if (part.itemMaster.isTimeLife == null) {
+            part.itemMaster.isTimeLife == false;
+        }
+
+        this.itemmaster.updateItemMasterTimeLife(part.itemMasterId, part.itemMaster.isTimeLife).subscribe(
+            result => {
+                this.alertService.showMessage(this.pageTitle, "Part " + part.itemMaster.partNumber + " IsTimeLife feature " + (part.itemMaster.isTimeLife ? "enabled" : "disabled") + " successfully.", MessageSeverity.success);
+            },
+            error => {
+                part.itemMaster.isSerialized = !part.itemMaster.isSerialized;
+                this.alertService.showMessage(this.pageTitle, 'Something went wrong while update Item Master', MessageSeverity.error);
+            });
     }
 }
 

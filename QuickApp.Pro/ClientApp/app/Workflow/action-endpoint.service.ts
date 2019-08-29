@@ -37,7 +37,9 @@ export class ActionEndpoint extends EndpointFactory {
 	private getPublicationStatusURL: string = 'api/mastertest/PublicationStatus';
 	private getExclusionEstimatedOccuranceURL: string = 'api/mastertest/ExclusionEstimatedOccurance';
 	private getAddActionURL: string = "api/Task/add";
-	private AddWorkFlowURL: string = "api/workflow/addWorkFlow";
+    private AddWorkFlowURL: string = "api/workflow/addWorkFlow";
+    private AddWorkFlowHeaderURL: string = "api/workflow/addWorkFlowHeader";
+
 	private AddChargesURL: string = "api/workflow/addCharges";
 	private AddDirectionURL: string = "api/workflow/addDirection";
 	private AddEquipmentURL: string = "api/workflow/addEquipment";
@@ -91,6 +93,44 @@ export class ActionEndpoint extends EndpointFactory {
             error => {
                 return this.handleError(error, () => this.removeWorkFlow(workFlowId));
             });
+    }
+
+    addWorkFlowHeader<T>(workflowData: any): Observable<T> {
+        let obj = {
+            'workflowDescription': workflowData.workflowDescription,
+            'version': workflowData.version,
+            'itemMasterId': workflowData.itemMasterId,
+            'flatRate': workflowData.flatRate,
+            'partNumberDescription': workflowData.partNumberDescription,
+            'changedPartNumber': workflowData.changedPartNumber,
+            'currencyId': workflowData.currencyId,
+            'customerId': workflowData.customerId,
+            'workflowExpirationDate': workflowData.workflowExpirationDate,
+            'isCalculatedBERThreshold': workflowData.isCalculatedBERThreshold,
+            'isFixedAmount': workflowData.isFixedAmount,
+            'fixedAmount': workflowData.fixedAmount,
+            'isPercentageofNew': workflowData.isPercentageofNew,
+            'costOfNew': workflowData.costOfNew,
+            'percentageOfNew': workflowData.percentageOfNew,
+            'isPercentageOfReplacement': workflowData.isPercentageOfReplacement,
+            'costOfReplacement': workflowData.costOfReplacement,
+            'percentageOfReplacement': workflowData.percentageOfReplacement,
+            'berThresholdAmount': workflowData.berThresholdAmount,
+            'memo': workflowData.memo,
+            'customerName': workflowData.customerName,
+            'partNumber': workflowData.partNumber,
+            'workflowId': workflowData.workflowId,
+            'workScopeId': workflowData.workScopeId,
+            'customerCode': workflowData.customerCode,
+            'isActive': workflowData.isActive,
+            'workflowCreateDate': workflowData.workflowCreateDate,
+            'otherCost': workflowData.otherCost,
+        };
+        return this.http.post<T>(this.AddWorkFlowHeaderURL, JSON.parse(JSON.stringify(obj)), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewWorkFlow(workflowData));
+            });
+
     }
 
     getNewWorkFlow<T>(workflowData: any): Observable<T> {

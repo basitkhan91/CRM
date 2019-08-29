@@ -71,7 +71,10 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _searchgetItemAirMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchgetItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID';
     private readonly _searchgetItemATAMappingByMultiTypeIDModelIDDashID: string = '/api/ItemMaster/searchGetItemATAMappedByItemMasterIDMultiATAIDATASubID';
     private readonly _getItemMasterDetails: string = '/api/ItemMaster/Get';
-private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPurchSaleByItemMasterID';
+    private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPurchSaleByItemMasterID';
+
+    private readonly _updateItemMasterSerialzed: string = '/api/itemmaster/itemMasterSerialized';
+    private readonly _updateItemMasterTimeLife: string = '/api/itemmaster/itemMasterTimeLife';
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -97,6 +100,9 @@ private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPur
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
     get getNonstockList() { return this.configurations.baseUrl + this._itemNonstockclassificationGetUrl; }
     get ItemMasterDetails() { return this.configurations.baseUrl + this._getItemMasterDetails };
+    get UpdateItemMasterSerialzedURL() { return this.configurations.baseUrl + this._updateItemMasterSerialzed }
+    get UpdateItemMasterTimeLifeURL() { return this.configurations.baseUrl + this._updateItemMasterTimeLife }
+
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -860,18 +866,18 @@ private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPur
                 return this.handleError(error, () => this.getPurcSaleByItemMasterID(ItemmasterId));
             });
     }
-    
-    deleteitemMasterMappedATAEndpoint<T>(userObject: any): Observable<T> {
-        return this.http.post<T>(this._ItemMasterATAMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
+
+    deleteitemMasterMappedATAEndpoint<T>(id: any): Observable<T> {
+        return this.http.post<T>(`${this._ItemMasterATAMappedDelete}/${id}`, JSON.stringify({}), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(userObject));
+                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(id));
             });
     }
 
-    deleteitemMasterMappedAirEndpoint<T>(userObject: any): Observable<T> {
-        return this.http.post<T>(this._ItemMasterAircraftMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
+    deleteitemMasterMappedAirEndpoint<T>(id: any): Observable<T> {
+        return this.http.post<T>(`${this._ItemMasterAircraftMappedDelete}/${id}`, JSON.stringify({}), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(userObject));
+                return this.handleError(error, () => this.deleteitemMasterMappedAirEndpoint(id));
             });
     }
     deleteitemMasterMappedPurcSaleEndpoint<T>(userObject: any): Observable<T> {
@@ -898,5 +904,23 @@ private readonly _getPurcSaleDetails: string = '/api/ItemMaster/getItemMasterPur
     //             return this.handleError(error, () => this.searchgetATAMappedByMultiATAIDATASUBID(ItemmasterId));
     //         });
     // }
+
+    updateItemMasterSerialized<T>(itemMasterId: number, active: boolean): Observable<T> {
+        let endpointUrl = `${this.UpdateItemMasterSerialzedURL}/${itemMasterId}/${active}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterSerialized<T>(itemMasterId, active));
+            });
+    }
+
+    updateItemMasterTimeLife<T>(itemMasterId: number, active: boolean): Observable<T> {
+        let endpointUrl = `${this.UpdateItemMasterTimeLifeURL}/${itemMasterId}/${active}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateItemMasterTimeLife<T>(itemMasterId, active));
+            });
+    }
 
 }

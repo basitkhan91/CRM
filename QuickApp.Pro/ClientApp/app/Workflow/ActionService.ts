@@ -114,69 +114,9 @@ export class ActionService {
     addAction(action: ITask) {
         return this.actionEndpoint.addAction<ITask>(action);
     }
-
-    updatePublication(publication: IPublication) {
-        return this.actionEndpoint.updatePublication<IPublication>(publication);
-    }
-
-    updateMeasurement(measurement: any) {
-        return this.actionEndpoint.updateMeasurement<any>(measurement);
-    }
-
-    updateMaterial(material: any) {
-        return this.actionEndpoint.updateMaterial<any>(material);
-    }
-
-    updateExpertise(expertise: any) {
-        return this.actionEndpoint.updateExpertise<any>(expertise);
-    }
-
-    updateExclusion(exclusion: any) {
-        return this.actionEndpoint.updateExclusion<any>(exclusion);
-    }
-
-    updateEquipment(equipment: any) {
-        return this.actionEndpoint.updateEquipment<any>(equipment);
-    }
-
-    updateDirection(direction: any) {
-        return this.actionEndpoint.updateDirection<any>(direction);
-    }
-
-    updateCharges(charges: any) {
-        return this.actionEndpoint.updateCharges<any>(charges);
-    }
-
-    addPublication(publication: IPublication) {
-        return this.actionEndpoint.addPublication<IPublication>(publication);
-    }
-
-    addMeasurement(measurement: any) {
-        return this.actionEndpoint.addMeasurement<any>(measurement);
-    }
-
-    addMaterial(material: any) {
-        return this.actionEndpoint.addMaterial<any>(material);
-    }
-
-    addExpertise(expertise: any) {
-        return this.actionEndpoint.addExpertise<any>(expertise);
-    }
-
-    addExclusion(exclusion: any) {
-        return this.actionEndpoint.addExclusion<any>(exclusion);
-    }
-
-    addEquipment(equipment: any) {
-        return this.actionEndpoint.addEquipment<any>(equipment);
-    }
-
-    addDirection(direction: any) {
-        return this.actionEndpoint.addDirection<any>(direction);
-    }
-
-    addCharges(charges: any) {
-        return this.actionEndpoint.addCharges<any>(charges);
+    
+    addWorkFlowHeader(workflowData: any) {
+        return this.actionEndpoint.addWorkFlowHeader<any>(workflowData);
     }
 
     getNewWorkFlow(workflowData: any) {

@@ -279,6 +279,53 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
+        public IEnumerable<object> GetAircraftMapped(long customerId)
+        {
+            {
+
+                var data = (from c in _appContext.CustomerAircraftMapping
+                    where c.CustomerId == customerId && c.IsDeleted == false
+                    select new
+                    {
+                        c.CustomerAircraftMappingId,
+                        c.CustomerId,
+                        c.AircraftTypeId,
+                        c.AircraftType,
+                        c.AircraftModelId,
+                        c.DashNumberId,
+                        c.PartNumber,
+                        c.DashNumber,
+                        c.AircraftModel,
+                        c.Memo
+
+                    }).ToList();
+                return data;
+            }
+        }
+
+        public IEnumerable<object> GetATAMapped(long customerId)
+        {
+            {
+
+                var data = (from ca in _appContext.CustomerATAMapping
+                    where ca.CustomerId == customerId && ca.IsDeleted == false
+                    select new
+                    {
+                        ca.CustomerATAMappingId,
+                        ca.CustomerId,
+                        ca.ATAChapterId,
+                        ca.ATAChapterCode,
+                        ca.ATAChapterName,
+                        ca.PartNumber,
+                        ca.ATASubChapterId,
+                        ca.ATASubChapterDescription
+                        
+
+                    }).ToList();
+                return data;
+            }
+        }
+
         public IEnumerable<object> getIntegrationData(long id)
         {
 
