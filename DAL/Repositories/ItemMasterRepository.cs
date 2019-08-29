@@ -70,7 +70,7 @@ namespace DAL.Repositories
                             iM.Manufacturer,
                             iM.ShelfLifeAvailable,
                             iM.isPma, iM.mfgHours, iM.turnTimeMfg, iM.turnTimeBenchTest, iM.IsExportUnspecified,
-                            iM.IsExportNOMilitary, iM.IsExportMilitary, iM.IsExportDual,
+                            iM.IsExportNONMilitary, iM.IsExportMilitary, iM.IsExportDual,
                             IPortalIDS= iPortalIds.Select(e => e.IntegrationPortalId).ToList()
                             }).ToList();
                 return data;
@@ -160,7 +160,7 @@ namespace DAL.Repositories
                             IM.turnTimeMfg,
                             IM.turnTimeBenchTest,
                             IM.IsExportUnspecified,
-                            IM.IsExportNOMilitary,
+                            IM.IsExportNONMilitary,
                             IM.IsExportMilitary,
                             IM.IsExportDual
                         }).ToList();

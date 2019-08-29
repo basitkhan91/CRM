@@ -331,14 +331,15 @@
                                     </div>
                                     <div *ngIf="sourceItemMaster.isPma">
                                         <label class="control-label col-sm-3">OEM PN</label>
-                                        <p-autoComplete [(ngModel)]="sourceItemMaster.pmaNumber"
-                                                        (onKeyUp)=pmeventHandler($event)
-                                                        [ngModelOptions]="{standalone: true}" [suggestions]="oempnCollection"
+                                        <p-autoComplete 
+                                                        [(ngModel)]="sourceItemMaster.oemPNId"
+                                                        name="oemPNId"
+                                                        (onSelect)="selectedOEM($event)"
+                                                         field="partNumber"
+                                                         [suggestions]="oempnCollection"
                                                         (completeMethod)="filterpn($event)" [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="p-autoComplete-ctsm col-sm-9">
-                                            <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template>
+                                                        [dropdown]="true" class="autocomplete-customer1 col-sm-9">
+
                                         </p-autoComplete>
 
                                     </div>
@@ -945,8 +946,9 @@
                             </span>
                         </div>
                     </div>
-
+                    <form #purchaseSales="ngForm">
                     <div class="table-responsive ">
+                           
                         <table class="table table-bordered table-striped table-sorting mpn-list-table fixed-column-table column-r1-fixed" id="mpn-list-table">
                             <thead>
                                 <tr>
@@ -987,11 +989,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                         
                                 <tr *ngFor="let field of fieldArray; let i = index">
                                     <td>
 
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
+                                        <select class="form-control w80 select-value-drop1" id="condition" name="condition"  [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
                                             <option value="NEW" selected="1">NEW</option>
                                             <option value="AS-IS">AS-IS </option>
                                             <option value="REPAIR">REPAIR</option>
@@ -1001,7 +1003,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.PP_UOMId" [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
+                                        <select class="form-control w80 select-value-drop1" id="pp_UOM" name="pp_UOM"  [(ngModel)]="field.PP_UOMId"  required [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1009,7 +1011,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select [ngModelOptions]="{standalone: true}" class="form-control w80 select-value-drop1" id="" name=""
+                                        <select [ngModelOptions]="{standalone: true}"  class="form-control w80 select-value-drop1" id="currencyName"  required name="currencyName"
                                                 [(ngModel)]="field.PP_CurrencyId" (change)="changeValueStringToInt($event.target.value)">
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
@@ -1018,7 +1020,8 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_FXRatePerc" />
+                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="money" maxlength="7" required name="PP_FXRatePerc{{i}}"        [(ngModel)]="field.PP_FXRatePerc" />
+
                                     </td>
                                     <td>
                                         <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
@@ -1057,7 +1060,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FXRatePerc" />
+                                        <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" name="SP_FSP_FXRatePerc{{i}}" required [(ngModel)]="field.SP_FSP_FXRatePerc" />
                                     </td>
                                     <td>
                                         <input type="number" class="input-field-value" pInputText pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
@@ -1100,14 +1103,17 @@
                                     </td>
 
                                 </tr>
+                         
+
                             </tbody>
                         </table>
+                            
                     </div>
                     <div class="col-sm-12 mt8">
                         <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
                     </div>
-
+                    </form>
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'ExportInfo'}">
                     <div class="card">
@@ -1141,12 +1147,25 @@
                                     <label class="control-label">Country <span style="color: red">*</span></label>
 
 
-                                    <p-autoComplete [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" [(ngModel)]="exportInfo.ExportCountryId">
+                                    <p-autoComplete 
+                                    class="p-autoComplete-ctsm"
+                                    [(ngModel)]="exportInfo.ExportCountryId"
+                                    name="exportCountry"
+                                    (onSelect)="selectedExportCountry($event)"
+                                     field="nice_name"
+                                     [suggestions]="countrycollection"
+                                     (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1"
+                                    [dropdown]="true"  >
+
+                                    </p-autoComplete> 
+
+
+                                    <!-- <p-autoComplete [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" >
                                         <ng-template let-countryName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{countryName}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
+                                    </p-autoComplete> -->
 
                                     <label class="control-label">Value <span style="color: red">*</span></label>
                                     <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
@@ -1275,31 +1294,28 @@
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label class="popup-plusicon-cstm">Aircraft Type <a href="/singlepages/singlepages/app-aircraft-manufacturer"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                <label class="popup-plusicon-cstm">Aircraft Type <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
                                 <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="popup-plusicon-cstm" style="width: 150px !important">
-                                    Model <a href="/singlepages/singlepages/app-aircraft-manufacturer"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                    <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important;
-                                 margin-left: 7px; "> Unknown
-
+                                <label class="popup-plusicon-cstm" style="width: 150px !important">Model <a [routerLink]="['/singlepages/singlepages/app-aircraft-model']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                 <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important; 
+                                 margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
                                 </label>
 
                                 <p-multiSelect *ngIf="!modelUnknown" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
-                                               (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
+                                               (onChange)="getDashNumberByTypeandModel($event)" ></p-multiSelect>
                             </div>
                         </div>
                         <div class="col-md-3" *ngIf="!modelUnknown">
                             <div class="form-group">
-                                <label class="popup-plusicon-cstm" style="width: 190px !important">
-                                    DashNumber
-                                    <a href="/singlepages/singlepages/app-dashnumber"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                <label class="popup-plusicon-cstm" style="width: 190px !important">DashNumber
+                                    <a [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
                                     <input type="checkbox" name="unknownDashNumber" [(ngModel)]="dashNumberUnknown" style="width: 20px !important;
-                                    margin-left: 7px; "> Unknown
+                                    margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
                                 </label>
 
 
@@ -3379,3 +3395,7 @@
         </div>
     </div>
 </div>
+
+
+
+

@@ -630,7 +630,7 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.turnTimeMfg = itemMasterViewModel.turnTimeMfg;
                 itemmaserObj.turnTimeBenchTest= itemMasterViewModel.turnTimeBenchTest;
                 itemmaserObj.IsExportUnspecified= itemMasterViewModel.IsExportUnspecified;
-                itemmaserObj.IsExportNOMilitary = itemMasterViewModel.IsExportNOMilitary;
+                itemmaserObj.IsExportNONMilitary = itemMasterViewModel.IsExportNONMilitary;
                 itemmaserObj.IsExportMilitary= itemMasterViewModel.IsExportMilitary;
                 itemmaserObj.IsExportDual= itemMasterViewModel.IsExportDual;
                 itemmaserObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
@@ -838,7 +838,7 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.turnTimeMfg = itemMasterViewModel.turnTimeMfg;
                 itemmaserObj.turnTimeBenchTest = itemMasterViewModel.turnTimeBenchTest;
                 itemmaserObj.IsExportUnspecified = itemMasterViewModel.IsExportUnspecified;
-                itemmaserObj.IsExportNOMilitary = itemMasterViewModel.IsExportNOMilitary;
+                itemmaserObj.IsExportNONMilitary = itemMasterViewModel.IsExportNONMilitary;
                 itemmaserObj.IsExportMilitary = itemMasterViewModel.IsExportMilitary;
                 itemmaserObj.IsExportDual = itemMasterViewModel.IsExportDual;
                 //itemmaserObj.PartAlternatePartId = itemMasterViewModel.PartAlternatePartId;
@@ -1314,8 +1314,11 @@ namespace QuickApp.Pro.Controllers
                         existingresule.ExportWeightUnit= itemMasterViewModel.ExportWeightUnit;
                         existingresule.ExportCurrencyId = itemMasterViewModel.ExportCurrencyId;
                         existingresule.ExportClassificationId= itemMasterViewModel.ExportClassificationId;
-
-                        existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
+						existingresule.IsExportUnspecified = itemMasterViewModel.IsExportUnspecified;
+						existingresule.IsExportNONMilitary = itemMasterViewModel.IsExportNONMilitary;
+						existingresule.IsExportMilitary = itemMasterViewModel.IsExportMilitary;
+						existingresule.IsExportDual = itemMasterViewModel.IsExportDual;
+						existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
 						_unitOfWork.Repository<ItemMaster>().Update(existingresule);
 						_unitOfWork.SaveChanges();
 						return Ok(itemMasterViewModel);
