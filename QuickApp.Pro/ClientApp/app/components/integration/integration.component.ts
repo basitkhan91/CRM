@@ -28,7 +28,6 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     selectedActionName: any;
     disableSave: boolean;
     actionamecolle: any[] = [];
-
     integration_Name: any = "";
     portalURL: any = "";
     memo: any = "";
@@ -36,9 +35,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
-
     AuditDetails: SingleScreenAuditDetails[];
-
     Active: string = "Active";
 	auditHisory: AuditHistory[];
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -75,15 +72,12 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-        this.cols = [
-            //{ field: 'integrationPortalId', header: 'Integration Portal ID' },
+        this.cols = [           
             { field: 'portalURL', header: 'Website Url' },
             { field: 'description', header: 'Integration' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-           // { field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
+            { field: 'updatedBy', header: 'Updated By' },         
 		];
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-integration';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
@@ -99,7 +93,6 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -198,7 +191,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
             if (value == this.selectedActionName.toLowerCase()) {
-                //alert("Action Name already Exists");
+               
                 this.disableSave = true;
             }
             else {
@@ -220,7 +213,6 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
 
 
     filterintegrations(event) {
-
         this.localCollection = [];
         for (let i = 0; i < this.allIntegrationInfo.length; i++) {
             let integrationName = this.allIntegrationInfo[i].description;
