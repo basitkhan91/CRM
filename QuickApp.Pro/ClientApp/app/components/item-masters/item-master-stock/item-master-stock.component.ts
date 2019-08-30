@@ -413,7 +413,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 // integration with dropdown value binding on edit 
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
 
-                console.log(this.sourceItemMaster.manufacturerName, this.sourceItemMaster)
+
 
 
                 // binding the export information data on edit
