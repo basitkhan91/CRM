@@ -397,19 +397,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // checks the params id with the url 
         this.itemMasterId = this._actRoute.snapshot.params['id'];
 
-        console.log(this.sourceItemMaster.IntegrationPortalId)
+
         if (this.itemMasterId !== undefined) {
 
 
             // get the itemmaster data by id
             this.isEdit = true;
+            this.isItemMasterCreated = true;
             this.itemser.getItemMasterDetailById(this.itemMasterId).subscribe(res => {
                 const responseDataOfEdit = res;
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
 
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate)
-
                 // integration with dropdown value binding on edit 
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
 
@@ -421,7 +421,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     ExportECCN: this.sourceItemMaster.exportECCN,
                     ITARNumber: this.sourceItemMaster.itarNumber,
                     ExportUomId: this.sourceItemMaster.exportUomId,
-                    ExportCountryId: this.sourceItemMaster.countryData,
+                    ExportCountryId: this.sourceItemMaster.countryData[0],
                     ExportValue: this.sourceItemMaster.exportValue,
                     ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
                     ExportWeight: this.sourceItemMaster.exportWeight,
@@ -431,7 +431,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
                     IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
                     IsExportMilitary: this.sourceItemMaster.isExportMilitary,
-                    IsExportNONMilitary: this.sourceItemMaster.IsExportNONMilitary,
+                    IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
                     IsExportDual: this.sourceItemMaster.isExportDual,
                 }
 
@@ -3397,7 +3397,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
         this.itemclass();
-        
+
     }
 
 
@@ -3430,7 +3430,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.itemType = this.itemTypeName;
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.newAction(this.sourceAction).subscribe(data => {
-                this.itemclass();     
+                this.itemclass();
                 console.log(data);
             })
         }
@@ -3441,7 +3441,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.description = this.className;
             this.sourceAction.itemType = this.itemTypeName;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(data => {this.itemclass();},
+            this.workFlowtService.updateAction(this.sourceAction).subscribe(data => { this.itemclass(); },
                 response => this.saveCompleted(this.sourceAction));
         }
 
@@ -4710,66 +4710,60 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else {
 
             this.isSaving = true;
+            console.log(!this.isItemMasterCreated);
+            console.log(this.itemMasterId);
 
-
-            if (!this.sourceItemMaster.itemMasterId) //for create ItemMaster
+            if (!this.isItemMasterCreated) //for create ItemMaster
 
             {
+                this.sourceItemMaster.createdBy = this.userName;
+                this.sourceItemMaster.updatedBy = this.userName;
+                this.sourceItemMaster.masterCompanyId = 1;
+                this.sourceItemMaster.itemTypeId = 1;
 
-                if (!this.isItemMasterCreated) {
-                    this.sourceItemMaster.createdBy = this.userName;
-                    this.sourceItemMaster.updatedBy = this.userName;
-                    this.sourceItemMaster.masterCompanyId = 1;
-                    this.sourceItemMaster.itemTypeId = 1;
-                    this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                    this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
+                this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+                this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
+                this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
+                    console.log(data.manufacturer.name);
+                    this.tempOEMpartNumberId = null;
 
-
-
-
-                    this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
-                        console.log(data.manufacturer.name);
-                        this.tempOEMpartNumberId = null;
-
-                        this.ManufacturerValue = data.manufacturer.name;
-                        // check whether response it there or not 
-                        if (data != null) {
-                            this.ItemMasterId = data.itemMasterId;
-                            if (this.isSaveCapes == true) {
-                                this.saveCapabilities();
-                            }
+                    this.ManufacturerValue = data.manufacturer.name;
+                    // check whether response it there or not 
+                    if (data != null) {
+                        this.ItemMasterId = data.itemMasterId;
+                        if (this.isSaveCapes == true) {
+                            this.saveCapabilities();
                         }
+                    }
 
-                        // get aircraft Mapped Information by ItemMasterId
-                        this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-                            this.aircraftListDataValues = data.map(x => {
-                                return {
-                                    aircraft: x.aircraftType,
-                                    model: x.aircraftModel,
-                                    dashNumber: x.dashNumber,
-                                    memo: x.memo,
-                                }
-                            })
+                    // get aircraft Mapped Information by ItemMasterId
+                    this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
+                        this.aircraftListDataValues = data.map(x => {
+                            return {
+                                aircraft: x.aircraftType,
+                                model: x.aircraftModel,
+                                dashNumber: x.dashNumber,
+                                memo: x.memo,
+                            }
                         })
-
-                        this.isItemMasterCreated = true;
-                        // go to next tab
-                        this.changeOfTab('AircraftInfo');
-                        // response Data after save 
-                        this.collectionofItemMaster = data;
-
-                        this.savesuccessCompleted(this.sourceItemMaster);
-
-                        this.alertService.startLoadingMessage();
-                        this.AddCustomerAircraftdata(this.collectionofItemMaster); //passing ItemMaster Saved Collection for Stote Aircraft Data                                    
-                        // this.value = 1;
-                        // this.activeTab = 2;
-                        this.moveAircraftInformation();
-
                     })
-                } else {
+
+                    this.isItemMasterCreated = true;
+                    // go to next tab
                     this.changeOfTab('AircraftInfo');
-                }
+                    // response Data after save 
+                    this.collectionofItemMaster = data;
+
+                    this.savesuccessCompleted(this.sourceItemMaster);
+
+                    this.alertService.startLoadingMessage();
+                    this.AddCustomerAircraftdata(this.collectionofItemMaster); //passing ItemMaster Saved Collection for Stote Aircraft Data                                    
+                    // this.value = 1;
+                    // this.activeTab = 2;
+                    this.moveAircraftInformation();
+
+                })
+
 
 
                 // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
@@ -4784,8 +4778,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
             }
-            else if (this.itemMasterId) //for Edit Screen
+            else if (this.isItemMasterCreated || this.itemMasterId) //for Edit Screen
             {
+                const itemMasterId = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
                 // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
                 // {
                 //     this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
@@ -4798,6 +4793,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.masterCompanyId = 1;
                 this.sourceItemMaster.itemTypeId = 1;
                 this.sourceItemMaster.oemPN = this.tempOEMpartNumberId;
+                this.sourceItemMaster.itemMasterId = itemMasterId;
                 // Destructing the Object in Services Place Apply Changes there also 
                 this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
                     this.tempOEMpartNumberId = null;
