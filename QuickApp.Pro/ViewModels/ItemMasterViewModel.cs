@@ -9,11 +9,11 @@ namespace QuickApp.Pro.ViewModels
 {
     public class ItemMasterViewModel
     {
-        public long? ItemMasterId { get; set; }
+        public long ItemMasterId { get; set; }
 
         public int? ItemCategoryId { get; set; }
 
-        public int? ItemTypeId { get; set; }
+        public int ItemTypeId { get; set; }
 
         public long? PartId { get; set; }
 
@@ -156,7 +156,7 @@ namespace QuickApp.Pro.ViewModels
 
         public long? PriorityId { get; set; }
 
-      //  public int? IntegrationPortalId { get; set; }
+      
 
         public long? WarningId { get; set; }
 
@@ -370,7 +370,7 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsExportNONMilitary { get; set; }
         public bool? IsExportMilitary { get; set; }
         public bool? IsExportDual { get; set; }
-
+        public int? oemPNId { get; set; }
         public string[] IntegrationPortalId { get; set; }
         public class ItemMasterViewModelValidator : AbstractValidator<ItemMasterViewModel>
         {
