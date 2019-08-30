@@ -404,17 +404,30 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             // get the itemmaster data by id
             this.isEdit = true;
             this.itemser.getItemMasterDetailById(this.itemMasterId).subscribe(res => {
-                console.log(res);
+                const responseDataOfEdit = res;
                 this.isDisabledSteps = true;
-                this.sourceItemMaster = res;
+                this.sourceItemMaster = res[0].iM;
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate)
-
+                console.log(responseDataOfEdit[0].countryName);
                 // binding the export information data on edit
                 this.exportInfo = {
                     ExportECCN: this.sourceItemMaster.exportECCN,
                     ITARNumber: this.sourceItemMaster.itarNumber,
                     ExportUomId: this.sourceItemMaster.exportUomId,
-                    ExportCountryId: this.sourceItemMaster.exportCountryId,
+                    ExportCountryId: {
+                        "countries_id": 1,
+                        "countries_name": "AFGHANISTAN",
+                        "nice_name": "Afghanistan",
+                        "countries_iso_code": "AF",
+                        "countries_iso3": "AFG",
+                        "countries_numcode": "4",
+                        "countries_isd_code": "93",
+                        "createdBy": "Prasad",
+                        "updatedBy": "Prasad",
+                        "createdDate": "2018-06-18T00:00:00",
+                        "updatedDate": "2018-06-18T00:00:00",
+                        "isActive": null
+                    },
                     ExportValue: this.sourceItemMaster.exportValue,
                     ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
                     ExportWeight: this.sourceItemMaster.exportWeight,
@@ -3962,8 +3975,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     // get aircraft model by type 
     getAircraftModelByManfacturer(value) {
         this.newValue = value.originalEvent.target.textContent;
- 
-        if(this.newValue){
+
+        if (this.newValue) {
             this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
 
                 const responseValue = models[0];
@@ -3973,7 +3986,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                         value: models
                     }
                 });
-              
+
             });
             this.selectedModelId = undefined;
             this.selectedDashnumber = undefined;
@@ -4731,6 +4744,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                     this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
                         this.tempOEMpartNumberId = null;
+
+                        this.ManufacturerValue = data.manufacturer.name;
                         // check whether response it there or not 
                         if (data != null) {
                             this.ItemMasterId = data.itemMasterId;
@@ -4739,17 +4754,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                             }
                         }
 
-                        // get aircraft Mapped Information by ItemMasterId
-                        this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-                            this.aircraftListDataValues = data.map(x => {
-                                return {
-                                    aircraft: x.aircraftType,
-                                    model: x.aircraftModel,
-                                    dashNumber: x.dashNumber,
-                                    memo: x.memo,
-                                }
-                            })
-                        })
+                        // // get aircraft Mapped Information by ItemMasterId
+                        // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
+                        //     this.aircraftListDataValues = data.map(x => {
+                        //         return {
+                        //             aircraft: x.aircraftType,
+                        //             model: x.aircraftModel,
+                        //             dashNumber: x.dashNumber,
+                        //             memo: x.memo,
+                        //         }
+                        //     })
+                        // })
 
                         this.isItemMasterCreated = true;
                         // go to next tab
