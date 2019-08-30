@@ -496,6 +496,7 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.MasterCompanyId = 1;
                     itemmaserObj.IsActive = true;
                     itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
+                    itemmaserObj.oemPNId= itemMasterViewModel.oemPNId;
                     itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
                     itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;
                     part.ParentPartId = itemMasterViewModel.ParentPartId;
@@ -767,6 +768,7 @@ namespace QuickApp.Pro.Controllers
                 var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
                 itemMasterViewModel.MasterCompanyId = 1;
                 itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
+                itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
                 itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;
                 itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
                 itemmaserObj.ExchangeListPrice = itemMasterViewModel.ExchangeListPrice;
@@ -1447,44 +1449,57 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("ItemMasterPurcSaleUpdate/{id}")]
-        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale itemMasterPurchaseSale, long id)
+        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale, long id,long itemMasterPurchaseSaleId)
         {
             if (ModelState.IsValid)
             {
                 if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterId == id))
                 {
-                    var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == id).FirstOrDefault();
-                    existingresule.ItemMasterId = itemMasterPurchaseSale.ItemMasterId;
-                    existingresule.PartNumber = itemMasterPurchaseSale.PartNumber;
-                    existingresule.PP_CurrencyId = itemMasterPurchaseSale.PP_CurrencyId;
-                    existingresule.PP_FXRatePerc = itemMasterPurchaseSale.PP_FXRatePerc;
-                    existingresule.PP_LastListPriceDate = itemMasterPurchaseSale.PP_LastListPriceDate;
-                    existingresule.PP_LastPurchaseDiscDate = itemMasterPurchaseSale.PP_LastPurchaseDiscDate;
-                    existingresule.PP_PurchaseDiscAmount = itemMasterPurchaseSale.PP_PurchaseDiscAmount;
-                    existingresule.PP_PurchaseDiscPerc = itemMasterPurchaseSale.PP_PurchaseDiscPerc;
-                    existingresule.PP_UnitPurchasePrice = itemMasterPurchaseSale.PP_UnitPurchasePrice;
-                    existingresule.PP_UOMId = itemMasterPurchaseSale.PP_UOMId;
-                    existingresule.PP_VendorListPrice = itemMasterPurchaseSale.PP_VendorListPrice;
-                    existingresule.SP_CalSPByPP_BaseSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_BaseSalePrice;
-                    existingresule.SP_CalSPByPP_LastMarkUpDate = itemMasterPurchaseSale.SP_CalSPByPP_LastMarkUpDate;
-                    existingresule.SP_CalSPByPP_LastSalesDiscDate = itemMasterPurchaseSale.SP_CalSPByPP_LastSalesDiscDate;
-                    existingresule.SP_CalSPByPP_MarkUpAmount = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpAmount;
-                    existingresule.SP_CalSPByPP_MarkUpPercOnListPrice = itemMasterPurchaseSale.SP_CalSPByPP_MarkUpPercOnListPrice;
-                    existingresule.SP_CalSPByPP_SaleDiscAmount = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscAmount;
+                    for (int i = 0; i < itemMasterPurchaseSale.Length; i++)
+                    {
+                        if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterPurchaseSaleId == itemMasterPurchaseSaleId))
+                        {
+                            var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == itemMasterPurchaseSaleId).FirstOrDefault();
+                            existingresule.ItemMasterId = itemMasterPurchaseSale[i].ItemMasterId;
+                            existingresule.PartNumber = itemMasterPurchaseSale[i].PartNumber;
+                            existingresule.PP_CurrencyId = itemMasterPurchaseSale[i].PP_CurrencyId;
+                            existingresule.PP_FXRatePerc = itemMasterPurchaseSale[i].PP_FXRatePerc;
+                            existingresule.PP_LastListPriceDate = itemMasterPurchaseSale[i].PP_LastListPriceDate;
+                            existingresule.PP_LastPurchaseDiscDate = itemMasterPurchaseSale[i].PP_LastPurchaseDiscDate;
+                            existingresule.PP_PurchaseDiscAmount = itemMasterPurchaseSale[i].PP_PurchaseDiscAmount;
+                            existingresule.PP_PurchaseDiscPerc = itemMasterPurchaseSale[i].PP_PurchaseDiscPerc;
+                            existingresule.PP_UnitPurchasePrice = itemMasterPurchaseSale[i].PP_UnitPurchasePrice;
+                            existingresule.PP_UOMId = itemMasterPurchaseSale[i].PP_UOMId;
+                            existingresule.PP_VendorListPrice = itemMasterPurchaseSale[i].PP_VendorListPrice;
+                            existingresule.SP_CalSPByPP_BaseSalePrice = itemMasterPurchaseSale[i].SP_CalSPByPP_BaseSalePrice;
+                            existingresule.SP_CalSPByPP_LastMarkUpDate = itemMasterPurchaseSale[i].SP_CalSPByPP_LastMarkUpDate;
+                            existingresule.SP_CalSPByPP_LastSalesDiscDate = itemMasterPurchaseSale[i].SP_CalSPByPP_LastSalesDiscDate;
+                            existingresule.SP_CalSPByPP_MarkUpAmount = itemMasterPurchaseSale[i].SP_CalSPByPP_MarkUpAmount;
+                            existingresule.SP_CalSPByPP_MarkUpPercOnListPrice = itemMasterPurchaseSale[i].SP_CalSPByPP_MarkUpPercOnListPrice;
+                            existingresule.SP_CalSPByPP_SaleDiscAmount = itemMasterPurchaseSale[i].SP_CalSPByPP_SaleDiscAmount;
 
-                    existingresule.SP_CalSPByPP_SaleDiscPerc = itemMasterPurchaseSale.SP_CalSPByPP_SaleDiscPerc;
-                    existingresule.SP_CalSPByPP_UnitSalePrice = itemMasterPurchaseSale.SP_CalSPByPP_UnitSalePrice;
-                    existingresule.SP_FSP_CurrencyId = itemMasterPurchaseSale.SP_FSP_CurrencyId;
-                    existingresule.SP_FSP_FlatPriceAmount = itemMasterPurchaseSale.SP_FSP_FlatPriceAmount;
+                            existingresule.SP_CalSPByPP_SaleDiscPerc = itemMasterPurchaseSale[i].SP_CalSPByPP_SaleDiscPerc;
+                            existingresule.SP_CalSPByPP_UnitSalePrice = itemMasterPurchaseSale[i].SP_CalSPByPP_UnitSalePrice;
+                            existingresule.SP_FSP_CurrencyId = itemMasterPurchaseSale[i].SP_FSP_CurrencyId;
+                            existingresule.SP_FSP_FlatPriceAmount = itemMasterPurchaseSale[i].SP_FSP_FlatPriceAmount;
 
-                    existingresule.SP_FSP_FXRatePerc = itemMasterPurchaseSale.SP_FSP_FXRatePerc;
-                    existingresule.SP_FSP_LastFlatPriceDate = itemMasterPurchaseSale.SP_FSP_LastFlatPriceDate;
-                    existingresule.SP_FSP_UOMId = itemMasterPurchaseSale.SP_FSP_UOMId;
+                            existingresule.SP_FSP_FXRatePerc = itemMasterPurchaseSale[i].SP_FSP_FXRatePerc;
+                            existingresule.SP_FSP_LastFlatPriceDate = itemMasterPurchaseSale[i].SP_FSP_LastFlatPriceDate;
+                            existingresule.SP_FSP_UOMId = itemMasterPurchaseSale[i].SP_FSP_UOMId;
 
-                    existingresule.UpdatedDate = DateTime.Now;
-                    existingresule.UpdatedBy = itemMasterPurchaseSale.UpdatedBy;
-                    _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
-                    _unitOfWork.SaveChanges();
+                            existingresule.UpdatedDate = DateTime.Now;
+                            existingresule.UpdatedBy = itemMasterPurchaseSale[i].UpdatedBy;
+                            _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
+                            _unitOfWork.SaveChanges();
+                        }
+                        else
+                        {
+                           
+                                _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale[i]);
+                                _unitOfWork.SaveChanges();
+                            
+                        }
+                    }
                     return Ok(itemMasterPurchaseSale);
                 }
             }
