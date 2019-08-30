@@ -1705,7 +1705,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     itemclassification(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.disabletypeSave = false;
@@ -3320,10 +3319,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     // new for priority 
     priorityopen(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
-        this.loadPriority();
+        //this.loadPriority();
         this.isSaving = true;
         this.disableSave = false;
         this.loadMasterCompanies();
@@ -3332,9 +3330,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.priorityName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -3386,7 +3381,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
         this.itemclass();
-
+        
     }
 
 
@@ -3402,15 +3397,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
-
-
     private savesuccessCompleted(user?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
         this.loadData();
         
     }
-
 
     saveitemclassification() {
         this.isSaving = true;
@@ -3422,8 +3414,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.itemType = this.itemTypeName;
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.newAction(this.sourceAction).subscribe(data => {
-                this.itemclass();
-                this.sourceAction.itemClassificationId = data.itemClassificationId;
+                this.itemclass();     
+                console.log(data);
             })
         }
         else {
@@ -3433,9 +3425,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.description = this.className;
             this.sourceAction.itemType = this.itemTypeName;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+            this.workFlowtService.updateAction(this.sourceAction).subscribe(data => {this.itemclass();},
+                response => this.saveCompleted(this.sourceAction));
         }
 
         this.modal.close();
@@ -3443,7 +3434,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     saveitemgroup() {
-
         this.isSaving = true;
 
         if (this.isEditMode == false) {
@@ -3554,9 +3544,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.updatedBy = this.userName;
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
-            this.unitService.updateUnitOfMeasure(this.sourceUOM).subscribe(
-                response => this.saveCompleted(this.sourceUOM),
-                error => this.saveFailedHelper(error));
+            this.unitService.updateUnitOfMeasure(this.sourceUOM).subscribe(data => { this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure() });
         }
 
         this.modal.close();
@@ -3661,7 +3649,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.description;
             this.sourceAction.masterCompanyId = 1;
-            this.inteService.newAction(this.sourceAction).subscribe(data => { this.integrationData() })
+            this.inteService.newAction(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
 
         }
         else {
@@ -4677,15 +4667,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
-
     saveItemMasterGeneralInformation() {
-        if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.itemClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId)) {
+        if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.itemClassificationId && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId && this.sourceItemMaster.manufacturerId)) {
             this.display = true;
             this.modelValue = true;
         } else {
 
             this.isSaving = true;
-
             if (!this.sourceItemMaster.itemMasterId) //for Edit Screen
             {
                 this.sourceItemMaster.createdBy = this.userName;
