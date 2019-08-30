@@ -26,6 +26,8 @@ namespace DAL.Repositories
                             from ct in countryID.DefaultIfEmpty()
                             join mfg in _appContext.Manufacturer on iM.ManufacturerId equals mfg.ManufacturerId into mfgID
                             from mfgs in mfgID.DefaultIfEmpty()
+                            join imst in _appContext.ItemMaster on iM.ItemMasterId equals imst.oemPNId into Imast
+                            from oemid in Imast.DefaultIfEmpty()
                             where iM.ItemMasterId == itemMasterId
 
                             select new
@@ -138,10 +140,12 @@ namespace DAL.Repositories
                                     iM.IsExportNONMilitary ,
                                     iM.IsExportMilitary ,
                                     iM.IsExportDual ,
-                                    CountryData= countryID.Select(c=>c.countries_id).ToList(),
+                                    ManufacturerName = mfgs == null ? "" : mfgs.Name,
+                                    CountryData = countryID.ToList(),
                                     //CountryName = ct == null ? "" : ct.countries_name,
                                     IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
-                                    ManufacturerName = mfgs == null ? "" : mfgs.Name,
+                                    oemPNData = Imast.ToList(),
+                                
                             }).ToList();
                                             
                 return data;
