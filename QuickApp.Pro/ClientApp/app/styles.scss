@@ -12759,9 +12759,7 @@ body .ui-datepicker table td > a.ui-state-active {
         display: flex;
         min-width: 100px;
     }
-.ui-autocomplete .ui-autocomplete-panel{
-    width :100%;
-}
+
 
 p-autocomplete .ui-autocomplete-dropdown {
     position: relative;
@@ -13956,9 +13954,12 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-autoComplete-ctsm .ui-autocomplete{
   padding: 0px !important;
 }
+.p-autocomplete-ctsm .ui-autocomplete .ui-autocomplete-panel{
+    width: 100% !important;
+}
 .p-dropdown-custom .ui-dropdown label.ui-dropdown-label {
-  text-align: left;
-  font-size: 12px !important;
+    text-align: left;
+    font-size: 12px !important;
 }
 .p-dropdown-custom .ui-dropdown {
   width: 224px !important;
@@ -14069,6 +14070,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     text-align: left;
     margin-right: 0;
     font-weight: normal;
+}
+.autocomp-customership-cstm .ui-autocomplete {
+    width: 100% !important;
 }
 
 .modal-full {

@@ -21,7 +21,7 @@
     <div class="clear"></div>
     <br>
     <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
-        <div class="tab-content form-bg margin0 padding0">
+        <div class="tab-content form-bg margin0 padding0 ">
             <div class="" id="menu3">
                 <div class="clear"></div>
                 <div class="md-stepper-horizontal orange">
@@ -85,7 +85,7 @@
                                                         (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
                                                         [ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="p-autoComplete-ctsm">
+                                                        [dropdown]="true" class="autocomplete-customer">
                                             <ng-template let-partName pTemplate="part">
                                                 <div class="ui-helper-clearfix">{{partName}}</div>
                                             </ng-template>
@@ -102,7 +102,7 @@
                                                         [ngModelOptions]="{standalone: true}"
                                                         (completeMethod)="filterdescription($event)"
                                                         [(ngModel)]="sourceItemMaster.partDescription" [size]="30"
-                                                        [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm">
+                                                        [minLength]="1" [dropdown]="true" class="autocomplete-customer">
                                             <ng-template let-partDescription pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{partDescription}}</div>
                                             </ng-template>
@@ -202,7 +202,7 @@
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isReceivedDateAvailable"
                                                        class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                       id="exp-rec-date-input" name=""
+                                                       id="exp-rec-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.daysReceived">
                                                 <span *ngIf="sourceItemMaster.isReceivedDateAvailable" style="margin-left: 8px;">Days</span>
@@ -218,7 +218,7 @@
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
                                                        class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                       id="exp-rec-date-input" name=""
+                                                       id="exp-rec-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.manufacturingDays">
                                                 <span *ngIf="sourceItemMaster.isManufacturingDateAvailable" style="margin-left: 8px;">Days</span>
@@ -234,7 +234,7 @@
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isTagDateAvailable"
                                                        class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
-                                                       id="exp-tag-date-input" name=""
+                                                       id="exp-tag-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.tagDays">
                                                 <span *ngIf="sourceItemMaster.isTagDateAvailable" style="margin-left: 8px;">Days</span>
@@ -250,7 +250,7 @@
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isOpenDateAvailable"
                                                        class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                       id="exp-open-date-input" name=""
+                                                       id="exp-open-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.openDays">
                                                 <span *ngIf="sourceItemMaster.isOpenDateAvailable" style="margin-left: 8px;">Days</span>
@@ -266,7 +266,7 @@
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isShippedDateAvailable"
                                                        class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                       id="exp-shipped-date-input" name=""
+                                                       id="exp-shipped-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.shippedDays">
                                                 <span *ngIf="sourceItemMaster.isShippedDateAvailable" style="margin-left: 8px;">Days</span>
@@ -282,7 +282,7 @@
                                                 </label>
                                                 <input *ngIf="sourceItemMaster.isOtherDateAvailable"
                                                        class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                       id="exp-shipped-date-input" name=""
+                                                       id="exp-shipped-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                        [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.otherDays">
                                                 <span *ngIf="sourceItemMaster.isOtherDateAvailable" style="margin-left: 8px;">Days</span>
@@ -296,11 +296,10 @@
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.shelfLife">
                                         &nbsp;
-                                        <input  *ngIf="sourceItemMaster.shelfLife"
-                                               class="form-control shelf1 number exp-date-inputs w50" type="number"  pattern="[0-5]{3}" min="0"  max="2" pKeyFilter="int"
-                                               id="exp-shipped-date-input" name=""
-                                               [ngModelOptions]="{standalone: true}"
-                                               [(ngModel)]="sourceItemMaster.shelfLifeAvailable" >
+                                        <input *ngIf="sourceItemMaster.shelfLife"
+                                               class="form-control shelf1 number exp-date-inputs w50" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" pKeyFilter="int"
+                                               id="exp-shipped-date-input" name="shelfDescription"
+                                               [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required>
                                         <strong class="shelf"><span *ngIf="sourceItemMaster.shelfLife">Days</span></strong>
                                     </div>
                                     <div class="inline-block display-flex inline-adjust spacing-label">
@@ -331,14 +330,13 @@
                                     </div>
                                     <div *ngIf="sourceItemMaster.isPma">
                                         <label class="control-label col-sm-3">OEM PN</label>
-                                        <p-autoComplete 
-                                                        [(ngModel)]="sourceItemMaster.oemPNId"
+                                        <p-autoComplete [(ngModel)]="sourceItemMaster.oemPNId"
                                                         name="oemPNId"
                                                         (onSelect)="selectedOEM($event)"
-                                                         field="partNumber"
-                                                         [suggestions]="oempnCollection"
+                                                        field="partNumber"
+                                                        [suggestions]="oempnCollection"
                                                         (completeMethod)="filterpn($event)" [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="autocomplete-customer1 col-sm-9">
+                                                        [dropdown]="true" class="p-autoComplete-ctsm col-sm-9">
 
                                         </p-autoComplete>
 
@@ -477,19 +475,19 @@
                                     <label class="control-label">Lead Time</label>
                                     <div class="col-md-7">
                                         <span style="font-size: 11px;">Days</span>
-                                        <input type="number" pInputText pKeyFilter="int" min="0" maxlength="10" class="input-value"
+                                        <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control input-value" 
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeDays">
                                     </div>
                                     <div class="col-md-5">
                                         <span style="font-size: 11px;">Hours</span>
-                                        <input type="number" pInputText pKeyFilter="int" class="input-value" [ngModelOptions]="{standalone: true}"
+                                        <input type="number"  pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control input-value" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeHours">
                                     </div>
                                     <div class="clear"></div>
                                     <label class="control-label spacing-label">Stock Level</label>
                                     <div>
-                                        <input class="form-control input-value" min="0" maxlength="10" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
+                                        <input class="form-control input-value" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.stockLevel">
                                     </div>
                                 </div>
@@ -499,19 +497,19 @@
                                     <label class="control-label spacing-label">Reorder Point</label>
                                     <div>
                                         <span data-toggle="tooltip" title="" data-original-title="calculation field">
-                                            <input class="form-control input-value" value="1245" min="0" max="10" type="number" pKeyFilter="int"
+                                            <input class="form-control input-value" value="1245" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" type="number" pKeyFilter="int"
                                                    [ngModelOptions]="{standalone: true}"
                                                    [(ngModel)]="sourceItemMaster.reorderPoint">
                                         </span>
                                     </div>
                                     <label class="control-label spacing-label">Reorder Qty</label>
                                     <div>
-                                        <input class="form-control input-value" type="number" pKeyFilter="int" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
+                                        <input class="form-control input-value" type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.reorderQuantiy">
                                     </div>
                                     <label class="control-label spacing-label">Min Order Qty</label>
                                     <div>
-                                        <input class="form-control input-value" type="number" pKeyFilter="int" min="0" maxlength="10" [ngModelOptions]="{standalone: true}"
+                                        <input class="form-control input-value" type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.minimumOrderQuantity">
                                     </div>
                                     <div class="inline-adjust inline-block display-flex">
@@ -545,7 +543,7 @@
                                     </div>
                                     <div>
                                         <p-multiSelect [options]="integrationvalues"
-                                                       [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedIntegrationTypes"
+                                                       [ngModelOptions]="{standalone: true}" [maxSelectedLabels]="2" [(ngModel)]="selectedIntegrationTypes"
                                                        [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                                     </div>
                                     <label class="control-label">Memo</label>
@@ -558,6 +556,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <div class="col-md-12 col-new">
                             <div class="col-md-4">
@@ -580,27 +579,27 @@
                                                             <strong>Hours</strong>
                                                             <br />
                                                             <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                                    [(ngModel)]="sourceItemMaster.overhaulHours">
                                                         </td>
                                                         <td>
                                                             <strong>Hours</strong>
                                                             <br />
                                                             <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                                    [(ngModel)]="sourceItemMaster.rpHours">
                                                         </td>
                                                         <td>
                                                             <strong>Hours</strong>
                                                             <br />
                                                             <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}" maxlength="5"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                                    [(ngModel)]="sourceItemMaster.mfgHours">
                                                         </td>
                                                         <td>
                                                             <strong>Hours</strong>
                                                             <br />
-                                                            <input type="number" pKeyFilter="int" maxlength="5" class="form-control w50 time control-bottom"
+                                                            <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control w50 time control-bottom"
                                                                    [ngModelOptions]="{standalone: true}"
                                                                    [(ngModel)]="sourceItemMaster.testHours">
                                                         </td>
@@ -631,29 +630,29 @@
                                                         <td>
                                                             <strong>Days</strong>
                                                             <br />
-                                                            <input maxlength="5" type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}"
+                                                            <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                                    [(ngModel)]="sourceItemMaster.turnTimeOverhaulHours">
                                                         </td>
                                                         <td>
                                                             <strong>Days</strong>
                                                             <br />
-                                                            <input maxlength="5" type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}"
+                                                            <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                                    [(ngModel)]="sourceItemMaster.turnTimeRepairHours">
                                                         </td>
                                                         <td>
                                                             <strong>Days</strong>
                                                             <br />
-                                                            <input maxlength="5" type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}"
+                                                            <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                                    [(ngModel)]="sourceItemMaster.turnTimeMfg">
                                                         </td>
                                                         <td>
                                                             <strong>Days</strong>
                                                             <br />
-                                                            <input maxlength="5" type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}"
+                                                            <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
                                                                    [(ngModel)]="sourceItemMaster.turnTimeBenchTest">
                                                         </td>
                                                     </tr>
@@ -683,9 +682,9 @@
                             <div class="col-sm-3">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
@@ -712,14 +711,14 @@
                                             <label class="fs12">
                                                 Aircraft Model
                                             </label>
-                                            <p-multiSelect [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
+                                            <p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
                                                            class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="fs12">DashNumber </label>
-                                            <p-multiSelect [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
+                                            <p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
                                                            class="pub-multi" [selectionLimit]="30"></p-multiSelect>
                                         </div>
                                     </div>
@@ -799,9 +798,9 @@
                             <div class="col-sm-3">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
@@ -932,9 +931,9 @@
                             <div class="col-sm-3">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
@@ -947,177 +946,537 @@
                         </div>
                     </div>
                     <form #purchaseSales="ngForm">
-                    <div class="table-responsive ">
-                           
-                        <table class="table table-bordered table-striped table-sorting mpn-list-table fixed-column-table column-r1-fixed" id="mpn-list-table">
-                            <thead>
-                                <tr>
-                                    <th colspan="10">Unit Purchase Price</th>
-                                    <th colspan="19" class="bg1">Unit Sale Price</th>
-                                </tr>
-                                <tr>
-                                    <th colspan="10"></th>
-                                    <th colspan="5" class="bg2">Use Flat Sale Price</th>
-                                    <th colspan="13" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
+                        <div class="table-responsive ">
 
-                                </tr>
-                                <tr>
-                                    <th>Cond *</th>
-                                    <th>UOM *</th>
-                                    <th>Currency *</th>
-                                    <th>FX Rate *</th>
-                                    <th>Vendor List Price</th>
-                                    <th>Last List Price Date</th>
-                                    <th>Purchase Disc %</th>
-                                    <th>Purchase Disc Amount</th>
-                                    <th>Last Purchase Disc Date</th>
-                                    <th>Unit Purchase Price</th>
-                                    <th class="bg2">UOM *</th>
-                                    <th class="bg2">Currency *</th>
-                                    <th class="bg2">FX Rate *</th>
-                                    <th class="bg2">Flat Price Amount</th>
-                                    <th class="bg2">Last Flat Price Date</th>
-                                    <th class="bg3">Mark % on List Price</th>
-                                    <th class="bg3">Mark Up Amount</th>
-                                    <th class="bg3">Last Mark Up Date</th>
-                                    <th class="bg3">Base Sale Price</th>
-                                    <th class="bg3">Sale Disc %</th>
-                                    <th class="bg3">Sale Disc Amount</th>
-                                    <th class="bg3">Last Sales Disc Date</th>
-                                    <th class="bg3">Unit Sale Price</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                         
-                                <tr *ngFor="let field of fieldArray; let i = index">
-                                    <td>
+                            <table class="table table-bordered table-striped table-sorting mpn-list-table fixed-column-table column-r1-fixed" id="mpn-list-table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="10">Unit Purchase Price</th>
+                                        <th colspan="19" class="bg1">Unit Sale Price</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="10"></th>
+                                        <th colspan="5" class="bg2">Use Flat Sale Price</th>
+                                        <th colspan="13" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
 
-                                        <select class="form-control w80 select-value-drop1" id="condition" name="condition"  [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
-                                            <option value="NEW" selected="1">NEW</option>
-                                            <option value="AS-IS">AS-IS </option>
-                                            <option value="REPAIR">REPAIR</option>
-                                            <option value="SRV">SRV</option>
-                                            <option value="OVERHAUL">OVERHAUL</option>
-                                            <option value="AR">AR</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control w80 select-value-drop1" id="pp_UOM" name="pp_UOM"  [(ngModel)]="field.PP_UOMId"  required [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
-                                            <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                    [ngValue]="unitName.unitOfMeasureId">
-                                                {{unitName.shortName}}
-                                            </option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select [ngModelOptions]="{standalone: true}"  class="form-control w80 select-value-drop1" id="currencyName"  required name="currencyName"
-                                                [(ngModel)]="field.PP_CurrencyId" (change)="changeValueStringToInt($event.target.value)">
-                                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                                    [ngValue]="currencyName.currencyId">
-                                                {{currencyName.symbol}}
-                                            </option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value"  pInputText pKeyFilter="money" maxlength="7" required name="PP_FXRatePerc{{i}}"        [(ngModel)]="field.PP_FXRatePerc" />
+                                    </tr>
+                                    <tr>
+                                        <th>Cond *</th>
+                                        <th>UOM *</th>
+                                        <th>Currency *</th>
+                                        <th>FX Rate *</th>
+                                        <th>Vendor List Price</th>
+                                        <th>Last List Price Date</th>
+                                        <th>Purchase Disc %</th>
+                                        <th>Purchase Disc Amount</th>
+                                        <th>Last Purchase Disc Date</th>
+                                        <th>Unit Purchase Price</th>
+                                        <th class="bg2">UOM *</th>
+                                        <th class="bg2">Currency *</th>
+                                        <th class="bg2">FX Rate *</th>
+                                        <th class="bg2">Flat Price Amount</th>
+                                        <th class="bg2">Last Flat Price Date</th>
+                                        <th class="bg3">Mark % on List Price</th>
+                                        <th class="bg3">Mark Up Amount</th>
+                                        <th class="bg3">Last Mark Up Date</th>
+                                        <th class="bg3">Base Sale Price</th>
+                                        <th class="bg3">Sale Disc %</th>
+                                        <th class="bg3">Sale Disc Amount</th>
+                                        <th class="bg3">Last Sales Disc Date</th>
+                                        <th class="bg3">Unit Sale Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
-                                    </td>
-                                    <td>
-                                        <input type="date" class="input-field-value" [ngModelOptions]="{standalone: true}" [ngModel]="field.PP_LastListPriceDate | date:'yyyy-MM-dd'" (ngModelChange)="field.PP_LastListPriceDate = $event">
-                                    </td>
-                                    <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.PP_PurchaseDiscPerc" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
-                                            <option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" value="{{field.PP_PurchaseDiscAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_PurchaseDiscAmount" />
-                                    </td>
-                                    <td>
-                                        <input type="date" class="input-field-value" [ngModel]="field.PP_LastPurchaseDiscDate | date:'yyyy-MM-dd'" (ngModelChange)="field.PP_LastPurchaseDiscDate = $event" [ngModelOptions]="{standalone: true}">
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="int" maxlength="15" value="{{field.PP_UnitPurchasePrice}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_UnitPurchasePrice" [disabled]="true" />
-                                    </td>
-                                    <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_FSP_UOMId" [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
-                                            <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                    [ngValue]="unitName.unitOfMeasureId">
-                                                {{unitName.shortName}}
-                                            </option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_CurrencyId" (change)="changeValueStringToInt($event.target.value)">
-                                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                                    [ngValue]="currencyName.currencyId">
-                                                {{currencyName.symbol}}
-                                            </option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" name="SP_FSP_FXRatePerc{{i}}" required [(ngModel)]="field.SP_FSP_FXRatePerc" />
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
-                                    </td>
-                                    <td>
-                                        <input type="date" class="input-field-value" [ngModel]="field.SP_FSP_LastFlatPriceDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_FSP_LastFlatPriceDate = $event" [ngModelOptions]="{standalone: true}">
-                                    </td>
-                                    <td>
-                                        <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_MarkUpPercOnListPrice" [ngModelOptions]="{standalone: true}" (change)="percentValue(field); changeValueStringToInt($event.target.value); ">
-                                            <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-                                        </select> %
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_MarkUpAmount" value="{{field.markupAmount}}" />
-                                    </td>
-                                    <td>
-                                        <input type="date" class="input-field-value" [ngModel]="field.SP_CalSPByPP_LastMarkUpDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_CalSPByPP_LastMarkUpDate = $event" [ngModelOptions]="{standalone: true}" />
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="15" [(ngModel)]="field.SP_CalSPByPP_BaseSalePrice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
-                                    </td>
-                                    <td>
-                                        <select class="form-control w50 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_SaleDiscPerc" [ngModelOptions]="{standalone: true}" (change)="salePercent(field); changeValueStringToInt($event.target.value);">
-                                            <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-                                        </select> %
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_SaleDiscAmount" value="{{field.SP_CalSPByPP_SaleDiscAmount}}" />
-                                    </td>
-                                    <td>
-                                        <input type="date" class="input-field-value" [ngModel]="field.SP_CalSPByPP_LastSalesDiscDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_CalSPByPP_LastSalesDiscDate = $event" [ngModelOptions]="{standalone: true}">
-                                    </td>
-                                    <td>
-                                        <input type="number" class="input-field-value" pInputText [disabled]="true" pKeyFilter="num" [(ngModel)]="field.SP_CalSPByPP_UnitSalePrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.SP_CalSPByPP_UnitSalePrice}}" />
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger nobg" (click)="delete(i)">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
+                                    <tr *ngFor="let field of fieldArray; let i = index">
+                                        <td>
 
-                                </tr>
-                         
+                                            <select class="form-control w80 select-value-drop1" id="condition" name="condition" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
+                                                <option value="NEW" selected="1">NEW</option>
+                                                <option value="AS-IS">AS-IS </option>
+                                                <option value="REPAIR">REPAIR</option>
+                                                <option value="SRV">SRV</option>
+                                                <option value="OVERHAUL">OVERHAUL</option>
+                                                <option value="AR">AR</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80 select-value-drop1" id="pp_UOM" name="pp_UOM" [(ngModel)]="field.PP_UOMId" required [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
+                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select [ngModelOptions]="{standalone: true}" class="form-control w80 select-value-drop1" id="currencyName" required name="currencyName"
+                                                    [(ngModel)]="field.PP_CurrencyId" (change)="changeValueStringToInt($event.target.value)">
+                                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                                        [ngValue]="currencyName.currencyId">
+                                                    {{currencyName.symbol}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" required name="PP_FXRatePerc{{i}}" [(ngModel)]="field.PP_FXRatePerc" />
 
-                            </tbody>
-                        </table>
-                            
-                    </div>
-                    <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
-                    </div>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_VendorListPrice" (input)="percentValue(field)" />
+                                        </td>
+                                        <td>
+                                            <input type="date" class="input-field-value" [ngModelOptions]="{standalone: true}" [ngModel]="field.PP_LastListPriceDate | date:'yyyy-MM-dd'" (ngModelChange)="field.PP_LastListPriceDate = $event">
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.PP_PurchaseDiscPerc" [ngModelOptions]="{standalone: true}" (change)="percentValue(field)">
+                                                <option *ngFor="let number of itemQuantitys" value="{{number}}">{{number}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" value="{{field.PP_PurchaseDiscAmount}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_PurchaseDiscAmount" />
+                                        </td>
+                                        <td>
+                                            <input type="date" class="input-field-value" [ngModel]="field.PP_LastPurchaseDiscDate | date:'yyyy-MM-dd'" (ngModelChange)="field.PP_LastPurchaseDiscDate = $event" [ngModelOptions]="{standalone: true}">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="int" maxlength="15" value="{{field.PP_UnitPurchasePrice}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.PP_UnitPurchasePrice" [disabled]="true" />
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_FSP_UOMId" [ngModelOptions]="{standalone: true}" (change)="changeValueStringToInt($event.target.value)">
+                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80 select-value-drop1" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_CurrencyId" (change)="changeValueStringToInt($event.target.value)">
+                                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                                        [ngValue]="currencyName.currencyId">
+                                                    {{currencyName.symbol}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" name="SP_FSP_FXRatePerc{{i}}" required [(ngModel)]="field.SP_FSP_FXRatePerc" />
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
+                                        </td>
+                                        <td>
+                                            <input type="date" class="input-field-value" [ngModel]="field.SP_FSP_LastFlatPriceDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_FSP_LastFlatPriceDate = $event" [ngModelOptions]="{standalone: true}">
+                                        </td>
+                                        <td>
+                                            <select class="form-control w80 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_MarkUpPercOnListPrice" [ngModelOptions]="{standalone: true}" (change)="percentValue(field); changeValueStringToInt($event.target.value); ">
+                                                <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+                                            </select> %
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_MarkUpAmount" value="{{field.markupAmount}}" />
+                                        </td>
+                                        <td>
+                                            <input type="date" class="input-field-value" [ngModel]="field.SP_CalSPByPP_LastMarkUpDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_CalSPByPP_LastMarkUpDate = $event" [ngModelOptions]="{standalone: true}" />
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="15" [(ngModel)]="field.SP_CalSPByPP_BaseSalePrice" [ngModelOptions]="{standalone: true}" (input)="salePercent(field)" />
+                                        </td>
+                                        <td>
+                                            <select class="form-control w50 select-value-drop1" id="" name="" [(ngModel)]="field.SP_CalSPByPP_SaleDiscPerc" [ngModelOptions]="{standalone: true}" (change)="salePercent(field); changeValueStringToInt($event.target.value);">
+                                                <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
+                                            </select> %
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="15" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_CalSPByPP_SaleDiscAmount" value="{{field.SP_CalSPByPP_SaleDiscAmount}}" />
+                                        </td>
+                                        <td>
+                                            <input type="date" class="input-field-value" [ngModel]="field.SP_CalSPByPP_LastSalesDiscDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_CalSPByPP_LastSalesDiscDate = $event" [ngModelOptions]="{standalone: true}">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input-field-value" pInputText [disabled]="true" pKeyFilter="num" [(ngModel)]="field.SP_CalSPByPP_UnitSalePrice" [ngModelOptions]="{standalone: true}" maxlength="15" value="{{field.SP_CalSPByPP_UnitSalePrice}}" />
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger nobg" (click)="delete(i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="col-sm-12 mt8">
+                            <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                            <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+                        </div>
                     </form>
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'ExportInfo'}">
-                    <div class="card">
-                        <div class="col-sm-12 font-padding">
+
+                    <form #exportInformatiom="ngForm">
+                        <div class="card">
+                            <div class="col-sm-12 font-padding">
+                                <div class="col-sm-2">
+                                    PN: <span style="color:red">{{pnvalue}}</span>
+                                </div>
+                                <div class="col-sm-3">
+                                    PN Description: <span style="color:red">{{pnDescription}}</span>
+                                </div>
+                                <!-- <div class="col-sm-3">
+                                    Alternate PN: <span style="color:red">{{alternatePn}}</span>
+                                </div> -->
+                                <div class="col-sm-3">
+                                    Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="form-row col-row">
+                                <div class="col-md-3" style="margin-left: 13px">
+                                    <div class="form-group">
+                                        <label for="eccn" class="control-label">
+                                            ECCN
+                                        </label>
+                                        <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
+                                        <label class="control-label">
+                                            ITAR Num <strong class="clr-red">*</strong>
+                                        </label>
+                                        <input type="text" class="input-field-value" required pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                        <label class="control-label">Country <span style="color: red">*</span></label>
+
+
+                                        <p-autoComplete required
+                                                        class="p-autoComplete-ctsm"
+                                                        [(ngModel)]="exportInfo.ExportCountryId"
+                                                        name="exportCountry"
+                                                        (onSelect)="selectedExportCountry($event)"
+                                                        field="nice_name"
+                                                        [suggestions]="countrycollection"
+                                                        (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1"
+                                                        [dropdown]="true">
+
+                                        </p-autoComplete>
+
+
+                                        <!-- <p-autoComplete [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                        [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" >
+                                            <ng-template let-countryName pTemplate="item">
+                                                <div class="ui-helper-clearfix">{{countryName}}</div>
+                                            </ng-template>
+                                        </p-autoComplete> -->
+
+                                        <label class="control-label">Value <span style="color: red">*</span></label>
+                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" required maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
+                                        <label class="control-label">Currency <span style="color: red">*</span></label>
+                                        <select class="select-value-drop1"
+                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" required name="ExportCurrencyId">
+                                            <option value=null> Select Currency</option>
+                                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                                    [ngValue]="currencyName.currencyId">
+                                                {{currencyName.symbol}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="weight" class="control-label">
+                                            Weight <strong class="clr-red">*</strong>
+                                        </label>
+                                        <span class="display-flex inline-block">
+                                            <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
+                                            <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                        </span>
+                                        <label class="control-label">
+                                            Export UOM <span style="color:red;">*</span>
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
+                                                <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
+                                                   data-target="#ModalUnit"></i>
+                                            </span>
+                                        </label>
+                                        <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"
+                                                (change)="changeValueStringToInt($event.target.value)" name="exportUOMId" required>
+                                            <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                    [ngValue]="unitName.unitOfMeasureId">
+                                                {{unitName.shortName}}
+                                            </option>
+                                        </select>
+                                        <label class="control-label">Size (L,W,H)</label>
+                                        <div class="inline-block display-flex">
+                                            <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
+                                            <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
+                                            <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
+                                        </div>
+                                        <label class="control-label">Classification <span style="color:red;">*</span></label>
+                                        <div class="inline-block display-flex">
+                                            <div class="checkbox-cstm check-value">
+                                                <label class="control-label">
+                                                    <input type="checkbox" id="" name="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Unspecified
+                                                </label>
+                                            </div>
+                                            <div class="checkbox-cstm check-value">
+                                                <label class="control-label">
+                                                    <input type="checkbox" id="" name="nonmilitary" [(ngModel)]="exportInfo.IsExportNONMilitary">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    NON-Military
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="inline-block display-flex">
+                                            <div class="checkbox-cstm check-value">
+                                                <label class="control-label">
+                                                    <input type="checkbox" id="" name="miltary" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Miltary
+                                                </label>
+                                            </div>
+                                            <div class="checkbox-cstm check-value">
+                                                <label class="control-label">
+                                                    <input type="checkbox" id="" name="dual" [(ngModel)]="exportInfo.IsExportDual">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Dual
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mt8">
+                            <div class="col-sm-6">
+                                <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="movePurchaseInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="float-right">
+                                    <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
+                                    &nbsp;
+                                    <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+        </div>
+        </form>
+
+
+
+
+
+
+
+
+        <!--New code for dialogue-->
+        <div id="ModalDashNumber"
+             class="modal fade custom-popup"
+             role="dialog">
+            <div class="modal-dialog modal-full">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Add Aircraft Information</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm">Aircraft Type <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                    <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm" style="width: 150px !important">
+                                        Model <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-model']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                        <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important;
+                                 margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
+                                    </label>
+
+                                    <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
+                                                   (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="!modelUnknown">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm" style="width: 190px !important">
+                                        DashNumber
+                                        <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                        <input type="checkbox" name="unknownDashNumber" [(ngModel)]="dashNumberUnknown" style="width: 20px !important;
+                                    margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
+                                    </label>
+
+
+                                    <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
+                            </div>
+                        </div>
+
+
+
+                        <div class="card" *ngIf="viewTable">
+                            <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th></th>
+                                        <th *ngFor="let col of columns">
+                                            {{col.header}}
+                                        </th>
+                                        <th>Memo</th>
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                    <tr>
+
+                                        <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
+                                        <td>
+                                            <span class="checkbox-cstm">
+                                                <label style="width: 10px;">
+                                                    <input type="checkbox" [(ngModel)]="rowData.IsChecked">
+
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                </label>
+                                            </span>
+                                        </td>
+
+                                        <td *ngFor="let col of columns">
+                                            {{rowData[col.field]}}
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
+                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="ATAADD"
+             class="modal fade custom-popup"
+             role="dialog">
+            <div class="modal-dialog modal-full">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Add ATA Information</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <form [formGroup]="ataform">
+                            <div class="form-row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="popup-plusicon-cstm">ATA Chapter <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-main']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                        <select class="select-option dropdown-custm" formControlName="atanumber" (change)="getATASubChapterByATAChapter()" style="width: 160px !important;">
+
+                                            <option value=''> Select Chapter</option>
+                                            <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="popup-plusicon-cstm" style="width: 170px !important;">ATA SubChapters <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                        <p-multiSelect class="imstock-pmselect" [options]="atasubchapter"
+                                                       [(ngModel)]="selectedModels"
+                                                       [panelStyle]="{minWidth:'12em'}" formControlName="atasubchaptername"></p-multiSelect>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addATAMapping();" data-dismiss="modal">Add</button>
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                        <!-- <div class="card" *ngIf="viewTable">
+                            <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th></th>
+                                        <th *ngFor="let col of columns">
+                                            {{col.header}}
+                                        </th>
+                                        <th>Memo</th>
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                    <tr>
+
+
+                                        <td>
+                                            <span class="checkbox-cstm">
+                                                <label style="width: 10px;">
+                                                    <input type="checkbox"  [(ngModel)]="rowData.IsChecked" >
+
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                </label>
+                                            </span>
+                                        </td>
+
+                                        <td *ngFor="let col of columns">
+                                            {{rowData[col.field]}}
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ModalViewCapes"
+             class="modal fade custom-popup"
+             role="dialog">
+            <div class="modal-dialog modal-full">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Capes</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12 font-padding">
                             <div class="col-sm-2">
                                 PN: <span style="color:red">{{pnvalue}}</span>
                             </div>
@@ -1125,469 +1484,114 @@
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
                             <div class="col-sm-3">
-                                Alternate PN: <span style="color:red">{{alternatePn}}</span>
+                                Capability Types: <span style="color:red"></span>
                             </div>
                             <div class="col-sm-3">
-                                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
                         </div>
+                        <p-table [rows]="6" [columns]="Capes" [scrollable]="true" [responsive]="true" [style]="{width:'100%'}" [paginator]="true">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
 
-                        <br />
-                        <div class="form-row col-row">
-                            <div class="col-md-3" style="margin-left: 13px">
-                                <div class="form-group">
-                                    <label for="eccn" class="control-label">
-                                        ECCN
-                                    </label>
-                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
-                                    <label class="control-label">
-                                        ITAR Num <strong class="clr-red">*</strong>
-                                    </label>
-                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
-                                    <label class="control-label">Country <span style="color: red">*</span></label>
-
-
-                                    <p-autoComplete 
-                                    class="p-autoComplete-ctsm"
-                                    [(ngModel)]="exportInfo.ExportCountryId"
-                                    name="exportCountry"
-                                    (onSelect)="selectedExportCountry($event)"
-                                     field="nice_name"
-                                     [suggestions]="countrycollection"
-                                     (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1"
-                                    [dropdown]="true"  >
-
-                                    </p-autoComplete> 
-
-
-                                    <!-- <p-autoComplete [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" >
-                                        <ng-template let-countryName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{countryName}}</div>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                <tr>
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Edit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ModalUnit"
+             class="modal fade custom-popup"
+             role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal">
+                            <i class="fa fa-close add"></i>
+                        </button>
+                        <h4 class="modal-title">Add Consume UOM</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="selection-box ">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="lbl1">Unit Of Measure</label>
+                                </div>
+                                <div class="col-sm-6 inline-block display-flex">
+                                    <p-autoComplete [(ngModel)]="sourceAction.unitofmeasure" [ngModelOptions]="{standalone: true}" [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                                        <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
                                         </ng-template>
-                                    </p-autoComplete> -->
+                                    </p-autoComplete>
 
-                                    <label class="control-label">Value <span style="color: red">*</span></label>
-                                    <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
-                                    <label class="control-label">Currency <span style="color: red">*</span></label>
-                                    <select class="select-value-drop1"
-                                            [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId">
-                                        <option value=null> Select Currency</option>
-                                        <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                                [ngValue]="currencyName.currencyId">
-                                            {{currencyName.symbol}}
-                                        </option>
-                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="weight" class="control-label">
-                                        Weight <strong class="clr-red">*</strong>
-                                    </label>
-                                    <span class="display-flex inline-block">
-                                        <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
-                                        <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
-                                            <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                    [ngValue]="unitName.unitOfMeasureId">
-                                                {{unitName.shortName}}
-                                            </option>
-                                        </select>
-                                    </span>
-                                    <label class="control-label">
-                                        Export UOM <span style="color:red;">*</span>
-                                        <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
-                                            <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
-                                               data-target="#ModalUnit"></i>
-                                        </span>
-                                    </label>
-                                    <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"
-                                            (change)="changeValueStringToInt($event.target.value)" name="exportUOMId">
-                                        <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                [ngValue]="unitName.unitOfMeasureId">
-                                            {{unitName.shortName}}
-                                        </option>
-                                    </select>
-                                    <label class="control-label">Size (L,W,H)</label>
-                                    <div class="inline-block display-flex">
-                                        <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
-                                        <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
-                                        <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
-                                    </div>
-                                    <label class="control-label">Classification <span style="color:red;">*</span></label>
-                                    <div class="inline-block display-flex">
-                                        <div class="checkbox-cstm check-value">
-                                            <label class="control-label">
-                                                <input type="checkbox" id="" name="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                Unspecified
-                                            </label>
-                                        </div>
-                                        <div class="checkbox-cstm check-value">
-                                            <label class="control-label">
-                                                <input type="checkbox" id="" name="nonmilitary" [(ngModel)]="exportInfo.IsExportNONMilitary">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                NON-Military
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="inline-block display-flex">
-                                        <div class="checkbox-cstm check-value">
-                                            <label class="control-label">
-                                                <input type="checkbox" id="" name="miltary" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                Miltary
-                                            </label>
-                                        </div>
-                                        <div class="checkbox-cstm check-value">
-                                            <label class="control-label">
-                                                <input type="checkbox" id="" name="dual" [(ngModel)]="exportInfo.IsExportDual">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                Dual
-                                            </label>
-                                        </div>
-                                    </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="lbl1">Short Name</label>
+                                </div>
+                                <div class="col-sm-6 inline-block display-flex">
+                                    <p-autoComplete [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                                        <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 mt8">
-                        <div class="col-sm-6">
-                            <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="movePurchaseInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        </div>
-                        <div class="col-sm-6">
-                            <span class="float-right">
-                                <button class="btn btn-primary-cstm" pButton type="button" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
-                                &nbsp;
-                                <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
-        </div>
-    </form>
-
-
-
-
-
-
-
-
-    <!--New code for dialogue-->
-    <div id="ModalDashNumber"
-         class="modal fade custom-popup"
-         role="dialog">
-        <div class="modal-dialog modal-full">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add Aircraft Information</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="popup-plusicon-cstm">Aircraft Type <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="popup-plusicon-cstm" style="width: 150px !important">Model <a [routerLink]="['/singlepages/singlepages/app-aircraft-model']"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                 <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important; 
-                                 margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
-                                </label>
-
-                                <p-multiSelect *ngIf="!modelUnknown" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
-                                               (onChange)="getDashNumberByTypeandModel($event)" ></p-multiSelect>
-                            </div>
-                        </div>
-                        <div class="col-md-3" *ngIf="!modelUnknown">
-                            <div class="form-group">
-                                <label class="popup-plusicon-cstm" style="width: 190px !important">DashNumber
-                                    <a [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                    <input type="checkbox" name="unknownDashNumber" [(ngModel)]="dashNumberUnknown" style="width: 20px !important;
-                                    margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
-                                </label>
-
-
-                                <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" class="imstock-pmselect" [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
-                        </div>
-                    </div>
-
-
-
-                    <div class="card" *ngIf="viewTable">
-                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th></th>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                    <th>Memo</th>
-
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                                <tr>
-
-                                    <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
-                                    <td>
-                                        <span class="checkbox-cstm">
-                                            <label style="width: 10px;">
-                                                <input type="checkbox" [(ngModel)]="rowData.IsChecked">
-
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </span>
-                                    </td>
-
-                                    <td *ngFor="let col of columns">
-                                        {{rowData[col.field]}}
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div id="ATAADD"
-         class="modal fade custom-popup"
-         role="dialog">
-        <div class="modal-dialog modal-full">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add ATA Information</h4>
-                </div>
-                <div class="modal-body">
-
-                    <form [formGroup]="ataform">
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="popup-plusicon-cstm">ATA Chapter <a [routerLink]="['/singlepages/singlepages/app-ata-main']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                    <select class="select-option dropdown-custm" formControlName="atanumber" (change)="getATASubChapterByATAChapter()" style="width: 160px !important;">
-
-                                        <option value=''> Select Chapter</option>
-                                        <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
-                                    </select>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="lbl1">Standard</label>
+                                </div>
+                                <div class="col-sm-6 inline-block display-flex">
+                                    <p-autoComplete [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                                        <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="popup-plusicon-cstm" style="width: 170px !important;">ATA SubChapters <a [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                    <p-multiSelect class="imstock-pmselect" [options]="atasubchapter"
-                                                   [(ngModel)]="selectedModels"
-                                                   [panelStyle]="{minWidth:'12em'}" formControlName="atasubchaptername"></p-multiSelect>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    <button class="btn btn-primary-cstm"
+                                            data-dismiss="modal">
+                                        SAVE
+                                    </button>
+                                </div>
+                                <div class="col-sm-6 inline-block display-flex">
+                                    <button class="btn btn-danger-cstm" style="margin-left: 172px"
+                                            data-dismiss="modal">
+                                        Close
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
-                                <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addATAMapping();" data-dismiss="modal">Add</button>
-                            </div>
-                        </div>
-                    </form>
-
-
-
-                    <!-- <div class="card" *ngIf="viewTable">
-                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th></th>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                    <th>Memo</th>
-
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                                <tr>
-
-
-                                    <td>
-                                        <span class="checkbox-cstm">
-                                            <label style="width: 10px;">
-                                                <input type="checkbox"  [(ngModel)]="rowData.IsChecked" >
-
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </span>
-                                    </td>
-
-                                    <td *ngFor="let col of columns">
-                                        {{rowData[col.field]}}
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div> -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="ModalViewCapes"
-         class="modal fade custom-popup"
-         role="dialog">
-        <div class="modal-dialog modal-full">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Capes</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-12 font-padding">
-                        <div class="col-sm-2">
-                            PN: <span style="color:red">{{pnvalue}}</span>
-                        </div>
-                        <div class="col-sm-3">
-                            PN Description: <span style="color:red">{{pnDescription}}</span>
-                        </div>
-                        <div class="col-sm-3">
-                            Capability Types: <span style="color:red"></span>
-                        </div>
-                        <div class="col-sm-3">
                         </div>
                     </div>
-                    <p-table [rows]="6" [columns]="Capes" [scrollable]="true" [responsive]="true" [style]="{width:'100%'}" [paginator]="true">
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
-                                <th *ngFor="let col of columns">
-                                    {{col.header}}
-                                </th>
-
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                            <tr>
-                                <td *ngFor="let col of columns">
-                                    {{rowData[col.field]}}
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Edit</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="ModalUnit"
-         class="modal fade custom-popup"
-         role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button"
-                            class="close"
-                            data-dismiss="modal">
-                        <i class="fa fa-close add"></i>
-                    </button>
-                    <h4 class="modal-title">Add Consume UOM</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="selection-box ">
-                        <div class="col-sm-12">
-                            <div class="col-sm-4">
-                                <label class="lbl1">Unit Of Measure</label>
-                            </div>
-                            <div class="col-sm-6 inline-block display-flex">
-                                <p-autoComplete [(ngModel)]="sourceAction.unitofmeasure" [ngModelOptions]="{standalone: true}" [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" class="autocomplete-customer">
-                                    <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="col-sm-4">
-                                <label class="lbl1">Short Name</label>
-                            </div>
-                            <div class="col-sm-6 inline-block display-flex">
-                                <p-autoComplete [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" class="autocomplete-customer">
-                                    <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="col-sm-4">
-                                <label class="lbl1">Standard</label>
-                            </div>
-                            <div class="col-sm-6 inline-block display-flex">
-                                <p-autoComplete [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" class="autocomplete-customer">
-                                    <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="col-sm-6">
-                                <button class="btn btn-primary-cstm"
-                                        data-dismiss="modal">
-                                    SAVE
-                                </button>
-                            </div>
-                            <div class="col-sm-6 inline-block display-flex">
-                                <button class="btn btn-danger-cstm" style="margin-left: 172px"
-                                        data-dismiss="modal">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
+        <div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
 </div>
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
@@ -1602,7 +1606,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="col-sm-4">
-                        <label for="name" class="control-label control-item"> Classification <span class="clr-red">*</span></label>
+                        <label for="name" class="control-label control-item">Classification <span class="clr-red">*</span></label>
                     </div>
                     <div class="col-sm-5">
                         <p-autoComplete [(ngModel)]="itemName" name="code"
@@ -1624,7 +1628,7 @@
                     </div>
                     <div class="col-sm-5">
                         <p-autoComplete (onSelect)="classificationId($event)" name="classficationname" (onKeyUp)=classeventHandler($event)
-                                        [(ngModel)]="className" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="className" 
                                         [suggestions]="localNameCollection" (completeMethod)="filterItemNames($event)" [size]="30" class="p-autoComplete-ctsm"
                                         [minLength]="1" [dropdown]="true" required>
                             <ng-template let-className pTemplate="description">
@@ -1640,7 +1644,7 @@
                     </div>
                     <div class="col-sm-5">
                         <p-autoComplete (onSelect)="classificationtypeId($event)"  name="type" class="p-autoComplete-ctsm" (onKeyUp)=classeventtypeHandler($event)
-                                        [(ngModel)]="itemTypeName" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="itemTypeName"
                                         [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" required>
                             <ng-template let-itemTypeName pTemplate="ItemType">
@@ -1657,7 +1661,7 @@
                     </div>
                     <div class="col-sm-5">
                         <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
-                                  [(ngModel)]="sourceAction.memo" minlength="2" required></textarea>
+                                  [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                     </div>
                 </div>
             </div>
@@ -1670,7 +1674,7 @@
                 </label>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!itemForm.valid"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!itemForm.valid || disableSaveItemClassficationCode || disableClassdesc || disabletypeSave"
                         (click)="saveitemclassification()">
                     Save
                 </button>
@@ -1724,7 +1728,7 @@
                 </div>
                 <div class="col-sm-5">
                     <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-                              [(ngModel)]="sourceAction.memo" minlength="2" required></textarea>
+                              [(ngModel)]="sourceAction.memo" minlength="2" ></textarea>
                 </div>
             </div>
             <div class="col-md-12">
@@ -1737,7 +1741,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveItemGroup"
                         (click)="saveitemgroup()">
                     Save
                 </button>
@@ -1784,7 +1788,7 @@
                     </div>
                     <div class="col-sm-5">
                         <textarea placeholder="Memo" class="text-item" #memo="ngModel" id="memo" name="descriptionmemo"
-                                  [(ngModel)]="sourceAction.memo" minlength="2" required></textarea>
+                                  [(ngModel)]="sourceAction.memo" minlength="2" ></textarea>
                         <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                             Memo is required.
                         </div>
@@ -1801,7 +1805,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!provisionForm.valid"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!provisionForm.valid || disableSaveProvision"
                         (click)="saveprovision()">
                     Save
                 </button>
@@ -1866,7 +1870,7 @@
                 </div>
                 <div class="col-sm-5">
                     <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}"
-                              [(ngModel)]="sourceUOM.memo" minlength="2" required></textarea>
+                              [(ngModel)]="sourceUOM.memo" minlength="2"></textarea>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -1877,7 +1881,7 @@
                 </label>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!purchaseForm.valid"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!purchaseForm.valid || disableSavePurchaseUOM"
                         (click)=" savePurchaseunitofmeasure()">
                     Save
                 </button>
@@ -1940,7 +1944,7 @@
                 </div>
                 <div class="col-sm-5">
                     <textarea class="text-item" #memo="ngModel" id="memo" name="memoDescription"
-                              [(ngModel)]="sourceUOM.memo" minlength="2" required></textarea>
+                              [(ngModel)]="sourceUOM.memo" minlength="2" ></textarea>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -1951,7 +1955,7 @@
                 </label>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!stockForm.valid"
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!stockForm.valid || disableSaveStockUOM"
                         (click)=" saveStockunitofmeasure()">
                     Save
                 </button>
@@ -2016,7 +2020,7 @@
                 </div>
                 <div class="col-sm-5">
                     <textarea class="text-item" #memo="ngModel" id="memo" name="memoDescription"
-                              [(ngModel)]="sourceUOM.memo" minlength="2" required></textarea>
+                              [(ngModel)]="sourceUOM.memo" minlength="2" ></textarea>
                 </div>
             </div>
             <div class="col-sm-12">
@@ -2026,7 +2030,7 @@
                 </label>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" [disabled]="!consumeForm.valid"
+                <button class="btn btn-primary-cstm" [disabled]="!consumeForm.valid || disableSaveConsume"
                         (click)=" saveConsumeunitofmeasure()">
                     Save
                 </button>
@@ -3213,7 +3217,7 @@
                     <label for="url" class="control-label col-sm-4">WebSite url</label>
                 <div class="col-sm-5">
                     <p-autoComplete (onSelect)="integrationId($event)" (onKeyUp)=integrationeventHandler($event) [(ngModel)]="portalURL" name="integration" [suggestions]="localmanufacturer" (completeMethod)="filterintegrations($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm"  required>
                         <ng-template let-integrationName pTemplate="item">
                             <div class="ui-helper-clearfix">{{integrationName}}</div>
                         </ng-template>
@@ -3253,7 +3257,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" (click)="saveIntegration()" [disabled]="!userForm.valid">Save</button>
+                <button class="btn btn-primary-cstm" (click)="saveIntegration()" [disabled]="!userForm.valid || disableSave">Save</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
@@ -3313,7 +3317,7 @@
                         <label for="description" class="control-label">Memo</label>
                     </div>
                     <div class="col-sm-5">
-                        <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="sourceAction.memo" required></textarea>
+                        <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="sourceAction.memo" ></textarea>
                         <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                             Memo is required.
                         </div>
@@ -3336,7 +3340,7 @@
                     <div class="clear"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" (click)="savepriority()" [disabled]="!priorityForm.valid">Save</button>
+                    <button class="btn btn-primary-cstm" (click)="savepriority()" [disabled]="!priorityForm.valid || disableSave">Save</button>
                     <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
                 </div>
             </form>

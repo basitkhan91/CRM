@@ -293,7 +293,6 @@ export class CustomerShippingInformationComponent {
 
         this.shipViacols = [
 
-            { field: 'siteName', header: 'Shipping SiteName' },
             { field: 'shipVia', header: 'Ship Via' },
             { field: 'shippingAccountinfo', header: 'Shipping Account Info' },
             { field: 'shippingURL', header: 'Shipping Url' },

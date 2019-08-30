@@ -20,6 +20,7 @@ namespace DAL.Repositories
         {
             try
             {
+
                 var data = (from iM in _appContext.ItemMaster
                             join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds
                             join country in _appContext.Countries on iM.ExportCountryId equals country.countries_id into countryID

@@ -605,7 +605,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
 	nextClick() {
 		this.workFlowtService.contactCollection = this.local;
 		this.activeIndex = 3;
-		this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.editItemAndCloseModel();
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
 
 	}
