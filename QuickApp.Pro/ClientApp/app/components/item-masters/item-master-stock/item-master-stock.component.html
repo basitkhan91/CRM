@@ -1116,6 +1116,8 @@
                     </form>
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'ExportInfo'}">
+
+                    <form #exportInformatiom="ngForm" >
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
@@ -1143,11 +1145,12 @@
                                     <label class="control-label">
                                         ITAR Num <strong class="clr-red">*</strong>
                                     </label>
-                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                    <input type="text" class="input-field-value" required pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
                                     <label class="control-label">Country <span style="color: red">*</span></label>
 
 
                                     <p-autoComplete 
+                                    required
                                     class="p-autoComplete-ctsm"
                                     [(ngModel)]="exportInfo.ExportCountryId"
                                     name="exportCountry"
@@ -1168,10 +1171,10 @@
                                     </p-autoComplete> -->
 
                                     <label class="control-label">Value <span style="color: red">*</span></label>
-                                    <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
+                                    <input type="number" class="input-field-value" pInputText pKeyFilter="num"  required maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
                                     <label class="control-label">Currency <span style="color: red">*</span></label>
                                     <select class="select-value-drop1"
-                                            [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId">
+                                            [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" required name="ExportCurrencyId">
                                         <option value=null> Select Currency</option>
                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                 [ngValue]="currencyName.currencyId">
@@ -1186,8 +1189,8 @@
                                         Weight <strong class="clr-red">*</strong>
                                     </label>
                                     <span class="display-flex inline-block">
-                                        <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
-                                        <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                        <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required  [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
+                                        <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1202,7 +1205,7 @@
                                         </span>
                                     </label>
                                     <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"
-                                            (change)="changeValueStringToInt($event.target.value)" name="exportUOMId">
+                                            (change)="changeValueStringToInt($event.target.value)" name="exportUOMId" required>
                                         <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                 [ngValue]="unitName.unitOfMeasureId">
                                             {{unitName.shortName}}
@@ -1258,12 +1261,13 @@
                         </div>
                         <div class="col-sm-6">
                             <span class="float-right">
-                                <button class="btn btn-primary-cstm" pButton type="button" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
+                                <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
                                 &nbsp;
                                 <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
                             </span>
                         </div>
                     </div>
+                    </form>
                 </div>
 
 
