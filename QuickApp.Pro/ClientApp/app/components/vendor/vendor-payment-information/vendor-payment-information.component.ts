@@ -656,7 +656,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.sourceVendor.isActive = true;
-				this.sourceVendor.vendorId = this.local.vendorId;
+                this.sourceVendor.vendorId = this.local.vendorId;
+                
 				this.workFlowtService.addDomesticinfo(this.domesticSaveObj).subscribe(data => {
 					this.loadData();
 					this.localCollection = data;

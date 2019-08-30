@@ -207,136 +207,138 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Add Contact Details</h4>
             </div>
-            <div class="modal-body">
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Prefix</label>
-                            <select name="preifx" [(ngModel)]="sourceCustomer.prefix">
-                                <option value="Dr.">Dr.</option>
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="None selected">None selected</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>First Name <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                <p-autoComplete class="autocomp-customer-cstm" (keypress)="onBlurMethod('firstName')" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)"
-                                                [(ngModel)]="sourceCustomer.firstName" name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
+            <form #generalInfoForm="ngForm" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Prefix</label>
+                                <select name="preifx" [(ngModel)]="sourceCustomer.prefix">
+                                    <option value="Dr.">Dr.</option>
+                                    <option value="Mr.">Mr.</option>
+                                    <option value="Mrs.">Mrs.</option>
+                                    <option value="Ms.">Ms.</option>
+                                    <option value="None selected">None selected</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>First Name <span class="clr-red">*</span></label>
+                                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                    <p-autoComplete class="autocomp-customer-cstm" (keypress)="onBlurMethod('firstName')" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)"
+                                                    [(ngModel)]="sourceCustomer.firstName" name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
 
-                                    <ng-template let-firstName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{firstName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
+                                        <ng-template let-firstName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{firstName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                                <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div>
+                                <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
+                                    <p class="fs10">
+                                        Please Enter Required fields
+                                    </p>
+                                </div>
                             </div>
-                            <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div>
-                            <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
-                                <p class="fs10">
-                                    Please Enter Required fields
-                                </p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Middle Name</label>
-                            <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)"
-                                                name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
-                                    <ng-template let-middleName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{middleName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                            </div>
+                            <div class="form-group">
+                                <label>Middle Name</label>
+                                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)"
+                                                    name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
+                                        <ng-template let-middleName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{middleName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
 
-                            <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div>
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                <p-autoComplete class="autocomp-customer-cstm" (keypress)="onBlurMethod('lastName')" [(ngModel)]="sourceCustomer.lastName" (onKeyUp)=onKeyUpLastNames($event)
-                                                (onSelect)="onSelectLastName($event)" name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
-                                    <ng-template let-lastName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{lastName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                                <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div>
+                                <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div>
                             </div>
-                            <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
-                                <p class="fs10">
-                                    Please Enter Required fields
-                                </p>
+                            <div class="form-group">
+                                <label>Last Name <span class="clr-red">*</span></label>
+                                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                    <p-autoComplete class="autocomp-customer-cstm" (keypress)="onBlurMethod('lastName')" [(ngModel)]="sourceCustomer.lastName" (onKeyUp)=onKeyUpLastNames($event)
+                                                    (onSelect)="onSelectLastName($event)" name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)"
+                                                    [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        <ng-template let-lastName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{lastName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div>
+                                </div>
+                                <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
+                                    <p class="fs10">
+                                        Please Enter Required fields
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Suffix</label>
-                            <select name="suffix" [(ngModel)]="sourceCustomer.suffix">
-                                <option value="II">II</option>
-                                <option value="III">III</option>
-                                <option value="Jr.">Jr.</option>
-                                <option value="Sr.">Sr.</option>
-                                <option value="None selected">None selected</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input class="form-control" type="text" name="contactTitle" [(ngModel)]="sourceCustomer.contactTitle">
-                        </div>
-                        <div class="form-group">
-                            <label>Work Phone <span class="clr-red">*</span></label>
-                            <div>
-                                <input class="form-control" type="text" name="workPhone" [(ngModel)]="sourceCustomer.workPhone" style="width: calc(100% - 63px) !important;">
-                                -
-                                <input class="form-control w50" type="text" (keypress)="keyPress($event)" name="workPhoneExtn" [(ngModel)]="sourceCustomer.workPhoneExtn">
+                            <div class="form-group">
+                                <label>Suffix</label>
+                                <select name="suffix" [(ngModel)]="sourceCustomer.suffix">
+                                    <option value="II">II</option>
+                                    <option value="III">III</option>
+                                    <option value="Jr.">Jr.</option>
+                                    <option value="Sr.">Sr.</option>
+                                    <option value="None selected">None selected</option>
+                                </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
-                                <div class="label-cstm" style="margin-right: 10px;">Primary Contact</div>
-                                <span class="checkbox-cstm">
-                                    <label style="width: 20px;">
-                                        <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceCustomer.isDefaultContact">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    </label>
-                                </span>
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input class="form-control" type="text" name="contactTitle" [(ngModel)]="sourceCustomer.contactTitle">
+                            </div>
+                            <div class="form-group">
+                                <label>Work Phone <span class="clr-red">*</span></label>
+                                <div>
+                                    <input class="form-control" type="text" name="workPhone" [(ngModel)]="sourceCustomer.workPhone" style="width: calc(100% - 63px) !important;" required>
+                                    -
+                                    <input class="form-control w50" type="text" (keypress)="keyPress($event)" name="workPhoneExtn" [(ngModel)]="sourceCustomer.workPhoneExtn" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Web Site</label>
-                            <input class="form-control" type="text" name="websiteURL" [(ngModel)]="sourceCustomer.websiteURL">
-                        </div>
-                        <div class="form-group">
-                            <label>Mobile Phone</label>
-                            <input class="form-control" type="text" name="mobilePhone" [(ngModel)]="sourceCustomer.mobilePhone">
-                        </div>
-                        <div class="form-group">
-                            <label>Alternate Phone</label>
-                            <input class="form-control" type="text" name="alternatePhone" [(ngModel)]="sourceCustomer.alternatePhone">
-                        </div>
-                        <div class="form-group">
-                            <label>Fax</label>
-                            <input class="form-control" type="text" name="fax" [(ngModel)]="sourceCustomer.fax">
-                        </div>
-                        <div class="form-group">
-                            <label>Memo</label>
-                            <input class="form-control" type="text" name="notes" [(ngModel)]="sourceCustomer.notes">
-                        </div>
-                        <div class="form-group">
-                            <label>Email <span class="clr-red">*</span></label>
-                            <input class="form-control" (keypress)="onBlurMethod('email')" type="text" name="email" [(ngModel)]="sourceCustomer.email">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
+                                    <div class="label-cstm" style="margin-right: 10px;">Primary Contact</div>
+                                    <span class="checkbox-cstm">
+                                        <label style="width: 20px;">
+                                            <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceCustomer.isDefaultContact">
+                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Web Site</label>
+                                <input class="form-control" type="text" name="websiteURL" [(ngModel)]="sourceCustomer.websiteURL">
+                            </div>
+                            <div class="form-group">
+                                <label>Mobile Phone</label>
+                                <input class="form-control" type="text" name="mobilePhone" [(ngModel)]="sourceCustomer.mobilePhone">
+                            </div>
+                            <div class="form-group">
+                                <label>Alternate Phone</label>
+                                <input class="form-control" type="text" name="alternatePhone" [(ngModel)]="sourceCustomer.alternatePhone">
+                            </div>
+                            <div class="form-group">
+                                <label>Fax</label>
+                                <input class="form-control" type="text" name="fax" [(ngModel)]="sourceCustomer.fax">
+                            </div>
+                            <div class="form-group">
+                                <label>Memo</label>
+                                <input class="form-control" type="text" name="notes" [(ngModel)]="sourceCustomer.notes">
+                            </div>
+                            <div class="form-group">
+                                <label>Email <span class="clr-red">*</span></label>
+                                <input class="form-control" (keypress)="onBlurMethod('email')" type="text" name="email" [(ngModel)]="sourceCustomer.email" required>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="disableSaveFirstName || disableSaveMiddleName || disableSaveLastName" (click)="editItemAndCloseModel()" data-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="disableSaveFirstName || disableSaveMiddleName || disableSaveLastName || !generalInfoForm.valid" (click)="editItemAndCloseModel()" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
