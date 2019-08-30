@@ -147,24 +147,6 @@
                                                     <label>Address Line 3</label>
                                                     <input class="form-control" type="text" id="cmaddress3" name="cmaddress3" [(ngModel)]="sourceCustomer.address3">
                                                 </div>
-                                                <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm">Is this Address For Billing</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-                                                            <input type="checkbox" name="isAddressForBilling" [(ngModel)]="sourceCustomer.isAddressForBilling">
-                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        </label>
-                                                    </span>
-                                                </div>
-                                                <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm">Is this Address For Shipping</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-                                                            <input type="checkbox" name="isAddressForShipping" [(ngModel)]="sourceCustomer.isAddressForShipping">
-                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        </label>
-                                                    </span>
-                                                </div>
                                                 <div class="form-group">
                                                     <label>City <span class="clr-red">*</span></label>
                                                     <input class="form-control" (keypress)="onBlurMethod('city')" type="text" id="cscity" name="cscity" [(ngModel)]="sourceCustomer.city" required>
@@ -190,18 +172,36 @@
                                                     </div>
                                                     <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div>
                                                 </div>
+                                                <div class="form-group" style="margin-top: 15px;">
+                                                    <div class="label-cstm">Is this Address For Billing</div>
+                                                    <span class="checkbox-cstm">
+                                                        <label style="width: 20px;">
+                                                            <input type="checkbox" name="isAddressForBilling" [(ngModel)]="sourceCustomer.isAddressForBilling">
+                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                                <div class="form-group" style="margin-top: 15px;">
+                                                    <div class="label-cstm">Is this Address For Shipping</div>
+                                                    <span class="checkbox-cstm">
+                                                        <label style="width: 20px;">
+                                                            <input type="checkbox" name="isAddressForShipping" [(ngModel)]="sourceCustomer.isAddressForShipping">
+                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                        </label>
+                                                    </span>
+                                                </div>
                                                 <!--<div class="form-group">
-                                                    <div class="form-control" *ngIf="checkAddress">
-                                                        <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
+        <div class="form-control" *ngIf="checkAddress">
+            <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
 
-                                                        <div class="checkbox col-sm-12">
-                                                            <label class="w100">
-                                                                <input type="checkbox" value="" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isvalidaddress">
-                                                                Validate Address
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>-->
+            <div class="checkbox col-sm-12">
+                <label class="w100">
+                    <input type="checkbox" value="" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isvalidaddress">
+                    Validate Address
+                </label>
+            </div>
+        </div>
+    </div>-->
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
