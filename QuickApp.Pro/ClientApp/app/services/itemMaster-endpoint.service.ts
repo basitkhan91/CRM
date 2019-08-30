@@ -355,6 +355,10 @@ export class ItemMasterEndpoint extends EndpointFactory {
 
         let endpointUrl = `${this._actionsUrlNew}/${roleObject.itemMasterId}`;
         let finalobj = {
+            'mfgHours': roleObject.mfgHours,
+            'turnTimeMfg': roleObject.turnTimeMfg,
+            'turnTimeBenchTest': roleObject.turnTimeBenchTest,
+            'shelfLifeAvailable': roleObject.shelfLifeAvailable,
             'isPma': roleObject.isPma,
             'oemPNId': roleObject.oemPNId,
             'exportCurrencyId': roleObject.exportCurrencyId,
@@ -459,6 +463,10 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'exportWeight': roleObject.exportWeight,
             'exportValue': roleObject.exportValue,
             'exportCountryId': roleObject.exportCountryId,
+            'isExportDual': roleObject.IsExportDual,
+            'isExportMilitary': roleObject.IsExportMilitary,
+            'isExportNONMilitary': roleObject.IsExportNONMilitary,
+            'isExportUnspecified': roleObject.IsExportUnspecified,
             'memo': roleObject.memo,
             'warningId': roleObject.warningId,
             'integrationPortalId': roleObject.IntegrationPortalId,
@@ -751,7 +759,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
         return this.http.post<T>(this._ItemMasterAircraftPostUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getNewitemAircraftEndpoint(userObject));
-            });
+            })
     }
     getNewitemATAEndpoint<T>(userObject: any): Observable<T> {
 
