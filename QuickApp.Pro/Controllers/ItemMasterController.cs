@@ -496,7 +496,8 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.MasterCompanyId = 1;
                     itemmaserObj.IsActive = true;
                     itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
-                    itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
+					itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
+					itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
                     itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;
                     part.ParentPartId = itemMasterViewModel.ParentPartId;
                     equipment.Description = itemMasterViewModel.EquipmentDescription;
@@ -767,7 +768,8 @@ namespace QuickApp.Pro.Controllers
                 var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
                 itemMasterViewModel.MasterCompanyId = 1;
                 itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
-                itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;
+				itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
+				itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;
                 itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
                 itemmaserObj.ExchangeListPrice = itemMasterViewModel.ExchangeListPrice;
                 itemmaserObj.OverheadCost = itemMasterViewModel.OverheadCost;
