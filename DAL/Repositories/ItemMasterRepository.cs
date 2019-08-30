@@ -53,6 +53,7 @@ namespace DAL.Repositories
         {
             var data = (from iM in _appContext.ItemMaster
                         join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds
+                        join country in _appContext.Countries on iM.ExportCountryId equals country.countries_id
                         where iM.ItemMasterId == id
 
                         select new
@@ -69,11 +70,19 @@ namespace DAL.Repositories
                             iM.ManufacturerId,
                             iM.Manufacturer,
                             iM.ShelfLifeAvailable,
-                            iM.isPma, iM.mfgHours, iM.turnTimeMfg, iM.turnTimeBenchTest, iM.IsExportUnspecified,
-                            iM.IsExportNONMilitary, iM.IsExportMilitary, iM.IsExportDual,
-                            IPortalIDS= iPortalIds.Select(e => e.IntegrationPortalId).ToList()
-                            }).ToList();
-                return data;
+                            country.countries_name,
+                            iM.isPma,
+                            iM.mfgHours,
+                            iM.turnTimeMfg,
+                            iM.turnTimeBenchTest,
+                            iM.IsExportUnspecified,
+                            iM.IsExportNONMilitary,
+                            iM.IsExportMilitary,
+                            iM.IsExportDual,
+                            iM.oemPNId,
+                            IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList()
+                        }).ToList();
+            return data;
         }
 
         public IEnumerable<object> GetSelectedAircraftModeldata(long id)
