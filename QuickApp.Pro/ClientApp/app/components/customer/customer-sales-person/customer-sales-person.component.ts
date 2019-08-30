@@ -33,7 +33,7 @@ import { VendorService } from '../../../services/vendor.service';
 @Component({
     selector: 'app-customer-sales-person',
     templateUrl: './customer-sales-person.component.html',
-    // styleUrls: ['./customers-sales-person.component.scss'],
+    styleUrls: ['./customer-sales-person.component.scss'],
     animations: [fadeInOut]
 })
 /** anys component*/
@@ -201,6 +201,7 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
 		this.activeIndex = 6;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		//this.saveCompleted(this.sourceCustomer);
+        this.editItemAndCloseModel();
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-warnings');
 	}
 	backClick() {
