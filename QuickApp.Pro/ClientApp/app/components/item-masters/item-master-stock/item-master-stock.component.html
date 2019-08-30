@@ -682,9 +682,9 @@
                             <div class="col-sm-3">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
@@ -711,14 +711,14 @@
                                             <label class="fs12">
                                                 Aircraft Model
                                             </label>
-                                            <p-multiSelect [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
+                                            <p-multiSelect    [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
                                                            class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="fs12">DashNumber </label>
-                                            <p-multiSelect [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
+                                            <p-multiSelect     [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
                                                            class="pub-multi" [selectionLimit]="30"></p-multiSelect>
                                         </div>
                                     </div>
@@ -798,9 +798,9 @@
                             <div class="col-sm-3">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
@@ -931,9 +931,9 @@
                             <div class="col-sm-3">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
@@ -1115,6 +1115,8 @@
                     </form>
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'ExportInfo'}">
+
+                    <form #exportInformatiom="ngForm" >
                     <div class="card">
                         <div class="col-sm-12 font-padding">
                             <div class="col-sm-2">
@@ -1123,9 +1125,9 @@
                             <div class="col-sm-3">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
@@ -1142,11 +1144,12 @@
                                     <label class="control-label">
                                         ITAR Num <strong class="clr-red">*</strong>
                                     </label>
-                                    <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                    <input type="text" class="input-field-value" required pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
                                     <label class="control-label">Country <span style="color: red">*</span></label>
 
 
                                     <p-autoComplete 
+                                    required
                                     class="p-autoComplete-ctsm"
                                     [(ngModel)]="exportInfo.ExportCountryId"
                                     name="exportCountry"
@@ -1167,10 +1170,10 @@
                                     </p-autoComplete> -->
 
                                     <label class="control-label">Value <span style="color: red">*</span></label>
-                                    <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
+                                    <input type="number" class="input-field-value" pInputText pKeyFilter="num"  required maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
                                     <label class="control-label">Currency <span style="color: red">*</span></label>
                                     <select class="select-value-drop1"
-                                            [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId">
+                                            [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" required name="ExportCurrencyId">
                                         <option value=null> Select Currency</option>
                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                 [ngValue]="currencyName.currencyId">
@@ -1185,8 +1188,8 @@
                                         Weight <strong class="clr-red">*</strong>
                                     </label>
                                     <span class="display-flex inline-block">
-                                        <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
-                                        <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                        <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required  [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
+                                        <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1201,7 +1204,7 @@
                                         </span>
                                     </label>
                                     <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"
-                                            (change)="changeValueStringToInt($event.target.value)" name="exportUOMId">
+                                            (change)="changeValueStringToInt($event.target.value)" name="exportUOMId" required>
                                         <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                 [ngValue]="unitName.unitOfMeasureId">
                                             {{unitName.shortName}}
@@ -1257,12 +1260,13 @@
                         </div>
                         <div class="col-sm-6">
                             <span class="float-right">
-                                <button class="btn btn-primary-cstm" pButton type="button" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
+                                <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
                                 &nbsp;
                                 <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
                             </span>
                         </div>
                     </div>
+                    </form>
                 </div>
 
 
@@ -1293,32 +1297,32 @@
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label class="popup-plusicon-cstm">Aircraft Type <a [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                <label class="popup-plusicon-cstm">Aircraft Type <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"  ><i class="fa fa-plus-circle fa-lg"></i></a></label>
                                 <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="popup-plusicon-cstm" style="width: 150px !important">Model <a [routerLink]="['/singlepages/singlepages/app-aircraft-model']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                <label class="popup-plusicon-cstm" style="width: 150px !important">Model <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-model']" ><i class="fa fa-plus-circle fa-lg"></i></a>
                                  <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important; 
                                  margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
                                 </label>
 
-                                <p-multiSelect *ngIf="!modelUnknown" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
+                                <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
                                                (onChange)="getDashNumberByTypeandModel($event)" ></p-multiSelect>
                             </div>
                         </div>
                         <div class="col-md-3" *ngIf="!modelUnknown">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm" style="width: 190px !important">DashNumber
-                                    <a [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                    <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
                                     <input type="checkbox" name="unknownDashNumber" [(ngModel)]="dashNumberUnknown" style="width: 20px !important;
                                     margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
                                 </label>
 
 
-                                <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" class="imstock-pmselect" [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
+                                <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -1391,7 +1395,7 @@
                         <div class="form-row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">ATA Chapter <a [routerLink]="['/singlepages/singlepages/app-ata-main']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                    <label class="popup-plusicon-cstm">ATA Chapter <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-main']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
                                     <select class="select-option dropdown-custm" formControlName="atanumber" (change)="getATASubChapterByATAChapter()" style="width: 160px !important;">
 
                                         <option value=''> Select Chapter</option>
@@ -1402,7 +1406,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm" style="width: 170px !important;">ATA SubChapters <a [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                    <label class="popup-plusicon-cstm" style="width: 170px !important;">ATA SubChapters <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
                                     <p-multiSelect class="imstock-pmselect" [options]="atasubchapter"
                                                    [(ngModel)]="selectedModels"
                                                    [panelStyle]="{minWidth:'12em'}" formControlName="atasubchaptername"></p-multiSelect>
