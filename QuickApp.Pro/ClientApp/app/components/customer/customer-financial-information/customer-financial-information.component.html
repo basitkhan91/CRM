@@ -168,10 +168,10 @@
 
                                 </div>
                                 <!--Right End-->
-                                <button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+                                <!--<button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
                                 <div class="clear"></div>
-                                <hr>
-                                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Next</button>
+                                <hr>-->
+                                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Save & Next</button>
                                 <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
                             </div>
                         </div>
@@ -278,7 +278,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveCreditTerms" (click)="saveCreditTermsdata()">Submit</button><!--disableSaveCreditTerms-->
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveCreditTerms" (click)="saveCreditTermsdata()">Submit</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
