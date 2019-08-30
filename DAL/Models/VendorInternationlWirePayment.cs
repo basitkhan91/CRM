@@ -31,6 +31,6 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
     
-        public virtual VendorPaymentMethod InternationalWirePayment { get; set; }
+        //public virtual VendorPaymentMethod InternationalWirePayment { get; set; }
     }
 }

@@ -131,7 +131,7 @@ namespace DAL.Repositories
                                 add.Country,
                                 add.PostalCode,
                                 ad.VendorInternationalWirePaymentId,
-                                t.InternationalWirePaymentId,
+                                t.InternationalWirePaymentId
                             }).ToList();
                 return data;
 
