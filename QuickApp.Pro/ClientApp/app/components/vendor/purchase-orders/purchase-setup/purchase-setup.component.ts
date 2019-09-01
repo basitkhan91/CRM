@@ -449,6 +449,12 @@ export class PurchaseSetupComponent {
         this.sourcePoApproval.vendorId = this.tempVendorId;
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
+        if (!this.sourcePoApproval.deferredReceiver) {
+            this.sourcePoApproval.deferredReceiver = 0;
+        }
+        if (!this.sourcePoApproval.resale) {
+            this.sourcePoApproval.resale = 0;
+        }
         console.log(this.sourcePoApproval);
         this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
