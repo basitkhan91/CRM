@@ -26,7 +26,7 @@ namespace DAL.Models
         public string ConditionCode { get; set; }
         public Nullable<long> UOMId { get; set; }
         public Nullable<short> QuantityOrdered { get; set; }
-        public Nullable<int> QuantityBackOrdered { get; set; }
+        public Nullable<short> QuantityBackOrdered { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
         public Nullable<short> DiscountPerUnit { get; set; }
         public Nullable<short> DiscountCostPerUnit { get; set; }

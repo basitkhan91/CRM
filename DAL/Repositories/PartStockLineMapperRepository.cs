@@ -19,13 +19,13 @@ namespace DAL.Repositories
                                    .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
 
             purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
-                                   .Include("ItemMaster")
-                                   .Include("StockLine")
-                                   .Include("TimeLife")
-                                   .Where(x => x.PurchaseOrderId == id).ToList();
+                                    .Where(x => x.PurchaseOrderId == id)
+                                    .ToList();
 
             purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
             {
+                part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
+                part.StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == part.PurchaseOrderId).ToList();
                 if (!part.isParent)
                 {
                     part.POPartSplitAddress = _appContext.Address.Where(x => x.AddressId == part.POPartSplitAddressId).FirstOrDefault();

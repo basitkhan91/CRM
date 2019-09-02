@@ -70,7 +70,7 @@ export class PurchaseOrderPart {
     status: string;
     trace: string;
     conditionCode: string;
-    quantityActuallyReceived: string;
+    quantityActuallyReceived: number;
     quantityRejected: string;
     uOMId: number;
     quantityOrdered: number;
@@ -128,7 +128,8 @@ export class PurchaseOrderPart {
 export class TimeLife {
 
     timeLifeCyclesId: number;
-
+    purchaseOrderId: number;
+    purchaseOrderPartRecordId: number;
     cyclesRemaining: string;
     cyclesSinceNew: string;
     cyclesSinceOVH: string;

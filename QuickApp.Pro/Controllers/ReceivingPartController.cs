@@ -160,7 +160,9 @@ namespace QuickApp.Pro.Controllers
                         stockLine.RepairOrderId = null;
                         stockLine.LocationId = null;
                     }
+
                     unitOfWork.Repository<StockLine>().AddRange(receivePart.StockLines);
+                    unitOfWork.Repository<TimeLife>().AddRange(receivePart.TimeLife);
                 }
                 unitOfWork.SaveChanges();
             }
