@@ -18,7 +18,7 @@
                     </div>
 
                     <div class="clear"></div>
-                    <form action="#" method="post" id="" name="" class="form-horizontal">
+                    <form #financialInfoForm="ngForm" class="form-horizontal">
                         <!--add-custustomer-->
 
                         <div class="col-md-12 col-sm-12 col-12">
@@ -43,14 +43,14 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Credit Limit <span class="clr-red">*</span></label>
-                                                <input class="form-control" type="text" id="" name="creditLimit" [(ngModel)]="sourceCustomer.creditLimit">
+                                                <input class="form-control" type="text" id="" name="creditLimit" [(ngModel)]="sourceCustomer.creditLimit" required>
                                             </div>
                                             <div class="form-group">
                                                 <label>
                                                     <span class="pull-left">Credit Terms </span><span class="clr-red">*</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addcredit" (click)="openCrediTerms(contentEdit)"></a></span>
                                                 </label>
-                                                <select name="creditTermsId" [(ngModel)]="sourceCustomer.creditTermsId">
+                                                <select name="creditTermsId" [(ngModel)]="sourceCustomer.creditTermsId" required>
                                                     <option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
                                                 </select>
                                             </div>
@@ -114,7 +114,7 @@
                                                     <span class="pull-left">Currency </span><span class="clr-red">*</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCurrency" (click)="openCurrency(contentCurrency)"></a></span>
                                                 </label>
-                                                <select name="currencyId" [(ngModel)]="sourceCustomer.currencyId">
+                                                <select name="currencyId" [(ngModel)]="sourceCustomer.currencyId" required>
                                                     <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                             [ngValue]="currencyName.currencyId">
                                                         {{currencyName.symbol}}
@@ -168,10 +168,10 @@
 
                                 </div>
                                 <!--Right End-->
-                                <button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+                                <!--<button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
                                 <div class="clear"></div>
-                                <hr>
-                                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Next</button>
+                                <hr>-->
+                                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="nextClick()">Save & Next</button>
                                 <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
                             </div>
                         </div>
@@ -278,7 +278,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveCreditTerms" (click)="saveCreditTermsdata()">Submit</button><!--disableSaveCreditTerms-->
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveCreditTerms" (click)="saveCreditTermsdata()">Submit</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>

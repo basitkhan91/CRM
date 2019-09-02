@@ -83,7 +83,8 @@ export class ItemMasterNonStockComponent {
 	itemdescription: any[] = [];
 	descriptionCollection: any[];
     partNumber: any;
-	name: string;
+    name: string;
+    itemValue= [];
 	glAccountcla: any[];
 	glAccountCollection: any[];
     localmanufacturer: any[];
@@ -198,6 +199,7 @@ export class ItemMasterNonStockComponent {
 
 
     ngOnInit(): void {
+        this.itemValue = Array(100).fill(1).map((x, i) => i + 1);
         this.itemclass();
         this.itemgroup();
         this.provisiondata();
