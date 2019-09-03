@@ -106,8 +106,6 @@
             <div class="form-group">
                 <label for="url" class="control-label">WebSite url</label>
                 <div class="inner-addon right-addon inline-block">
-
-                    <!--<input type="text" name="Portalurl" class="form-control" required #Portalurl="ngModel" [(ngModel)]="sourceAction.Portalurl">-->
                     <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="portalURL" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterintegrations($event)" [size]="30"
                                     [minLength]="1" [dropdown]="true">
                         <ng-template let-integrationName pTemplate="item">

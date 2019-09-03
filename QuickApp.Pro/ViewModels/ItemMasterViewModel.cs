@@ -9,11 +9,11 @@ namespace QuickApp.Pro.ViewModels
 {
     public class ItemMasterViewModel
     {
-        public long? ItemMasterId { get; set; }
+        public long ItemMasterId { get; set; }
 
         public int? ItemCategoryId { get; set; }
 
-        public int? ItemTypeId { get; set; }
+        public int ItemTypeId { get; set; }
 
         public long? PartId { get; set; }
 
@@ -156,7 +156,7 @@ namespace QuickApp.Pro.ViewModels
 
         public long? PriorityId { get; set; }
 
-      //  public int? IntegrationPortalId { get; set; }
+      
 
         public long? WarningId { get; set; }
 
@@ -182,7 +182,7 @@ namespace QuickApp.Pro.ViewModels
 
         public Byte? ExportClassificationId { get; set; }
 
-         public decimal? PurchaseListPrice { get; set; }
+        public decimal? PurchaseListPrice { get; set; }
 
         public Int16? PurchaseDiscountOffListPrice { get; set; }
 
@@ -361,16 +361,16 @@ namespace QuickApp.Pro.ViewModels
         public string EquipmentDescription { get; set; }
         public string[] AircraftTypeId { get; set; }
 
-        public decimal ShelfLifeAvailable { get; set; }
-        public bool isPma   { get; set; }
-        public decimal mfgHours { get; set; }
-        public decimal turnTimeMfg { get; set; }
-        public decimal turnTimeBenchTest { get; set; }
-        public bool IsExportUnspecified { get; set; }
-        public bool IsExportNOMilitary { get; set; }
-        public bool IsExportMilitary { get; set; }
-        public bool IsExportDual { get; set; }
-
+        public decimal? ShelfLifeAvailable { get; set; }
+        public bool? isPma   { get; set; }
+        public decimal? mfgHours { get; set; }
+        public decimal? turnTimeMfg { get; set; }
+        public decimal? turnTimeBenchTest { get; set; }
+        public bool? IsExportUnspecified { get; set; }
+        public bool? IsExportNONMilitary { get; set; }
+        public bool? IsExportMilitary { get; set; }
+        public bool? IsExportDual { get; set; }
+        public int? oemPNId { get; set; }
         public string[] IntegrationPortalId { get; set; }
         public class ItemMasterViewModelValidator : AbstractValidator<ItemMasterViewModel>
         {

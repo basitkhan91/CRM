@@ -126,7 +126,7 @@ this.items = [{
 	}
 },
 {
-	label: 'Sales Person',
+	label: 'Sales Information',
 	command: (event: any) => {
 		this.activeIndex = 5;
 		this.msgs.length = 0;

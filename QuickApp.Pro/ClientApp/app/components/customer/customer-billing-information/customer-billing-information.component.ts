@@ -26,7 +26,7 @@ declare const google: any;
 @Component({
     selector: 'app-customer-billing-information',
     templateUrl: './customer-billing-information.component.html',
-    //styleUrls: ['./customers-billing-information.component.scss'],
+    styleUrls: ['./customer-billing-information.component.scss'],
     animations: [fadeInOut]
 })
 /** anys component*/
@@ -153,22 +153,22 @@ export class CustomerBillingInformationComponent
     }
 
     // Get Map Data
-	getlatlng(address) {
-        this.checkAddress = true;
-		return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-			this.options = {
-				center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
-				zoom: 12
-			};
-			this.overlays = [
-                new google.maps.Marker({ location: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
+	//getlatlng(address) {
+    //       this.checkAddress = true;
+	//	return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
+	//		this.options = {
+	//			center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
+	//			zoom: 12
+	//		};
+	//		this.overlays = [
+    //               new google.maps.Marker({ location: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
 				
-			];
-			return data;
+	//		];
+	//		return data;
 
 
-		});
-	}
+	//	});
+	//}
 
 
 
@@ -400,13 +400,18 @@ export class CustomerBillingInformationComponent
 	}
 
 	openShipaddressHistory(content, row) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.sourceCustomer = row;
-		this.isSaving = true;
-		this.workFlowtService.billaddressHistory(this.sourceCustomer.customerBillingAddressId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
+		//this.alertService.startLoadingMessage();
+		//this.loadingIndicator = true;
+		//this.sourceCustomer = row;
+		//this.isSaving = true;
+		//this.workFlowtService.billaddressHistory(this.sourceCustomer.customerBillingAddressId).subscribe(
+		//	results => this.onHistoryLoadSuccessful(results[0], content),
+  //          error => this.saveFailedHelper(error));
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        },
+            () => { console.log('Backdrop click') });
 
 	}
 	
@@ -445,7 +450,7 @@ export class CustomerBillingInformationComponent
         if (!(this.sourceCustomer.siteName && this.sourceCustomer.address1 
             && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
         )) {
-            this.display = true;
+            //this.display = true;
             this.modelValue = true;
         }
         this.isSaving = true;

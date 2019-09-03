@@ -159,16 +159,17 @@ namespace DAL.Models
 
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
-        public decimal ShelfLifeAvailable { get; set; }
-        public bool isPma { get; set; }
-        public decimal mfgHours { get; set; }
-        public decimal turnTimeMfg { get; set; }
-        public decimal turnTimeBenchTest { get; set; }
-        public bool IsExportUnspecified { get; set; }
-        public bool IsExportNOMilitary { get; set; }
-        public bool IsExportMilitary { get; set; }
-        public bool IsExportDual { get; set; }
-
+        public decimal? ShelfLifeAvailable { get; set; }
+        public bool? isPma { get; set; }
+        public decimal? mfgHours { get; set; }
+        public decimal? turnTimeMfg { get; set; }
+        public decimal? turnTimeBenchTest { get; set; }
+        public bool? IsExportUnspecified { get; set; }
+        public bool? IsExportNONMilitary { get; set; }
+        public bool? IsExportMilitary { get; set; }
+        public bool? IsExportDual { get; set; }
+        
+        public int? oemPNId { get; set; }
 
         public virtual Manufacturer Manufacturer { get;set;}
         public virtual Provision Provision {get;set;}

@@ -25,6 +25,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> vendorAircraftManufacturerGet(long id);
         IEnumerable<object> vendorAircraftManufacturerModelGet(long id);
         IEnumerable<object>  getVendorCapabilityData(long id);
+        IEnumerable<object> getVendorByID(long vendorid, bool isDContact);
+
         //  void CreateAction(DAL.Models.Action action);
 
     }

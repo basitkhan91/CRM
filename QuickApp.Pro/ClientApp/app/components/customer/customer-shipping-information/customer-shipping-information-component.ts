@@ -23,7 +23,7 @@ declare const google: any;
 @Component({
     selector: 'app-customer-shipping-information',
     templateUrl: './customer-shipping-information.component.html',
-    // styleUrls: ['./customers-shipping-information.component.scss'],
+     styleUrls: ['./customer-shipping-information.component.scss'],
     animations: [fadeInOut]
 })
 /** anys component*/
@@ -293,7 +293,6 @@ export class CustomerShippingInformationComponent {
 
         this.shipViacols = [
 
-            { field: 'siteName', header: 'Shipping SiteName' },
             { field: 'shipVia', header: 'Ship Via' },
             { field: 'shippingAccountinfo', header: 'Shipping Account Info' },
             { field: 'shippingURL', header: 'Shipping Url' },

@@ -21,8 +21,8 @@
                             </p>
                         </div>
                         <div class="clear"></div>
-                        <form action="#" method="post" id="" name="" class="form-horizontal"> <!--add-custustomer-->
-
+                        <!--<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer"> -->
+                        <form #generalInfoForm="ngForm" class="form-horizontal">
                             <div class="col-md-12 col-sm-12 col-12">
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="home">
@@ -62,7 +62,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Type <span class="clr-red">*</span></label>
-                                                    <select (keypress)="onBlurMethod('CustomerTypeId')" [(ngModel)]="sourceCustomer.customerTypeId" name="customerTypeId">
+                                                    <select (keypress)="onBlurMethod('CustomerTypeId')" [(ngModel)]="sourceCustomer.customerTypeId" name="customerTypeId" required>
                                                         <option *ngFor="let CustomerType of customertypes" [ngValue]="CustomerType.customerTypeId">{{CustomerType.description}}</option>
                                                     </select>
                                                 </div>
@@ -71,7 +71,7 @@
                                                     <div class="inner-addon right-addon inline-block">
 
                                                         <p-autoComplete class="autocomp-customer-cstm" name="customerName" (onSelect)="onCustomerNameselected($event)" (onKeyUp)=eventHandler($event) (keypress)="onBlurMethod('name')" [(ngModel)]="sourceCustomer.name" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-                                                                        [minLength]="1" [dropdown]="true">
+                                                                        [minLength]="1" [dropdown]="true" required>
                                                             <ng-template let-name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{name}}</div>
                                                             </ng-template>
@@ -84,7 +84,7 @@
                                                     <div class="inner-addon right-addon inline-block">
 
                                                         <p-autoComplete (onSelect)="onCustomercodeSelected($event)" class="autocomp-customer-cstm" name="customerCode" (onKeyUp)=eventCustCodeselection($event) (keypress)="onBlurMethod('customerCode')" [(ngModel)]="sourceCustomer.customerCode" [suggestions]="customerCodes" (completeMethod)="filterCustomerCodes($event)" [size]="30"
-                                                                        [minLength]="1" [dropdown]="true">
+                                                                        [minLength]="1" [dropdown]="true" required>
                                                             <ng-template let-customerCode pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{customerCode}}</div>
                                                             </ng-template>
@@ -120,13 +120,13 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Phone <span class="clr-red">*</span></label>
-                                                    <input type="text" id="phone" name="phone" pInputText pKeyFilter="num" [pattern]="mobnumPattern" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [(ngModel)]="sourceCustomer.customerPhone">
+                                                    <input type="text" id="phone" name="phone" pInputText pKeyFilter="num" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [(ngModel)]="sourceCustomer.customerPhone" required>
                                                     <div *ngIf="mobPattern.errors" [ngClass]="'error'">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Email <span class="clr-red">*</span></label>
-                                                    <input class="form-control" id="email" name="email" [pattern]="emailPattern" #userEmail="ngModel" (keypress)="onBlurMethod('email')" type="email" pKeyFilter="email" mask="email" [(ngModel)]="sourceCustomer.email">
+                                                    <input class="form-control" id="email" name="email" [pattern]="emailPattern" #userEmail="ngModel" (keypress)="onBlurMethod('email')" type="email" pKeyFilter="email" mask="email" [(ngModel)]="sourceCustomer.email" required>
                                                     <div *ngIf="userEmail.errors" [ngClass]="'error'">
                                                         <div *ngIf="userEmail.errors.pattern">
                                                             <span style="color:red">User Email  not valid</span>
@@ -137,7 +137,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Address Line 1 <span class="clr-red">*</span></label>
-                                                    <input class="form-control" (keypress)="onBlurMethod('address1')" type="text" id="cmaddress1" name="cmaddress1" [(ngModel)]="sourceCustomer.address1">
+                                                    <input class="form-control" (keypress)="onBlurMethod('address1')" type="text" id="cmaddress1" name="cmaddress1" [(ngModel)]="sourceCustomer.address1" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Address Line 2</label>
@@ -149,22 +149,22 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>City <span class="clr-red">*</span></label>
-                                                    <input class="form-control" (keypress)="onBlurMethod('city')" type="text" id="cscity" name="cscity" [(ngModel)]="sourceCustomer.city">
+                                                    <input class="form-control" (keypress)="onBlurMethod('city')" type="text" id="cscity" name="cscity" [(ngModel)]="sourceCustomer.city" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Primary State/Province <span class="clr-red">*</span></label>
-                                                    <input class="form-control" type="text" name="stateOrProvince" (keypress)="onBlurMethod('stateOrProvince')" [(ngModel)]="sourceCustomer.stateOrProvince">
+                                                    <input class="form-control" type="text" name="stateOrProvince" (keypress)="onBlurMethod('stateOrProvince')" [(ngModel)]="sourceCustomer.stateOrProvince" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Postal <span class="clr-red">*</span></label>
-                                                    <input class="form-control" (keypress)="onBlurMethod('postal')" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.postalCode">
+                                                    <input class="form-control" (keypress)="onBlurMethod('postal')" type="text" name="postalCode" [(ngModel)]="sourceCustomer.postalCode" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Country <span class="clr-red">*</span></label>
                                                     <div class="inner-addon right-addon inline-block">
 
                                                         <p-autoComplete class="autocomp-customer-cstm" (onSelect)="onCountrieselected($event)" filter="true" (onKeyUp)=eventCountryHandler($event) (keypress)="onBlurMethod('country')" [(ngModel)]="sourceCustomer.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                                        [minLength]="1" [dropdown]="true">
+                                                                        [minLength]="1" [dropdown]="true" required>
                                                             <ng-template let-nice_name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
                                                             </ng-template>
@@ -172,18 +172,36 @@
                                                     </div>
                                                     <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="form-control" *ngIf="checkAddress">
-                                                        <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
-
-                                                        <div class="checkbox col-sm-12">
-                                                            <label class="w100">
-                                                                <input type="checkbox" value="" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isvalidaddress">
-                                                                Validate Address
-                                                            </label>
-                                                        </div>
-                                                    </div>
+                                                <div class="form-group" style="margin-top: 15px;">
+                                                    <div class="label-cstm">Is this Address For Billing</div>
+                                                    <span class="checkbox-cstm">
+                                                        <label style="width: 20px;">
+                                                            <input type="checkbox" name="isAddressForBilling" [(ngModel)]="sourceCustomer.isAddressForBilling">
+                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                        </label>
+                                                    </span>
                                                 </div>
+                                                <div class="form-group" style="margin-top: 15px;">
+                                                    <div class="label-cstm">Is this Address For Shipping</div>
+                                                    <span class="checkbox-cstm">
+                                                        <label style="width: 20px;">
+                                                            <input type="checkbox" name="isAddressForShipping" [(ngModel)]="sourceCustomer.isAddressForShipping">
+                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                                <!--<div class="form-group">
+        <div class="form-control" *ngIf="checkAddress">
+            <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
+
+            <div class="checkbox col-sm-12">
+                <label class="w100">
+                    <input type="checkbox" value="" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceCustomer.isvalidaddress">
+                    Validate Address
+                </label>
+            </div>
+        </div>
+    </div>-->
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
@@ -191,7 +209,7 @@
                                                         <span class="pull-left">Customer Classification</span> <span class="clr-red">*</span>
                                                         <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openClassification(contentEdit)"></a></span>
                                                     </label>
-                                                    <select [(ngModel)]="sourceCustomer.customerClassificationId" name="customerClassificationId">
+                                                    <select [(ngModel)]="sourceCustomer.customerClassificationId" name="customerClassificationId" required>
                                                         <option *ngFor="let classificationName of allcustomerclassificationInfo" [ngValue]="classificationName.customerClassificationId">{{classificationName.description}}</option>
                                                     </select>
                                                 </div>
@@ -212,7 +230,7 @@
                                                     </span>
                                                     <div class="rpma-input memo-popup-cstm" *ngIf="sourceCustomer.isPBHCustomer">
                                                         <span pTooltip="{{sourceCustomer.pbhCustomerMemo}}" tooltipPosition="top"><input type="text" name="pbhCustomerMemo" pInputText class="form-control" value="{{sourceCustomer.pbhCustomerMemo}}" disabled /></span>
-                                                        <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#memo-popup" pTooltip="{{sourceCustomer.pbhCustomerMemo}}" tooltipPosition="top" (click)="onClickPBHCustomer('PBHCustomer')"></i>                                                        
+                                                        <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#memo-popup" pTooltip="{{sourceCustomer.pbhCustomerMemo}}" tooltipPosition="top" (click)="onClickPBHCustomer('PBHCustomer')"></i>
                                                     </div>
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
@@ -247,7 +265,7 @@
                                                         <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
                                                     </label>
                                                     <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
-                                                               selectedItemsLabel="{0} columns selected" name="integrationCols"
+                                                                   selectedItemsLabel="{0} columns selected" name="integrationCols"
                                                                    [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
                                                 </div>
                                                 <div class="form-group" style="clear: both;">
@@ -256,7 +274,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Currency <span class="clr-red">*</span></label>
-                                                    <select name="generalCurrencyId" [(ngModel)]="sourceCustomer.generalCurrencyId">
+                                                    <select name="generalCurrencyId" [(ngModel)]="sourceCustomer.generalCurrencyId" required>
                                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                 [ngValue]="currencyName.currencyId">
                                                             {{currencyName.symbol}}
@@ -264,25 +282,16 @@
                                                     </select>
                                                 </div>
                                                 <!--<div class="form-group">
-                                                        <label>Annual Revenue Potential</label>
-                                                        <input class="form-control" type="text" name="annualRevenuePotential" [(ngModel)]="sourceCustomer.annualRevenuePotential">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Annual Quota</label>
-                                                        <input class="form-control" type="text" name="annualQuota" [(ngModel)]="sourceCustomer.annualQuota">
-                                                    </div>-->
+                <label>Annual Revenue Potential</label>
+                <input class="form-control" type="text" name="annualRevenuePotential" [(ngModel)]="sourceCustomer.annualRevenuePotential">
+            </div>
+            <div class="form-group">
+                <label>Annual Quota</label>
+                <input class="form-control" type="text" name="annualQuota" [(ngModel)]="sourceCustomer.annualQuota">
+            </div>-->
 
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm">Is this Address For Billing & Shipping</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-                                                            <input type="checkbox" name="isAddressForBillingAndShipping" [(ngModel)]="sourceCustomer.isAddressForBillingAndShipping">
-                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        </label>
-                                                    </span>
-                                                </div>
                                                 <div class="form-group" style="margin-top: 15px;">
                                                     <div class="label-cstm">Scan Documents</div>
                                                     <span class="checkbox-cstm">
@@ -304,9 +313,9 @@
                                             </div>
                                         </div>
                                         <div class="form-row pull-right">
-                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode ||disablesave || disableSaveParentName" (click)="editItemAndCloseModel()">Save &amp; Next</button>
+                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="disableSaveCusName || disableSaveCusCode ||disablesave || disableSaveParentName || !generalInfoForm.valid" (click)="editItemAndCloseModel()">Save &amp; Next</button>
                                         </div>
-                                       
+
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>

@@ -1,47 +1,46 @@
 ﻿<div [@fadeInOut] class="page-content">
 	<div class="right_col" role="main">
 		<div class="x_panel" style="">
-			<div class="x_content">
-				<div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-					<p class="fs10">
-						<label class="control-label w100">Customer Name:</label>
-						{{local?.name}}
-					</p>
-				</div>
-				<div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-					<p class="fs10">
-						<label class="control-label w100">Customer Code:</label>
-						{{local?.customerCode}}
-					</p>
-				</div>
-				<!--<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-			<li class="breadcrumb-item active" aria-current="page">Customer Warnings</li>
-		</ol>
-	</nav>-->
-				<!--<div class="pheading">
-		<h4 class="page-heading">Customer Warnings</h4>
-	</div>-->
+            <div class="x_content">
+                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label w100">Customer Name:</label>
+                        {{local?.name}}
+                    </p>
+                </div>
+                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label w100">Customer Code:</label>
+                        {{local?.customerCode}}
+                    </p>
+                </div>
+                <!--<nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Customer Warnings</li>
+        </ol>
+    </nav>-->
+                <!--<div class="pheading">
+        <h4 class="page-heading">Customer Warnings</h4>
+    </div>-->
 
-				<div class="clear"></div>
+                <div class="clear"></div>
 
-				<form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
+                <div>
+                    <div class="col-md-12" style="margin-bottom: -10px;">
+                        <h3 class="po-head pull-left" style="padding: 0 6px;">Warnings Message</h3>
+                    </div>
+                    <div class="clear"></div>
+                    <hr />
+                </div>
+
+                <form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
 
 
-					<div class="col-md-12 col-sm-12 col-12">
-						<div class="tab-content form-bg">
+                    <div class="col-md-12 col-sm-12 col-12">
+                        <div class="tab-content">
                             <div class="tab-pane active" id="menu7">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <p class="lead" style="font-size:medium">Warnings Message</p>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </table>
+
                                 <div class="col-sm-8">
                                     <div class="table-responsive">
                                         <table class="table table-bordered warnings-table">
@@ -175,20 +174,16 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="clear"></div>
-                                <br>
-                                <button type="button" class="btn btn-success pull-rightsubmit-btn" (click)="saveDetails()" style="float:right">save</button>
-                                <div class="clear"></div>
-                                <hr />
-                            </div>
-							<div class="clear"></div>
-						</div>
 
-					</div>
-				</form>
-			</div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="saveDetails()">Save</button>
+                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                    </div>
+                </form>
+            </div>
 		</div>
-		<button type="button" class="btn btn-success pull-rightsubmit-btn" (click)="backClick()" style="float:right">Previous</button>
 	</div>
 
 

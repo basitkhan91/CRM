@@ -12,7 +12,7 @@ namespace DAL.Models
         public long? PurchaseOrderId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public string ReferenceId { get; set; }
-        public Nullable<short> PriorityId { get; set; }
+        public Nullable<long> PriorityId { get; set; }
         public string RequestedBy { get; set; }
         public System.DateTime DateRequested { get; set; }
         public string Approver { get; set; }
@@ -40,8 +40,8 @@ namespace DAL.Models
         public Nullable<long> BillToAddressId { get; set; }
         public string BillToContactName { get; set; }
         public string BillToMemo { get; set; }
-        public int? MasterCompanyId { get; set; }
-        public int ManagementStructureId { get; set; }
+        public int MasterCompanyId { get; set; }
+        public long ManagementStructureId { get; set; }
         public Int16? ShipToUserType { get; set; }
         public Int16? BillToUserType { get; set; }
         public string ShipToUserName { get; set; }

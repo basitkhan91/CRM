@@ -325,18 +325,19 @@ td {
   margin-top: 0px !important;
 }
 .control-label {
-  margin-top: 10px;
-  text-align: left;
-  font-size: 12px !important;
-  width: 150px !important;
+    margin-top: 10px;
+    text-align: left;
+    font-size: 12px !important;
+    width: 150px !important;
+    //font-weight: 500;
 }
 .control-item {
   width: 140px !important;
 }
 .text-item {
-  width: 93% !important;
+  width: 100% !important;
   border-radius: 5px !important;
-  margin-left: 4px;
+  margin-left: 0px;
 }
 .form-check-label {
   float: left;
@@ -349,9 +350,9 @@ td {
   margin-top: 6px;
 }
 .input-text-value {
-  margin-left: 4px !important;
+ 
   border-radius: 5px !important;
-  width: 93% !important;
+  width:100% !important;
 }
 .snumber-block2 {
   margin: 10px 0px;

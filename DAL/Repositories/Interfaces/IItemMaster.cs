@@ -8,6 +8,8 @@ namespace DAL.Repositories.Interfaces
 
     public interface IItemMaster : IRepository<ItemMaster>
     {
+        
+        IEnumerable<object> getByID(long itemMasterId);
         IEnumerable<object> GetAircraftMapped(long ItemmasterId);
         IEnumerable<object> GetATAMapped(long ItemmasterId);
         IEnumerable<ItemMaster> getAlldata();
@@ -33,7 +35,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getItemMasterData(long id);
 
         IEnumerable<object> getLegalEntityAccountsData(long id);
-        IEnumerable<object> getItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemMasterID, string AircraftTypeID, string AircraftModelID, string DashNumberId);
+        IEnumerable<object> getItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemMasterID, string AircraftTypeID, string AirModelId, string DashNumberId);
         IEnumerable<object> getItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid, string ATAID, string ATASubID);
 
         IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemMasterID, string AircraftTypeID, string AircraftModelID, string DashNumberId);

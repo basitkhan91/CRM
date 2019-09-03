@@ -1,26 +1,27 @@
 ﻿<div>
-	<div [@fadeInOut] class="page-content">
-		<div class="right_col" role="main">
-			<div class="x_panel" style="">
-				<div class="x_content">
-					
-						<div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-							<p class="fs10">
-								<label class="control-label w100">Customer Name:</label>
-								{{local?.name}}
-							</p>
-						</div>
-						<div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-							<p class="fs10">
-								<label class="control-label w100">Customer Code:</label>
-								{{local?.customerCode}}
-							</p>
-						</div>				
-				
-					<div class="clear"></div>
-					<form action="#" method="post" id="" name="" class="form-horizontal"><!--add-custustomer-->
+    <div [@fadeInOut] class="page-content">
+        <div class="right_col" role="main">
+            <div class="x_panel" style="">
+                <div class="x_content">
 
-						<div class="col-md-12 col-sm-12 col-12">
+                    <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                        <p class="fs10">
+                            <label class="control-label w100">Customer Name:</label>
+                            {{local?.name}}
+                        </p>
+                    </div>
+                    <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                        <p class="fs10">
+                            <label class="control-label w100">Customer Code:</label>
+                            {{local?.customerCode}}
+                        </p>
+                    </div>
+
+                    <div class="clear"></div>
+                    <form #financialInfoForm="ngForm" class="form-horizontal">
+                        <!--add-custustomer-->
+
+                        <div class="col-md-12 col-sm-12 col-12">
                             <div class="tab-content">
                                 <div class="tab-pane active" id="menu2">
                                     <div class="form-row">
@@ -42,14 +43,14 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Credit Limit <span class="clr-red">*</span></label>
-                                                <input class="form-control" type="text" id="" name="creditLimit" [(ngModel)]="sourceCustomer.creditLimit">
+                                                <input class="form-control" type="text" id="" name="creditLimit" [(ngModel)]="sourceCustomer.creditLimit" required>
                                             </div>
                                             <div class="form-group">
                                                 <label>
                                                     <span class="pull-left">Credit Terms </span><span class="clr-red">*</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addcredit" (click)="openCrediTerms(contentEdit)"></a></span>
                                                 </label>
-                                                <select name="creditTermsId" [(ngModel)]="sourceCustomer.creditTermsId">
+                                                <select name="creditTermsId" [(ngModel)]="sourceCustomer.creditTermsId" required>
                                                     <option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
                                                 </select>
                                             </div>
@@ -90,6 +91,7 @@
                                             <div class="form-group">
                                                 <label>
                                                     <span class="pull-left">Tax Rate - State/Prov</span>
+                                                    <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRateStateProv" (click)="openTaxRateStateProv(contentTaxRateStateProv)"></a></span>
                                                 </label>
                                                 <select name="taxRateStateOrProvince" [(ngModel)]="sourceCustomer.taxRateStateOrProvince">
                                                     <option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}&#37;</option>
@@ -112,7 +114,7 @@
                                                     <span class="pull-left">Currency </span><span class="clr-red">*</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCurrency" (click)="openCurrency(contentCurrency)"></a></span>
                                                 </label>
-                                                <select name="currencyId" [(ngModel)]="sourceCustomer.currencyId">
+                                                <select name="currencyId" [(ngModel)]="sourceCustomer.currencyId" required>
                                                     <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                             [ngValue]="currencyName.currencyId">
                                                         {{currencyName.symbol}}
@@ -166,30 +168,30 @@
 
                                 </div>
                                 <!--Right End-->
-                                <button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+                                <!--<button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
                                 <div class="clear"></div>
-                                <hr>
-                                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Next</button>
+                                <hr>-->
+                                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="nextClick()">Save & Next</button>
                                 <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
                             </div>
-						</div>
-					</form>
-				</div>
-			</div>			
-		</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
-		<div class="modal fade success-msg" id="success-popup" role="dialog">
-			<div class="modal-dialog modal-sm popup-timeout">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						<h4> <i class="fa fa-check"></i>&nbsp; You Added Successfully !</h4>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="modal fade success-msg" id="success-popup" role="dialog">
+            <div class="modal-dialog modal-sm popup-timeout">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4> <i class="fa fa-check"></i>&nbsp; You Added Successfully !</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit CreditTerm</h4>
@@ -276,7 +278,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveCreditTerms" (click)="saveCreditTermsdata()">Submit</button><!--disableSaveCreditTerms-->
+                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveCreditTerms" (click)="saveCreditTermsdata()">Submit</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
@@ -341,7 +343,7 @@
                             <textarea rows="3" cols="12" #memo="ngModel" id="memo" [(ngModel)]="sourceAction.memo"></textarea>
                         </div>
                     </div>
-                </div>               
+                </div>
                 <div class="form-group">
                     <div class="col-sm-6">
                         <span class="checkbox-cstm">
@@ -359,7 +361,50 @@
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
-    </ng-template>	
+    </ng-template>
+
+    <ng-template #contentTaxRateStateProv let-c="close" let-d="dismiss" style="width:auto">
+        <div class="modal-header">
+            <h4 class="modal-title" *ngIf="isEditMode">Edit Tax Rate - State/Prov</h4>
+            <h4 class="modal-title" *ngIf="!isEditMode">Add Tax Rate - State/Prov</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form #userForm="ngForm" class="form-horizontal addcurrencyform" (ngSubmit)="saveCurrecy()">
+            <div class="modal-body">
+
+                <div class="form-group input-icon1" style="margin-bottom: 35px !important;">
+                    <label class="control-label">Tax Type</label>
+                    <div class="col-sm-6">
+                        <p-autoComplete class="autocomp-customer-cstm" name="taxType"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-taxType pTemplate="item">
+                                <div class="ui-helper-clearfix">{{taxType}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Tax Rate in %</label>
+                    <div class="col-sm-6">
+                        <p-autoComplete class="autocomp-customer-cstm" name="taxRate"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-taxType pTemplate="item">
+                                <div class="ui-helper-clearfix">{{taxRate}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm" (click)="dismissModel()">Submit</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
+    </ng-template>
 </div>
 
 <p-dialog class="p-dialog-cstm" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"

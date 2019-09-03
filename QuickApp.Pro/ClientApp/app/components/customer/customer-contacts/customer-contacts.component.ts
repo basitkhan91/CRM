@@ -398,7 +398,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
         if (!(this.sourceCustomer.firstName && this.sourceCustomer.lastName &&
             this.sourceCustomer.workPhone && this.sourceCustomer.email
         )) {
-            this.display = true;
+            //this.display = true;
             this.modelValue = true;
         }
 		if (this.sourceCustomer.firstName && this.sourceCustomer.lastName && this.sourceCustomer.workPhone && this.sourceCustomer.email) {

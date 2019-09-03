@@ -26,7 +26,7 @@ namespace DAL.Models
         public string ConditionCode { get; set; }
         public Nullable<long> UOMId { get; set; }
         public Nullable<short> QuantityOrdered { get; set; }
-        public Nullable<int> QuantityBackOrdered { get; set; }
+        public Nullable<short> QuantityBackOrdered { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
         public Nullable<short> DiscountPerUnit { get; set; }
         public Nullable<short> DiscountCostPerUnit { get; set; }
@@ -37,7 +37,7 @@ namespace DAL.Models
         public Nullable<long> WorkOrderId { get; set; }
         public Nullable<long> RepairOrderId { get; set; }
         public Nullable<long> SalesOrderId { get; set; }
-        public Nullable<int> GeneralLedgerAccounId { get; set; }
+        public long GeneralLedgerAccounId { get; set; }
         public string Memo { get; set; }
         public Nullable<short> POPartSplitUserTypeId { get; set; }
         public long? POPartSplitUserId { get; set; }

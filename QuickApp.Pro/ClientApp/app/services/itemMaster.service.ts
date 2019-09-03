@@ -328,6 +328,12 @@ export class ItemMasterService {
         return this.itemMasterEndpoint.getPurcSaleByItemMasterID<any>(ItemMasterId);
     }
 
+    updateItemMasterSerialized<T>(itemMasterId: number, active: boolean): Observable<T> {
+        return this.itemMasterEndpoint.updateItemMasterSerialized(itemMasterId, active);
+    }
     
+    updateItemMasterTimeLife<T>(itemMasterId: number, active: boolean): Observable<T> {
+        return this.itemMasterEndpoint.updateItemMasterTimeLife(itemMasterId, active);
+    }
 
 }

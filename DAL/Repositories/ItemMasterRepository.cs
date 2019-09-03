@@ -16,7 +16,150 @@ namespace DAL.Repositories
     {
         public ItemMasterRepository(ApplicationDbContext context) : base(context)
         { }
+        public IEnumerable<object> getByID(long itemMasterId)
+        {
+            try
+            {
 
+                var data = (from iM in _appContext.ItemMaster
+                            join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds
+                            join country in _appContext.Countries on iM.ExportCountryId equals country.countries_id into countryID
+                            from ct in countryID.DefaultIfEmpty()
+                            join mfg in _appContext.Manufacturer on iM.ManufacturerId equals mfg.ManufacturerId into mfgID
+                            from mfgs in mfgID.DefaultIfEmpty()
+                            join imst in _appContext.ItemMaster on iM.oemPNId equals imst.ItemMasterId into Imast
+                            from oemid in Imast.DefaultIfEmpty()
+                            where iM.ItemMasterId == itemMasterId
+
+                            select new
+                            {
+                                iM.PartNumber ,
+                                    iM.ItemTypeId ,
+                                    iM.PartDescription ,
+                                    iM.ExchangeListPrice,
+                                    iM.OverheadCost ,
+                                    iM.IsAlternatePartChecked ,
+                                    iM.TurnTimeOverhaulHours ,
+                                    iM.TurnTimeRepairHours ,
+                                    iM.IsSerialized ,
+                                    iM.ItemGroupId ,
+                                    iM.ItemClassificationId ,
+                                    iM.IsAcquiredMethodBuy ,
+                                    iM.IsHazardousMaterial ,
+                                    iM.IsExpirationDateAvailable ,
+                                    iM.ExpirationDate ,
+                                    iM.IsReceivedDateAvailable ,
+                                    iM.DaysReceived ,
+                                    iM.IsManufacturingDateAvailable ,
+                                    iM.ManufacturingDays ,
+                                    iM.IsTagDateAvailable ,
+                                    iM.TagDays ,
+                                    iM.IsOpenDateAvailable ,
+                                    iM.OpenDays ,
+                                    iM.IsShippedDateAvailable ,
+                                    iM.ShippedDays ,
+                                    iM.IsOtherDateAvailable ,
+                                    iM.OtherDays ,
+                                    iM.ShelfLife ,
+                                    iM.ProvisionId,
+                                    iM.ManufacturerId,
+                                    iM.PurchaseLastListPriceDate ,
+                                    iM.SalesLastSalePriceDate ,
+                                    iM.PurchaseLastDiscountPercentDate ,
+                                    iM.PurchaseLastListPriceAfterDiscountDate ,
+                                    iM.SalesLastMarkUpPercentOnListPriceDate ,
+                                    iM.SalesLastMakUpPercentOnListPriceAfterDiscDate ,
+                                    iM.SalesLastBaselineSalesPriceDate ,
+                                    iM.SalesLastSalesDiscountPercentDate ,
+                                    iM.PMA ,
+                                    iM.DER ,
+                                    iM.ATAChapterId ,
+                                    iM.ATASubChapterId ,
+                                    iM.NationalStockNumber ,
+                                    iM.IsSchematic ,
+                                    iM.SalesIsFixedPrice ,
+                                    iM.OverhaulHours ,
+                                    iM.RPHours ,
+                                    iM.SalesPrice ,
+                                    iM.SalesCurrencyId ,
+                                    iM.TestHours ,
+                                    iM.CSE ,
+                                    iM.RFQTracking ,
+                                    iM.GLAccountId ,
+                                    iM.PurchaseUnitOfMeasureId ,
+                                    iM.ExportUomId ,
+                                    iM.StockUnitOfMeasureId ,
+                                    iM.ConsumeUnitOfMeasureId,
+                                    iM.SoldUnitOfMeasureId ,
+                                    iM.LeadTimeDays ,
+                                    iM.LeadTimeHours ,
+                                    iM.ReorderQuantiy ,
+                                    iM.ReorderPoint ,
+                                    iM.MinimumOrderQuantity ,
+                                    iM.IsExchangeInfoAvailable ,
+                                    iM.CoreValue ,
+                                    iM.PartListPrice ,
+                                    iM.POCoreCharge ,
+                                    iM.SOCoreCharge ,
+                                    iM.PriorityId ,
+                                    iM.WarningId ,
+                                    iM.Memo ,
+									iM.ExportECCN,
+									iM.ITARNumber,
+                                    iM.ExportCountryId ,
+                                    iM.ExportValue ,
+                                    iM.ExportCurrencyId ,
+                                    iM.ExportWeight ,
+                                    iM.ExportWeightUnit ,
+                                    iM.ExportSizeLength ,
+                                    iM.ExportSizeWidth ,
+                                    iM.ExportSizeHeight ,
+                                    iM.ExportSizeUnit ,
+                                    iM.ExportClassificationId ,
+                                    iM.PurchaseDiscountOffListPrice ,
+                                    iM.PurchaseListPriceAfterDiscount ,
+                                    iM.PurchaseCurrencyId ,
+                                    iM.SalesMarkUpOnPurchaseListPriceActive ,
+                                    iM.SalesMarkUpOnListPrice ,
+                                    iM.SalesDiscountPercent ,
+                                    iM.SalesMarkUpOnListPriceAfterDisc ,
+                                    iM.SalesBaselineSalesPrice ,
+                                    iM.StandAloneEquipment ,
+                                    iM.ComponentEquipment ,
+                                    iM.MasterCompanyId ,
+                                    iM.IsTimeLife ,
+                                    iM.ListPrice ,
+                                    iM.PriceDate ,
+                                    iM.UnitCost ,
+                                    iM.DiscountPurchasePercent ,
+                                    iM.ItemNonStockClassificationId ,
+                                    iM.StockLevel ,
+                                    iM.ShelfLifeAvailable ,
+                                    iM.isPma ,
+                                    iM.mfgHours ,
+                                    iM.turnTimeMfg ,
+                                    iM.turnTimeBenchTest ,
+                                    iM.IsExportUnspecified ,
+                                    iM.IsExportNONMilitary ,
+                                    iM.IsExportMilitary ,
+                                    iM.IsExportDual ,
+                                    ManufacturerName = mfgs == null ? "" : mfgs.Name,
+                                    CountryData = countryID.ToList(),
+								//CountryName = ct == null ? "" : ct.countries_name,
+								//IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
+								IntegrationPortalIds = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
+								//IntegrationPortalIds = iPortalIds.ToList(),
+								oemPNData = Imast.ToList(),
+                                
+                            }).ToList();
+                                            
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
         public IEnumerable<DAL.Models.ItemMaster> getAlldata()
         {
             return null;
@@ -51,7 +194,11 @@ namespace DAL.Repositories
         
         public IEnumerable<object> getItemMasterData(long id)
         {
+            try
+            {
                 var data = (from iM in _appContext.ItemMaster
+                            join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds
+                            join country in _appContext.Countries on iM.ExportCountryId equals country.countries_id
                             where iM.ItemMasterId == id
 
                             select new
@@ -68,10 +215,23 @@ namespace DAL.Repositories
                                 iM.ManufacturerId,
                                 iM.Manufacturer,
                                 iM.ShelfLifeAvailable,
-                                iM.isPma,iM.mfgHours,iM.turnTimeMfg ,iM.turnTimeBenchTest ,iM.IsExportUnspecified,
-                                iM.IsExportNOMilitary ,iM.IsExportMilitary ,iM.IsExportDual 
+                                country.countries_name,
+                                iM.isPma,
+                                iM.mfgHours,
+                                iM.turnTimeMfg,
+                                iM.turnTimeBenchTest,
+                                iM.IsExportUnspecified,
+                                iM.IsExportNONMilitary,
+                                iM.IsExportMilitary,
+                                iM.IsExportDual,
+                                iM.oemPNId,
+                                IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList()
                             }).ToList();
                 return data;
+            }catch(Exception ex)
+            {
+                throw;
+            }
         }
 
         public IEnumerable<object> GetSelectedAircraftModeldata(long id)
@@ -158,7 +318,7 @@ namespace DAL.Repositories
                             IM.turnTimeMfg,
                             IM.turnTimeBenchTest,
                             IM.IsExportUnspecified,
-                            IM.IsExportNOMilitary,
+                            IM.IsExportNONMilitary,
                             IM.IsExportMilitary,
                             IM.IsExportDual
                         }).ToList();
@@ -487,13 +647,13 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> getItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemmasterId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        public IEnumerable<object> getItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemmasterId, string AircraftTypeId, string AirModelId, string DashNumberId)
         {
             var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-            var myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            var myAircraftModelId = AirModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
             var myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
-            var data = (from it in _appContext.ItemMasterAircraftMapping
-                        where it.IsActive == true && it.ItemMasterId== ItemmasterId &&  myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId)
+            var data = (from it in  _appContext.ItemMasterAircraftMapping
+                        where it.AircraftModelId  != null && it.DashNumberId!=null && it.IsActive == true && it.ItemMasterId== ItemmasterId &&  myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value)
 
                         select new
                         {
@@ -546,7 +706,7 @@ namespace DAL.Repositories
                 myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
             if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
             {               var data = (from it in _appContext.ItemMasterAircraftMapping
-                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted!=true
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted!=true
                             select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
@@ -554,7 +714,7 @@ namespace DAL.Repositories
             else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null)
             {
                             var data = (from it in _appContext.ItemMasterAircraftMapping
-                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && it.IsDeleted != true
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && it.IsDeleted != true
                             select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
@@ -570,7 +730,7 @@ namespace DAL.Repositories
             else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId != null)
             {
                             var data = (from it in _appContext.ItemMasterAircraftMapping
-                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
                             select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
@@ -578,7 +738,7 @@ namespace DAL.Repositories
             else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId != null)
             {
                             var data = (from it in _appContext.ItemMasterAircraftMapping
-                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
                             select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
@@ -586,7 +746,7 @@ namespace DAL.Repositories
             else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId == null)
             {
                 var data = (from it in _appContext.ItemMasterAircraftMapping
-                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftModelId.Contains(it.AircraftModelId) && it.IsDeleted != true
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftModelId.Contains(it.AircraftModelId.Value) && it.IsDeleted != true
                             select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -594,7 +754,7 @@ namespace DAL.Repositories
             else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId != null)
             {
                             var data = (from it in _appContext.ItemMasterAircraftMapping
-                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myDashNumberId.Contains(it.DashNumberId) && it.IsDeleted != true
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
                             select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
