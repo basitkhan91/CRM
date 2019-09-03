@@ -86,8 +86,8 @@ namespace DAL.Models
         public string VendorParentName { get; set; }
 
         // public virtual VendorCapabiliy VendorCapabiliy { get; set; }
-
-        public virtual VendorContact VendorContact { get; set; }
+       
+        public virtual List<VendorContact> VendorContact { get; set; }
 
         public virtual Address Address { get; set; }
 

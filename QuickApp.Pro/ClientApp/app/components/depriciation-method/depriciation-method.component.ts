@@ -26,12 +26,17 @@ export class DepriciationMethodComponent implements OnInit {
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    selectedColumns: any[];
+    cols: any[];
+    memoPopupText: string;
+    memoNotes: string = 'This is  memo';
     AuditDetails: SingleScreenAuditDetails[];
     /** DepriciationMethod ctor */
     constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal) {
     }
 
     ngOnInit(): void {
+        this.loadData();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-depriciation-method';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
@@ -39,7 +44,21 @@ export class DepriciationMethodComponent implements OnInit {
         });
         this.currentDepriciationmethod = new DepriciationMethod();
     }
+    private loadData() {
+        this.cols = [
+            //{ field: 'actionId', header: 'Action Id' },
+            { field: 'id', header: 'Code' },
+            { field: 'name', header: 'Name' },
+            { field: 'customerType', header: 'Customer Type' },
+            { field: 'basis', header: 'Depriciation Basis ' },
+            { field: 'memo', header: 'Memo' },        
 
+        ];
+
+        if (!this.selectedColumns) {
+            this.selectedColumns = this.cols;
+        }
+    }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
@@ -97,9 +116,7 @@ export class DepriciationMethodComponent implements OnInit {
                 this.modal.close();
             });
         });
-
-    }
-    
+    }    
     resetdepriciationmethod(): void {
         this.updateMode = false;
         this.currentDepriciationmethod = new DepriciationMethod();

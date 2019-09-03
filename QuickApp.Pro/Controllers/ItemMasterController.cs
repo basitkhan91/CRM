@@ -624,6 +624,15 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.StockLevel = itemMasterViewModel.StockLevel;
                 itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
                 itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
+                itemmaserObj.ShelfLifeAvailable = itemMasterViewModel.ShelfLifeAvailable;
+                itemmaserObj.isPma= itemMasterViewModel.isPma;
+                itemmaserObj.mfgHours= itemMasterViewModel.mfgHours;
+                itemmaserObj.turnTimeMfg = itemMasterViewModel.turnTimeMfg;
+                itemmaserObj.turnTimeBenchTest= itemMasterViewModel.turnTimeBenchTest;
+                itemmaserObj.IsExportUnspecified= itemMasterViewModel.IsExportUnspecified;
+                itemmaserObj.IsExportNOMilitary = itemMasterViewModel.IsExportNOMilitary;
+                itemmaserObj.IsExportMilitary= itemMasterViewModel.IsExportMilitary;
+                itemmaserObj.IsExportDual= itemMasterViewModel.IsExportDual;
                 itemmaserObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
                 if (manufacturer.Comments != null)
                 {
@@ -823,6 +832,15 @@ namespace QuickApp.Pro.Controllers
                 itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
                 itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
                 itemmaserObj.StockLevel = itemMasterViewModel.StockLevel;
+                itemmaserObj.ShelfLifeAvailable = itemMasterViewModel.ShelfLifeAvailable;
+                itemmaserObj.isPma = itemMasterViewModel.isPma;
+                itemmaserObj.mfgHours = itemMasterViewModel.mfgHours;
+                itemmaserObj.turnTimeMfg = itemMasterViewModel.turnTimeMfg;
+                itemmaserObj.turnTimeBenchTest = itemMasterViewModel.turnTimeBenchTest;
+                itemmaserObj.IsExportUnspecified = itemMasterViewModel.IsExportUnspecified;
+                itemmaserObj.IsExportNOMilitary = itemMasterViewModel.IsExportNOMilitary;
+                itemmaserObj.IsExportMilitary = itemMasterViewModel.IsExportMilitary;
+                itemmaserObj.IsExportDual = itemMasterViewModel.IsExportDual;
                 //itemmaserObj.PartAlternatePartId = itemMasterViewModel.PartAlternatePartId;
 
                 if (itemMasterViewModel.AircraftTypeId != null)
@@ -961,7 +979,7 @@ namespace QuickApp.Pro.Controllers
                 if (itemMasterViewModel == null)
                     return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
                 var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
-                itemmaserObj.IsDelete = false;
+                itemmaserObj.IsDelete = true;
 
                 _unitOfWork.itemMaster.Update(itemmaserObj);
                 _unitOfWork.SaveChanges();
@@ -1230,7 +1248,9 @@ namespace QuickApp.Pro.Controllers
                 }
                 else
                 {
-                    return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
+	
+				
+					return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
                 }
             }catch(Exception ex)
             {
@@ -1269,31 +1289,52 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
-        [HttpPut("ExportInfoPostBy_IMastID/{id}")]
+        [HttpPost("ExportInfoPostBy_IMastID/{id}")]
         public IActionResult ExportInfoupdate(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                if (_context.ItemMaster.Any(o => o.ItemMasterId == itemMasterViewModel.ItemMasterId))
-                {
-                    var existingresule = _context.ItemMaster.Where(c => c.ItemMasterId == itemMasterViewModel.ItemMasterId).FirstOrDefault();
-                    existingresule.UpdatedDate = DateTime.Now;
-                    existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
-                    _unitOfWork.Repository<ItemMaster>().Update(existingresule);
-                    _unitOfWork.SaveChanges();
-                    return Ok(itemMasterViewModel);
-                }
-                else
-                {
-                    return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
-                }
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					if (_context.ItemMaster.Any(o => o.ItemMasterId == itemMasterViewModel.ItemMasterId))
+					{
+						var existingresule = _context.ItemMaster.Where(c => c.ItemMasterId == itemMasterViewModel.ItemMasterId).FirstOrDefault();
+						existingresule.UpdatedDate = DateTime.Now;
+						existingresule.ExportCountryId=itemMasterViewModel.ExportCountryId;
+						existingresule.ITARNumber= itemMasterViewModel.ITARNumber;
+						existingresule.ExportSizeHeight= itemMasterViewModel.ExportSizeHeight;
+						existingresule.ExportSizeLength = itemMasterViewModel.ExportSizeLength;
+						existingresule.ExportSizeUnit = itemMasterViewModel.ExportSizeUnit;
+						existingresule.ExportSizeWidth = itemMasterViewModel.ExportSizeWidth;
+						existingresule.ExportUomId = itemMasterViewModel.ExportUomId;
+						existingresule.ExportValue = itemMasterViewModel.ExportValue;
+						existingresule.ExportECCN = itemMasterViewModel.ExportECCN;
+                        //existingresule.ExportClassification = itemMasterViewModel.ExportClassification;
+                        existingresule.ExportWeight = itemMasterViewModel.ExportWeight;
+                        existingresule.ExportWeightUnit= itemMasterViewModel.ExportWeightUnit;
+                        existingresule.ExportCurrencyId = itemMasterViewModel.ExportCurrencyId;
+                        existingresule.ExportClassificationId= itemMasterViewModel.ExportClassificationId;
 
-            }
-            else
-            {
-                return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
-            }
+                        existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
+						_unitOfWork.Repository<ItemMaster>().Update(existingresule);
+						_unitOfWork.SaveChanges();
+						return Ok(itemMasterViewModel);
+					}
+					else
+					{
+						return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
+					}
 
+				}
+				else
+				{
+					return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
+				}
+			}
+			catch(Exception ex)
+			{
+				throw;
+			}
         }
         //updates
         [HttpPut("ItemMasterAircraftUpdate/{id}")]
@@ -1512,6 +1553,21 @@ namespace QuickApp.Pro.Controllers
         public IActionResult orATAMappedMultiATASUBId(long ItemMasterID, string ATAChapterId, string ATASubChapterID)
         {
             var result = _unitOfWork.itemMaster.searchgetItemATAMappingDataByMultiTypeIdATAIDATASUBID(ItemMasterID, ATAChapterId, ATASubChapterID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("getItemMasterPurchSaleByItemMasterID/{ItemMasterID}")]
+        [Produces(typeof(List<ItemMasterPurchaseSale>))]
+        public IActionResult getItemMasterPurchaseSaleByItemMasterID(long ItemMasterID)
+        {
+            var result = _unitOfWork.itemMaster.gePurcSaleByItemMasterID(ItemMasterID);
 
             if (result == null)
             {

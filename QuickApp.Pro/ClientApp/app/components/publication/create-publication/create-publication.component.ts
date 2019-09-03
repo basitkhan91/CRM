@@ -21,7 +21,7 @@ import { map } from 'rxjs/operator/map';
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 import { EmployeeService } from '../../../services/employee.service';
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-create-publication',
   templateUrl: './create-publication.component.html',
@@ -40,7 +40,28 @@ export class CreatePublicationComponent implements OnInit {
   private isSaving: boolean;
   private isEditMode: boolean;
   selectedFile: File = null;
-  public sourcePublication: any = {};
+
+  publicationGeneralInformation = {
+    entryDate: new Date(),
+    PublicationId: '',
+    description: '',
+    pubType: '',
+    ASD: '',
+    sequence: '',
+    publishby: '',
+    location: '',
+    revisionDate: new Date(),
+    expirationDate: new Date(),
+    nextreviewDate: new Date(),
+    employee: null,
+    verifiedby: '',
+    masterCompanyId: 1,
+  }
+
+  public sourcePublication: any = {
+    ...this.publicationGeneralInformation
+
+  };
   generalInformationDetails: any = {};
   airCraftTypesList = [];
   airCraftModels = [];
@@ -82,6 +103,7 @@ export class CreatePublicationComponent implements OnInit {
   // dropdown
 
   publicationTypes = [
+    { label: 'Select Publication Type', value: null },
     { label: 'CMM', value: 'CMM' },
     { label: 'AD', value: 'AD' },
     { label: 'SB', value: 'SB' }
@@ -174,6 +196,7 @@ export class CreatePublicationComponent implements OnInit {
           value: x.employeeId
         };
       });
+      this.employeeList = [{ label: 'Select Employee', value: null }, ...this.employeeList]
     });
   }
   private saveSuccessHelper(role?: any) {
@@ -226,14 +249,19 @@ export class CreatePublicationComponent implements OnInit {
 
       {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
-        this.sourcePublication.masterCompanyId = 1;
         this.publicationService
-          .newAction(this.sourcePublication)
+          .newAction({
+            ...this.sourcePublication, CreatedBy: this.userName,
+            UpdatedBy: this.userName,
+            IsActive: true,
+            IsDeleted: false,
+          })
           .subscribe(res => {
             const { publicationRecordId } = res;
             this.publicationRecordId = publicationRecordId;
 
             this.changeOfTab('PnMap'),
+              this.alertService.showMessage("Success", `Publication saved Successfully`, MessageSeverity.success),
               role => this.saveSuccessHelper(role),
               error => this.saveFailedHelper(error);
           });
@@ -278,8 +306,9 @@ export class CreatePublicationComponent implements OnInit {
         UpdatedBy: this.userName,
         MasterCompanyId: obj.masterCompanyId,
         IsActive: true,
-        CreatedDate: '2019-08-12',
-        UpdatedDate: '2019-08-12'
+        IsDeleted: false,
+        CreatedDate: new Date(),
+        UpdatedDate: new Date()
       };
     });
     this.selectedPartNumbers = [];
@@ -298,6 +327,7 @@ export class CreatePublicationComponent implements OnInit {
               ItemClassification: x.itemClassification
             };
           });
+          this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
         });
 
       this.getAircraftInformationByPublicationId();

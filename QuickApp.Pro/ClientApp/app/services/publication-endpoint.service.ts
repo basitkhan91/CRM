@@ -8,7 +8,9 @@ import { ConfigurationService } from './configuration.service';
 
 @Injectable()
 export class PublicationEndpointService extends EndpointFactory {
-  private readonly _publicationGetUrl: string = '/api/Publication/Get';
+    private readonly _publicationGetUrl: string = '/api/Publication/Get';
+    private readonly _publicationGetByIdUrl: string = '/api/Publication/GetPublicationByID';
+    
   private readonly _publicationUrlNew: string =
     '/api/Publication/publicationpost';
   private readonly _actionsUrlAuditHistory: string =
@@ -72,8 +74,15 @@ export class PublicationEndpointService extends EndpointFactory {
       .catch(error => {
         return this.handleError(error, () => this.getpublicationEndpoint());
       });
-  }
-
+    }
+    getpublicationbyIdEndpoint<T>(): Observable<T> {
+        return this.http
+            .get<T>(this._publicationGetByIdUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getpublicationbyIdEndpoint());
+            });
+    }
+    
   getNewpublicationEndpoint<T>(userObject: any): Observable<T> {
     return this.http
       .post<T>(

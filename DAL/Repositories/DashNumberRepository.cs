@@ -29,11 +29,11 @@ namespace DAL.Repositories
         public IEnumerable<object> getDashListByIDS(string Mid, long Tid, string Did)
         {
             long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-            string[] myDids = Did.Split(',').Select(x => x).ToArray();
+			long[] myDids = Did.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
             var data = (from iM in _appContext.AircraftDashNumber
                         join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
                         join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
-                        where myMids.Contains(iM.AircraftModelId) && iM.AircraftTypeId == Tid && myDids.Contains(iM.DashNumber)
+                        where myMids.Contains(iM.AircraftModelId) && iM.AircraftTypeId == Tid && myDids.Contains(iM.DashNumberId)
                         select new
                         {
                             aircraft = at.Description,
@@ -51,7 +51,7 @@ namespace DAL.Repositories
         public IEnumerable<object> GetDashNoByID(string Mid, string Tid)
         {
             long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-            long[] myTids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            long[] myTids = Tid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             var data = (from iM in _appContext.AircraftDashNumber
                         join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
                         join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId

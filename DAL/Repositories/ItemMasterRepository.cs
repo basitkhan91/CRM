@@ -49,10 +49,8 @@ namespace DAL.Repositories
             }
         }
         
-              public IEnumerable<object> getItemMasterData(long id)
+        public IEnumerable<object> getItemMasterData(long id)
         {
-
-            {
                 var data = (from iM in _appContext.ItemMaster
                             where iM.ItemMasterId == id
 
@@ -68,14 +66,13 @@ namespace DAL.Repositories
                                 iM.ItemMasterId,
                                 iM.GLAccountId,
                                 iM.ManufacturerId,
-                                iM.Manufacturer
-
-
+                                iM.Manufacturer,
+                                iM.ShelfLifeAvailable,
+                                iM.isPma,iM.mfgHours,iM.turnTimeMfg ,iM.turnTimeBenchTest ,iM.IsExportUnspecified,
+                                iM.IsExportNOMilitary ,iM.IsExportMilitary ,iM.IsExportDual 
                             }).ToList();
                 return data;
-            }
         }
-
 
         public IEnumerable<object> GetSelectedAircraftModeldata(long id)
         {
@@ -103,12 +100,12 @@ namespace DAL.Repositories
         {
 
             {
-                var data = (from iM in _appContext.ItemMasterAircraftManufacturer
-                            where iM.ItemMasterId == id
+                var data = (from iM in _appContext.ItemMasterAircraftMapping
+							where iM.ItemMasterId == id
 
                             select new
                             {
-                                iM.ItemMasterAircraftManufacturerId,
+                                iM.ItemMasterAircraftMappingId,
                                 iM.ItemMasterId,
                                 iM.AircraftTypeId,
                                 iM.IsActive
@@ -118,7 +115,6 @@ namespace DAL.Repositories
                 return data;
             }
         }
-
 
         public IEnumerable<object> getAllItemMasterdata()
         {
@@ -157,6 +153,14 @@ namespace DAL.Repositories
                             IM.NationalStockNumber,
                             IM.IsHazardousMaterial,
                             IM.ItemMasterId,
+                            IM.isPma,
+                            IM.mfgHours,
+                            IM.turnTimeMfg,
+                            IM.turnTimeBenchTest,
+                            IM.IsExportUnspecified,
+                            IM.IsExportNOMilitary,
+                            IM.IsExportMilitary,
+                            IM.IsExportDual
                         }).ToList();
             return data;
 
@@ -579,6 +583,14 @@ namespace DAL.Repositories
                             var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                             return uniquedata;
             }
+            else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId == null)
+            {
+                var data = (from it in _appContext.ItemMasterAircraftMapping
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftModelId.Contains(it.AircraftModelId) && it.IsDeleted != true
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
             else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId != null)
             {
                             var data = (from it in _appContext.ItemMasterAircraftMapping
@@ -610,7 +622,6 @@ namespace DAL.Repositories
                             select new{iM.ItemMasterATAMappingId,iM.ItemMasterId,iM.ATAChapterId,iM.ATAChapterCode,iM.ATAChapterName,iM.PartNumber,iM.ATASubChapterId,iM.ATASubChapterDescription}).ToList();
                             var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                             return uniquedata;
-
             }
             else if (ATAChapterId != null && ATASubChapterID == null)
             {
@@ -639,6 +650,28 @@ namespace DAL.Repositories
                             return uniquedata;
 
             }
+        }
+
+        public IEnumerable<object> gePurcSaleByItemMasterID(long ItemMasterid)
+        {
+
+                var data = (from iM in _appContext.ItemMasterPurchaseSale
+                            where iM.ItemMasterId == ItemMasterid && iM.IsActive == true && iM.IsDeleted == false
+                            select new
+                            {
+                                iM.Condition,iM.ItemMasterId,
+                                iM.ItemMasterPurchaseSaleId,iM.PartNumber,iM.PP_CurrencyId,iM.PP_FXRatePerc,iM.PP_LastListPriceDate,
+                                iM.PP_LastPurchaseDiscDate,iM.PP_PurchaseDiscAmount,iM.PP_PurchaseDiscPerc,iM.PP_UnitPurchasePrice,
+                                iM.PP_UOMId,iM.PP_VendorListPrice,iM.SP_CalSPByPP_BaseSalePrice,iM.SP_CalSPByPP_LastMarkUpDate,
+                                iM.SP_CalSPByPP_LastSalesDiscDate,iM.SP_CalSPByPP_MarkUpAmount,iM.SP_CalSPByPP_MarkUpPercOnListPrice,
+                                iM.SP_CalSPByPP_SaleDiscAmount,iM.SP_CalSPByPP_SaleDiscPerc,iM.SP_CalSPByPP_UnitSalePrice,
+                                iM.SP_FSP_CurrencyId,iM.SP_FSP_FlatPriceAmount,iM.SP_FSP_FXRatePerc,iM.SP_FSP_LastFlatPriceDate,
+                                iM.SP_FSP_UOMId,iM.UpdatedBy,iM.UpdatedDate,iM.IsActive,iM.IsDeleted,iM.CreatedBy,iM.CreatedDate,
+
+
+
+                            }).ToList();
+                return data;
         }
     }
 }

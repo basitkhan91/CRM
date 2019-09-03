@@ -28,6 +28,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     totelPages: number;
     itemClassificationPaginationList: any[] = [];
     event: any;
+    property: string;
     itemClassification = [];
     itemTypeInputFieldValue: any;
     updatedByInputFieldValue: any;
@@ -656,6 +657,25 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         else {
         }
     }
+    eventPage(data) {
+        this.property = data.field;
+        this.itemClassificationPaginationList = this.sortData(this.itemClassificationPaginationList, this.property, false);
 
+        console.log(this.property);
+        console.log(data);
+    }
+
+    sortData(array: any[], property: string, isNumber: boolean) {
+        var collection;
+        if (isNumber) {
+            return array.sort((item1, item2) => {
+                return (item1[property] > item2[property]) ? 1 : -1;
+            });
+        } else {
+            return array.sort((item1, item2) => {
+                return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
+            });
+        }
+    }
 
 }

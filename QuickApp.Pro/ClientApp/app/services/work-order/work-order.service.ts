@@ -63,4 +63,7 @@ export class WorkOrderService {
     getAllWorkOrderStages() {
         return this.workOrderEndpointService.getAllWorkOrderStages<WorkOrderStage[]>();
     }
+    postLabour(action: any) {
+        return this.workOrderEndpointService.postLabourEndpoint<any>(action);
+    }
 }

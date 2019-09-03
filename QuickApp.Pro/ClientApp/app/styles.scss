@@ -324,7 +324,7 @@ p {
 }
 input[type="text"] {
     background-color: white !important;
-    border-radius: 2px !important;
+    border-radius: 5px !important;
 }
 .ui-autocomplete .ui-autocomplete-dropdown {    
     height: 24px;
@@ -13628,8 +13628,15 @@ button {
     p-autocomplete .ui-autocomplete input.ui-inputtext {
         background-color: white !important;
     }
-.autocomplete-customer2 .ui-autocomplete {
-    width: 106% !important;
+.autocomplete-value .ui-autocomplete {
+    margin-top: -12px;
+    width: 108% !important;
+    margin-left: -7px;
+}
+.autocomplete-value1 .ui-autocomplete {
+    margin-top: -4px;
+    width: 108% !important;
+    margin-left: -7px;
 }
 .autocomplete-customer3 .ui-autocomplete {
     margin-left: -5px !important;
@@ -13639,6 +13646,12 @@ button {
 .autocomplete-customer .ui-autocomplete {
     margin-left: -5px !important;   
     margin-top: -6px !important;
+    width: 100% !important;
+}
+.autocomplete-width .ui-autocomplete {
+    margin-left: -5px !important;
+    margin-top: -6px !important;
+    width: 105% !important;
 }
 .autocomplete-customer3 .ui-autocomplete input.ui-inputtext {
     border-radius: 5px 0px 0px 5px !important;
@@ -13646,10 +13659,16 @@ button {
 .autocomplete-customer .ui-autocomplete input.ui-inputtext {
     border-radius: 5px 0px 0px 5px !important;
 }
+.autocomplete-width .ui-autocomplete input.ui-inputtext {
+    border-radius: 5px 0px 0px 5px !important;
+}
 .autocomplete-customer3 .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
     border-radius: 0px 5px 5px 0px !important;
 }
 .autocomplete-customer .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
+    border-radius: 0px 5px 5px 0px !important;
+}
+.autocomplete-width .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
     border-radius: 0px 5px 5px 0px !important;
 }
 .calender-border .ui-calendar.ui-calendar-w-btn .ui-inputtext {
@@ -13705,8 +13724,40 @@ button {
     position: relative;
     border-collapse: collapse;
 }
+
+.ata-table-cstm {
+    overflow-y: hidden;
+}
+
+.ata-table-cstm th {
+    width: 110px;
+    padding: 8px 5px !important;
+}
+
+.ata-table-cstm .ui-table {
+    padding-bottom: 60px;
+}
+
+.ata-table-cstm .ui-table-wrapper {
+    max-width: 100%;  
+    position: relative;
+    padding: 0;
+}
+
+.ata-table-cstm .ui-table-wrapper table {
+    position: relative;
+    border-collapse: collapse;
+}
 .input-field-value {
+    background-color: white !important;
     border-radius: 5px !important;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 .rro-table-cstm .ui-table-wrapper thead th {
     position: -webkit-sticky;
@@ -13714,6 +13765,7 @@ button {
     top: -1px;
     background: #0d57b0;
 }
+
 .rro-table-cstm thead th:last-child {
     right: 0;
     z-index: 1;
@@ -13808,6 +13860,11 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     min-width: 95% !important;
     margin-left: 5px !important;
     margin-top: 10px;
+}
+.autocomplete-value .ui-autocomplete .ui-autocomplete-panel {
+    min-width: 95% !important;
+    margin-left: 5px !important;
+    margin-top: 8px;
 }
 .autocomplete-customer1 .ui-autocomplete .ui-autocomplete-panel {
     min-width: 97% !important;
@@ -13954,6 +14011,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     top: 43% !important;
     left: 36% !important;
 }
+.new-margin {
+    margin-top: 10px;
+}
 .imstock-pddowm .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight {
     color: #fff !important;
 }
@@ -13981,6 +14041,26 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .plusicon-cstm i {
     padding: 0 !important;
     font-size: 20px !important;
+}
+.autocomp-customer-cstm .ui-autocomplete {
+    padding: 0 !important;
+}
+.p-dialog-cstm .ui-dialog-titlebar {
+    min-height: 30px;
+}
+.p-dialog-cstm .ui-dialog-content {
+    margin-bottom: 0 !important;
+}
+.p-dialog-cstm .ui-widget.ui-widget-content {
+    min-height: 110px !important;
+}
+.label-cstm {
+    width: auto;
+    float: left;
+    font-size: 12px !important;
+    text-align: left;
+    margin-right: 0;
+    font-weight: normal;
 }
 
 .modal-full {

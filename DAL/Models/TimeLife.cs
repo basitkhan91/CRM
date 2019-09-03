@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class TimeLife:PasBase
+    public class TimeLife : PasBase
     {
         [Key]
         public long TimeLifeCyclesId { get; set; }

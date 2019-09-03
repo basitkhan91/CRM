@@ -202,6 +202,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     selectedCustomerClassification: any;
     disableSaveCustomerClassification: boolean;
     disableSaveParentName: boolean;
+    integrationCols: any[];
+    intSelectedColumns: any[];
+    memoPopupContent: string;
+    memoPopupValue: string;
 
     ngOnInit(): void
     {
@@ -239,6 +243,18 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (!this.classificationName)
         {
             this.disableSaveCustomerClassificationSave = true;
+        }
+
+        this.integrationCols = [
+            { field: '145.com', header: '145.com' },
+            { field: 'Aeroxchange', header: 'Aeroxchange' },
+            { field: 'AvRef', header: 'AvRef' },
+            { field: 'ILS', header: 'ILS' },
+            { field: 'partsBase', header: 'Parts base' },
+        ];
+
+        if (!this.intSelectedColumns) {
+            this.intSelectedColumns = this.cols;
         }
 
     }
@@ -1534,6 +1550,37 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             }
         }
+    }
+
+    onAddIntegrationWith() {
+        this.router.navigate(['/singlepages/singlepages/app-integration']);
+    }
+
+    onClickPBHCustomer(value) {
+        if (value == 'PBHCustomer') {
+            this.memoPopupContent = this.sourceCustomer.pbhCustomerMemo;      
+        }
+        if (value == 'restrictPMA') {
+            this.memoPopupContent = this.sourceCustomer.restrictPMAMemo;      
+        }
+        if (value == 'restrictBER') {
+            this.memoPopupContent = this.sourceCustomer.restrictBERMemo;           
+        }           
+        this.memoPopupValue = value;
+    }
+
+    onClickPopupSave() {
+        console.log(this.memoPopupValue);
+        if (this.memoPopupValue == 'PBHCustomer') {
+            this.sourceCustomer.pbhCustomerMemo = this.memoPopupContent;
+        }
+        if (this.memoPopupValue == 'restrictPMA') {
+            this.sourceCustomer.restrictPMAMemo = this.memoPopupContent;
+        }
+        if (this.memoPopupValue == 'restrictBER') {
+            this.sourceCustomer.restrictBERMemo = this.memoPopupContent;
+        }
+        this.memoPopupContent = '';
     }
 
 }

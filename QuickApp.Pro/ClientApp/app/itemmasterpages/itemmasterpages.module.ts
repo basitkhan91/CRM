@@ -48,6 +48,7 @@ import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { TooltipModule } from "primeng/tooltip";
 
+
 @NgModule({
     imports: [        
         TooltipModule,
@@ -77,6 +78,7 @@ import { TooltipModule } from "primeng/tooltip";
         AuditModule
     ],
     declarations: [
+   
         ItemmasterPagesComponent,
         ItemMasterListComponent,
         ItemMasterSetupComponent,

@@ -15,15 +15,17 @@ import { WorkOrder } from '../../models/work-order.model';
 export class WorkOrderEndpointService extends EndpointFactory {
 
     private readonly getAllURL: string = "/api/WorkOrder/getAll";
-    private readonly getByIdURL: string = "/api/WorkOrder/get";
-    private readonly addURL: string = "/api/WorkOrder/add";
-    private readonly updateURL: string = "/api/WorkOrder/update";
+    private readonly getByIdURL: string = "/api/WorkOrder/getWorkOrderDataByID";
+    private readonly addURL: string = "/api/WorkOrder/WorkOrderPost";
+    private readonly updateURL: string = "/api/WorkOrder/updateWO";
     private readonly removeByIdURL: string = "/api/WorkOrder/remove";
     private readonly getAssetAuditById: string = "/api/WorkOrder/audits";
     private readonly getAllWorkOrderTypesURL: string = "/api/WorkOrder/workOrderTypes";
     private readonly getAllWorkOrderStatusURL: string = "/api/WorkOrder/workOrderStatus";
     private readonly getAllWorkScopesURL: string = "/api/WorkOrder/getAllworkScopes";
     private readonly getAllWorkOrderStagesURL: string = "/api/WorkOrder/getStages";
+
+    private readonly addLabourURL: string = "/api/WorkOrder/WorkOrderLabourPost";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -125,5 +127,13 @@ export class WorkOrderEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getAssetStatusAuditById(workOrderId));
             });
     }
+    postLabourEndpoint<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this.addLabourURL, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postLabourEndpoint(userObject));
+            });
+    }
+    
 
 }

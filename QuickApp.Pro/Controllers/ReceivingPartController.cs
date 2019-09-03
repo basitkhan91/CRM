@@ -153,7 +153,7 @@ namespace QuickApp.Pro.Controllers
                 foreach (var receivePart in receiveParts)
                 {
                     foreach (var stockLine in receivePart.StockLines)
-                    { 
+                    {
                         stockLine.ShelfId = null;
                         stockLine.WarehouseId = null;
                         stockLine.BinId = null;
@@ -164,7 +164,8 @@ namespace QuickApp.Pro.Controllers
                 }
                 unitOfWork.SaveChanges();
             }
-            else {
+            else
+            {
                 return BadRequest();
             }
             return Ok();

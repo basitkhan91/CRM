@@ -120,20 +120,24 @@ import { AircraftModelComponent } from "../components/aircraft-model/aircraft-mo
 import { DashnumberComponent } from "../components/dashnumber/dashnumber.component";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { DashNumberService } from "../services/dash-number/dash-number.service";
-import {PaginatorModule} from 'primeng/paginator';
+import { PaginatorModule} from 'primeng/paginator';
 import { CreatePublicationComponent } from "../components/publication/create-publication/create-publication.component";
 import { PaginationComponent } from "../shared/pagination/pagination/pagination.component";
 import { PaginationService } from "../services/pagination/pagination.service";
+import { TooltipModule } from "primeng/tooltip";
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 @NgModule({
 	imports: [
         FlexLayoutModule,
+        KeyFilterModule,
         FormsModule, ReactiveFormsModule,
         QuickAppProMaterialModule,
         TranslateModule,
         CommonModule,
         SinglePagesRoutingModule,
         TableModule,
+        TooltipModule,
         ButtonModule,
         SelectButtonModule,
         InputTextModule,

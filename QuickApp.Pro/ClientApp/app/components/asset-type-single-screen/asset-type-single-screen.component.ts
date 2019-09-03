@@ -28,15 +28,20 @@ export class AssetTypeSingleScreenComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
-
+    memoPopupText: string;
+    memoNotes: string = 'This is new memo';
+    selectedColumns: any[];
+    cols: any[];
     constructor(private breadCrumb: SingleScreenBreadcrumbService,private alertService: AlertService, private assetTypeService: AssetTypeSingleScreenService, private modalService: NgbModal, private authService: AuthService) {
     }
 
     ngOnInit(): void {
+        this.loadData();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-type-single-screen';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.assetTypeService.getAll().subscribe(AssetTypes => {
             this.assetTypeList = AssetTypes[0];
+            
         });
         this.currentAssetTypeetStatus = new AssetTypeSingleScreen();
     }
@@ -63,7 +68,9 @@ export class AssetTypeSingleScreenComponent implements OnInit {
             });
         }
     }
-
+    onAddMemoToPopup() {
+        this.memoPopupText = this.memoNotes;
+    }
     resetAssetTypeAdd(): void {
         this.currentAssetTypeetStatus = new AssetTypeSingleScreen();
     }
@@ -93,7 +100,22 @@ export class AssetTypeSingleScreenComponent implements OnInit {
             });
         }
     }
+    private loadData() {
+        this.cols = [
+            //{ field: 'actionId', header: 'Action Id' },
+            { field: 'id', header: 'Code' },
+            { field: 'name', header: 'Name' },           
+            { field: 'memo', header: 'Memo' },
 
+        ];
+
+        if (!this.selectedColumns) {
+            this.selectedColumns = this.cols;
+        }
+    }
+    onSaveMemo() {
+        this.memoNotes = this.memoPopupText;
+    }
     removeAssetType(): void {
         this.assetTypeService.remove(this.currentAssetTypeetStatus.assetTypeSingleScreenId).subscribe(response => {
             this.alertService.showMessage("Asset Type removed successfully.");
