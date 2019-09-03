@@ -37,7 +37,7 @@ namespace DAL.Models
         public Nullable<long> WorkOrderId { get; set; }
         public Nullable<long> RepairOrderId { get; set; }
         public Nullable<long> SalesOrderId { get; set; }
-        public Nullable<int> GeneralLedgerAccounId { get; set; }
+        public long GeneralLedgerAccounId { get; set; }
         public string Memo { get; set; }
         public Nullable<short> POPartSplitUserTypeId { get; set; }
         public long? POPartSplitUserId { get; set; }
