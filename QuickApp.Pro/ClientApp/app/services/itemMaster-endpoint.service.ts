@@ -352,9 +352,11 @@ export class ItemMasterEndpoint extends EndpointFactory {
     }
 
     getUpdateitemMasterEndpoint<T>(roleObject: any, itemMasterId: number): Observable<T> {
+        console.log(roleObject);
 
         let endpointUrl = `${this._actionsUrlNew}/${roleObject.itemMasterId}`;
         let finalobj = {
+
             'mfgHours': roleObject.mfgHours,
             'turnTimeMfg': roleObject.turnTimeMfg,
             'turnTimeBenchTest': roleObject.turnTimeBenchTest,

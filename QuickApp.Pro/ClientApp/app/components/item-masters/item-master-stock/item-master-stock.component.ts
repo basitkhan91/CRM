@@ -375,9 +375,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         IsExportNONMilitary: false,
         IsExportDual: false,
     }
-    tempOEMpartNumberId: number;
-    tempExportCountryId: number;
+    tempOEMpartNumberId: number = null;
+    tempExportCountryId: number = null;
     isItemMasterCreated: boolean = false;
+    isValidClassification: boolean = false;
     // errorLogForPS: string = '';
 
     constructor(private fb: FormBuilder, public priorityService: PriorityService, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -410,30 +411,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster = responseDataOfEdit[0];
 
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate)
-                // integration with dropdown value binding on edit 
+
+
+
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
 
+                this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
 
 
 
-                // binding the export information data on edit
-                this.exportInfo = {
-                    ExportECCN: this.sourceItemMaster.exportECCN,
-                    ITARNumber: this.sourceItemMaster.itarNumber,
-                    ExportUomId: this.sourceItemMaster.exportUomId,
-                    ExportCountryId: this.sourceItemMaster.countryData[0],
-                    ExportValue: this.sourceItemMaster.exportValue,
-                    ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
-                    ExportWeight: this.sourceItemMaster.exportWeight,
-                    ExportWeightUnit: parseInt(this.sourceItemMaster.exportWeightUnit),
-                    ExportSizeLength: this.sourceItemMaster.exportSizeLength,
-                    ExportSizeWidth: this.sourceItemMaster.exportSizeWidth,
-                    ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
-                    IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
-                    IsExportMilitary: this.sourceItemMaster.isExportMilitary,
-                    IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
-                    IsExportDual: this.sourceItemMaster.isExportDual,
-                }
 
 
                 // assign the header values
@@ -475,6 +461,28 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                 })
 
+
+
+                // binding the export information data on edit
+                this.exportInfo = {
+                    ExportECCN: this.sourceItemMaster.exportECCN,
+                    ITARNumber: this.sourceItemMaster.itarNumber,
+                    ExportUomId: this.sourceItemMaster.exportUomId,
+                    ExportCountryId: this.sourceItemMaster.countryData[0],
+                    ExportValue: this.sourceItemMaster.exportValue,
+                    ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
+                    ExportWeight: this.sourceItemMaster.exportWeight,
+                    ExportWeightUnit: parseInt(this.sourceItemMaster.exportWeightUnit),
+                    ExportSizeLength: this.sourceItemMaster.exportSizeLength,
+                    ExportSizeWidth: this.sourceItemMaster.exportSizeWidth,
+                    ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
+                    IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
+                    IsExportMilitary: this.sourceItemMaster.isExportMilitary,
+                    IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
+                    IsExportDual: this.sourceItemMaster.isExportDual,
+                }
+                // validate classification required in Export Information
+                this.validateClassificationRequired()
                 this.getAircraftMappedDataByItemMasterId();
                 this.getATAMappedDataByItemMasterId();
             })
@@ -733,6 +741,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllATAChapter();
         this.getAllATASubChapter();
         this.getAllSubChapters();
+
+
+
 
         // //cutom
         // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
@@ -4681,8 +4692,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showexportData = false;
     }
 
+    validateClassificationRequired() {
+
+        if (this.exportInfo.IsExportUnspecified || this.exportInfo.IsExportMilitary || this.exportInfo.IsExportNONMilitary || this.exportInfo.IsExportDual) {
+
+            this.isValidClassification = true;
+        } else {
+            this.isValidClassification = false;
+        }
+
+
+
+    }
+
     saveExportInformation() {
-        console.log(this.exportInfo);
+
 
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
@@ -4699,6 +4723,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     selectedOEM(value) {
+
         this.tempOEMpartNumberId = value.itemMasterId;
 
     }
@@ -4710,21 +4735,25 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else {
 
             this.isSaving = true;
-            console.log(!this.isItemMasterCreated);
-            console.log(this.itemMasterId);
-
             if (!this.isItemMasterCreated) //for create ItemMaster
 
             {
+                const oemPnData = this.sourceItemMaster.oemPNId;
                 this.sourceItemMaster.createdBy = this.userName;
                 this.sourceItemMaster.updatedBy = this.userName;
                 this.sourceItemMaster.masterCompanyId = 1;
                 this.sourceItemMaster.itemTypeId = 1;
 
-                this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+
+                if (this.selectedIntegrationTypes != null) {
+
+                    this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+                }
+
                 this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
+
                 this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
-                    console.log(data.manufacturer.name);
+                    this.sourceItemMaster.oemPNId = oemPnData;
                     this.tempOEMpartNumberId = null;
 
                     this.ManufacturerValue = data.manufacturer.name;
@@ -4736,17 +4765,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                         }
                     }
 
-                    // get aircraft Mapped Information by ItemMasterId
-                    this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-                        this.aircraftListDataValues = data.map(x => {
-                            return {
-                                aircraft: x.aircraftType,
-                                model: x.aircraftModel,
-                                dashNumber: x.dashNumber,
-                                memo: x.memo,
-                            }
-                        })
-                    })
+                    // // get aircraft Mapped Information by ItemMasterId
+                    // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
+                    //     this.aircraftListDataValues = data.map(x => {
+                    //         return {
+                    //             aircraft: x.aircraftType,
+                    //             model: x.aircraftModel,
+                    //             dashNumber: x.dashNumber,
+                    //             memo: x.memo,
+                    //         }
+                    //     })
+                    // })
 
                     this.isItemMasterCreated = true;
                     // go to next tab
@@ -4781,10 +4810,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             else if (this.isItemMasterCreated || this.itemMasterId) //for Edit Screen
             {
                 const itemMasterId = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-                // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
-                // {
-                //     this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
-                // }
+                // takes copy of current object to reassign to UI after submit data
+                const oemPnData = this.sourceItemMaster.oemPNId;
+
                 if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
                 {
                     this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
@@ -4792,10 +4820,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.updatedBy = this.userName;
                 this.sourceItemMaster.masterCompanyId = 1;
                 this.sourceItemMaster.itemTypeId = 1;
-                this.sourceItemMaster.oemPN = this.tempOEMpartNumberId;
+
+                this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId === null ? this.sourceItemMaster.oemPNId.itemMasterId : this.tempOEMpartNumberId;
                 this.sourceItemMaster.itemMasterId = itemMasterId;
                 // Destructing the Object in Services Place Apply Changes there also 
                 this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
+
+                    this.sourceItemMaster.oemPNId = oemPnData;
                     this.tempOEMpartNumberId = null;
                     this.changeOfTab('AircraftInfo');
                     this.collectionofItemMaster = data;
@@ -5042,21 +5073,22 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 );
         }
 
-        let valAirCraft = [];
-        this.itemser.getintegrationtypes(this.sourceItemMaster.itemMasterId)
-            .subscribe(results => {
-                this.allIntegrationInfo = results;
-                if (results != null) {
-                    for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-                        valAirCraft.push(this.allIntegrationInfo[i].integrationPortalId);
-                    }
-                    this.selectedIntegrationTypes = valAirCraft;
-                    //console.log(this.selectedIntegrationTypes);
-                }
 
-            },
-                error => this.onDataLoadFailed(error)
-            );
+        // let valAirCraft = [];
+        // this.itemser.getintegrationtypes(this.sourceItemMaster.itemMasterId)
+        //     .subscribe(results => {
+        //         this.allIntegrationInfo = results;
+        //         if (results != null) {
+        //             for (let i = 0; i < this.allIntegrationInfo.length; i++) {
+        //                 valAirCraft.push(this.allIntegrationInfo[i].integrationPortalId);
+        //             }
+        //             this.selectedIntegrationTypes = valAirCraft;
+        //             //console.log(this.selectedIntegrationTypes);
+        //         }
+
+        //     },
+        //         error => this.onDataLoadFailed(error)
+        //     );
     }
 
 
@@ -5418,6 +5450,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         if (field.PP_UnitPurchasePrice && field.SP_CalSPByPP_MarkUpAmount) {
 
             field.SP_CalSPByPP_BaseSalePrice = field.PP_VendorListPrice + field.SP_CalSPByPP_MarkUpAmount;
+        }
+
+        if (field.SP_CalSPByPP_UnitSalePrice !== null) {
+            this.salePercent(field);
         }
 
     }
