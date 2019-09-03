@@ -1116,8 +1116,6 @@ export class ItemMasterNonStockComponent {
 			this.isSaving = true;
 
 			if (!this.sourceItemMaster.itemMasterId) {
-
-
 				this.sourceItemMaster.isActive = true;
 				this.sourceItemMaster.createdBy = this.userName;
 				this.sourceItemMaster.updatedBy = this.userName;
@@ -1130,7 +1128,7 @@ export class ItemMasterNonStockComponent {
 					this.itemser.listNonstock = true;
 					this.itemser.listEquipment = false;
 					this.savesuccessCompleted(this.sourceItemMaster);
-
+                    this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-list'])
 				})
 			}
 			else {

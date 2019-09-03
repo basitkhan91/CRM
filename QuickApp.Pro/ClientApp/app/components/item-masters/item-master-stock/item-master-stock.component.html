@@ -137,7 +137,7 @@
 
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}" class="select-drop"
+                                        <select name="itemclassification" class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemClassificationId">
                                             <option *ngFor="let itemName of allitemclassificationInfo"
                                                     [ngValue]="itemName.itemClassificationId">
@@ -309,7 +309,7 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}"
+                                        <select name="provision"
                                                 [(ngModel)]="sourceItemMaster.provisionId">
                                             <option *ngFor="let provisionName of allProvisonInfo"
                                                     [ngValue]="provisionName.provisionId">
