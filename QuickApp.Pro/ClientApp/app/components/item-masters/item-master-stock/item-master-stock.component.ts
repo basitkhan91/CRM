@@ -4941,7 +4941,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.manufacturerName = " "
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-            console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
