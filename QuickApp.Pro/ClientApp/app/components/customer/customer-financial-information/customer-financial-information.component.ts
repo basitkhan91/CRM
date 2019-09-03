@@ -139,6 +139,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     itemQuantity = [];
     itemQuantity1 = [];
     itemQuantity2 = [];
+    isCustomerAlsoVendor: boolean;
+
 	constructor(public taxtypeser: TaxTypeService, private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, public customerClassificationService: CustomerClassificationService, private router: ActivatedRoute, public inteservice: IntegrationService, public taxRateService: TaxRateService, public itemser: ItemMasterService, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
@@ -172,7 +174,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (this.local) {
             this.getCustomerList();
         }
-        
+        if (this.workFlowtService.isEditMode == false) {
+            this.sourceCustomer.allowPartialBilling = true;
+            this.sourceCustomer.allowProformaBilling = true;
+        }
+                
     }
     private getCustomerList() {
         this.alertService.startLoadingMessage();
@@ -189,6 +195,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allCustomers;
+        this.isCustomerAlsoVendor = allCustomers[0].t.isCustomerAlsoVendor;
         if (this.customersList) {
             this.sourceCustomer = this.customersList;
         }

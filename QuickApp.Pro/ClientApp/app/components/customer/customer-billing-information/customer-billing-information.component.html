@@ -19,7 +19,7 @@
                 <div>
                     <div class="col-md-12" style="margin-bottom: -10px;">
                         <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3>
-                        <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addBillingInfo">Add Billing Information</button>
+                        <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addBillingInfo" (click)="onAddBillingInfo()">Add Billing Information</button>
                     </div>
                     <div class="clear"></div>
                     <hr />
@@ -78,7 +78,7 @@
                                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
-                                    <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
+                                    <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addBillingInfo">
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
@@ -324,7 +324,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="disablesave || !addBillingForm.valid" (click)="editItemAndCloseModel()">Save</button>
+                    <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="disablesave || !addBillingForm.valid" (click)="editItemAndCloseModel()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>
