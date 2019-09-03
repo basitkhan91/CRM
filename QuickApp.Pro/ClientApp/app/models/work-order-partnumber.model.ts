@@ -3,7 +3,8 @@
 
     constructor() {
         this.iD = 0;
-        this.workOrderId = 0;
+        this.description = '',
+            this.workOrderId = 0;
         this.itemMasterId = 0;
         this.workOrderScopeId = 0;
         this.nTE = "";
@@ -36,6 +37,7 @@
 
 
     public iD: number;
+    public description: string
     public workOrderId: number;
     public itemMasterId: number;
     public workOrderScopeId: number;
