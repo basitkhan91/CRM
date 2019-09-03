@@ -51,8 +51,8 @@ export class ShippingEndpoint extends EndpointFactory {
         for (let part of receiveParts) {
             let Obj = {
                 'purchaseOrderPartRecordId': part.purchaseOrderPartRecordId,
-                'stockLines': part.stockLines
-
+                'stockLines': part.stockLines,
+                'timeLife': part.timeLife
                 //'stockLineId': stockLine.stockLineId,part
                 //'partNumber': stockLine.partNumber,
                 //'stockLineNumber': stockLine.stockLineNumber,

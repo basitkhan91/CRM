@@ -543,7 +543,7 @@
                                     </div>
                                     <div>
                                         <p-multiSelect [options]="integrationvalues"
-                                                       [ngModelOptions]="{standalone: true}" [maxSelectedLabels]="2" [(ngModel)]="selectedIntegrationTypes"
+                                                       name="intergations" [maxSelectedLabels]="2" [(ngModel)]="selectedIntegrationTypes"
                                                        [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                                     </div>
                                     <label class="control-label">Memo</label>
@@ -1219,14 +1219,14 @@
                                         <div class="inline-block display-flex">
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified">
+                                                    <input type="checkbox" id="" name="unspecified"  [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     Unspecified
                                                 </label>
                                             </div>
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="nonmilitary" [(ngModel)]="exportInfo.IsExportNONMilitary">
+                                                    <input type="checkbox" id="" name="nonmilitary"  [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     NON-Military
                                                 </label>
@@ -1235,14 +1235,14 @@
                                         <div class="inline-block display-flex">
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="miltary" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary">
+                                                    <input type="checkbox" id="" name="miltary"  value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     Miltary
                                                 </label>
                                             </div>
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="dual" [(ngModel)]="exportInfo.IsExportDual">
+                                                    <input type="checkbox" id="" name="dual"  [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     Dual
                                                 </label>
@@ -1259,7 +1259,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <span class="float-right">
-                                    <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
+                                    <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
                                     &nbsp;
                                     <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
                                 </span>

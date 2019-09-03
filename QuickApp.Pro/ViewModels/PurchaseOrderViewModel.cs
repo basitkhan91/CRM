@@ -11,7 +11,7 @@ namespace QuickApp.Pro.ViewModels
         public long PurchaseOrderId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public string ReferenceId { get; set; }
-        public Nullable<short> PriorityId { get; set; }
+        public Nullable<long> PriorityId { get; set; }
         public string RequestedBy { get; set; }
         public System.DateTime DateRequested { get; set; }
         public string Approver { get; set; }
