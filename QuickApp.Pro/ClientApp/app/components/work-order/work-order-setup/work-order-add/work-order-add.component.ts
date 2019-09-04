@@ -96,6 +96,7 @@ export class WorkOrderAddComponent implements OnInit {
   ];
   workOrderMPN = {
     iD: 0,
+    description: '',
     workOrderId: 0,
     itemMasterId: 0,
     workOrderScopeId: 0,
@@ -222,7 +223,7 @@ export class WorkOrderAddComponent implements OnInit {
           this.workOrderPartNumberService
             .add(this.workOrderPartNumbers[i])
             .subscribe(
-              result => {},
+              result => { },
               error => {
                 var message = '';
                 if (error.error.constructor == Array) {
@@ -394,7 +395,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   getStockLines(): void {
     this.stocklineService.getStockLineList().subscribe(
-      result => {},
+      result => { },
       error => {
         this.alertService.showMessage(
           this.moduleName,
@@ -408,7 +409,7 @@ export class WorkOrderAddComponent implements OnInit {
   getAllIterMasters(): void {
     this.itemMasterService
       .getItemMasterList()
-      .subscribe(result => {}, error => {});
+      .subscribe(result => { }, error => { });
   }
 
   onCustomerSelected(event, selectionType): void {

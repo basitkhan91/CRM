@@ -8,11 +8,11 @@ interface AddressDetails {
 }
 
 export class addressesForm {
-  woId: string;
+  workOrderId: number;
   shipTo: AddressDetails;
   billTo: AddressDetails;
   constructor() {
-    this.woId = '';
+    this.workOrderId = null;
     this.shipTo = {
       siteName: '',
       address: '',

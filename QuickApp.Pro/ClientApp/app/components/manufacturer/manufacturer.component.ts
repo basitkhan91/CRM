@@ -335,7 +335,8 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.sourcemanufacturer.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourcemanufacturer.isActive == false;
-            this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+            this.loadMasterCompanies();
+            this.sourceAction.masterCompanyId = 1; this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
                 response => this.saveCompleted(this.sourcemanufacturer),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -345,7 +346,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.sourcemanufacturer.updatedBy = this.userName;
             this.Active = "Active";
             this.sourcemanufacturer.isActive == true;
-            this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+            this.sourceAction.masterCompanyId = 1; this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
                 response => this.saveCompleted(this.sourcemanufacturer),
                 error => this.saveFailedHelper(error));
             //alert(e);
