@@ -380,6 +380,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     tempExportCountryId: number = null;
     isItemMasterCreated: boolean = false;
     isValidClassification: boolean = false;
+    oemPnData: any;
     // errorLogForPS: string = '';
 
     constructor(private fb: FormBuilder, public priorityService: PriorityService, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -4644,7 +4645,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             if (!this.isItemMasterCreated) //for create ItemMaster
 
             {
-                const oemPnData = this.sourceItemMaster.oemPNId;
+                this.oemPnData = this.sourceItemMaster.oemPNId;
                 this.sourceItemMaster.createdBy = this.userName;
                 this.sourceItemMaster.updatedBy = this.userName;
                 this.sourceItemMaster.masterCompanyId = 1;
@@ -4656,10 +4657,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
                 }
 
-                this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
-
+                if (this.sourceItemMaster.isPma) {
+                    this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
+                }
                 this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
-                    this.sourceItemMaster.oemPNId = oemPnData;
+
+                    this.sourceItemMaster.oemPNId = this.oemPnData;
+
                     this.tempOEMpartNumberId = null;
 
                     this.ManufacturerValue = data.manufacturer.name;
@@ -4714,10 +4718,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
             }
             else if (this.isItemMasterCreated || this.itemMasterId) //for Edit Screen
+
             {
+
                 const itemMasterId = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-                // takes copy of current object to reassign to UI after submit data
-                const oemPnData = this.sourceItemMaster.oemPNId;
+                // takes copy of current object to reassign to UI after submit data only on create edit Method
+
+
+                this.oemPnData = this.sourceItemMaster.oemPNId;
+
 
                 if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
                 {
@@ -4727,12 +4736,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.masterCompanyId = 1;
                 this.sourceItemMaster.itemTypeId = 1;
 
-                this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId === null ? this.sourceItemMaster.oemPNId.itemMasterId : this.tempOEMpartNumberId;
+                if (this.sourceItemMaster.isPma) {
+                    // checks whether the Change of Data is Happened or not if not and its is in edit mode binds the old data id if not edit and no change it will get the old create oemPnID
+                    this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId === null ? this.isEdit === true ? this.sourceItemMaster.oemPNId.itemMasterId : this.oemPnData.itemMasterId : this.tempOEMpartNumberId;
+                }
+
                 this.sourceItemMaster.itemMasterId = itemMasterId;
                 // Destructing the Object in Services Place Apply Changes there also 
                 this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
 
-                    this.sourceItemMaster.oemPNId = oemPnData;
+                    this.sourceItemMaster.oemPNId = this.oemPnData;
                     this.tempOEMpartNumberId = null;
                     this.changeOfTab('AircraftInfo');
                     this.collectionofItemMaster = data;
@@ -4911,7 +4924,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-            console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
