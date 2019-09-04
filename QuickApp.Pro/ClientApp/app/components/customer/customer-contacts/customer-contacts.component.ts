@@ -16,7 +16,7 @@ import { MasterCompany } from '../../../models/mastercompany.model';
 import { AuditHistory } from '../../../models/audithistory.model';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../../services/auth.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, NgForm } from '@angular/forms';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { Customer } from '../../../models/Customer.model';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
@@ -86,8 +86,8 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 	comName: string;
 	display: boolean = false;
 	modelValue: boolean = false;
-	private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+	isEditMode: boolean = false;
+    isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
     isDefaultContact: any;
     selectedFirstName: any;
@@ -97,31 +97,34 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
     disableSaveName: any;
     disableSavelastName: any;
     disableSaveLastName: boolean;
-	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    sourceCustomerTemp: any = {};
+    //@ViewChild('addContactForm') addContactForm: NgForm;
+
+	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
 			//this.comName = companyDirective.companyName;
-		if (this.workFlowtService.generalCollection) {
+		if (this.customerService.generalCollection) {
 
-			this.local = this.workFlowtService.generalCollection;
+			this.local = this.customerService.generalCollection;
 		}
 		if (this.local) {
 
-			this.workFlowtService.contactCollection = this.local;
+			this.customerService.contactCollection = this.local;
 		}
 
 		this.dataSource = new MatTableDataSource();
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-			this.local = this.workFlowtService.listCollection.t;
+		if (this.customerService.listCollection && this.customerService.isEditMode == true) {
+			this.local = this.customerService.listCollection.t;
 			this.loadData();
 		}
         this.alertService.stopLoadingMessage();
     }
 
     ngOnInit(): void {
-        this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-contacts';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        this.workFlowtService.ShowPtab = true;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
+        this.customerService.currentUrl = '/customersmodule/customerpages/app-customer-contacts';
+        this.customerService.bredcrumbObj.next(this.customerService.currentUrl);
+        this.customerService.ShowPtab = true;
+        this.customerService.alertObj.next(this.customerService.ShowPtab); //steps
         if (this.local) {
             this.loadData();
         }
@@ -185,23 +188,25 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 	}
 
 	//Load Contacts//
-	private loadData() {
+loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getContacts(this.local.customerId).subscribe(
+		this.customerService.getContacts(this.local.customerId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
 		this.cols = [
 			{ field: 'firstName', header: 'First Name' },
-			{ field: 'lastName', header: 'Last  Name' },
+			{ field: 'lastName', header: 'Last Name' },
 			{ field: 'contactTitle', header: 'Contact Title' },
 			{ field: 'email', header: 'Email' },
 			{ field: 'workPhone', header: 'Work Phone' },
             { field: 'mobilePhone', header: 'Mobile Phone' },
             { field: 'fax', header: 'Fax' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
+			//{ field: 'createdBy', header: 'Created By' },
+			//{ field: 'updatedBy', header: 'Updated By' },
+            { field: 'isDefaultContact', header: 'Primary Contact' },
+			{ field: 'notes', header: 'Memo' },
 			{ field: 'updatedDate', header: 'Updated Date' },
 			{ field: 'createdDate', header: 'Created Date' }
 
@@ -215,7 +220,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 	private loadCompleteddata() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getContactsFirstName().subscribe(
+		this.customerService.getContactsFirstName().subscribe(
 			results => this.ondata(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -249,7 +254,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 			this.sourceCustomer.updatedBy = this.userName;
 			this.Active = "In Active";
 			this.sourceCustomer.isActive == false;
-			this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(
+			this.customerService.updateContactinfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             this.sourceCustomer = "";
@@ -260,7 +265,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 			this.sourceCustomer.updatedBy = this.userName;
 			this.Active = "Active";
 			this.sourceCustomer.isActive == true;
-			this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(
+			this.customerService.updateContactinfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             this.sourceCustomer = "";
@@ -329,14 +334,22 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-	openEdit(content, row) {
+	/*openEdit(content, row) {
 		this.isEditMode = true;
 		this.isSaving = true;
 		this.sourceCustomer = row;
 		this.loadMasterCompanies();
 		this.loadData();
-
-	}
+	}*/
+    openEditContact(row) {
+        this.isEditMode = true;
+		this.isSaving = true;
+        this.sourceCustomer = {...row};
+    }
+    onAddContactDetails() {
+        this.sourceCustomer = {};
+        this.isEditMode = false;
+    }
 	opencontactView(content, row) {
 		this.sourceViewforContact = row;
 		this.createdBy = row.createdBy;
@@ -362,7 +375,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = true;
 		this.sourceCustomer = row;
 		this.isSaving = true;
-		this.workFlowtService.historyAcion(this.sourceCustomer.contactId).subscribe(
+		this.customerService.historyAcion(this.sourceCustomer.contactId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
 	}
@@ -408,10 +421,13 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 				this.sourceCustomer.createdBy = this.userName;
 				this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
-                this.sourceCustomer.isDefaultContact = true; 
+                if(this.sourceCustomer.isDefaultContact === undefined){
+                        this.sourceCustomer.isDefaultContact = false;
+                    }
+            
+                console.log(this.sourceCustomer.isDefaultContact);
                 this.isDefault = this.sourceCustomer.isDefaultContact;
-				this.workFlowtService.newAddContactInfo(this.sourceCustomer).subscribe(data => {
-
+				this.customerService.newAddContactInfo(this.sourceCustomer).subscribe(data => {
 					this.localCollection = data;
 					this.sourceCustomer= new Object();
 					this.localCollection.CustomerId = this.local.customerId;
@@ -423,13 +439,13 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
                         this.loadData();
                     }
 					if (this.sourceCustomer.isCustomerAlsoVendor == true) {
-						this.workFlowtService.isCustomerAlsoVendor = this.isCustomerAlsoVendor;
-						this.workFlowtService.localCollectiontoVendor = data;
+						this.customerService.isCustomerAlsoVendor = this.isCustomerAlsoVendor;
+						this.customerService.localCollectiontoVendor = data;
 					}
-					this.workFlowtService.contactCollection = this.local;
+					this.customerService.contactCollection = this.local;
 					this.savesuccessCompleted(this.sourceCustomer);
 					this.activeIndex = 1;
-					this.workFlowtService.indexObj.next(this.activeIndex);
+					this.customerService.indexObj.next(this.activeIndex);
 					
 				})
 
@@ -442,7 +458,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
                 this.sourceCustomer.masterCompanyId = 1;
                 this.isDefault = this.sourceCustomer.isDefaultContact;
               
-				this.workFlowtService.updateContactinfo(this.sourceCustomer).subscribe(data => {
+				this.customerService.updateContactinfo(this.sourceCustomer).subscribe(data => {
                     this.loadData();                  
 					if (data) { this.sourceCustomer = new Object(); }
 
@@ -463,31 +479,31 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
     }
     // Next Click
     nextClick() {
-        this.workFlowtService.contactCollection = this.local;
+        this.customerService.contactCollection = this.local;
 		this.activeIndex = 2;
-		this.workFlowtService.indexObj.next(this.activeIndex);
+		this.customerService.indexObj.next(this.activeIndex);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-financial-information');
 		
     }
 
     // Back Click
 	backClick() {
-		this.workFlowtService.contactCollection = this.local;
+		this.customerService.contactCollection = this.local;
 		this.activeIndex = 0;
-		this.workFlowtService.indexObj.next(this.activeIndex);
+		this.customerService.indexObj.next(this.activeIndex);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
 
 	}
 
 	deleteItemAndCloseModel(contactId) {
 		this.isSaving = true;
-		this.workFlowtService.deleteContact(contactId).subscribe(
+		this.customerService.deleteContact(contactId).subscribe(
 			response => this.saveCompleted(this.sourceCustomer),
 			error => this.saveFailedHelper(error));
 	}
 
 	updateCustomerContact(updateObj: any) {
-		this.workFlowtService.newAddCustomerContact(updateObj).subscribe(data => {
+		this.customerService.newAddCustomerContact(updateObj).subscribe(data => {
 			this.loadData();
 		})
 	}

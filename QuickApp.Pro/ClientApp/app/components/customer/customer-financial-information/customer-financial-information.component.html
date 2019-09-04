@@ -34,7 +34,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>
-                                                    <span class="pull-left">MarkUp %</span>
+                                                    <span class="pull-left">Mark Up %</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addMarkUp" (click)="openMarkUpPercentage(openPopUpMarkUp)"></a></span>
                                                 </label>
                                                 <select name="markUpPercentageId" [(ngModel)]="sourceCustomer.markUpPercentageId">
@@ -63,7 +63,7 @@
                                                     <option *ngFor="let discontValue of alldiscountvalueInfo" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group" style="margin-top: 15px;">
+                                            <div class="form-group" style="margin-top: 15px;" *ngIf="isCustomerAlsoVendor">
                                                 <div class="label-cstm">Allow Netting of AP/AR</div>
                                                 <span class="checkbox-cstm">
                                                     <label style="width: 20px;">
@@ -109,7 +109,7 @@
                                                     <option *ngFor="let taxRate of allTaxrateInfo" [ngValue]="taxRate.taxTypeId">{{taxRate.taxTypeId}}</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group">
+                                            <!--<div class="form-group">
                                                 <label>
                                                     <span class="pull-left">Currency </span><span class="clr-red">*</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCurrency" (click)="openCurrency(contentCurrency)"></a></span>
@@ -120,31 +120,8 @@
                                                         {{currencyName.symbol}}
                                                     </option>
                                                 </select>
-                                            </div>
-                                            <div class="form-group" style="margin-top: 15px;">
-                                                <div class="label-cstm">EDI</div>
-                                                <span class="checkbox-cstm">
-                                                    <label style="width: 20px;">
-                                                        <input type="checkbox" name="edi" [(ngModel)]="sourceCustomer.edi">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    </label>
-                                                </span>
-                                                <div class="edi-input" *ngIf="sourceCustomer.edi">
-                                                    <input class="form-control" type="text" name="ediDescription" [(ngModel)]="sourceCustomer.ediDescription">
-                                                </div>
-                                            </div>
-                                            <div class="form-group" style="margin-top: 15px;">
-                                                <div class="label-cstm">Aeroxchange</div>
-                                                <span class="checkbox-cstm">
-                                                    <label style="width: 20px;">
-                                                        <input type="checkbox" class="aeroxchange-checkbox" name="Aeroxchange" [(ngModel)]="sourceCustomer.isAeroExchange">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    </label>
-                                                </span>
-                                                <div class="aeroxchange-input" *ngIf="sourceCustomer.isAeroExchange">
-                                                    <input type="text" id="tax" class="form-control" name="aeroExchangeDescription" [(ngModel)]="sourceCustomer.aeroExchangeDescription">
-                                                </div>
-                                            </div>
+                                            </div>-->
+                                            
                                             <div class="form-group" style="margin-top: 15px;">
                                                 <div class="label-cstm">Allow Partial Billing</div>
                                                 <span class="checkbox-cstm">
@@ -456,8 +433,8 @@
 
 <ng-template #openPopUpMarkUp let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit MarkUp Percent</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add MarkUp Percent</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Mark Up Percent</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Mark Up Percent</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -465,7 +442,7 @@
     <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveMarkUpPercentage()">
         <div class="modal-body" style="padding-bottom: 30px;">
             <div class="form-group">
-                <label for="name" class="control-label">MarkUp Percentage <span class="clr-red">*</span></label>
+                <label for="name" class="control-label">Mark Up Percentage <span class="clr-red">*</span></label>
                 <div class="col-sm-5">
                     <input type="text" class="form-control" name="markUpValue" pKeyFilter="pnum" [(ngModel)]="markUpValue" required />
                 </div>

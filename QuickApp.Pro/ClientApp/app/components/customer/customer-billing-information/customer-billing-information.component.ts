@@ -99,8 +99,8 @@ export class CustomerBillingInformationComponent
 	display: boolean = false; 
 	modelValue: boolean = false;
     public sourceCustomer: any = {};
-	private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+	isEditMode: boolean = false;
+    isDeleteMode: boolean = false;
     xlocation: string[];
 
 
@@ -359,10 +359,14 @@ export class CustomerBillingInformationComponent
 	openEdit(row) {
 		this.isEditMode = true;
 		this.isSaving = true;
-		this.sourceCustomer = row;
+        this.sourceCustomer = {...row};
 		this.loadMasterCompanies();
 	
-	}
+    }
+    onAddBillingInfo() {
+        this.sourceCustomer = {};
+        this.isEditMode = false;
+    }
 
 	openView(content, row) {
 
@@ -473,6 +477,7 @@ export class CustomerBillingInformationComponent
                 else {
                     this.sourceCustomer.isActive = true;
                     this.sourceCustomer.updatedBy = this.userName;
+                    this.sourceCustomer.createdBy = this.userName;
                     this.sourceCustomer.masterCompanyId = 1;
                     this.workFlowtService.updateBillinginfo(this.sourceCustomer).subscribe(data => {
                         this.updatedCollection = data;

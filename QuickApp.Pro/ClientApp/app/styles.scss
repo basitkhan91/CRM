@@ -14071,8 +14071,17 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     margin-right: 0;
     font-weight: normal;
 }
+.autocomp-customer-cstm.ng-dirty.ng-invalid > .ui-autocomplete > .ui-inputtext {
+    border: 1px solid #bdbdbd;
+}
 .autocomp-customership-cstm .ui-autocomplete {
     width: 100% !important;
+}
+.p-calendar-cstm .ui-calendar {
+    width: 100% !important;
+}
+.p-calendar-cstm .ui-calendar-button {
+    padding: 3px;
 }
 
 .modal-full {
