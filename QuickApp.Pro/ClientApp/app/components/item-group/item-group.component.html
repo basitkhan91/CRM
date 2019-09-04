@@ -97,6 +97,9 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+                            <div class="modal-body">
+                                <strong>Item Group ID : <span class="new-label">{{itemGroup_Name}}</span></strong>
+                            </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
@@ -115,97 +118,111 @@
                             </div>
                             <div class="modal-body">
                                 <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-                                    <div class="col-sm-12 form-group">
-                                        <label for="name" class="control-label col-sm-4">Item Group Id<span class="clr-red">*</span></label>
-                                        <p-autoComplete class="autocomplete-width col-sm-6" [(ngModel)]="itemGroupName" [ngModelOptions]="{standalone: true}" (onSelect)="itemGroupId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterItemgroups($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-itemGroupName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{itemGroupName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                        <div *ngIf="disableSave" class="clr-red">Entry Already Exists</div>
-                                    </div>
-                                    <div class="col-sm-12 form-group">
-                                        <label for="netDays" class="control-label col-sm-4">Item Group Name<span class="clr-red">*</span></label>
-                                        <input type="text" name="description" class="form-control col-sm-6" required #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2">
-                                        <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-                                            Item Group Description required.
-                                        </div>
-                                        <div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
-                                            Item Group Description category must be at least 2 characters long.
-                                        </div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div class="col-sm-12 form-group">
-                                        <label for="description" class="control-label col-sm-4">Memo</label>
-                                        <textarea class="input-field-value input-value1 col-sm-6" rows="3" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
-                                        <div class="clear"></div>
-                                    </div>
                                     <div class="form-group">
-                                        <div class="col-sm-6">
-                                            <div class="checkbox-cstm check-value">
-                                                <label>
-                                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    Active
-                                                </label>
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-4">
+                                                <label for="name" class="control-label control-item">Item Group Id<span class="clr-red">*</span></label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <p-autoComplete [(ngModel)]="itemGroupName" name="itemgroup" (onSelect)="itemGroupId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterItemgroups($event)" [size]="30"
+                                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                    <ng-template let-itemGroupName pTemplate="item">
+                                                        <div class="ui-helper-clearfix">{{itemGroupName}}</div>
+                                                    </ng-template>
+                                                </p-autoComplete>
+                                                <div *ngIf="disableSave" class="clr-red">Entry Already Exists</div>
                                             </div>
                                         </div>
-                                        <div class="clear"></div>
-                                    </div>
-
-
-                                    <!--<div class="form-group">
-                                        <label for="name" class="control-label">Item Group Id<span class="clr-red">*</span></label>
-                                        <div class="inner-addon right-addon inline-block">
-
-                                            <p-autoComplete [(ngModel)]="itemGroupName" [ngModelOptions]="{standalone: true}" (onSelect)="itemGroupId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterItemgroups($event)" [size]="30"
-                                                            [minLength]="1" [dropdown]="true">
-                                                <ng-template let-itemGroupName pTemplate="item">
-                                                    <div class="ui-helper-clearfix">{{itemGroupName}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                            <div *ngIf="disableSave" class="clr-red">Entry Already Exists</div>
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-4">
+                                                <label for="netDays" class="control-label control-item">Item Group Name<span class="clr-red">*</span></label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2">
+                                                <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
+                                                    Item Group Description required.
+                                                </div>
+                                                <div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
+                                                    Item Group Description category must be at least 2 characters long.
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-4">
+                                                <label for="description" class="control-label control-item">Memo</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <textarea class="text-item" rows="3" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
+                                            </div>
                                             <div class="clear"></div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="netDays" class="control-label">Item Group Name<span class="clr-red">*</span></label>
-                                        <div>
-                                            <input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2">
-                                            <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-                                                Item Group Description required.
-                                            </div>
-                                            <div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
-                                                Item Group Description category must be at least 2 characters long.
-                                            </div>
                                         </div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description" class="control-label">Memo</label>
-                                        <div class="control-data">
-                                            <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <div class="checkbox-cstm check-value">
+                                                    <label>
+                                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                        Active
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+
+
+                                        <!--<div class="form-group">
+        <label for="name" class="control-label">Item Group Id<span class="clr-red">*</span></label>
+        <div class="inner-addon right-addon inline-block">
+
+            <p-autoComplete [(ngModel)]="itemGroupName" [ngModelOptions]="{standalone: true}" (onSelect)="itemGroupId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterItemgroups($event)" [size]="30"
+                            [minLength]="1" [dropdown]="true">
+                <ng-template let-itemGroupName pTemplate="item">
+                    <div class="ui-helper-clearfix">{{itemGroupName}}</div>
+                </ng-template>
+            </p-autoComplete>
+            <div *ngIf="disableSave" class="clr-red">Entry Already Exists</div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="netDays" class="control-label">Item Group Name<span class="clr-red">*</span></label>
+        <div>
+            <input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2">
+            <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
+                Item Group Description required.
+            </div>
+            <div *ngIf="description.dirty && description.errors?.minlength && description.errors" class="invalid-form-error-message">
+                Item Group Description category must be at least 2 characters long.
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="form-group">
+        <label for="description" class="control-label">Memo</label>
+        <div class="control-data">
+            <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-6">
+            <label class="form-check-label" for="isActive">
+                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+            </label>
+        </div>
+        <div class="clear"></div>
+    </div>-->
+
+                                        <div class="modal-footer">
+                                            <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
+                                            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 
                                         </div>
-                                        <div class="clear"></div>
-                                    </div>
-        
-                                    <div class="form-group">
-                                        <div class="col-sm-6">
-                                            <label class="form-check-label" for="isActive">
-                                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-                                            </label>
-                                        </div>
-                                        <div class="clear"></div>
-                                    </div>-->
-
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary-cstm" [disabled]="disableSave">Save</button>
-                                        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-                                     
-                                    </div>
-                                </form>
+</form>
                             </div>
 
                         </ng-template>
@@ -258,7 +275,7 @@
                                     <h4 class="modal-title">Item Group Details</h4>
                                 </div>
                                 <div class="modal-body viewform">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <p><span class="label"><b>Item Group Name: </b></span><span class="value">{{ itemGroup_Name}}</span></p>
                                         <p><span class="label"><b>Description: </b></span><span class="value">{{ description}}</span></p>
                                         <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>

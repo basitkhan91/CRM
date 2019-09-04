@@ -1728,7 +1728,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     priorty(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1744,7 +1743,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     atamai(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1761,7 +1759,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     item(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1920,39 +1917,88 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
+    //ItemHandler(event) {
+    //    if (event.target.value != "") {
+    //        let value = event.target.value.toLowerCase();
+    //        if (this.selectedItemCode) {
+    //            if (value == this.selectedItemCode.toLowerCase()) {
+    //                this.disableSaveItemClassficationCode = true;
+
+    //            }
+    //            else {
+    //                this.disableSaveItemClassficationCode = false;
+
+    //            }
+    //        }
+
+    //    }
+    //}
+
+
+    //ItemClassficationCode(event) {
+    //    if (this.allitemclassificationInfo) {
+    //        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+    //            if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
+    //                this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
+    //                this.disableSaveItemClassficationCode = true;
+    //                this.selectedItemCode = event;
+    //            }
+
+    //        }
+    //    }
+    //}
+
+    //filterItems(event) {
+
+    //    this.localCollection = [];
+    //    if (this.allitemclassificationInfo) {
+    //        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+    //            let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
+    //            if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    //                this.localCollection.push(itemName);
+    //            }
+    //        }
+    //    }
+    //}
     ItemHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedItemCode) {
-                if (value == this.selectedItemCode.toLowerCase()) {
-                    this.disableSaveItemClassficationCode = true;
+        let value = event.target.value.toLowerCase();
+        if (this.selectedItemCode) {
+            if (value == this.selectedItemCode.toLowerCase()) {
+                this.disableSaveItemClassficationCode = true;
 
-                }
-                else {
-                    this.disableSaveItemClassficationCode = false;
-
-                }
             }
+            else {
+                this.disableSaveItemClassficationCode = false;
 
+            }
         }
+
     }
 
 
     ItemClassficationCode(event) {
-        if (this.allitemclassificationInfo) {
-            for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-                if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
-                    this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
-                    this.disableSaveItemClassficationCode = true;
-
-                    this.selectedItemCode = event;
-                }
-
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+            if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
+                this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
+                this.disableSaveItemClassficationCode = true;
+                this.selectedItemCode = event;
             }
         }
+
     }
 
+    filterItems(event) {
 
+        this.localCollection = [];
+
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+            let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
+            if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(itemName);
+            }
+        }
+
+    }
     ItemGroupHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -2280,18 +2326,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    filterItems(event) {
 
-        this.localCollection = [];
-        if (this.allitemclassificationInfo) {
-            for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-                let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
-                if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.localCollection.push(itemName);
-                }
-            }
-        }
-    }
 
 
     private loadManagementdata() {
@@ -3460,8 +3495,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
             this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {                
-                this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
-                 this.Stockunitofmeasure()
+                 this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
+                this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure()
             })
 
         }
@@ -3564,11 +3599,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.priorityService.newPriority(this.sourceAction).subscribe(
+            this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode}).subscribe(
                 data => {
                     this.sourceItemMaster.priorityId = data.priorityId;
-                    this.loadPriority() },
-                response => this.saveCompleted(this.sourceAction));
+                    this.loadPriority() 
+                });
         }
         else {
             this.sourceAction.updatedBy = this.userName;
