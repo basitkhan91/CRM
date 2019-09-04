@@ -50,6 +50,14 @@ import { CalendarModule } from "primeng/calendar";
 import { DropdownModule } from 'primeng/dropdown';
 import { KeyFilterModule } from "primeng/keyfilter";
 import { TooltipModule } from 'primeng/tooltip';
+import { CustomerAircraftComponent } from "../components/customer/customer-aircraft-information/customer-aircraft.component";
+import { CustomerATAInformationComponent } from "../components/customer/customer-ata-information/customer-ata.component";
+import { AircraftModelService } from "../services/aircraft-model/aircraft-model.service";
+import { AircraftModelEndpointService } from "../services/aircraft-model/aircraft-model-endpoint.service";
+import { AircraftManufacturerEndpointService } from "../services/aircraft-manufacturer/aircraftManufacturer-endpoint.service";
+import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
+import { DashNumberService } from "../services/dash-number/dash-number.service";
+import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 
 
 
@@ -65,11 +73,11 @@ import { TooltipModule } from 'primeng/tooltip';
         ButtonModule,
         SelectButtonModule,
         InputTextModule,
-		MultiSelectModule,
-		InputSwitchModule,
+        MultiSelectModule,
+        InputSwitchModule,
         CustomerPagesRoutingModule,
-		AutoCompleteModule,
-		CalendarModule,
+        AutoCompleteModule,
+        CalendarModule,
         GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule,
         DropdownModule, TooltipModule
     ],
@@ -77,8 +85,9 @@ import { TooltipModule } from 'primeng/tooltip';
         CustomerPagesComponent,
         CustomersListComponent,
         CustomerEditComponent,
-		CustomerSetupComponent,
-		CustomerGeneralInformationComponent,
+        CustomerSetupComponent,
+        CustomerGeneralInformationComponent,
+        CustomerAircraftComponent,
         //CustomerWorksListComponent,
         //CustomerWorkSetupComponent,
         //CustomerWorkEditComponent,
@@ -86,13 +95,20 @@ import { TooltipModule } from 'primeng/tooltip';
         CustomerFinancialInformationComponent,
         CustomerBillingInformationComponent,
         CustomerShippingInformationComponent,
-		CustomerSalesPersonComponent,
-		CustomerWarningsComponent,
-		CustomerStepsPrimengComponent
-      
+        CustomerSalesPersonComponent,
+        CustomerWarningsComponent,
+        CustomerStepsPrimengComponent,
+        CustomerATAInformationComponent
+
     ],
     providers: [
-     
+        AircraftModelService,
+        AircraftModelEndpointService,
+        AircraftManufacturerEndpointService,
+        AircraftManufacturerService,
+        DashNumberService,
+        DashNumberEndpointService
+
     ],
     entryComponents: [
     ]

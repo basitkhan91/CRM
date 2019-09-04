@@ -4191,6 +4191,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     selectedDashnumbervalue(value) {
         this.newDashnumValue = value.originalEvent.target.textContent;
+        console.log()
     }
 
     resetAircraftModelsorDashNumbers() {
@@ -4208,7 +4209,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     mapAircraftInformation() {
-        console.log(this.selectedModelId)
+        console.log(this.selectedDashnumber)
         this.viewTable = true;
         // Selected All 
         if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
