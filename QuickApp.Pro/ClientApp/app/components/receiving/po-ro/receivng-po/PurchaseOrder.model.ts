@@ -123,6 +123,7 @@ export class PurchaseOrderPart {
     quantityToReceive: number;
     isSameDetailsForAllParts: boolean;
     isTimeLifeUpdateLater: boolean;
+    hasChildren: boolean;
 }
 
 export class TimeLife {

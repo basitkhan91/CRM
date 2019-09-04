@@ -274,11 +274,11 @@
                                             </section>
                                         </td>
                                         <td style="padding:4px;">
-                                            <input type="text" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
+                                            <input type="text" *ngIf="!part.hasChildren" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
 
                                             <!--<a *ngIf="part.quantityBackOrdered" (click)="addDetailsClick(part)" style="color:red">Add Details</a>-->
                                         </td>
-                                        <td><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
+                                        <td><a *ngIf="!part.hasChildren" class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
 
                                     </tr>
 
@@ -421,9 +421,9 @@
                                             <div style="margin-left: 6px;" *ngIf="part.stocklineListObj != undefined && part.stocklineListObj.length > 0">
                                                 <h3 class="add-details-heading">{{ part.itemMaster?.partNumber }} receiving Qty {{ (currentSLIndex + 1) }} of {{ part.stocklineListObj.length }} </h3>
                                                 <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
-                                                    <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(currentSLIndex - 1, part)"></i>
+                                                    <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSLIndex - 1, part)"></i>
                                                     <input [value]="currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                    <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(currentSLIndex + 1, part)"></i>
+                                                    <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSLIndex + 1, part)"></i>
                                                     <p>Page {{currentSLIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
                                                 </div>
                                                 <section>
@@ -776,9 +776,9 @@
                                                 <section>
                                                     <h4 class="add-details-heading" style="text-align: left;" *ngIf="part.itemMaster.isSerialized">Serialized</h4>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
-                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(currentSERIndex - 1, part)"></i>
+                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSERIndex - 1, part)"></i>
                                                         <input [value]="currentSERIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(currentSERIndex + 1, part)"></i>
+                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSERIndex + 1, part)"></i>
                                                         <p>Page {{currentSERIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
                                                     </div>
                                                     <div class="form-row" *ngIf="part.itemMaster.isSerialized">
@@ -798,12 +798,12 @@
                                                 </section>
                                                 <br />
                                                 <section *ngIf="part.itemMaster.isTimeLife">
-                                                    <h3 class="add-details-heading">Time Life - {{ currentTLIndex + 1 }}  of part {{ part.itemMaster?.partNumber }} </h3>
+                                                    <h3 class="add-details-heading"> {{ part.itemMaster?.partNumber }} receiving Qty Time Life  {{ (currentTLIndex + 1) }} of {{ part.timeLifeList.length }}   </h3>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isTimeLife">
-                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(currentTLIndex - 1, part)"></i>
+                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', currentTLIndex - 1, part)"></i>
                                                         <input [value]="currentTLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage(currentTLIndex + 1, part)"></i>
-                                                        <p>Page {{currentTLIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
+                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', currentTLIndex + 1, part)"></i>
+                                                        <p>Page {{currentTLIndex + 1}} of {{part.timeLifeList.length}} Pages</p>
                                                     </div>
 
                                                     <div class="form-row">

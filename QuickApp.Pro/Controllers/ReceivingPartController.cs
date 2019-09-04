@@ -168,12 +168,12 @@ namespace QuickApp.Pro.Controllers
                         stockLine.BinId = null;
                         stockLine.RepairOrderId = null;
                         stockLine.LocationId = null;
-                        if (!string.IsNullOrEmpty(stockLine.SerialNumber.Trim()))
+                        if (!string.IsNullOrEmpty(stockLine.SerialNumber))
                         {
-                            var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber);
+                            var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
                             if (isSerialExist != null)
                             {
-                                return BadRequest("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1));
+                                return BadRequest("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " alreadt exists.");
                             }
                         }
 
