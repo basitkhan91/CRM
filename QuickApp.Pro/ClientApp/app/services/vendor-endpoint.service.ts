@@ -124,6 +124,11 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _deleteVendorCapability: string = "/api/Vendor/deleteVendorCapability";
 
     private readonly _getVendorContactByID: string = "/api/Vendor/getvendorContactByVendorID";
+
+    private readonly _actionsCapsUrl: string = "/api/Vendor/GetListforCapes";
+    private readonly _capesdata: string = "/api/Vendor/GetVendorCapesDatawithMasterId"; 
+    private readonly _mancapPost: string = "/api/Vendor/VendorMancapespost";
+    private readonly _aircraftmodelsPost: string = "/api/Vendor/Aircraftpost";
     
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -171,11 +176,38 @@ export class VendorEndpointService extends EndpointFactory {
     get vendorManufacturerurl() { return this.configurations.baseUrl + this._vendorManufacturer; }
     get vendorManufacturerModelurl() { return this.configurations.baseUrl + this._vendorManufacturerModel; }
 
+    get actionsUrlCaps() { return this.configurations.baseUrl + this._actionsCapsUrl; }
+    get capesdata() { return this.configurations.baseUrl + this._capesdata; }
+  
+
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
 	}
 
+    getVendorCapesData<T>(vendorId: any): Observable<T> {
+        let url = `${this.capesdata}/${vendorId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorCapesData(vendorId));
+            });
+    }
+
+    saveVendorCapesmaninfo<T>(data: any): Observable<T> {
+        //debugger;
+        return this.http.post<T>(this._mancapPost, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.saveVendorCapesmaninfo(data));
+            });
+    }
+
+    saveAircraftinfo<T>(data: any): Observable<T> {
+        //debugger;
+        return this.http.post<T>(this._aircraftmodelsPost, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.saveVendorCapesmaninfo(data));
+            });
+    }
 
     getNewvendorEndpoint<T>(userObject: any): Observable<T> {
 
