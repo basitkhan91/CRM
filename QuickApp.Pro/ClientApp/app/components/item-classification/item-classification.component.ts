@@ -42,6 +42,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     item_Name: any = "";
     description: any = "";
     itemType: any = "";
+    item_value: any = "";
     memo: any = "";
     createdBy: any = "";
     updatedBy: any = "";
@@ -212,6 +213,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = true;
+        this.item_value = row.itemClassificationCode;
         this.sourceAction = row;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -330,21 +332,20 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     filterItems(event) {
 
         this.localCollection = [];
-        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-            let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
-            if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.actionamecolle.push([{
-                    "itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
-                    "itemName": itemName
-                }]),
-                this.localCollection.push(itemName);
-            }
+        if (this.allitemclassificationInfo) {
+            for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+                let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
+                if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.actionamecolle.push([{
+                        "itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
+                        "itemName": itemName
+                    }]),
+                        this.localCollection.push(itemName);
+                }
+        }       
         }
 	}
-
-
 	filterItemNames(event) {
-
 		this.localNameCollection = [];
 		if (this.allitemclassificationInfo) {
 			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
@@ -360,7 +361,6 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 		}
 	}
 	filterItemtypes(event) {
-
 		this.localtypeCollection = [];
 		if (this.allitemclassificationInfo) {
 			for (let i = 0; i < this.allitemclassificationInfo.length; i++) {

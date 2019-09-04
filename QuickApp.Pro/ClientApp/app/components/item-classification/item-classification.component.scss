@@ -14,12 +14,16 @@
 .new-margin {
     margin-top: 10px;
 }
-
-.control-label {    
+.text-item {  
+    width: 100%;
+    border-radius: 5px !important;
+    margin-left: 0px;
+}
+.control-label {
+    margin-top: 5px;
     text-align: left;
     font-size: 12px !important;
     width: 100% !important;
-    font-weight: 500;
 }
 .x_panel {
     border: none;
@@ -27,4 +31,10 @@
 .input-value1 {
     width: 180px;
     margin-left: 2px;
+}
+p .label{
+    width: 35% !important;
+}
+.new-label{
+    color: cadetblue;
 }
