@@ -24,7 +24,7 @@ export class EditRoComponent implements OnInit {
     rroEditCF: boolean = true; //remove once add dynamic content
 
     constructor(public route: Router) {
-        
+
     }
 
     ngOnInit() {
@@ -89,7 +89,7 @@ export class EditRoComponent implements OnInit {
     }
 
     addPageCustomer() {
-        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-create');
     }
 
     //remove once add dynamic content

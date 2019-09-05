@@ -1,6 +1,6 @@
-﻿<div [@fadeInOut] class="page-content">
+﻿
     <div class="right_col" role="main">
-        <div class="x_panel">
+        <div >
             <div class="x_content">
                 <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                     <p class="fs10">
@@ -18,8 +18,19 @@
                 <div class="table-responsive">
                     <div>
                         <div class="col-md-12" style="margin-bottom: -10px;">
-                            <h3 class="po-head pull-left" style="padding: 0 6px;">Contact List</h3>
-                            <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addContactDetails" (click)="onAddContactDetails()">Add Contact Details</button>
+                            <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Contact List</h3> -->
+                            <h4 class="float-right">
+                                    Add Contact
+                                    <a
+                                      class="plusicon-cstm"
+                                      href="#"
+                                      data-toggle="modal"
+                                      data-target="#addContactDetails" (click)="onAddContactDetails()"
+                                      ><i class="fa fa-plus-circle fa-lg"></i
+                                    ></a>
+                                  </h4>
+                            <!-- <button type="button" class="btn btn-primary-cstm float-right"
+                             data-toggle="modal" data-target="#addContactDetails" (click)="onAddContactDetails()">Add Contact Details</button> -->
                         </div>
                         <div class="clear"></div>
                         <hr />
@@ -157,7 +168,7 @@
         </div>
 
     </div>
-</div>
+
 
 
 <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">

@@ -666,7 +666,7 @@ export class ReceivngPoComponent implements OnInit {
 
         part.visible = true;
         this.createStockLineItems(part);
-    
+
         if (part.itemMaster.isTimeLife) {
             for (var i = 0; i < quantity; i++) {
                 let timeLife: TimeLife = new TimeLife();
@@ -711,7 +711,7 @@ export class ReceivngPoComponent implements OnInit {
     createStockLineItems(part: PurchaseOrderPart): void {
         part.stocklineListObj = [];
         part.isSameDetailsForAllParts = false;
-        
+
         this.currentSLIndex = 0;
         this.currentSERIndex = 0;
         this.currentTLIndex = 0;
@@ -819,7 +819,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     moveStockLinePage(type: string, index: number, part: PurchaseOrderPart): void {
-        var count = type == 'stockline' ? part.stocklineListObj.length : part.timeLifeList.length; 
+        var count = type == 'stockline' ? part.stocklineListObj.length : part.timeLifeList.length;
         if (index >= 0 && index < count) {
             if (part.itemMaster.isSerialized) {
                 this.currentSLIndex = index;
@@ -1119,18 +1119,18 @@ export class ReceivngPoComponent implements OnInit {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.info);
             return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
         },
-        error => {
-            var message = '';
-            if (error.error.constructor == Array) {
-                message = error.error[0].errorMessage;
+            error => {
+                var message = '';
+                if (error.error.constructor == Array) {
+                    message = error.error[0].errorMessage;
+                }
+                else {
+                    message = error.error.Message;
+                }
+                this.alertService.showMessage(this.pageTitle, message, MessageSeverity.error);
             }
-            else {
-                message = error.error.Message;
-            }
-            this.alertService.showMessage(this.pageTitle, message, MessageSeverity.error);
-        }
         );
-        
+
     }
 
     extractAllAllStockLines(): ReceiveParts[] {
@@ -1188,7 +1188,7 @@ export class ReceivngPoComponent implements OnInit {
                             errorMessages.push("Please enter Serial Number in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                         }
                     }
-                    
+
                 }
             }
 
@@ -1274,7 +1274,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     addPageCustomer() {
-        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-create');
     }
 
     onFilter(event, stockLine, type): void {

@@ -1,1 +1,108 @@
-<h3>Welcome to ATA Chapther</h3>
+<div class="card">
+  <div class="col-sm-12 font-padding">
+    <div class="col-sm-2">Customer Name: <span style="color:red"></span></div>
+    <div class="col-sm-3">Customer Code: <span style="color:red"></span></div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="col-md-12 ">
+      <div class="shadow-Box">
+        <div class="col-sm-12">
+          <h4 class="float-left">Search ATA chapters</h4>
+          <h4 class="float-right">
+            Add ATA Information
+            <a
+              class="plusicon-cstm"
+              href="#"
+              data-toggle="modal"
+              data-target="#ATAADD"
+              ><i class="fa fa-plus-circle fa-lg"></i
+            ></a>
+          </h4>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group ">
+            <label class="fs12">ATA Chapter</label>
+            <p-multiSelect
+              [options]="LoadAtachapter"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="selectedATAchapter"
+              (onChange)="getSubChapterByATAChapter()"
+              [panelStyle]="{ minWidth: '12em' }"
+              class="pub-multi"
+            ></p-multiSelect>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="fs12">
+              ATA Subchapter
+            </label>
+            <p-multiSelect
+              [options]="atasubchapterValues"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="selectedATASubChapter"
+              [panelStyle]="{ minWidth: '12em' }"
+              class="pub-multi"
+            ></p-multiSelect>
+          </div>
+        </div>
+        <div class="col-md-1 add-new-align">
+          <div class="form-group">
+            <button class="btn btn-primary mtop20" (click)="searchATA()">
+              <i class="pi pi-search pi-search"></i>
+            </button>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+  <br />
+</div>
+<div class="col-sm-12">
+  <p-table
+    [value]="ataMappedList"
+    [rows]="6"
+    [columns]="atasub"
+    [scrollable]="true"
+    [style]="{ width: '100%' }"
+    [paginator]="true"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th>Id</th>
+        <th *ngFor="let col of atasub">
+          {{ col.header }}
+        </th>
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-i="rowIndex"
+      let-rowData
+      let-columns="columns"
+    >
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td *ngFor="let col of atasub">
+          {{ rowData[col.field] }}
+        </td>
+        <td>
+          <button
+            class="btn btn-danger nobg"
+            (click)="deleteATAMapped(rowData)"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <br />
+</div>
+<!-- <div class="col-sm-12 mt8">
+            <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+            <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+        </div> -->
