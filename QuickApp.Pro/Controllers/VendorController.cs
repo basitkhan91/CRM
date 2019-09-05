@@ -422,23 +422,23 @@ namespace QuickApp.Pro.Controllers
             return Ok(checkAddress);
 
         }
-        [HttpGet("vendorAddressGet/{id}")]
-        [Produces(typeof(List<VendorShippingAddress>))]
-        public IActionResult AllVendorendorAddressGet(long id)
-        {
-            var allAddresses = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
-            return Ok(allAddresses);
 
-        }
+        //[HttpGet("vendorAddressGet/{id}")]
+        //[Produces(typeof(List<VendorShippingAddress>))]
+        //public IActionResult AllVendorAddressGet(long id)
+        //{
+        //    var allAddresses = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
+        //    return Ok(allAddresses);
+        //}
+
         [HttpGet("getVendorShipViaDetails/{Selectedrow}")]
         [Produces(typeof(List<VendorShipping>))]
         public IActionResult getVendorShipViaDetails(long Selectedrow)
         {
-
             var allShipViaDetails = _unitOfWork.VendorShippingAddress.GetAllShipViaDetails(Selectedrow); //.GetAllCustomersData();
             return Ok(allShipViaDetails);
-
         }
+
         [HttpGet("cusshippingGetwithid/{Selectedrow}")]
         [Produces(typeof(List<VendorShipping>))]
         public IActionResult cusshippingGetwithid(long Selectedrow)
@@ -2579,6 +2579,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(aircraft);
         }
 
+        [HttpGet("vendorAddressGet/{id}")]
+        [Produces(typeof(List<VendorShippingAddress>))]
+        public IActionResult vendorAddressGet(long id, VendorShippingAddress vendorBillingAddress)
+        {
+            var allVendShipdetails = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
+            return Ok(allVendShipdetails);
+
+        }
         [HttpGet("vendorAircraftManufacturerGet/{id}")]
         [Produces(typeof(List<VendorCapabilityAircraftType>))]
         public IActionResult vendorAircraftManufacturerGet(int id)
