@@ -117,9 +117,9 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Dept</label>
-                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
+                            <label>Division</label>
+                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
                             </select>
                         </div>
                     </div>
@@ -159,10 +159,11 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Division</label>
-                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
+                            <label>Dept</label>
+                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
                             </select>
+                            
                         </div>
                     </div>
                 </div>
@@ -258,7 +259,7 @@
                                         </td>
                                         <td>{{part.statusText}}</td>
                                         <td colspan="3"></td>
-                                        <td colspan="2">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td>
+                                        <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="2">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td>
                                         <td>
                                             <section *ngIf="part.itemMaster != null">
                                                 <p-inputSwitch *ngIf="part.itemMaster.isSerialized == true" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
@@ -315,7 +316,7 @@
                                         <td>{{'NA'}}</td>
                                         <td>{{part?.userName}}</td>
                                         <td>{{part.addressText }}</td>
-                                        <td colspan="3">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
+                                        <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="3">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
                                         <td><input type="text" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required /></td>
                                         <td><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
                                         <!--<td><a (click)="addStockLine(part)" class="btn btn-primary-cstm btn-po-details">Add Details</a></td>-->
@@ -386,13 +387,13 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Export Control Classification Number">ECCN</label>
-                                                        <input class="form-control" [(ngModel)]="part.itemMaster.exportECCN" disabled="{{part.itemMaster.exportECCN?.length > 0}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.exportECCN" disabled="{{part.eCCNAlreadyExist}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="International Traffic in Arms Regulations Number">ITAR Num</label>
-                                                        <input class="form-control" [(ngModel)]="part.itemMaster.itarNumber" disabled="{{part.itemMaster.itarNumber?.length > 0}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.itarNumber" disabled="{{part.itarNumberExist}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -480,7 +481,8 @@
                                                                 <select class="form-control"
                                                                         [(ngModel)]="part.stocklineListObj[currentSLIndex].departmentId"
                                                                         #selects="ngModel"
-                                                                        [ngModelOptions]="{standalone: true}">
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        (change)="setStockLineDepartmentManagementStructureId(part.stocklineListObj[currentSLIndex])">
                                                                     <option value="0">Select</option>
                                                                     <option *ngFor="let department of part.stocklineListObj[currentSLIndex].DepartmentList" [value]="department.Key">{{department.Value}}</option>
                                                                 </select>
@@ -742,10 +744,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Shipping Ref</label>
-                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[currentSLIndex].shippingReferenceId">
-                                                                    <option value="0">Select</option>
-                                                                    <option *ngFor="let shippingReference of ShippingReferenceList" [ngValue]="shippingReference.Key">{{shippingReference.Value}}</option>
-                                                                </select>
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].shippingReference" pInputText [maxLength]="200">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Ship Via</label>
@@ -756,10 +755,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Shipping Account</label>
-                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[currentSLIndex].shippingAccountId">
-                                                                    <option value="0">Select</option>
-                                                                    <option *ngFor="let shippingAccount of ShippingAccountList" [ngValue]="shippingAccount.Key">{{shippingAccount.Value}}</option>
-                                                                </select>
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].shippingAccount" pInputText [maxLength]="200">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label matTooltip="Engine Serial Number">ESN</label>
