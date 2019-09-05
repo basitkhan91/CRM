@@ -210,7 +210,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     public sourceActions: any = {};
     allATAMaininfo: ATAChapter[];
     allPriorityInfo: Priority[] = [];
-    allUnitOfMeasureinfo: any[];
+    allUnitOfMeasureinfo: any[];    
     allPurchaseUnitOfMeasureinfo: any[];
     allStockUnitOfMeasureinfo: any[];
     allConsumeUnitOfMeasureinfo: any[];
@@ -1409,7 +1409,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
-
+        console.log(this.allUnitOfMeasureinfo);
+        
 
     }
 
@@ -1440,9 +1441,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.allSOLDUnitOfMeasureinfo = getUnitOfMeasureList;
     }
 
-
     unitmeasure(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1455,7 +1454,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
+    Exportuom(content) {
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceUOM = new UnitOfMeasure();
+        this.sourceUOM.isActive = true;
+        this.unitName = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
     private onDataLoadcountrySuccessful(allWorkFlows: any[]) {
 
@@ -2183,24 +2193,46 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    StockUOMstandard(event) {
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                if (event == this.allUnitOfMeasureinfo[i].shortName) {
+                    //this.sourceItemMaster.itemClassificationCode = this.allUnitOfMeasureinfo[i].shortName;
+                    this.disableSaveStockUOM = true;
+                    this.selectedStockUOM = event;
+                }
+
+            }
+        }
+    }
+    consumeUOMstandard(event) {
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                if (event == this.allUnitOfMeasureinfo[i].standard) {
+                    //this.sourceItemMaster.itemClassificationCode = this.allUnitOfMeasureinfo[i].standard;
+                    this.disableSaveConsume = true;
+                    this.selectedConsume = event;
+                }
+                else {
+                    this.disableSaveConsume = false;
+                }
+
+            }
+        }
+    }
     ConsumeUOMHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedConsume) {
                 if (value == this.selectedConsume.toLowerCase()) {
                     this.disableSaveConsume = true;
-
                 }
                 else {
                     this.disableSaveConsume = false;
-
                 }
             }
-
         }
     }
-
-
     ConsumeUOMdescription(event) {
         if (this.allConsumeUnitOfMeasureinfo) {
             for (let i = 0; i < this.allConsumeUnitOfMeasureinfo.length; i++) {
@@ -3568,7 +3600,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.modal.close();
     }
-
+    saveexportuom() {
+        this.isSaving = true;
+        this.disableuomvalue = false;
+        this.sourceUOM.createdBy = this.userName;
+        this.sourceUOM.updatedBy = this.userName;
+        this.sourceUOM.description = this.unitName;
+        this.sourceUOM.masterCompanyId = 1;
+        this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
+            this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
+            this.Purchaseunitofmeasure();
+        })
+        this.modal.close();    
+    }
 
     saveSOLDunitofmeasure() {
         this.isSaving = true;
@@ -5623,7 +5667,30 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
+    filterStandardUOM(event) {
+        this.unitofmeasureValue = [];
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                let unitName = this.allUnitOfMeasureinfo[i].shortName;                
+                if (unitName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.unitofmeasureValue.push(unitName)
+                }
+            }
+        }
+       
+    }
+    filterconsumeUOM(event) {
+        this.unitofmeasureValue = [];
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                let unitName = this.allUnitOfMeasureinfo[i].standard;
+                if (unitName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.unitofmeasureValue.push(unitName)
+                }
+            }
+        }
 
+    }
     // onClickDNCheckbox(rowIndex) {
     //     this.indexOfrow = rowIndex;
     //     this.enableDNMemo = !this.enableDNMemo;

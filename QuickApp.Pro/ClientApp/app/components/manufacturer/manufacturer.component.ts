@@ -132,8 +132,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     open(content) {
         this.disableSave = false;
         this.isEditMode = false;
-        this.isDeleteMode = false;
-        //this.disableSave = false;
+        this.isDeleteMode = false;        
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourcemanufacturer = new Manufacturer();
@@ -141,18 +140,15 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         this.sourcemanufacturer.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourcemanufacturer = row;
+        this.manufactureViewField.name = row.name;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -164,14 +160,11 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedManufacturer) {
-                if (value == this.selectedManufacturer.toLowerCase()) {
-                    //alert("Action Name already Exists");
+                if (value == this.selectedManufacturer.toLowerCase()) {                  
                     this.disableSave = true;
-
                 }
                 else {
                     this.disableSave = false;
-
                 }
             }
 
@@ -208,7 +201,6 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
                 if (event == this.allManufacturerInfo[i].name) {
                     this.sourcemanufacturer.name = this.allManufacturerInfo[i].name;
                     this.disableSave = true;
-
                     this.selectedManufacturer = event;
                 }
 
@@ -218,7 +210,6 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     editItemAndCloseModel() {
 
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourcemanufacturer.createdBy = this.userName;
             this.sourcemanufacturer.updatedBy = this.userName;
@@ -261,14 +252,9 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.totalRecords = allWorkFlows.length;
         this.allManufacturerInfo = allWorkFlows;
-
-
         //console.log(this.allActions);
-
-
     }
     filtermanufacturer(event) {
-
         this.localCollection = [];
         for (let i = 0; i < this.allManufacturerInfo.length; i++) {
             let name = this.allManufacturerInfo[i].name;
@@ -278,14 +264,11 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
                     "name": name
                 }]),
                     this.localCollection.push(name)
-
             }
         }
     }
 
-
     openEdit(content, row) {
-
         this.isEditMode = true;
         this.isSaving = true;
         this.loadMasterCompanies();
@@ -300,7 +283,6 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
     openView(content, row) {
-
         this.sourcemanufacturer = row;
         this.manufactureViewField.name = row.name;
         this.manufactureViewField.comments = row.comments;
@@ -316,9 +298,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     }
 
     openHist(content, row) {
-
         this.sourcemanufacturer = row;
-
         this.workFlowtService.historyManufacturer(this.sourcemanufacturer.manufacturerId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
@@ -336,17 +316,19 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.Active = "In Active";
             this.sourcemanufacturer.isActive == false;
             this.loadMasterCompanies();
-            this.sourceAction.masterCompanyId = 1; this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+            this.sourcemanufacturer.masterCompanyId = 1;
+            this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
                 response => this.saveCompleted(this.sourcemanufacturer),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
         else {
             this.sourcemanufacturer = rowData;
             this.sourcemanufacturer.updatedBy = this.userName;
             this.Active = "Active";
             this.sourcemanufacturer.isActive == true;
-            this.sourceAction.masterCompanyId = 1; this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+            this.loadMasterCompanies();
+            this.sourcemanufacturer.masterCompanyId = 1;
+            this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
                 response => this.saveCompleted(this.sourcemanufacturer),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -362,21 +344,16 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             error => this.onDataLoadFailed(error)
         );
         this.cols = [
-
-
             { field: 'name', header: 'Manufacturer Name' },
             { field: 'comments', header: 'Comments' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
             //{ field: 'createdDate', header: 'Created Date' },
             //{ field: 'updatedDate', header: 'Updated Date' }
-
-
         ];
         this.selectedColumns = this.cols;
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
-
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
