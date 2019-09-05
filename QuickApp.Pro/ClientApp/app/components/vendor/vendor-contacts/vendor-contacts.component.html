@@ -6,262 +6,106 @@
 <div [@fadeInOut] class="page-content">
 	<div class="right_col" role="main">
 		<div class="x_panel" style="">
-			<div class="x_content">
-				<div class="form-group col-sm-4  vendor-details-heading marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
-					<p class="fs10">
-						<label class="control-label w100">Vendor Name:</label>
-						{{local?.vendorName}}
-					</p>
-				</div>
-				<div class="form-group col-sm-4  vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-					<p class="fs10">
-						<label class="control-label w100">Vendor Code:</label>
-						{{local?.vendorCode}}
-					</p>
-				</div>
-				<div class="table-responsive">
-					<p class="lead"></p>
-					<p-table #dt [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+            <div class="x_content">
+                <div class="form-group col-sm-4  vendor-details-heading marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label w100">Vendor Name:</label>
+                        {{local?.vendorName}}
+                    </p>
+                </div>
+                <div class="form-group col-sm-4  vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label w100">Vendor Code:</label>
+                        {{local?.vendorCode}}
+                    </p>
+                </div>
+                <div class="form-group col-sm-3" style="display: inline-block;margin: 18px 5px 0 5px;">
+                    <h4 class="float-right">Add Contact Information <a class="plusicon-cstm" data-target="#addContactInfo" data-toggle="modal"><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i></a></h4>
+                </div>
+                <div class="clear"></div>
+                <hr />
+                <div class="clear"></div>
+                <div class="table-responsive">
+                    <!--<p class="lead"></p>-->
+                    <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
 
-						<ng-template pTemplate="caption">
+                        <ng-template pTemplate="caption">
 
-							<div style="text-align: right">
-								<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-											   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-								<div class="inner-addon right-addon w200 inline-block">
-									<i class="fa fa-search"></i>
-									<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
-								</div>
-								<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-								<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
-								<!--<a (click)="open(contentEdit)" matTooltip="Add Item Group" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
-								<div class="excel-upload">
-									<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-									<label for="upload">
-										<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-									</label>
-								</div>
-							</div>
-
-
-						</ng-template>
-
-						<ng-template pTemplate="header" let-columns>
-							<tr>
-
-								<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-									{{col.header}}
-									<p-sortIcon [field]="col.field"></p-sortIcon>
-								</th>
-
-								<th></th>
-
-							</tr>
-						</ng-template>
-
-						<ng-template pTemplate="body" let-rowData let-columns="columns">
-							<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
-
-
-								<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-									{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-								</td>
-
-								<td>
-									<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-									<!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
-									<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="opencontactView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-									<button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
-										<mat-icon>edit</mat-icon>
-									</button>
-
-									<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.contactId)">
-										<mat-icon color="warn">delete</mat-icon>
-									</button>
-
-									<button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-										<mat-icon color="green">history</mat-icon>
-									</button>
-
-								</td>
-
-							</tr>
-						</ng-template>
-					</p-table>
-					<div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
-
-						No Records
-
-
-					</div>
-				</div>
-
-				<form #userForm="ngForm" class="form-horizontal add-custustomer">
-					<div class="tab-content form-bg">
-                        <div class="" id="">
-                            <div class="form-group row">
-                                <!--<div class="form-group vendor-details-heading marginr50">
-            <p class="fs10">
-                <label class="control-label text-left">Vendor Name:</label>
-                {{local?.vendorName}}
-            </p>
-        </div>
-        <div class="form-group vendor-details-heading">
-            <p class="fs10">
-                <label class="control-label text-left">Vendor Code:</label>
-                {{local?.vendorCode}}
-            </p>
-        </div>-->
-                            </div>
-                            <h5 class="heading">{{viewName}} Contact Information </h5>
-                            <div class="col-sm-6 w400 page-2blocks">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Prefix</label>
-                                    <div class="col-sm-7">
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.prefix">
-                                            <option>Dr.</option>
-                                            <option>Mr.</option>
-                                            <option>Mrs.</option>
-                                            <option>Ms.</option>
-                                            <option>None selected</option>
-                                        </select>
-                                    </div>
+                            <div style="text-align: right">
+                                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
+                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
                                 </div>
-                                <div class="form-group col-sm-12 input-icon1">
-                                    <label for="First Name" class="control-label col-sm-4">First Name<strong class="clr-red">*</strong></label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon inline-block">
-                                            <p-autoComplete [(ngModel)]="sourceVendor.firstName" (onSelect)="onFirstNameSelected($event)" (onKeyUp)=eventFirstNameHandler($event) [ngModelOptions]="{standalone: true}" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                                            [minLength]="1" [dropdown]="true">
-                                                <ng-template let-firstName pTemplate="item">
-                                                    <div class="ui-helper-clearfix">{{firstName}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                        </div>
-                                        <div *ngIf="disablesaveForFirstname" class="clr-red">Already Exist</div>
-                                    </div>
-                                </div>
-                            <div class="form-group col-sm-12 input-icon1">
-                                <label class="control-label col-sm-4">Middle Name</label>
-                                <div class="col-sm-7">
-                                    <div class="inner-addon right-addon inline-block">
-                                        <p-autoComplete [(ngModel)]="sourceVendor.middleName" (onSelect)="onMiddleNameSelected($event)" (onKeyUp)=eventMiddleNameHandler($event) [ngModelOptions]="{standalone: true}" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-middleName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{middleName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div *ngIf="disablesaveForMiddlename" style="color:red">Already Exist</div>
+                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                <!--<a (click)="open(contentEdit)" matTooltip="Add Item Group" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
+                                <div class="excel-upload excel-upload-cstm">
+                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                    <label for="upload">
+                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                    </label>
                                 </div>
                             </div>
-                            <div class="form-group col-sm-12 input-icon1">
-                                <label for="Last Name" class="control-label col-sm-4">Last Name<strong class="clr-red">*</strong></label>
-                                <div class="col-sm-7">
-                                    <div class="inner-addon right-addon inline-block">
-                                        <p-autoComplete [(ngModel)]="sourceVendor.lastName" (onSelect)="onLastNameSelected($event)" (onKeyUp)=eventlastNameHandler($event) [ngModelOptions]="{standalone: true}" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-lastName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{lastName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div *ngIf="disablesaveForlastname" style="color:red">Already Exist</div>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Suffix</label>
-                                <div class="col-sm-7">
-                                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.suffix">
-                                        <option>II</option>
-                                        <option>III</option>
-                                        <option>Jr.</option>
-                                        <option>None selected</option>
-                                        <option>Sr.</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Title</label>
-                                <div class="col-sm-7">
-                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.contactTitle">
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Work Phone<strong class="clr-red">*</strong></label>
-                                <div class="col-sm-7">
-                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.workPhone"><!--- <input class="form-control w50" type="text">-->
-                                </div>
-
-                            </div>
-
-                            <!--<div class="form-group col-sm-12">
-        <label class="control-label col-sm-4"></label>
-        <div class="col-sm-7"></div>
-    </div>-->
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Email <strong class="clr-red">*</strong></label>
-                                <div class="col-sm-7">
-                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.email">
-                                </div>
-
-                            </div>
-                        </div>
-                            <div class="col-sm-6 w400 page-2blocks">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Primary Contact </label>
-                                    <div class="col-sm-7">
-                                        <input class="" type="checkbox" checked="checked"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.isdefaultContact" name="">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Mobile Phone</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.mobilePhone">
-                                    </div>
-
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Alternate Phone</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.alternatePhone">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Fax</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.fax">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Notes</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.notes">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                            <hr>
-
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">update</button>
 
 
-                            <div class="clear"></div>
-                            <div class="clear"></div>
+                        </ng-template>
 
-                            <div class="clear"></div>
-                            <br>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
 
-                        </div>
-					</div>
-				</form>
-			</div>
+                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </th>
+
+                                <th></th>
+
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+
+                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                </td>
+
+                                <td>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="opencontactView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                    <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit" data-target="#addContactInfo" data-toggle="modal">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.contactId)">
+                                        <mat-icon color="warn">delete</mat-icon>
+                                    </button>
+
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
+                        No Records
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Next</button>
+                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="previousClick()">Previous</button>
+            </div>
 		</div>
-		<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
-		<button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+		
 	</div>
 </div>
 
@@ -274,12 +118,11 @@
 			<span aria-hidden="true">&times;</span>
 		</button>
 
-
 	</div>
 	<div class="modal-body">
 
 		<div class="table-responsive">
-			<table class="table table-bordered">
+			<table class="table table-bordered cus-contact-table">
 				<thead>
 					<tr>
 						<th>AID</th>
@@ -302,7 +145,7 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 	</div>
 </ng-template>
 
@@ -314,17 +157,26 @@
 			<h4 class="modal-title">Vendor Details</h4>
 		</div>
 		<div class="modal-body viewform">
-			<p><span class="label"><b>First Name: </b></span><span class="value">{{firstName}}</span></p>
-			<p><span class="label"><b>Last Name: </b></span><span class="value">{{lastName}}</span></p>
-			<p><span class="label"><b>Contact Title </b></span><span class="value">{{contactTitle}}</span></p>
-			<p><span class="label"><b>Email: </b></span><span class="value">{{email}}</span></p>
-			<p><span class="label"><b>Mobile Phone : </b></span><span class="value">{{workPhone}}</span></p>
-			<p><span class="label"><b>Fax : </b></span><span class="value">{{fax}}</span></p>
+			<p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceVendorforView.prefix}}</span></p>
+			<p><span class="label"><b>First Name: </b></span><span class="value">{{sourceVendorforView.firstName}}</span></p>
+			<p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceVendorforView.middleName}}</span></p>
+			<p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceVendorforView.lastName}}</span></p>
+			<p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceVendorforView.suffix}}</span></p>
+			<p><span class="label"><b>Contact Title: </b></span><span class="value">{{sourceVendorforView.contactTitle}}</span></p>
+			<p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceVendorforView.workPhoneExtn}}
+                <span *ngIf="sourceVendorforView.workPhoneExtn">-</span>
+                {{sourceVendorforView.workPhone}}</span></p>
+			<p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceVendorforView.isdefaultContact}}</span></p>
+			<p><span class="label"><b>Email: </b></span><span class="value">{{sourceVendorforView.email}}</span></p>
+			<p><span class="label"><b>Mobile Phone : </b></span><span class="value">{{sourceVendorforView.mobilePhone}}</span></p>
+			<p><span class="label"><b>Alternate Phone : </b></span><span class="value">{{sourceVendorforView.alternatePhone}}</span></p>
+			<p><span class="label"><b>Fax: </b></span><span class="value">{{sourceVendorforView.fax}}</span></p>
+			<p><span class="label"><b>Memo: </b></span><span class="value">{{sourceVendorforView.notes}}</span></p>
 			
 			<div class="clear"></div>
 		</div>
 		<div class="modal-footer">
-			<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+			<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
 		</div>
 	</div>
 
@@ -339,3 +191,125 @@
 	</h5>
 
 </p-dialog>
+
+<div class="modal fade" id="addContactInfo" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{viewName}} Contact Details</h4>
+            </div>
+            <form #addContactForm="ngForm" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Prefix</label>
+                                <select name="preifx" [(ngModel)]="sourceVendor.prefix">
+                                    <option value="Dr.">Dr.</option>
+                                    <option value="Mr.">Mr.</option>
+                                    <option value="Mrs.">Mrs.</option>
+                                    <option value="Ms.">Ms.</option>
+                                    <option value="None selected">None selected</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>First Name <span class="clr-red">*</span></label>
+                                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.firstName" (onSelect)="onFirstNameSelected($event)" (onKeyUp)=eventFirstNameHandler($event) name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                        <ng-template let-firstName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{firstName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                                <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Middle Name</label>
+                                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.middleName" (onSelect)="onMiddleNameSelected($event)" (onKeyUp)=eventMiddleNameHandler($event) name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                                        <ng-template let-middleName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{middleName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                                <div *ngIf="disablesaveForMiddlename" class="clr-red">Entry Already Exists</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name <span class="clr-red">*</span></label>
+                                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.lastName" (onSelect)="onLastNameSelected($event)" (onKeyUp)=eventlastNameHandler($event) name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                        <ng-template let-lastName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{lastName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                                <div *ngIf="disablesaveForlastname" class="clr-red">Entry Already Exists</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Suffix</label>
+                                <select name="suffix" [(ngModel)]="sourceVendor.suffix">
+                                    <option value="II">II</option>
+                                    <option value="III">III</option>
+                                    <option value="Jr.">Jr.</option>
+                                    <option value="Sr.">Sr.</option>
+                                    <option value="None selected">None selected</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input class="form-control" type="text" name="contactTitle" [(ngModel)]="sourceVendor.contactTitle">
+                            </div>
+                            <div class="form-group">
+                                <label>Work Phone <span class="clr-red">*</span></label>
+                                <div>
+                                    <input class="form-control" type="number" pKeyFilter="pnum" name="workPhone" [(ngModel)]="sourceVendor.workPhone" style="width: calc(100% - 63px) !important;" required>
+                                    -
+                                    <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="sourceVendor.workPhoneExtn">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
+                                    <!--<div class="label-cstm" style="margin-right: 10px;">Primary Contact</div>-->
+                                    <span class="checkbox-cstm">
+                                        <label>
+                                            <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceVendor.isdefaultContact">
+                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span> Primary Contact
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email <span class="clr-red">*</span></label>
+                                <input class="form-control" email type="text" name="email" [(ngModel)]="sourceVendor.email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mobile Phone</label>
+                                <input class="form-control" pKeyFilter="pint" type="text" name="mobilePhone" [(ngModel)]="sourceVendor.mobilePhone">
+                            </div>
+                            <div class="form-group">
+                                <label>Alternate Phone</label>
+                                <input class="form-control" pKeyFilter="pint" type="text" name="alternatePhone" [(ngModel)]="sourceVendor.alternatePhone">
+                            </div>
+                            <div class="form-group">
+                                <label>Fax</label>
+                                <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="sourceVendor.fax">
+                            </div>
+                            <div class="form-group">
+                                <label>Memo</label>
+                                <textarea class="form-control" name="notes" [(ngModel)]="sourceVendor.notes"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Save</button>
+                    <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

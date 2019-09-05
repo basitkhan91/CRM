@@ -11,14 +11,24 @@
 }
 input[type='text'],
 input[type='number'],
+input[type='email'],
 select,
 textarea {
   height: 24px !important;
   border-radius: 5px !important;
 }
-
 .po-head {
   font-weight: 700;
   font-size: 16px !important;
   color: #295d92 !important;
+}
+.fa-plus-circle.fa-lg {
+    color: green !important;
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        max-width: 22%;
+        margin-right: 15px;
+    }
 }

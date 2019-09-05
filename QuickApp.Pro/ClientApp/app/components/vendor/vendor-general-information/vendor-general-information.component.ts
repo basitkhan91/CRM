@@ -94,38 +94,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     isVendorAlsoCustomer: boolean = false;
     disableSaveParentName: boolean;
     disablesaveForClassification: boolean;
-    selectedClass: any;
-
-
-    ngOnInit(): void {
-        this.matSpinner = false;
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        this.workFlowtService.ShowPtab = true;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
-        this.activeIndex = 0;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.loadData();
-        this.Capabilitydata();
-        this.countrylist();
-        this.loadDataVendorData();
-        this.options = {
-            center: { lat: 36.890257, lng: 30.707417 },
-            zoom: 12
-        };
-        this.sourceVendor.vendorTypeId = 1;
-        if (this.workFlowtService.isEditMode == false) {
-            this.sourceVendor.vendorTypeId = 2;
-            this.viewName = "Create";
-        }
-        if (this.workFlowtService.enableExternal == false) {
-            this.sourceVendor.vendorTypeId = 2;
-        }
-
-        if (this.workFlowtService.generalCollection) {
-            this.sourceVendor = this.workFlowtService.generalCollection;
-        }
-    }
+    selectedClass: any;  
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -155,32 +124,34 @@ export class VendorGeneralInformationComponent implements OnInit {
     public overlays: any[];
     msgs: Message[];
     uploadedFiles: any[] = [];
-    private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+    isEditMode: boolean = false;
+    isDeleteMode: boolean = false;
+    integrationCols: any[];
+    intSelectedColumns: any[];
 
-    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.dataSource = new MatTableDataSource();
         if (this.local)
         {
-            this.workFlowtService.contactCollection = this.local;
+            this.vendorService.contactCollection = this.local;
         }
-        if (this.workFlowtService.generalCollection)
+        if (this.vendorService.generalCollection)
         {
-            this.local = this.workFlowtService.generalCollection;
+            this.local = this.vendorService.generalCollection;
         }
 
-        if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
+        if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
             this.showLable = true;
             this.viewName = "Edit";
-            this.local = this.workFlowtService.listCollection.t;
-            this.sourceVendor = this.workFlowtService.listCollection.t;
-            this.sourceVendor.address1 = this.workFlowtService.listCollection.address1;
-            this.sourceVendor.address2 = this.workFlowtService.listCollection.address2;
-            this.sourceVendor.address3 = this.workFlowtService.listCollection.address3;
-            this.sourceVendor.city = this.workFlowtService.listCollection.city;
-            this.sourceVendor.country = this.workFlowtService.listCollection.country;
-            this.sourceVendor.stateOrProvince = this.workFlowtService.listCollection.stateOrProvince;
-            this.sourceVendor.PostalCode = this.workFlowtService.listCollection.postalCode;
+            this.local = this.vendorService.listCollection.t;
+            this.sourceVendor = this.vendorService.listCollection.t;
+            this.sourceVendor.address1 = this.vendorService.listCollection.address1;
+            this.sourceVendor.address2 = this.vendorService.listCollection.address2;
+            this.sourceVendor.address3 = this.vendorService.listCollection.address3;
+            this.sourceVendor.city = this.vendorService.listCollection.city;
+            this.sourceVendor.country = this.vendorService.listCollection.country;
+            this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
+            this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
 
         }
         if (this.customerser.isCustomerAlsoVendor == true) {
@@ -193,6 +164,48 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
         }
     }
+
+    ngOnInit(): void {
+        this.matSpinner = false;
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        this.vendorService.ShowPtab = true;
+        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+        this.activeIndex = 0;
+        this.vendorService.indexObj.next(this.activeIndex);
+        this.loadData();
+        this.Capabilitydata();
+        this.countrylist();
+        this.loadDataVendorData();
+        this.options = {
+            center: { lat: 36.890257, lng: 30.707417 },
+            zoom: 12
+        };
+        this.sourceVendor.vendorTypeId = 1;
+        if (this.vendorService.isEditMode == false) {
+            this.sourceVendor.vendorTypeId = 2;
+            this.viewName = "Create";
+        }
+        if (this.vendorService.enableExternal == false) {
+            this.sourceVendor.vendorTypeId = 2;
+        }
+
+        if (this.vendorService.generalCollection) {
+            this.sourceVendor = this.vendorService.generalCollection;
+        }
+
+        this.integrationCols = [
+            { field: '145.com', header: '145.com' },
+            { field: 'Aeroxchange', header: 'Aeroxchange' },
+            { field: 'AvRef', header: 'AvRef' },
+            { field: 'ILS', header: 'ILS' },
+            { field: 'partsBase', header: 'Parts base' },
+        ];
+        if (!this.intSelectedColumns) {
+            this.intSelectedColumns = this.cols;
+        }
+    }
+
     sourceVendor: any = {};
     closethis() {
         this.closeCmpny = false;
@@ -202,7 +215,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.vendorService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -218,7 +231,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCountrylist().subscribe(
+        this.vendorService.getCountrylist().subscribe(
             results => this.onDatacountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -233,7 +246,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     private Capabilitydata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCapabilibylist().subscribe(
+        this.vendorService.getCapabilibylist().subscribe(
             results => this.onCapabilitySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -260,7 +273,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     private loadAddressDara() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getAddressDtails().subscribe(
+        this.vendorService.getAddressDtails().subscribe(
             results => this.onAddressDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -273,19 +286,19 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.addressId = this.allAddresses[0].addressId;
     }
 
-    getlatlng(address) {
-        this.checkAddress = true;
-        return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-            this.options = {
-                center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
-                zoom: 12
-            };
-            this.overlays = [
-                new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
-            ];
-            return data;
-        });
-    }
+    //getlatlng(address) {
+    //    this.checkAddress = true;
+    //    return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
+    //        this.options = {
+    //            center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
+    //            zoom: 12
+    //        };
+    //        this.overlays = [
+    //            new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
+    //        ];
+    //        return data;
+    //    });
+    //}
     //Load Master Companies
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -441,7 +454,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     private loadGeneralObject() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getGeneralObj().subscribe(
+        this.vendorService.getGeneralObj().subscribe(
             results => this.onGeneralObjUrl(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -521,7 +534,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId
         )) {
-            this.display = true;
+            //this.display = true;
             this.modelValue = true;
         }
         if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
@@ -535,7 +548,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
-                this.workFlowtService.newAction(this.sourceVendor).subscribe(data => {
+                this.vendorService.newAction(this.sourceVendor).subscribe(data => {
                     this.sourceVendor.updatedBy = this.userName;
                     this.localCollection = data;
                     this.sourceVendor = data;
@@ -546,17 +559,17 @@ export class VendorGeneralInformationComponent implements OnInit {
                     this.sourceVendor.country = data.address.country;
                     this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
                     this.sourceVendor.PostalCode = data.address.postalCode;
-                    this.workFlowtService.generalCollection = this.localCollection;
-                    this.workFlowtService.contactCollection = this.localCollection;
-                    this.workFlowtService.financeCollection = this.localCollection;
-                    this.workFlowtService.paymentCollection = this.localCollection;
-                    this.workFlowtService.shippingCollection = this.localCollection;
+                    this.vendorService.generalCollection = this.localCollection;
+                    this.vendorService.contactCollection = this.localCollection;
+                    this.vendorService.financeCollection = this.localCollection;
+                    this.vendorService.paymentCollection = this.localCollection;
+                    this.vendorService.shippingCollection = this.localCollection;
                     if (this.sourceVendor.isVendorAlsoCustomer == true) {
-                        this.workFlowtService.isVendorAlsoCustomer = this.sourceVendor.isVendorAlsoCustomer;
-                        this.workFlowtService.localCollectiontoCustomer = this.sourceVendor;
+                        this.vendorService.isVendorAlsoCustomer = this.sourceVendor.isVendorAlsoCustomer;
+                        this.vendorService.localCollectiontoCustomer = this.sourceVendor;
                     }
                     this.activeIndex = 0;
-                    this.workFlowtService.indexObj.next(this.activeIndex);
+                    this.vendorService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor);
                 })
             }
@@ -566,7 +579,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
-                this.workFlowtService.updateVendorDetails(this.sourceVendor).subscribe(
+                this.vendorService.updateVendorDetails(this.sourceVendor).subscribe(
                     data => {
                         this.sourceVendor.updatedBy = this.userName;
                         this.localCollection = data;
@@ -578,24 +591,25 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.sourceVendor.country = data.address.country;
                         this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
                         this.sourceVendor.PostalCode = data.address.postalCode;
-                        this.workFlowtService.generalCollection = this.localCollection;
-                        this.workFlowtService.contactCollection = this.localCollection;
-                        this.workFlowtService.financeCollection = this.localCollection;
-                        this.workFlowtService.paymentCollection = this.localCollection;
-                        this.workFlowtService.shippingCollection = this.localCollection;
+                        this.vendorService.generalCollection = this.localCollection;
+                        this.vendorService.contactCollection = this.localCollection;
+                        this.vendorService.financeCollection = this.localCollection;
+                        this.vendorService.paymentCollection = this.localCollection;
+                        this.vendorService.shippingCollection = this.localCollection;
                         this.activeIndex = 0;
-                        this.workFlowtService.indexObj.next(this.activeIndex);
+                        this.vendorService.indexObj.next(this.activeIndex);
                         this.savesuccessCompleted(this.sourceVendor);
                     })
             }
         }
         else {
         }
+
     }
     nextClick() {
-        this.workFlowtService.vendorgeneralcollection = this.local;
+        this.vendorService.vendorgeneralcollection = this.local;
         this.activeIndex = 1;
-        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.vendorService.indexObj.next(this.activeIndex);
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
     dismissModel() {
@@ -791,4 +805,13 @@ export class VendorGeneralInformationComponent implements OnInit {
             }
         }
     }
+
+    onAddIntegrationWith() {
+        this.router.navigate(['/singlepages/singlepages/app-integration']);
+    }
+
+    onAddCapabilities() {
+        
+    }
+
 }

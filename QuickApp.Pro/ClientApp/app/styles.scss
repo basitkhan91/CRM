@@ -12650,6 +12650,9 @@ table thead tr th:first-child input, table tr td:first-child input {
 .pautocomp-cstm .ui-autocomplete {
     padding: 0;
 }
+.pautocomp-cstm.ng-dirty.ng-invalid > .ui-autocomplete > .ui-inputtext {
+    border: 1px solid #bdbdbd;
+}
 body .ui-datepicker table td > a.ui-state-active {
     color: #337ab7;
 }
@@ -14082,6 +14085,26 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .p-calendar-cstm .ui-calendar-button {
     padding: 3px;
+}
+.p-radiobutton-cstm .ui-radiobutton {
+    margin-right: -5px !important;
+    padding-top: 8px !important;
+}
+.p-radiobutton-cstm .ui-radiobutton .ui-radiobutton-box {
+    width: 15px !important;
+    height: 15px !important;
+}
+.p-radiobutton-cstm .ui-radiobutton .ui-radiobutton-box .ui-radiobutton-icon {
+    left: 58% !important;
+    top: 58% !important;
+    width: 7px !important;
+    height: 7px !important;
+}
+.cus-contact-table tr th {
+    padding: 7px !important;
+}
+.cus-contact-table tr td {
+    padding: 4px !important;
 }
 
 .modal-full {
