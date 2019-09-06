@@ -196,7 +196,6 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
-        this.itemGroup_Name = row.itemGroupCode;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -353,8 +352,6 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceAction.isActive == false;
-            this.loadMasterCompanies();
-            this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -365,7 +362,6 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceAction.isActive == true;
-            this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
