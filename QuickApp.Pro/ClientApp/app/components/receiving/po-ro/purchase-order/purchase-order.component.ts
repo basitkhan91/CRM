@@ -155,7 +155,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                 purchaseOrder.reference = purchaseOrder.vendor.vendorContractReference;
 
                 let defaultContact = purchaseOrder.vendor.vendorContact.filter(x => x.isDefaultContact == true);
-                if (defaultContact != null && defaultContact.length > 0) {
+                if (defaultContact != null && defaultContact.length > 0 && defaultContact[0].contact != null) {
 
                     purchaseOrder.contactPhone = defaultContact[0].contact.mobilePhone;  //  ', header: 'Vendor Contact' },
                     purchaseOrder.vendorContact = defaultContact[0].contact.suffix +
@@ -164,12 +164,13 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                         defaultContact[0].contact.lastName;
                 }
                 else {
-                    purchaseOrder.contactPhone = purchaseOrder.vendorContact[0].contact.mobilePhone;  //  ', header: 'Vendor Contact' },
-                    purchaseOrder.vendorContact = purchaseOrder.vendorContact[0].contact.prefix +
-                        purchaseOrder.vendorContact[0].contact.firstName + " " +
-                        purchaseOrder.vendorContact[0].contact.middleName + " " +
-                        purchaseOrder.vendorContact[0].contact.lastName;
-
+                    if (purchaseOrder.vendor.vendorContact[0].contact != null) {
+                        purchaseOrder.contactPhone = purchaseOrder.vendor.vendorContact[0].contact.mobilePhone;  //  ', header: 'Vendor Contact' },
+                        purchaseOrder.vendorContact = purchaseOrder.vendorContact[0].contact.prefix +
+                            purchaseOrder.vendorContact[0].contact.firstName + " " +
+                            purchaseOrder.vendorContact[0].contact.middleName + " " +
+                            purchaseOrder.vendorContact[0].contact.lastName;
+                    }
                 }
             }
 

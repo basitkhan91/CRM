@@ -1412,6 +1412,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         console.log(this.allUnitOfMeasureinfo);
         
 
+
     }
 
 
@@ -1987,6 +1988,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     ItemClassficationCode(event) {
+
         for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
             if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
                 this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
@@ -1996,6 +1998,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
 
     }
+
+
 
     filterItems(event) {
 
@@ -3527,8 +3531,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
             this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {                
+
                  this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
                 this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure()
+
             })
 
         }
@@ -3648,6 +3654,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.sourceItemMaster.priorityId = data.priorityId;
                     this.loadPriority() 
                 });
+
         }
         else {
             this.sourceAction.updatedBy = this.userName;
@@ -4954,6 +4961,45 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
+
+        //else {
+
+        //    this.sourceAction.updatedBy = this.userName;
+        //    this.sourceAction.itemClassificationCode = this.itemName;
+        //    this.sourceAction.description = this.className;
+        //    this.sourceAction.itemType = this.itemTypeName;
+        //    this.sourceAction.masterCompanyId = 1;
+        //    this.workFlowtService.updateAction(this.sourceAction).subscribe(data => { this.itemclass(); },
+        //        response => this.saveCompleted(this.sourceAction));
+        //}
+
+        this.modal.close();
+    }
+
+    // Manufacturer Save
+    filtermanufacturer(event) {
+        this.manufacturerCollection = [];
+        this.manufacturerNumber = [];
+        if (this.allManufacturerInfo) {
+            if (this.allpnNumbers.length > 0) {
+                for (let i = 0; i < this.allManufacturerInfo.length; i++) {
+                    let name = this.allManufacturerInfo[i].name;
+                    if (name) {
+                        if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                            this.manufacturerNumber.push([{
+                                "manufacturerId": this.allManufacturerInfo[i].manufacturerId,
+                                "name": name
+                            }]),
+
+                                this.manufacturerCollection.push(name);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     Manufacturer(content) {
         this.sourcemanufacturer.name = '';

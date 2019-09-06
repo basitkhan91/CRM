@@ -316,8 +316,10 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.Active = "In Active";
             this.sourcemanufacturer.isActive == false;
             this.loadMasterCompanies();
-            this.sourcemanufacturer.masterCompanyId = 1;
+            this.sourcemanufacturer.masterCompanyId = 1;         
+
             this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+
                 response => this.saveCompleted(this.sourcemanufacturer),
                 error => this.saveFailedHelper(error));
         }
@@ -327,8 +329,9 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.Active = "Active";
             this.sourcemanufacturer.isActive == true;
             this.loadMasterCompanies();
-            this.sourcemanufacturer.masterCompanyId = 1;
+            this.sourcemanufacturer.masterCompanyId = 1;           
             this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+
                 response => this.saveCompleted(this.sourcemanufacturer),
                 error => this.saveFailedHelper(error));
             //alert(e);

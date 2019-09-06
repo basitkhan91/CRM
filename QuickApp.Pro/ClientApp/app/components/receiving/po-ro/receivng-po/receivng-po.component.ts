@@ -354,6 +354,7 @@ export class ReceivngPoComponent implements OnInit {
                 let parentPart: PurchaseOrderPart;
                 var allParentParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.isParent == true);
                 for (let parent of allParentParts) {
+
                     var splitParts = this.purchaseOrderData.purchaseOderPart.filter(x => !x.isParent && x.itemMaster.partNumber == parent.itemMaster.partNumber);
 
                     if (splitParts.length > 0) {
@@ -371,12 +372,13 @@ export class ReceivngPoComponent implements OnInit {
                 }
 
                 for (let part of this.purchaseOrderData.purchaseOderPart) {
-                    //part.managementStructureId
                     part.visible = false;
                     part.showStockLineGrid = false;
                     part.isSameDetailsForAllParts = false;
                     let selectedOrgStruct: ManagementStructure[] = [];
                     //part.conditionId = 0;
+                    part.eCCNAlreadyExist = part.itemMaster.exportECCN != null && part.itemMaster.exportECCN.length > 0;
+                    part.itarNumberExist = part.itemMaster.itarNumber != null && part.itemMaster.itarNumber.length > 0;
                     part.quantityRejected = "0";
                     if (part.isParent) {
                         this.getManagementStructureHierarchy(part.managementStructureId, null, selectedOrgStruct);
@@ -433,6 +435,7 @@ export class ReceivngPoComponent implements OnInit {
 
             if (stockLineManagementStructureHierarchy[0] != undefined && stockLineManagementStructureHierarchy[0].length > 0) {
                 stockLine.companyId = stockLineSelectedManagementStructureHierarchy[0].managementStructureId;
+                stockLine.managementStructureEntityId = stockLine.companyId; 
                 for (let managementStruct of stockLineManagementStructureHierarchy[0]) {
                     var dropdown = new DropDownData();
                     dropdown.Key = managementStruct.managementStructureId.toLocaleString();
@@ -442,6 +445,7 @@ export class ReceivngPoComponent implements OnInit {
             }
             if (stockLineManagementStructureHierarchy[1] != undefined && stockLineManagementStructureHierarchy[1].length > 0) {
                 stockLine.businessUnitId = stockLineSelectedManagementStructureHierarchy[1].managementStructureId;
+                stockLine.managementStructureEntityId = stockLine.businessUnitId;
                 for (let managementStruct of stockLineManagementStructureHierarchy[1]) {
                     var dropdown = new DropDownData();
                     dropdown.Key = managementStruct.managementStructureId.toLocaleString();
@@ -451,6 +455,7 @@ export class ReceivngPoComponent implements OnInit {
             }
             if (stockLineManagementStructureHierarchy[2] != undefined && stockLineManagementStructureHierarchy[2].length > 0) {
                 stockLine.divisionId = stockLineSelectedManagementStructureHierarchy[2].managementStructureId;
+                stockLine.managementStructureEntityId = stockLine.divisionId;
                 for (let managementStruct of stockLineManagementStructureHierarchy[2]) {
                     var dropdown = new DropDownData();
                     dropdown.Key = managementStruct.managementStructureId.toLocaleString();
@@ -460,6 +465,7 @@ export class ReceivngPoComponent implements OnInit {
             }
             if (stockLineManagementStructureHierarchy[3] != undefined && stockLineManagementStructureHierarchy[3].length > 0) {
                 stockLine.departmentId = stockLineSelectedManagementStructureHierarchy[3].managementStructureId;
+                stockLine.managementStructureEntityId = stockLine.departmentId;
                 for (let managementStruct of stockLineManagementStructureHierarchy[3]) {
                     var dropdown = new DropDownData();
                     dropdown.Key = managementStruct.managementStructureId.toLocaleString();
@@ -722,20 +728,21 @@ export class ReceivngPoComponent implements OnInit {
                 this.setStockLineManagementStructure(part.managementStructureId, stockLine);
                 stockLine.purchaseOrderId = part.purchaseOrderId;
                 stockLine.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
+                stockLine.itemMasterId = part.itemMaster.itemMasterId;
                 stockLine.partNumber = part.itemMaster.partNumber;
                 stockLine.quantity = 1;
                 stockLine.stockLineId = 0;
                 stockLine.createdDate = new Date();
                 stockLine.manufacturerId = 0;
                 stockLine.visible = false;
-                stockLine.shippingReferenceId = 0;
+                stockLine.shippingReference = '';
                 stockLine.shippingViaId = 0;
                 stockLine.shelfId = null;
                 stockLine.warehouseId = null;
                 stockLine.binId = null;
                 stockLine.repairOrderId = null;
                 stockLine.locationId = null;
-                stockLine.shippingAccountId = 0;
+                stockLine.shippingAccount = '';
                 stockLine.conditionId = 0;
                 stockLine.masterCompanyId = 1;
                 stockLine.serialNumberNotProvided = false;
@@ -759,19 +766,20 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.purchaseOrderId = part.purchaseOrderId;
             stockLine.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
             stockLine.partNumber = part.itemMaster.partNumber;
+            stockLine.itemMasterId = part.itemMaster.itemMasterId;
             stockLine.quantity = 1;
             stockLine.stockLineId = 0;
             stockLine.createdDate = new Date();
             stockLine.manufacturerId = 0;
             stockLine.visible = false;
-            stockLine.shippingReferenceId = 0;
+            stockLine.shippingReference = '';
             stockLine.shippingViaId = 0;
             stockLine.shelfId = null;
             stockLine.warehouseId = null;
             stockLine.binId = null;
             stockLine.repairOrderId = null;
             stockLine.locationId = null;
-            stockLine.shippingAccountId = 0;
+            stockLine.shippingAccount = '';
             stockLine.conditionId = 0;
             stockLine.masterCompanyId = 1;
             stockLine.serialNumberNotProvided = false;
@@ -853,6 +861,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     getStockLineBusinessUnitList(stockLine: StockLine): void {
+        stockLine.managementStructureEntityId = stockLine.companyId;
         var businessUnits = this.managementStructure.filter(function (management) {
             return management.parentId == stockLine.companyId;
         });
@@ -873,6 +882,13 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     getStockLineDivision(stockLine: StockLine): void {
+        if (stockLine.businessUnitId != undefined && stockLine.businessUnitId > 0) {
+            stockLine.managementStructureEntityId = stockLine.businessUnitId;
+        }
+        else {
+            stockLine.managementStructureEntityId = stockLine.companyId;
+        }
+
         var divisions = this.managementStructure.filter(function (management) {
             return management.parentId == stockLine.businessUnitId;
         });
@@ -890,6 +906,14 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     getStockLineDepartment(stockLine: StockLine): void {
+
+        if (stockLine.divisionId != undefined && stockLine.divisionId > 0) {
+            stockLine.managementStructureEntityId = stockLine.divisionId;
+        }
+        else {
+            stockLine.managementStructureEntityId = stockLine.businessUnitId;
+        }
+
         var departments = this.managementStructure.filter(function (management) {
             return management.parentId == stockLine.divisionId;
         });
@@ -901,6 +925,15 @@ export class ReceivngPoComponent implements OnInit {
             dropdown.Key = deparment.managementStructureId.toLocaleString();
             dropdown.Value = deparment.code;
             stockLine.DepartmentList.push(dropdown);
+        }
+    }
+
+    setStockLineDepartmentManagementStructureId(stockLine: StockLine) {
+        if (stockLine.departmentId != undefined && stockLine.departmentId > 0) {
+            stockLine.managementStructureEntityId = stockLine.departmentId;
+        }
+        else {
+            stockLine.managementStructureEntityId = stockLine.divisionId;
         }
     }
 
@@ -1116,7 +1149,7 @@ export class ReceivngPoComponent implements OnInit {
         let partsToPost: ReceiveParts[] = this.extractAllAllStockLines();
         console.log(partsToPost);
         this.shippingService.receiveParts(partsToPost).subscribe(data => {
-            this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.info);
+            this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
             return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
         },
         error => {
@@ -1168,11 +1201,10 @@ export class ReceivngPoComponent implements OnInit {
             var ofPartMsg = " of Part No. " + item.itemMaster.partNumber;
             if (item.stocklineListObj != undefined && item.stocklineListObj.length > 0) {
                 for (var i = 0; i < item.stocklineListObj.length; i++) {
-                    item.stocklineListObj[i].managementStructureEntityId = item.itemMaster.glAccountId;
-                    item.stocklineListObj[i].conditionId = item.conditionId;
+                    item.stocklineListObj[i].gLAccountId = item.itemMaster.glAccountId;
+                    item.stocklineListObj[i].conditionId = parseInt(item.conditionCode);
                     item.stocklineListObj[i].quantityRejected = toInteger(item.quantityRejected);
-
-                    if (item.stocklineListObj[i].managementStructureEntityId == undefined || item.stocklineListObj[i].managementStructureEntityId == 0) {
+                    if (item.stocklineListObj[i].companyId == undefined || item.stocklineListObj[i].companyId == 0) {
                         errorMessages.push("Please select Company in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                     }
 
