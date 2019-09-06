@@ -1728,6 +1728,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     priorty(content) {
+
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1743,6 +1744,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     atamai(content) {
+
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1759,6 +1761,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     item(content) {
+
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1917,88 +1920,39 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
-    //ItemHandler(event) {
-    //    if (event.target.value != "") {
-    //        let value = event.target.value.toLowerCase();
-    //        if (this.selectedItemCode) {
-    //            if (value == this.selectedItemCode.toLowerCase()) {
-    //                this.disableSaveItemClassficationCode = true;
-
-    //            }
-    //            else {
-    //                this.disableSaveItemClassficationCode = false;
-
-    //            }
-    //        }
-
-    //    }
-    //}
-
-
-    //ItemClassficationCode(event) {
-    //    if (this.allitemclassificationInfo) {
-    //        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-    //            if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
-    //                this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
-    //                this.disableSaveItemClassficationCode = true;
-    //                this.selectedItemCode = event;
-    //            }
-
-    //        }
-    //    }
-    //}
-
-    //filterItems(event) {
-
-    //    this.localCollection = [];
-    //    if (this.allitemclassificationInfo) {
-    //        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-    //            let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
-    //            if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //                this.localCollection.push(itemName);
-    //            }
-    //        }
-    //    }
-    //}
     ItemHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedItemCode) {
-            if (value == this.selectedItemCode.toLowerCase()) {
-                this.disableSaveItemClassficationCode = true;
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedItemCode) {
+                if (value == this.selectedItemCode.toLowerCase()) {
+                    this.disableSaveItemClassficationCode = true;
 
-            }
-            else {
-                this.disableSaveItemClassficationCode = false;
+                }
+                else {
+                    this.disableSaveItemClassficationCode = false;
 
+                }
             }
+
         }
-
     }
 
 
     ItemClassficationCode(event) {
-        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-            if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
-                this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
-                this.disableSaveItemClassficationCode = true;
-                this.selectedItemCode = event;
+        if (this.allitemclassificationInfo) {
+            for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+                if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
+                    this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
+                    this.disableSaveItemClassficationCode = true;
+
+                    this.selectedItemCode = event;
+                }
+
             }
         }
-
     }
 
-    filterItems(event) {
 
-        this.localCollection = [];
-
-        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-            let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
-            if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.localCollection.push(itemName);
-            }
-        }
-
-    }
     ItemGroupHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -2326,7 +2280,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
+    filterItems(event) {
 
+        this.localCollection = [];
+        if (this.allitemclassificationInfo) {
+            for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+                let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
+                if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.localCollection.push(itemName);
+                }
+            }
+        }
+    }
 
 
     private loadManagementdata() {
@@ -3495,8 +3460,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
             this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {                
-                 this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
-                this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure()
+                this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
+                 this.Stockunitofmeasure()
             })
 
         }
@@ -3599,11 +3564,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode}).subscribe(
+            this.priorityService.newPriority(this.sourceAction).subscribe(
                 data => {
                     this.sourceItemMaster.priorityId = data.priorityId;
-                    this.loadPriority() 
-                });
+                    this.loadPriority() },
+                response => this.saveCompleted(this.sourceAction));
         }
         else {
             this.sourceAction.updatedBy = this.userName;
@@ -4134,7 +4099,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     selectedDashnumbervalue(value) {
         this.newDashnumValue = value.originalEvent.target.textContent;
-        console.log()
     }
 
     resetAircraftModelsorDashNumbers() {
@@ -4152,7 +4116,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     mapAircraftInformation() {
-        console.log(this.selectedDashnumber)
+        console.log(this.selectedModelId)
         this.viewTable = true;
         // Selected All 
         if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
