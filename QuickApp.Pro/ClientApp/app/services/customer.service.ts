@@ -438,4 +438,8 @@ export class CustomerService {
         return Observable.forkJoin(
             this.customerEndpoint.getGlobalCustomerRecords<Customer[]>(pageData));
     }
+    postCustomerAircrafts(data) {
+        return Observable.forkJoin(this.customerEndpoint.postCustomerAircraft<any>(data));
+    }
+
 }

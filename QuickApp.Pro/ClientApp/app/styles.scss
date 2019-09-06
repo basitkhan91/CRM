@@ -14090,6 +14090,23 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .margintop {
     margin-top: 7px !important;
 }
+.md-stepper-horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 5px;
+}
+@media only screen and (max-width: 1024px) {
+    .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {
+        font-size: 10px !important;
+    }
+    .md-stepper-horizontal .md-step .md-step-title {
+        margin-top: 10px !important;
+        font-size: 10px  !important;
+    }
+    .md-stepper-horizontal .md-step {
+        padding: 8px !important;
+    }
+}
 
 .rounder-corners-cstm {
     border-radius: 5px !important

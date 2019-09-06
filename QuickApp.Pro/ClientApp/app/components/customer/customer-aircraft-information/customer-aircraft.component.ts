@@ -1,9 +1,11 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemMasterService } from '../../../services/itemMaster.service';
 
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
 import { AircraftModelService } from '../../../services/aircraft-model/aircraft-model.service';
+import { CustomerService } from '../../../services/customer.service';
+import { AuthService } from '../../../services/auth.service';
 
 
 
@@ -15,7 +17,7 @@ import { AircraftModelService } from '../../../services/aircraft-model/aircraft-
 })
 /** CustomerEdit component*/
 export class CustomerAircraftComponent implements OnInit {
-
+    @Input() savedGeneralInformationData;
     // aircraft Type used for both 
     manufacturerData: { value: any; label: any; }[];
     // search Variables
@@ -44,16 +46,26 @@ export class CustomerAircraftComponent implements OnInit {
     searchAircraftParams: string = '';
     multipleModelUrl: any = '';
     tempAircraftDashNumber: any;
-    modelUnknown: boolean;
-
+    modelUnknown: boolean = false;
+    inventoryData: any = [];
+    colaircraft: any[] = [
+        { field: "AircraftType", header: "Aircraft" },
+        { field: "AircraftModel", header: "Model" },
+        { field: "DashNumber", header: "Dash Numbers" },
+    ];
+    dashNumberUnknown: boolean = false;
 
 
 
 
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
-        private Dashnumservice: DashNumberService, ) { }
+        private Dashnumservice: DashNumberService,
+        public customerService: CustomerService,
+        private authService: AuthService,
+    ) { }
     ngOnInit() {
+
         this.route.data.subscribe(data => {
             console.log(data);
         })
@@ -63,6 +75,12 @@ export class CustomerAircraftComponent implements OnInit {
 
 
     }
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
+
     getAllAircraftManfacturer() {
         this.itemser.getAircraft().subscribe(res => {
             this.manufacturerData = res[0].map(x => {
@@ -283,18 +301,19 @@ export class CustomerAircraftComponent implements OnInit {
 
     mapAircraftInventory() {
 
-        // this.viewTable = true;
+        console.log(this.add_SelectedModel);
         // Selected All 
-        if (this.add_SelectedAircraftId !== undefined && this.add_SelectedModel.length > 0 && this.add_SelectedDashNumber.length > 0) {
+        if (this.add_SelectedAircraftId !== undefined && this.add_SelectedModel.length > 0 && this.add_SelectedDashNumber !== undefined) {
             this.Dashnumservice.getAllDashModels(this.multipleModelUrl, this.add_SelectedAircraftId, this.add_SelectedDashNumber).subscribe(aircraftdata => {
                 const responseValue = aircraftdata;
-                const inventoryData = responseValue.map(x => {
+                this.inventoryData = responseValue.map(x => {
                     return {
                         AircraftType: x.aircraft,
                         AircraftModel: x.model,
                         DashNumber: x.dashNumber,
                         AircraftModelId: x.modelid,
                         DashNumberId: x.dashNumberId,
+                        Inventory: null,
                         Memo: '',
                         IsChecked: false
                     }
@@ -302,33 +321,58 @@ export class CustomerAircraftComponent implements OnInit {
             })
         }
 
-        //     if (this.selectedAircraftId !== undefined && this.modelUnknown) {
-        //         this.aircraftData = [{
-        //             AircraftType: this.newValue,
-        //             AircraftModel: 'Unknown',
-        //             DashNumber: 'Unknown',
-        //             AircraftModelId: '',
-        //             DashNumberId: '',
-        //             Memo: '',
-        //             IsChecked: false
-        //         }]
-        //     }
-
-        //     if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
-        //         this.aircraftData = this.selectedModelId.map(x => {
-        //             return {
-        //                 AircraftType: this.newValue,
-        //                 AircraftModel: x.modelName,
-        //                 DashNumber: 'Unknown',
-        //                 AircraftModelId: x.aircraftModelId,
-        //                 DashNumberId: '',
-        //                 Memo: '',
-        //                 IsChecked: false
-        //             }
-        //         })
-        //     }
+        if (this.add_SelectedAircraftId !== undefined && this.modelUnknown) {
+            this.inventoryData = [{
+                AircraftType: this.tempAircraftType,
+                AircraftModel: 'Unknown',
+                DashNumber: 'Unknown',
+                AircraftModelId: '',
+                DashNumberId: '',
+                Memo: '',
+                IsChecked: false
+            }]
+        }
+        console.log(this.add_SelectedAircraftId !== undefined, this.add_SelectedModel.length > 0, this.dashNumberUnknown)
+        if (this.add_SelectedAircraftId !== undefined && this.add_SelectedModel.length >= 0 && this.dashNumberUnknown) {
+            this.inventoryData = this.add_SelectedModel.map(x => {
+                return {
+                    AircraftType: this.tempAircraftType,
+                    AircraftModel: x.modelName,
+                    DashNumber: 'Unknown',
+                    AircraftModelId: x.aircraftModelId,
+                    DashNumberId: '',
+                    Memo: '',
+                    IsChecked: false
+                }
+            })
+        }
     }
     resetAircraftModelsorDashNumbers() {
+        if (this.modelUnknown) {
+            this.add_SelectedModel = [];
+            this.add_SelectedDashNumber = undefined;
 
+        }
+        if (this.dashNumberUnknown) {
+
+            this.add_SelectedDashNumber = undefined;
+
+        }
+
+    }
+    saveAircraft() {
+        const id = this.savedGeneralInformationData.CustomerId
+        const data = this.inventoryData.map(x => {
+            return {
+                ...x,
+                CustomerId: id,
+                MasterCompanyId: 1,
+                createdBy: this.userName,
+                updatedBy: this.userName,
+            }
+        })
+        this.customerService.postCustomerAircrafts(data).subscribe(res => {
+            console.log(res)
+        })
     }
 }

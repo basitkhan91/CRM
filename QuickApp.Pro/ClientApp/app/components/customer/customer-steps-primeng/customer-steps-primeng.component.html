@@ -151,7 +151,9 @@
       ></app-customer-contacts>
     </div>
     <div [ngClass]="{ hideTab: currentTab !== 'AircraftInfo' }">
-      <app-customer-aircraft></app-customer-aircraft>
+      <app-customer-aircraft
+        [savedGeneralInformationData]="savedGeneralInformationData"
+      ></app-customer-aircraft>
     </div>
     <div [ngClass]="{ hideTab: currentTab !== 'Atachapter' }">
       <app-customer-ata></app-customer-ata>

@@ -146,6 +146,13 @@ export class CustomerEndpoint extends EndpointFactory {
     //        });
     //}
 
+    postCustomerAircraft<T>(postData) {
+        return this.http.post<T>(this.getCustomerAircrafPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postCustomerAircraft(postData));
+            });
+    }
+
     getNewitemAircraftEndpoint<T>(userObject: any): Observable<T> {
 
         return this.http.post<T>(this._CustomerAircraftPostUrl, JSON.stringify(userObject), this.getRequestHeaders())

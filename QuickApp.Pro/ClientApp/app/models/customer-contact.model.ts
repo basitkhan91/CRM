@@ -1,30 +1,42 @@
-﻿import { MasterCompany } from './mastercompany.model';
-import { Customer } from './customer.model';
+﻿// import { MasterCompany } from './mastercompany.model';
+// import { Customer } from './customer.model';
 export class CustomerContactModel {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-	constructor(masterCompany?: MasterCompany, CustomerBillingAddressId?: number, CustomerId?: number, AddressId?: number, IsDefaultContact?: boolean, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string) {
+    constructor() {
+        this.prefix= ''
+        this.firstName= '';
+        this.middleName = '';
+        this.lastName = '';
+        this.suffix= '';
+        this.contactTitle= '';
+        this.workPhone = null;
+        this.email= '';
+        this.workPhoneExtn= '';
+        this.websiteURL= '';
+        this.mobilePhone= '';
+        this.alternatePhone= '';
+        this.fax= '';
+        this.notes= '';
+        this.isDefaultContact = false
 
-        this.CustomerBillingAddressId = CustomerBillingAddressId;
-        this.CustomerId = CustomerId;
-        this.AddressId = AddressId;
-        this.IsDefaultContact = IsDefaultContact;
-        this.masterCompanyId = masterCompanyId;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-        this.updatedBy = updatedBy;
     }
+    prefix:string
+    firstName:string;
+    middleName: string;
+    lastName: string;
+    suffix:string;
+    contactTitle:string;
+    workPhone:number;
+    email:string;
+    workPhoneExtn:string;
+    websiteURL:string;
+    mobilePhone:string;
+    alternatePhone:string;
+    fax:string;
+    notes:string;
+    isDefaultContact:boolean
 
-    public CustomerBillingAddressId: number;
-    public CustomerId: number;
-    public AddressId: number;
-    public IsDefaultContact: boolean;
-    public displayName: string;
-    public masterCompanyId: number;
-    public createdBy: string;
-    public updatedBy: string;
-    public createdDate: Date;
-    public updatedDate: Date;
-    public masterCompany: MasterCompany;
-	public Customer: Customer;
+
+
+
 }

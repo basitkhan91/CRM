@@ -460,7 +460,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
         console.log(this.generalInformation);
         console.log(this.userName)
         this.customerService.newAction({ ...this.generalInformation, createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1 }).subscribe(res => {
-            console.log(res);
+            this.tab.emit('Contacts');
+            this.saveGeneralInformationData.emit(res);
         })
     }
 

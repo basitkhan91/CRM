@@ -32,7 +32,7 @@ import { MenuItem } from "primeng/components/common/menuitem"; //Bread crumb
 @Component({
     selector: "quickapp-pro-app",
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss','./styles.scss'],
+    styleUrls: ['./app.component.scss', './styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, AfterViewInit {
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.toastyConfig.showClose = true;
         this.routeActive = "active";
         this.appTitleService.appName = this.appTitle;
-    
+
 
     }
     showthis() {
@@ -123,7 +123,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.userCollapsed = true;
     }
 
-    ngAfterViewInit() {     
+    ngAfterViewInit() {
     }
     ngOnInit() {
         // Created by Jyotsna
@@ -163,7 +163,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 icon: 'fa fa-fw fa-group',
                 items: [
                     { label: 'Customers List', routerLink: '/customersmodule/customerpages/app-customers-list' },
-                    { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-general-information' },
+                    { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-create' },
                     { label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                     {
                         label: 'Invoice', items: [
@@ -224,7 +224,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         { label: 'Disposal', routerLink: '/#' },
                         ]
                     },
-                    
+
                 ]
             },
             {
@@ -258,7 +258,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
-                            { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                        { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
                         { label: 'PO Approval', routerLink: '/#' },
                         { label: 'Create Vendor RMA', routerLink: '/#' }]
                     },
@@ -290,7 +290,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Purchase Order', routerLink: '/receivingmodule/receivingpages/app-purchase-order' },
                     { label: 'Repair Order', routerLink: '/receivingmodule/receivingpages/app-ro' },
                     { label: 'Shipping Receiver', routerLink: '/receivingmodule/receivingpages/app-shipping' },
-                    {label:'Work Order', routerLink: '/#' },
+                    { label: 'Work Order', routerLink: '/#' },
                     {
                         label: 'Reports and forms', items: [{
                             label: 'Receiving Log', routerLink: '/#'
@@ -307,7 +307,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Create Work Flow', routerLink: '/workflowmodule/workflowpages/wf-create' },
                     { label: 'Task', routerLink: '/singlepages/singlepages/app-tasks' },
                     { label: 'Task Attribute', routerLink: '/singlepages/singlepages/app-task-attributes' },
-                   
+
                 ]
             },
             {
@@ -737,7 +737,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);       
+        this.mobileQuery.removeListener(this._mobileQueryListener);
         this.unsubscribeNotifications();
     }
 
@@ -839,12 +839,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     goBack() { window.history.back(); }
-    
+
     logout() {
- 
+
         this.authService.logout();
         this.authService.redirectLogoutUser();
-        this.mobileQuery.removeListener(this._mobileQueryListener);    
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     get userName(): string {
