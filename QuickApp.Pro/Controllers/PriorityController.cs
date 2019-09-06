@@ -73,7 +73,6 @@ namespace QuickApp.Pro.Controllers
                 priorityobject.Description = priorityViewModel.Description;
                 priorityobject.MasterCompanyId = 1;
                 priorityobject.IsActive = priorityViewModel.IsActive;
-                priorityobject.IsDelete = priorityViewModel.IsDelete;
                 priorityobject.Memo = priorityViewModel.Memo;
                 priorityobject.CreatedDate = DateTime.Now;
                 priorityobject.UpdatedDate = DateTime.Now;

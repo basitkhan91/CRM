@@ -196,10 +196,10 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.provision_Name = row.description;   
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -207,9 +207,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     }
 
     openEdit(content, row) {
-
         this.isEditMode = true;
-
         this.isSaving = true;
         this.loadMasterCompanies();
 		this.disableSave = false;
