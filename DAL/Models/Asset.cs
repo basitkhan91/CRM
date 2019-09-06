@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
    public class Asset : IAudit
     {
         [Key]
-
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public long? AssetRecordId { get; set; }
 
         [Required(ErrorMessage = "Id Is Required.")]

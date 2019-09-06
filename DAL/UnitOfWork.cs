@@ -188,7 +188,7 @@ namespace DAL
         IDashNumberRepository dashNumberRepository;
         IWorkOrderRepository workOrderRepository;
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
-
+        IAssetCapes _assetCapes;
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -485,7 +485,7 @@ namespace DAL
 
         public int SaveChanges()
         {
-            AuditChanges();
+            //AuditChanges();
             return _context.SaveChanges();
         }
 
@@ -1559,57 +1559,66 @@ namespace DAL
 
         private void AuditChanges()
         {
-            _context.ChangeTracker.DetectChanges();
-            var modifiedEntries = _context.ChangeTracker.Entries()
-                .Where(x => x.Entity is IAudit && x.State == EntityState.Modified).ToList();
-            foreach (var entry in modifiedEntries)
+            try
             {
-                var entity = entry.Entity;
-                Type type = entity.GetType();
-                var classPath = type.GetTypeInfo().FullName;
-                var auditEntity = Activator.CreateInstance(Type.GetType(classPath + "Audit", true));
-                var auditEntityProperties = auditEntity.GetType().GetProperties();
-                var originalValues = entry.GetDatabaseValues();  // OriginalValues[property.Name];
-                var entityProperties = entity.GetType().GetProperties();
-                var isValueChanged = false;
-                auditEntityProperties.ToList().ForEach(property =>
+                _context.ChangeTracker.DetectChanges();
+                var modifiedEntries = _context.ChangeTracker.Entries()
+                    .Where(x => x.Entity is IAudit && x.State == EntityState.Modified).ToList();
+                foreach (var entry in modifiedEntries)
                 {
-
-                    if (entityProperties.Any(x => x.Name == property.Name))
+                    var entity = entry.Entity;
+                    Type type = entity.GetType();
+                    var classPath = type.GetTypeInfo().FullName;
+                    var auditEntity = Activator.CreateInstance(Type.GetType(classPath + "Audit", true));
+                    var auditEntityProperties = auditEntity.GetType().GetProperties();
+                    var originalValues = entry.GetDatabaseValues();  // OriginalValues[property.Name];
+                    var entityProperties = entity.GetType().GetProperties();
+                    var isValueChanged = false;
+                    auditEntityProperties.ToList().ForEach(property =>
                     {
-                        var originalValue = originalValues[property.Name];
-                        var currentValue = entry.CurrentValues[property.Name];
-                        var entityProperty = entityProperties.First(x => x.Name == property.Name);
-                        var isKeyAttribute = Attribute.GetCustomAttribute(entityProperty, typeof(KeyAttribute)) as KeyAttribute != null;
 
-                        if (originalValue != null)
+                        if (entityProperties.Any(x => x.Name == property.Name))
                         {
-                            if (currentValue == null)
+                            var originalValue = originalValues[property.Name];
+                            var currentValue = entry.CurrentValues[property.Name];
+                            var entityProperty = entityProperties.First(x => x.Name == property.Name);
+                            var isKeyAttribute = Attribute.GetCustomAttribute(entityProperty, typeof(KeyAttribute)) as KeyAttribute != null;
+
+                            if (originalValue != null)
                             {
-                                property.SetValue(auditEntity, originalValue, null);
-                                isValueChanged = true;
+                                if (currentValue == null)
+                                {
+                                    property.SetValue(auditEntity, originalValue, null);
+                                    isValueChanged = true;
+                                }
+                                else if (originalValue.ToString() != currentValue.ToString())
+                                {
+                                    property.SetValue(auditEntity, originalValue, null);
+                                    isValueChanged = true;
+                                }
+                                else if (isKeyAttribute)
+                                {
+                                    property.SetValue(auditEntity, originalValue, null);
+                                }
                             }
-                            else if (originalValue.ToString() != currentValue.ToString())
+                            else
                             {
-                                property.SetValue(auditEntity, originalValue, null);
-                                isValueChanged = true;
-                            }
-                            else if (isKeyAttribute)
-                            {
-                                property.SetValue(auditEntity, originalValue, null);
+                                if (currentValue != null && property.Name == "UpdatedDate")
+                                {
+                                    property.SetValue(auditEntity, currentValue, null);
+                                    isValueChanged = true;
+                                }
                             }
                         }
-                        else {
-                            if (currentValue != null && property.Name == "UpdatedDate")
-                            {
-                                property.SetValue(auditEntity, currentValue, null);
-                                isValueChanged = true;
-                            }
-                        }
-                    }
-                });
-                if (isValueChanged)
-                    AuditRecord(auditEntity);
+                    });
+                    if (isValueChanged)
+                        AuditRecord(auditEntity);
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
             }
         }
         
@@ -1653,7 +1662,14 @@ namespace DAL
                 return workOrderRepository;
             }
         }
-        
+        IAssetCapes IUnitOfWork.AssetCapes
+        {
+            get {
+                if (_assetCapes == null)
+                    _assetCapes = new AssetCapesRepository(_context);
+                return _assetCapes;
+            }
+        }
     }
 }
 
