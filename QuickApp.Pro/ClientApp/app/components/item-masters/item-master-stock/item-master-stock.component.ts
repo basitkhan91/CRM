@@ -407,21 +407,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 const responseDataOfEdit = res;
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
-                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate)
-
-
-
+                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
-
-
-
-
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
-
-
-
-
-
 
                 // assign the header values
                 this.pnvalue = this.sourceItemMaster.partNumber;
@@ -675,7 +663,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //     this.selectedAircraftId = []
         //     this.selectedModelId = undefined;
         //     this.selectedDashnumber = undefined;
-        // });
+        //});
         this.addFieldValue();
         // this.getAtachapter();
         this.modalDash = [
@@ -1409,6 +1397,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
+        console.log(this.allUnitOfMeasureinfo);
+
 
 
     }
@@ -3495,6 +3485,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
             this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
+
                 this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
                 this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure()
             })
@@ -3566,7 +3557,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.modal.close();
     }
-
 
     saveSOLDunitofmeasure() {
         this.isSaving = true;
@@ -4920,7 +4910,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             }
         }
+        this.modal.close();
     }
+
+
+    //else {
+
+    //    this.sourceAction.updatedBy = this.userName;
+    //    this.sourceAction.itemClassificationCode = this.itemName;
+    //    this.sourceAction.description = this.className;
+    //    this.sourceAction.itemType = this.itemTypeName;
+    //    this.sourceAction.masterCompanyId = 1;
+    //    this.workFlowtService.updateAction(this.sourceAction).subscribe(data => { this.itemclass(); },
+    //        response => this.saveCompleted(this.sourceAction));
+    //}
+
+
+
+
+   
+
 
     Manufacturer(content) {
         this.sourcemanufacturer.name = '';

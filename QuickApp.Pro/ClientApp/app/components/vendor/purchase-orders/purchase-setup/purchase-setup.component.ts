@@ -449,6 +449,12 @@ export class PurchaseSetupComponent {
         this.sourcePoApproval.vendorId = this.tempVendorId;
         this.sourcePoApproval.createdBy = this.userName;
         this.sourcePoApproval.updatedBy = this.userName;
+        if (!this.sourcePoApproval.deferredReceiver) {
+            this.sourcePoApproval.deferredReceiver = 0;
+        }
+        if (!this.sourcePoApproval.resale) {
+            this.sourcePoApproval.resale = 0;
+        }
         console.log(this.sourcePoApproval);
         this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
 			this.savedInfo = saveddata;
@@ -466,37 +472,48 @@ export class PurchaseSetupComponent {
 			results => this.oncusDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
-	private oncusDataLoadSuccessful(allWorkFlows: any[]) {
+    }
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.allCustomers = allWorkFlows;
-		if (this.sourcePoApproval.billToUserType == 1) {
-			this.onBillToCustomerNameselected(this.sourcePoApproval.billToUserName);
-		}
-		if (this.sourcePoApproval.billToUserType == 2) {
-			this.onVendorselectedForBillTo(this.sourcePoApproval.billToUserName);
-		}
-		if (this.sourcePoApproval.shipToUserType == 1) {
-			this.onshipCustomerNameselected(this.sourcePoApproval.shipToUserName);
-		}
-		if (this.sourcePoApproval.shipToUserType == 2) {
-			this.onVendorselectedForShipTo(this.sourcePoApproval.shipToUserName);
-		}
-		if (this.sourcePoApproval.billToUserType == 1) {
-			this.filterNames(this.sourcePoApproval.billToUserName);
-		}
-		if (this.sourcePoApproval.billToUserType == 2) {
-			this.filterVendorNames(this.sourcePoApproval.billToUserName);
-		}
-		if (this.sourcePoApproval.shipToUserType == 1) {
-			this.filterNames(this.sourcePoApproval.shipToUserName);
-		}
-		if (this.sourcePoApproval.shipToUserType == 2) {
-			this.filterVendorNames(this.sourcePoApproval.shipToUserName);
-		}
+    private loadvendorData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
+        this.vendorService.getWorkFlows().subscribe(
+            results => this.oncusDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private oncusDataLoadSuccessful(allWorkFlows: any[]) {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allCustomers = allWorkFlows;
+        if (this.sourcePoApproval.billToUserType == 1) {
+            this.onBillToCustomerNameselected(this.sourcePoApproval.billToUserName);
+        }
+        if (this.sourcePoApproval.billToUserType == 2) {
+            this.onVendorselectedForBillTo(this.sourcePoApproval.billToUserName);
+        }
+        if (this.sourcePoApproval.shipToUserType == 1) {
+            this.onshipCustomerNameselected(this.sourcePoApproval.shipToUserName);
+        }
+        if (this.sourcePoApproval.shipToUserType == 2) {
+            this.onVendorselectedForShipTo(this.sourcePoApproval.shipToUserName);
+        }
+        if (this.sourcePoApproval.billToUserType == 1) {
+            this.filterNames(this.sourcePoApproval.billToUserName);
+        }
+        if (this.sourcePoApproval.billToUserType == 2) {
+            this.filterVendorNames(this.sourcePoApproval.billToUserName);
+        }
+        if (this.sourcePoApproval.shipToUserType == 1) {
+            this.filterNames(this.sourcePoApproval.shipToUserName);
+        }
+        if (this.sourcePoApproval.shipToUserType == 2) {
+            this.filterVendorNames(this.sourcePoApproval.shipToUserName);
+        }
+    
 		//get Shipping info
 		if (this.sourcePoApproval.billToUserType == 1) {
 			this.cusservice.getCustomerShipAddressGetWIthAddressId(this.sourcePoApproval.billToAddressId).subscribe(
@@ -1350,9 +1367,10 @@ export class PurchaseSetupComponent {
 					returnddataforbill => {
 						this.billToCusData = returnddataforbill[0];
 					});
-				this.vendorService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
-					this.shipToContactData = data[0];
-				});
+                this.cusservice.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
+                    this.billToContactData = data[0];//shipToContactData
+                });
+                break;
 			}
 		}
 
@@ -1366,10 +1384,11 @@ export class PurchaseSetupComponent {
 					returnddataforbill => {
 						this.shipToCusData = returnddataforbill[0];
 					});
-				this.vendorService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
+                this.cusservice.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
 		
-					this.billToContactData = data[0];
-				});
+					this.shipToContactData = data[0];
+                });
+                break;
 			}
 		}
 
@@ -1916,11 +1935,10 @@ export class PurchaseSetupComponent {
 				this.vendorService.getContacts(this.VendorNamecoll[i][0].vendorId).subscribe(
 					returdaa => {
 						this.vendorContactsForshipTo = returdaa[0];
-					})
+                    })
+                break;
 			}
-
 		}
-
 	}
 	onVendorselectedForBillTo(event) {
 		this.showInput = true;
@@ -1934,6 +1952,7 @@ export class PurchaseSetupComponent {
 					returdaa => {
 						this.vendorContactsForBillTO = returdaa[0];
 					})
+                break;
 			}
 
 		}
@@ -1959,17 +1978,13 @@ export class PurchaseSetupComponent {
 
 	filterVendorNames(event) {
         this.vendorNames = [];
-        this.vendorNames = this.allActions;
-
-        const vendorFilterData = [...this.allActions.filter(x => {
-            return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
-        })]
-        this.vendorNames = vendorFilterData;
-
-
-
-
-/*		if (this.allActions) {
+        
+        //const vendorFilterData = [...this.allActions.filter(x => {
+        //    return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
+        //})]
+        //this.vendorNames = vendorFilterData;
+                     
+		if (this.allActions) {
 			for (let i = 0; i < this.allActions.length; i++) {
 				let vendorName = this.allActions[i].vendorName;
 				if (event.query) {
@@ -1993,7 +2008,7 @@ export class PurchaseSetupComponent {
 					//}
 				}
 			}
-		}*/
+		}
     }
   
     selectedVendor(value) {
