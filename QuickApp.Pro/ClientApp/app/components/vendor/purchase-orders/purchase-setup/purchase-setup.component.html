@@ -44,7 +44,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3">                        
+                        <div class="form-group">
+                            <label>Vendor Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorId" name="vednor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" (onSelect)="selectedVendor($event)">
+                                    <ng-template let-vendorName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{vendorName}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                                <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Vendor Code <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
@@ -55,18 +67,6 @@
                                     </ng-template>
                                 </p-autoComplete>
                                 <!--<div *ngIf="disableSaveVenderCode" class="clr-red">Already Exists</div>-->
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Vendor Name <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-                                <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorId" name="vednor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" (onSelect)="selectedVendor($event)">
-                                    <!--<ng-template let-vendorName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{vendorName}}</div>
-                                    </ng-template>-->
-                                </p-autoComplete>
-                                <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
                             </div>
                         </div>
                         <div class="form-group">
@@ -1995,7 +1995,7 @@
 
     <!-- Split Shipment Address -->
     <ng-template #contentSplitShipmentAddress let-c="close" let-d="dismiss" style="width:auto">
-        <div class="modal-header">
+        <div class="modal-header"  id="createPOSplitAddress" role="dialog">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Split Shipment Address</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Split Shipment Address</h4>
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -2003,21 +2003,21 @@
             </button>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body" >
             <form #userForm="ngForm" class="form-horizontal">
                 <div class="row">
                     <div class="col-6">
                         <!--<div class="form-group">
-                            <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
-                            <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
-                                            [minLength]="2" [dropdown]="true">
-                                <ng-template let-name pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{name}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-                            <div class="clear"></div>
-                        </div>-->
+                <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
+                <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
+                                [minLength]="2" [dropdown]="true">
+                    <ng-template let-name pTemplate="item">
+                        <div class="ui-helper-clearfix">{{name}}</div>
+                    </ng-template>
+                </p-autoComplete>
+                <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
+                <div class="clear"></div>
+            </div>-->
                         <div class="form-group col-sm-12">
                             <label for="description" class="control-label col-sm-4">Address 1</label>
                             <div class="col-sm-7">
@@ -2066,34 +2066,36 @@
                     <div class="col-6">
                         <!-- Check Box Management Data -->
                         <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of columns; let i = index">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns; let i = index">
+                            <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                            <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
+                            {{rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
 
-                        </p-treeTable>-->
+            </p-treeTable>-->
                         <!-- Check box Management Date End -->
                     </div>
                 </div>
                 <div class="modal-footer">
 
-                    <button class="btn btn-success" [disabled]="disableSaveManufacturer" (click)="saveToVendorCustomerCompanyTable(sourceSplitShipment)">Save to Vendor/Customer/company Table</button>
-                    <button class="btn btn-success" [disabled]="disableSaveManufacturer" (click)="saveToThisPO()">Save to this PO</button>
+                    <button class="btn btn-success" [disabled]="disableSaveManufacturer">
+                        Save to Vendor/Customer/company Table
+                    </button>
+                    <button class="btn btn-success" [disabled]="disableSaveManufacture">Save to this PO</button>
 
                 </div>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>createPOSplitAddress
             </form>
         </div>
 
@@ -2263,8 +2265,8 @@
                                 <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="sourceissued.country">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid">Save to Vendor/Customer/Company Table</button>
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid">Save to this PO</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid"  (click)="saveToVendorCustomerCompanyTable(sourceissued)">Save to Vendor/Customer/Company Table</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveToThisPO(sourceissued)">Save to this PO</button>
                             </div>
                         </form>
                         </div>
