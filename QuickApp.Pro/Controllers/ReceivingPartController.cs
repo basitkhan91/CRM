@@ -163,11 +163,7 @@ namespace QuickApp.Pro.Controllers
                     var index = 0;
                     foreach (var stockLine in receivePart.StockLines)
                     {
-                        stockLine.ShelfId = null;
-                        stockLine.WarehouseId = null;
-                        stockLine.BinId = null;
                         stockLine.RepairOrderId = null;
-                        stockLine.LocationId = null;
                         if (!string.IsNullOrEmpty(stockLine.SerialNumber))
                         {
                             var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
