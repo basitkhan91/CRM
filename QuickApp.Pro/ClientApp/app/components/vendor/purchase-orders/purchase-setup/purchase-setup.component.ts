@@ -1367,9 +1367,10 @@ export class PurchaseSetupComponent {
 					returnddataforbill => {
 						this.billToCusData = returnddataforbill[0];
 					});
-				this.vendorService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
-					this.shipToContactData = data[0];
-				});
+                this.cusservice.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
+                    this.billToContactData = data[0];//shipToContactData
+                });
+                break;
 			}
 		}
 
@@ -1383,7 +1384,7 @@ export class PurchaseSetupComponent {
 					returnddataforbill => {
 						this.shipToCusData = returnddataforbill[0];
 					});
-				this.vendorService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
+                this.cusservice.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
 		
 					this.shipToContactData = data[0];
                 });
@@ -1924,7 +1925,7 @@ export class PurchaseSetupComponent {
 
 	}
 	onVendorselectedForShipTo(event) {
-		//this.showInput = true;
+		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
 				this.vendorService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
@@ -1940,7 +1941,7 @@ export class PurchaseSetupComponent {
 		}
 	}
 	onVendorselectedForBillTo(event) {
-		//this.showInput = true;
+		this.showInput = true;
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName) {
 				this.vendorService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
@@ -1951,6 +1952,7 @@ export class PurchaseSetupComponent {
 					returdaa => {
 						this.vendorContactsForBillTO = returdaa[0];
 					})
+                break;
 			}
 
 		}

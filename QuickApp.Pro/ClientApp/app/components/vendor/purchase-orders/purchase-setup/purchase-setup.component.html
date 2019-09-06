@@ -50,9 +50,9 @@
                             <div class="inner-addon right-addon inline-block">
                                 <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorId" name="vednor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                                 [minLength]="1" [dropdown]="true" (onSelect)="selectedVendor($event)">
-                                    <!--<ng-template let-vendorName pTemplate="item">
+                                    <ng-template let-vendorName pTemplate="item">
                                         <div class="ui-helper-clearfix">{{vendorName}}</div>
-                                    </ng-template>-->
+                                    </ng-template>
                                 </p-autoComplete>
                                 <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
                             </div>
