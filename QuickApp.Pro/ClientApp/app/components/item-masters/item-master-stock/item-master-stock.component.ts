@@ -210,7 +210,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     public sourceActions: any = {};
     allATAMaininfo: ATAChapter[];
     allPriorityInfo: Priority[] = [];
-    allUnitOfMeasureinfo: any[];    
+    allUnitOfMeasureinfo: any[];
     allPurchaseUnitOfMeasureinfo: any[];
     allStockUnitOfMeasureinfo: any[];
     allConsumeUnitOfMeasureinfo: any[];
@@ -407,21 +407,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 const responseDataOfEdit = res;
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
-                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate)
-
-
-
+                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
-
-
-
-
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
-
-
-
-
-
 
                 // assign the header values
                 this.pnvalue = this.sourceItemMaster.partNumber;
@@ -675,7 +663,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //     this.selectedAircraftId = []
         //     this.selectedModelId = undefined;
         //     this.selectedDashnumber = undefined;
-        // });
+        //});
         this.addFieldValue();
         // this.getAtachapter();
         this.modalDash = [
@@ -1410,7 +1398,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
         console.log(this.allUnitOfMeasureinfo);
-        
+
 
 
     }
@@ -1578,7 +1566,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private onprodataSuccessful(getProvisionList: Provision[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allProvisonInfo = getProvisionList;        
+        this.allProvisonInfo = getProvisionList;
     }
 
 
@@ -1796,7 +1784,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-  
+
 
 
     integratn(content) {
@@ -2829,7 +2817,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                             this.localprovision.push(provisionName)
                     }
                 }
-               
+
             }
         }
     }
@@ -3455,7 +3443,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 data => {
                     this.sourceItemMaster.itemGroupId = data.itemGroupId;
                     this.itemgroup();
-            })
+                })
         }
         //else {
 
@@ -3530,9 +3518,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.updatedBy = this.userName;
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {                
+            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
 
-                 this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
+                this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
                 this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure()
 
             })
@@ -3558,10 +3546,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
             this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(
-                data =>
-                {
+                data => {
                     this.sourceItemMaster.stockUnitOfMeasureId = data.unitOfMeasureId;
-                     this.Stockunitofmeasure()
+                    this.Stockunitofmeasure()
                 },
                 response => this.saveCompleted(this.sourceUOM)
             )
@@ -3587,8 +3574,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.updatedBy = this.userName;
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data =>
-            {
+            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
                 this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
                 this.Consumeunitofmeasure()
             })
@@ -3617,7 +3603,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
             this.Purchaseunitofmeasure();
         })
-        this.modal.close();    
+        this.modal.close();
     }
 
     saveSOLDunitofmeasure() {
@@ -3649,10 +3635,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode}).subscribe(
+            this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode }).subscribe(
                 data => {
                     this.sourceItemMaster.priorityId = data.priorityId;
-                    this.loadPriority() 
+                    this.loadPriority()
                 });
 
         }
@@ -4894,7 +4880,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     //Itemclassification Save
     itemclassification(content) {
         this.isEditMode = false;
-        this.isDeleteMode = false;   
+        this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         //this.sourceAction = new ItemClassificationModel();
@@ -4920,8 +4906,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 data => {
                     this.sourceItemMaster.itemClassificationId = data.itemClassificationId;
-                    this.itemclass();                
-            })
+                    this.itemclass();
+                })
         }
 
 
@@ -4960,45 +4946,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             }
         }
-    }
-
-
-        //else {
-
-        //    this.sourceAction.updatedBy = this.userName;
-        //    this.sourceAction.itemClassificationCode = this.itemName;
-        //    this.sourceAction.description = this.className;
-        //    this.sourceAction.itemType = this.itemTypeName;
-        //    this.sourceAction.masterCompanyId = 1;
-        //    this.workFlowtService.updateAction(this.sourceAction).subscribe(data => { this.itemclass(); },
-        //        response => this.saveCompleted(this.sourceAction));
-        //}
-
         this.modal.close();
     }
 
-    // Manufacturer Save
-    filtermanufacturer(event) {
-        this.manufacturerCollection = [];
-        this.manufacturerNumber = [];
-        if (this.allManufacturerInfo) {
-            if (this.allpnNumbers.length > 0) {
-                for (let i = 0; i < this.allManufacturerInfo.length; i++) {
-                    let name = this.allManufacturerInfo[i].name;
-                    if (name) {
-                        if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                            this.manufacturerNumber.push([{
-                                "manufacturerId": this.allManufacturerInfo[i].manufacturerId,
-                                "name": name
-                            }]),
 
-                                this.manufacturerCollection.push(name);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    //else {
+
+    //    this.sourceAction.updatedBy = this.userName;
+    //    this.sourceAction.itemClassificationCode = this.itemName;
+    //    this.sourceAction.description = this.className;
+    //    this.sourceAction.itemType = this.itemTypeName;
+    //    this.sourceAction.masterCompanyId = 1;
+    //    this.workFlowtService.updateAction(this.sourceAction).subscribe(data => { this.itemclass(); },
+    //        response => this.saveCompleted(this.sourceAction));
+    //}
+
+
+
+
+   
+
 
 
     Manufacturer(content) {
