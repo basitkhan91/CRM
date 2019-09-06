@@ -111,7 +111,6 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.unitofmeasureService.getUnitOfMeasureList().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -156,6 +155,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.dataSource.data = getUnitOfMeasureList;
         this.totalRecords = getUnitOfMeasureList.length;//Adding for Pagination
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
+        console.log(this.allUnitOfMeasureinfo);
     }
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
@@ -335,16 +335,18 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceAction.isActive == false;
+            this.loadMasterCompanies();
+            this.sourceAction.masterCompanyId = 1;
             this.unitofmeasureService.updateUnitOfMeasure(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
+                error => this.saveFailedHelper(error));            
         }
         else {
             this.sourceAction = rowData;
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceAction.isActive == true;
+            this.sourceAction.masterCompanyId = 1;
             this.unitofmeasureService.updateUnitOfMeasure(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

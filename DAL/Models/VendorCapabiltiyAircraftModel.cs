@@ -13,6 +13,7 @@ namespace DAL.Models
         public long VendorCapabilityAircraftModelId { get; set; }
 
         public long VendorCapabilityId { get; set; }
+        public long VendorId { get; set; }
 
         public long AircraftModelId { get; set; }
 

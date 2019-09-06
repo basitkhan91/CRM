@@ -70,7 +70,7 @@ export class PurchaseOrderPart {
     status: string;
     trace: string;
     conditionCode: string;
-    quantityActuallyReceived: string;
+    quantityActuallyReceived: number;
     quantityRejected: string;
     uOMId: number;
     quantityOrdered: number;
@@ -123,12 +123,16 @@ export class PurchaseOrderPart {
     quantityToReceive: number;
     isSameDetailsForAllParts: boolean;
     isTimeLifeUpdateLater: boolean;
+    hasChildren: boolean;
+    eCCNAlreadyExist: boolean;
+    itarNumberExist: boolean;
 }
 
 export class TimeLife {
 
     timeLifeCyclesId: number;
-
+    purchaseOrderId: number;
+    purchaseOrderPartRecordId: number;
     cyclesRemaining: string;
     cyclesSinceNew: string;
     cyclesSinceOVH: string;
@@ -223,9 +227,9 @@ export class StockLine {
     isSerialized: boolean;
     idNumber: number;
     aircraftTailNumber: string;
-    shippingReferenceId: number;
+    shippingReference: string;
     shippingViaId: number;
-    shippingAccountId: number;
+    shippingAccount: string;
     engineSerialNumber: string;
     createdDate: Date;
     purchaseOrderPartRecordId: number;

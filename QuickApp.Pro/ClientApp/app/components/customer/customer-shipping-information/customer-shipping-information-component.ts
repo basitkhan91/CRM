@@ -63,6 +63,7 @@ export class CustomerShippingInformationComponent {
     checkAddress: boolean = false;
     sourceViewforShipping: any = {};
     sourceViewforShippingforshipVia: any = {};
+    sourceViewforInterShipping: any = {};
     selectedCountries: any;
     selectedShipVia: any;
     disablesave: boolean;
@@ -101,6 +102,8 @@ export class CustomerShippingInformationComponent {
     selectedShipViaColumn: any[];
     selectedShipViaColumns: any[];
     cols: any[];
+    IShippingcols: any[];
+    selectedIShippingColumns: any[];
     shipViacols: any[];
     title: string = "Create";
     id: number;
@@ -114,8 +117,8 @@ export class CustomerShippingInformationComponent {
     modelValue: boolean = false;
     /** Actions ctor */
 
-    private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+    isEditMode: boolean = false;
+    isDeleteMode: boolean = false;
 
     constructor(private http: HttpClient, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
@@ -265,7 +268,6 @@ export class CustomerShippingInformationComponent {
         );
 
         this.cols = [
-
             { field: 'siteName', header: 'Site Name' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
@@ -274,10 +276,23 @@ export class CustomerShippingInformationComponent {
             { field: 'stateOrProvince', header: 'State Or Province' },
             { field: 'postalCode', header: 'Postal Code' },
             { field: 'country', header: 'Country' }
-
         ];
-
+        if(!this.selectedColumns) {
         this.selectedColumns = this.cols;
+        }
+
+        this.IShippingcols = [
+            { field: 'exportLicense', header: 'Export License#' },
+            { field: 'description', header: 'Description' },
+            { field: 'startDate', header: 'Start Date' },
+            { field: 'expirationDate', header: 'Expiration Date' },
+            { field: 'currency', header: 'Currency' },
+            { field: 'amount', header: 'Amount' },
+            { field: 'country', header: 'Country' }
+        ];
+        if (!this.selectedIShippingColumns) {
+        this.selectedIShippingColumns = this.IShippingcols;
+        }
 
     }
 
@@ -420,16 +435,11 @@ export class CustomerShippingInformationComponent {
         // debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         this.auditHisory = auditHistory;
-
-
         this.modal = this.modalService.open(content, { size: 'lg' });
-
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-
 
     }
 
@@ -500,6 +510,13 @@ export class CustomerShippingInformationComponent {
         //    console.log('When user closes');
         //}, () => { console.log('Backdrop click') })
     }
+
+    openInterEdit(row) {
+        this.isEditMode = true;
+        this.isSaving = true;
+        this.sourceCustomer = row;
+    }
+
     openShippinggView(content, row) {
 
         this.sourceViewforShipping = row;
@@ -520,6 +537,22 @@ export class CustomerShippingInformationComponent {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
+    openInterShippingView(content, row) {
+
+        this.sourceViewforInterShipping = row;
+        //this.sourceViewforShippingforshipVia = row;
+        this.createdBy = row.createdBy;
+        this.updatedBy = row.updatedBy;
+        this.createddate = row.createdDate;
+        this.updatedDate = row.updatedDate;
+        this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }    
+
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -544,20 +577,19 @@ export class CustomerShippingInformationComponent {
 
     }
     openShipaddressHistory(content, row) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-
+        //this.alertService.startLoadingMessage();
+        //this.loadingIndicator = true;
         this.sourceCustomer = row;
-
-
         this.isSaving = true;
-        //debugger;
-        this.workFlowtService.shipaddressHistory(this.sourceCustomer.CustomerShippingAddressId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
+        //debugger; 
+        /*this.workFlowtService.shipaddressHistory(this.sourceCustomer.customerShippingAddressId).subscribe(
+            results => console.log(results),
+            error => this.saveFailedHelper(error));*/
 
-
+    }
+    onAddShippingInfo() {
+        this.sourceCustomer = {};
+        this.isEditMode = false;
     }
     onBlurMethod(data) {
         if (data == 'siteName') {
@@ -595,7 +627,7 @@ export class CustomerShippingInformationComponent {
         if (!(this.sourceCustomer.siteName && this.sourceCustomer.address1 &&
             this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
         )) {
-            this.display = true;
+            //this.display = true;
             this.modelValue = true;
         }
         this.isSaving = true;

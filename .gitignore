@@ -18,3 +18,9 @@
 /QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.pdb
 /QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.runtimeconfig.dev.json
 /QuickApp.Pro/bin/Release/netcoreapp2.0/QuickApp.Pro.runtimeconfig.json
+
+DAL/bin/
+
+DAL/obj/
+
+QuickApp.Pro/bin/Debug/

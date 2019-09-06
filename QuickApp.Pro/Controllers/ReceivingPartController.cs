@@ -140,8 +140,16 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<PurchaseOrderViewModel>))]
         public IActionResult GetReceivingPurchaseOrderListById(long receivingId)
         {
-            var receivingData = unitOfWork.PartStockLineMapper.GetReceivingPurchaseOrderList(receivingId);
-            return Ok(receivingData);
+            try
+            {
+                var receivingData = unitOfWork.PartStockLineMapper.GetReceivingPurchaseOrderList(receivingId);
+                return Ok(receivingData);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
         }
 
 
@@ -152,15 +160,32 @@ namespace QuickApp.Pro.Controllers
             {
                 foreach (var receivePart in receiveParts)
                 {
+                    var index = 0;
                     foreach (var stockLine in receivePart.StockLines)
                     {
-                        stockLine.ShelfId = null;
-                        stockLine.WarehouseId = null;
-                        stockLine.BinId = null;
                         stockLine.RepairOrderId = null;
-                        stockLine.LocationId = null;
+                        if (!string.IsNullOrEmpty(stockLine.SerialNumber))
+                        {
+                            var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
+                            if (isSerialExist != null)
+                            {
+                                return BadRequest("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " alreadt exists.");
+                            }
+                        }
+
+                        index++;
                     }
+
+                    foreach (var timeLife in receivePart.TimeLife)
+                    {
+                        timeLife.CreatedDate = DateTime.UtcNow;
+                        timeLife.UpdatedDate = DateTime.UtcNow;
+                        timeLife.MasterCompanyId = 1;
+                        timeLife.IsActive = true;
+                    }
+
                     unitOfWork.Repository<StockLine>().AddRange(receivePart.StockLines);
+                    unitOfWork.Repository<TimeLife>().AddRange(receivePart.TimeLife);
                 }
                 unitOfWork.SaveChanges();
             }

@@ -206,9 +206,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
     intSelectedColumns: any[];
     memoPopupContent: string;
     memoPopupValue: string;
+    //@ViewChild('generalInfoForm') gIForm: NgForm;
 
     ngOnInit(): void
     {
+        //if (this.workFlowtService.isEditMode == false) {
+        //    this.gIForm.resetForm();
+        //}
         this.sourceCustomer.isAddressForBilling = true;
         this.sourceCustomer.isAddressForShipping = true;
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
@@ -589,9 +593,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private onDataLoadClassifiSuccessful(getCustomerClassificationList: CustomerClassification[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = getCustomerClassificationList;
 
-        this.allcustomerclassificationInfo = getCustomerClassificationList;
+        this.dataSource.data = getCustomerClassificationList.filter(obj => obj.isActive.toString().toLowerCase() == "true");
+
+        this.allcustomerclassificationInfo = getCustomerClassificationList.filter(obj => obj.isActive.toString().toLowerCase() == "true");
     }
 
     //For google Maps
@@ -760,13 +765,16 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private onVendorDataLoad(getCustomerClassificationList: CustomerClassification[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+
         this.dataSource.data = getCustomerClassificationList;
         this.allCustomerClassInfo = getCustomerClassificationList;
     }
+
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
 
+ 
 
     private refresh() {
         this.applyFilter(this.dataSource.filter);
@@ -1557,6 +1565,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
     onAddIntegrationWith() {
         this.router.navigate(['/singlepages/singlepages/app-integration']);
     }
+
+
+    
 
     onClickPBHCustomer(value) {
         if (value == 'PBHCustomer') {

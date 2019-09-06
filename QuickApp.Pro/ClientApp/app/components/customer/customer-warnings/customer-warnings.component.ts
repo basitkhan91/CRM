@@ -1139,25 +1139,25 @@ export class CustomerWarningsComponent implements OnInit {
 			this.isDerEnable = false;
             this.isWarrenable = false;
 
-            if (this.sourePerformReceiving.isAllow == true)
-            {
-                this.sourePerformReceiving.isAllow = false;
+            //if (this.sourePerformReceiving.isAllow == true)
+            //{
+            //    this.sourePerformReceiving.isAllow = false;
 
-                this.sourePerformReceiving.allow = false;
-                this.sourceQuoting.allow = false;
-                this.sourceWOCreation.allow = false;
-                this.sourceCreatingInvoicing.allow = false;
-                this.sourceCreditMemo.allow = false;
-                this.sourceShipping.allow = false;
-                this.soureRepairOrder.allow = false;
-                this.sourceSalesOrder.allow = false;
-                this.sourceNetAPAR.allow = false;
-                this.sourceEDI.allow = false;
-                this.sourceAeroxchange.allow = false;
-                this.sourcePMA.allow = false;
-                this.sourceDAR.allow = false;
-                this.sourceWarranty.allow = false;
-            }
+            //    this.sourePerformReceiving.allow = false;
+            //    this.sourceQuoting.allow = false;
+            //    this.sourceWOCreation.allow = false;
+            //    this.sourceCreatingInvoicing.allow = false;
+            //    this.sourceCreditMemo.allow = false;
+            //    this.sourceShipping.allow = false;
+            //    this.soureRepairOrder.allow = false;
+            //    this.sourceSalesOrder.allow = false;
+            //    this.sourceNetAPAR.allow = false;
+            //    this.sourceEDI.allow = false;
+            //    this.sourceAeroxchange.allow = false;
+            //    this.sourcePMA.allow = false;
+            //    this.sourceDAR.allow = false;
+            //    this.sourceWarranty.allow = false;
+            //}
 
             if (this.sourePerformReceiving.isRestrict == true)
             {
