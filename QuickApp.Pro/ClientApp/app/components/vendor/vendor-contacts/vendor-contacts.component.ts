@@ -107,8 +107,8 @@ export class VendorContactsComponent implements OnInit {
     length: number;
     localCollection: any;
     comName: string;
-    isEditMode: boolean = false;
-    isDeleteMode: boolean = false;
+    private isEditMode: boolean = false;
+    private isDeleteMode: boolean = false;
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
@@ -185,19 +185,17 @@ export class VendorContactsComponent implements OnInit {
 
         this.cols = [
             { field: 'firstName', header: 'First Name' },
-            { field: 'lastName', header: 'Last Name' },
+            { field: 'lastName', header: 'Last  Name' },
             { field: 'contactTitle', header: 'Contact Title' },
             { field: 'email', header: 'Email' },
             { field: 'workPhone', header: 'Mobile Phone' },
             { field: 'fax', header: 'Fax' },
-            //{ field: 'createdBy', header: 'Created By' },
-            //{ field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' },
+            { field: 'updatedDate', header: 'Updated Date' },
+            { field: 'createdDate', header: 'Created Date' }
         ];
-        if (!this.selectedColumns) {
-            this.selectedColumns = this.cols;
-        }
+        this.selectedColumns = this.cols;
     }
 
     private loadCompleteddata() {
@@ -337,7 +335,7 @@ export class VendorContactsComponent implements OnInit {
     openEdit(content, row) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = { ...row };
+        this.sourceVendor = row;
         this.loadMasterCompanies();
     }
     openView(content, row) {
@@ -391,7 +389,7 @@ export class VendorContactsComponent implements OnInit {
         if (!(this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
             this.sourceVendor.email
         )) {
-            //this.display = true;
+            this.display = true;
             this.modelValue = true;
         }
         if (this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
@@ -401,9 +399,8 @@ export class VendorContactsComponent implements OnInit {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.isDefault = this.sourceVendor.isDefaultContact;
-                // before you commit make sure u don't have conlog, debug, commented code...
                 this.workFlowtService.newAddContactInfo(this.sourceVendor).subscribe(data => {
-                    console.log(data)
+
                     this.localCollection = data;
                     this.sourceVendor = new Object();
                     this.localCollection.VendorId = this.local.vendorId;
@@ -413,7 +410,7 @@ export class VendorContactsComponent implements OnInit {
                     if (data) {
                         this.updateVendorContact(this.localCollection);
                         this.localCollection.isDefaultContact = this.isDefault;
-                        this.loadData(); // use proper naming conventions
+                        this.loadData();
                     }
 
                     this.workFlowtService.contactCollection = this.local;
@@ -510,17 +507,16 @@ export class VendorContactsComponent implements OnInit {
     opencontactView(content, row) {
 
         this.sourceVendorforView = row;
-        console.log(this.sourceVendorforView);
         this.firstName = row.firstName;
         this.lastName = row.lastName;
         this.contactTitle = row.contactTitle;
         this.email = row.email;
         this.mobilePhone = row.mobilePhone;
         this.fax = row.fax;
-        //this.createdBy = row.createdBy;
-        //this.updatedBy = row.updatedBy;
-        //this.createddate = row.createdDate;
-        //this.updatedDate = row.updatedDate;
+        this.createdBy = row.createdBy;
+        this.updatedBy = row.updatedBy;
+        this.createddate = row.createdDate;
+        this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -601,10 +597,6 @@ export class VendorContactsComponent implements OnInit {
                 }
             }
         }
-    }
-
-    onAddContactInfo() {
-        this.sourceVendor = {};
     }
 
 }

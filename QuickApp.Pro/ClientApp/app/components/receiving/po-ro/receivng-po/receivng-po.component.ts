@@ -1204,6 +1204,7 @@ export class ReceivngPoComponent implements OnInit {
                     item.stocklineListObj[i].gLAccountId = item.itemMaster.glAccountId;
                     item.stocklineListObj[i].conditionId = parseInt(item.conditionCode);
                     item.stocklineListObj[i].quantityRejected = toInteger(item.quantityRejected);
+
                     if (item.stocklineListObj[i].companyId == undefined || item.stocklineListObj[i].companyId == 0) {
                         errorMessages.push("Please select Company in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                     }
