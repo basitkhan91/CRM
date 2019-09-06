@@ -191,7 +191,6 @@ namespace QuickApp.Pro.Controllers
             {
                 Asset asset = _context.Asset.Where(a => a.AssetRecordId == maintenanceWarranty.AssetRecordId).FirstOrDefault();
                 asset.AssetIsMaintenanceReqd = maintenanceWarranty.AssetIsMaintenanceReqd;
-                asset.AssetMaintenanceContractFile = maintenanceWarranty.AssetMaintenanceContractFile;
                 asset.AssetMaintenanceIsContract = maintenanceWarranty.AssetMaintenanceIsContract;
                 asset.MaintenanceFrequencyDays = maintenanceWarranty.MaintenanceFrequencyDays;
                 asset.MaintenanceFrequencyMonths = maintenanceWarranty.MaintenanceFrequencyMonths;
@@ -207,38 +206,68 @@ namespace QuickApp.Pro.Controllers
                 asset.UnexpiredTime = maintenanceWarranty.UnexpiredTime;
                 asset.UpdatedBy = maintenanceWarranty.UpdatedBy;
                 asset.UpdatedDate = DateTime.Now;
-                //IFormFile maintenanacefile = maintenanceWarranty.MaintenanceFile;
-                //IFormFile warantyFile = maintenanceWarranty.WarantyFile;
-                //byte[] maintenancefilebytes;
-                //byte[] warantyfilebytes;
-                //var mfstream = maintenanacefile.OpenReadStream();
-                //var wfstream = warantyFile.OpenReadStream();
-                //var mFileName = maintenanacefile.FileName;
-                //var wFileName = warantyFile.FileName;
-
+                string mFilePath = string.Empty;
+                string wFilePath = string.Empty;
                 if (maintenanceWarranty.MaintenanceFile != null)
                 {
-                    var path = Path.Combine(
-                       Directory.GetCurrentDirectory(), "wwwroot",
-                       maintenanceWarranty.MaintenanceFile.FileName);
-                    using (var stream = new FileStream(path,FileMode.Create))
+                     mFilePath = Path.Combine(
+                      Directory.GetCurrentDirectory(), "wwwroot",
+                      maintenanceWarranty.MaintenanceFile.FileName);
+                    using (var stream = new FileStream(mFilePath, FileMode.Create))
                     {
                         maintenanceWarranty.MaintenanceFile.CopyTo(stream);
                     }
                 }
                 if (maintenanceWarranty.WarantyFile != null)
                 {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", maintenanceWarranty.WarantyFile.FileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                     wFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", maintenanceWarranty.WarantyFile.FileName);
+                    using (var stream = new FileStream(wFilePath, FileMode.Create))
                     {
                         maintenanceWarranty.WarantyFile.CopyTo(stream);
                     }
                 }
+                asset.AssetMaintenanceContractFile = mFilePath;
+                asset.AssetMaintenanceContractFileExt = Path.GetExtension(mFilePath);
+                asset.WarrantyFile = wFilePath;
+                asset.WarrantyFileExt = Path.GetExtension(wFilePath);
+
                 _unitOfWork.Repository<Asset>().Update(asset);
                 _unitOfWork.SaveChanges();
             }
             return Ok();
         }
+
+        [HttpPost("updateCalibration")]
+        public IActionResult updatecalibration([FromBody] CalibrationViewModel  calibration)
+        {
+            if (calibration != null)
+            {
+                Asset asset = _context.Asset.Where(a => a.AssetRecordId == calibration.AssetRecordId).FirstOrDefault();
+                asset.CalibrationDefaultVendorId = calibration.CalibrationDefaultVendorId;
+                asset.CalibrationFrequencyMonths = calibration.CalibrationFrequencyMonths;
+                asset.CalibrationFrequencyDays = calibration.CalibrationFrequencyDays;
+                asset.CalibrationDefaultCost = calibration.CalibrationDefaultCost;
+                asset.CalibrationGlAccountId = calibration.CalibrationGlAccountId;
+                asset.CalibrationMemo = calibration.CalibrationMemo;
+                asset.CertificationFrequencyMonths = calibration.CertificationFrequencyMonths;
+                asset.CertificationFrequencyDays = calibration.CertificationFrequencyDays;
+                asset.CertificationDefaultCost = calibration.CertificationDefaultCost;
+                asset.CertificationGlAccountId = calibration.CertificationGlAccountId;
+                asset.CertificationDefaultVendorId = calibration.CertificationDefaultVendorId;
+                asset.CertificationMemo = calibration.CertificationMemo;
+                asset.AssetCalibrationMin = calibration.AssetCalibrationMin;
+                asset.AssetCalibrationMinTolerance = calibration.AssetCalibrationMinTolerance;
+                asset.AssetCalibratonMax = calibration.AssetCalibratonMax;
+                asset.AssetCalibrationMaxTolerance = calibration.AssetCalibrationMaxTolerance;
+                asset.AssetCalibrationExpected = calibration.AssetCalibrationExpected;
+                asset.AssetCalibrationExpectedTolerance = calibration.AssetCalibrationExpectedTolerance;
+                asset.UpdatedBy = calibration.UpdatedBy;
+                _unitOfWork.Repository<Asset>().Update(asset);
+                _unitOfWork.SaveChanges();
+            }
+            return Ok();
+        }
+
         [HttpPost("addAssetCapes")]
         public IActionResult addassetcapes([FromBody] AssetCapes assetCapes)
         {
