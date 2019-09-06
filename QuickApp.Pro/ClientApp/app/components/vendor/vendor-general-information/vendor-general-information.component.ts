@@ -323,6 +323,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.vendorName = "";
         this.vendorClassName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
+
+        // below line doing nothing
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -443,6 +445,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
         this.modal = this.modalService.open(content, { size: 'lg' });
+        // does nothing here too
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -478,6 +481,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadMasterCompanies();
         this.actionName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
+        //remove
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -606,17 +610,20 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
 
     }
+
     nextClick() {
         this.vendorService.vendorgeneralcollection = this.local;
         this.activeIndex = 1;
         this.vendorService.indexObj.next(this.activeIndex);
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
+
     dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();
     }
+
     private saveCompleted(user?: any) {
         this.isSaving = false;
         if (this.isDeleteMode == true) {
@@ -656,7 +663,6 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
     }
     onUpload(event) {
-        debugger;
         for (let file of event.files) {
             this.uploadedFiles.push(file);
         }
