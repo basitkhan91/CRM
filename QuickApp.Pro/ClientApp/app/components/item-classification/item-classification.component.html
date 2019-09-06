@@ -9,24 +9,18 @@
                         &nbsp;&nbsp;
                         <a class="plusicon-cstm new-margin" pTooltip="Add Item Classification" tooltipPosition="right" (click)="open(contentEdit)"><i class="fa fa-plus-circle fa-lg"></i></a>
                     </div>
-                    <p-table #dt [value]="itemClassificationPagination"  class="rpo-table-cstm rro-table-cstm" [lazy]="false" (onLazyLoad)="loadItemClassification($event)"  [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+                    <p-table #dt [value]="itemClassificationPagination"  class="rpo-table-cstm rro-table-cstm" [lazy]="true" (onLazyLoad)="loadItemClassification($event)" [rows]="10" [rowsPerPageOptions]="[10,20,30]"
                              [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [columns]="selectedColumns" [totalRecords]="totalRecords" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true"  [scrollable]="true" scrollHeight="450px">
                         <ng-template pTemplate="caption">
                             <div style="text-align: right">
                                 <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left" class="m-item-classification-select"></p-multiSelect>
                                 <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value,'contains')" placeholder="Global Filter">
                                 </div>
                                 <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                 <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                <div class="excel-upload  excel-upload-cstm">
-                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                    <label for="upload">
-                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                    </label>
-                                </div>
                             </div>
                         </ng-template>
                         <ng-template pTemplate="header" let-columns>
@@ -92,15 +86,12 @@
 
                     <ng-template #content let-c="close" let-d="dismiss">
                         <div class="modal-header">
-                            <h4 class="modal-title">Are You Sure Want to Delete ?</h4>                           
-                           
+                            <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
                             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                           <strong>Item Classification Name: <span class="new-label">"{{item_value}}"</span></strong> 
-                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
                             <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
@@ -118,82 +109,55 @@
                         </div>
                         <div class="modal-body">
                             <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-4">
-                                            <label for="name" class="control-label control-item">Item Classification <span class="clr-red">*</span></label>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <p-autoComplete  name="code"
-                                                           (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="itemName"
-                                                            [suggestions]="localCollection" (completeMethod)="filterItems($event)" [size]="30"
-                                                            [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                                <ng-template let-itemName pTemplate="item">
-                                                    <div class="ui-helper-clearfix">{{itemName}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                            <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-4">
-                                            <label for="netDays" class="control-label control-item">
-                                                Item Classification Name<span class="clr-red">*</span>
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <p-autoComplete (onSelect)="classificationId($event)" name="classficationname" (onKeyUp)=classeventHandler($event)
-                                                            [(ngModel)]="className"
-                                                            [suggestions]="localNameCollection" (completeMethod)="filterItemNames($event)" [size]="30" class="p-autoComplete-ctsm"
-                                                            [minLength]="1" [dropdown]="true" required>
-                                                <ng-template let-className pTemplate="description">
-                                                    <div class="ui-helper-clearfix">{{className}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                            <div *ngIf="disableClassdesc" style="color:Red">Already Exist</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-4">
-                                            <label for="netDays" class="control-label control-item">Item Type<span class="clr-red">*</span></label>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <p-autoComplete (onSelect)="classificationtypeId($event)" name="type" class="p-autoComplete-ctsm" (onKeyUp)=classeventtypeHandler($event)
-                                                            [(ngModel)]="itemTypeName"
-                                                            [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
-                                                            [minLength]="1" [dropdown]="true" required>
-                                                <ng-template let-itemTypeName pTemplate="ItemType">
-                                                    <div class="ui-helper-clearfix">{{itemTypeName}}</div>
-                                                </ng-template>
+                                <div class="form-group col-sm-12">
+                                    <label for="name" class="control-label col-sm-5">Item Classification Code<span class="clr-red">*</span></label>
+                                    <p-autoComplete class="autocomplete-width col-sm-6" (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="itemName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterItems($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-itemName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{itemName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <div *ngIf="disableSave" style="color:red">Entry Already Exists</div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="name" class="control-label col-sm-5">Item Classification Name<span class="clr-red">*</span></label>
+                                    <p-autoComplete class="autocomplete-width col-sm-6" (onSelect)="classificationId($event)" (onKeyUp)=classeventHandler($event) [(ngModel)]="className" [ngModelOptions]="{standalone: true}" [suggestions]="localNameCollection" (completeMethod)="filterItemNames($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-className pTemplate="description">
+                                            <div class="ui-helper-clearfix">{{className}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <div *ngIf="disableClassdesc" style="color:red">Already Exist</div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="netDays" class="control-label col-sm-5">Item Type<span class="clr-red">*</span></label>
+                                    <p-autoComplete class="autocomplete-width col-sm-6" (onSelect)="classificationtypeId($event)" (onKeyUp)=classeventtypeHandler($event) [(ngModel)]="itemTypeName" [ngModelOptions]="{standalone: true}" [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-itemTypeName pTemplate="ItemType">
+                                            <div class="ui-helper-clearfix">{{itemTypeName}}</div>
+                                        </ng-template>
 
-                                            </p-autoComplete>
-                                            <div *ngIf="disabletypeSave" style="color:Red">Already Exist</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-4">
-                                            <label for="description" class="control-label control-item">Memo</label>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
-                                                      [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
-                                        </div>
-                                    </div>
+                                    </p-autoComplete>
+                                    <div *ngIf="disabletypeSave" style="color:red">Already Exist</div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="memo" class="control-label col-sm-5">Memo</label>
+                                    <textarea class="input-field-value input-value1 col-sm-6" rows="3" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-6">
-                                        <div class="checkbox-cstm">
+                                        <div class="checkbox-cstm check-value">
                                             <label>
-                                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}" >
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                 Active
                                             </label>
                                         </div>
                                     </div>
+                                    <div class="clear"></div>
                                 </div>
-                                <div class="clear"></div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disabletypeSave || disableClassdesc|| disableSave">Save</button>
+                                    <button class="btn btn-primary-cstm" [disabled]="disableSave">Save</button>
                                     <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
                                 </div>
                             </form>
@@ -245,14 +209,14 @@
                             </div>
                             <div class="modal-body viewform">
                                 <div class="col-sm-12">
-                                    <p><span class="label col-sm-6"><b>ItemClassification Name: </b></span><span class="value col-sm-6">{{ item_Name}}</span></p>
-                                    <p><span class="label col-sm-6"><b>Description: </b></span><span class="value col-sm-6">{{ description}}</span></p>
-                                    <p><span class="label col-sm-6"><b>ItemType: </b></span><span class="value col-sm-6">{{ itemType}}</span></p>
-                                    <p><span class="label col-sm-6"><b>Memo: </b></span><span class="value col-sm-6">{{memo}}</span></p>
-                                    <p><span class="label col-sm-6"><b>Created By: </b></span><span class="value col-sm-6">{{createdBy}}</span></p>
-                                    <p><span class="label col-sm-6"><b>Created Date: </b></span><span class="value col-sm-6">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                                    <p><span class="label col-sm-6"><b>Updated By: </b></span><span class="value col-sm-6">{{updatedBy}}</span></p>
-                                    <p><span class="label col-sm-6"><b>Updated Date: </b></span><span class="value col-sm-6">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
+                                    <p><span class="label"><b>ItemClassification Name: </b></span><span class="value">{{ item_Name}}</span></p>
+                                    <p><span class="label"><b>Description: </b></span><span class="value">{{ description}}</span></p>
+                                    <p><span class="label"><b>ItemType: </b></span><span class="value">{{ itemType}}</span></p>
+                                    <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
+                                    <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
+                                    <p><span class="label"><b>Created Date: </b></span><span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
+                                    <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
+                                    <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
                                 </div>
 
                                 <div class="clear"></div>
