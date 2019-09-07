@@ -620,7 +620,7 @@ export class PurchaseSetupComponent {
 
 	saveToThisPO(x)
 	{
-
+      
 	}
 	filterpartItems(event) {
 

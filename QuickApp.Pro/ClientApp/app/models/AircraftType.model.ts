@@ -7,6 +7,8 @@
   updatedDate: Date;
   isDeleted: boolean;
   isActive: boolean;
-  memo: string;
+    memo: string;
+    masterCompanyId: number;
   aircraftTypeList: AircraftType[];
+
 }
