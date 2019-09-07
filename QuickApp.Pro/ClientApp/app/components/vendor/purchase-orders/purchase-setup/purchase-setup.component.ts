@@ -456,7 +456,7 @@ export class PurchaseSetupComponent {
             this.sourcePoApproval.resale = 0;
         }
         console.log(this.sourcePoApproval);
-        this.vendorService.savePurchaseorder(this.sourcePoApproval).subscribe(saveddata => {
+        this.vendorService.savePurchaseorder({...this.sourcePoApproval, }).subscribe(saveddata => {
 			this.savedInfo = saveddata;
             console.log(saveddata);
             this.tempVendorId = null;
@@ -649,6 +649,7 @@ export class PurchaseSetupComponent {
 	}
 
 	partnmId(parentdata, event) {
+		console.log(parentdata , event )
 	
 		this.showInput = true;
 
@@ -665,7 +666,7 @@ export class PurchaseSetupComponent {
 
 					this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
                         data1 => {
-                            //console.log(data1);
+                            console.log(data1);
 							if (data1[0][0]) {
 								this.partWithId = data1[0][0];
 								parentdata.partAlternatePartId = this.partWithId.partAlternatePartId;
@@ -691,8 +692,13 @@ export class PurchaseSetupComponent {
 			};
 		}
     }
-    ddlModel: any;
+	ddlModel: any;
+	
+
+
+
     savePurchaseorderPart(purId) {
+		console.log(this.partListData)
 
 		if (this.vendorService.isEditMode == false) {
 			for (let i = 0; i < this.partListData.length; i++) {
@@ -726,7 +732,7 @@ export class PurchaseSetupComponent {
 						workOrderId: this.partListData[i].workOrderId,
 						repairOrderId: this.partListData[i].repairOrderId,
 						salesOrderId: this.partListData[i].salesOrderId,
-                        GeneralLedgerAccounId: this.partListData[i].glAccountId,
+                        generalLedgerAccounId: this.partListData[i].glAccountId,
 						UOMId: this.partListData[i].UOMId,
 						memo: this.partListData[i].memo,
 						poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
@@ -791,7 +797,7 @@ export class PurchaseSetupComponent {
 										//workOrderId: this.partListData[i].workOrderId,
 										//repairOrderId: this.partListData[i].repairOrderId,
 										//salesOrderId: this.partListData[i].salesOrderId,
-										//generalLedgerAccounId: this.partListData[i].generalLedgerAccounId,
+										generalLedgerAccounId: this.partListData[i].glAccountId,
 										memo: this.partListData[i].memo,
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
@@ -849,7 +855,7 @@ export class PurchaseSetupComponent {
 										//workOrderId: this.partListData[i].workOrderId,
 										//repairOrderId: this.partListData[i].repairOrderId,
 										//salesOrderId: this.partListData[i].salesOrderId,
-										//generalLedgerAccounId: this.partListData[i].generalLedgerAccounId,
+										generalLedgerAccounId: this.partListData[i].glAccountId,
 										memo: this.partListData[i].memo,
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
@@ -913,7 +919,7 @@ export class PurchaseSetupComponent {
 						workOrderId: this.partListData[i].workOrderId,
 						repairOrderId: this.partListData[i].repairOrderId,
 						salesOrderId: this.partListData[i].salesOrderId,
-						generalLedgerAccounId: this.partListData[i].generalLedgerAccounId,
+						generalLedgerAccounId: this.partListData[i].glAccountId,
 						memo: this.partListData[i].memo,
 						poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
 						poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
@@ -976,7 +982,7 @@ export class PurchaseSetupComponent {
 									//workOrderId: this.partListData[i].workOrderId,
 									//repairOrderId: this.partListData[i].repairOrderId,
 									//salesOrderId: this.partListData[i].salesOrderId,
-									//generalLedgerAccounId: this.partListData[i].generalLedgerAccounId,
+									generalLedgerAccounId: this.partListData[i].glAccountId,
 									memo: this.partListData[i].memo,
 									poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 									poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
@@ -1046,7 +1052,7 @@ export class PurchaseSetupComponent {
 					workOrderId: this.partListData[i].workOrderId,
 					repairOrderId: this.partListData[i].repairOrderId,
 					salesOrderId: this.partListData[i].salesOrderId,
-					generalLedgerAccounId: this.partListData[i].generalLedgerAccounId,
+					generalLedgerAccounId: this.partListData[i].glAccountId,
 					memo: this.partListData[i].memo,
 					poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
 					poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
@@ -1110,7 +1116,7 @@ export class PurchaseSetupComponent {
 								//workOrderId: this.partListData[i].workOrderId,
 								//repairOrderId: this.partListData[i].repairOrderId,
 								//salesOrderId: this.partListData[i].salesOrderId,
-								//generalLedgerAccounId: this.partListData[i].generalLedgerAccounId,
+								generalLedgerAccounId: this.partListData[i].glAccountId,
 								memo: this.partListData[i].memo,
 								poPartSplitAddressId: this.childDataList[k].poPartSplitAddressId,
 								poPartSplitUserTypeId: this.childDataList[k].poPartSplitUserTypeId,
@@ -1213,7 +1219,8 @@ export class PurchaseSetupComponent {
 		}
     }
     onCustomerNameChange(part, customer): void {
-        part.poPartSplitUserId = customer.customerId;
+		console.log(part, customer )
+        // part.poPartSplitUserId = customer.customerId;
 
         this.cusservice.getCustomerShipAddressGet(customer.customerId).subscribe(returnedcustomerAddressses => {
             this.spiltshipmentData = returnedcustomerAddressses[0];
@@ -1254,13 +1261,16 @@ export class PurchaseSetupComponent {
         }
     }
     onVendorNameChange(part, vendor): void {
-        part.poPartSplitUserId = vendor.vendorId;
+		console.log(part, vendor)
+        //part.poPartSplitUserId = vendor.vendorId;
         this.vendorService.getVendorShipAddressGet(vendor.vendorId).subscribe(
             vendorAddresses => {
                 this.vendorSelectedforSplit = vendorAddresses[0];
                 part.addressData = vendorAddresses[0];;
             })
-    }
+	}
+	
+
     getVendorPartyNames(part, event) : void {
         if (this.allActions && this.allActions.length > 0) {
             var vendors = this.allActions.filter(function (vendor) {
@@ -1275,7 +1285,7 @@ export class PurchaseSetupComponent {
             });
 
         }
-    }
+	}
 
 
     onCustomerNameselected(partChildList, event): void {
@@ -1863,17 +1873,17 @@ export class PurchaseSetupComponent {
 		} else if (parentObj) {
 			partListObj["partId"] = parentObj["partId"];
 			partListObj["partId"] = parentObj["partId"];
-			//partListObj["poPartSplitUserTypeId"] = parentObj["poPartSplitUserTypeId"];
-			//partListObj["poPartSplitUserName"] = parentObj["poPartSplitUserName"];
-			//partListObj["poPartSplitAddress1"] = parentObj["poPartSplitAddress1"];
-			//partListObj["poPartSplitAddress2"] = parentObj["poPartSplitAddress2"];
-			//partListObj["poPartSplitAddress3"] = parentObj["poPartSplitAddress3"];
-			//partListObj["poPartSplitCity"] = parentObj["poPartSplitCity"];
-			//partListObj["poPartSplitState"] = parentObj["poPartSplitState"];
-			//partListObj["poPartSplitPostalCode"] = parentObj["poPartSplitPostalCode"];
-			//partListObj["poPartSplitCountry"] = parentObj["poPartSplitCountry"];
-			//partListObj["needByDate"] = parentObj["needByDate"];
-			//partListObj["quantityOrdered"] = parentObj["quantityOrdered"];
+			// partListObj["poPartSplitUserTypeId"] = parentObj["poPartSplitUserTypeId"];
+			// partListObj["poPartSplitUserName"] = parentObj["poPartSplitUserName"];
+			// partListObj["poPartSplitAddress1"] = parentObj["poPartSplitAddress1"];
+			// partListObj["poPartSplitAddress2"] = parentObj["poPartSplitAddress2"];
+			// partListObj["poPartSplitAddress3"] = parentObj["poPartSplitAddress3"];
+			// partListObj["poPartSplitCity"] = parentObj["poPartSplitCity"];
+			// partListObj["poPartSplitState"] = parentObj["poPartSplitState"];
+			// partListObj["poPartSplitPostalCode"] = parentObj["poPartSplitPostalCode"];
+			// partListObj["poPartSplitCountry"] = parentObj["poPartSplitCountry"];
+			// partListObj["needByDate"] = parentObj["needByDate"];
+			// partListObj["quantityOrdered"] = parentObj["quantityOrdered"];
 			partListObj["itemTypeId"] = parentObj["itemTypeId"];
 		}
 		return partListObj;
@@ -1977,42 +1987,50 @@ export class PurchaseSetupComponent {
 	}
 
 	filterVendorNames(event) {
-        this.vendorNames = [];
+		this.vendorNames = this.allActions;
+
+
+
+        const vendorFilter = [...this.allActions.filter(x => {
+            return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+		this.vendorNames = vendorFilter;
         
         //const vendorFilterData = [...this.allActions.filter(x => {
         //    return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
         //})]
         //this.vendorNames = vendorFilterData;
                      
-		if (this.allActions) {
-			for (let i = 0; i < this.allActions.length; i++) {
-				let vendorName = this.allActions[i].vendorName;
-				if (event.query) {
-					if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-						//this.vendorNames.push(vendorName);
-						this.VendorNamecoll.push([{
-							"vendorId": this.allActions[i].vendorId,
-							"vendorName": vendorName
-						}]),
-							this.vendorNames.push(vendorName);
-					}
-				}
-				else {
-					//if (vendorName.toLowerCase().indexOf(event.toLowerCase()) == 0) {
-					//this.vendorNames.push(vendorName);
-					this.VendorNamecoll.push([{
-						"vendorId": this.allActions[i].vendorId,
-						"vendorName": vendorName
-					}]),
-						this.vendorNames.push(vendorName);
-					//}
-				}
-			}
-		}
+		// if (this.allActions) {
+		// 	for (let i = 0; i < this.allActions.length; i++) {
+		// 		let vendorName = this.allActions[i].vendorName;
+		// 		if (event.query) {
+		// 			if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+		// 				//this.vendorNames.push(vendorName);
+		// 				this.VendorNamecoll.push([{
+		// 					"vendorId": this.allActions[i].vendorId,
+		// 					"vendorName": vendorName
+		// 				}]),
+		// 					this.vendorNames.push(vendorName);
+		// 			}
+		// 		}
+		// 		else {
+		// 			//if (vendorName.toLowerCase().indexOf(event.toLowerCase()) == 0) {
+		// 			//this.vendorNames.push(vendorName);
+		// 			this.VendorNamecoll.push([{
+		// 				"vendorId": this.allActions[i].vendorId,
+		// 				"vendorName": vendorName
+		// 			}]),
+		// 				this.vendorNames.push(vendorName);
+		// 			//}
+		// 		}
+		// 	}
+		// }
     }
   
     selectedVendor(value) {
-        //console.log(value);
+
+        console.log(value);
         this.sourcePoApproval.vendorName = value.vendorName;
         this.sourcePoApproval.vendorCode = value.vendorCode;
         this.tempVendorId = value.vendorId;
@@ -2700,6 +2718,10 @@ export class PurchaseSetupComponent {
             this.addressHeader = 'Edit Bill To Details';      
         }        
     }
+
+    onAddMemo() {
+
+}
 
 }
 
