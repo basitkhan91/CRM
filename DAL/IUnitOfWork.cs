@@ -249,6 +249,8 @@ namespace DAL
 
         IDashNumberRepository DashNumberRepository { get; }
 
+        IAssetCapes AssetCapes { get; }
+
         void SaveChanges(Employee employeeobject);
     }
 }
