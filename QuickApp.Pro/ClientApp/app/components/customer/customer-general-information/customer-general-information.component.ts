@@ -202,10 +202,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
     selectedCustomerClassification: any;
     disableSaveCustomerClassification: boolean;
     disableSaveParentName: boolean;
-    integrationCols: any[];
-    intSelectedColumns: any[];
+    //integrationCols: any[];
+    //intSelectedColumns: any[];
     memoPopupContent: string;
     memoPopupValue: string;
+    actionamecolle: any[] = [];
     //@ViewChild('generalInfoForm') gIForm: NgForm;
 
     ngOnInit(): void
@@ -251,7 +252,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.disableSaveCustomerClassificationSave = true;
         }
 
-        this.integrationCols = [
+
+        /*this.integrationCols = [
             { field: '145.com', header: '145.com' },
             { field: 'Aeroxchange', header: 'Aeroxchange' },
             { field: 'AvRef', header: 'AvRef' },
@@ -261,7 +263,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         if (!this.intSelectedColumns) {
             this.intSelectedColumns = this.cols;
-        }
+        }*/
 
     }
 
@@ -1562,12 +1564,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
     }
 
-    onAddIntegrationWith() {
-        this.router.navigate(['/singlepages/singlepages/app-integration']);
-    }
-
-
-    
 
     onClickPBHCustomer(value) {
         if (value == 'PBHCustomer') {
@@ -1595,5 +1591,60 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
         this.memoPopupContent = '';
     }
+
+    integrationopen(content) {
+        this.sourceAction = {};
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.disableSave = false;
+        this.isSaving = true;
+        this.integrationData();
+        this.loadMasterCompanies();
+        this.sourceAction.isActive = true;
+        this.integrationName = "";
+        this.sourceAction.description = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    private integrationData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.integration.getWorkFlows().subscribe(
+            results => this.onDatainteSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onDatainteSuccessful(allWorkFlowValues: Integration[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allIntegrationInfo = allWorkFlowValues;
+    }
+
+    integrationId(event) {
+        for (let i = 0; i < this.actionamecolle.length; i++) {
+            if (event == this.actionamecolle[i][0].integrationName) {
+                this.disableSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+
+    integrationeventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    }
+
+
 
 }

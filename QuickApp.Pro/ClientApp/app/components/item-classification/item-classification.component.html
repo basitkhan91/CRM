@@ -9,7 +9,7 @@
                         &nbsp;&nbsp;
                         <a class="plusicon-cstm new-margin" pTooltip="Add Item Classification" tooltipPosition="right" (click)="open(contentEdit)"><i class="fa fa-plus-circle fa-lg"></i></a>
                     </div>
-                    <p-table #dt [value]="itemClassificationPagination"  class="rpo-table-cstm rro-table-cstm" [lazy]="false" (onLazyLoad)="loadItemClassification($event)"  [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+                    <p-table #dt [value]="itemClassificationPagination"  class="rpo-table-cstm rro-table-cstm" [lazy]="true" (onLazyLoad)="loadItemClassification($event)"  [rows]="10" [rowsPerPageOptions]="[10,20,30]"
                              [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [columns]="selectedColumns" [totalRecords]="totalRecords" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true"  [scrollable]="true" scrollHeight="450px">
                         <ng-template pTemplate="caption">
                             <div style="text-align: right">
