@@ -123,9 +123,9 @@
                                                 <label for="description" class="control-label">Provision Name<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p-autoComplete [(ngModel)]="provisionName" [ngModelOptions]="{standalone: true}" (onSelect)="provisionId($event)" (onKeyUp)="eventHandler($event)"
+                                                <p-autoComplete [(ngModel)]="provisionName" name="provision" (onSelect)="provisionId($event)" (onKeyUp)="eventHandler($event)"
                                                                 [suggestions]="localCollection" (completeMethod)="filterprovisions($event)" [size]="30"
-                                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm">
+                                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                                     <ng-template let-provisionName pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{provisionName}}</div>
                                                     </ng-template>
@@ -138,7 +138,7 @@
                                                 <label for="description" class="control-label">Memo</label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
+                                                <textarea class="text-item" #memo="ngModel" id="memo" name="memo" [(ngModel)]="sourceAction.memo" minlength="2" required></textarea>
                                             </div>
                                         </div>                                        
                                     </div>                                  
@@ -155,7 +155,7 @@
                                     </div>
                                     <div class="clear"></div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-primary-cstm" [disabled]="disableSave">Save</button>
+                                        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
                                         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
                                     </div>
                                 </form>
