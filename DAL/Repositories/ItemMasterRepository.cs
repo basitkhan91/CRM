@@ -425,7 +425,7 @@ namespace DAL.Repositories
             var data = _appContext.ItemMaster.Include("Manufacturer").Include("Provision").Include("GLAccount").
                 Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification")
 
-                   .Where(a => a.ItemTypeId == 1 && (a.IsDelete == true || a.IsDelete==null)).OrderByDescending(a => a.ItemMasterId).ToList();
+                   .Where(a => a.ItemTypeId == 1 && (a.IsDelete == false || a.IsDelete==null)).OrderByDescending(a => a.ItemMasterId).ToList();
         
 
             return data;
@@ -517,7 +517,7 @@ namespace DAL.Repositories
         {
           
             var data = _appContext.ItemMaster.Include("Manufacturer").Include("ItemClassification").Include("Currency")
-                .Where(a => a.ItemTypeId == 2 && (a.IsDelete == true || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
+                .Where(a => a.ItemTypeId == 2 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
             return data;
         }
 
@@ -525,7 +525,7 @@ namespace DAL.Repositories
         {            
              var data = _appContext.ItemMaster.Include("Equipment").Include("EquipmentValidationType").Include("Manufacturer")
 
-                  .Where(a => a.ItemTypeId == 3 && (a.IsDelete == true || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
+                  .Where(a => a.ItemTypeId == 3 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
             return data;
 
         }
