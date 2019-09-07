@@ -410,7 +410,7 @@
     <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemCloseModel()">
         <div class="modal-body" style="padding-bottom: 30px;">
             <div class="form-group">
-                <label for="name" class="control-label">Discount Percent<span class="clr-red">*</span></label>
+                <label for="name" class="control-label">Discount Percent <span class="clr-red">*</span></label>
                 <div class="col-sm-6">
                     <div class="inner-addon right-addon inline-block">
                         <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="discontValue" name="discontValue" (onKeyUp)=discountvalueHandler($event) (onSelect)="discountvaluedesc($event)" [suggestions]="discountcollection" (completeMethod)="filterDiscountvalue($event)" [size]="30"
