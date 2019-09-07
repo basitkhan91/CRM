@@ -2,202 +2,280 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item" aria-current="page">Single Screen</li>
-                        <li class="breadcrumb-item active" aria-current="page">Aircraft Manufacturer</li>
-                    </ol>
-                </nav>
-                <h4 class="page-heading">Aircraft Manufacturer</h4>
-                <div class="col-sm-12 form-bg">
-                    <div class="form-group add-inputs">
-                        <div class="form-group col-sm-4 w250">
-                            <label class="control-label col-sm-4">Name<span class="clr-red">*</span></label>
-                            <div class="col-sm-7 cust-name">
-                                <div class="inner-addon right-addon w200 inline-block">
-                                    <i class="fa fa-search"></i>
-                                    <input type="text" class="form-control ui-autocomplete-input" id="cmname" name="" autocomplete="off">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="inline-block display-flex">
+                            <h3 class="po-head lead">Aircraft Information</h3>
+                            &nbsp;&nbsp;
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Aircraft Manufacturer" tooltipPosition="right" (click)="open(Manufacturer)"><i class="fa fa-plus-circle fa-lg"></i></a>
+                        </div>
+                        <p-table #dt [value]="aircraftManufacturerPagination" class="rpo-table-cstm rro-table-cstm"
+                                 [lazy]="true" (onLazyLoad)="loadAircraftManufacturer($event)" [paginator]="true"
+                                 [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords"
+                                 [metaKeySelection]="true" [pageLinks]="3" [columns]="cols" selectionMode="multiple"
+                                 [(selection)]="cols" [resizableColumns]="true" [reorderableColumns]="true">
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                                   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                    <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                                    </div>
+                                    <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <button type="button" id="btnFilterAssetStatus" matTooltip="search is pending" name="" class="btn btn-warning" data-toggle="tooltip" data-original-title="Filter"><i class="fa fa-search"></i></button>
-                            <button type="button" id="btnAddAssetStatus" matTooltip="Add Aircraft Manufacturer" (click)="open(Manufacturer)" name="" class="btn btn-success nobg" data-toggle="tooltip" data-original-title="Add"><i class="fa fa-plus"></i></button>
-
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <div class="excel-upload mtop0">
-                                <input type="file" name="upload[]" multiple="" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload"> <span data-toggle="tooltip" title="Upload Excel" data-original-title="Excel Upload (table rows)"><i class="fa fa-file-excel-o"></i></span> </label>
-                            </div>                          
-                        </div>
-                        <!--<div class="excel-upload mtop0">
-                           
-                        </div>-->
-                        <!--</form>-->
-                    </div>
-                    <!--<div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Aircraft Manufacturer Name</th>
-                                    <th>&nbsp;</th>
+                                    <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th style="width:150px"></th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let manufacturer of aircraftManufacturerList">
-                                    <td>{{manufacturer.aircraftTypeId}}</td>
-                                    <td>{{manufacturer.description}}</td>
+                                <tr>
+                                    <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                    </th>
+                                    <th style="width:150px"></th>
+                                </tr>                           
+                            </ng-template>
+                            <ng-template pTemplate="body" ngFor let-model [ngForOf]="aircraftManufacturerPagination">
+                                <tr>
+                                    <td>{{model.aircraftTypeId}}</td>
+                                    <td>{{model.description}}</td>
+                                    <td>{{model.memo}}</td>
                                     <td>
-                                        <p-inputSwitch *ngIf="manufacturer.isActive == true || manufacturer.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(manufacturer,$event)" [(ngModel)]="manufacturer.isActive"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="manufacturer.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(manufacturer,$event)" [(ngModel)]="manufacturer.isActive"></p-inputSwitch>
-
-                                        <span (click)="setAircraftManufacturerToUpdate(editAircraftManufacturer,manufacturer.aircraftTypeId)" data-toggle="modal" data-target="#edit">
-                                            <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                        </span>
-                                        <span (click)="confirmDelete(content,manufacturer.aircraftTypeId)" data-toggle="modal" data-target="#data">
-                                            <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </span>
-                                        <span (click)="showAuditPopup(auditContent,manufacturer.aircraftTypeId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                                        <p-inputSwitch *ngIf="(model.isActive == true) || (model.isActive == null)" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(model,$event)" [(ngModel)]="model.isActive"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="model.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(model,$event)" [(ngModel)]="model.isActive"></p-inputSwitch>
+                                        <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"  (click)="openView(view,rowData)"  title="View"><i class="fa fa-eye"></i></a> </span>-->
+                                        <button class="btn-edit" mat-icon-button (click)="setAircraftManufacturerToUpdate(editAircraftManufacturer,model.aircraftTypeId)" matTooltip="edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <span (click)="showAuditPopup(auditContent,model.aircraftTypeId)" matTooltip="History" data-toggle="modal" data-target="#history">
                                             <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
                                                 <i class="fa fa-history"></i>
                                             </a>
                                         </span>
+                                        <span (click)="confirmDelete(content,model.aircraftTypeId)" data-toggle="modal" data-target="#data">
+                                            <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
-
-                            </tbody>
-                        </table>
-                    </div>-->
-                    <br>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
+                                &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    </div>
                 </div>
-
             </div>
         </div>
-
-        <ng-template #auditContent let-c="close" let-d="dismiss">
-            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-            </div>
-        </ng-template>
-        <ng-template #content let-c="close" let-d="dismiss">
-            <div class="modal-header">
-                <h4 class="modal-title">Are you sure you want to delete Aircraft manufacturer</h4>
-                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" (click)="removeAircraftManufacturer()">Yes</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-            </div>
-
-        </ng-template>
-
-        <ng-template #editAircraftManufacturer let-c="close" let-d="dismiss">
+    </div>
 
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title"> Edit</h4>
-                </div>
-                <div class="modal-body">
 
-                    <p>
-                        <span class="col-sm-3"><b>Name: </b><span class="clr-red">*</span></span> <span class="col-sm-6">
-                            <input type="text" [(ngModel)]="aircraftManufacturerTypeToUpdate.description" class="form-control">
-                        </span>
-                    </p>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" (click)="updateAircraftManufacturer()" class="btn btn-success" data-dismiss="modal">Update</button>
-                    <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </ng-template>
-
-        <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-                  [width]="350" [minWidth]="200" [responsive]="true"
-                  [minY]="1050" [baseZIndex]="1100000">
-            <h5 [ngStyle]="{'color':'red'}">
-                Please Enter (*) Mandatory Fields
-            </h5>
-            <p-footer>
-                <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-            </p-footer>
-        </p-dialog>
-
-
-        <p-table #dt [columns]="cols" [value]="aircraftManufacturerPagination" [lazy]="true" (onLazyLoad)="loadAircraftManufacturer($event)" [paginator]="true"
-                 [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [loading]="loading">
-            <ng-template pTemplate="header" let-columns>
+                        
+                                <!--<div class="excel-upload mtop0">
+    </div>-->
+                                <!--</form>-->
+                                <!--<div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
-                    </th>
-                    <th></th>
+                    <th>ID</th>
+                    <th>Aircraft Manufacturer Name</th>
+                    <th>&nbsp;</th>
                 </tr>
-                <tr>
-                    <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                        <input pInputText type="text" (input)="filterGrid($event.target.value, col.field, col.filterMatchMode)">
-
-                    </th>
-                    <th></th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" ngFor let-model [ngForOf]="aircraftManufacturerPagination">
-                <tr>
-                    <td>{{model.aircraftTypeId}}</td>
-                    <td>{{model.description}}</td>
+            </thead>
+            <tbody>
+                <tr *ngFor="let manufacturer of aircraftManufacturerList">
+                    <td>{{manufacturer.aircraftTypeId}}</td>
+                    <td>{{manufacturer.description}}</td>
                     <td>
-                        <p-inputSwitch *ngIf="(model.isActive == true) || (model.isActive == null)" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(model,$event)" [(ngModel)]="model.isActive"></p-inputSwitch>
-                        <p-inputSwitch *ngIf="model.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(model,$event)" [(ngModel)]="model.isActive"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="manufacturer.isActive == true || manufacturer.isActive == null" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(manufacturer,$event)" [(ngModel)]="manufacturer.isActive"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="manufacturer.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(manufacturer,$event)" [(ngModel)]="manufacturer.isActive"></p-inputSwitch>
 
-                        <span (click)="setAircraftManufacturerToUpdate(editAircraftManufacturer,model.aircraftTypeId)" data-toggle="modal" data-target="#edit">
+                        <span (click)="setAircraftManufacturerToUpdate(editAircraftManufacturer,manufacturer.aircraftTypeId)" data-toggle="modal" data-target="#edit">
                             <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                 <i class="fa fa-edit"></i>
                             </a>
                         </span>
-                        <span (click)="showAuditPopup(auditContent,model.aircraftTypeId)" matTooltip="History" data-toggle="modal" data-target="#history">
-                            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
-                                <i class="fa fa-history"></i>
-                            </a>
-                        </span>
-                        <span (click)="confirmDelete(content,model.aircraftTypeId)" data-toggle="modal" data-target="#data">
+                        <span (click)="confirmDelete(content,manufacturer.aircraftTypeId)" data-toggle="modal" data-target="#data">
                             <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </span>
+                        <span (click)="showAuditPopup(auditContent,manufacturer.aircraftTypeId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                                <i class="fa fa-history"></i>
+                            </a>
+                        </span>
                     </td>
                 </tr>
-            </ng-template>
-        </p-table>
 
-        <ng-template #Manufacturer let-c="close" let-d="dismiss">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title"> Add Aircraft Manufacturer</h4>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        <span class="col-sm-3"><b>Manufacturer Name: </b></span> <span class="col-sm-6">
-                            <input type="text" [(ngModel)]="currentAircraftManufacturerType.description" class="form-control">
-                        </span>
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" (click)="addAircraftManufacturer()" class="btn btn-success" data-dismiss="modal">Add</button>
-                    <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
-                </div>
-            </div>
+            </tbody>
+        </table>
+    </div>-->
+
+
+                                <ng-template #auditContent let-c="close" let-d="dismiss">
+                                    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                                        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                                    </div>
+                                </ng-template>
+                                <ng-template #content let-c="close" let-d="dismiss">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Are you sure you want to delete Aircraft manufacturer</h4>
+                                        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" (click)="removeAircraftManufacturer()">Yes</button>
+                                        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+                                    </div>
+
+                                </ng-template>
+
+                                <ng-template #editAircraftManufacturer let-c="close" let-d="dismiss">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+                                            <h4 class="modal-title">Edit Aircraft Manufacturer</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label">Name:</label>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" [(ngModel)]="aircraftManufacturerTypeToUpdate.description" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" (click)="updateAircraftManufacturer()" class="btn btn-primary-cstm" data-dismiss="modal">Update</button>
+                                            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+
+                                </ng-template>
+
+                                <ng-template #view class="modal fade" id="view" role="dialog">
+
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                                            <h4 class="modal-title">Manufacturer Details</h4>
+                                        </div>
+                                        <div class="modal-body viewform">
+                                            <!--<p><span class="label"><b>Manufacturer ID: </b></span><span class="value">{{manufactureViewField.id}}</span></p>
+                <p><span class="label"><b>Manufacutrer Name: </b></span><span class="value">{{manufactureViewField.comments}}</span></p>-->
+                                            <!--<p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
+                <p><span class="label"><b>Created Date: </b></span><span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
+                <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
+                <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>-->
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+                                        </div>
+                                    </div>
+
+                                </ng-template>
+                                <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+                                          [width]="350" [minWidth]="200" [responsive]="true"
+                                          [minY]="1050" [baseZIndex]="1100000">
+                                    <h5 [ngStyle]="{'color':'red'}">
+                                        Please Enter (*) Mandatory Fields
+                                    </h5>
+                                    <p-footer>
+                                        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+                                    </p-footer>
+                                </p-dialog>
+
+
+                                <!--<p-table #dt [columns]="cols" [value]="aircraftManufacturerPagination" [lazy]="true" (onLazyLoad)="loadAircraftManufacturer($event)" [paginator]="true"
+             [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [loading]="loading">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <input pInputText type="text" (input)="filterGrid($event.target.value, col.field, col.filterMatchMode)">
+                </th>
+                <th></th>
+            </tr>
         </ng-template>
+        <ng-template pTemplate="body" ngFor let-model [ngForOf]="aircraftManufacturerPagination">
+            <tr>
+                <td>{{model.aircraftTypeId}}</td>
+                <td>{{model.description}}</td>
+                <td>
+                    <p-inputSwitch *ngIf="(model.isActive == true) || (model.isActive == null)" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(model,$event)" [(ngModel)]="model.isActive"></p-inputSwitch>
+                    <p-inputSwitch *ngIf="model.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(model,$event)" [(ngModel)]="model.isActive"></p-inputSwitch>
+
+                    <span (click)="setAircraftManufacturerToUpdate(editAircraftManufacturer,model.aircraftTypeId)" data-toggle="modal" data-target="#edit">
+                        <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </span>
+                    <span (click)="showAuditPopup(auditContent,model.aircraftTypeId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                        <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                            <i class="fa fa-history"></i>
+                        </a>
+                    </span>
+                    <span (click)="confirmDelete(content,model.aircraftTypeId)" data-toggle="modal" data-target="#data">
+                        <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </span>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>-->
+
+                                <ng-template #Manufacturer let-c="close" let-d="dismiss">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
+                                            <h4 class="modal-title"> Add Aircraft Manufacturer</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label">Manufacturer Name:</label>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" [(ngModel)]="currentAircraftManufacturerType.description" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" (click)="addAircraftManufacturer()" class="btn btn-primary-cstm" data-dismiss="modal">Save</button>
+                                            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </ng-template>
