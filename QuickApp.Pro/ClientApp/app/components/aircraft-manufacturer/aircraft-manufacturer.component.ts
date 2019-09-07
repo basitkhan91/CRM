@@ -7,6 +7,8 @@ import { AircraftType } from "../../models/AircraftType.model";
 import { AircraftManufacturerService } from "../../services/aircraft-manufacturer/aircraftManufacturer.service";
 import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
 import { LazyLoadEvent } from "primeng/api";
+import { MasterCompany } from "../../models/mastercompany.model";
+import { MasterComapnyService } from "../../services/mastercompany.service";
 @Component({
     selector: 'app-aircraft-manufacturer',
     templateUrl: './aircraft-manufacturer.component.html',
@@ -19,29 +21,34 @@ export class AircraftManufacturerComponent implements OnInit{
     first: number;
     rows: number;
     paginatorState: any;
-
+    loadingIndicator: boolean;
     AuditDetails: any[];
     /** aircraft-manufacturer ctor */
-
+    allComapnies: MasterCompany[] = [];
     currentAircraftManufacturerType: AircraftType;
     aircraftManufacturerTypeToUpdate: AircraftType;
     aircraftManufacturerTypeToRemove: AircraftType;
     aircraftManufacturerList: AircraftType[];
     aircraftManufacturerPagination: AircraftType[];//added
-
+    public sourceaircraftmanufacturer: any = {}
     aircraftManufacturerSearchList: AircraftType[];
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
-
+    manufactureViewField: any = {};
     //adding for Pagination start
     totalRecords: number;
     cols: any[];
     loading: boolean;
+    comments: any = " ";
+    createdBy: any = "";
+    updatedBy: any = "";
+    createdDate: any = "";
+    updatedDate: any = "";
     //adding for Pagination End
 
-    constructor(private aircraftManufacurerService: AircraftManufacturerService,private alertService: AlertService, private modalService: NgbModal, private authService: AuthService,) {
+    constructor(private aircraftManufacurerService: AircraftManufacturerService, private masterComapnyService: MasterComapnyService,private alertService: AlertService, private modalService: NgbModal, private authService: AuthService,) {
 
     }
 
@@ -57,6 +64,28 @@ export class AircraftManufacturerComponent implements OnInit{
     //    });
     //  }
 
+    private loadMasterCompanies() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.masterComapnyService.getMasterCompanies().subscribe(
+            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
+
+    }
+    private onDataLoadFailed(error: any) {
+        // alert(error);
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+    }
     ngOnInit(): void {
         this.aircraftManufacurerService.getAll().subscribe(aircraftManufacturer => {
             this.aircraftManufacturerList = aircraftManufacturer[0];
@@ -71,6 +100,7 @@ export class AircraftManufacturerComponent implements OnInit{
         this.cols = [
             { field: 'aircraftTypeId', header: 'ID' },
             { field: 'description', header: 'Aircraft Manufacturer Name' },
+            { field: 'memo', header: 'Memo' },
         ];
         this.loading = true;
         //P-table Code End
@@ -114,7 +144,18 @@ export class AircraftManufacturerComponent implements OnInit{
         });
 
     }
+    openView(content, row) {
+        this.currentAircraftManufacturerType = row;             
+        
+        this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
+
+  
     setAircraftManufacturerToUpdate(editAircraftManufacturerpopup: any, id: number): void {
         this.aircraftManufacturerTypeToUpdate = Object.assign({}, this.aircraftManufacturerPagination.filter(function (aircraftManufacturer) {
             return aircraftManufacturer.aircraftTypeId == id;
