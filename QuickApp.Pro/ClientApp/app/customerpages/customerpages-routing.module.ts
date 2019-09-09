@@ -31,8 +31,6 @@ const customerPagesRoutes: Routes = [
             { path: "app-customers-list", component: CustomersListComponent, data: { title: "Customer's List" } },
             { path: "app-customer-setup", component: CustomerSetupComponent, data: { title: "Customer Setup" } },
             { path: "app-customer-general-information", component: CustomerGeneralInformationComponent, data: { title: "General Information" } },
-            { path: "app-customer-aircraft", component: CustomerAircraftComponent },
-            { path: "app-customer-ata", component: CustomerATAInformationComponent},
             { path: "app-customer-edit", component: CustomerEditComponent, data: { title: "Customer Edit" } },
             { path: "app-customer-contacts", component: CustomerContactsComponent, data: { title: "Customer contacts" } },
             { path: "app-customer-financial-information", component: CustomerFinancialInformationComponent, data: { title: "Financial-Information" } },
@@ -40,6 +38,8 @@ const customerPagesRoutes: Routes = [
             { path: "app-customer-shipping-information", component: CustomerShippingInformationComponent, data: { title: "Shipping-Information" } },
             { path: "app-customer-sales-person", component: CustomerSalesPersonComponent, data: { title: "Sales-Person" } },
             { path: "app-customer-warnings", component: CustomerWarningsComponent, data: { title: "Warnings" } },
+            { path: 'app-customer-aircraft', component: CustomerAircraftComponent, data: { title: 'Aircraft Information' } },
+            { path: 'app-customer-ata', component: CustomerATAInformationComponent }
         ]
     }
 ];
