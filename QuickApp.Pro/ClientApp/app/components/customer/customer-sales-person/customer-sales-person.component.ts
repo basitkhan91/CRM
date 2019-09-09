@@ -128,6 +128,9 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
             this.local = this.workFlowtService.listCollection.t;
             this.sourceCustomer = this.workFlowtService.listCollection.t;
+        }else if(this.workFlowtService.salesCollection) {
+            this.sourceCustomer = this.workFlowtService.salesCollection
+
         }
 
     }
@@ -390,7 +393,16 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
             this.sourceCustomer.createdBy = this.userName;
             this.sourceCustomer.updatedBy = this.userName;
             this.sourceCustomer.masterCompanyId = 1;
-            this.workFlowtService.updatesalesinfo(this.sourceCustomer, this.sourceCustomer.customerId).subscribe(data => {
+
+            this.local.primarySalesPersonFirstName = this.sourceCustomer.primarySalesPersonFirstName;
+            this.local.secondarySalesPersonName = this.sourceCustomer.secondarySalesPersonName;
+            this.local.csrName = this.sourceCustomer.csrName;
+            this.local.agentName = this.sourceCustomer.agentName;
+            this.local.annualRevenuePotential = this.sourceCustomer.annualRevenuePotential;
+            this.local.annualQuota = this.sourceCustomer.annualQuota;
+
+
+            this.workFlowtService.updatesalesinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
                 this.localCollection = data;
 				this.workFlowtService.salesCollection = this.local;
 				this.activeIndex = 8;
@@ -406,6 +418,14 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
             this.sourceCustomer.updatedBy = this.userName;
             this.sourceCustomer.masterCompanyId = 1;
             //debugger;
+
+            this.local.primarySalesPersonFirstName = this.sourceCustomer.primarySalesPersonFirstName;
+            this.local.secondarySalesPersonName = this.sourceCustomer.secondarySalesPersonName;
+            this.local.csrName = this.sourceCustomer.csrName;
+            this.local.agentName = this.sourceCustomer.agentName;
+            this.local.annualRevenuePotential = this.sourceCustomer.annualRevenuePotential;
+            this.local.annualQuota = this.sourceCustomer.annualQuota;
+
             this.workFlowtService.updatesalesinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
                 this.localCollection = data;
 				this.saveCompleted(this.sourceCustomer);
