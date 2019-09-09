@@ -148,10 +148,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.dataSource = new MatTableDataSource();
         if (this.customerService.listCollection && this.customerService.isEditMode == true) {
 
+            console.log(this.customerService)
             this.local = this.customerService.listCollection.t;
             this.sourceCustomer = this.customerService.listCollection.t;
+        }else if(this.customerService.financeCollection) {
+            // console.log(this.customerService)
+            this.sourceCustomer = this.customerService.financeCollection;
         }
-        console.log(this.customerService);
+
 
 
 
@@ -423,17 +427,24 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.display = true;
             this.modelValue = true;
         }
-        console.log('test')
 
         if (this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId) {
-            console.log('test1')
-
             if (this.sourceCustomer.customerId) {
-                console.log('test2')
                 this.sourceCustomer.createdBy = this.userName;
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
-                this.local = this.sourceCustomer;
+                this.local.creditLimit = this.sourceCustomer.creditLimit
+                this.local.creditTermsId = this.sourceCustomer.creditTermsId;
+                this.local.discountId = this.sourceCustomer.discountId;
+                this.local.markUpPercentageId = this.sourceCustomer.markUpPercentageId;
+                this.local.isTaxExempt = this.sourceCustomer.isTaxExempt;
+                this.local.taxRateStateOrProvince = this.sourceCustomer.taxRateStateOrProvince;
+                this.local.taxRateOther = this.sourceCustomer.taxRateOther;
+                this.local.taxTypeId = this.sourceCustomer.taxTypeId;
+                this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
+                this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
+                // this.local = this.sourceCustomer;
+                console.log(this.local);
                 this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
@@ -445,7 +456,21 @@ export class CustomerFinancialInformationComponent implements OnInit {
             else {
 
                 this.sourceCustomer.updatedBy = this.userName;
-                this.sourceCustomer.masterCompanyId = 1;
+                this.sourceCustomer.masterCompanyId = 1; 
+                this.local.creditLimit = this.sourceCustomer.creditLimit
+                this.local.creditTermsId = this.sourceCustomer.creditTermsId;
+                this.local.discountId = this.sourceCustomer.discountId;
+                this.local.markUpPercentageId = this.sourceCustomer.markUpPercentageId;
+                this.local.isTaxExempt = this.sourceCustomer.isTaxExempt;
+                this.local.taxRateStateOrProvince = this.sourceCustomer.taxRateStateOrProvince;
+                this.local.taxRateOther = this.sourceCustomer.taxRateOther;
+                this.local.taxTypeId = this.sourceCustomer.taxTypeId;
+                this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
+                this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
+
+
+         
+                // this.local = this.sourceCustomer;
                 console.log(this.local);
                 this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
