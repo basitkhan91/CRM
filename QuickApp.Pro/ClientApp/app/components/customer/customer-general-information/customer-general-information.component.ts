@@ -209,7 +209,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     actionamecolle: any[] = [];
     //@ViewChild('generalInfoForm') gIForm: NgForm;
 
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         //if (this.workFlowtService.isEditMode == false) {
         //    this.gIForm.resetForm();
         //}
@@ -246,7 +247,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         this.loadCurrencyData();
 
-        if (!this.classificationName) {
+        if (!this.classificationName)
+        {
             this.disableSaveCustomerClassificationSave = true;
         }
 
@@ -258,6 +260,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             { field: 'ILS', header: 'ILS' },
             { field: 'partsBase', header: 'Parts base' },
         ];
+
         if (!this.intSelectedColumns) {
             this.intSelectedColumns = this.cols;
         }*/
@@ -426,7 +429,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCountrylist().subscribe(
+        this.workFlowtService.getCountrylist().subscribe(           
             results => this.onDatacountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -645,7 +648,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-
+        
     }
 
 
@@ -712,12 +715,14 @@ export class CustomerGeneralInformationComponent implements OnInit {
             else {
             }
         }
-        if (!(this.classificationName)) {
+        if (!(this.classificationName))
+        {
             this.displayCustomerClassification = true;
             this.customerClassificationError = true;
             this.modelValue = true;
         }
-        if (this.classificationName) {
+        if (this.classificationName)
+        {
             this.isSaving = true;
             if (this.isEditMode == false) {
                 this.sourceClassification.createdBy = this.userName;
@@ -743,10 +748,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customerClassificationError = false;
             this.modal.close();
         }
-
-
-
-
+        
+       
+        
+        
     }
 
     // Load  Customer Clasfication data
@@ -771,7 +776,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-
+ 
 
     private refresh() {
         this.applyFilter(this.dataSource.filter);
@@ -1055,9 +1060,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // Save Customer Data//
     editItemAndCloseModel() {
-        if (!(this.sourceCustomer.address1 && this.sourceCustomer.customerTypeId && this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
+        if (!(this.sourceCustomer.address1 && this.sourceCustomer.customerTypeId  && this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
-        )) {
+        ))
+        {
             //this.display = true;
             this.modelValue = true;
 
@@ -1138,7 +1144,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
             && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
-        ) {
+        )
+        {
             this.isSaving = true;
             if (!this.sourceCustomer.customerId) {
                 this.sourceCustomer.createdBy = this.userName;
@@ -1210,7 +1217,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.sourceCustomer.customerParentName = '';
 
                 }
-                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data => {
+                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data =>
+                {
                     this.sourceCustomer.updatedBy = this.userName;
                     this.localCollection = data;
                     this.sourceCustomer = data;
@@ -1559,14 +1567,14 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     onClickPBHCustomer(value) {
         if (value == 'PBHCustomer') {
-            this.memoPopupContent = this.sourceCustomer.pbhCustomerMemo;
+            this.memoPopupContent = this.sourceCustomer.pbhCustomerMemo;      
         }
         if (value == 'restrictPMA') {
-            this.memoPopupContent = this.sourceCustomer.restrictPMAMemo;
+            this.memoPopupContent = this.sourceCustomer.restrictPMAMemo;      
         }
         if (value == 'restrictBER') {
-            this.memoPopupContent = this.sourceCustomer.restrictBERMemo;
-        }
+            this.memoPopupContent = this.sourceCustomer.restrictBERMemo;           
+        }           
         this.memoPopupValue = value;
     }
 

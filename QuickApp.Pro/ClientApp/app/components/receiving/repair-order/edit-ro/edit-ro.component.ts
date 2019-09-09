@@ -89,7 +89,7 @@ export class EditRoComponent implements OnInit {
     }
 
     addPageCustomer() {
-        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-create');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
 
     //remove once add dynamic content

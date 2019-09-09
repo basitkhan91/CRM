@@ -192,8 +192,8 @@ export class CustomerBillingInformationComponent
 
     // Back Click
    	backClick() {
-		this.workFlowtService.contactCollection = this.local;
-		this.activeIndex = 2;
+		this.workFlowtService.billingCollection = this.local;
+		this.activeIndex = 4;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		this.router.navigateByUrl('/customersmodule/customerpages/app-customer-financial-information');
 
@@ -581,7 +581,7 @@ export class CustomerBillingInformationComponent
 		if (this.local) {
 			this.workFlowtService.financeCollection = this.local;
 		}
-		this.activeIndex = 4;
+		this.activeIndex = 6;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		this.router.navigateByUrl('/customersmodule/customerpages/app-customer-shipping-information');
 	

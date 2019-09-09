@@ -1307,7 +1307,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     addPageCustomer() {
-        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-create');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
     }
 
     onFilter(event, stockLine, type): void {
