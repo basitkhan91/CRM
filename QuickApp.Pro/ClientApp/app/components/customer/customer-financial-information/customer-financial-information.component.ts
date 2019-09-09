@@ -151,6 +151,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.local = this.customerService.listCollection.t;
             this.sourceCustomer = this.customerService.listCollection.t;
         }
+        console.log(this.customerService);
+
+
 
     }
 
@@ -407,24 +410,30 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (data == 'creditTermsId ') {
             this.showCreditTearms = false;
         }
-        if (data == 'currencyId') {
-            this.showCurrency = false;
-        }
+        // if (data == 'currencyId') {
+        //     this.showCurrency = false;
+        // }
     }
 
 
     // Save Finance Info
     editItemAndCloseModel() {
         this.isSaving = true;
-		if (!(this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId && this.sourceCustomer.currencyId)) {
+		if (!(this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId)) {
             this.display = true;
             this.modelValue = true;
         }
-        if (this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId && this.sourceCustomer.currencyId) {
+        console.log('test')
+
+        if (this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId) {
+            console.log('test1')
+
             if (this.sourceCustomer.customerId) {
+                console.log('test2')
                 this.sourceCustomer.createdBy = this.userName;
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
+                this.local = this.sourceCustomer;
                 this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
@@ -437,6 +446,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
+                console.log(this.local);
                 this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
@@ -445,7 +455,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 
             }
         }
-        else { }
+
 
 
 
@@ -611,7 +621,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 	nextClick() {
 		this.customerService.contactCollection = this.local;
-		this.activeIndex = 3;
+		this.activeIndex = 5;
         this.customerService.indexObj.next(this.activeIndex);
         this.editItemAndCloseModel();
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
@@ -619,9 +629,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
 	}
 	backClick() {
 		this.customerService.contactCollection = this.local;
-		this.activeIndex = 1;
+		this.activeIndex = 3;
 		this.customerService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-ata');
 
 	}
 
@@ -667,7 +677,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.currencyService.newAddcurrency(this.sourceAction).subscribe(data => {
 				this.loadCurrencyData();
 				this.saveCompleted(this.sourceAction);
-				this.sourceCustomer.currencyId = data.currencyId;
+                // this.sourceCustomer.currencyId = data.currencyId;
+                
             });
         }
         else {
@@ -1037,7 +1048,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 			})
 
-			this.activeIndex = 2;
+			this.activeIndex = 5;
 		}
 		else {
 			this.sourceAction.updatedBy = this.userName;
@@ -1047,7 +1058,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 
-			this.activeIndex = 2;
+			this.activeIndex = 5;
 
 			
 		}

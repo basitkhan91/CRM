@@ -60,7 +60,8 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
     updatedDate: any = "";
 	sub: any;
 	allEmployeeinfo: any[] = [];
-	firstCollection: any[];
+    firstCollection: any[];
+    lastCollection: any[];
 	disableSavepartDescription: boolean;
 	itemclaColl: any[];
 	partCollection: any[];
@@ -196,17 +197,17 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
 	nextClick() {
 		if (this.local) {
 			this.workFlowtService.shippingCollection = this.local;
-		}
-
-		this.activeIndex = 6;
-		this.workFlowtService.indexObj.next(this.activeIndex);
+        }
+        		
 		//this.saveCompleted(this.sourceCustomer);
         this.editItemAndCloseModel();
+        this.activeIndex = 8;
+        this.workFlowtService.indexObj.next(this.activeIndex);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-warnings');
 	}
 	backClick() {
 		this.workFlowtService.contactCollection = this.local;
-		this.activeIndex = 4;
+		this.activeIndex = 6;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		//this.saveCompleted(this.sourceCustomer);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-shipping-information');
@@ -392,7 +393,7 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
             this.workFlowtService.updatesalesinfo(this.sourceCustomer, this.sourceCustomer.customerId).subscribe(data => {
                 this.localCollection = data;
 				this.workFlowtService.salesCollection = this.local;
-				this.activeIndex = 5;
+				this.activeIndex = 8;
 				this.workFlowtService.indexObj.next(this.activeIndex);
 				this.savesuccessCompleted(this.sourceCustomer);
             
@@ -411,7 +412,7 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
                 this.workFlowtService.salesCollection = this.local;
                
             })
-			this.activeIndex = 5;
+			this.activeIndex = 8;
 			this.workFlowtService.indexObj.next(this.activeIndex);
 		
 			
@@ -502,9 +503,9 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		//this.dataSource.data = getEmployeeCerficationList;
-		this.allEmployeeinfo = getEmployeeCerficationList;
-	}
-
+        this.allEmployeeinfo = getEmployeeCerficationList;
+        //console.log(this.allEmployeeinfo);
+    }
 	filterfirstName(event) {
 
 		this.firstCollection = [];
@@ -514,7 +515,18 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
 				this.firstCollection.push(firstName);
 			}
 		}
-	}
+    }
+    
+    // filterlastName(event) {
+
+	// 	this.lastCollection = [];
+	// 	for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+	// 		let lastName = this.allEmployeeinfo[i].lastName;
+	// 		if (lastName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+	// 			this.lastCollection.push(lastName);
+	// 		}
+	// 	}
+	// }
 	//private onptnmbersSuccessful(allWorkFlows: any[]) {
 
 	//	this.alertService.stopLoadingMessage();
