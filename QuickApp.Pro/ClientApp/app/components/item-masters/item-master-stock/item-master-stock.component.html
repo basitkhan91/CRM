@@ -475,13 +475,13 @@
                                     <label class="control-label">Lead Time</label>
                                     <div class="col-md-7">
                                         <span style="font-size: 11px;">Days</span>
-                                        <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control input-value" 
+                                        <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control input-value"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeDays">
                                     </div>
                                     <div class="col-md-5">
                                         <span style="font-size: 11px;">Hours</span>
-                                        <input type="number"  pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control input-value" [ngModelOptions]="{standalone: true}"
+                                        <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control input-value" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeHours">
                                     </div>
                                     <div class="clear"></div>
@@ -1219,14 +1219,14 @@
                                         <div class="inline-block display-flex">
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="unspecified"  [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
+                                                    <input type="checkbox" id="" name="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     Unspecified
                                                 </label>
                                             </div>
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="nonmilitary"  [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
+                                                    <input type="checkbox" id="" name="nonmilitary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     NON-Military
                                                 </label>
@@ -1235,14 +1235,14 @@
                                         <div class="inline-block display-flex">
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="miltary"  value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
+                                                    <input type="checkbox" id="" name="miltary" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     Miltary
                                                 </label>
                                             </div>
                                             <div class="checkbox-cstm check-value">
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="dual"  [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
+                                                    <input type="checkbox" id="" name="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     Dual
                                                 </label>
@@ -1261,7 +1261,7 @@
                                 <span class="float-right">
                                     <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
                                     &nbsp;
-                                    <button class="btn btn-primary-cstm" pButton type="button" (click)="moveGeneralInfromation()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
+                                    <button class="btn btn-primary-cstm" pButton type="button" (click)="saveandcreate()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
                                 </span>
                             </div>
                         </div>
@@ -1272,320 +1272,322 @@
             </div>
 
         </div>
-        </form>
+    </form>
 
 
-        <!--New code for dialogue-->
-        <div id="ModalDashNumber"
-             class="modal fade custom-popup"
-             role="dialog">
-            <div class="modal-dialog modal-full">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">×</button>
-                        <h4 class="modal-title">Add Aircraft Information</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="popup-plusicon-cstm">Aircraft Type <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                    <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
-                                </div>
+    <!--New code for dialogue-->
+    <div id="ModalDashNumber"
+         class="modal fade custom-popup"
+         role="dialog">
+        <div class="modal-dialog modal-full">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add Aircraft Information</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm">Aircraft Type <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
+                        </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="popup-plusicon-cstm" style="width: 150px !important">
-                                        Model <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-model']"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important;
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm" style="width: 150px !important">
+                                    Model <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-model']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                    <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important;
                                  margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
-                                    </label>
+                                </label>
 
-                                    <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
-                                                   (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
-                                </div>
+                                <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}"
+                                               (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
                             </div>
-                            <div class="col-md-3" *ngIf="!modelUnknown">
-                                <div class="form-group">
-                                    <label class="popup-plusicon-cstm" style="width: 190px !important">
-                                        DashNumber
-                                        <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        <input type="checkbox" name="unknownDashNumber" [(ngModel)]="dashNumberUnknown" style="width: 20px !important;
+                        </div>
+                        <div class="col-md-3" *ngIf="!modelUnknown">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm" style="width: 190px !important">
+                                    DashNumber
+                                    <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                    <input type="checkbox" name="unknownDashNumber" [(ngModel)]="dashNumberUnknown" style="width: 20px !important;
                                     margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
-                                    </label>
+                                </label>
 
 
-                                    <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
+                                <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
                             </div>
                         </div>
-
-
-
-                        <div class="card" *ngIf="viewTable">
-                            <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-                                <ng-template pTemplate="header" let-columns>
-                                    <tr>
-                                        <th></th>
-                                        <th *ngFor="let col of columns">
-                                            {{col.header}}
-                                        </th>
-                                        <th>Memo</th>
-
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                                    <tr>
-
-                                        <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
-                                        <td>
-                                            <span class="checkbox-cstm">
-                                                <label style="width: 10px;">
-                                                    <input type="checkbox" [(ngModel)]="rowData.IsChecked">
-
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                </label>
-                                            </span>
-                                        </td>
-
-                                        <td *ngFor="let col of columns">
-                                            {{rowData[col.field]}}
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
+                        <div class="col-md-2">
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
 
-        <div id="ATAADD"
-             class="modal fade custom-popup"
-             role="dialog">
-            <div class="modal-dialog modal-full">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">×</button>
-                        <h4 class="modal-title">Add ATA Information</h4>
-                    </div>
-                    <div class="modal-body">
-
-                        <form [formGroup]="ataform">
-                            <div class="form-row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="popup-plusicon-cstm">ATA Chapter <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-main']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                        <select class="select-option dropdown-custm" formControlName="atanumber" (change)="getATASubChapterByATAChapter()" style="width: 160px !important;">
-
-                                            <option value=''> Select Chapter</option>
-                                            <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="popup-plusicon-cstm" style="width: 170px !important;">ATA SubChapters <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                        <p-multiSelect class="imstock-pmselect" [options]="atasubchapter"
-                                                       [(ngModel)]="selectedModels"
-                                                       [panelStyle]="{minWidth:'12em'}" formControlName="atasubchaptername"></p-multiSelect>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addATAMapping();" data-dismiss="modal">Add</button>
-                                </div>
-                            </div>
-                        </form>
-
-
-
-                        <!-- <div class="card" *ngIf="viewTable">
-                            <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-                                <ng-template pTemplate="header" let-columns>
-                                    <tr>
-                                        <th></th>
-                                        <th *ngFor="let col of columns">
-                                            {{col.header}}
-                                        </th>
-                                        <th>Memo</th>
-
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                                    <tr>
-
-
-                                        <td>
-                                            <span class="checkbox-cstm">
-                                                <label style="width: 10px;">
-                                                    <input type="checkbox"  [(ngModel)]="rowData.IsChecked" >
-
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                </label>
-                                            </span>
-                                        </td>
-
-                                        <td *ngFor="let col of columns">
-                                            {{rowData[col.field]}}
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-                        </div> -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="ModalViewCapes"
-             class="modal fade custom-popup"
-             role="dialog">
-            <div class="modal-dialog modal-full">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">×</button>
-                        <h4 class="modal-title">Capes</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="col-md-12 font-padding">
-                            <div class="col-sm-2">
-                                PN: <span style="color:red">{{pnvalue}}</span>
-                            </div>
-                            <div class="col-sm-3">
-                                PN Description: <span style="color:red">{{pnDescription}}</span>
-                            </div>
-                            <div class="col-sm-3">
-                                Capability Types: <span style="color:red"></span>
-                            </div>
-                            <div class="col-sm-3">
-                            </div>
-                        </div>
-                        <p-table [rows]="6" [columns]="Capes" [scrollable]="true" [responsive]="true" [style]="{width:'100%'}" [paginator]="true">
+                    <div class="card" *ngIf="viewTable">
+                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
+                                    <th></th>
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
+                                    <th>Memo</th>
 
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                 <tr>
+
+                                    <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
+                                    <td>
+                                        <span class="checkbox-cstm">
+                                            <label style="width: 10px;">
+                                                <input type="checkbox" [(ngModel)]="rowData.IsChecked">
+
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </span>
+                                    </td>
+
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
                                     </td>
                                 </tr>
                             </ng-template>
                         </p-table>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Edit</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-        <div id="ModalUnit"
-             class="modal fade custom-popup"
-             role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal">
-                            <i class="fa fa-close add"></i>
-                        </button>
-                        <h4 class="modal-title">Add Consume UOM</h4>
+    </div>
+
+
+
+    <div id="ATAADD"
+         class="modal fade custom-popup"
+         role="dialog">
+        <div class="modal-dialog modal-full">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add ATA Information</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form [formGroup]="ataform">
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm">ATA Chapter <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-main']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                    <select class="select-option dropdown-custm" formControlName="atanumber" (change)="getATASubChapterByATAChapter()" style="width: 160px !important;">
+
+                                        <option value=''> Select Chapter</option>
+                                        <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm" style="width: 170px !important;">ATA SubChapters <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                    <p-multiSelect class="imstock-pmselect" [options]="atasubchapter"
+                                                   [(ngModel)]="selectedModels"
+                                                   [panelStyle]="{minWidth:'12em'}" formControlName="atasubchaptername"></p-multiSelect>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addATAMapping();" data-dismiss="modal">Add</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+                    <!-- <div class="card" *ngIf="viewTable">
+                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th></th>
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                    <th>Memo</th>
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                <tr>
+
+
+                                    <td>
+                                        <span class="checkbox-cstm">
+                                            <label style="width: 10px;">
+                                                <input type="checkbox"  [(ngModel)]="rowData.IsChecked" >
+
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </span>
+                                    </td>
+
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ModalViewCapes"
+         class="modal fade custom-popup"
+         role="dialog">
+        <div class="modal-dialog modal-full">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Capes</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12 font-padding">
+                        <div class="col-sm-2">
+                            PN: <span style="color:red">{{pnvalue}}</span>
+                        </div>
+                        <div class="col-sm-3">
+                            PN Description: <span style="color:red">{{pnDescription}}</span>
+                        </div>
+                        <div class="col-sm-3">
+                            Capability Types: <span style="color:red"></span>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <div class="selection-box ">
-                            <div class="col-sm-12">
-                                <div class="col-sm-4">
-                                    <label class="lbl1">Unit Of Measure</label>
-                                </div>
-                                <div class="col-sm-6 inline-block display-flex">
-                                    <p-autoComplete [(ngModel)]="sourceAction.unitofmeasure" [ngModelOptions]="{standalone: true}" [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
-                                        <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
+                    <p-table [rows]="6" [columns]="Capes" [scrollable]="true" [responsive]="true" [style]="{width:'100%'}" [paginator]="true">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th *ngFor="let col of columns">
+                                    {{col.header}}
+                                </th>
 
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="col-sm-4">
-                                    <label class="lbl1">Short Name</label>
-                                </div>
-                                <div class="col-sm-6 inline-block display-flex">
-                                    <p-autoComplete [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
-                                        <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="col-sm-4">
-                                    <label class="lbl1">Standard</label>
-                                </div>
-                                <div class="col-sm-6 inline-block display-flex">
-                                    <p-autoComplete [suggestions]="unitofmeasureValue" (completeMethod)="filterUOM($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" class="autocomplete-customer">
-                                        <ng-template *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{unitName.shortName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="col-sm-6">
-                                    <button class="btn btn-primary-cstm"
-                                            data-dismiss="modal">
-                                        SAVE
-                                    </button>
-                                </div>
-                                <div class="col-sm-6 inline-block display-flex">
-                                    <button class="btn btn-danger-cstm" style="margin-left: 172px"
-                                            data-dismiss="modal">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                            <tr>
+                                <td *ngFor="let col of columns">
+                                    {{rowData[col.field]}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Edit</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <ng-template #ModalUnit let-c="close" let-d="dismiss" style="width:auto">
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Add Export UOM</h4>
+        </div>
+        <div class="modal-body">
+            <form #userForm="ngForm" (ngSubmit)="saveConsumeunitofmeasure()" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label control-item">Unit Of Measure</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <p-autoComplete [(ngModel)]="unitName" name="consume"
+                                            (onKeyUp)=PurchaseUOMHandler($event) (onSelect)="PurchaseUOMdescription($event)"
+                                            [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                <ng-template let-unitName pTemplate="item">
+                                    <div class="ui-helper-clearfix">{{unitName}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <div *ngIf="disableSavePurchaseUOM" class="clr-red">Already Exists</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label control-item">Short Name</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <p-autoComplete [suggestions]="unitofmeasureValue" (onKeyUp)=StockUOMHandler($event) (onSelect)="StockUOMstandard($event)"
+                                            (completeMethod)="filterStandardUOM($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm">
+                                <ng-template let-unitName pTemplate="item">
+                                    <div class="ui-helper-clearfix">{{unitName}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <div *ngIf="disableSaveStockUOM" class="clr-red">Already Exists</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label control-item">Standard</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <p-autoComplete [suggestions]="unitofmeasureValue"
+                                            (onKeyUp)=ConsumeUOMHandler($event) (onSelect)="consumeUOMstandard($event)" (completeMethod)="filterconsumeUOM($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm">
+                                <ng-template let-unitName pTemplate="item">
+                                    <div class="ui-helper-clearfix">{{unitName}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <div *ngIf="disableSaveConsume" class="clr-red">Already Exists</div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="checkbox-cstm">
+                            <label>
+                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceUOM.isActive">
+                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSaveConsume || disableSaveStockUOM || disableSavePurchaseUOM"
+                            (click)="saveConsumeunitofmeasure()">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                </div>
+            </form>
         </div>
-        <div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
+    </ng-template>
+    <div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
 </div>
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
@@ -1604,7 +1606,7 @@
                     </div>
                     <div class="col-sm-5">
                         <p-autoComplete [(ngModel)]="itemName" name="code"
-                                        (onKeyUp)=ItemHandler($event)  (onSelect)="ItemClassficationCode($event)"
+                                        (onKeyUp)=ItemHandler($event) (onSelect)="ItemClassficationCode($event)"
                                         [suggestions]="localCollection" (completeMethod)="filterItems($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-itemName pTemplate="item">
@@ -1622,7 +1624,7 @@
                     </div>
                     <div class="col-sm-5">
                         <p-autoComplete (onSelect)="classificationId($event)" name="classficationname" (onKeyUp)=classeventHandler($event)
-                                        [(ngModel)]="className" 
+                                        [(ngModel)]="className"
                                         [suggestions]="localNameCollection" (completeMethod)="filterItemNames($event)" [size]="30" class="p-autoComplete-ctsm"
                                         [minLength]="1" [dropdown]="true" required>
                             <ng-template let-className pTemplate="description">
@@ -1637,7 +1639,7 @@
                         <label for="netDays" class="control-label control-item">Item Type<span class="clr-red">*</span></label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete (onSelect)="classificationtypeId($event)"  name="type" class="p-autoComplete-ctsm" (onKeyUp)=classeventtypeHandler($event)
+                        <p-autoComplete (onSelect)="classificationtypeId($event)" name="type" class="p-autoComplete-ctsm" (onKeyUp)=classeventtypeHandler($event)
                                         [(ngModel)]="itemTypeName"
                                         [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" required>
@@ -1668,7 +1670,7 @@
                             Active
                         </label>
                     </div>
-                </div>              
+                </div>
             </div>
             <div class="clear"></div>
             <div class="modal-footer">
@@ -1791,8 +1793,8 @@
                         <label for="description" class="control-label">Memo</label>
                     </div>
                     <div class="col-sm-5">
-                        <textarea  class="text-item" #memo="ngModel" id="memo" name="descriptionmemo"
-                                  [(ngModel)]="sourceAction.memo" minlength="2" ></textarea>
+                        <textarea class="text-item" #memo="ngModel" id="memo" name="descriptionmemo"
+                                  [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                         <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                             Memo is required.
                         </div>
@@ -1842,16 +1844,16 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                            <p-autoComplete [(ngModel)]="unitName" name="unitname"
-                                            (onKeyUp)=PurchaseUOMHandler($event) (onSelect)="PurchaseUOMdescription($event)"
-                                            [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
-                                            [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                <ng-template let-unitName pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{unitName}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <div *ngIf="disableSavePurchaseUOM" class="clr-red">Already Exists</div>
-                            <div class="clear"></div>
+                        <p-autoComplete [(ngModel)]="unitName" name="unitname"
+                                        (onKeyUp)=PurchaseUOMHandler($event) (onSelect)="PurchaseUOMdescription($event)"
+                                        [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                            <ng-template let-unitName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{unitName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSavePurchaseUOM" class="clr-red">Already Exists</div>
+                        <div class="clear"></div>
                     </div>
                 </div>
                 <div class="col-sm-12">
@@ -1900,8 +1902,8 @@
                     </button>
                     <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
                 </div>
-                </div>
-</form>
+            </div>
+        </form>
     </div>
 </ng-template>
 
@@ -1981,8 +1983,8 @@
                     </button>
                     <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
                 </div>
-                </div>
-</form>
+            </div>
+        </form>
     </div>
 </ng-template>
 
@@ -1999,71 +2001,71 @@
         <form #consumeForm="ngForm" class="form-horizontal" (ngSubmit)="saveConsumeunitofmeasure()">
             <div class="form-group">
                 <div class="col-sm-12">
-                <div class="col-sm-4">
-                    <label for="description" class="control-label control-item">
-                        Consume Unit Of Measure<span class="clr-red">*</span>
-                    </label>
-                </div>
-                <div class="col-sm-5">
-                    <p-autoComplete [(ngModel)]="unitName" name="consume"
-                                    (onKeyUp)=ConsumeUOMHandler($event) (onSelect)="ConsumeUOMdescription($event)"
-                                    [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                        <ng-template let-unitName pTemplate="item">
-                            <div class="ui-helper-clearfix">{{unitName}}</div>
-                        </ng-template>
-                    </p-autoComplete>
-                    <div *ngIf="disableSaveConsume" class="clr-red">Already Exists</div>
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="col-sm-4">
-                    <label for="shortName" class="control-label control-item">Short Name<span class="clr-red">*</span></label>
-                </div>
-                <div class="col-sm-5">
-                    <input type="text" name="shortName" style="width: 100% !important" class="form-control input-text-value" #shortName="ngModel"
-                           [(ngModel)]="sourceUOM.shortName" minlength="2" required>
-
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="col-sm-4">
-                    <label for="standard" class="control-label control-item">Standard<span class="clr-red">*</span></label>
-                </div>
-                <div class="col-sm-5">
-                    <input type="text" name="standard" style="width: 100% !important" class="form-control input-text-value" #standard="ngModel"
-                           [(ngModel)]="sourceUOM.standard" minlength="2" required>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="col-sm-4">
-                    <label for="description" class="control-label control-item">Memo</label>
-                </div>
-                <div class="col-sm-5">
-                    <textarea class="text-item" #memo="ngModel" id="memo" name="memoDescription"
-                              [(ngModel)]="sourceUOM.memo" minlength="2" ></textarea>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="col-sm-6">
-                    <div class="checkbox-cstm">
-                        <label>
-                            <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceUOM.isActive">
-                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                            Active
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label control-item">
+                            Consume Unit Of Measure<span class="clr-red">*</span>
                         </label>
                     </div>
+                    <div class="col-sm-5">
+                        <p-autoComplete [(ngModel)]="unitName" name="consume"
+                                        (onKeyUp)=ConsumeUOMHandler($event) (onSelect)="ConsumeUOMdescription($event)"
+                                        [suggestions]="localunit" (completeMethod)="filterUnitOfMeasures($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                            <ng-template let-unitName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{unitName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSaveConsume" class="clr-red">Already Exists</div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="shortName" class="control-label control-item">Short Name<span class="clr-red">*</span></label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="shortName" style="width: 100% !important" class="form-control input-text-value" #shortName="ngModel"
+                               [(ngModel)]="sourceUOM.shortName" minlength="2" required>
+
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="standard" class="control-label control-item">Standard<span class="clr-red">*</span></label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="standard" style="width: 100% !important" class="form-control input-text-value" #standard="ngModel"
+                               [(ngModel)]="sourceUOM.standard" minlength="2" required>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label control-item">Memo</label>
+                    </div>
+                    <div class="col-sm-5">
+                        <textarea class="text-item" #memo="ngModel" id="memo" name="memoDescription"
+                                  [(ngModel)]="sourceUOM.memo" minlength="2"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <div class="checkbox-cstm">
+                            <label>
+                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceUOM.isActive">
+                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary-cstm" [disabled]="!consumeForm.valid || disableSaveConsume"
+                            (click)=" saveConsumeunitofmeasure()">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary-cstm" [disabled]="!consumeForm.valid || disableSaveConsume"
-                        (click)=" saveConsumeunitofmeasure()">
-                    Save
-                </button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-            </div>
-                </div>
         </form>
     </div>
 </ng-template>
@@ -3247,54 +3249,54 @@
                 </div>
                 <div class="col-sm-5">
                     <p-autoComplete (onSelect)="integrationId($event)" (onKeyUp)=integrationeventHandler($event) [(ngModel)]="portalURL" name="integration" [suggestions]="localmanufacturer" (completeMethod)="filterintegrations($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm"  required>
+                                    [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                         <ng-template let-integrationName pTemplate="item">
                             <div class="ui-helper-clearfix">{{integrationName}}</div>
                         </ng-template>
                     </p-autoComplete>
                     <div *ngIf="disableSave" style="color:red">Already Exists</div>
-                </div>            
+                </div>
                 <div class="clear"></div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="Integration" class="control-label control-item">Integration</label>
-                    </div>
-                    <div class="col-sm-5">
-                        <input type="text" style="width: 100% !important;" name="description" class="form-control" #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2" required>
-                        <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
-                            Integration required.
-                        </div>
-                    </div>
-                    <div class="clear"></div>
                 </div>
+                <div class="col-sm-5">
+                    <input type="text" style="width: 100% !important;" name="description" class="form-control" #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2" required>
+                    <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
+                        Integration required.
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
             <div class="form-group">
                 <div class="col-sm-4">
                     <label for="description" class="control-label control-item">Memo</label>
-                    </div>
-                    <div class="col-sm-5">
-                        <textarea #memo="ngModel" id="memo" name="memoDescription" [(ngModel)]="sourceAction.memo"></textarea>
-                    </div>
-                    <div class="clear"></div>
                 </div>
+                <div class="col-sm-5">
+                    <textarea #memo="ngModel" id="memo" name="memoDescription" [(ngModel)]="sourceAction.memo"></textarea>
+                </div>
+                <div class="clear"></div>
+            </div>
 
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <div class="checkbox-cstm">
-                            <label>
-                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceAction.isActive">
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                Active
-                            </label>
-                        </div>
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="checkbox-cstm">
+                        <label>
+                            <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            Active
+                        </label>
                     </div>
-                    <div class="clear"></div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" (click)="saveIntegration()" [disabled]="!userForm.valid || disableSave">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-                </div>
-</form>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm" (click)="saveIntegration()" [disabled]="!userForm.valid || disableSave">Save</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
     </div>
 
 </ng-template>
@@ -3330,54 +3332,54 @@
     </div>
     <div class="modal-body">
         <form #priorityForm="ngForm" class="form-horizontal" (ngSubmit)="savepriority()">
-                 <div class="form-group">
-                    <div class="col-sm-4">
-                        <label for="description" class="control-label control-item">Priority Name<span class="clr-red">*</span></label>
-                    </div>
-                    <div class="col-sm-5">
-                        <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="priorityName" (onSelect)="priorityId($event)" (onKeyUp)="priorityeventHandler($event)" name="priority" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" required>
-                            <ng-template let-priorityName pTemplate="item">
-                                <div class="ui-helper-clearfix">{{priorityName}}</div>
-                            </ng-template>
-                        </p-autoComplete>
-                        <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+            <div class="form-group">
+                <div class="col-sm-4">
+                    <label for="description" class="control-label control-item">Priority Name<span class="clr-red">*</span></label>
+                </div>
+                <div class="col-sm-5">
+                    <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="priorityName" (onSelect)="priorityId($event)" (onKeyUp)="priorityeventHandler($event)" name="priority" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true" required>
+                        <ng-template let-priorityName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{priorityName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
 
-                    </div>
-                    <div class="clear"></div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-4">
-                        <label for="description" class="control-label control-item">Memo</label>
-                    </div>
-                    <div class="col-sm-5">
-                        <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="sourceAction.memo" ></textarea>
-                        <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-                            Memo is required.
-                        </div>
-                        <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-                            Memo is must be at least 2 characters long.
-                        </div>
-                    </div>
-                    <div class="clear"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4">
+                    <label for="description" class="control-label control-item">Memo</label>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <div class="checkbox-cstm">
-                            <label>
-                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceAction.isActive">
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                Active
-                            </label>
-                        </div>
+                <div class="col-sm-5">
+                    <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="sourceAction.memo"></textarea>
+                    <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                        Memo is required.
                     </div>
-                    <div class="clear"></div>
+                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                        Memo is must be at least 2 characters long.
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" (click)="savepriority()" [disabled]="!priorityForm.valid || disableSave">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="checkbox-cstm">
+                        <label>
+                            <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            Active
+                        </label>
+                    </div>
                 </div>
-            </form>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm" (click)="savepriority()" [disabled]="!priorityForm.valid || disableSave">Save</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
     </div>
 
 
@@ -3433,7 +3435,3 @@
         </div>
     </div>
 </div>
-
-
-
-

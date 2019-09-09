@@ -124,6 +124,8 @@ export class PurchaseOrderPart {
     isSameDetailsForAllParts: boolean;
     isTimeLifeUpdateLater: boolean;
     hasChildren: boolean;
+    eCCNAlreadyExist: boolean;
+    itarNumberExist: boolean;
 }
 
 export class TimeLife {
@@ -225,9 +227,9 @@ export class StockLine {
     isSerialized: boolean;
     idNumber: number;
     aircraftTailNumber: string;
-    shippingReferenceId: number;
+    shippingReference: string;
     shippingViaId: number;
-    shippingAccountId: number;
+    shippingAccount: string;
     engineSerialNumber: string;
     createdDate: Date;
     purchaseOrderPartRecordId: number;

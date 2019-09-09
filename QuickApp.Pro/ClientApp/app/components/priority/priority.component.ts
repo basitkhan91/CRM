@@ -177,6 +177,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = true;
+        this.priority_Name = row.description;
         this.sourceAction = row;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -190,9 +191,6 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 		this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-
-
-
         this.sourceAction = row;
         this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();

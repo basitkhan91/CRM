@@ -44,7 +44,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3">                        
+                        <div class="form-group">
+                            <label>Vendor Name <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorId" name="vednor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="selectedVendor($event)">
+                                    <!-- <ng-template let-vendorName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{vendorName}}</div>
+                                    </ng-template> -->
+                                </p-autoComplete>
+                                <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Vendor Code <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
@@ -55,18 +66,6 @@
                                     </ng-template>
                                 </p-autoComplete>
                                 <!--<div *ngIf="disableSaveVenderCode" class="clr-red">Already Exists</div>-->
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Vendor Name <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-                                <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorId" name="vednor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" (onSelect)="selectedVendor($event)">
-                                    <!--<ng-template let-vendorName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{vendorName}}</div>
-                                    </ng-template>-->
-                                </p-autoComplete>
-                                <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
                             </div>
                         </div>
                         <div class="form-group">
@@ -175,7 +174,7 @@
                         <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
                             <label>Memo</label>
                             <span pTooltip="{{sourcePoApproval.notes}}" tooltipPosition="top"><input type="text" name="header memo" pInputText class="form-control" value="{{sourcePoApproval.notes}}" disabled /></span>
-                            <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourcePoApproval.notes}}" tooltipPosition="top"></i>
+                            <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourcePoApproval.notes}}" tooltipPosition="top" (click)="onAddMemo()"></i>
                         </div>
                     </div>
                 </div>
@@ -418,7 +417,7 @@
                            <td>{{partList?.partNumber}}</td>
                            <td>{{partList?.partdescription}}</td>
                            <td>
-                               <select [(ngModel)]="partChildList.poPartSplitUserTypeId">
+                               <select [(ngModel)]="partChildList.poPartSplitUserTypeId"  >
                                    <option value="1">Customer</option>
                                    <option value="2">Vendor</option>
                                    <option value="3">Company</option>
@@ -428,8 +427,8 @@
                                <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==1">
                                    <div class="col-sm-11">
                                        <p-autoComplete field="customername"
-                                                       name="customername"
-                                                       [(ngModel)]="ddlModel"
+                                                       name="customername{{row_no}}"
+                                                       [(ngModel)]="partChildList.poPartSplitUserId"
                                                        (onSelect)="onCustomerNameChange(partChildList,$event)"
                                                        (onKeyUp)=customereventHandler($event)
                                                        [suggestions]="partChildList.customers"
@@ -447,10 +446,10 @@
                                <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==2">
                                    <div class="col-sm-11">
                                        <p-autoComplete field="vendorName"
-                                                       name="vendorName"
+                                                       name="vendorName{{row_no}}"
                                                        (onSelect)="onVendorNameChange(partChildList,$event)"
                                                        (onKeyUp)=vendoreventHandler($event)
-                                                       [(ngModel)]="ddlVendorModel"
+                                                       [(ngModel)]="partChildList.poPartSplitUserId"
                                                        [suggestions]="partChildList.vendors"
                                                        (completeMethod)="getVendorPartyNames(partChildList,$event)"
                                                        [size]="30"
@@ -634,17 +633,38 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" *ngIf="sourcePoApproval.shipToUserType==1">
                     <label>
                         Site Name <span class="clr-red">*</span>
-                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickShipSiteName('Add')"></a></span>
-                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickShipSiteName('Edit')"></a></span>
+                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openedit(contentEdit)"></a></span>
+                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-shipto" (click)="openEditissued(contentmodel,selectedValue1)"></a></span>
                     </label>
                     <select class="form-control" (change)="getValueforShipTo(selectedValue1)" [(ngModel)]="selectedValue1">
                         <option>-- Select --</option>
                         <option *ngFor="let object of shipToCusData" [ngValue]="object">{{object.siteName}}</option>
                     </select>
-
+                </div>
+                <div class="form-group" *ngIf="sourcePoApproval.shipToUserType==2">
+                    <label>
+                        Site Name <span class="clr-red">*</span>
+                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openSiteedit(contentSiteEdit)"></a></span>
+                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-shipto" (click)="openEditissued(contentmodel,selectedValue1)"></a></span>
+                    </label>
+                    <select class="form-control" (change)="getValueforShipTo(selectedValue1)" [(ngModel)]="selectedValue1">
+                        <option>-- Select --</option>
+                        <option *ngFor="let object of vendorSelected" [ngValue]="object">{{object.siteName}}   </option>
+                    </select>
+                </div>
+                <div class="form-group" *ngIf="sourcePoApproval.shipToUserType==3">
+                    <label>
+                        Site Name <span class="clr-red">*</span>
+                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openedit(contentSiteEdit)"><i class="fa fa-plus"></i></a></span>
+                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-shipto" (click)="openEditissued(contentmodel,selectedValue1)"></a></span>
+                    </label>
+                    <select class="form-control" (change)="siteValueChange(selectedValue1)" [(ngModel)]="selectedValue1">
+                        <option>-- Select --</option>
+                        <option *ngFor="let site of allManagementSiteData" [ngValue]="site.siteId">{{site.siteName}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Address</label>
@@ -726,18 +746,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" *ngIf="sourcePoApproval.billToUserType==1">
                     <label>
                         Site Name <span class="clr-red">*</span>
-                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickBillSiteName('Add')"></a></span>
-                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickBillSiteName('Edit')"></a></span>
+                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openeditmodel(content)"></a></span>
+                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-billto" (click)="openEditissued1(cmodel,selectedValue2)"></a></span>
                     </label>
                     <select class="form-control" (change)="getValueforBillTo(selectedValue2)" [(ngModel)]="selectedValue2">
                         <option>-- Select --</option>
                         <option *ngFor="let object of billToCusData" [ngValue]="object">{{object.siteName}} </option>
                     </select>
-
                 </div>
+                <div class="form-group" *ngIf="sourcePoApproval.billToUserType==2">
+                    <label>
+                        Site Name <span class="clr-red">*</span>
+                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openeditmodel(content)"></a></span>
+                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-billto" (click)="openEditissued1(cmodel,selectedValue2)"></a></span>
+                    </label>
+                    <select class="form-control" (change)="getValueforBillTo(selectedValue2)" [(ngModel)]="selectedValue2">
+                        <option>-- Select --</option>
+                        <option *ngFor="let object of vendorSelectedForBillTo" [ngValue]="object">{{object.siteName}} </option>
+                    </select>
+                </div>
+                <div class="form-group" *ngIf="sourcePoApproval.billToUserType==3">
+                    <label>
+                        Site Name <span class="clr-red">*</span>
+                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openeditmodel(content)"></a></span>
+                        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-billto" (click)="openEditissued1(cmodel,selectedValue2)"></a></span>
+                    </label>
+                    <select class="form-control" (change)="siteValueChange1(selectedValue2)" [(ngModel)]="selectedValue2">
+                        <option>-- Select --</option>
+                        <option *ngFor="let site of allManagementSiteData" [ngValue]="site.siteId">{{site.siteName}}</option>
+                    </select>
+                </div>
+
+
                 <div class="form-group">
                     <label>Address</label>
                     <input class="form-control" type="text" value="{{billToAddress?.address1}}" disabled>
@@ -1995,7 +2038,7 @@
 
     <!-- Split Shipment Address -->
     <ng-template #contentSplitShipmentAddress let-c="close" let-d="dismiss" style="width:auto">
-        <div class="modal-header">
+        <div class="modal-header"  id="createPOSplitAddress" role="dialog">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Split Shipment Address</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Split Shipment Address</h4>
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -2003,21 +2046,21 @@
             </button>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body" >
             <form #userForm="ngForm" class="form-horizontal">
                 <div class="row">
                     <div class="col-6">
                         <!--<div class="form-group">
-                            <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
-                            <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
-                                            [minLength]="2" [dropdown]="true">
-                                <ng-template let-name pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{name}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-                            <div class="clear"></div>
-                        </div>-->
+                <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
+                <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
+                                [minLength]="2" [dropdown]="true">
+                    <ng-template let-name pTemplate="item">
+                        <div class="ui-helper-clearfix">{{name}}</div>
+                    </ng-template>
+                </p-autoComplete>
+                <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
+                <div class="clear"></div>
+            </div>-->
                         <div class="form-group col-sm-12">
                             <label for="description" class="control-label col-sm-4">Address 1</label>
                             <div class="col-sm-7">
@@ -2066,34 +2109,36 @@
                     <div class="col-6">
                         <!-- Check Box Management Data -->
                         <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of columns; let i = index">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns; let i = index">
+                            <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                            <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
+                            {{rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
 
-                        </p-treeTable>-->
+            </p-treeTable>-->
                         <!-- Check box Management Date End -->
                     </div>
                 </div>
                 <div class="modal-footer">
 
-                    <button class="btn btn-success" [disabled]="disableSaveManufacturer" (click)="saveToVendorCustomerCompanyTable(sourceSplitShipment)">Save to Vendor/Customer/company Table</button>
-                    <button class="btn btn-success" [disabled]="disableSaveManufacturer" (click)="saveToThisPO()">Save to this PO</button>
+                    <button class="btn btn-success" [disabled]="disableSaveManufacturer">
+                        Save to Vendor/Customer/company Table
+                    </button>
+                    <button class="btn btn-success" [disabled]="disableSaveManufacture">Save to this PO</button>
 
                 </div>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>createPOSplitAddress
             </form>
         </div>
 
@@ -2110,11 +2155,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Memo</label>
-                        <textarea class="form-control">{{sourcePoApproval.notes}}</textarea>
+                        <textarea class="form-control" [ngModel]="tempMemo" value={{tempMemo}} (keyup)="memoData($event.target.value)"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success-cstm" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-success-cstm" data-dismiss="modal" (click)="onSaveMemo()">Save</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -2263,9 +2308,10 @@
                                 <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="sourceissued.country">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid">Save to Vendor/Customer/Company Table</button>
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid">Save to this PO</button>
-                            </div>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid"  (click)="saveToVendorCustomerCompanyTable(sourceissued)">Save to Vendor/Customer/Company Table</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveToThisPO()">Save to this PO</button>
+                            </div> <!--saveToThisPO(sourceissued)-->
+
                         </form>
                         </div>
                     </div>

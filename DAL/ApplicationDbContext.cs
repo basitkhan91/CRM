@@ -365,6 +365,9 @@ namespace DAL
 
         public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
         public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
+        public DbSet<AssetCapes> AssetCapes { get; set; }
+        public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
@@ -408,15 +411,11 @@ namespace DAL
 
         }
 
-
-
-
         public override int SaveChanges()
         {
             UpdateAuditEntities();
             return base.SaveChanges();
         }
-
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
