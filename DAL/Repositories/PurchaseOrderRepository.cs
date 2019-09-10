@@ -25,7 +25,19 @@ namespace DAL.Repositories
             return purchaseOrderList;
         }
 
-
+        public int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId)
+        {
+            var stockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == puchaseOrderId && x.PurchaseOrderPartRecordId == purchaseOrderPartId).OrderByDescending(x => x.StockLineId).FirstOrDefault();
+            if (stockLine != null)
+            {
+                return Convert.ToInt32(stockLine.IdNumber);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

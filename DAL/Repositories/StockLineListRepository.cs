@@ -20,9 +20,7 @@ namespace DAL.Repositories
 
                               join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
 
-
                               join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
-
 
                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
                               from si in sit.DefaultIfEmpty()
@@ -39,23 +37,8 @@ namespace DAL.Repositories
                               join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
                               from bi in bin.DefaultIfEmpty()
 
-
-                                  //join com in _appContext.Company on stl.CompanyId equals com.CompanyId into compe
-                                  //from com in compe.DefaultIfEmpty()
-
-                                  //join bu in _appContext.BusinessUnit on stl.BusinessUnitId equals bu.BusinessUnitId into busu
-                                  //from bu in busu.DefaultIfEmpty()
-
-                                  //join di in _appContext.Division on stl.DivisionId equals di.DivisionId into divi
-                                  //from di in divi.DefaultIfEmpty()
-
-                                  //join de in _appContext.Department on stl.DepartmentId equals de.DepartmentId into dep
-                                  //from de in dep.DefaultIfEmpty()
-
-
                               join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId
-
-
+                              
                               join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId
 
                               join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId
@@ -66,23 +49,12 @@ namespace DAL.Repositories
                               join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                               from man in manufa.DefaultIfEmpty()
 
-                                  //join sa in _appContext.StocklineAdjustment on stl.StockLineId equals sa.StockLineId into stla
-                                  // from sa in stla.DefaultIfEmpty()
-
-
-
-
-
-
                               select new
                               {
                                   stl,
                                   stl.StockLineId,
                                   im,
                                   man,
-
-
-
                                   partNumber = stl.PartNumber,
                                   stockLineNumber = stl.StockLineNumber,
                                   stl.ControlNumber,
@@ -93,22 +65,11 @@ namespace DAL.Repositories
                                   stl.SerialNumber,
                                   conditionId = co.ConditionId,
                                   stl.IdNumber,
-
-                                  //com.CompanyName,
-                                  //bu.BusinessUnitName,
-                                  //di.DivisionName,
-                                  //de.DepartmentName,
                                   partDescription = im.PartDescription,
-
-
                                   stl.ManagementStructureEntityId,
-
                                   stl.Quantity,
                                   condition = co.Description,
-                                  // shelfLife = im.IsShelfLifeAvailable,
                                   stl.ShelfLifeExpirationDate,
-                                  //stl.Shelf,
-                                  //stl.Bin,
                                   siteName = si.Name,
                                   shelfName = sh.Name,
                                   binName = bi.Name,
@@ -118,11 +79,9 @@ namespace DAL.Repositories
                                   warehouseId = stl.WarehouseId,
                                   locationId = stl.LocationId,
                                   Receiver = stl.ReceiverNumber,
-
                                   stl.ObtainFrom,
                                   stl.Owner,
                                   stl.TraceableTo,
-                                  //stl.Manufacturer,
                                   stl.ManufacturerLotNumber,
                                   stl.ManufacturingDate,
                                   stl.ManufacturingBatchNumber,
@@ -138,21 +97,13 @@ namespace DAL.Repositories
                                   ro.RepairOrderNumber,
                                   stl.RepairOrderUnitCost,
                                   stl.InventoryUnitCost,
-
                                   stl.ReceivedDate,
-
                                   man.Name,
-
-
-
                                   stl.ReconciliationNumber,
                                   stl.UnitSalesPrice,
                                   stl.CoreUnitCost,
-
                                   stl.GLAccountId,
                                   stl.AssetId,
-
-                                  // stl.IsHazardousMaterial,
                                   stl.IsPMA,
                                   stl.IsDER,
                                   stl.OEM,
@@ -162,11 +113,9 @@ namespace DAL.Repositories
                                   stl.TraceableToType,
                                   stl.ManufacturerId,
                                   stl.ShelfLife,
-
                                   stl.UnitCostAdjustmentReasonTypeId,
                                   stl.UnitSalePriceAdjustmentReasonTypeId,
                                   stl.TimeLifeCyclesId,
-
                                   ti.CyclesRemaining,
                                   ti.CyclesSinceNew,
                                   ti.CyclesSinceOVH,
@@ -184,10 +133,6 @@ namespace DAL.Repositories
                                   co,
                                   w,
                                   l,
-                                  //com,
-                                  //bu,
-                                  //di,
-                                  // de,
                                   po,
                                   ro,
                                   conditionType = co.Description,

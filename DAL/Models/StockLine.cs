@@ -10,8 +10,13 @@ namespace DAL.Models
     {
         [Key]
         public long StockLineId { get; set; }
+
+        
         public string PartNumber { get; set; }
+
         public string StockLineNumber { get; set; }
+
+
         public string ControlNumber { get; set; }
 
         //[FK]
