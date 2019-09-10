@@ -19,23 +19,27 @@ import { CustomerSalesPersonComponent } from "../components/customer/customer-sa
 import { CustomerWarningsComponent } from "../components/customer/customer-warnings/customer-warnings.component";
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
+import { CustomerAircraftComponent } from '../components/customer/customer-aircraft-information/customer-aircraft.component';
+import { CustomerATAInformationComponent } from '../components/customer/customer-ata-information/customer-ata.component';
 
 const customerPagesRoutes: Routes = [
     {
         path: 'customerpages',
         component: CustomerPagesComponent,
         children: [
-           
+
             { path: "app-customers-list", component: CustomersListComponent, data: { title: "Customer's List" } },
-			{ path: "app-customer-setup", component: CustomerSetupComponent, data: { title: "Customer Setup" } },
-			{ path: "app-customer-general-information", component: CustomerGeneralInformationComponent, data: { title: "General Information" } },
+            { path: "app-customer-setup", component: CustomerSetupComponent, data: { title: "Customer Setup" } },
+            { path: "app-customer-general-information", component: CustomerGeneralInformationComponent, data: { title: "General Information" } },
             { path: "app-customer-edit", component: CustomerEditComponent, data: { title: "Customer Edit" } },
             { path: "app-customer-contacts", component: CustomerContactsComponent, data: { title: "Customer contacts" } },
             { path: "app-customer-financial-information", component: CustomerFinancialInformationComponent, data: { title: "Financial-Information" } },
             { path: "app-customer-billing-information", component: CustomerBillingInformationComponent, data: { title: "Billing-Information" } },
             { path: "app-customer-shipping-information", component: CustomerShippingInformationComponent, data: { title: "Shipping-Information" } },
-			{ path: "app-customer-sales-person", component: CustomerSalesPersonComponent, data: { title: "Sales-Person" } },
-			{ path: "app-customer-warnings", component: CustomerWarningsComponent, data: { title: "Warnings" } },
+            { path: "app-customer-sales-person", component: CustomerSalesPersonComponent, data: { title: "Sales-Person" } },
+            { path: "app-customer-warnings", component: CustomerWarningsComponent, data: { title: "Warnings" } },
+            { path: 'app-customer-aircraft', component: CustomerAircraftComponent, data: { title: 'Aircraft Information' } },
+            { path: 'app-customer-ata', component: CustomerATAInformationComponent }
         ]
     }
 ];

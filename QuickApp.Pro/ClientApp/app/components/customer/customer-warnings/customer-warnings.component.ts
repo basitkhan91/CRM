@@ -1058,7 +1058,7 @@ export class CustomerWarningsComponent implements OnInit {
 	}
 	backClick() {
 		this.workFlowtService.contactCollection = this.local;
-		this.activeIndex = 5;
+		this.activeIndex = 7;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		//this.saveCompleted(this.sourceCustomer);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-sales-person');

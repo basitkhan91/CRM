@@ -73,6 +73,8 @@ export class CustomerShippingInformationComponent {
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         this.workFlowtService.ShowPtab = true;
         this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
+
+        
         this.countrylist();
         if (this.local) {
             this.loadData();
@@ -122,10 +124,15 @@ export class CustomerShippingInformationComponent {
 
     constructor(private http: HttpClient, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
+        console.log('test')
         this.dataSource = new MatTableDataSource();
         if (this.workFlowtService.generalCollection) {
-            if (this.workFlowtService.generalCollection.isAddressForBillingAndShipping == true) {
+            console.log(this.workFlowtService.generalCollection)
+            // if (this.workFlowtService.generalCollection.isAddressForBillingAndShipping == true) {
+                console.log('test2')
                 this.local = this.workFlowtService.generalCollection;
+                console.log(this.local)
+                // this.sourceCustomer.customerId = this.local.customerId;
                 this.sourceCustomer.siteName = this.local.name;
                 this.sourceCustomer.address1 = this.local.address.line1;
                 this.sourceCustomer.address2 = this.local.address.line2;
@@ -147,8 +154,9 @@ export class CustomerShippingInformationComponent {
                 else {
                     this.sourceCustomer.expirationDate = new Date();
                 }
-            }
+            // }
         }
+
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
             this.local = this.workFlowtService.listCollection;
             this.loadData();
@@ -874,14 +882,14 @@ export class CustomerShippingInformationComponent {
             this.workFlowtService.shippingCollection = this.local;
         }
 
-        this.activeIndex = 5;
+        this.activeIndex = 7;
         this.workFlowtService.indexObj.next(this.activeIndex);
         //this.saveCompleted(this.sourceCustomer);
         this.router.navigateByUrl('/customersmodule/customerpages/app-customer-sales-person');
     }
     backClick() {
         this.workFlowtService.contactCollection = this.local;
-        this.activeIndex = 3;
+        this.activeIndex = 5;
         this.workFlowtService.indexObj.next(this.activeIndex);
         //this.saveCompleted(this.sourceCustomer);
         this.router.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');

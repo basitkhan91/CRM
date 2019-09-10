@@ -272,6 +272,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource();
 
+
+
+
+
+
         if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
             //debugger;
             this.showLable = true;
@@ -1156,6 +1161,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.sourceCustomer.customerParentName = '';
 
                 }
+                if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
+                {
+                    this.sourceCustomer.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+                }
                 this.workFlowtService.newAction(this.sourceCustomer).subscribe(data => {
                     this.sourceCustomer.updatedBy = this.userName;
                     this.localCollection = data;
@@ -1195,10 +1204,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.nextClick();//I am calling After Data is Saved
 
                 })
-                if (this.selectedIntegrationTypes != null) //separting Array which is having ","
-                {
-                    this.sourceCustomer.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                }
+                // if (this.selectedIntegrationTypes != null) //separting Array which is having ","
+                // {
+                //     this.sourceCustomer.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+                // }
 
 
             }

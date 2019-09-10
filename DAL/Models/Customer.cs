@@ -55,6 +55,10 @@ namespace DAL.Models
 
         public bool RestrictPMA { get; set; }
 
+        public bool? IsAddressForBilling { get; set; }
+
+        public bool? IsAddressForShipping { get; set; }
+
 
         public string RestrictPMAMemo { get; set; }
 

@@ -25,6 +25,15 @@ export class Customer {
 		MasterCompanyId?: number, IsActive?: boolean, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean
 		) {
 
+
+
+
+
+
+
+
+
+
         this.CustomerId = customerId;
         this.customerId = customerId;
         this.Name = name;

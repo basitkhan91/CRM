@@ -679,7 +679,7 @@ export class ReceivngPoComponent implements OnInit {
 
         part.visible = true;
         this.createStockLineItems(part);
-    
+
         if (part.itemMaster.isTimeLife) {
             for (var i = 0; i < quantity; i++) {
                 let timeLife: TimeLife = new TimeLife();
@@ -722,10 +722,10 @@ export class ReceivngPoComponent implements OnInit {
     createStockLineItems(part: PurchaseOrderPart): void {
         part.stocklineListObj = [];
         part.isSameDetailsForAllParts = false;
-        
-        part.currentSLIndex = 0;
-        part.currentSERIndex = 0;
-        part.currentTLIndex = 0;
+
+        this.currentSLIndex = 0;
+        this.currentSERIndex = 0;
+        this.currentTLIndex = 0;
 
         if (part.itemMaster.isSerialized) {
             for (var i = 0; i < part.quantityActuallyReceived; i++) {
@@ -832,7 +832,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     moveStockLinePage(type: string, index: number, part: PurchaseOrderPart): void {
-        var count = type == 'stockline' ? part.stocklineListObj.length : part.timeLifeList.length; 
+        var count = type == 'stockline' ? part.stocklineListObj.length : part.timeLifeList.length;
         if (index >= 0 && index < count) {
             if (part.itemMaster.isSerialized) {
                 part.currentSLIndex = index;
@@ -1157,18 +1157,18 @@ export class ReceivngPoComponent implements OnInit {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
             return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
         },
-        error => {
-            var message = '';
-            if (error.error.constructor == Array) {
-                message = error.error[0].errorMessage;
+            error => {
+                var message = '';
+                if (error.error.constructor == Array) {
+                    message = error.error[0].errorMessage;
+                }
+                else {
+                    message = error.error.Message;
+                }
+                this.alertService.showMessage(this.pageTitle, message, MessageSeverity.error);
             }
-            else {
-                message = error.error.Message;
-            }
-            this.alertService.showMessage(this.pageTitle, message, MessageSeverity.error);
-        }
         );
-        
+
     }
 
     extractAllAllStockLines(): ReceiveParts[] {

@@ -192,8 +192,8 @@ export class CustomerBillingInformationComponent
 
     // Back Click
    	backClick() {
-		this.workFlowtService.contactCollection = this.local;
-		this.activeIndex = 2;
+		this.workFlowtService.billingCollection = this.local;
+		this.activeIndex = 4;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		this.router.navigateByUrl('/customersmodule/customerpages/app-customer-financial-information');
 
@@ -471,7 +471,7 @@ export class CustomerBillingInformationComponent
 						this.savesuccessCompleted(this.sourceCustomer);
 						this.sourceCustomer = {};
 						})
-					this.activeIndex = 3;
+					this.activeIndex = 5;
 					this.workFlowtService.indexObj.next(this.activeIndex);
                 }
                 else {
@@ -486,7 +486,7 @@ export class CustomerBillingInformationComponent
 						this.sourceCustomer = {};
 					})
 					
-					this.activeIndex = 3;
+					this.activeIndex = 5;
 					//this.workFlowtService.indexObj.next(this.activeIndex);
 					//this.router.navigateByUrl('/customersmodule/customerpages/app-customer-shipping-information');
             }
@@ -581,7 +581,7 @@ export class CustomerBillingInformationComponent
 		if (this.local) {
 			this.workFlowtService.financeCollection = this.local;
 		}
-		this.activeIndex = 4;
+		this.activeIndex = 6;
 		this.workFlowtService.indexObj.next(this.activeIndex);
 		this.router.navigateByUrl('/customersmodule/customerpages/app-customer-shipping-information');
 	

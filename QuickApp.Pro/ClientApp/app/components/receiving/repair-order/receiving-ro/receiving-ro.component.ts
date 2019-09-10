@@ -41,8 +41,8 @@ export class ReceivingRoComponent implements OnInit {
     memoNotes: string = 'This is Repair Order memo of Vendor named Albert Einstein.'; //TODO: remove dummy content later
 
     constructor(public manufacturerService: ManufacturerService,
-                public alertService: AlertService,
-                public route: Router) {
+        public alertService: AlertService,
+        public route: Router) {
         this.getConditionList();
         this.getManufacturers();
     }
