@@ -405,7 +405,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         }
 
     }
-
+// for commit
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
