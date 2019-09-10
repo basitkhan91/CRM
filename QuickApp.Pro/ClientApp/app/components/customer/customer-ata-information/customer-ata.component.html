@@ -25,9 +25,7 @@
               <label class="fs12">ATA Chapter</label>
               <p-multiSelect
                 [options]="LoadAtachapter"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="selectedATAchapter"
-         
+                name="atachapther"
                 [panelStyle]="{ minWidth: '12em' }"
                 class="pub-multi"
               ></p-multiSelect>
@@ -40,8 +38,7 @@
               </label>
               <p-multiSelect
                 [options]="atasubchapter"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="selectedATASubChapter"
+                 name="ataSubchapter"
                 [panelStyle]="{ minWidth: '12em' }"
                 class="pub-multi"
               ></p-multiSelect>
@@ -60,11 +57,9 @@
     </div>
     <br />
   </div>
-  <div class="col-sm-12">
+  <!--<div class="col-sm-12">
     <p-table
-      [value]="ataMappedList"
       [rows]="6"
-      [columns]="atasub"
       [scrollable]="true"
       [style]="{ width: '100%' }"
       [paginator]="true"
@@ -101,7 +96,7 @@
       </ng-template>
     </p-table>
     <br />
-  </div>
+  </div>-->
   <!-- <div class="col-sm-12 mt8">
               <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
               <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
@@ -115,7 +110,7 @@
           <h4 class="modal-title">Add ATA Information</h4>
         </div>
         <div class="modal-body">
-          <form [formGroup]="ataform">
+          <form >
             <div class="form-row">
               <div class="col-md-3">
                 <div class="form-group">
@@ -128,7 +123,7 @@
                   ></label>
                   <select
                     class="select-option dropdown-custm"
-                    formControlName="atanumber"
+                   
                   
                     style="width: 160px !important;"
                   >
@@ -157,10 +152,9 @@
                   ></label>
                   <p-multiSelect
                     class="imstock-pmselect"
-                    [options]="atasubchapter"
-                    [(ngModel)]="selectedModels"
+                    [options]="atasubchapter"name="popUpATASubchapter"
                     [panelStyle]="{ minWidth: '12em' }"
-                    formControlName="atasubchaptername"
+                   
                   ></p-multiSelect>
                 </div>
               </div>
