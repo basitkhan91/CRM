@@ -68,6 +68,8 @@ namespace QuickApp.Pro.ViewModels
 
         public long? Addressid { get; set; }
 
+        public bool IsAddressForBillingAndShipping { get; set; }
+
         public bool IsCustomerAlsoVendor { get; set; }
 
         public long? RelatedVendorId { get; set; }
@@ -161,7 +163,13 @@ namespace QuickApp.Pro.ViewModels
         public Int32? MarkUpPercentageId { get; set; }
 
         public Int32? GeneralCurrencyId { get; set; }
-        public bool? IsAddressForBillingAndShipping { get; set; }
+        
+        public bool? IsAddressForBilling { get; set; }
+
+        public bool? IsAddressForShipping { get; set; }
+
+
+
         public virtual MasterCompany MasterCompany { get; set; }
 
         public virtual CustomerClassification CustomerClassification { get; set; }
