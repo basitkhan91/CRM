@@ -176,6 +176,7 @@
             <h4 class="modal-title">Edit Aircraft Manufacturer</h4>
         </div>
         <div class="modal-body">
+                <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateAircraftManufacturer()">
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="col-sm-4">
@@ -204,9 +205,10 @@
                     </div>
                 </div>
             </div>
+            </form>
         </div>
         <div class="modal-footer">
-            <button type="button" (click)="updateAircraftManufacturer()" class="btn btn-primary-cstm" data-dismiss="modal">Save</button>
+            <button type="button" (click)="updateAircraftManufacturer()" [disabled]="!userForm.valid || disableSave" class="btn btn-primary-cstm" data-dismiss="modal">Save</button>
             <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()" data-dismiss="modal">Close</button>
         </div>
     </div>
@@ -333,6 +335,7 @@
             <h4 class="modal-title"> Add Aircraft Manufacturer</h4>
         </div>
         <div class="modal-body">
+            <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="addAircraftManufacturer()">
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="col-sm-4">
@@ -361,9 +364,10 @@
                     </div>
                 </div>
             </div>
+        </form>
         </div>
         <div class="modal-footer">
-            <button type="button" (click)="addAircraftManufacturer()" class="btn btn-primary-cstm" data-dismiss="modal">Save</button>
+            <button type="button" (click)="addAircraftManufacturer()" class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" data-dismiss="modal">Save</button>
             <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()" data-dismiss="modal">Close</button>
         </div>
     </div>
