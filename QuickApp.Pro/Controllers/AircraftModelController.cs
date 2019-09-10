@@ -53,7 +53,8 @@ namespace QuickApp.Pro.Controllers
                 {
                     aircraftModel.IsActive = true;
                     aircraftModel.CreatedDate = DateTime.Now;
-                    aircraftModel.UpdatedDate = null;
+                    aircraftModel.UpdatedDate = DateTime.Now;
+                    aircraftModel.IsDeleted = false;
                     aircraftModel.MasterCompanyId = 1;
                     unitOfWork.Repository<AircraftModel>().Add(aircraftModel);
                     unitOfWork.SaveChanges();
