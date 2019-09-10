@@ -632,7 +632,6 @@ export class CustomerShippingInformationComponent {
     }
 
     editItemAndCloseModel() {
-        console.log(this.sourceCustomer , this.local)
         if (!(this.sourceCustomer.siteName && this.sourceCustomer.address1 &&
             this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
         )) {

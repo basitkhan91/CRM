@@ -433,6 +433,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.sourceCustomer.createdBy = this.userName;
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
+                this.sourceCustomer.isAddressForBillingAndShipping = false;
                 this.local.creditLimit = this.sourceCustomer.creditLimit
                 this.local.creditTermsId = this.sourceCustomer.creditTermsId;
                 this.local.discountId = this.sourceCustomer.discountId;
@@ -443,6 +444,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.local.taxTypeId = this.sourceCustomer.taxTypeId;
                 this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
                 this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
+                this.local.isAddressForBillingAndShipping = this.sourceCustomer.isAddressForBillingAndShipping;
                 // this.local = this.sourceCustomer;
                 console.log(this.local);
                 this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
@@ -457,6 +459,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1; 
+                this.sourceCustomer.isAddressForBillingAndShipping = false;
                 this.local.creditLimit = this.sourceCustomer.creditLimit
                 this.local.creditTermsId = this.sourceCustomer.creditTermsId;
                 this.local.discountId = this.sourceCustomer.discountId;
@@ -467,7 +470,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.local.taxTypeId = this.sourceCustomer.taxTypeId;
                 this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
                 this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
-
+                this.local.isAddressForBillingAndShipping = this.sourceCustomer.isAddressForBillingAndShipping;
 
          
                 // this.local = this.sourceCustomer;
@@ -1232,7 +1235,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     
                 })
 
-            this.activeIndex = 2;
+            this.activeIndex = 4;
         }
         else {
             this.sourceCustomer.updatedBy = this.userName;
@@ -1243,7 +1246,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     this.loadMarkUpData()
                 })
 
-            this.activeIndex = 2;
+            this.activeIndex = 4;
         }
         this.modal.close();
     }
