@@ -44,7 +44,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    Status: string[] = ['Open', 'Pending Approval', 'Approved', 'Rejected', 'FulFilled'];
+    Status: string[] = ['Open', 'Pending', 'Fulfilling', 'Closed'];
 
     displayedColumns = ['currencyId', 'code', 'symbol', 'displayName', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<any>;
@@ -148,7 +148,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
             }
             purchaseOrder.noOfItems = partIds.length;
             purchaseOrder.statusId = purchaseOrder.statusId == null ? 0 : purchaseOrder.statusId;
-            purchaseOrder.status = this.Status[purchaseOrder.statusId];
+            purchaseOrder.status = this.Status[purchaseOrder.statusId - 1];
 
             if (purchaseOrder.vendor != null && purchaseOrder.vendor.vendorContact != null && purchaseOrder.vendor.vendorContact.length > 0) {
                 purchaseOrder.vendorName = purchaseOrder.vendor.vendorName;
@@ -166,10 +166,10 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                 else {
                     if (purchaseOrder.vendor.vendorContact[0].contact != null) {
                         purchaseOrder.contactPhone = purchaseOrder.vendor.vendorContact[0].contact.mobilePhone;  //  ', header: 'Vendor Contact' },
-                        purchaseOrder.vendorContact = purchaseOrder.vendorContact[0].contact.prefix +
-                            purchaseOrder.vendorContact[0].contact.firstName + " " +
-                            purchaseOrder.vendorContact[0].contact.middleName + " " +
-                            purchaseOrder.vendorContact[0].contact.lastName;
+                        purchaseOrder.vendorContact = purchaseOrder.vendor.vendorContact[0].contact.prefix +
+                            purchaseOrder.vendor.vendorContact[0].contact.firstName + " " +
+                            purchaseOrder.vendor.vendorContact[0].contact.middleName + " " +
+                            purchaseOrder.vendor.vendorContact[0].contact.lastName;
                     }
                 }
             }

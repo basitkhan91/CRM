@@ -63,5 +63,8 @@ namespace DAL.Models
         public virtual ICollection<TimeLife> TimeLife { get; set; }
 
         public virtual Address POPartSplitAddress { get; set; }
+
+        [NotMapped]
+        public long StockLineCount { get; set; }
     }
 }
