@@ -11,13 +11,13 @@
                         <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                             <p class="fs10">
                                 <label class="control-label w100">Customer Name:</label>
-                                {{local?.name}}
+                                {{sourceCustomer.name}} <!--local?.name-->
                             </p>
                         </div>
                         <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                             <p class="fs10">
                                 <label class="control-label w100">Customer Code:</label>
-                                {{local?.customerCode}}
+                                {{sourceCustomer?.customerCode}} <!--local?.customerCode-->
                             </p>
                         </div>
                         <div class="clear"></div>
@@ -260,14 +260,19 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>
-                                                        <span class="pull-left">Integration With</span>
-                                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
+                                                    <label class="control-label">
+                                                        Integration With <span class="clr-red"></span>
+                                                        <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
+                                                            <i class="fa fa-plus-circle fa-lg"
+                                                               data-toggle="modal" data-target="#addIntegration"
+                                                               (click)="integrationopen(contentEdits)"></i>
+                                                        </span>
                                                     </label>
-                                                    <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
-                                                                   selectedItemsLabel="{0} columns selected" name="integrationCols"
-                                                                   [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+                                                    <p-multiSelect [options]="integrationvalues"
+                                                                   name="intergations" [maxSelectedLabels]="2" [(ngModel)]="selectedIntegrationTypes"
+                                                                   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                                                 </div>
+
                                                 <div class="form-group" style="clear: both;">
                                                     <label>URL to Customer site</label>
                                                     <input class="form-control " type="text" id="customerURL" name="customerURL" [(ngModel)]="sourceCustomer.customerURL">
@@ -282,13 +287,13 @@
                                                     </select>
                                                 </div>
                                                 <!--<div class="form-group">
-                <label>Annual Revenue Potential</label>
-                <input class="form-control" type="text" name="annualRevenuePotential" [(ngModel)]="sourceCustomer.annualRevenuePotential">
-            </div>
-            <div class="form-group">
-                <label>Annual Quota</label>
-                <input class="form-control" type="text" name="annualQuota" [(ngModel)]="sourceCustomer.annualQuota">
-            </div>-->
+        <label>Annual Revenue Potential</label>
+        <input class="form-control" type="text" name="annualRevenuePotential" [(ngModel)]="sourceCustomer.annualRevenuePotential">
+    </div>
+    <div class="form-group">
+        <label>Annual Quota</label>
+        <input class="form-control" type="text" name="annualQuota" [(ngModel)]="sourceCustomer.annualQuota">
+    </div>-->
 
                                             </div>
                                             <div class="col-md-3">
@@ -420,20 +425,25 @@
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemIntegrationalCloseModel()">
             <div class="form-group">
-                <label for="url" class="control-label">WebSite url</label>
-                <div>
-                    <p-autoComplete [(ngModel)]="integrationName" [ngModelOptions]="{standalone: true}" [suggestions]="integrationCollection" (completeMethod)="filterintegrations($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true">
+                <div class="col-sm-4">
+                    <label for="url" class="control-label control-item">WebSite url <span class="clr-red">*</span></label>
+                </div>
+                <div class="col-sm-5">
+                    <p-autoComplete (onSelect)="integrationId($event)" (onKeyUp)=integrationeventHandler($event) [(ngModel)]="integrationName" name="integration" [suggestions]="integrationCollection" (completeMethod)="filterintegrations($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                         <ng-template let-integrationName pTemplate="item">
                             <div class="ui-helper-clearfix">{{integrationName}}</div>
                         </ng-template>
                     </p-autoComplete>
+                    <div *ngIf="disableSave" style="color:red">Already Exists</div>
                 </div>
+
                 <div class="clear"></div>
             </div>
             <div class="form-group">
-                <label for="netDays" class="control-label">Integration</label>
-                <div>
+                <div class="col-sm-4">
+                    <label for="netDays" class="control-label">Integration <span class="clr-red">*</span></label>
+                </div>
+                <div class="col-sm-5">
                     <input type="text" name="description" class="form-control" required #description="ngModel" [(ngModel)]="sourceAction.description" minlength="2">
                     <div *ngIf="description.dirty && description.errors?.required && description.errors" class="invalid-form-error-message">
                         Integration required.
@@ -445,9 +455,11 @@
                 <div class="clear"></div>
             </div>
             <div class="form-group">
-                <label for="description" class="control-label">Memo</label>
-                <div class="control-data">
-                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                <div class="col-sm-4">
+                    <label for="description" class="control-label">Memo</label>
+                </div>
+                <div class="col-sm-5">
+                    <textarea #memo="ngModel" id="memo" name="memo" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                     <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>
@@ -459,20 +471,24 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-6">
-                    <label class="form-check-label" for="isActive">
-                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-                    </label>
+                    <div class="checkbox-cstm" style="margin-left: 0 !important;">
+                        <label>
+                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            Active
+                        </label>
+                    </div>
                 </div>
                 <div class="clear"></div>
             </div>
 
-
             <div class="modal-footer">
-
-                <button class="btn btn-success">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSave">Save</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
+
+
     </div>
 
 

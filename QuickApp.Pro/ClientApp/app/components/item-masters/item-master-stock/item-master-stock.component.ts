@@ -407,21 +407,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 const responseDataOfEdit = res;
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
-                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate)
-
-
-
+                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
-
-
-
-
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
-
-
-
-
-
 
                 // assign the header values
                 this.pnvalue = this.sourceItemMaster.partNumber;
@@ -675,7 +663,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //     this.selectedAircraftId = []
         //     this.selectedModelId = undefined;
         //     this.selectedDashnumber = undefined;
-        // });
+        //});
         this.addFieldValue();
         // this.getAtachapter();
         this.modalDash = [
@@ -1409,6 +1397,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
+        console.log(this.allUnitOfMeasureinfo);
+
 
 
     }
@@ -1567,7 +1557,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private onprodataSuccessful(getProvisionList: Provision[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allProvisonInfo = getProvisionList;        
+        this.allProvisonInfo = getProvisionList;
     }
 
 
@@ -1728,7 +1718,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     priorty(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1744,7 +1733,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     atamai(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1761,7 +1749,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     item(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -1788,7 +1775,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-  
+
 
 
     integratn(content) {
@@ -1920,39 +1907,88 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
     }
+    //ItemHandler(event) {
+    //    if (event.target.value != "") {
+    //        let value = event.target.value.toLowerCase();
+    //        if (this.selectedItemCode) {
+    //            if (value == this.selectedItemCode.toLowerCase()) {
+    //                this.disableSaveItemClassficationCode = true;
+
+    //            }
+    //            else {
+    //                this.disableSaveItemClassficationCode = false;
+
+    //            }
+    //        }
+
+    //    }
+    //}
+
+
+    //ItemClassficationCode(event) {
+    //    if (this.allitemclassificationInfo) {
+    //        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+    //            if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
+    //                this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
+    //                this.disableSaveItemClassficationCode = true;
+    //                this.selectedItemCode = event;
+    //            }
+
+    //        }
+    //    }
+    //}
+
+    //filterItems(event) {
+
+    //    this.localCollection = [];
+    //    if (this.allitemclassificationInfo) {
+    //        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+    //            let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
+    //            if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    //                this.localCollection.push(itemName);
+    //            }
+    //        }
+    //    }
+    //}
     ItemHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedItemCode) {
-                if (value == this.selectedItemCode.toLowerCase()) {
-                    this.disableSaveItemClassficationCode = true;
+        let value = event.target.value.toLowerCase();
+        if (this.selectedItemCode) {
+            if (value == this.selectedItemCode.toLowerCase()) {
+                this.disableSaveItemClassficationCode = true;
 
-                }
-                else {
-                    this.disableSaveItemClassficationCode = false;
-
-                }
             }
+            else {
+                this.disableSaveItemClassficationCode = false;
 
+            }
         }
+
     }
 
 
     ItemClassficationCode(event) {
-        if (this.allitemclassificationInfo) {
-            for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-                if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
-                    this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
-                    this.disableSaveItemClassficationCode = true;
-
-                    this.selectedItemCode = event;
-                }
-
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+            if (event == this.allitemclassificationInfo[i].itemClassificationCode) {
+                this.sourceItemMaster.itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
+                this.disableSaveItemClassficationCode = true;
+                this.selectedItemCode = event;
             }
         }
+
     }
 
+    filterItems(event) {
 
+        this.localCollection = [];
+
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+            let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
+            if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(itemName);
+            }
+        }
+
+    }
     ItemGroupHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -2280,18 +2316,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    filterItems(event) {
 
-        this.localCollection = [];
-        if (this.allitemclassificationInfo) {
-            for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-                let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
-                if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.localCollection.push(itemName);
-                }
-            }
-        }
-    }
 
 
     private loadManagementdata() {
@@ -2758,7 +2783,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                             this.localprovision.push(provisionName)
                     }
                 }
-               
+
             }
         }
     }
@@ -3384,7 +3409,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 data => {
                     this.sourceItemMaster.itemGroupId = data.itemGroupId;
                     this.itemgroup();
-            })
+                })
         }
         //else {
 
@@ -3459,9 +3484,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.updatedBy = this.userName;
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {                
+            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
+
                 this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
-                 this.Stockunitofmeasure()
+                this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure()
             })
 
         }
@@ -3485,10 +3511,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
             this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(
-                data =>
-                {
+                data => {
                     this.sourceItemMaster.stockUnitOfMeasureId = data.unitOfMeasureId;
-                     this.Stockunitofmeasure()
+                    this.Stockunitofmeasure()
                 },
                 response => this.saveCompleted(this.sourceUOM)
             )
@@ -3514,8 +3539,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceUOM.updatedBy = this.userName;
             this.sourceUOM.description = this.unitName;
             this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data =>
-            {
+            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
                 this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
                 this.Consumeunitofmeasure()
             })
@@ -3533,7 +3557,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.modal.close();
     }
-
 
     saveSOLDunitofmeasure() {
         this.isSaving = true;
@@ -3564,11 +3587,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.priorityService.newPriority(this.sourceAction).subscribe(
+            this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode }).subscribe(
                 data => {
                     this.sourceItemMaster.priorityId = data.priorityId;
-                    this.loadPriority() },
-                response => this.saveCompleted(this.sourceAction));
+                    this.loadPriority()
+                });
         }
         else {
             this.sourceAction.updatedBy = this.userName;
@@ -4099,6 +4122,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     selectedDashnumbervalue(value) {
         this.newDashnumValue = value.originalEvent.target.textContent;
+        console.log()
     }
 
     resetAircraftModelsorDashNumbers() {
@@ -4116,7 +4140,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     mapAircraftInformation() {
-        console.log(this.selectedModelId)
+        console.log(this.selectedDashnumber)
         this.viewTable = true;
         // Selected All 
         if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
@@ -4615,7 +4639,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     saveExportInformation() {
 
-
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
 
@@ -4627,6 +4650,20 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 MessageSeverity.success
             );
             this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-list'])
+        })
+    }
+    saveandcreate() {
+        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
+
+        this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
+            this.tempExportCountryId = null;
+            this.alertService.showMessage(
+                'Success',
+                `Saved Export Information Successfully `,
+                MessageSeverity.success
+            );
+            this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-stock'])
         })
     }
 
@@ -4807,7 +4844,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     //Itemclassification Save
     itemclassification(content) {
         this.isEditMode = false;
-        this.isDeleteMode = false;   
+        this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         //this.sourceAction = new ItemClassificationModel();
@@ -4833,8 +4870,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 data => {
                     this.sourceItemMaster.itemClassificationId = data.itemClassificationId;
-                    this.itemclass();                
-            })
+                    this.itemclass();
+                })
         }
 
 
@@ -4873,7 +4910,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             }
         }
+        this.modal.close();
     }
+
+
+    //else {
+
+    //    this.sourceAction.updatedBy = this.userName;
+    //    this.sourceAction.itemClassificationCode = this.itemName;
+    //    this.sourceAction.description = this.className;
+    //    this.sourceAction.itemType = this.itemTypeName;
+    //    this.sourceAction.masterCompanyId = 1;
+    //    this.workFlowtService.updateAction(this.sourceAction).subscribe(data => { this.itemclass(); },
+    //        response => this.saveCompleted(this.sourceAction));
+    //}
+
+
+
+
+   
+
 
     Manufacturer(content) {
         this.sourcemanufacturer.name = '';
@@ -4920,7 +4976,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-       // this.sourceAction = new Provision();
+        // this.sourceAction = new Provision();
         this.sourceAction.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -4975,7 +5031,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
- 
+
 
 
     captureId(event) {
@@ -5039,7 +5095,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //     }
         // }
     }
- 
+
 
     filterdescription(event) {
         this.descriptionCollection = [];
@@ -5718,7 +5774,85 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    Exportuom(content) {
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceUOM = new UnitOfMeasure();
+        this.sourceUOM.isActive = true;
+        this.unitName = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
+    StockUOMstandard(event) {
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                if (event == this.allUnitOfMeasureinfo[i].shortName) {
+                    //this.sourceItemMaster.itemClassificationCode = this.allUnitOfMeasureinfo[i].shortName;
+                    this.disableSaveStockUOM = true;
+                    this.selectedStockUOM = event;
+                }
+
+            }
+        }
+    }
+    consumeUOMstandard(event) {
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                if (event == this.allUnitOfMeasureinfo[i].standard) {
+                    //this.sourceItemMaster.itemClassificationCode = this.allUnitOfMeasureinfo[i].standard;
+                    this.disableSaveConsume = true;
+                    this.selectedConsume = event;
+                }
+                else {
+                    this.disableSaveConsume = false;
+                }
+
+            }
+        }
+    }
+
+    saveexportuom() {
+        this.isSaving = true;
+        this.disableuomvalue = false;
+        this.sourceUOM.createdBy = this.userName;
+        this.sourceUOM.updatedBy = this.userName;
+        this.sourceUOM.description = this.unitName;
+        this.sourceUOM.masterCompanyId = 1;
+        this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
+            this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
+            this.Purchaseunitofmeasure();
+        })
+        this.modal.close();
+    }
+
+    filterStandardUOM(event) {
+        this.unitofmeasureValue = [];
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                let unitName = this.allUnitOfMeasureinfo[i].shortName;
+                if (unitName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.unitofmeasureValue.push(unitName)
+                }
+            }
+        }
+
+    }
+    filterconsumeUOM(event) {
+        this.unitofmeasureValue = [];
+        if (this.allUnitOfMeasureinfo) {
+            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
+                let unitName = this.allUnitOfMeasureinfo[i].standard;
+                if (unitName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.unitofmeasureValue.push(unitName)
+                }
+            }
+        }
+
+    }
     filterintegrations(event) {
         this.localmanufacturer = [];
         for (let i = 0; i < this.allIntegrationInfo.length; i++) {
