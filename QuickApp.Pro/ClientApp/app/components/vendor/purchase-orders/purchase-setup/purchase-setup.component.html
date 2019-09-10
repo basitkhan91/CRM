@@ -593,7 +593,7 @@
                 <h5 class="po-head">Ship To</h5>
                 <div class="form-group">
                     <label>User Type <span class="clr-red">*</span></label>
-                    <select class="form-control" [(ngModel)]="sourcePoApproval.shipToUserType">
+                    <select class="form-control" [(ngModel)]="sourcePoApproval.shipToUserType" (change)="onSelectShipUserType()">
                         <option value="0">Select</option>
                         <option value="1">Customer</option>
                         <option value="2">Vendor</option>
@@ -615,14 +615,21 @@
                         </div>
                     </div>
                     <div class="form-row" *ngIf="sourcePoApproval.shipToUserType==2">
-                        <div class="col-sm-11">
-                            <p-autoComplete name="shipToUserName" (onSelect)="onVendorselectedForShipTo($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                            [minLength]="1" [dropdown]="true">
-                                <ng-template let-vendorName pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{vendorName}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                        </div>
+						<div class="col-sm-11">
+							<!--<p-autoComplete name="shipToUserName" (onSelect)="onVendorselectedForShipTo($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+											[minLength]="1" [dropdown]="true">
+								<ng-template let-vendorName pTemplate="item">
+									<div class="ui-helper-clearfix">{{vendorName}}</div>
+								</ng-template>
+							</p-autoComplete>-->
+							<p-autoComplete field="vendorName" class="pautocomp-cstm" 
+											(onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserName" name="vendor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onVendorselectedForShipTo($event)">
+								<!-- <ng-template let-vendorName pTemplate="item">
+			<div class="ui-helper-clearfix">{{vendorName}}</div>
+		</ng-template> -->
+							</p-autoComplete>
+							<!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
+						</div>
                         <div class="col-sm-1">
                             <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
                         </div>
@@ -686,15 +693,32 @@
                     <label>Country</label>
                     <input class="form-control" type="text" value="{{shipToAddress?.country}}" disabled>
                 </div>
-                <div class="form-group">
-                    <label>Contact Name <span class="clr-red">*</span></label>
-                    <p-autoComplete class="pautocomp-cstm" name="shipToContactName" [(ngModel)]="sourcePoApproval.shipToContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterFirstNamesforshipto($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true">
-                        <ng-template let-firstName pTemplate="item">
-                            <div class="ui-helper-clearfix">{{firstName}}</div>
-                        </ng-template>
-                    </p-autoComplete>
-                </div>
+
+                <div class="form-group col-sm-12">
+                        <label>Contact Name <span class="clr-red">*</span></label>
+                        <div class="col-sm-7">
+                            <div class="inner-addon right-addon autosuggesions-add">
+                                
+                                <div class="inner-addon right-addon autosuggesions-add inline-block" *ngIf="sourcePoApproval.shipToUserType==1">
+                                    <i class="fa fa-search"></i>
+                                    <p-autoComplete placeholder="customer firstname" [(ngModel)]="sourcePoApproval.shipToContactName" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterFirstNamesforshipto($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-firstName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{firstName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                                <div class="inner-addon right-addon autosuggesions-add inline-block" *ngIf="sourcePoApproval.shipToUserType==2">
+                                    <i class="fa fa-search"></i>
+                                    <p-autoComplete placeholder="vendor firstname" [(ngModel)]="sourcePoApproval.shipToContactName" name="shipToVendorContactName" [suggestions]="firstNamesShipTo1" (completeMethod)="filterFirstNamesforshipto1($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-firstName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{firstName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                </div>
+                            </div>
+                        </div>
                 <div class="form-group memo-popup-cstm">
                     <label>Memo <span class="clr-red">*</span></label>
                     <span pTooltip="{{sourcePoApproval.shipToMemo}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{sourcePoApproval.shipToMemo}}" disabled /></span>
@@ -706,7 +730,7 @@
                 <h5 class="po-head">Bill To</h5>
                 <div class="form-group">
                     <label>User Type <span class="clr-red">*</span></label>
-                    <select class="form-control" [(ngModel)]="sourcePoApproval.billToUserType">
+                    <select class="form-control" [(ngModel)]="sourcePoApproval.billToUserType" (change)="onSelectBillUserType()">
                         <option value="0">Select</option>
                         <option value="1">Customer</option>
                         <option value="2">Vendor</option>
@@ -728,14 +752,20 @@
                         </div>
                     </div>
                     <div class="form-row" *ngIf="sourcePoApproval.billToUserType==2">
-                        <div class="col-sm-11">
-                            <p-autoComplete name="billToUserName" (onSelect)="onVendorselectedForBillTo($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.billToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                            [minLength]="1" [dropdown]="true">
-                                <ng-template let-vendorName pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{vendorName}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                        </div>
+						<div class="col-sm-11">
+							<!--<p-autoComplete name="billToUserName" (onSelect)="onVendorselectedForBillTo($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.billToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+											[minLength]="1" [dropdown]="true">
+								<ng-template let-vendorName pTemplate="item">
+									<div class="ui-helper-clearfix">{{vendorName}}</div>
+								</ng-template>
+							</p-autoComplete>-->
+							<p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.billToUserName" name="billToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onVendorselectedForBillTo($event)">
+								<!-- <ng-template let-vendorName pTemplate="item">
+									<div class="ui-helper-clearfix">{{vendorName}}</div>
+								</ng-template> -->
+							</p-autoComplete>
+							<!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
+						</div>
                         <div class="col-sm-1">
                             <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
                         </div>
@@ -818,7 +848,7 @@
 
             </div>
 
-        </div>
+        </div></div>
     </p-tabPanel>
 </p-tabView>
 
