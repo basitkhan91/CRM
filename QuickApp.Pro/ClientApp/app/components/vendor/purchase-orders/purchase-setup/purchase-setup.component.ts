@@ -133,7 +133,9 @@ export class PurchaseSetupComponent {
 	cols: any[];
 	allPartnumbersInfo: any[];
 	showInput: boolean = false;
-	partNumbers: any;
+    partNumbers: any;
+    tempMemo: any;
+    memoData: any;
 	pocollection: any;
 	gridData: TreeNode[];
 	copyOfAllManagemtninfo: any[] = [];
@@ -618,7 +620,7 @@ export class PurchaseSetupComponent {
 		console.log(sourceSplitShipment);
 	}
 
-	saveToThisPO(x)
+	saveToThisPO()
 	{
       
 	}
@@ -1737,7 +1739,10 @@ export class PurchaseSetupComponent {
 		}
 
 		console.log(this.partWithId);
-	}
+    }
+    onSaveMemo() {
+        
+    }
 	private loadConditionData() {
 		
 		this.conditionService.getConditionList().subscribe(data => {

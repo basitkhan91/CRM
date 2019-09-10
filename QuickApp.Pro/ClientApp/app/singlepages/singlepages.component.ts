@@ -807,8 +807,19 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Location' }
 				];
-			}
-
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-aircraft-model') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Aircraft Model' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-aircraft-manufacturer') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Aircraft Manufacturer' }
+                ];
+            }
 		}
 	}
 }
