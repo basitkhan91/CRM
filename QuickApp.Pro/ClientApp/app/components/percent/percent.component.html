@@ -7,11 +7,11 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Percent</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Percent" tooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Percent" tooltipPosition="right" >
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allPriorityInfo" [rows]="20"
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm"  [rows]="20"
                         [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]"
                         [columns]="cols" selectionMode="multiple" [(selection)]="cols"
                         [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
