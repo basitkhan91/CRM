@@ -87,6 +87,9 @@ export class PurchaseSetupComponent {
 	VendorNamecoll: any[] = [];
 	partId: any;
 	vendorNames: any[];
+	allPriorityDetails: any[];
+	vendorContactsHeader: any[];
+	vendorPhoneNum: any[];
 	bulistovh: any[] = [];
 	departmentList: any[] = [];
 	departmentListovh: any[] = [];
@@ -172,6 +175,9 @@ export class PurchaseSetupComponent {
 	vendorCapesInfo: any[] = [];
 	tempVendorId: number;
 	vName: any;
+	tempMemo: string;
+	needByTempDate: Date = new Date();
+	creditTermsList: any[];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService) {
@@ -383,6 +389,8 @@ export class PurchaseSetupComponent {
 		];
 
 		console.log(this.sourcePoApproval);
+		this.sourcePoApproval.statusId = 1;
+		this.sourcePoApproval.dateRequested = new Date();
 
 	}
 	private priorityData() {
@@ -449,6 +457,9 @@ export class PurchaseSetupComponent {
 		this.sourcePoApproval.vendorId = this.tempVendorId;
 		this.sourcePoApproval.createdBy = this.userName;
 		this.sourcePoApproval.updatedBy = this.userName;
+		this.sourcePoApproval.masterCompanyId = 1;
+
+
 		if (!this.sourcePoApproval.deferredReceiver) {
 			this.sourcePoApproval.deferredReceiver = 0;
 		}
@@ -456,7 +467,11 @@ export class PurchaseSetupComponent {
 			this.sourcePoApproval.resale = 0;
 		}
 		console.log(this.sourcePoApproval);
-		this.vendorService.savePurchaseorder({ ...this.sourcePoApproval, }).subscribe(saveddata => {
+		this.vendorService.savePurchaseorder({
+			...this.sourcePoApproval,
+			priorityId: this.sourcePoApproval.priorityId.priorityId !== undefined ? this.sourcePoApproval.priorityId.priorityId : 0,
+			creditTermsId: this.sourcePoApproval.creditTermsId !== undefined ? this.sourcePoApproval.creditTermsId.creditTermsId : 0
+		}).subscribe(saveddata => {
 			this.savedInfo = saveddata;
 			console.log(saveddata);
 			this.tempVendorId = null;
@@ -598,6 +613,7 @@ export class PurchaseSetupComponent {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allPartnumbersInfo = allWorkFlows;
+		//debugger;
 		console.log(this.allPartnumbersInfo);
 
 
@@ -617,9 +633,7 @@ export class PurchaseSetupComponent {
 		console.log(sourceSplitShipment);
 	}
 
-	saveToThisPO(x) {
 
-	}
 	filterpartItems(event) {
 
 		this.partCollection = [];
@@ -711,7 +725,7 @@ export class PurchaseSetupComponent {
 						serialNumber: this.partListData[i].serialNumber,
 						//nonInventory: this.partListData[i].nonInventory,
 						requisitionedBy: this.sourcePoApproval.requestedBy,
-						requisitionedDate: this.sourcePoApproval.requisitionedDate,
+						requisitionedDate: new Date(), //this.sourcePoApproval.requisitionedDate
 						approver: this.sourcePoApproval.approver,
 						approvedDate: this.sourcePoApproval.dateApprovied,
 						needByDate: this.partListData[i].needByDate,
@@ -750,6 +764,7 @@ export class PurchaseSetupComponent {
 						//updatedDate: this.partListData[i].updatedDate,
 						//isActive: this.partListData[i].purchaseOrderPartRecordId,
 						isParent: this.partListData[i].isParent,
+						masterCompanyId: 1,
 
 					}
 					let childDataList = [];
@@ -774,7 +789,7 @@ export class PurchaseSetupComponent {
 										//serialNumber: this.partListData[i].serialNumber,
 										//nonInventory: this.partListData[i].nonInventory,
 										requisitionedBy: this.sourcePoApproval.requestedBy,
-										requisitionedDate: this.sourcePoApproval.requisitionedDate,
+										requisitionedDate: new Date(),
 										approver: this.sourcePoApproval.approver,
 										approvedDate: this.sourcePoApproval.dateApprovied,
 										needByDate: this.partListData[i].needByDate,
@@ -816,6 +831,7 @@ export class PurchaseSetupComponent {
 										//updatedDate: this.childDataList[k].updatedDate,
 										//isActive: this.childDataList[k].purchaseOrderPartRecordId,
 										isParent: childDataList[k].isParent,
+										masterCompanyId: 1,
 									}
 									this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 										this.savedPurchasedPart = saveddata2;
@@ -832,7 +848,7 @@ export class PurchaseSetupComponent {
 										//serialNumber: this.partListData[i].serialNumber,
 										//nonInventory: this.partListData[i].nonInventory,
 										requisitionedBy: this.sourcePoApproval.requestedBy,
-										requisitionedDate: this.sourcePoApproval.requisitionedDate,
+										requisitionedDate: new Date(),
 										approver: this.sourcePoApproval.approver,
 										approvedDate: this.sourcePoApproval.dateApprovied,
 										needByDate: this.partListData[i].needByDate,
@@ -874,6 +890,7 @@ export class PurchaseSetupComponent {
 										//updatedDate: childDataList[k].updatedDate,
 										//isActive: childDataList[k].purchaseOrderPartRecordId,
 										isParent: childDataList[k].isParent,
+										masterCompanyId: 1,
 									}
 									this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 										this.savedPurchasedPart = saveddata2;
@@ -896,7 +913,7 @@ export class PurchaseSetupComponent {
 						serialNumber: this.partListData[i].serialNumber,
 						//nonInventory: this.partListData[i].nonInventory,
 						requisitionedBy: this.sourcePoApproval.requestedBy,
-						requisitionedDate: this.sourcePoApproval.requisitionedDate,
+						requisitionedDate: new Date(),
 						approver: this.sourcePoApproval.approver,
 						approvedDate: this.sourcePoApproval.dateApprovied,
 						needByDate: this.partListData[i].needByDate,
@@ -936,6 +953,7 @@ export class PurchaseSetupComponent {
 						//updatedDate: this.partListData[i].updatedDate,
 						//isActive: this.partListData[i].purchaseOrderPartRecordId,
 						isParent: this.partListData[i].isParent,
+						masterCompanyId: 1,
 
 					}
 					let childDataList = [];
@@ -959,7 +977,7 @@ export class PurchaseSetupComponent {
 									//serialNumber: this.partListData[i].serialNumber,
 									//nonInventory: this.partListData[i].nonInventory,
 									requisitionedBy: this.sourcePoApproval.requestedBy,
-									requisitionedDate: this.sourcePoApproval.requisitionedDate,
+									requisitionedDate: new Date(),
 									approver: this.sourcePoApproval.approver,
 									approvedDate: this.sourcePoApproval.dateApprovied,
 									needByDate: this.partListData[i].needByDate,
@@ -1001,6 +1019,7 @@ export class PurchaseSetupComponent {
 									//updatedDate: childDataList[k].updatedDate,
 									//isActive: childDataList[k].purchaseOrderPartRecordId,
 									isParent: childDataList[k].isParent,
+									masterCompanyId: 1,
 								}
 								this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 									this.savedPurchasedPart = saveddata2;
@@ -1029,7 +1048,7 @@ export class PurchaseSetupComponent {
 					serialNumber: this.partListData[i].serialNumber,
 					//nonInventory: this.partListData[i].nonInventory,
 					requisitionedBy: this.sourcePoApproval.requestedBy,
-					requisitionedDate: this.sourcePoApproval.requisitionedDate,
+					requisitionedDate: new Date(),
 					approver: this.sourcePoApproval.approver,
 					approvedDate: this.sourcePoApproval.dateApprovied,
 					needByDate: this.partListData[i].needByDate,
@@ -1070,6 +1089,7 @@ export class PurchaseSetupComponent {
 					//updatedDate: this.partListData[i].updatedDate,
 					//isActive: this.partListData[i].purchaseOrderPartRecordId,
 					isParent: this.partListData[i].isParent,
+					masterCompanyId: 1,
 
 				}
 				if (this.partListData[i].childList) {
@@ -1093,7 +1113,7 @@ export class PurchaseSetupComponent {
 								//serialNumber: this.partListData[i].serialNumber,
 								//nonInventory: this.partListData[i].nonInventory,
 								requisitionedBy: this.sourcePoApproval.requestedBy,
-								requisitionedDate: this.sourcePoApproval.requisitionedDate,
+								requisitionedDate: new Date(),
 								approver: this.sourcePoApproval.approver,
 								approvedDate: this.sourcePoApproval.dateApprovied,
 								needByDate: this.partListData[i].needByDate,
@@ -1135,6 +1155,7 @@ export class PurchaseSetupComponent {
 								//updatedDate: this.childDataList[k].updatedDate,
 								//isActive: this.childDataList[k].purchaseOrderPartRecordId,
 								isParent: this.childDataList[k].isParent,
+								masterCompanyId: 1,
 							}
 							this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
 								this.savedPurchasedPart = saveddata2;
@@ -1615,17 +1636,16 @@ export class PurchaseSetupComponent {
 			this.partListData[i].partBusinessUnitId = buid;
 			this.onPartBusinessUnitChange(this.partListData[i]);
 		}
-
-		console.log(this.divisionlist);
 	}
 
 	getDivisionlist(divid) {
 		this.sourcePoApproval.managementStructureId = divid; //Saving Management Structure Id if there Company Id
-
 		this.departmentList = [];
+		console.log(this.sourcePoApproval)
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
 			if (this.allManagemtninfo[i].parentId == divid) {
 				this.departmentList.push(this.allManagemtninfo[i]);
+				console.log(this.departmentList)
 			}
 		}
 
@@ -1809,7 +1829,7 @@ export class PurchaseSetupComponent {
 			requisitionedDate: '',
 			approver: '',
 			approvedDate: '',
-			needByDate: '',
+			needByDate: this.needByTempDate,
 			manufacturer: '',
 			status: '',
 			trace: '',
@@ -2024,11 +2044,13 @@ export class PurchaseSetupComponent {
 		this.vendorNames = this.allActions;
 
 
+		if (event.query !== undefined && event.query !== null) {
+			const vendorFilter = [...this.allActions.filter(x => {
+				return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.vendorNames = vendorFilter;
+		}
 
-		const vendorFilter = [...this.allActions.filter(x => {
-			return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
-		})]
-		this.vendorNames = vendorFilter;
 		//this.VendorNamecoll = vendorFilter;
 		//   for (let i = 0; i < this.allActions.length; i++) { 
 		//   let vendorName = this.allActions[i].vendorName;
@@ -2076,12 +2098,62 @@ export class PurchaseSetupComponent {
 		// }
 	}
 
-	selectedVendor(value) {
-
+	selectedVendorName(value) {
 		console.log(value);
 		this.sourcePoApproval.vendorName = value.vendorName;
 		this.sourcePoApproval.vendorCode = value.vendorCode;
+		this.sourcePoApproval.firstName = value.vendorContact;
+		this.sourcePoApproval.workPhone = value.vendorPhone;
+		this.sourcePoApproval.terms = value.creditLimit
+		this.sourcePoApproval.creditLimit = value.creditTermsId;
 		this.tempVendorId = value.vendorId;
+	}
+
+	filterVendorContacts(event) {
+		console.log(this.allActions)
+		this.vendorContactsHeader = this.allActions;
+
+		if (event.query !== undefined && event.query !== null) {
+			const vendorFilter = [...this.allActions.filter(x => {
+				return x.vendorContact.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.vendorContactsHeader = vendorFilter;
+		}
+	}
+
+	filterVendorPhone(event) {
+		this.vendorPhoneNum = this.allActions;
+
+		if (event.query !== undefined && event.query !== null) {
+			const vendorFilter = [...this.allActions.filter(x => {
+
+				return x.vendorPhone.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.vendorPhoneNum = vendorFilter;
+		}
+	}
+
+	filterPriorityNames(event) {
+		this.allPriorityDetails = this.allPriorityInfo;
+
+		if (event.query !== undefined && event.query !== null) {
+			const priority = [...this.allPriorityInfo.filter(x => {
+				return x.description.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.allPriorityDetails = priority;
+		}
+	}
+
+	filtercreditTerms(event) {
+		this.creditTermsList = this.allcreditTermInfo;
+
+
+		if (event.query !== undefined && event.query !== null) {
+			const creditterms = [...this.allcreditTermInfo.filter(x => {
+				return x.name.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.creditTermsList = creditterms;
+		}
 	}
 
 	private onDataLoadSuccessful(allWorkFlows: any[]) {
@@ -2616,11 +2688,11 @@ export class PurchaseSetupComponent {
 		this.loadingIndicator = true;
 
 		this.employeeService.getEmployeeList().subscribe(
-			results => this.onempDataLoadSuccessful(results[0]),
+			results => { console.log(results), this.onempDataLoadSuccessful(results[0]) },
 			error => this.onDataLoadFailed(error)
 		);
 
-		this.selectedColumns = this.cols;
+		//this.selectedColumns = this.cols;
 
 	}
 
@@ -2630,6 +2702,7 @@ export class PurchaseSetupComponent {
 		this.loadingIndicator = false;
 		//this.dataSource.data = getEmployeeCerficationList;
 		this.allEmployeeinfo = getEmployeeCerficationList;
+		console.log(this.allEmployeeinfo);
 	}
 
 	saveSiteItemAndCloseModel() {
@@ -2729,10 +2802,21 @@ export class PurchaseSetupComponent {
 
 	onClickShipMemo() {
 		this.addressMemoLabel = 'Edit Ship';
+		this.tempMemo = this.sourcePoApproval.shipToMemo;
 	}
 
 	onClickBillMemo() {
 		this.addressMemoLabel = 'Edit Bill';
+		this.tempMemo = this.sourcePoApproval.billToMemo;
+	}
+
+	onSaveAddressMemo() {
+		if (this.addressMemoLabel == 'Edit Ship') {
+			this.sourcePoApproval.shipToMemo = this.tempMemo;
+		}
+		if (this.addressMemoLabel == 'Edit Bill') {
+			this.sourcePoApproval.billToMemo = this.tempMemo;
+		}
 	}
 
 	onClickPartsListAddress(value) {
@@ -2766,8 +2850,13 @@ export class PurchaseSetupComponent {
 	}
 
 	onAddMemo() {
-
+		this.tempMemo = this.sourcePoApproval.notes;
 	}
+	onSaveMemo() {
+		this.sourcePoApproval.notes = this.tempMemo;
+		console.log(this.tempMemo)
+	}
+
 
 	onSelectShipUserType() {
 		this.sourcePoApproval.shipToUserName = '';
@@ -2783,6 +2872,23 @@ export class PurchaseSetupComponent {
 		this.billToAddress = {};
 		this.sourcePoApproval.billToContactName = '';
 		this.sourcePoApproval.billToMemo = '';
+	}
+
+	onSelectNeedByDate() {
+		this.needByTempDate = this.sourcePoApproval.needByDate;
+		const data = this.sourcePoApproval;
+		console.log(data);
+
+		//  partList["isParent"].partList["childList"];
+		//     const y =  data.map(x => {
+		// 		 ...x,
+
+		// 	 })
+
+		// }
+
+
+		console.log(this.needByTempDate);
 	}
 
 }
