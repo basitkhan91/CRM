@@ -105,7 +105,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="removeDashNumber()">Yes</button>
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 
@@ -164,8 +164,8 @@
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit ATA Chapter</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add ATA Chapter</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Dash Number</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Dash Number</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -185,18 +185,25 @@
                     <label class="control-label col-sm-4">
                         Aircraft Model <strong class="clr-red">*</strong>
                     </label>
-                    <p-multiSelect class="col-sm-5 pub-multi3" [options]="aircraftModelsList" [(ngModel)]="selectedAircraftModel" name="modelname"
+                    <p-multiSelect  maxSelectedLabels="1" selectedItemsLabel="{0} columns selected" class="col-sm-5 pub-multi3" [options]="aircraftModelsList" [(ngModel)]="selectedAircraftModel" name="modelname"
                                    (onChange)="getDashNumberByManfacturerandModel()"></p-multiSelect>
                 </div>
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">
-                        Dash Number <strong class="clr-red">*</strong>
-                    </label>
-                    <input type="text" class="col-sm-5" pInputText pKeyFilter="int" [(ngModel)]="selectedDashnumber" name="dashnumber" />
-                </div>
+                        <label class="control-label col-sm-4">
+                            Dash Number <strong class="clr-red">*</strong>
+                        </label>
+                        <p-autoComplete [(ngModel)]="selectedDashnumber" (onSelect)="dashNumberSelection($event)" (onKeyUp)=eventHandler($event) name="description"  [suggestions]="localCollection" (completeMethod)="filterDashnumber($event)" [size]="30"
+                                [dropdown]="true" class="p-autoComplete-ctsm col-sm-5" required>
+                                <ng-template let-dashnumber pTemplate="item">
+                                    <div class="ui-helper-clearfix">{{dashnumber}}</div>
+                                </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSave" class="clr-red col-sm-5">Already Exists</div>
+                        <div class="clear"></div>                        
+                </div>             
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">
-                        Memo <strong class="clr-red">*</strong>
+                        Memo 
                     </label>
                     <textarea class="input-field-value col-sm-5" rows="3" cols="10" [(ngModel)]="selectedMemo" name="memo"></textarea>
                 </div>

@@ -23,26 +23,30 @@ export class AircraftModelComponent implements OnInit{
     first: number;
     rows: number;
     paginatorState: any;
-
+    actionModel: any[] = [];
     AuditDetails: any[];
     /** aircraft-model ctor */
-
     currentAircraftModelType: AircraftModel;
     aircraftModelTypeToUpdate: AircraftModel;
     aircraftModelTypeToRemove: AircraftModel;
     aircraftModelList: AircraftModel[];
     aircraftManufacturerList: AircraftType[];
     aircraftModelsPagination: AircraftModel[];//added
-    modal: NgbModalRef;
+    modal: NgbModalRef;    
+    selectedActionName: any;
+    localCollection: any[] = [];
+    disableSave: boolean = false;
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
     totelPages: number;
+    allaircraftModels: AircraftModel[] = [];
     innerColumnHeader: string = "aircraftType?.description";
     //adding for Pagination start
     totalRecords: number;
     cols: any[];
     loading: boolean;
+    isDelete: boolean = false;
     aircraftModelTypeToView: AircraftModel;
     //adding for Pagination End
 
@@ -57,10 +61,11 @@ export class AircraftModelComponent implements OnInit{
 
         this.aircraftModelService.getAll().subscribe(aircraftModels => {
             this.aircraftModelList = aircraftModels[0];
+            this.allaircraftModels = aircraftModels[0];
             this.totalRecords = this.aircraftModelList.length;//Adding for Pagination
             this.totelPages = Math.ceil(this.totalRecords / this.rows);
             this.aircraftModelList.forEach(function (model) {
-                model.isActive = model.isActive == false ? false : true;
+                model.isActive = model.isActive == false ? false : true;               
             });
         });
         this.currentAircraftModelType = new AircraftModel();
@@ -212,6 +217,41 @@ export class AircraftModelComponent implements OnInit{
         if (this.paginatorState)
         {
             this.loadAircraftModels(this.paginatorState);
+        }
+    }
+    model(event){
+        for (let i = 0; i < this.actionModel.length; i++) {            
+            if (event == this.actionModel[i][0].modelname) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+    filterModelName(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allaircraftModels.length; i++) {
+            let modelname = this.allaircraftModels[i].modelName;
+            if (modelname.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.actionModel.push([{
+                    "aircraftmodelId": this.allaircraftModels[i].aircraftModelId,
+                    "modelname": modelname
+                }]),
+                this.localCollection.push(modelname);
+            }
+        }
+    }
+  eventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
         }
     }
 }

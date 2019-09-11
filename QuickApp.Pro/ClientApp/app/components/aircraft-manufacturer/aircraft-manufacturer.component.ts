@@ -277,8 +277,7 @@ export class AircraftManufacturerComponent implements OnInit {
         }
     }
     manufactureId(event){
-        for (let i = 0; i < this.actionmanufacturer.length; i++) {
-            console.log(this.actionmanufacturer[i][0].manufacturer);
+        for (let i = 0; i < this.actionmanufacturer.length; i++) {            
             if (event == this.actionmanufacturer[i][0].manufacturer) {
                 //alert("Action Name already Exists");
                 this.disableSave = true;

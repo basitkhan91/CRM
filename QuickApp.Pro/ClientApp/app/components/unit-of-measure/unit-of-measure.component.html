@@ -113,8 +113,8 @@
 
                         <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
                             <div class="modal-header">
-                                <h4 class="modal-title" *ngIf="isEditMode">Edit Unit Of Mearsure</h4>
-                                <h4 class="modal-title" *ngIf="!isEditMode">Add Unit Of Mearsure</h4>
+                                <h4 class="modal-title" *ngIf="isEditMode">Edit Unit Of Measure</h4>
+                                <h4 class="modal-title" *ngIf="!isEditMode">Add Unit Of Measure</h4>
                                 <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -142,7 +142,7 @@
                                                 <label for="shortName" class="control-label">Short Name<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <input type="text" name="shortName" class="form-control" #shortName="ngModel" [(ngModel)]="sourceAction.shortName" minlength="2" required>
+                                                <input type="text" name="shortName" class="form-control" #shortName="ngModel" [(ngModel)]="sourceAction.shortName"  required>
                                                 <div *ngIf="shortName.dirty && shortName.errors?.required && shortName.errors" class="invalid-form-error-message">
                                                     Short Name required.
                                                 </div>
@@ -153,7 +153,7 @@
                                                 <label for="standard" class="control-label">Standard<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <input type="text" name="standard" class="form-control" #standard="ngModel" [(ngModel)]="sourceAction.standard" minlength="2">
+                                                <input type="text" name="standard" class="form-control" #standard="ngModel" [(ngModel)]="sourceAction.standard"  required>
                                                 <div *ngIf="standard.dirty && standard.errors?.required && standard.errors" class="invalid-form-error-message">
                                                     Standard required.
                                                 </div>
