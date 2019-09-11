@@ -261,6 +261,12 @@ export class SingleComponent {
 				];
 			}
 
+			else if (this.currentUrl == '/singlepages/singlepages/app-percent') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Percent' }
+				];
+			}
 			else if (this.currentUrl == '/singlepages/singlepages/app-provision') {
 				this.items = [
 					{ label: 'Single Screens' },
