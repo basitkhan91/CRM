@@ -117,8 +117,14 @@ export class DashnumberComponent implements OnInit {
         const response = getDashnumbers;
         this.dashnumberInfo = response.map(x => {
             return {    
-                dashNumberId: x.dashNumberId,            
+                dashNumberId: x.dashNumberId,     
+                aircraftModelId: x.aircraftModelId,    
+                aircraftTypeId: x.aircraftTypeId,   
                 aircraftType: x.aircraftType.description,
+                createdBy: x.createdBy,
+                updatedBy: x.updatedBy,
+                createdDate: x.createdDate,
+                updatedDate: x.updatedDate,
                 aircraftModel: x.aircraftModel.modelName,
                 dashNumber: x.dashNumber,
                 memo: x.memo,
@@ -167,7 +173,7 @@ export class DashnumberComponent implements OnInit {
 
     }
 
-    //setDashNumberToUpdate(editAircraftDashNumberpopup: any, id: number): void {
+    // setDashNumberToUpdate(editAircraftDashNumberpopup: any, id: number): void {
     //    this.dashNumberToUpdate = Object.assign({}, this.dashNumberList.filter(function (aircraftDashNumber) {
     //        return aircraftDashNumber.dashNumberId == id;
     //    })[0]);
@@ -179,7 +185,7 @@ export class DashnumberComponent implements OnInit {
     //            //this.aircraftManufacturerChange(this.dashNumberToUpdate.aircraftTypeId);
     //        }
     //    }
-    //}
+    // }
 
     updateDashNumber(): void {
         this.currentDashNumberType.updatedBy = this.userName;
@@ -211,14 +217,14 @@ export class DashnumberComponent implements OnInit {
     }
     open(content) {
         this.isEditMode = false;
-        this.isDeleted = false;
-        this.sourceAction.isActive = true;
+        this.isDeleted = false;        
         this.sourceAction = new AircraftDashNumber();
+        this.sourceAction.isActive = true;
         this.isSaving = true;
-        this.aircrafttype = "";
-        this.aircraft_Model = "";
-        this.dashnumber = "";
-        this.memo = "";
+        this.selectedAircraftId = "";
+        this.selectedAircraftModel = "";
+        this.selectedDashnumber = "";
+        this.selectedMemo = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -230,7 +236,7 @@ export class DashnumberComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleted = true;
         this.sourceAction = row;
-        this.dashnumber = row.dashnumber;                
+        this.dashnumber = row.dashNumber;                
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -239,6 +245,14 @@ export class DashnumberComponent implements OnInit {
     openEdit(content, row) {
         this.isEditMode = true;
         this.isDeleted = false;
+        this.loadMasterCompanies();     
+        this.sourceAction =  row;     
+        this.aircraftManufacturerChange(this.sourceAction.aircraftTypeId);
+        console.log(this.sourceAction);
+        this.selectedAircraftId = this.sourceAction.aircraftType; 
+        this.selectedAircraftModel = [this.sourceAction.aircraftModelId];       
+        this.selectedDashnumber = this.sourceAction.dashNumber;
+        this.selectedMemo= this.sourceAction.memo;        
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -246,7 +260,7 @@ export class DashnumberComponent implements OnInit {
     }
 
     openView(content, row) {
-        this.sourceAction = row;
+        this.sourceAction = row;       
         this.aircrafttype = row.aircraftType;
         this.aircraft_Model = row.aircraftModel;
         this.dashnumber = row.dashNumber;
@@ -254,9 +268,8 @@ export class DashnumberComponent implements OnInit {
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createdDate = row.createdDate;
-        this.updatedDate = row.updatedDate;
-        console.log(this.createdBy);
-        //this.loadMasterCompanies();
+        this.updatedDate = row.updatedDate;        
+        this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -307,8 +320,10 @@ export class DashnumberComponent implements OnInit {
     }
 
 
-    aircraftManufacturerChange() {
-        this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(dashNumbers => {
+    aircraftManufacturerChange(typeId?) {
+        console.log(typeId)
+        const id = typeId == undefined ? this.selectedAircraftId : typeId  
+        this.aircraftModelService.getAircraftModelListByManufactureId(id).subscribe(dashNumbers => {
             const responseValue = dashNumbers[0];
             this.aircraftModelsList = responseValue.map(x => {
                 return {
@@ -355,7 +370,6 @@ export class DashnumberComponent implements OnInit {
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
         }
 
         this.loadData();
@@ -366,13 +380,9 @@ export class DashnumberComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
-
     editItemAndCloseModel() {
-
         // debugger;
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -385,14 +395,14 @@ export class DashnumberComponent implements OnInit {
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
-        else {
+        else {        
+            
             this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.masterCompanyId = 1;
+            this.sourceAction.updatedBy = this.userName;           
+            this.sourceAction.masterCompanyId = 1;           
             this.dashNumberService.update(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-
         }
 
         this.modal.close();
