@@ -52,7 +52,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     dashNumber.IsActive = true;
                     dashNumber.CreatedDate = DateTime.Now;
-                    dashNumber.UpdatedDate = null;
+                    dashNumber.UpdatedDate = DateTime.Now;
                     dashNumber.MasterCompanyId = 1;
                     unitOfWork.Repository<AircraftDashNumber>().Add(dashNumber);
                     unitOfWork.SaveChanges();
@@ -78,7 +78,9 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    dashNumber.UpdatedDate = DateTime.Now;
+                   
+                    dashNumber.CreatedDate = DateTime.Now;
+                    dashNumber.UpdatedDate = DateTime.Now;                                  
                     unitOfWork.Repository<AircraftDashNumber>().Update(dashNumber);
                     unitOfWork.SaveChanges();
                     return Ok(dashNumber);
@@ -102,8 +104,10 @@ namespace QuickApp.Pro.Controllers
             var dashNumber = unitOfWork.Repository<AircraftDashNumber>().Find(x => x.DashNumberId == id).FirstOrDefault();
             if (dashNumber != null)
             {
+
                 dashNumber.UpdatedDate = DateTime.Now;
                 dashNumber.IsDeleted = true;
+       
                 unitOfWork.Repository<AircraftDashNumber>().Update(dashNumber);
                 unitOfWork.SaveChanges();
                 return Ok();
@@ -115,21 +119,35 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("updateActive/{id}")]
-        public IActionResult UpdateActive(long id, [FromBody] AircraftDashNumber dashNumber)
+        public IActionResult UpdateActive(long id)
         {
-            if (ModelState.IsValid)
+
+            var dashNumber = unitOfWork.Repository<AircraftDashNumber>().Find(x => x.DashNumberId == id).FirstOrDefault();
+            if (dashNumber != null)
             {
-                if (dashNumber != null)
-                {
-                    var existingResult = unitOfWork.Repository<AircraftDashNumber>().Find(x => x.DashNumberId == id).FirstOrDefault();
-                    dashNumber.UpdatedDate = DateTime.Now;
-                    existingResult.IsActive = dashNumber.IsActive;
-                    unitOfWork.Repository<AircraftDashNumber>().Update(dashNumber);
-                    unitOfWork.SaveChanges();
-                    return Ok();
-                }
+                dashNumber.IsActive = dashNumber.IsActive == true ? false : true;
+                dashNumber.UpdatedDate = DateTime.Now;
+                unitOfWork.Repository<AircraftDashNumber>().Update(dashNumber);
+                unitOfWork.SaveChanges();
             }
-            return Ok(ModelState);
+            else
+            {
+                return BadRequest(new Exception("DashNumber Does not Exists"));
+            }
+            return Ok();
+            //if (ModelState.IsValid)
+            //{
+            //    if (dashNumber != null)
+            //    {
+            //        var existingResult = unitOfWork.Repository<AircraftDashNumber>().Find(x => x.DashNumberId == id).FirstOrDefault();
+            //        dashNumber.UpdatedDate = DateTime.Now;
+            //        existingResult.IsActive = dashNumber.IsActive;
+            //        unitOfWork.Repository<AircraftDashNumber>().Update(dashNumber);
+            //        unitOfWork.SaveChanges();
+            //        return Ok();
+            //    }
+            //}
+            //return Ok(ModelState);
         }
 
         [HttpGet("audits/{id}")]
