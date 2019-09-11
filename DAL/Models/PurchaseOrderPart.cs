@@ -56,12 +56,18 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
-        public virtual PurchaseOrder PurchaseOrder { get; set; }
+
+		public int MasterCompanyId { get; set; }
+
+		public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
         public virtual List<PartStockLineMapper> PartStockLineMapper { get; set; }
         public virtual ICollection<StockLine> StockLine { get; set; }
         public virtual ICollection<TimeLife> TimeLife { get; set; }
 
         public virtual Address POPartSplitAddress { get; set; }
+
+        [NotMapped]
+        public long StockLineCount { get; set; }
     }
 }

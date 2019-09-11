@@ -86,7 +86,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly getAllCustomersInfoURL: string = "/api/customer/getAllCustomersInfo";
     private readonly getCustomer: string = "/api/customer/pagination";
     private readonly getGlobalCustomer: string = "/api/customer/globalSearch";
-    
+
 
     private readonly _getAircraftMapped: string = "/api/Customer/getAircraftMapped";
     private readonly _CustomerAircraftPostUrl: string = "/api/Customer/CustomerAircraftPost";
@@ -145,6 +145,13 @@ export class CustomerEndpoint extends EndpointFactory {
     //            return this.handleError(error, () => this.getcustomerEndpoint());
     //        });
     //}
+
+    postCustomerAircraft<T>(postData) {
+        return this.http.post<T>(this.getCustomerAircrafPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postCustomerAircraft(postData));
+            });
+    }
 
     getNewitemAircraftEndpoint<T>(userObject: any): Observable<T> {
 
@@ -304,7 +311,6 @@ export class CustomerEndpoint extends EndpointFactory {
     //}
 
     getNewcustomerEndpoint<T>(userObject: any): Observable<T> {
-
 
         return this.http.post<T>(this._customersUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {

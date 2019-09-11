@@ -86,6 +86,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
     customerVfinanceiewFeilds: any = {};
     customerClassificationId: any;
     exportLicenseNumber: any;
+    tempCustomerType: any;
     ngOnInit(): void {
 
         this.loadData(); //it is need to not show steps in customer List
@@ -137,6 +138,18 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource();
         this.activeIndex = 0;
         this.workFlowtService.listCollection = null;
+
+
+        this.workFlowtService.financeCollection = undefined;
+        this.workFlowtService.paymentCollection= undefined;
+        this.workFlowtService.salesCollection= undefined;
+        this.workFlowtService.shippingCollection = undefined;
+        this.workFlowtService.generalCollection= undefined;
+        this.workFlowtService.auditServiceCollection = {};
+        this.workFlowtService.contactCollection= undefined;
+        this.workFlowtService.customergeneralcollection= undefined;
+
+
         //this.sourceCustomer = new Customer();
 
     }
@@ -341,7 +354,26 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             this.sourceCustomer.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceCustomer.isActive == false;
-            this.workFlowtService.updateActionforActive(this.sourceCustomer).subscribe(
+            this.tempCustomerType ;
+
+
+
+            if(this.sourceCustomer.customerType === 'Lead'){
+                this.tempCustomerType = {customerTypeId: 1, description: "Lead"}
+            }else
+            if(this.sourceCustomer.customerType === "Prospect"){
+                this.tempCustomerType = {customerTypeId: 2, description: "Prospect"}
+            }else
+            if(this.sourceCustomer.customerType ==="Customer"){
+                this.tempCustomerType = {customerTypeId: 3, description: "Customer"}
+            }else 
+            if(this.sourceCustomer.customerType ==="Opportunity"){
+                this.tempCustomerType = {customerTypeId: 4, description: "Opportunity"}
+            }
+
+
+
+            this.workFlowtService.updateActionforActive({...this.sourceCustomer, customerType : this.tempCustomerType }).subscribe(
                 response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -351,14 +383,29 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             this.sourceCustomer.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceCustomer.isActive == true;
-            this.workFlowtService.updateActionforActive(this.sourceCustomer).subscribe(
+
+            if(this.sourceCustomer.customerType === 'Lead'){
+                this.tempCustomerType = {customerTypeId: 1, description: "Lead"}
+            }else
+            if(this.sourceCustomer.customerType === "Prospect"){
+                this.tempCustomerType = {customerTypeId: 2, description: "Prospect"}
+            }else
+            if(this.sourceCustomer.customerType ==="Customer"){
+                this.tempCustomerType = {customerTypeId: 3, description: "Customer"}
+            }else 
+            if(this.sourceCustomer.customerType ==="Opportunity"){
+                this.tempCustomerType = {customerTypeId: 4, description: "Opportunity"}
+            }
+
+            this.tempCustomerType
+            this.workFlowtService.updateActionforActive({...this.sourceCustomer, customerType : this.tempCustomerType } ).subscribe(
                 response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
 
     }
-
+// for commit
 
     deleteItemAndCloseModel() {
         this.isSaving = true;

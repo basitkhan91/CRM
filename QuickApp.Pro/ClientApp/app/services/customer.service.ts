@@ -99,7 +99,7 @@ export class CustomerService {
 
     getCustomers() {
         return Observable.forkJoin(
-            this.customerEndpoint.getcustomerEndpoint<Customer[]>());
+            this.customerEndpoint.getcustomerEndpoint<any[]>());
     }
 
     getCountrylist() {
@@ -438,4 +438,8 @@ export class CustomerService {
         return Observable.forkJoin(
             this.customerEndpoint.getGlobalCustomerRecords<Customer[]>(pageData));
     }
+    postCustomerAircrafts(data) {
+        return Observable.forkJoin(this.customerEndpoint.postCustomerAircraft<any>(data));
+    }
+
 }

@@ -705,8 +705,9 @@ namespace QuickApp.Pro.Controllers
                     actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
                     actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
                     actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
+					actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
 
-                    actionobject.NeedByDate = poViewModel.NeedByDate;
+					actionobject.NeedByDate = poViewModel.NeedByDate;
                     actionobject.Approver = poViewModel.Approver;
                     actionobject.ApprovedDate = poViewModel.ApprovedDate;
                     actionobject.NeedByDate = poViewModel.NeedByDate;
@@ -755,7 +756,8 @@ namespace QuickApp.Pro.Controllers
 
                     actionobject.PurchaseOrderId = poViewModel.PurchaseOrderId;
                     actionobject.ItemMasterId = poViewModel.ItemMasterId;
-                    actionobject.SerialNumber = poViewModel.SerialNumber;
+					actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+					actionobject.SerialNumber = poViewModel.SerialNumber;
                     actionobject.NonInventory = poViewModel.NonInventory;
                     actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
                     actionobject.RequisitionedDate = poViewModel.RequisitionedDate;

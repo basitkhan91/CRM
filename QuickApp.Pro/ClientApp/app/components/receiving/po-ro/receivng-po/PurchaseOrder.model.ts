@@ -126,6 +126,13 @@ export class PurchaseOrderPart {
     hasChildren: boolean;
     eCCNAlreadyExist: boolean;
     itarNumberExist: boolean;
+
+    stockLineCount: number;
+
+    currentSLIndex: number;
+    currentTLIndex: number;
+    currentSERIndex: number;
+    isDisabledTLboxes: boolean;
 }
 
 export class TimeLife {
@@ -248,6 +255,7 @@ export class StockLine {
     VendorList: DropDownData[];
     visible: boolean;
     serialNumberNotProvided: boolean;
+    isDisabledSNboxes: boolean;
 }
 
 export class ReceiveParts {
