@@ -81,6 +81,7 @@ import { CalendarModule } from "primeng/calendar";
 import { InputTextModule } from "primeng/inputtext";
 import { FileUploadModule } from "primeng/fileupload";
 import { CheckboxModule } from "primeng/checkbox";
+import { PercentComponent } from "../components/percent/percent.component";
 const singlePagesRoutes: Routes = [
   {
     path: "singlepages",
@@ -374,6 +375,12 @@ const singlePagesRoutes: Routes = [
         path: "app-dashnumber",
         component: DashnumberComponent,
         data: { title: "Dash Numbers" }
+      },
+      {
+        path: "app-percent",
+        component: PercentComponent,
+        data: {title: "Percent"}
+
       },
       {
         path: "app-create-publication",
