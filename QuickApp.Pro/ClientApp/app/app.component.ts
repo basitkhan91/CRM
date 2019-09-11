@@ -612,7 +612,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Ata Chapter', routerLink: '/singlepages/singlepages/app-ata-main' },
                             { label: 'Ata Sub-Chapter', routerLink: '/singlepages/singlepages/app-ata-sub-chapter1' },
                             { label: 'Conditions', routerLink: '/singlepages/singlepages/app-conditions' },
-                            { label: 'Percent', routerLink: '/#' },
+                            { label: 'Percent', routerLink: '/singlepages/singlepages/app-percent' },
                             { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
                             { label: 'Integration', routerLink: '/singlepages/singlepages/app-integration' },
                             { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
