@@ -148,9 +148,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.dataSource = new MatTableDataSource();
         if (this.customerService.listCollection && this.customerService.isEditMode == true) {
 
+            console.log(this.customerService)
             this.local = this.customerService.listCollection.t;
             this.sourceCustomer = this.customerService.listCollection.t;
+        }else if(this.customerService.financeCollection) {
+            // console.log(this.customerService)
+            this.sourceCustomer = this.customerService.financeCollection;
         }
+
+
+
 
     }
 
@@ -407,24 +414,39 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (data == 'creditTermsId ') {
             this.showCreditTearms = false;
         }
-        if (data == 'currencyId') {
-            this.showCurrency = false;
-        }
+        // if (data == 'currencyId') {
+        //     this.showCurrency = false;
+        // }
     }
 
 
     // Save Finance Info
     editItemAndCloseModel() {
         this.isSaving = true;
-		if (!(this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId && this.sourceCustomer.currencyId)) {
+		if (!(this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId)) {
             this.display = true;
             this.modelValue = true;
         }
-        if (this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId && this.sourceCustomer.currencyId) {
+
+        if (this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId) {
             if (this.sourceCustomer.customerId) {
                 this.sourceCustomer.createdBy = this.userName;
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
+                this.sourceCustomer.isAddressForBillingAndShipping = false;
+                this.local.creditLimit = this.sourceCustomer.creditLimit
+                this.local.creditTermsId = this.sourceCustomer.creditTermsId;
+                this.local.discountId = this.sourceCustomer.discountId;
+                this.local.markUpPercentageId = this.sourceCustomer.markUpPercentageId;
+                this.local.isTaxExempt = this.sourceCustomer.isTaxExempt;
+                this.local.taxRateStateOrProvince = this.sourceCustomer.taxRateStateOrProvince;
+                this.local.taxRateOther = this.sourceCustomer.taxRateOther;
+                this.local.taxTypeId = this.sourceCustomer.taxTypeId;
+                this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
+                this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
+                this.local.isAddressForBillingAndShipping = this.sourceCustomer.isAddressForBillingAndShipping;
+                // this.local = this.sourceCustomer;
+                console.log(this.local);
                 this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
@@ -436,7 +458,23 @@ export class CustomerFinancialInformationComponent implements OnInit {
             else {
 
                 this.sourceCustomer.updatedBy = this.userName;
-                this.sourceCustomer.masterCompanyId = 1;
+                this.sourceCustomer.masterCompanyId = 1; 
+                this.sourceCustomer.isAddressForBillingAndShipping = false;
+                this.local.creditLimit = this.sourceCustomer.creditLimit
+                this.local.creditTermsId = this.sourceCustomer.creditTermsId;
+                this.local.discountId = this.sourceCustomer.discountId;
+                this.local.markUpPercentageId = this.sourceCustomer.markUpPercentageId;
+                this.local.isTaxExempt = this.sourceCustomer.isTaxExempt;
+                this.local.taxRateStateOrProvince = this.sourceCustomer.taxRateStateOrProvince;
+                this.local.taxRateOther = this.sourceCustomer.taxRateOther;
+                this.local.taxTypeId = this.sourceCustomer.taxTypeId;
+                this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
+                this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
+                this.local.isAddressForBillingAndShipping = this.sourceCustomer.isAddressForBillingAndShipping;
+
+         
+                // this.local = this.sourceCustomer;
+                console.log(this.local);
                 this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
@@ -445,7 +483,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 
             }
         }
-        else { }
+
 
 
 
@@ -611,7 +649,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 	nextClick() {
 		this.customerService.contactCollection = this.local;
-		this.activeIndex = 3;
+		this.activeIndex = 5;
         this.customerService.indexObj.next(this.activeIndex);
         this.editItemAndCloseModel();
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
@@ -619,9 +657,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
 	}
 	backClick() {
 		this.customerService.contactCollection = this.local;
-		this.activeIndex = 1;
+		this.activeIndex = 3;
 		this.customerService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-ata');
 
 	}
 
@@ -667,7 +705,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.currencyService.newAddcurrency(this.sourceAction).subscribe(data => {
 				this.loadCurrencyData();
 				this.saveCompleted(this.sourceAction);
-				this.sourceCustomer.currencyId = data.currencyId;
+                // this.sourceCustomer.currencyId = data.currencyId;
+                
             });
         }
         else {
@@ -1037,7 +1076,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 			})
 
-			this.activeIndex = 2;
+			this.activeIndex = 5;
 		}
 		else {
 			this.sourceAction.updatedBy = this.userName;
@@ -1047,7 +1086,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 
-			this.activeIndex = 2;
+			this.activeIndex = 5;
 
 			
 		}
@@ -1196,7 +1235,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     
                 })
 
-            this.activeIndex = 2;
+            this.activeIndex = 4;
         }
         else {
             this.sourceCustomer.updatedBy = this.userName;
@@ -1207,7 +1246,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     this.loadMarkUpData()
                 })
 
-            this.activeIndex = 2;
+            this.activeIndex = 4;
         }
         this.modal.close();
     }

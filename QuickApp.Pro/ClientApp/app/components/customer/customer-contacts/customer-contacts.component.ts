@@ -425,7 +425,7 @@ loadData() {
                         this.sourceCustomer.isDefaultContact = false;
                     }
             
-                console.log(this.sourceCustomer.isDefaultContact);
+       
                 this.isDefault = this.sourceCustomer.isDefaultContact;
 				this.customerService.newAddContactInfo(this.sourceCustomer).subscribe(data => {
 					this.localCollection = data;
@@ -444,7 +444,7 @@ loadData() {
 					}
 					this.customerService.contactCollection = this.local;
 					this.savesuccessCompleted(this.sourceCustomer);
-					this.activeIndex = 1;
+					this.activeIndex = 2;
 					this.customerService.indexObj.next(this.activeIndex);
 					
 				})
@@ -482,7 +482,7 @@ loadData() {
         this.customerService.contactCollection = this.local;
 		this.activeIndex = 2;
 		this.customerService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-financial-information');
+		this.route.navigate(['/customersmodule/customerpages/app-customer-aircraft']);
 		
     }
 

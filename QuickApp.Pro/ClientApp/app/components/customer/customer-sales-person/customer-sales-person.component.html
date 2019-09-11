@@ -29,7 +29,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Primary Sales Person <span class="clr-red">*</span></label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.primarySalesPersonFirstName" name="primarySalesPersonFirstName" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.primarySalesPersonFirstName" 
+                                    name="primarySalesPersonFirstName" [size]="30" [minLength]="1" [dropdown]="true" required >
                                         <ng-template let-primarySalesPerson pTemplate="item">
                                             <div class="ui-helper-clearfix">{{primarySalesPerson}}</div>
                                         </ng-template>
@@ -45,7 +46,7 @@
                                 </div>-->
                                 <div class="form-group">
                                     <label>Secondary Sales Person</label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.secondarySalesPersonName" name="secondarySalesPersonName" [size]="30" [minLength]="1" [dropdown]="true">
+                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.secondarySalesPersonName" name="secondarySalesPersonName" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-secondarySalesPerson pTemplate="item">
                                             <div class="ui-helper-clearfix">{{secondarySalesPerson}}</div>
                                         </ng-template>
@@ -63,7 +64,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Customer Service Rep Name</label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.csrName" name="csrName" [size]="30" [minLength]="1" [dropdown]="true">
+                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.csrName" name="csrName" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-csrName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{csrName}}</div>
                                         </ng-template>
@@ -71,7 +72,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Agent</label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.agentName" name="agentName" [size]="30" [minLength]="1" [dropdown]="true">
+                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.agentName" name="agentName" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-agentName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{agentName}}</div>
                                         </ng-template>

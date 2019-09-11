@@ -67,6 +67,7 @@ namespace DAL.Models
 
         public virtual Address POPartSplitAddress { get; set; }
 
-		
-	}
+        [NotMapped]
+        public long StockLineCount { get; set; }
+    }
 }
