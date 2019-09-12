@@ -249,6 +249,8 @@ namespace DAL
 
         IDashNumberRepository DashNumberRepository { get; }
 
+        ICommonRepository CommonRepository { get; }
+
         void SaveChanges(Employee employeeobject);
     }
 }

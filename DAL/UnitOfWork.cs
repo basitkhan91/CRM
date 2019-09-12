@@ -189,6 +189,8 @@ namespace DAL
         IWorkOrderRepository workOrderRepository;
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
+        ICommonRepository _commonRepository;
+
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -1653,7 +1655,16 @@ namespace DAL
                 return workOrderRepository;
             }
         }
-        
+
+        public ICommonRepository CommonRepository
+        {
+            get
+            {
+                if (_commonRepository == null)
+                    _commonRepository = new CommonRepository(_context);
+                return _commonRepository;
+            }
+        }
     }
 }
 
