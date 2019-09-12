@@ -112,10 +112,10 @@ namespace DAL.Models
         public Int32? OwnerType { get; set; }
         public Int32? TraceableToType { get; set; }
 
-        public bool? TimeLife { get; set; }
+        //public bool? TimeLife { get; set; }
 
-        [ForeignKey("TimeLifeId")]
-        public long? TimeLifeId { get; set; }
+        //[ForeignKey("TimeLifeId")]
+        //public long? TimeLifeId { get; set; }
         public Int32? UnitCostAdjustmentReasonTypeId { get; set; }
         public Int32? UnitSalePriceAdjustmentReasonTypeId { get; set; }
 
@@ -134,7 +134,7 @@ namespace DAL.Models
         public virtual MasterCompany MasterCompany { get; set; }
         public string IdNumber { get; set; }
 
-        public virtual TimeLife TimeLifeObject { get; set; }
+        //public virtual TimeLife TimeLifeObject { get; set; }
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 

@@ -409,11 +409,12 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.IsDER = stockLineViewModel.IsDER;
                 actionobject1.OEM = stockLineViewModel.OEM;
                 actionobject1.Memo = stockLineViewModel.Memo;
-                actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId;
-                if (stockLineViewModel.TimeLifeCyclesId == 0)
-                {
-                    actionobject1.TimeLifeCyclesId = null;
-                }
+                // Approach is changed and due to which the time life will have a stock line id and not vice versa. due to serialized and non serialized item master configuration.
+                //actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId;
+                //if (stockLineViewModel.TimeLifeCyclesId == 0)
+                //{
+                //    actionobject1.TimeLifeCyclesId = null;
+                //}
 
                 //actionobject1.CompanyId = 1;
                 //actionobject1.BusinessUnitId = 1;
@@ -575,8 +576,9 @@ namespace QuickApp.Pro.Controllers
             //actionobject.Shelf = stockLineViewModel.Shelf;
             //actionobject.Bin = stockLineViewModel.Bin;
             //actionobject.TimeLife = stockLineViewModel.TimeLife;
-
-            actionobject.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId;
+            
+            // Approach is changed and due to which the time life will have a stock line id and not vice versa. due to serialized and non serialized item master configuration.
+            //actionobject.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId;
             actionobject.ObtainFromType = stockLineViewModel.ObtainFromType;
             actionobject.OwnerType = stockLineViewModel.OwnerType;
             actionobject.TraceableToType = stockLineViewModel.TraceableToType;
