@@ -27,7 +27,12 @@ namespace DAL.Repositories
                 purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
                 {
                     part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
-                    part.StockLineCount = (long)_appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).ToList().Sum(x => x.Quantity);
+
+                    var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).ToList();
+                    if (stockLines != null && stockLines.Count > 0) {
+                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
+                    }
+                    
                     if (!part.isParent)
                     {
                         part.POPartSplitAddress = _appContext.Address.Where(x => x.AddressId == part.POPartSplitAddressId).FirstOrDefault();
