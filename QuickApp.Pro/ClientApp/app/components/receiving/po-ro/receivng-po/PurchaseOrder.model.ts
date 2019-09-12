@@ -133,6 +133,7 @@ export class PurchaseOrderPart {
     currentTLIndex: number;
     currentSERIndex: number;
     isDisabledTLboxes: boolean;
+    toggleIcon: boolean;
 }
 
 export class TimeLife {
@@ -158,6 +159,9 @@ export class TimeLife {
 
     masterCompanyId: number;
     isActive: boolean;
+
+    detailsNotProvided: boolean;
+    stockLineId: number;
 }
 
 export class StockLine {

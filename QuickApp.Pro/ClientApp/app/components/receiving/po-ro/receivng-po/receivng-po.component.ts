@@ -235,7 +235,7 @@ export class ReceivngPoComponent implements OnInit {
                             timeLife.lastSinceNew = '';
                             timeLife.lastSinceInspection = '';
                             timeLife.lastSinceOVH = '';
-
+                            timeLife.detailsNotProvided = false;
                             part.timeLifeList.push(timeLife);
                         }
                     }
@@ -357,12 +357,15 @@ export class ReceivngPoComponent implements OnInit {
                     parent.currentTLIndex = 0;
                     parent.currentSERIndex = 0;
                     parent.isDisabledTLboxes = false;
+                    
                     var splitParts = this.purchaseOrderData.purchaseOderPart.filter(x => !x.isParent && x.itemMaster.partNumber == parent.itemMaster.partNumber);
 
                     if (splitParts.length > 0) {
+                        
                         parent.hasChildren = true;
                         parent.quantityOrdered = 0;
                         for (let childPart of splitParts) {
+                            parent.stockLineCount += childPart.stockLineCount;
                             childPart.managementStructureId = parent.managementStructureId;
                             childPart.managementStructureName = parent.managementStructureName;
                             parent.quantityOrdered += childPart.quantityOrdered;
@@ -374,6 +377,9 @@ export class ReceivngPoComponent implements OnInit {
                 }
 
                 for (let part of this.purchaseOrderData.purchaseOderPart) {
+                    part.toggleIcon = false;
+                    part.stocklineListObj = [];
+                    part.timeLifeList = [];
                     part.currentSLIndex = 0;
                     part.currentTLIndex = 0;
                     part.currentSERIndex = 0;
@@ -441,7 +447,7 @@ export class ReceivngPoComponent implements OnInit {
 
             if (stockLineManagementStructureHierarchy[0] != undefined && stockLineManagementStructureHierarchy[0].length > 0) {
                 stockLine.companyId = stockLineSelectedManagementStructureHierarchy[0].managementStructureId;
-                stockLine.managementStructureEntityId = stockLine.companyId; 
+                stockLine.managementStructureEntityId = stockLine.companyId;
                 for (let managementStruct of stockLineManagementStructureHierarchy[0]) {
                     var dropdown = new DropDownData();
                     dropdown.Key = managementStruct.managementStructureId.toLocaleString();
@@ -577,19 +583,15 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    private showSplitShipmentParts(itemMasterId: number): void {
-        this.toggleExpandIcon();
+    private showSplitShipmentParts(purchaseOrderPart : PurchaseOrderPart): void {
         var selectedParts = this.purchaseOrderData.purchaseOderPart.filter(function (part) {
-            return part.itemMasterId == itemMasterId;
+            return part.itemMasterId == purchaseOrderPart.itemMasterId;
         });
 
         selectedParts.forEach(part => {
+            part.toggleIcon = !part.toggleIcon;  
             part.visible = !part.visible;
         });
-    }
-
-    private toggleExpandIcon() {
-        this.toggleIcon = !this.toggleIcon;
     }
 
     private isSplitShipmentPart(itemMasterId: number): boolean {
@@ -631,48 +633,45 @@ export class ReceivngPoComponent implements OnInit {
         this.alertService.stopLoadingMessage();
     }
 
-    private partQuantityChange(event: any, part: PurchaseOrderPart): void {
-        part.stocklineListObj = []
-        part.timeLifeList = [];
-        part.isSameDetailsForAllParts = false;
-        part.isTimeLifeUpdateLater = false;
-
-        part.currentSLIndex = 0;
-        part.currentTLIndex = 0;
-        part.currentSERIndex = 0;
-
-
-        if (event.target.value == "0" || event.target.value == "") {
-            event.target.value = "";
-            //part.visible = false;
+    private toggleStockLine(event: any, part: PurchaseOrderPart): void {
+        if (part.showStockLineGrid) {
+            this.addStockLine(part, false);
+            return;
+        }
+        
+        
+        if (part.quantityActuallyReceived == undefined || part.quantityActuallyReceived == 0) {
             part.showStockLineGrid = false;
+            this.alertService.showMessage(this.pageTitle, 'Please enter Quantity Received.', MessageSeverity.error);
             return;
         }
 
-        let quantity: number = parseInt(event.target.value);
+        let quantity: number = (part.quantityActuallyReceived != undefined || part.quantityActuallyReceived.toString()) != '' ? part.quantityActuallyReceived : 0;
+
+        if ((part.itemMaster.isSerialized && part.stocklineListObj.length != quantity) ||
+            (!part.itemMaster.isSerialized && part.stocklineListObj.length > 0 && part.stocklineListObj[0].quantity != quantity)) {
+
+            part.stocklineListObj = []
+            part.timeLifeList = [];
+            part.isSameDetailsForAllParts = false;
+            part.currentSLIndex = 0;
+            part.currentTLIndex = 0;
+            part.currentSERIndex = 0;
+        }
 
         var POParts = this.purchaseOrderData.purchaseOderPart.filter(x =>
-            // isParent = false = split shipment
             x.itemMaster.partnumber == part.itemMaster.partnumber && x.itemMaster.isParent == false
         );
 
         if (POParts.length > 1) {
-            //var totalQuantity = 0;
-            //for (let poPart of POParts) {
-            //    totalQuantity += poPart.quantityOrdered + (poPart.quantityBackOrdered == undefined ? 0 : poPart.quantityBackOrdered);
-            //}
-
             if (quantity > part.quantityOrdered - part.stockLineCount) {
-                event.target.value = "";
-                this.alertService.showMessage(this.pageTitle, "Quantity receieve can not be more than quantity ordered", MessageSeverity.error);
+                this.alertService.showMessage(this.pageTitle, "Quantity receive can not be more than quantity ordered", MessageSeverity.error);
                 return;
             }
         }
         else {
-
             if (quantity > part.quantityOrdered - part.stockLineCount) {
-                event.target.value = "";
-                this.alertService.showMessage(this.pageTitle, "Quantity receieve can not be more than quantity ordered", MessageSeverity.error);
+                this.alertService.showMessage(this.pageTitle, "Quantity receive can not be more than quantity ordered", MessageSeverity.error);
                 return;
             }
         }
@@ -699,12 +698,22 @@ export class ReceivngPoComponent implements OnInit {
                 timeLife.lastSinceNew = '';
                 timeLife.lastSinceInspection = '';
                 timeLife.lastSinceOVH = '';
-
+                timeLife.detailsNotProvided = false;
                 part.timeLifeList.push(timeLife);
             }
         }
 
-        this.addStockLine(part, false);
+        this.addStockLine(part, true);
+    }
+
+
+    addStockLine(part: PurchaseOrderPart, visible?: boolean): void {
+        if (visible == undefined) {
+            part.showStockLineGrid = !part.showStockLineGrid;
+        }
+        else {
+            part.showStockLineGrid = visible;
+        }
     }
 
     private paginatorFocusOut(event: any, part: PurchaseOrderPart): void {
@@ -1096,23 +1105,6 @@ export class ReceivngPoComponent implements OnInit {
         );
     }
 
-    addStockLine(part: PurchaseOrderPart, visible?: boolean): void {
-
-        if (part.quantityActuallyReceived != undefined && part.quantityActuallyReceived.toString().trim() != '' || part.quantityActuallyReceived > 0) {
-            if (visible == undefined) {
-                part.showStockLineGrid = !part.showStockLineGrid;
-            }
-            else {
-                part.showStockLineGrid = visible;
-            }
-        }
-        else {
-            this.alertService.showMessage(this.pageTitle, 'Please enter Quantity Received.', MessageSeverity.error);
-        }
-    }
-
-    isTimeLifeUpdateLater: Boolean;
-
     onSerialNumberNotProvided(stockLine: StockLine) {
         stockLine.isDisabledSNboxes = !stockLine.isDisabledSNboxes;
         stockLine.serialNumber = '';
@@ -1120,27 +1112,22 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     onChangeTimeLife(part: PurchaseOrderPart) {
-        part.isTimeLifeUpdateLater = !part.isTimeLifeUpdateLater;
-        part.isDisabledTLboxes = !part.isDisabledTLboxes;
-        for (let i = 0; i < part.timeLifeList.length; i++) {
-            part.timeLifeList[i] = new TimeLife();
-            part.timeLifeList[i].timeLifeCyclesId = 0;
-            part.timeLifeList[i].purchaseOrderId = part.purchaseOrderId;
-            part.timeLifeList[i].purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
-            part.timeLifeList[i].cyclesRemaining = '';
-            part.timeLifeList[i].cyclesSinceInspection = '';
-            part.timeLifeList[i].cyclesSinceNew = '';
-            part.timeLifeList[i].cyclesSinceOVH = '';
-            part.timeLifeList[i].cyclesSinceRepair = '';
-            part.timeLifeList[i].timeRemaining = '';
-            part.timeLifeList[i].timeSinceInspection = '';
-            part.timeLifeList[i].timeSinceNew = '';
-            part.timeLifeList[i].timeSinceOVH = '';
-            part.timeLifeList[i].timeSinceRepair = '';
-            part.timeLifeList[i].lastSinceNew = '';
-            part.timeLifeList[i].lastSinceInspection = '';
-            part.timeLifeList[i].lastSinceOVH = '';
-        }
+            part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
+            part.timeLifeList[part.currentTLIndex].purchaseOrderId = part.purchaseOrderId;
+            part.timeLifeList[part.currentTLIndex].purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
+            part.timeLifeList[part.currentTLIndex].cyclesRemaining = '';
+            part.timeLifeList[part.currentTLIndex].cyclesSinceInspection = '';
+            part.timeLifeList[part.currentTLIndex].cyclesSinceNew = '';
+            part.timeLifeList[part.currentTLIndex].cyclesSinceOVH = '';
+            part.timeLifeList[part.currentTLIndex].cyclesSinceRepair = '';
+            part.timeLifeList[part.currentTLIndex].timeRemaining = '';
+            part.timeLifeList[part.currentTLIndex].timeSinceInspection = '';
+            part.timeLifeList[part.currentTLIndex].timeSinceNew = '';
+            part.timeLifeList[part.currentTLIndex].timeSinceOVH = '';
+            part.timeLifeList[part.currentTLIndex].timeSinceRepair = '';
+            part.timeLifeList[part.currentTLIndex].lastSinceNew = '';
+            part.timeLifeList[part.currentTLIndex].lastSinceInspection = '';
+            part.timeLifeList[part.currentTLIndex].lastSinceOVH = '';
     }
 
     onSubmitToReceive() {
@@ -1180,7 +1167,7 @@ export class ReceivngPoComponent implements OnInit {
             let receivePart: ReceiveParts = new ReceiveParts();
             receivePart.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
             receivePart.stockLines = part.stocklineListObj;
-            receivePart.timeLife = part.isTimeLifeUpdateLater == true ? [] : part.timeLifeList;;
+            receivePart.timeLife = part.timeLifeList;;
             receiveParts.push(receivePart);
         }
         return receiveParts;
@@ -1209,6 +1196,17 @@ export class ReceivngPoComponent implements OnInit {
                     item.stocklineListObj[i].gLAccountId = item.itemMaster.glAccountId;
                     item.stocklineListObj[i].conditionId = parseInt(item.conditionCode);
                     item.stocklineListObj[i].quantityRejected = toInteger(item.quantityRejected);
+                    item.stocklineListObj[i].isSerialized = item.itemMaster.isSerialized == undefined ? false : item.itemMaster.isSerialized;
+                    item.stocklineListObj[i].isPMA = item.itemMaster.pma;
+                    item.stocklineListObj[i].isDER = item.itemMaster.der;
+                    item.stocklineListObj[i].purchaseOrderExtendedCost = item.stocklineListObj[i].purchaseOrderExtendedCost == undefined ||
+                        item.stocklineListObj[i].purchaseOrderExtendedCost.toString() == '' ? 0 :
+                        item.stocklineListObj[i].purchaseOrderExtendedCost;
+
+                    item.stocklineListObj[i].purchaseOrderUnitCost = item.stocklineListObj[i].purchaseOrderUnitCost == undefined ||
+                        item.stocklineListObj[i].purchaseOrderUnitCost.toString() == '' ? 0 :
+                        item.stocklineListObj[i].purchaseOrderUnitCost;
+                    //item.stocklineListObj[i].oEM = item.itemMaster.oemPNId;
 
                     if (item.stocklineListObj[i].companyId == undefined || item.stocklineListObj[i].companyId == 0) {
                         errorMessages.push("Please select Company in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
@@ -1223,12 +1221,14 @@ export class ReceivngPoComponent implements OnInit {
                     }
                     if (item.itemMaster.isSerialized == true) {
                         item.stocklineListObj[i].serialNumber = item.stocklineListObj[i].serialNumber.trim();
-                        if (!item.stocklineListObj[i].serialNumberNotProvided && (item.stocklineListObj[i].serialNumber == undefined || item.stocklineListObj[i].serialNumber.trim() == '')) {
+                        if (!item.stocklineListObj[i].serialNumberNotProvided && (item.stocklineListObj[i].serialNumber == undefined || item.stocklineListObj[i].serialNumber == '')) {
                             errorMessages.push("Please enter Serial Number in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                         }
-                        for (var j = i + 1; j < item.stocklineListObj.length; j++) {
-                            if (item.stocklineListObj[j].serialNumber == item.stocklineListObj[i].serialNumber) {
-                                errorMessages.push("Duplicate Serial Number is entered in Stock Line Page " + (i+1).toString() + " and Page " + (j+1).toString());
+                        if (!item.stocklineListObj[i].serialNumberNotProvided) {
+                            for (var j = i + 1; j < item.stocklineListObj.length; j++) {
+                                if (!item.stocklineListObj[i].serialNumberNotProvided && item.stocklineListObj[j].serialNumber == item.stocklineListObj[i].serialNumber) {
+                                    errorMessages.push("Duplicate Serial Number is entered in Stock Line Page " + (i + 1).toString() + " and Page " + (j + 1).toString());
+                                }
                             }
                         }
                     }
@@ -1408,7 +1408,6 @@ export class ReceivngPoComponent implements OnInit {
                         part.currentSLIndex = 0;
                         part.currentSERIndex = 0;
                         part.currentTLIndex = 0;
-                        part.isTimeLifeUpdateLater = false;
                         for (var i = 0; i < part.quantityActuallyReceived; i++) {
                             let timeLife: TimeLife = new TimeLife();
                             timeLife.timeLifeCyclesId = 0;
@@ -1427,7 +1426,7 @@ export class ReceivngPoComponent implements OnInit {
                             timeLife.lastSinceNew = '';
                             timeLife.lastSinceInspection = '';
                             timeLife.lastSinceOVH = '';
-
+                            timeLife.detailsNotProvided = false;
                             part.timeLifeList.push(timeLife);
                         }
                     }
