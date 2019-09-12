@@ -192,10 +192,10 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.itemGroup_Name = row.itemGroupCode;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
