@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
 {
-    [Route("api/WorkOrder")]
+    [Route("api/workorder")]
     public class WorkOrderController : Controller
     {
 
@@ -27,6 +27,91 @@ namespace QuickApp.Pro.Controllers
 
         #endregion Constructor
 
+        [HttpGet("workorderbyid")]
+        public IActionResult WorkOrderById(long workOrderId)
+        {
+            var workOrder = unitOfWork.WorkOrderRepository.WorkOrderById(workOrderId);
+            return Ok(workOrder);
+        }
+
+        [HttpPost("createworkorder")]
+        public IActionResult Add([FromBody] WorkOrder workOrder)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.WorkOrderRepository.CreateWorkOrder(workOrder);
+                   return Ok(workOrder);
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("updateworkorder")]
+        public IActionResult UpdateWorkOrder([FromBody] WorkOrder workOrder)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.WorkOrderRepository.UpdateWorkOrder(workOrder);
+                    return Ok(workOrder);
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+                }
+            }catch(Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("deleteworkorder")]
+        public IActionResult DeleteWorkOrder(long workOrderId)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrder(workOrderId);
+            return Ok(ModelState);
+        }
+
+        [HttpPost("workorderstatus")]
+        public IActionResult WorkOrderStatus(long workOrderId,bool status)
+        {
+            unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status);
+            return Ok(ModelState);
+        }
+
+        [HttpGet("workorderlist")]
+        public IActionResult GetWorkOrdersList(WorkOrderList workOrderList)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrdersList(workOrderList);
+            return Ok(result);
+        }
+
+        [HttpGet("workflownos")]
+        public IActionResult GetWorkFlowNos(long partId, long workScopeId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowNos(partId, workScopeId);
+            return Ok(result);
+        }
+
+
+
+
+
+
+
+
+
+
         [HttpGet("getAll")]
         public IActionResult Index()
         {
@@ -38,13 +123,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(workOrderList);
         }
 
-        [HttpGet("getWorkOrderDataByID/{id}")]
-        public IActionResult GetById(long id)
-        {
-            var workOrder = unitOfWork.Repository<WorkOrder>()
-                .Find(x => x.ID == id).FirstOrDefault();
-            return Ok(workOrder);
-        }
         //POST Multi Data in Workorderlabor Table
         [HttpPost("WorkOrderLabourPost")]
         public IActionResult AddLabour([FromBody] WorkOrderLabor[] workOrderLabor)
@@ -70,87 +148,6 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        //Post Data in WorkOrder Table
-        [HttpPost("WorkOrderPost")]
-        public IActionResult Add([FromBody] WorkOrder workOrder)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                        unitOfWork.Repository<WorkOrder>().Add(workOrder);
-                        unitOfWork.SaveChanges();
-                        //workOrder = unitOfWork.Repository<WorkOrder>().GetAll().OrderByDescending(x => x.ID).FirstOrDefault();
-                        return Ok(workOrder);
-                }
-                else
-                {
-                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
-                }
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost("updateWO/{id}")]
-        public IActionResult Update(long id,[FromBody] WorkOrder workOrder)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var workorderObj = unitOfWork.WorkOrderRepository.GetSingleOrDefault(c => c.ID == id);
-                    workOrder.MasterCompanyId = 1;
-                    workorderObj.Contract = workOrder.Contract;
-
-                    workorderObj.CreditLimit = workOrder.CreditLimit;
-                    workorderObj.CreditTermsId = workOrder.CreditTermsId;
-                    workorderObj.CustomerContactId = workOrder.CustomerContactId;
-                    workorderObj.CustomerId = workOrder.CustomerId;
-                    workorderObj.EmployeeId = workOrder.EmployeeId;
-                    workorderObj.IsContractAvl = workOrder.IsContractAvl;
-                    workorderObj.IsSinglePN = workOrder.IsSinglePN;
-                    workorderObj.MasterCompanyId = workOrder.MasterCompanyId;
-                    workorderObj.OpenDate = workOrder.OpenDate;
-                    workorderObj.Quantity = workOrder.Quantity;
-                    workorderObj.SalesPerson = workOrder.SalesPerson;
-                    workorderObj.WorkOrderNum = workOrder.WorkOrderNum;
-                    workorderObj.WorkOrderStatusId = workOrder.WorkOrderStatusId;
-                    workorderObj.WorkOrderTypeId = workOrder.WorkOrderTypeId;
-                    workorderObj.UpdatedBy = workOrder.UpdatedBy;
-                    workorderObj.UpdatedDate = workOrder.UpdatedDate;
-                    workorderObj.CreatedBy = workOrder.CreatedBy;
-                    workorderObj.CreatedDate = workOrder.CreatedDate;
-                    workorderObj.IsActive = workOrder.IsActive;
-                    workorderObj.IsDeleted = workOrder.IsDeleted;
-
-                    unitOfWork.Repository<WorkOrder>().Update(workorderObj);
-                    unitOfWork.SaveChanges();
-                    return Ok(workOrder);
-                }
-                else
-                {
-                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
-                }
-            }catch(Exception ex)
-            {
-                throw;
-            }
-            //return Ok();
-        }
-
-        [HttpPost("remove/{id}")]
-        public IActionResult Delete(long id)
-        {
-            var workOrder = unitOfWork.Repository<WorkOrder>().Find(xx => xx.ID == id).FirstOrDefault();
-            workOrder.IsDeleted = true;
-            workOrder.UpdatedDate = DateTime.Now;
-            unitOfWork.Repository<WorkOrder>().Update(workOrder);
-            unitOfWork.SaveChanges();
-            return Ok(workOrder);
         }
 
         [HttpGet("audits/{id}")]
