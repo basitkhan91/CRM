@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
    public class Asset : IAudit
     {
         [Key]
-
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public long? AssetRecordId { get; set; }
 
         [Required(ErrorMessage = "Id Is Required.")]
@@ -58,6 +59,7 @@ namespace DAL.Models
         public Nullable<bool> AssetIsMaintenanceReqd { get; set; }
         public Nullable<bool> AssetMaintenanceIsContract { get; set; }
         public string AssetMaintenanceContractFile { get; set; }
+        public string AssetMaintenanceContractFileExt { get; set; }
         public Nullable<byte> MaintenanceFrequencyMonths { get; set; }
         public Nullable<byte> MaintenanceFrequencyDays { get; set; }
         public Nullable<long> DefaultVendorId { get; set; }
@@ -70,6 +72,8 @@ namespace DAL.Models
         public Nullable<System.DateTime> WarrantyStartDate { get; set; }
         public Nullable<System.DateTime> WarrantyEndDate { get; set; }
         public string WarrantyStatus { get; set; }
+        public string WarrantyFile { get; set; }
+        public string WarrantyFileExt { get; set; }
         public Nullable<byte> UnexpiredTime { get; set; }
         public Nullable<Int32> MasterCompanyId { get; set; }
         public Nullable<bool> IsActive { get; set; }

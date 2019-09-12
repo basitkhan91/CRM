@@ -1,11 +1,13 @@
 ﻿using DAL;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace QuickApp.Pro.Controllers
@@ -146,6 +148,180 @@ namespace QuickApp.Pro.Controllers
 
         //    return Ok(auditResult);
         //}
+
+        [HttpPost("addNewAsset")]
+        public IActionResult addnewasset([FromBody] Asset asset)
+        {
+            if (asset != null && asset.AssetId != null) //need to check duplicate
+            {
+                Asset newAsset = new Asset();
+                //newAsset.AssetRecordId = asset.AssetRecordId;
+                newAsset.AssetId = asset.AssetId;
+                newAsset.AlternateAssetId = asset.AlternateAssetId;
+                newAsset.Name = asset.Name;
+                newAsset.Description = asset.Description;
+                newAsset.ManagementStructureId = asset.ManagementStructureId;
+                newAsset.AssetAcquisitionTypeId = asset.AssetAcquisitionTypeId;
+                newAsset.AssetTypeId = asset.AssetTypeId;
+                newAsset.ManufacturerId = asset.ManufacturerId;
+                newAsset.Model = asset.Model;
+                newAsset.UnitOfMeasureId = asset.UnitOfMeasureId;
+                newAsset.CurrencyId = asset.CurrencyId;
+                newAsset.AssetTypeId = asset.AssetTypeId;
+                newAsset.UnitCost = asset.UnitCost;
+                newAsset.IsActive = true;
+                newAsset.IsDelete = false;
+                newAsset.CreatedBy = asset.CreatedBy;
+                newAsset.UpdatedBy = asset.UpdatedBy;
+                newAsset.CreatedDate = DateTime.Now;
+                newAsset.UpdatedDate = DateTime.Now;
+                newAsset.MasterCompanyId = 1;
+                _unitOfWork.Repository<Asset>().Add(newAsset);
+                _unitOfWork.SaveChanges(); 
+            return Ok(newAsset);
+            }
+            else
+            return Ok("Enter proper data");
+
+        }
+        [HttpPost("updateMaintenanceWarranty")]
+        public IActionResult updatemaintenancewarranty(MaintenanceWarrantyViewModel maintenanceWarranty)
+        {
+            if(maintenanceWarranty != null && maintenanceWarranty.AssetRecordId != null)
+            {
+                Asset asset = _context.Asset.Where(a => a.AssetRecordId == maintenanceWarranty.AssetRecordId).FirstOrDefault();
+                asset.AssetIsMaintenanceReqd = maintenanceWarranty.AssetIsMaintenanceReqd;
+                asset.AssetMaintenanceIsContract = maintenanceWarranty.AssetMaintenanceIsContract;
+                asset.MaintenanceFrequencyDays = maintenanceWarranty.MaintenanceFrequencyDays;
+                asset.MaintenanceFrequencyMonths = maintenanceWarranty.MaintenanceFrequencyMonths;
+                asset.DefaultVendorId = maintenanceWarranty.DefaultVendorId;
+                asset.GLAccountId = maintenanceWarranty.GLAccountId;
+                asset.MaintenanceMemo = maintenanceWarranty.MaintenanceMemo;
+                asset.IsWarrantyRequired = maintenanceWarranty.IsWarrantyRequired;
+                asset.Warranty = maintenanceWarranty.Warranty;
+                asset.WarrantyCompany = maintenanceWarranty.WarrantyCompany;
+                asset.WarrantyStartDate = maintenanceWarranty.WarrantyStartDate;
+                asset.WarrantyEndDate = maintenanceWarranty.WarrantyEndDate;
+                asset.WarrantyStatus = maintenanceWarranty.WarrantyStatus;
+                asset.UnexpiredTime = maintenanceWarranty.UnexpiredTime;
+                asset.UpdatedBy = maintenanceWarranty.UpdatedBy;
+                asset.UpdatedDate = DateTime.Now;
+                string mFilePath = string.Empty;
+                string wFilePath = string.Empty;
+                if (maintenanceWarranty.MaintenanceFile != null)
+                {
+                     mFilePath = Path.Combine(
+                      Directory.GetCurrentDirectory(), "wwwroot",
+                      maintenanceWarranty.MaintenanceFile.FileName);
+                    using (var stream = new FileStream(mFilePath, FileMode.Create))
+                    {
+                        maintenanceWarranty.MaintenanceFile.CopyTo(stream);
+                    }
+                }
+                if (maintenanceWarranty.WarantyFile != null)
+                {
+                     wFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", maintenanceWarranty.WarantyFile.FileName);
+                    using (var stream = new FileStream(wFilePath, FileMode.Create))
+                    {
+                        maintenanceWarranty.WarantyFile.CopyTo(stream);
+                    }
+                }
+                asset.AssetMaintenanceContractFile = mFilePath;
+                asset.AssetMaintenanceContractFileExt = Path.GetExtension(mFilePath);
+                asset.WarrantyFile = wFilePath;
+                asset.WarrantyFileExt = Path.GetExtension(wFilePath);
+
+                _unitOfWork.Repository<Asset>().Update(asset);
+                _unitOfWork.SaveChanges();
+            }
+            return Ok();
+        }
+
+        [HttpPost("updateCalibration")]
+        public IActionResult updatecalibration([FromBody] CalibrationViewModel  calibration)
+        {
+            if (calibration != null)
+            {
+                Asset asset = _context.Asset.Where(a => a.AssetRecordId == calibration.AssetRecordId).FirstOrDefault();
+                asset.CalibrationDefaultVendorId = calibration.CalibrationDefaultVendorId;
+                asset.CalibrationFrequencyMonths = calibration.CalibrationFrequencyMonths;
+                asset.CalibrationFrequencyDays = calibration.CalibrationFrequencyDays;
+                asset.CalibrationDefaultCost = calibration.CalibrationDefaultCost;
+                asset.CalibrationGlAccountId = calibration.CalibrationGlAccountId;
+                asset.CalibrationMemo = calibration.CalibrationMemo;
+                asset.CertificationFrequencyMonths = calibration.CertificationFrequencyMonths;
+                asset.CertificationFrequencyDays = calibration.CertificationFrequencyDays;
+                asset.CertificationDefaultCost = calibration.CertificationDefaultCost;
+                asset.CertificationGlAccountId = calibration.CertificationGlAccountId;
+                asset.CertificationDefaultVendorId = calibration.CertificationDefaultVendorId;
+                asset.CertificationMemo = calibration.CertificationMemo;
+                asset.AssetCalibrationMin = calibration.AssetCalibrationMin;
+                asset.AssetCalibrationMinTolerance = calibration.AssetCalibrationMinTolerance;
+                asset.AssetCalibratonMax = calibration.AssetCalibratonMax;
+                asset.AssetCalibrationMaxTolerance = calibration.AssetCalibrationMaxTolerance;
+                asset.AssetCalibrationExpected = calibration.AssetCalibrationExpected;
+                asset.AssetCalibrationExpectedTolerance = calibration.AssetCalibrationExpectedTolerance;
+                asset.UpdatedBy = calibration.UpdatedBy;
+                _unitOfWork.Repository<Asset>().Update(asset);
+                _unitOfWork.SaveChanges();
+            }
+            return Ok();
+        }
+
+        [HttpPost("addAssetCapes")]
+        public IActionResult addassetcapes([FromBody] AssetCapes assetCapes)
+        {
+            AssetCapes newAssetCapes = new AssetCapes();
+            newAssetCapes.AssetRecordId = assetCapes.AssetRecordId;
+            newAssetCapes.CapabilityId = assetCapes.CapabilityId;
+            newAssetCapes.MasterCompanyId = assetCapes.MasterCompanyId;
+
+            newAssetCapes.CreatedBy = assetCapes.CreatedBy;
+            newAssetCapes.UpdatedBy = assetCapes.UpdatedBy;
+            newAssetCapes.CreatedDate = DateTime.Now;
+            newAssetCapes.UpdatedDate = DateTime.Now;
+            newAssetCapes.IsActive = true;
+            newAssetCapes.IsDeleted = false;
+            newAssetCapes.AircraftTypeId = assetCapes.AircraftTypeId;
+            newAssetCapes.AircraftModelId = assetCapes.AircraftModelId;
+            newAssetCapes.AircraftDashNumberId = assetCapes.AircraftDashNumberId;
+            
+            _unitOfWork.Repository<AssetCapes>().Add(newAssetCapes);
+            _unitOfWork.SaveChanges();
+            return Ok();
+        }
+        [HttpPost("updateAssetCapes")]
+        public IActionResult updateassetcapes([FromBody] List<AssetCapes> assetCapes)
+        {
+            try
+            {
+                foreach (AssetCapes capes in assetCapes)
+                {
+                    AssetCapes newAssetCapes = _context.AssetCapes.Where(c => c.AssetCapesId == capes.AssetCapesId).FirstOrDefault();
+                    //newAssetCapes.AssetRecordId = capes.AssetRecordId;
+                    newAssetCapes.CapabilityId = capes.CapabilityId;
+                    newAssetCapes.MasterCompanyId = capes.MasterCompanyId;
+                    newAssetCapes.CreatedBy = capes.CreatedBy;
+                    newAssetCapes.UpdatedBy = capes.UpdatedBy;
+                    newAssetCapes.UpdatedDate = DateTime.Now;
+                    newAssetCapes.IsActive = capes.IsActive;
+                    newAssetCapes.IsDeleted = capes.IsDeleted;
+                    newAssetCapes.AircraftTypeId = capes.AircraftTypeId;
+                    newAssetCapes.AircraftModelId = capes.AircraftModelId;
+                    newAssetCapes.AircraftDashNumberId = capes.AircraftDashNumberId;
+                    newAssetCapes.AircraftType = capes.AircraftType;
+                    newAssetCapes.AircraftModel = capes.AircraftModel;
+                    newAssetCapes.AircraftDashNumber = capes.AircraftDashNumber;
+                    _unitOfWork.Repository<AssetCapes>().Update(newAssetCapes);
+                    _unitOfWork.SaveChanges();
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Ok("Getting error");
+            }
+        }
     }
 }
 

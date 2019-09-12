@@ -62,6 +62,8 @@ namespace DAL.Models
         public Nullable<System.DateTime> WarrantyStartDate { get; set; }
         public Nullable<System.DateTime> WarrantyEndDate { get; set; }
         public string WarrantyStatus { get; set; }
+        public string WarrantyFile { get; set; }
+        public string WarrantyFileExt { get; set; }
         public Nullable<byte> UnexpiredTime { get; set; }
         public Nullable<Int32> MasterCompanyId { get; set; }
         public Nullable<bool> IsActive { get; set; }

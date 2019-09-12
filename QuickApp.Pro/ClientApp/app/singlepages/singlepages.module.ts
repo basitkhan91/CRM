@@ -126,6 +126,7 @@ import { PaginationComponent } from "../shared/pagination/pagination/pagination.
 import { PaginationService } from "../services/pagination/pagination.service";
 import { TooltipModule } from "primeng/tooltip";
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { PercentComponent } from "../components/percent/percent.component";
 
 @NgModule({
 	imports: [
@@ -150,6 +151,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     declarations: [
         CreatePublicationComponent,
         SingleComponent,
+        PercentComponent,
         ActionsComponent,
         ActionAttributesComponent,
         AtaMainComponent,

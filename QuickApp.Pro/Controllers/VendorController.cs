@@ -422,23 +422,23 @@ namespace QuickApp.Pro.Controllers
             return Ok(checkAddress);
 
         }
-        [HttpGet("vendorAddressGet/{id}")]
-        [Produces(typeof(List<VendorShippingAddress>))]
-        public IActionResult AllVendorendorAddressGet(long id)
-        {
-            var allAddresses = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
-            return Ok(allAddresses);
 
-        }
+        //[HttpGet("vendorAddressGet/{id}")]
+        //[Produces(typeof(List<VendorShippingAddress>))]
+        //public IActionResult AllVendorAddressGet(long id)
+        //{
+        //    var allAddresses = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
+        //    return Ok(allAddresses);
+        //}
+
         [HttpGet("getVendorShipViaDetails/{Selectedrow}")]
         [Produces(typeof(List<VendorShipping>))]
         public IActionResult getVendorShipViaDetails(long Selectedrow)
         {
-
             var allShipViaDetails = _unitOfWork.VendorShippingAddress.GetAllShipViaDetails(Selectedrow); //.GetAllCustomersData();
             return Ok(allShipViaDetails);
-
         }
+
         [HttpGet("cusshippingGetwithid/{Selectedrow}")]
         [Produces(typeof(List<VendorShipping>))]
         public IActionResult cusshippingGetwithid(long Selectedrow)
@@ -705,8 +705,9 @@ namespace QuickApp.Pro.Controllers
                     actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
                     actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
                     actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
+					actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
 
-                    actionobject.NeedByDate = poViewModel.NeedByDate;
+					actionobject.NeedByDate = poViewModel.NeedByDate;
                     actionobject.Approver = poViewModel.Approver;
                     actionobject.ApprovedDate = poViewModel.ApprovedDate;
                     actionobject.NeedByDate = poViewModel.NeedByDate;
@@ -755,7 +756,8 @@ namespace QuickApp.Pro.Controllers
 
                     actionobject.PurchaseOrderId = poViewModel.PurchaseOrderId;
                     actionobject.ItemMasterId = poViewModel.ItemMasterId;
-                    actionobject.SerialNumber = poViewModel.SerialNumber;
+					actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+					actionobject.SerialNumber = poViewModel.SerialNumber;
                     actionobject.NonInventory = poViewModel.NonInventory;
                     actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
                     actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
@@ -2579,6 +2581,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(aircraft);
         }
 
+        [HttpGet("vendorAddressGet/{id}")]
+        [Produces(typeof(List<VendorShippingAddress>))]
+        public IActionResult vendorAddressGet(long id, VendorShippingAddress vendorBillingAddress)
+        {
+            var allVendShipdetails = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
+            return Ok(allVendShipdetails);
+
+        }
         [HttpGet("vendorAircraftManufacturerGet/{id}")]
         [Produces(typeof(List<VendorCapabilityAircraftType>))]
         public IActionResult vendorAircraftManufacturerGet(int id)

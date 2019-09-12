@@ -250,6 +250,8 @@ namespace DAL
         IDashNumberRepository DashNumberRepository { get; }
 
         ICommonRepository CommonRepository { get; }
+      
+        IAssetCapes AssetCapes { get; }
 
         void SaveChanges(Employee employeeobject);
     }

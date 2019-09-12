@@ -47,8 +47,8 @@ namespace QuickApp.Pro.ViewModels
         public Int16? BillToUserType { get; set; }
         public string ShipToUserName { get; set; }
         public string BillToUserName { get; set; }
-        public bool? DeferredReceiver { get; set; }
-        public bool? Resale { get; set; }
+        public bool DeferredReceiver { get; set; }
+        public bool Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
 
         public int ManagementStructureId { get; set; }

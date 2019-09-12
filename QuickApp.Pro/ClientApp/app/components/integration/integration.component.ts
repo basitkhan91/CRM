@@ -165,6 +165,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = true;
+        this.integration_Name = row.description;
         this.sourceAction = row;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {

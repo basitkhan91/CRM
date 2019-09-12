@@ -52,10 +52,13 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
-        //public Array partListObj { get; set; }
-        //public Array childList { get; set; }
+
+		public int MasterCompanyId { get; set; }
+
+		//public Array partListObj { get; set; }
+		//public Array childList { get; set; }
 
 
 
-    }
+	}
 }

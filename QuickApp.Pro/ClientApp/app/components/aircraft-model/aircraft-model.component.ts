@@ -10,6 +10,8 @@ import { AircraftType } from "../../models/AircraftType.model";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { PaginatorModule, Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from "primeng/api";
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { modelGroupProvider } from "../../../../node_modules/@angular/forms/src/directives/ng_model_group";
 @Component({
     selector: 'app-aircraft-model',
     templateUrl: './aircraft-model.component.html',
@@ -21,38 +23,49 @@ export class AircraftModelComponent implements OnInit{
     first: number;
     rows: number;
     paginatorState: any;
-
+    actionModel: any[] = [];
     AuditDetails: any[];
     /** aircraft-model ctor */
-
     currentAircraftModelType: AircraftModel;
     aircraftModelTypeToUpdate: AircraftModel;
     aircraftModelTypeToRemove: AircraftModel;
     aircraftModelList: AircraftModel[];
     aircraftManufacturerList: AircraftType[];
     aircraftModelsPagination: AircraftModel[];//added
-    modal: NgbModalRef;
+    modal: NgbModalRef;    
+    selectedActionName: any;
+    localCollection: any[] = [];
+    disableSave: boolean = false;
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
+    totelPages: number;
+    allaircraftModels: AircraftModel[] = [];
     innerColumnHeader: string = "aircraftType?.description";
     //adding for Pagination start
     totalRecords: number;
     cols: any[];
     loading: boolean;
+    isDelete: boolean = false;
+    aircraftModelTypeToView: AircraftModel;
     //adding for Pagination End
 
-    constructor(private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
 
     }
 
     ngOnInit(): void
     {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-aircraft-model' ;
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+
         this.aircraftModelService.getAll().subscribe(aircraftModels => {
             this.aircraftModelList = aircraftModels[0];
+            this.allaircraftModels = aircraftModels[0];
             this.totalRecords = this.aircraftModelList.length;//Adding for Pagination
+            this.totelPages = Math.ceil(this.totalRecords / this.rows);
             this.aircraftModelList.forEach(function (model) {
-                model.isActive = model.isActive == false ? false : true;
+                model.isActive = model.isActive == false ? false : true;               
             });
         });
         this.currentAircraftModelType = new AircraftModel();
@@ -66,6 +79,7 @@ export class AircraftModelComponent implements OnInit{
             { field: 'aircraftModelId', header: 'ID' },
             { field: 'aircraftType.description', header: 'Aircraft Manufacturer' },
             { field: 'modelName', header: 'Model Name' },
+            { field: 'memo', header: 'Memo'}
         ];
         this.loading = true;
         //P-table Code End
@@ -157,7 +171,13 @@ export class AircraftModelComponent implements OnInit{
         })[0]);;
         this.modal = this.modalService.open(content, { size: 'sm' });
     }
-
+    openView(viewData, id): void {
+        this.aircraftModelTypeToView = Object.assign({}, this.aircraftModelsPagination.filter(function (model) {
+            return model.aircraftModelId == id;
+        })[0]);;        
+        console.log(this.aircraftModelTypeToView)
+        this.modal = this.modalService.open(viewData, { size: 'sm' });
+    }
     toggleIsActive(aircraftModels: any, event): void {
         this.aircraftModelTypeToUpdate = aircraftModels;
         this.aircraftModelTypeToUpdate.isActive = event.checked == false ? false : true;
@@ -197,6 +217,41 @@ export class AircraftModelComponent implements OnInit{
         if (this.paginatorState)
         {
             this.loadAircraftModels(this.paginatorState);
+        }
+    }
+    model(event){
+        for (let i = 0; i < this.actionModel.length; i++) {            
+            if (event == this.actionModel[i][0].modelname) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+    filterModelName(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allaircraftModels.length; i++) {
+            let modelname = this.allaircraftModels[i].modelName;
+            if (modelname.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.actionModel.push([{
+                    "aircraftmodelId": this.allaircraftModels[i].aircraftModelId,
+                    "modelname": modelname
+                }]),
+                this.localCollection.push(modelname);
+            }
+        }
+    }
+  eventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
         }
     }
 }

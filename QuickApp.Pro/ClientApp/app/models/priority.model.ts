@@ -13,9 +13,9 @@ export class Priority {
         this.updatedDate = updatedDate;
         this.updatedBy = updatedBy;
         this.masterCompany = masterCompany;
-        this.isActive = isActive;
+		this.isActive = isActive;
+        this.memo = memo;
         this.isDelete = isDelete;
-		this.memo = memo;
     }
 
     public priorityId: number;

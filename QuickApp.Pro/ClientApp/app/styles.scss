@@ -14083,12 +14083,49 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-calendar-cstm .ui-calendar-button {
     padding: 3px;
 }
+.p-radiobutton-cstm .ui-radiobutton {
+    margin-right: -5px !important;
+    padding-top: 8px !important;
+}
+.p-radiobutton-cstm .ui-radiobutton .ui-radiobutton-box {
+    width: 15px !important;
+    height: 15px !important;
+}
+.p-radiobutton-cstm .ui-radiobutton .ui-radiobutton-box .ui-radiobutton-icon {
+    left: 58% !important;
+    top: 58% !important;
+    width: 7px !important;
+    height: 7px !important;
+}
+.cus-contact-table tr th {
+    padding: 7px !important;
+}
+.cus-contact-table tr td {
+    padding: 4px !important;
+}
 
 .modal-full {
     max-width: 700px !important;
 }
 .margintop {
     margin-top: 7px !important;
+}
+.md-stepper-horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 5px;
+}
+@media only screen and (max-width: 1024px) {
+    .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {
+        font-size: 10px !important;
+    }
+    .md-stepper-horizontal .md-step .md-step-title {
+        margin-top: 10px !important;
+        font-size: 10px  !important;
+    }
+    .md-stepper-horizontal .md-step {
+        padding: 8px !important;
+    }
 }
 
 .rounder-corners-cstm {

@@ -91,6 +91,8 @@ namespace QuickApp.Pro.Controllers
                 workscopeobject.IsActive = workscopeViewModel.IsActive;
                 workscopeobject.CreatedDate = DateTime.Now;
                 workscopeobject.UpdatedDate = DateTime.Now;
+                workscopeobject.IsDelete = false;
+                workscopeobject.MasterCompanyId = 1;
                 workscopeobject.CreatedBy = workscopeViewModel.CreatedBy;
                 workscopeobject.UpdatedBy = workscopeViewModel.UpdatedBy;
                 _unitOfWork.WorkScope.Add(workscopeobject);

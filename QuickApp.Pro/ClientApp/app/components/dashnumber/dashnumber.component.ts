@@ -11,6 +11,8 @@ import { DashNumberService } from "../../services/dash-number/dash-number.servic
 import { AircraftModelService } from "../../services/aircraft-model/aircraft-model.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { PaginationService } from "../../services/pagination/pagination.service";
+import { MasterComapnyService } from "../../services/mastercompany.service";
+import { MasterCompany } from "../../models/mastercompany.model";
 @Component({
     selector: 'app-dashnumber',
     templateUrl: './dashnumber.component.html',
@@ -33,6 +35,11 @@ export class DashnumberComponent implements OnInit {
     dashnumberInfo: any;
     aircraftManufacturerList: AircraftType[];
     selectedAircraftModel: any;
+    alldashnumberInfo: AircraftDashNumber[] = [];
+    actionDashnumber: any[] = [];
+    selectedActionName: any;
+    localCollection: any[] = [];
+    disableSave: boolean = false;   
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
@@ -62,11 +69,12 @@ export class DashnumberComponent implements OnInit {
     dashnumbers: any;
     public sourceAction: any;
     isActive: string = 'Active';
+    allComapnies: MasterCompany[] = [];
     //added for test pagination end
     private isEditMode: boolean = false;
     private isDeleted: boolean = false;
     //Active: string = "Active";
-    constructor(private paginationService: PaginationService, private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private dashNumberService: DashNumberService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
+    constructor(private paginationService: PaginationService,private masterComapnyService: MasterComapnyService, private aircraftModelService: AircraftModelService, private aircraftManufacturerService: AircraftManufacturerService, private dashNumberService: DashNumberService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
         this.sourceAction = new AircraftDashNumber();
     }
 
@@ -90,6 +98,7 @@ export class DashnumberComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
         this.cols = [
+            { field: 'dashNumberId', header: 'Dash Number ID'},
             { field: 'aircraftType', header: 'Aircraft Manufacturer' },
             { field: 'aircraftModel', header: 'Model Name' },
             { field: 'dashNumber', header: 'Dash Number' },
@@ -103,12 +112,19 @@ export class DashnumberComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         // this.dataSource.data = getAtaMainList;
-        this.dashnumberInfo = getDashnumbers;
+        this.dashnumberInfo = getDashnumbers;      
         console.log(this.dashnumberInfo);
         const response = getDashnumbers;
         this.dashnumberInfo = response.map(x => {
-            return {
+            return {    
+                dashNumberId: x.dashNumberId,     
+                aircraftModelId: x.aircraftModelId,    
+                aircraftTypeId: x.aircraftTypeId,   
                 aircraftType: x.aircraftType.description,
+                createdBy: x.createdBy,
+                updatedBy: x.updatedBy,
+                createdDate: x.createdDate,
+                updatedDate: x.updatedDate,
                 aircraftModel: x.aircraftModel.modelName,
                 dashNumber: x.dashNumber,
                 memo: x.memo,
@@ -146,6 +162,7 @@ export class DashnumberComponent implements OnInit {
             this.alertService.showMessage('Aircraft Model Dash Number added successfully.');
             this.dashNumberService.getAll().subscribe(dashNumbers => {
                 this.dashNumberList = dashNumbers[0];
+               
                 this.dashNumberList.forEach(function (dashNumber) {
                     dashNumber.isActive = dashNumber.isActive == false ? false : true;
                 });
@@ -156,7 +173,7 @@ export class DashnumberComponent implements OnInit {
 
     }
 
-    //setDashNumberToUpdate(editAircraftDashNumberpopup: any, id: number): void {
+    // setDashNumberToUpdate(editAircraftDashNumberpopup: any, id: number): void {
     //    this.dashNumberToUpdate = Object.assign({}, this.dashNumberList.filter(function (aircraftDashNumber) {
     //        return aircraftDashNumber.dashNumberId == id;
     //    })[0]);
@@ -168,7 +185,7 @@ export class DashnumberComponent implements OnInit {
     //            //this.aircraftManufacturerChange(this.dashNumberToUpdate.aircraftTypeId);
     //        }
     //    }
-    //}
+    // }
 
     updateDashNumber(): void {
         this.currentDashNumberType.updatedBy = this.userName;
@@ -200,25 +217,26 @@ export class DashnumberComponent implements OnInit {
     }
     open(content) {
         this.isEditMode = false;
-        this.isDeleted = false;
-        this.sourceAction.isActive = true;
+        this.isDeleted = false;        
         this.sourceAction = new AircraftDashNumber();
+        this.sourceAction.isActive = true;
         this.isSaving = true;
-        this.aircrafttype = "";
-        this.aircraft_Model = "";
-        this.dashnumber = "";
-        this.memo = "";
+        this.selectedAircraftId = "";
+        this.selectedAircraftModel = "";
+        this.selectedDashnumber = "";
+        this.selectedMemo = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
 
     }
-
+   
     openDelete(content, row) {
         this.isEditMode = false;
         this.isDeleted = true;
         this.sourceAction = row;
+        this.dashnumber = row.dashNumber;                
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -227,6 +245,14 @@ export class DashnumberComponent implements OnInit {
     openEdit(content, row) {
         this.isEditMode = true;
         this.isDeleted = false;
+        this.loadMasterCompanies();     
+        this.sourceAction =  row;     
+        this.aircraftManufacturerChange(this.sourceAction.aircraftTypeId);
+        console.log(this.sourceAction);
+        this.selectedAircraftId = this.sourceAction.aircraftType; 
+        this.selectedAircraftModel = [this.sourceAction.aircraftModelId];       
+        this.selectedDashnumber = this.sourceAction.dashNumber;
+        this.selectedMemo= this.sourceAction.memo;        
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -234,7 +260,7 @@ export class DashnumberComponent implements OnInit {
     }
 
     openView(content, row) {
-        this.sourceAction = row;
+        this.sourceAction = row;       
         this.aircrafttype = row.aircraftType;
         this.aircraft_Model = row.aircraftModel;
         this.dashnumber = row.dashNumber;
@@ -242,8 +268,8 @@ export class DashnumberComponent implements OnInit {
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createdDate = row.createdDate;
-        this.updatedDate = row.updatedDate;
-        //this.loadMasterCompanies();
+        this.updatedDate = row.updatedDate;        
+        this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -277,21 +303,27 @@ export class DashnumberComponent implements OnInit {
         }
     }
 
-    //confirmDelete(content, id): void {
+    // confirmDelete(content, id): void {
     //    this.dashNumberTypeToRemove = Object.assign({}, this.dashNumberList.filter(function (dashNumber) {
-    //        return dashNumber.dashNumberId == id;
+    //        return dashNumber == dashNumber;
     //    })[0]);;
     //    this.modal = this.modalService.open(content, { size: 'sm' });
-    //}
-
-    toggleIsActive(assetStatus: any, event): void {
-        this.dashNumberToUpdate = assetStatus;
-        this.dashNumberToUpdate.isActive = event.checked == false ? false : true;
-        this.updateDashNumber();
+    // }
+   
+    deleteItemAndCloseModel() {        
+        this.isSaving = true;
+        this.sourceAction.updatedBy = this.userName;
+        this.dashNumberService.remove(this.sourceAction.dashNumberId).subscribe(
+            response => this.saveCompleted(this.sourceAction),
+            error => this.saveFailedHelper(error));
+        this.modal.close();
     }
 
-    aircraftManufacturerChange() {
-        this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(dashNumbers => {
+
+    aircraftManufacturerChange(typeId?) {
+        console.log(typeId)
+        const id = typeId == undefined ? this.selectedAircraftId : typeId  
+        this.aircraftModelService.getAircraftModelListByManufactureId(id).subscribe(dashNumbers => {
             const responseValue = dashNumbers[0];
             this.aircraftModelsList = responseValue.map(x => {
                 return {
@@ -303,8 +335,9 @@ export class DashnumberComponent implements OnInit {
     }
     getDashNumberByManfacturerandModel() {
         this.dashNumberService.getDashNumberByModelTypeId(this.selectedAircraftModel, this.selectedAircraftId).subscribe((dashnumberValues) => {
-            console.log(dashnumberValues);
             const respData = dashnumberValues;
+            this.alldashnumberInfo = dashnumberValues;
+            console.log(this.alldashnumberInfo)
             this.dashnumbers = respData.map(x => {
                 return {
                     label: x.dashNumber,
@@ -337,7 +370,6 @@ export class DashnumberComponent implements OnInit {
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
         }
 
         this.loadData();
@@ -348,13 +380,9 @@ export class DashnumberComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
-
     editItemAndCloseModel() {
-
         // debugger;
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -367,20 +395,97 @@ export class DashnumberComponent implements OnInit {
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
-        else {
+        else {        
+            
             this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.masterCompanyId = 1;
+            this.sourceAction.updatedBy = this.userName;           
+            this.sourceAction.masterCompanyId = 1;           
             this.dashNumberService.update(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-
         }
 
         this.modal.close();
     }
 
+    dashNumberSelection(event){
+        for (let i = 0; i < this.alldashnumberInfo.length; i++) {            
+            if (event == this.alldashnumberInfo[i].dashNumber) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+    filterDashnumber(event) {
 
+        this.localCollection = [];
+        for (let i = 0; i < this.alldashnumberInfo.length; i++) {
+            let dashnumber = this.alldashnumberInfo[i].dashNumber;
+            
+                this.actionDashnumber.push([{
+                    "aircraftTypeId": this.alldashnumberInfo[i].dashNumber,
+                    "dashnumber": dashnumber
+                }]),
+                this.localCollection.push(dashnumber);
+            
+        }
+    }
+  eventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    }
+    private loadMasterCompanies() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.masterComapnyService.getMasterCompanies().subscribe(
+            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
+
+    }
+
+    handleChange(rowData, e) {
+        if (e.checked == false) {
+            this.sourceAction = rowData;
+            this.sourceAction.updatedBy = this.userName;
+            this.Active = "In Active";
+            this.sourceAction.isActive == false;
+            this.loadMasterCompanies();
+            this.sourceAction.masterCompanyId = 1;
+            this.dashNumberService.updateActive(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));            
+        }
+        else {
+            this.sourceAction = rowData;
+            this.sourceAction.updatedBy = this.userName;
+            this.Active = "Active";
+            this.sourceAction.isActive == true;
+            this.sourceAction.masterCompanyId = 1;
+            this.dashNumberService.updateActive(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+            //alert(e);
+        }
+
+    }
 
     //pagination code start
     //getMessages(): void {

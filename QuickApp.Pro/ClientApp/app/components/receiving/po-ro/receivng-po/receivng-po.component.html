@@ -117,9 +117,9 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Dept</label>
-                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
+                            <label>Division</label>
+                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
                             </select>
                         </div>
                     </div>
@@ -159,10 +159,11 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Division</label>
-                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
+                            <label>Dept</label>
+                            <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let department of poDepartmentList" [value]="department.Key">{{department.Value}}</option>
                             </select>
+                            
                         </div>
                     </div>
                 </div>
@@ -247,18 +248,18 @@
                                             {{part?.quantityOrdered}}
                                         </td>
                                         <td>
-                                            {{part.quantityReceived}}
+                                            {{part.stockLineCount}}
                                         </td>
                                         <td>
                                             {{part.approver}}
                                         </td>
                                         <td>{{part?.userName}}</td>
                                         <td>
-                                            {{part.quantityBackOrdered}}
+                                            {{part.quantityOrdered - part.stockLineCount}}
                                         </td>
-                                        <td>{{part.statusText}}</td>
+                                        <td>{{part.stockLineCount == 0 ? 'Pending' : part.stockLineCount < part.quantityOrdered ? 'Fulfilling' : 'Receieved'}}</td>
                                         <td colspan="3"></td>
-                                        <td colspan="2">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td>
+                                        <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="2">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td>
                                         <td>
                                             <section *ngIf="part.itemMaster != null">
                                                 <p-inputSwitch *ngIf="part.itemMaster.isSerialized == true" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
@@ -274,11 +275,11 @@
                                             </section>
                                         </td>
                                         <td style="padding:4px;">
-                                            <input type="text" *ngIf="!part.hasChildren" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
+                                            <input type="text" *ngIf="!part.hasChildren && part.stockLineCount < part.quantityOrdered" [(ngModel)]="part.quantityActuallyReceived" (keyup)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" />
 
                                             <!--<a *ngIf="part.quantityBackOrdered" (click)="addDetailsClick(part)" style="color:red">Add Details</a>-->
                                         </td>
-                                        <td><a *ngIf="!part.hasChildren" class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
+                                        <td><a *ngIf="!part.hasChildren && part.stockLineCount < part.quantityOrdered" class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
 
                                     </tr>
 
@@ -305,19 +306,19 @@
                                         <td>&nbsp;</td>
                                         <td>{{part?.itemMaster?.partNumber}}</td>
                                         <td>{{part?.quantityOrdered}}</td>
-                                        <td>{{part?.stockline?.quantityReceived}}</td>
+                                        <td>{{part?.stockLineCount}}</td>
                                         <td>{{'NA'}}</td>
                                         <td>{{'NA'}}</td>
-                                        <td>{{'NA'}}</td>
+                                        <td>{{part.quantityOrdered - part.stockLineCount}}</td>
                                         <td>
-                                            {{part.statusText}}
+                                            {{part.stockLineCount == 0 ? 'Pending' : part.stockLineCount < part.quantityOrdered ? 'Fulfilling' : 'Receieved'}}
                                         </td>
                                         <td>{{'NA'}}</td>
                                         <td>{{part?.userName}}</td>
                                         <td>{{part.addressText }}</td>
-                                        <td colspan="3">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
-                                        <td><input type="text" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required /></td>
-                                        <td><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
+                                        <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="3">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
+                                        <td><input type="text" *ngIf="part.stockLineCount < part.quantityOrdered" [(ngModel)]="part.quantityActuallyReceived" (keyup)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" /></td>
+                                        <td><a class="btn btn-primary-cstm btn-po-details" *ngIf="part.stockLineCount < part.quantityOrdered" (click)="addStockLine(part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
                                         <!--<td><a (click)="addStockLine(part)" class="btn btn-primary-cstm btn-po-details">Add Details</a></td>-->
                                         <!--<button type="button" (click)="showDialog()" pButton icon="fa-external-link-square" label="Show"></button>-->
                                     </tr>
@@ -358,7 +359,7 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>Qty Actually Received <span class="clr-red">*</span></label>
-                                                        <input type="text" [(ngModel)]="part.quantityActuallyReceived" (change)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
+                                                        <input type="text" *ngIf="part.stockLineCount < part.quantityOrdered" [(ngModel)]="part.quantityActuallyReceived" (keyup)="partQuantityChange($event, part)" pInputText pKeyFilter="pnum" class="form-control" required />
                                                     </div>
                                                 </div>
 
@@ -386,13 +387,13 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Export Control Classification Number">ECCN</label>
-                                                        <input class="form-control" [(ngModel)]="part.itemMaster.exportECCN" disabled="{{part.itemMaster.exportECCN?.length > 0}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.exportECCN" disabled="{{part.eCCNAlreadyExist}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="International Traffic in Arms Regulations Number">ITAR Num</label>
-                                                        <input class="form-control" [(ngModel)]="part.itemMaster.itarNumber" disabled="{{part.itemMaster.itarNumber?.length > 0}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
+                                                        <input class="form-control" [(ngModel)]="part.itemMaster.itarNumber" disabled="{{part.itarNumberExist}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -419,12 +420,12 @@
                                                 </div>
                                             </div>
                                             <div style="margin-left: 6px;" *ngIf="part.stocklineListObj != undefined && part.stocklineListObj.length > 0">
-                                                <h3 class="add-details-heading">{{ part.itemMaster?.partNumber }} receiving Qty {{ (currentSLIndex + 1) }} of {{ part.stocklineListObj.length }} </h3>
+                                                <h3 class="add-details-heading">{{ part.itemMaster?.partNumber }} receiving Qty  {{ (part.currentSLIndex + 1) }} of {{ part.stocklineListObj.length }} </h3>
                                                 <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
-                                                    <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSLIndex - 1, part)"></i>
-                                                    <input [value]="currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                    <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSLIndex + 1, part)"></i>
-                                                    <p>Page {{currentSLIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
+                                                    <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex - 1, part)"></i>
+                                                    <input [value]="part.currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                    <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex + 1, part)"></i>
+                                                    <p>Page {{part.currentSLIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
                                                 </div>
                                                 <section>
                                                     <div class="form-row">
@@ -445,88 +446,89 @@
                                                             <div class="form-group">
                                                                 <label>Company <span class="clr-red">*</span></label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].companyId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].companyId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
-                                                                        (change)="getStockLineBusinessUnitList(part.stocklineListObj[currentSLIndex])">
+                                                                        (change)="getStockLineBusinessUnitList(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let company of part.stocklineListObj[currentSLIndex].CompanyList" [value]="company.Key">{{company.Value}}</option>
+                                                                    <option *ngFor="let company of part.stocklineListObj[part.currentSLIndex].CompanyList" [value]="company.Key">{{company.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>BU</label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].businessUnitId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].businessUnitId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
-                                                                        (change)="getStockLineDivision(part.stocklineListObj[currentSLIndex])">
+                                                                        (change)="getStockLineDivision(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let businessUnit of part.stocklineListObj[currentSLIndex].BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                                                                    <option *ngFor="let businessUnit of part.stocklineListObj[part.currentSLIndex].BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Division</label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].divisionId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].divisionId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
-                                                                        (change)="getStockLineDepartment(part.stocklineListObj[currentSLIndex])">
+                                                                        (change)="getStockLineDepartment(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let division of part.stocklineListObj[currentSLIndex].DivisionList" [value]="division.Key">{{division.Value}}</option>
+                                                                    <option *ngFor="let division of part.stocklineListObj[part.currentSLIndex].DivisionList" [value]="division.Key">{{division.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Dept</label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].departmentId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].departmentId"
                                                                         #selects="ngModel"
-                                                                        [ngModelOptions]="{standalone: true}">
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        (change)="setStockLineDepartmentManagementStructureId(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let department of part.stocklineListObj[currentSLIndex].DepartmentList" [value]="department.Key">{{department.Value}}</option>
+                                                                    <option *ngFor="let department of part.stocklineListObj[part.currentSLIndex].DepartmentList" [value]="department.Key">{{department.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Site <span class="clr-red">*</span></label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].siteId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].siteId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
-                                                                        (change)="getStockLineWareHouse(part.stocklineListObj[currentSLIndex])">
+                                                                        (change)="getStockLineWareHouse(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let site of part.stocklineListObj[currentSLIndex].SiteList" [value]="site.Key">{{site.Value}}</option>
+                                                                    <option *ngFor="let site of part.stocklineListObj[part.currentSLIndex].SiteList" [value]="site.Key">{{site.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Warehouse</label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].warehouseId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].warehouseId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
-                                                                        (change)="getStockLineLocation(part.stocklineListObj[currentSLIndex])">
+                                                                        (change)="getStockLineLocation(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let warehouse of part.stocklineListObj[currentSLIndex].WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
+                                                                    <option *ngFor="let warehouse of part.stocklineListObj[part.currentSLIndex].WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Location</label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].locationId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].locationId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
-                                                                        (change)="getStockLineShelf(part.stocklineListObj[currentSLIndex])">
+                                                                        (change)="getStockLineShelf(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let loc of part.stocklineListObj[currentSLIndex].LocationList" [ngValue]="loc.Key">{{loc.Value}}</option>
+                                                                    <option *ngFor="let loc of part.stocklineListObj[part.currentSLIndex].LocationList" [ngValue]="loc.Key">{{loc.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Shelf</label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].shelfId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].shelfId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
-                                                                        (change)="getStockLineBin(part.stocklineListObj[currentSLIndex])">
+                                                                        (change)="getStockLineBin(part.stocklineListObj[part.currentSLIndex])">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let shelf of part.stocklineListObj[currentSLIndex].ShelfList" [ngValue]="shelf.Key">{{shelf.Value}}</option>
+                                                                    <option *ngFor="let shelf of part.stocklineListObj[part.currentSLIndex].ShelfList" [ngValue]="shelf.Key">{{shelf.Value}}</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -534,17 +536,17 @@
                                                             <div class="form-group">
                                                                 <label>Bin</label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].binId"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].binId"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}">
                                                                     <option value="0">Select</option>
-                                                                    <option *ngFor="let bin of part.stocklineListObj[currentSLIndex].BinList" [ngValue]="bin.Key">{{bin.Value}}</option>
+                                                                    <option *ngFor="let bin of part.stocklineListObj[part.currentSLIndex].BinList" [ngValue]="bin.Key">{{bin.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Obtain From </label>
                                                                 <select class="form-control"
-                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFromType"
+                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].obtainFromType"
                                                                         #selects="ngModel"
                                                                         [ngModelOptions]="{standalone: true}"
                                                                         (change)="onObtainFromChange($event)">
@@ -554,28 +556,28 @@
                                                                     <option value="3">Vendor</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="form-group" *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType != undefined && part.stocklineListObj[currentSLIndex].obtainFromType > 0">
+                                                            <div class="form-group" *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType != undefined && part.stocklineListObj[part.currentSLIndex].obtainFromType > 0">
                                                                 <div class="form-row">
                                                                     <div class="col-sm-11">
-                                                                        <p-autoComplete *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 1"
+                                                                        <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 1"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"
-                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[currentSLIndex], part.stocklineListObj[currentSLIndex].obtainFromType)"
-                                                                                        [suggestions]="part.stocklineListObj[currentSLIndex].filteredRecords"
-                                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom"
+                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].obtainFromType)"
+                                                                                        [suggestions]="part.stocklineListObj[part.currentSLIndex].filteredRecords"
+                                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].obtainFrom"
                                                                                         [minLength]="1"
                                                                                         [dropdown]="true">
                                                                             <ng-template let-Value pTemplate="customer">
                                                                                 <div class="ui-helper-clearfix">{{Value}}</div>
                                                                             </ng-template>
                                                                         </p-autoComplete>
-                                                                        <input *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].owner" pInputText>
-                                                                        <p-autoComplete *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 3"
+                                                                        <input *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].owner" pInputText>
+                                                                        <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 3"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"
-                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[currentSLIndex], part.stocklineListObj[currentSLIndex].obtainFromType)"
-                                                                                        [suggestions]="part.stocklineListObj[currentSLIndex].filteredRecords"
-                                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].obtainFrom"
+                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].obtainFromType)"
+                                                                                        [suggestions]="part.stocklineListObj[part.currentSLIndex].filteredRecords"
+                                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].obtainFrom"
                                                                                         [minLength]="1"
                                                                                         [dropdown]="true">
                                                                             <ng-template let-Value pTemplate="vendor">
@@ -584,41 +586,41 @@
                                                                         </p-autoComplete>
                                                                     </div>
                                                                     <div class="col-sm-1">
-                                                                        <div *ngIf="part.stocklineListObj[currentSLIndex].obtainFromType == 1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                                                        <div *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Owner </label>
-                                                                <select class="form-control" (change)="onOwnerChange($event)" [(ngModel)]="part.stocklineListObj[currentSLIndex].ownerType">
+                                                                <select class="form-control" (change)="onOwnerChange($event)" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].ownerType">
                                                                     <option value="0">Select</option>
                                                                     <option value="1">Customer</option>
                                                                     <option value="2">Other </option>
                                                                     <option value="3">Vendor</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="form-group" *ngIf="part.stocklineListObj[currentSLIndex].ownerType != undefined && part.stocklineListObj[currentSLIndex].ownerType > 0">
+                                                            <div class="form-group" *ngIf="part.stocklineListObj[part.currentSLIndex].ownerType != undefined && part.stocklineListObj[part.currentSLIndex].ownerType > 0">
                                                                 <div class="form-row">
                                                                     <div class="col-sm-11">
-                                                                        <p-autoComplete *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 1"
+                                                                        <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].ownerType == 1"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"
-                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[currentSLIndex], part.stocklineListObj[currentSLIndex].ownerType)"
-                                                                                        [suggestions]="part.stocklineListObj[currentSLIndex].filteredRecords"
-                                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].owner"
+                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].ownerType)"
+                                                                                        [suggestions]="part.stocklineListObj[part.currentSLIndex].filteredRecords"
+                                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].owner"
                                                                                         [minLength]="1"
                                                                                         [dropdown]="true">
                                                                             <ng-template let-Value pTemplate="customer">
                                                                                 <div class="ui-helper-clearfix">{{Value}}</div>
                                                                             </ng-template>
                                                                         </p-autoComplete>
-                                                                        <input *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].owner" pInputText>
-                                                                        <p-autoComplete *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 3"
+                                                                        <input *ngIf="part.stocklineListObj[part.currentSLIndex].ownerType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].owner" pInputText>
+                                                                        <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].ownerType == 3"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"
-                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[currentSLIndex], part.stocklineListObj[currentSLIndex].ownerType)"
-                                                                                        [suggestions]="part.stocklineListObj[currentSLIndex].filteredRecords"
-                                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].owner"
+                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].ownerType)"
+                                                                                        [suggestions]="part.stocklineListObj[part.currentSLIndex].filteredRecords"
+                                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].owner"
                                                                                         [minLength]="1"
                                                                                         [dropdown]="true">
                                                                             <ng-template let-Value pTemplate="vendor">
@@ -627,41 +629,41 @@
                                                                         </p-autoComplete>
                                                                     </div>
                                                                     <div class="col-sm-1">
-                                                                        <div *ngIf="part.stocklineListObj[currentSLIndex].ownerType == 1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                                                        <div *ngIf="part.stocklineListObj[part.currentSLIndex].ownerType == 1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Traceable To</label>
-                                                                <select class="form-control" (change)="onTraceableToChange($event)" [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableToType">
+                                                                <select class="form-control" (change)="onTraceableToChange($event)" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].traceableToType">
                                                                     <option value="0">Select</option>
                                                                     <option value="1">Customer</option>
                                                                     <option value="2">Other </option>
                                                                     <option value="3">Vendor</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="form-group" *ngIf="part.stocklineListObj[currentSLIndex].traceableToType != undefined && part.stocklineListObj[currentSLIndex].traceableToType > 0">
+                                                            <div class="form-group" *ngIf="part.stocklineListObj[part.currentSLIndex].traceableToType != undefined && part.stocklineListObj[part.currentSLIndex].traceableToType > 0">
                                                                 <div class="form-row">
                                                                     <div class="col-sm-11">
-                                                                        <p-autoComplete *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 1"
+                                                                        <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].traceableToType == 1"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"
-                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[currentSLIndex], part.stocklineListObj[currentSLIndex].traceableToType)"
-                                                                                        [suggestions]="part.stocklineListObj[currentSLIndex].filteredRecords"
-                                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo"
+                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].traceableToType)"
+                                                                                        [suggestions]="part.stocklineListObj[part.currentSLIndex].filteredRecords"
+                                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].traceableTo"
                                                                                         [minLength]="1"
                                                                                         [dropdown]="true">
                                                                             <ng-template let-Value pTemplate="customer">
                                                                                 <div class="ui-helper-clearfix">{{Value}}</div>
                                                                             </ng-template>
                                                                         </p-autoComplete>
-                                                                        <input *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo" pInputText>
-                                                                        <p-autoComplete *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 3"
+                                                                        <input *ngIf="part.stocklineListObj[part.currentSLIndex].traceableToType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].traceableTo" pInputText>
+                                                                        <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].traceableToType == 3"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"
-                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[currentSLIndex], part.stocklineListObj[currentSLIndex].traceableToType)"
-                                                                                        [suggestions]="part.stocklineListObj[currentSLIndex].filteredRecords"
-                                                                                        [(ngModel)]="part.stocklineListObj[currentSLIndex].traceableTo"
+                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].traceableToType)"
+                                                                                        [suggestions]="part.stocklineListObj[part.currentSLIndex].filteredRecords"
+                                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].traceableTo"
                                                                                         [minLength]="1"
                                                                                         [dropdown]="true">
                                                                             <ng-template let-Value pTemplate="vendor">
@@ -670,63 +672,63 @@
                                                                         </p-autoComplete>
                                                                     </div>
                                                                     <div class="col-sm-1">
-                                                                        <div *ngIf="part.stocklineListObj[currentSLIndex].traceableToType == 1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                                                        <div *ngIf="part.stocklineListObj[part.currentSLIndex].traceableToType == 1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label>MFG <span class="clr-red">*</span></label>
-                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturerId">
+                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturerId">
                                                                     <option value="0">Select</option>
                                                                     <option *ngFor="let manufacturer of ManufacturerList" [value]="manufacturer.Key">{{manufacturer.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>MFG Lot Num</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturerLotNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturerLotNumber" type="text" pInputText pKeyFilter="pnum">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>MFG Date</label>
-                                                                <p-calendar class="pas-clder pas-clder-po-table" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturingDate" [showIcon]="true"></p-calendar>
+                                                                <p-calendar class="pas-clder pas-clder-po-table" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturingDate" [showIcon]="true"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>MFG Trace</label>
-                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturingTrace" pInputText value="Map pending">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturingTrace" pInputText value="Map pending">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>MFG Batch Num</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].manufacturingBatchNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturingBatchNumber" type="text" pInputText pKeyFilter="pnum">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Expiration Date</label>
-                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].expirationDate"></p-calendar>
+                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].expirationDate"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Unit Cost</label>
-                                                                <input type="text" class="form-control" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[currentSLIndex].purchaseOrderUnitCost">
+                                                                <input type="text" class="form-control" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].purchaseOrderUnitCost">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Extended Cost</label>
-                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[currentSLIndex].purchaseOrderExtendedCost">
+                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].purchaseOrderExtendedCost">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Parts Cert Num</label>
-                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[currentSLIndex].partCertificationNumber">
+                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].partCertificationNumber">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Cert By</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedBy" type="text" pInputText>
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedBy" type="text" pInputText>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Certified Date</label>
-                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedDate"></p-calendar>
+                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedDate"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Certified Due Date</label>
-                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].certifiedDueDate"></p-calendar>
+                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedDueDate"></p-calendar>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
@@ -738,36 +740,30 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Tag Date</label>
-                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[currentSLIndex].tagDate"></p-calendar>
+                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].tagDate"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Shipping Ref</label>
-                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[currentSLIndex].shippingReferenceId">
-                                                                    <option value="0">Select</option>
-                                                                    <option *ngFor="let shippingReference of ShippingReferenceList" [ngValue]="shippingReference.Key">{{shippingReference.Value}}</option>
-                                                                </select>
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].shippingReference" pInputText [maxLength]="200">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Ship Via</label>
-                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[currentSLIndex].shippingViaId">
+                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[part.currentSLIndex].shippingViaId">
                                                                     <option value="0">Select</option>
                                                                     <option *ngFor="let shippingVia of ShippingViaList" [ngValue]="shippingVia.Key">{{shippingVia.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Shipping Account</label>
-                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[currentSLIndex].shippingAccountId">
-                                                                    <option value="0">Select</option>
-                                                                    <option *ngFor="let shippingAccount of ShippingAccountList" [ngValue]="shippingAccount.Key">{{shippingAccount.Value}}</option>
-                                                                </select>
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].shippingAccount" pInputText [maxLength]="200">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label matTooltip="Engine Serial Number">ESN</label>
-                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].engineSerialNumber" pInputText [maxLength]="25">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].engineSerialNumber" pInputText [maxLength]="25">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Aircraft Tail Num</label>
-                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[currentSLIndex].aircraftTailNumber" pInputText [maxLength]="25">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].aircraftTailNumber" pInputText [maxLength]="25">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -776,19 +772,19 @@
                                                 <section>
                                                     <h4 class="add-details-heading" style="text-align: left;" *ngIf="part.itemMaster.isSerialized">Serialized</h4>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
-                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSERIndex - 1, part)"></i>
-                                                        <input [value]="currentSERIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', currentSERIndex + 1, part)"></i>
-                                                        <p>Page {{currentSERIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
+                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSERIndex - 1, part)"></i>
+                                                        <input [value]="part.currentSERIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSERIndex + 1, part)"></i>
+                                                        <p>Page {{part.currentSERIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
                                                     </div>
                                                     <div class="form-row" *ngIf="part.itemMaster.isSerialized">
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Serial Num</label>
-                                                                <input class="form-control" disabled="{{part.stocklineListObj[currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[currentSERIndex].serialNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText pKeyFilter="pnum">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
-                                                                        <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[currentSERIndex])">
+                                                                        <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[part.currentSERIndex])">
                                                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span> Serial Number not provided
                                                                     </label>
                                                                 </div>
@@ -798,12 +794,12 @@
                                                 </section>
                                                 <br />
                                                 <section *ngIf="part.itemMaster.isTimeLife">
-                                                    <h3 class="add-details-heading"> {{ part.itemMaster?.partNumber }} receiving Qty Time Life  {{ (currentTLIndex + 1) }} of {{ part.timeLifeList.length }}   </h3>
+                                                    <h3 class="add-details-heading"> {{ part.itemMaster?.partNumber }} receiving Qty Time Life  {{ (part.currentTLIndex + 1) }} of {{ part.timeLifeList.length }}   </h3>
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isTimeLife">
-                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', currentTLIndex - 1, part)"></i>
-                                                        <input [value]="currentTLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', currentTLIndex + 1, part)"></i>
-                                                        <p>Page {{currentTLIndex + 1}} of {{part.timeLifeList.length}} Pages</p>
+                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', part.currentTLIndex - 1, part)"></i>
+                                                        <input [value]="part.currentTLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', part.currentTLIndex + 1, part)"></i>
+                                                        <p>Page {{part.currentTLIndex + 1}} of {{part.timeLifeList.length}} Pages</p>
                                                     </div>
 
                                                     <div class="form-row">
@@ -830,41 +826,41 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td>Remaining</td>
-                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesRemaining"></td>
+                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].cyclesRemaining"></td>
                                                                     <td>Remaining</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeRemaining"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].timeRemaining"></td>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].lastSinceNew"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].lastSinceNew"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceNew"></td>
+                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].cyclesSinceNew"></td>
                                                                     <td>Since New</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceNew"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].timeSinceNew"></td>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].lastSinceOVH"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].lastSinceOVH"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceOVH"></td>
+                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].cyclesSinceOVH"></td>
                                                                     <td>Since Ovh</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceOVH"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].timeSinceOVH"></td>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].lastSinceInspection"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].lastSinceInspection"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceInspection"></td>
+                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].cyclesSinceInspection"></td>
                                                                     <td>Since Insp</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceInspection"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].timeSinceInspection"></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Since Repair</td>
-                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].cyclesSinceRepair"></td>
+                                                                    <td><input class="form-control" placeholder="Cycle" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].cyclesSinceRepair"></td>
                                                                     <td>Since Repair</td>
-                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[currentTLIndex].timeSinceRepair"></td>
+                                                                    <td><input class="form-control" placeholder="Hours" disabled="{{part.isDisabledTLboxes}}" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLifeList[part.currentTLIndex].timeSinceRepair"></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>
@@ -890,17 +886,9 @@
                                                         </div>
                                                     </div>
                                                 </section>
-
-                                                <!--<div class="form-row">
-        <div class="col-md-12">
-            <a class="btn btn-primary-cstm" style="width: 58px; height: 28px; margin-bottom: 10px;">Save</a>
-        </div>
-    </div>-->
                                             </div>
-
                                         </td>
                                     </tr>
-
                                 </ng-container>
                             </tbody>
                         </table>

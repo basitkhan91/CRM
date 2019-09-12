@@ -10,8 +10,13 @@ namespace DAL.Models
     {
         [Key]
         public long StockLineId { get; set; }
+
+        
         public string PartNumber { get; set; }
+
         public string StockLineNumber { get; set; }
+
+
         public string ControlNumber { get; set; }
 
         //[FK]
@@ -96,9 +101,9 @@ namespace DAL.Models
         public long? ManagementStructureEntityId { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public string AircraftTailNumber { get; set; }
-        public long? ShippingReferenceId { get; set; }
+        public string ShippingReference { get; set; }
         public long? ShippingViaId { get; set; }
-        public long? ShippingAccountId { get; set; }
+        public string ShippingAccount { get; set; }
         //public string Site { get; set; }
         //public string Shelf { get; set; }
         //public string Bin { get; set; }
