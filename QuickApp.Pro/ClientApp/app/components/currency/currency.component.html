@@ -4,27 +4,37 @@
             <div class="x_content">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="po-head" style="padding:0 10px;">Currency</h4>
-                        <p-table #dt class="wf-table-cstm" [value]="currencyPagination" [metaKeySelection]="true" [rows]="10"
-                                 [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords"
-                                 [lazy]="true" (onLazyLoad)="loadCurrency($event)" [columns]="selectedColumns"
-                                 selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true"
-                                 [scrollable]="true" scrollHeight="450px">
+                        <div class="inline-block display-flex">
+                            <h3 class="po-head lead">Currency</h3>
+                            &nbsp;&nbsp;
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Currency" tooltipPosition="right" (click)="open(contentEdit)">
+                                <i class="fa fa-plus-circle fa-lg"></i>
+                            </a>
+                        </div>
+
+                        <p-table #dt class="wf-table-cstm" [value]="currencyPagination" [metaKeySelection]="true" [rows]="10" [paginator]="true"
+                            [pageLinks]="3" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadCurrency($event)"
+                            [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
+                            [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right">
-                                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                                   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
+                                        [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                     <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                         <i class="fa fa-search"></i>
-                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                            placeholder="Global Filter">
                                     </div>
                                     <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                    <a (click)="open(contentEdit)" matTooltip="Add Currency" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
+                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only"
+                                        (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
+                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
                                         </label>
                                     </div>
                                 </div>
@@ -47,13 +57,21 @@
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr [pSelectableRow]="rowData">
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                        {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                     </td>
                                     <td>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                            [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                            [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                            [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </span>
                                         <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
@@ -73,9 +91,10 @@
                                 </div>
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
-                                &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
 
                             </ng-template>
                         </p-table>
@@ -95,10 +114,14 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
+    <div class="modal-body">
+        <strong>Currency Name:
+            <span class="new-label">"{{currency_Name}}"</span>
+        </strong>
+    </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 
 </ng-template>
@@ -114,11 +137,16 @@
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
             <div class="form-group">
-                <div class="col-md-12">
-                    <label for="name" class="control-label col-md-4">Currency Code<span class="clr-red">*</span></label>
-                    <div class="col-md-5">
-                        <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="currencyName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterCurrency($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="name" class="control-label">Currency Code
+                            <span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="currencyName" name="currency_name"
+                            [suggestions]="localCollection" (completeMethod)="filterCurrency($event)" [size]="30" [minLength]="1"
+                            [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-currencyName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{currencyName}}</div>
                             </ng-template>
@@ -126,10 +154,15 @@
                         <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-bottom: 5px;">
-                    <label for="netDays" class="control-label col-md-4">Currency Symbol<span class="clr-red">*</span></label>
-                    <div class="col-md-5">
-                        <input type="text" name="symbol" class="input-field-value" pInputText style="width:94% !important" required #symbol="ngModel" [(ngModel)]="sourceAction.symbol" minlength="1">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="netDays" class="control-label">Currency Symbol
+                            <span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="symbol" class="input-field-value" pInputText  required #symbol="ngModel"
+                            [(ngModel)]="sourceAction.symbol" minlength="1">
                         <div *ngIf="symbol.dirty && symbol.errors?.required && symbol.errors" class="invalid-form-error-message">
                             Currency Symbol is required.
                         </div>
@@ -138,34 +171,44 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-bottom: 5px;">
-                    <label for="netDays" class="control-label col-md-4">Currency Name<span class="clr-red">*</span></label>
-                    <div class="col-md-5">
-                        <input type="text" name="displayName" class="input-field-value" style="width:94% !important" pInputText required #displayName="ngModel" [(ngModel)]="sourceAction.displayName">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="netDays" class="control-label">Currency Name
+                            <span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="displayName" class="input-field-value"  pInputText required #displayName="ngModel"
+                            [(ngModel)]="sourceAction.displayName">
                         <div *ngIf="displayName.dirty && displayName.errors?.required && displayName.errors" class="invalid-form-error-message">
                             Currency Name is required.
                         </div>
                     </div>
                 </div>
-                <br />
-                <div class="col-md-12">
-                    <label for="description" class="control-label col-md-4">Memo</label>
-                    <div class="col-md-5">
-                        <textarea class="form-control input-field-value text-area-size" #memo="ngModel" id="memo" [(ngModel)]="sourceAction.memo" [ngModelOptions]="{standalone: true}" rows="2" cols="12"></textarea>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label">Memo</label>
+                    </div>
+                    <div class="col-sm-5">
+                        <textarea class="input-field-value" #memo="ngModel" id="memo" [(ngModel)]="sourceAction.memo" [ngModelOptions]="{standalone: true}"
+                            rows="2" cols="12"></textarea>
                     </div>
                 </div>
+            </div>
+            <div class="form-group">
                 <div class="checkbox-cstm check-value">
                     <label>
                         <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
-                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                        <span class="cr">
+                            <i class="cr-icon pi pi-check"></i>
+                        </span>
                         Active
                     </label>
                 </div>
                 <div class="clear"></div>
             </div>
-
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" [disabled]="disableSave">Submit</button>
+                <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
@@ -210,7 +253,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 <ng-template #view class="modal fade " id="view" role="dialog">
@@ -221,14 +264,54 @@
         </div>
         <div class="modal-body viewform">
             <div class="col-md-12">
-                <p><span class="label"><b>Currency Code: </b></span><span class="value">{{ currency_Name}}</span></p>
-                <p><span class="label"><b>Currency Symbol: </b></span><span class="value">{{ symbol}}</span></p>
-                <p><span class="label"><b>Currency Name: </b></span><span class="value">{{ displayName}}</span></p>
-                <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
-                <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
-                <p><span class="label"><b>Created Date: </b></span><span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
-                <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
+                <p>
+                    <span class="label">
+                        <b>Currency Code: </b>
+                    </span>
+                    <span class="value">{{ currency_Name}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Currency Symbol: </b>
+                    </span>
+                    <span class="value">{{ symbol}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Currency Name: </b>
+                    </span>
+                    <span class="value">{{ displayName}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Memo: </b>
+                    </span>
+                    <span class="value">{{memo}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Created By: </b>
+                    </span>
+                    <span class="value">{{createdBy}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Created Date: </b>
+                    </span>
+                    <span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Updated By: </b>
+                    </span>
+                    <span class="value">{{updatedBy}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Updated Date: </b>
+                    </span>
+                    <span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                </p>
             </div>
 
             <div class="clear"></div>
@@ -254,7 +337,11 @@
             <p>Sample Point 4 about Page Description</p>
             <p>Sample Point 5 about Page Description</p>
             <hr />
-            <p><b>Excell format to upload the Data - <a href="documents/action-table-format.xlsx" class="clr-red">Download</a></b></p>
+            <p>
+                <b>Excell format to upload the Data -
+                    <a href="documents/action-table-format.xlsx" class="clr-red">Download</a>
+                </b>
+            </p>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-success" data-dismiss="modal" (click)="dismissModel()">Close</button>
@@ -262,4 +349,3 @@
     </div>
 
 </ng-template>
-
