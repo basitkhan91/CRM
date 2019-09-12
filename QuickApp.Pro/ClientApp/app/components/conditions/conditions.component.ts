@@ -63,7 +63,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     Active: string = "Active";
     /** Currency ctor */
     constructor(public router: Router, private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public conditionService: ConditionService, private dialog: MatDialog) {
-        console.log(this.router.url);
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
 
@@ -155,10 +154,10 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.condition_Name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
