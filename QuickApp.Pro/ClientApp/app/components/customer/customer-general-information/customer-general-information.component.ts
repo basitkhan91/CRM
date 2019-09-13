@@ -297,10 +297,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.sourceAuditHistory.postalCode = this.workFlowtService.listCollection.ad.postalCode;
             this.sourceCustomer.customerAffiliationId = this.sourceCustomer.customerAffiliationId;
 
-            this.sourceCustomer.isAddressForBilling = this.workFlowtService.listCollection.isAddressForBilling;
-            this.sourceCustomer.isAddressForShipping = this.workFlowtService.listCollection.isAddressForShipping;
-            this.sourceCustomer.edi = this.workFlowtService.listCollection.edi;
-            this.sourceCustomer.isAeroExchange = this.workFlowtService.listCollection.isAeroExchange;
+            this.sourceCustomer.isAddressForBilling = this.local.isAddressForBilling;
+            this.sourceCustomer.isAddressForShipping = this.local.isAddressForShipping;
+            this.sourceCustomer.edi = this.local.edi;
+            this.sourceCustomer.isAeroExchange = this.local.isAeroExchange;
 
             if (this.workFlowtService.listCollection.t.ataChapterId) {
                 this.getATASubChapterData(this.workFlowtService.listCollection.t.ataChapterId);
