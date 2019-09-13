@@ -10,5 +10,7 @@
         public decimal? CreditLimt { get; set; }
         public short? CreditTermId { get; set; }
         public string CSR { get; set; }
+
+		public string Email { get; set; }
     }
 }

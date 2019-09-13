@@ -57,7 +57,11 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public long CustomerId { get; internal set; }
         public bool? IsActive { get; internal set; }
-    }
+
+		public string CustomerPhone { get; set; }
+
+
+	}
     #endregion
 
     #region unitOfMeasure
@@ -227,7 +231,10 @@ namespace QuickApp.Pro.ViewModels
         public int pageCount { get; set; }
         public int rows { get; set; }
         public int limit { get; set; }
-    }
+
+		public string Memo { get; set; }
+		public string Link { get; set; }
+	}
     #endregion
 
     #region DefaultMessage

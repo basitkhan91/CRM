@@ -30,6 +30,9 @@ namespace DAL.Models
             public virtual MasterCompany MasterCompany { get; set; }
             public bool? IsDelete { get; set; }
 
-    }
+		public string Memo { get; set; }
+		public string Link { get; set; }
+
+	}
     }
 
