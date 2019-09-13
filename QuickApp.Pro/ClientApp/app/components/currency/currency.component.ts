@@ -26,7 +26,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 /** Currency component*/
 export class CurrencyComponent implements OnInit, AfterViewInit {
     curreencyPaginationList: any[] = [];
-    totelPages: number;
+    totelPages
     event: any;
     currency = [];
     updatedByInputFieldValue: any;
@@ -213,6 +213,7 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.currency_Name = row.code;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');

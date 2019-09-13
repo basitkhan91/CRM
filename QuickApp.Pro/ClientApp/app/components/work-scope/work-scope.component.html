@@ -124,8 +124,8 @@
         </button>
     </div>
     <div class="modal-body">
-        <strong>Workscope Name:
-            <span class="new-label">{{workScope_Name}}</span>
+        <strong>WorkscopeCode:
+            <span class="new-label">"{{workScope_Name}}"</span>
         </strong>
     </div>
     <div class="modal-footer">
@@ -154,6 +154,7 @@
                     </div>
                     <div class="col-sm-5">
                         <p-autoComplete [(ngModel)]="workScopeName" (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) name="workscope"
+                        [suggestions]="localCollection"  (completeMethod)="filterWorkscopes($event)"
                             [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-workScopeName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{workScopeName}}</div>

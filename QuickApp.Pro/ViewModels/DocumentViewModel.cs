@@ -7,7 +7,8 @@ namespace QuickApp.Pro.ViewModels
     {
        
         public long DocumentId { get; set; }
-        //public string Memo { get; set; }
+        public string Memo { get; set; }
+        public string Link { get; set; }
         public string DocumentCode { get; set; }
         public string Description { get; set; }
         public bool? Customer { get; set; }
