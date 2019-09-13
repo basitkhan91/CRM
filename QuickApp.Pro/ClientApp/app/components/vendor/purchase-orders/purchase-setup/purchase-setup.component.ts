@@ -401,6 +401,8 @@ export class PurchaseSetupComponent {
 		console.log(this.sourcePoApproval);
 		this.sourcePoApproval.statusId = 1;
 		this.sourcePoApproval.dateRequested = new Date();
+		this.sourcePoApproval.shipToUserType = 3;
+		this.sourcePoApproval.billToUserType = 3;
 
 	}
 	private priorityData() {
@@ -1007,7 +1009,7 @@ export class PurchaseSetupComponent {
 									requisitionedDate: new Date(),
 									approver: this.sourcePoApproval.approver,
 									approvedDate: this.sourcePoApproval.dateApprovied,
-									needByDate: this.partListData[i].needByDate,
+									needByDate: this.childDataList[k].needByDate,
 									manufacturerId: this.partListData[i].manufacturerId,
 									manufacturer: this.partListData[i].manufacturer,
 									status: this.sourcePoApproval.statusId,
@@ -1841,8 +1843,11 @@ export class PurchaseSetupComponent {
 		this.modal.close();
 	}
 	addPartNumber() {
-		//this.itemTypeId=0;
-		this.partListData.push(this.defaultPartListObj(true));
+		//this.itemTypeId=0;		
+		if (this.vendorService.isEditMode == false) {
+			this.partListData.push(this.defaultPartListObj(true));
+		}
+		
 	}
 
 	addRow(partList) {
@@ -2960,7 +2965,26 @@ export class PurchaseSetupComponent {
 		// }
 
 
-		console.log(this.needByTempDate);
+		if (this.vendorService.isEditMode == false) {
+			if (this.partListData) {
+				for (let i = 0; i < this.partListData.length; i++) {
+					this.partListData[i].needByDate = this.needByTempDate;
+				}
+			}
+
+			for (let i = 0; i < this.partListData.length; i++) {
+				if (this.partListData[i].childList) {
+					if (this.partListData[i].childList.length > 0) {
+						for (let j = 0; j < this.partListData[i].childList.length; j++) {
+							this.partListData[i].childList[j].needByDate = this.needByTempDate;
+						}
+					}
+				}
+			}
+		}
+			
+
+		
 	}
 
 	onGetDiscCostPerUnit(partList) {
