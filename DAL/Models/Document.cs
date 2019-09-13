@@ -16,7 +16,8 @@ namespace DAL.Models
             public bool? RepairOrder { get; set; }
             public bool? SL { get; set; }
             public bool? SalesOrder { get; set; }
-            //public string Memo { get; set; }
+            public string Memo { get; set; }
+            public string Link { get; set; }
             public bool? WorkOrder { get; set; }
             public bool? Vendor { get; set; }
             [ForeignKey("MasterCompanyId")]
