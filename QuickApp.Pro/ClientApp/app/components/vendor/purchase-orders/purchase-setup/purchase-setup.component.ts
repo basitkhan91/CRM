@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, ViewChild } from '@angular/core';
 import { LegalEntityService } from '../../../../services/legalentity.service';
 import { CreditTermsService } from '../../../../services/Credit Terms.service';
 import { VendorService } from '../../../../services/vendor.service';
@@ -22,6 +22,8 @@ import { SiteService } from '../../../../services/site.service';
 import { WarehouseService } from '../../../../services/warehouse.service';
 import { Site } from '../../../../models/site.model';
 import { CreatePOPartsList, PartDetails } from '../../../../models/create-po-partslist.model';
+import { NgForm } from '@angular/forms';
+import * as $ from 'jquery';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -179,6 +181,10 @@ export class PurchaseSetupComponent {
 	vName: any;
 	needByTempDate: Date = new Date();
 	creditTermsList: any[];
+	conditionList: any[];
+	functionalCurrList: any[];
+	functionalTransList: any[];
+	@ViewChild('createPOForm') createPOForm: NgForm;
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService) {
@@ -454,12 +460,17 @@ export class PurchaseSetupComponent {
 
 	savePurchaseOrder() {
 
-		this.userName = 'admin';
+		if(this.createPOForm.invalid) {
+			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
+			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');
+			alert('Please enter required fields!');
+		} 
+		else {
+			this.userName = 'admin';
 		this.sourcePoApproval.vendorId = this.tempVendorId;
 		this.sourcePoApproval.createdBy = this.userName;
 		this.sourcePoApproval.updatedBy = this.userName;
 		this.sourcePoApproval.masterCompanyId = 1;
-
 
 		if (!this.sourcePoApproval.deferredReceiver) {
 			this.sourcePoApproval.deferredReceiver = 0;
@@ -478,8 +489,10 @@ export class PurchaseSetupComponent {
 			this.tempVendorId = null;
 			this.savePurchaseorderPart(saveddata.purchaseOrderId);
 		});
+		}
 
 	}
+
 	private loadcustomerData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -732,14 +745,14 @@ export class PurchaseSetupComponent {
 						manufacturerId: this.partListData[i].manufacturerId,
 						status: this.sourcePoApproval.statusId,
 						trace: this.partListData[i].trace,
-						conditionCode: this.partListData[i].conditionCode,
+						conditionCode: this.partListData[i].conditionCode.conditionId,
 						quantityOrdered: this.partListData[i].quantityOrdered,
 						unitCost: this.partListData[i].unitCost,
 						discountPerUnit: this.partListData[i].discountPerUnit,
 						discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 						extendedCost: this.partListData[i].extendedCost,
 						transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
-						functionalCurrencyId: this.partListData[i].functionalCurrencyId,
+						functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 						foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 						workOrderId: this.partListData[i].workOrderId,
 						repairOrderId: this.partListData[i].repairOrderId,
@@ -797,7 +810,7 @@ export class PurchaseSetupComponent {
 										manufacturer: this.partListData[i].manufacturer,
 										status: this.sourcePoApproval.statusId,
 										trace: this.partListData[i].trace,
-										conditionCode: this.partListData[i].conditionCode,
+										conditionCode: this.partListData[i].conditionCode.conditionId,
 										UOMId: this.partListData[i].UOMId,
 										quantityOrdered: childDataList[k].quantityOrdered,
 										//unitCost: this.partListData[i].unitCost,
@@ -805,7 +818,7 @@ export class PurchaseSetupComponent {
 										//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 										//extendedCost: this.partListData[i].extendedCost,
 										transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
-										functionalCurrencyId: this.partListData[i].functionalCurrencyId,
+										functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 										//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 										//workOrderId: this.partListData[i].workOrderId,
 										//repairOrderId: this.partListData[i].repairOrderId,
@@ -856,7 +869,7 @@ export class PurchaseSetupComponent {
 										manufacturer: this.partListData[i].manufacturer,
 										status: this.sourcePoApproval.statusId,
 										trace: this.partListData[i].trace,
-										conditionCode: this.partListData[i].conditionCode,
+										conditionCode: this.partListData[i].conditionCode.conditionId,
 										UOMId: this.partListData[i].UOMId,
 										quantityOrdered: childDataList[k].quantityOrdered,
 										//unitCost: this.partListData[i].unitCost,
@@ -864,7 +877,7 @@ export class PurchaseSetupComponent {
 										//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 										//extendedCost: this.partListData[i].extendedCost,
 										transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
-										functionalCurrencyId: this.partListData[i].functionalCurrencyId,
+										functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 										//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 										//workOrderId: this.partListData[i].workOrderId,
 										//repairOrderId: this.partListData[i].repairOrderId,
@@ -921,7 +934,7 @@ export class PurchaseSetupComponent {
 						manufacturer: this.partListData[i].manufacturer,
 						status: this.sourcePoApproval.statusId,
 						trace: this.partListData[i].trace,
-						conditionCode: this.partListData[i].conditionCode,
+						conditionCode: this.partListData[i].conditionCode.conditionId,
 						UOMId: this.partListData[i].UOMId,
 						quantityOrdered: this.partListData[i].quantityOrdered,
 						unitCost: this.partListData[i].unitCost,
@@ -929,7 +942,7 @@ export class PurchaseSetupComponent {
 						discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 						extendedCost: this.partListData[i].extendedCost,
 						transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
-						functionalCurrencyId: this.partListData[i].functionalCurrencyId,
+						functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 						foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 						workOrderId: this.partListData[i].workOrderId,
 						repairOrderId: this.partListData[i].repairOrderId,
@@ -985,7 +998,7 @@ export class PurchaseSetupComponent {
 									manufacturer: this.partListData[i].manufacturer,
 									status: this.sourcePoApproval.statusId,
 									trace: this.partListData[i].trace,
-									conditionCode: this.partListData[i].conditionCode,
+									conditionCode: this.partListData[i].conditionCode.conditionId,
 									UOMId: this.partListData[i].UOMId,
 									quantityOrdered: childDataList[k].quantityOrdered,
 									//unitCost: this.partListData[i].unitCost,
@@ -993,7 +1006,7 @@ export class PurchaseSetupComponent {
 									//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 									//extendedCost: this.partListData[i].extendedCost,
 									transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
-									functionalCurrencyId: this.partListData[i].functionalCurrencyId,
+									functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 									//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 									//workOrderId: this.partListData[i].workOrderId,
 									//repairOrderId: this.partListData[i].repairOrderId,
@@ -1056,7 +1069,7 @@ export class PurchaseSetupComponent {
 					manufacturer: this.partListData[i].manufacturer,
 					status: this.sourcePoApproval.statusId,
 					trace: this.partListData[i].trace,
-					conditionCode: this.partListData[i].conditionCode,
+					conditionCode: this.partListData[i].conditionCode.conditionId,
 					uomId: this.partListData[i].uomId,
 					quantityOrdered: this.partListData[i].quantityOrdered,
 					unitCost: this.partListData[i].unitCost,
@@ -1064,7 +1077,7 @@ export class PurchaseSetupComponent {
 					discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 					extendedCost: this.partListData[i].extendedCost,
 					transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
-					functionalCurrencyId: this.partListData[i].functionalCurrencyId,
+					functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 					foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 					workOrderId: this.partListData[i].workOrderId,
 					repairOrderId: this.partListData[i].repairOrderId,
@@ -1121,7 +1134,7 @@ export class PurchaseSetupComponent {
 								manufacturer: this.partListData[i].manufacturer,
 								status: this.sourcePoApproval.statusId,
 								trace: this.partListData[i].trace,
-								conditionCode: this.partListData[i].conditionCode,
+								conditionCode: this.partListData[i].conditionCode.conditionId,
 								uomId: this.childDataList[k].uomId,
 								quantityOrdered: this.childDataList[k].quantityOrdered,
 								//unitCost: this.partListData[i].unitCost,
@@ -1129,7 +1142,7 @@ export class PurchaseSetupComponent {
 								//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 								//extendedCost: this.partListData[i].extendedCost,
 								transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
-								functionalCurrencyId: this.partListData[i].functionalCurrencyId,
+								functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 								//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 								//workOrderId: this.partListData[i].workOrderId,
 								//repairOrderId: this.partListData[i].repairOrderId,
@@ -2044,7 +2057,6 @@ export class PurchaseSetupComponent {
 	filterVendorNames(event) {
 		this.vendorNames = this.allActions;
 
-
 		if (event.query !== undefined && event.query !== null) {
 			const vendorFilter = [...this.allActions.filter(x => {
 				return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
@@ -2099,15 +2111,27 @@ export class PurchaseSetupComponent {
 		// }
 	}
 
+	autoCompleteBindById(field: string, id: any, originalData: any) {
+		const data = originalData.filter(x => {
+			if (x[field] === id) {
+				return x;
+			}
+		})
+		return data[0];
+	}
+
 	selectedVendorName(value) {
 		console.log(value);
+		this.tempVendorId = value.vendorId;
 		this.sourcePoApproval.vendorName = value.vendorName;
 		this.sourcePoApproval.vendorCode = value.vendorCode;
-		this.sourcePoApproval.firstName = value.vendorContact;
+		this.sourcePoApproval.firstName = this.getVendorContactsListByID(value.vendorId);
+		console.log(this.sourcePoApproval.firstName)
 		this.sourcePoApproval.workPhone = value.vendorPhone;
 		this.sourcePoApproval.terms = value.creditLimit
-		this.sourcePoApproval.creditLimit = value.creditTermsId;
-		this.tempVendorId = value.vendorId;
+		// this.sourcePoApproval.creditLimit = value.creditTermsId;
+		this.sourcePoApproval.creditTermsId = this.autoCompleteBindById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);		
+		
 	}
 
 	filterVendorContacts(event) {
@@ -2148,12 +2172,41 @@ export class PurchaseSetupComponent {
 	filtercreditTerms(event) {
 		this.creditTermsList = this.allcreditTermInfo;
 
-
 		if (event.query !== undefined && event.query !== null) {
 			const creditterms = [...this.allcreditTermInfo.filter(x => {
 				return x.name.toLowerCase().includes(event.query.toLowerCase())
 			})]
 			this.creditTermsList = creditterms;
+		}
+	}
+
+	filterCond(event) {
+		this.conditionList = this.allconditioninfo;
+		if (event.query !== undefined && event.query !== null) {
+			const condlist = [...this.allconditioninfo.filter(x => {
+				return x.description.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.conditionList = condlist;
+		}
+	}
+
+	filterFunctionalCurrency(event) {
+		this.functionalCurrList = this.allCurrencyData;
+		if (event.query !== undefined && event.query !== null) {
+			const funcCurrlist = [...this.allCurrencyData.filter(x => {
+				return x.symbol.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.functionalCurrList = funcCurrlist;
+		}
+	}
+
+	filterTransCurrency(event) {
+		this.functionalTransList = this.allCurrencyData;
+		if (event.query !== undefined && event.query !== null) {
+			const transCurrlist = [...this.allCurrencyData.filter(x => {
+				return x.symbol.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.functionalTransList = transCurrlist;
 		}
 	}
 
@@ -2890,6 +2943,25 @@ export class PurchaseSetupComponent {
 
 
 		console.log(this.needByTempDate);
+	}
+
+	onGetDiscCostPerUnit(partList) {
+		if(partList.unitCost !== null && partList.discountPerUnit !== null) {
+			partList.discountCostPerUnit = Math.round((partList.unitCost * partList.discountPerUnit)/100);
+		}
+	}
+	
+	onGetExtCost(partList) {
+		if(partList.unitCost !== null && partList.discountPerUnit !== null) {
+			partList.extendedCost = partList.unitCost - partList.discountPerUnit;
+		}
+	}
+
+	getVendorContactsListByID(vendorId) {
+		this.vendorService.getVendorContactsListByID(vendorId).subscribe(data => {
+			console.log(data[0][0].contact)
+			return data[0][0].contact;
+		})
 	}
 
 }

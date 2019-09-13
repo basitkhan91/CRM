@@ -14103,7 +14103,16 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .cus-contact-table tr td {
     padding: 4px !important;
 }
-
+// .ro-grid-form-cstm .ng-invalid {
+//     border: 1px solid red;
+// }
+.border-red-clr {
+    border: 1px solid red;
+}
+.alert-danger-cstm {
+    padding: 0px 5px 2px !important;
+    margin: 0 !important;
+}
 .modal-full {
     max-width: 700px !important;
 }

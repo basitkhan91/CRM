@@ -128,8 +128,8 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _actionsCapsUrl: string = "/api/Vendor/GetListforCapes";
     private readonly _capesdata: string = "/api/Vendor/GetVendorCapesDatawithMasterId"; 
     private readonly _mancapPost: string = "/api/Vendor/VendorMancapespost";
-    private readonly _aircraftmodelsPost: string = "/api/Vendor/Aircraftpost";
-    
+	private readonly _aircraftmodelsPost: string = "/api/Vendor/Aircraftpost";
+	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts";    
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -1210,6 +1210,14 @@ export class VendorEndpointService extends EndpointFactory {
         return this.http.get<T>(url, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getVendorContactEndpoint(vendorId, isDContact));
+            });
+	}
+	
+	getVendorContactsByIDEndpoint<T>(vendorId: any): Observable<T> {
+        let url = `${this._vendorContactsGetByID}?vendorId=${vendorId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorContactsByIDEndpoint(vendorId));
             });
     }
 }

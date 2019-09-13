@@ -546,6 +546,11 @@ export class VendorService {
 
     getVendorCapesData(vendorID: any) {
         return this.actionEndpoint.getVendorCapesData(vendorID);
+	}
+	
+	getVendorContactsListByID(vendorId: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorContactsByIDEndpoint<any[]>(vendorId));
     }
 
 }
