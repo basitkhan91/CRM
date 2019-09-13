@@ -141,13 +141,13 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 
 
         this.workFlowtService.financeCollection = undefined;
-        this.workFlowtService.paymentCollection= undefined;
-        this.workFlowtService.salesCollection= undefined;
+        this.workFlowtService.paymentCollection = undefined;
+        this.workFlowtService.salesCollection = undefined;
         this.workFlowtService.shippingCollection = undefined;
-        this.workFlowtService.generalCollection= undefined;
+        this.workFlowtService.generalCollection = undefined;
         this.workFlowtService.auditServiceCollection = {};
-        this.workFlowtService.contactCollection= undefined;
-        this.workFlowtService.customergeneralcollection= undefined;
+        this.workFlowtService.contactCollection = undefined;
+        this.workFlowtService.customergeneralcollection = undefined;
 
 
         //this.sourceCustomer = new Customer();
@@ -179,6 +179,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             { field: 'email', header: 'Customer Email' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'StateOrProvince' },
+            { field: 'customerPhone', header: 'Customer Phone' },
             { field: 'primarySalesPersonFirstName', header: 'Primary Sales Person' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
@@ -335,13 +336,12 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         //this.sourceVendor = row;
         this.loadMasterCompanies();
-        this.workFlowtService.getCustomerdataById(row.customerId).subscribe(results =>
-        {
+        this.workFlowtService.getCustomerdataById(row.customerId).subscribe(results => {
             this.workFlowtService.listCollection = results[0][0];
             this.workFlowtService.enableExternal = true;
             this._route.navigateByUrl('customersmodule/customerpages/app-customer-general-information');
-            });
-       
+        });
+
         //this.workFlowtService.listCollection = row;
         //this.workFlowtService.enableExternal = true;
         //this._route.navigateByUrl('customersmodule/customerpages/app-customer-general-information');
@@ -354,26 +354,26 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             this.sourceCustomer.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceCustomer.isActive == false;
-            this.tempCustomerType ;
+            this.tempCustomerType;
 
 
 
-            if(this.sourceCustomer.customerType === 'Lead'){
-                this.tempCustomerType = {customerTypeId: 1, description: "Lead"}
-            }else
-            if(this.sourceCustomer.customerType === "Prospect"){
-                this.tempCustomerType = {customerTypeId: 2, description: "Prospect"}
-            }else
-            if(this.sourceCustomer.customerType ==="Customer"){
-                this.tempCustomerType = {customerTypeId: 3, description: "Customer"}
-            }else 
-            if(this.sourceCustomer.customerType ==="Opportunity"){
-                this.tempCustomerType = {customerTypeId: 4, description: "Opportunity"}
-            }
+            if (this.sourceCustomer.customerType === 'Lead') {
+                this.tempCustomerType = { customerTypeId: 1, description: "Lead" }
+            } else
+                if (this.sourceCustomer.customerType === "Prospect") {
+                    this.tempCustomerType = { customerTypeId: 2, description: "Prospect" }
+                } else
+                    if (this.sourceCustomer.customerType === "Customer") {
+                        this.tempCustomerType = { customerTypeId: 3, description: "Customer" }
+                    } else
+                        if (this.sourceCustomer.customerType === "Opportunity") {
+                            this.tempCustomerType = { customerTypeId: 4, description: "Opportunity" }
+                        }
 
 
 
-            this.workFlowtService.updateActionforActive({...this.sourceCustomer, customerType : this.tempCustomerType }).subscribe(
+            this.workFlowtService.updateActionforActive({ ...this.sourceCustomer, customerType: this.tempCustomerType }).subscribe(
                 response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -384,28 +384,28 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             this.Active = "Active";
             this.sourceCustomer.isActive == true;
 
-            if(this.sourceCustomer.customerType === 'Lead'){
-                this.tempCustomerType = {customerTypeId: 1, description: "Lead"}
-            }else
-            if(this.sourceCustomer.customerType === "Prospect"){
-                this.tempCustomerType = {customerTypeId: 2, description: "Prospect"}
-            }else
-            if(this.sourceCustomer.customerType ==="Customer"){
-                this.tempCustomerType = {customerTypeId: 3, description: "Customer"}
-            }else 
-            if(this.sourceCustomer.customerType ==="Opportunity"){
-                this.tempCustomerType = {customerTypeId: 4, description: "Opportunity"}
-            }
+            if (this.sourceCustomer.customerType === 'Lead') {
+                this.tempCustomerType = { customerTypeId: 1, description: "Lead" }
+            } else
+                if (this.sourceCustomer.customerType === "Prospect") {
+                    this.tempCustomerType = { customerTypeId: 2, description: "Prospect" }
+                } else
+                    if (this.sourceCustomer.customerType === "Customer") {
+                        this.tempCustomerType = { customerTypeId: 3, description: "Customer" }
+                    } else
+                        if (this.sourceCustomer.customerType === "Opportunity") {
+                            this.tempCustomerType = { customerTypeId: 4, description: "Opportunity" }
+                        }
 
             this.tempCustomerType
-            this.workFlowtService.updateActionforActive({...this.sourceCustomer, customerType : this.tempCustomerType } ).subscribe(
+            this.workFlowtService.updateActionforActive({ ...this.sourceCustomer, customerType: this.tempCustomerType }).subscribe(
                 response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
 
     }
-// for commit
+    // for commit
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
@@ -418,8 +418,8 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             this.updatePaginatorState();
             this.modal.close();
         });
-            //response => this.saveCompleted(this.sourceCustomer),
-            //error => this.saveFailedHelper(error));
+        //response => this.saveCompleted(this.sourceCustomer),
+        //error => this.saveFailedHelper(error));
         this.modal.close();
     }
     dismissModel() {
@@ -474,13 +474,11 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 
     openView(content, row) {
 
-        if (row.customerId)
-        {
+        if (row.customerId) {
             this.workFlowtService.getCustomerdataById(row.customerId).subscribe(results => {
                 this.customerViewData = results[0][0];
 
-                if (this.customerViewData)
-                {
+                if (this.customerViewData) {
                     this.customerViewFeilds.name = this.customerViewData.name;
                     this.customerViewFeilds.dba = this.customerViewData.dba;
                     this.customerViewFeilds.customerCode = this.customerViewData.customerCode;
@@ -554,7 +552,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         //this.sourceCustomer = row;
         //this.customerViewFeilds = row;
         //this.customerVfinanceiewFeilds = row;
-        
+
     }
 
     //private loadCustomerData() {
@@ -794,10 +792,9 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
                             this.customerPagination = this.customersList[0].customerList;
                             this.totalRecords = this.customersList[0].totalRecordsCount;
                             this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                            
+
                         }
-                        else
-                        {
+                        else {
                             this.alertService.showMessage("Asset Status removed successfully.");
                         }
                     });
@@ -812,7 +809,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
                         pages => {
                             this.customersList = pages;
                             this.customerPagination = this.customersList[0].customerList;
-                            this.totalRecords = this.customersList[0].totalRecordsCount; 
+                            this.totalRecords = this.customersList[0].totalRecordsCount;
                             this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         });
                     this.loading = false;
@@ -824,8 +821,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
 
     inputGlobalFiledFilter(dataEvent, contains) {
         this.showPaginator = true;
-        if (dataEvent)
-        {
+        if (dataEvent) {
             this.globalCustomers.push({
                 GlobalSearchString: dataEvent,
                 first: this.first,
@@ -836,15 +832,17 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             })
             this.workFlowtService.getGlobalSearch(this.globalCustomers[this.globalCustomers.length - 1]).subscribe( //we are sending event details to service
                 pages => {
+
                     this.customersList = pages;
+                    console.log(pages)
                     this.customerPagination = this.customersList[0].customerList;
-                    this.totalRecords = this.customersList[0].totalRecordsCount; 
+                    this.totalRecords = this.customersList[0].totalRecordsCount;
+                    console.log(this.totalRecords)
                 });
         }
     }
 
-    inputFiledFilter(event, filed, matchMode)
-    {
+    inputFiledFilter(event, filed, matchMode) {
         this.showPaginator = true;
         this.first = 0;
         this.event = event;
@@ -934,8 +932,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
                     this.customerPagination = this.customersList[0].customerList;
                     this.totalRecords = this.customersList[0].totalRecordsCount;
                     this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                    if (this.totalRecords == 0)
-                    {
+                    if (this.totalRecords == 0) {
                         this.showPaginator = false;
                     }
                 });
@@ -946,17 +943,15 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
     }
 
 
-    eventPage(data)
-    {
+    eventPage(data) {
         this.property = data.field;
         this.customerPagination = this.sortData(this.customerPagination, this.property, false);
-       
+
         console.log(this.property);
         console.log(data);
     }
 
-    sortData(array: any[], property: string, isNumber: boolean)
-    {
+    sortData(array: any[], property: string, isNumber: boolean) {
         var collection;
         if (isNumber) {
             return array.sort((item1, item2) => {
@@ -964,10 +959,10 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             });
         } else {
             return array.sort((item1, item2) => {
-                 return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
+                return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
             });
         }
     }
-   
+
 }
 

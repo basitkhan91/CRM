@@ -77,7 +77,8 @@ namespace DAL.Repositories
                          Reference = string.Empty,
                          CreditLimt = z.cc1.cust.CreditLimit,
                          CreditTermId = z.cc1.cust.CreditTermsId,
-                         CSR = z.cc1.cust.CSRName
+                         CSR = z.cc1.cust.CSRName,
+						 Email = z.cc1.cust.Email
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
@@ -93,6 +94,7 @@ namespace DAL.Repositories
                         objContact.CustomerCode = item.CustomerCode;
                         objContact.CustomerReference = item.Reference;
                         objContact.WorkPhone = item.WorkPhone;
+						objContact.Email = item.Email;
                         customerContacts.Add(objContact);
                     }
                 }
