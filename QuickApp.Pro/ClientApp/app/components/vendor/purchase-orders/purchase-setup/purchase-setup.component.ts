@@ -185,6 +185,9 @@ export class PurchaseSetupComponent {
 	functionalCurrList: any[];
 	functionalTransList: any[];
 	@ViewChild('createPOForm') createPOForm: NgForm;
+	purchaseOrderId: any;
+	purchaseOrderPartRecordId: any;
+	glAccountTemp: any;
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService) {
@@ -479,11 +482,14 @@ export class PurchaseSetupComponent {
 			this.sourcePoApproval.resale = 0;
 		}
 		console.log(this.sourcePoApproval);
+	
 		this.vendorService.savePurchaseorder({
 			...this.sourcePoApproval,
+			purchaseOrderId : this.purchaseOrderId,
 			priorityId: this.sourcePoApproval.priorityId.priorityId !== undefined ? this.sourcePoApproval.priorityId.priorityId : 0,
 			creditTermsId: this.sourcePoApproval.creditTermsId !== undefined ? this.sourcePoApproval.creditTermsId.creditTermsId : 0
 		}).subscribe(saveddata => {
+            this.purchaseOrderId = saveddata.purchaseOrderId;
 			this.savedInfo = saveddata;
 			console.log(saveddata);
 			this.tempVendorId = null;
@@ -694,6 +700,7 @@ export class PurchaseSetupComponent {
 							console.log(data1);
 							if (data1[0][0]) {
 								this.partWithId = data1[0][0];
+								//this.glAccountTemp = this.partWithId.glAccountId;
 								parentdata.partAlternatePartId = this.partWithId.partAlternatePartId;
 								parentdata.partId = this.partWithId.itemMasterId;
 								parentdata.partdescription = this.partWithId.partDescription;
@@ -702,6 +709,7 @@ export class PurchaseSetupComponent {
 								parentdata.name = this.partWithId.name;
 								parentdata.itemMasterId = this.partWithId.itemMasterId;
 								parentdata.glAccountId = this.partWithId.glAccountId;
+								//parentdata.glAccountId = autoCompleteBindById(this.partWithId.glAccountId);
 								parentdata.shortName = this.partWithId.shortName;
 								parentdata.listPrice = this.partWithId.listPrice; //Initial Value
 								parentdata.purchaseDiscountOffListPrice = this.partWithId.purchaseDiscountOffListPrice; //Percentage
@@ -789,8 +797,10 @@ export class PurchaseSetupComponent {
 							}
 						}
 					}
-					this.vendorService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
+					this.vendorService.savePurchaseorderpart({...sendobj, purchaseOrderPartRecordId : this.purchaseOrderPartRecordId}).subscribe(saveddata1 => {
 						this.savedPurchasedPart = saveddata1;
+						this.purchaseOrderPartRecordId = saveddata1.purchaseOrderPartRecordId;
+
 						if (childDataList.length > 0) {
 							for (let k = 0; k < childDataList.length; k++) {
 								if (childDataList[k].purchaseOrderPartRecordId) {
@@ -805,7 +815,7 @@ export class PurchaseSetupComponent {
 										requisitionedDate: new Date(),
 										approver: this.sourcePoApproval.approver,
 										approvedDate: this.sourcePoApproval.dateApprovied,
-										needByDate: this.partListData[i].needByDate,
+										needByDate: this.childDataList[k].needByDate,
 										manufacturerId: this.partListData[i].manufacturerId,
 										manufacturer: this.partListData[i].manufacturer,
 										status: this.sourcePoApproval.statusId,
@@ -828,9 +838,10 @@ export class PurchaseSetupComponent {
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
 										poPartSplitUserId: childDataList[k].poPartSplitUserId,
+										poPartSplitAddress: childDataList[k].addressData,
 										poPartSplitAddress1: childDataList[k].poPartSplitAddress1,
-										poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
-										poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
+										//poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
+										//poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
 										poPartSplitCity: childDataList[k].poPartSplitCity,
 										poPartSplitState: childDataList[k].poPartSplitState,
 										poPartSplitPostalCode: childDataList[k].poPartSplitPostalCode,
@@ -846,9 +857,9 @@ export class PurchaseSetupComponent {
 										isParent: childDataList[k].isParent,
 										masterCompanyId: 1,
 									}
-									this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+									this.vendorService.savePurchaseorderpart({...childobj, purchaseOrderPartRecordId : this.purchaseOrderPartRecordId}).subscribe(saveddata2 => {
 										this.savedPurchasedPart = saveddata2;
-
+										this.purchaseOrderPartRecordId = saveddata2.purchaseOrderPartRecordId;
 									})
 								}
 								else {
@@ -864,7 +875,7 @@ export class PurchaseSetupComponent {
 										requisitionedDate: new Date(),
 										approver: this.sourcePoApproval.approver,
 										approvedDate: this.sourcePoApproval.dateApprovied,
-										needByDate: this.partListData[i].needByDate,
+										needByDate: this.childDataList[k].needByDate,
 										manufacturerId: this.partListData[i].manufacturerId,
 										manufacturer: this.partListData[i].manufacturer,
 										status: this.sourcePoApproval.statusId,
@@ -887,9 +898,10 @@ export class PurchaseSetupComponent {
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
 										poPartSplitUserId: childDataList[k].poPartSplitUserId,
+										poPartSplitAddress: childDataList[k].addressData,
 										poPartSplitAddress1: childDataList[k].poPartSplitAddress1,
-										poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
-										poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
+										//poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
+										//poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
 										poPartSplitCity: childDataList[k].poPartSplitCity,
 										poPartSplitState: childDataList[k].poPartSplitState,
 										poPartSplitPostalCode: childDataList[k].poPartSplitPostalCode,
@@ -905,8 +917,9 @@ export class PurchaseSetupComponent {
 										isParent: childDataList[k].isParent,
 										masterCompanyId: 1,
 									}
-									this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+									this.vendorService.savePurchaseorderpart({...childobj, purchaseOrderPartRecordId : this.purchaseOrderPartRecordId}).subscribe(saveddata2 => {
 										this.savedPurchasedPart = saveddata2;
+										this.purchaseOrderPartRecordId = saveddata2.purchaseOrderPartRecordId;
 
 									})
 								}
@@ -978,8 +991,9 @@ export class PurchaseSetupComponent {
 							}
 						}
 					}
-					this.vendorService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
+					this.vendorService.savePurchaseorderpart({...sendobj, purchaseOrderPartRecordId : this.purchaseOrderPartRecordId}).subscribe(saveddata1 => {
 						this.savedPurchasedPart = saveddata1;
+						this.purchaseOrderPartRecordId = saveddata1.purchaseOrderPartRecordId;
 						if (childDataList.length > 0) {
 							for (let k = 0; k < childDataList.length; k++) {
 								let childobj = {
@@ -1016,9 +1030,10 @@ export class PurchaseSetupComponent {
 									poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 									poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
 									poPartSplitUserId: childDataList[k].poPartSplitUserId,
+									poPartSplitAddress: childDataList[k].addressData,
 									poPartSplitAddress1: childDataList[k].poPartSplitAddress1,
-									poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
-									poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
+									//poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
+									//poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
 									poPartSplitCity: childDataList[k].poPartSplitCity,
 									poPartSplitState: childDataList[k].poPartSplitState,
 									poPartSplitPostalCode: childDataList[k].poPartSplitPostalCode,
@@ -1034,9 +1049,9 @@ export class PurchaseSetupComponent {
 									isParent: childDataList[k].isParent,
 									masterCompanyId: 1,
 								}
-								this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+								this.vendorService.savePurchaseorderpart({...childobj, purchaseOrderPartRecordId : this.purchaseOrderPartRecordId}).subscribe(saveddata2 => {
 									this.savedPurchasedPart = saveddata2;
-
+									this.purchaseOrderPartRecordId = saveddata2.purchaseOrderPartRecordId;
 								})
 
 							}
@@ -1113,8 +1128,9 @@ export class PurchaseSetupComponent {
 						}
 					}
 				}
-				this.vendorService.savePurchaseorderpart(sendobj).subscribe(saveddata1 => {
+				this.vendorService.savePurchaseorderpart({...sendobj, purchaseOrderPartRecordId : this.purchaseOrderPartRecordId}).subscribe(saveddata1 => {
 					this.savedPurchasedPart = saveddata1;
+					this.purchaseOrderPartRecordId = saveddata1.purchaseOrderPartRecordId;
 					if (this.childDataList.length > 0) {
 						for (let k = 0; k < this.childDataList.length; k++) {
 							console.log('adding child records');
@@ -1129,7 +1145,7 @@ export class PurchaseSetupComponent {
 								requisitionedDate: new Date(),
 								approver: this.sourcePoApproval.approver,
 								approvedDate: this.sourcePoApproval.dateApprovied,
-								needByDate: this.partListData[i].needByDate,
+								needByDate: this.childDataList[k].needByDate,
 								manufacturerId: this.partListData[i].manufacturerId,
 								manufacturer: this.partListData[i].manufacturer,
 								status: this.sourcePoApproval.statusId,
@@ -1152,9 +1168,10 @@ export class PurchaseSetupComponent {
 								poPartSplitAddressId: this.childDataList[k].poPartSplitAddressId,
 								poPartSplitUserTypeId: this.childDataList[k].poPartSplitUserTypeId,
 								poPartSplitUserId: this.childDataList[k].poPartSplitUserId,
+								poPartSplitAddress: this.childDataList[k].addressData,
 								poPartSplitAddress1: this.childDataList[k].poPartSplitAddress1,
-								poPartSplitAddress2: this.childDataList[k].poPartSplitAddress2,
-								poPartSplitAddress3: this.childDataList[k].poPartSplitAddress3,
+								//poPartSplitAddress2: this.childDataList[k].poPartSplitAddress2,
+								//poPartSplitAddress3: this.childDataList[k].poPartSplitAddress3,
 								poPartSplitCity: this.childDataList[k].poPartSplitCity,
 								poPartSplitState: this.childDataList[k].poPartSplitState,
 								poPartSplitPostalCode: this.childDataList[k].poPartSplitPostalCode,
@@ -1170,8 +1187,9 @@ export class PurchaseSetupComponent {
 								isParent: this.childDataList[k].isParent,
 								masterCompanyId: 1,
 							}
-							this.vendorService.savePurchaseorderpart(childobj).subscribe(saveddata2 => {
+							this.vendorService.savePurchaseorderpart({...childobj, purchaseOrderPartRecordId : this.purchaseOrderPartRecordId}).subscribe(saveddata2 => {
 								this.savedPurchasedPart = saveddata2;
+								this.purchaseOrderPartRecordId = saveddata2.purchaseOrderPartRecordId;
 
 							})
 
