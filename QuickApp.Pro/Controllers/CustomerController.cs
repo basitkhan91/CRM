@@ -1801,13 +1801,15 @@ namespace QuickApp.Pro.Controllers
                                      ad.Country,
                                      ad.PostalCode,
                                      t.PrimarySalesPersonFirstName,
-                                     t.IsActive
+									 t.CustomerClassification,
+									 t.IsActive
                                  }).OrderByDescending(a => a.UpdatedDate).ToList();
                 foreach (var item in customers)
                 {
                     customer = new CustomerSearchViewModel();
                     customer.CustomerId = item.CustomerId;
-                    customer.CustomerCode = item.CustomerCode;
+					customer.CustomerPhone = item.CustomerPhone;
+					customer.CustomerCode = item.CustomerCode;
                     customer.City = item.City;
                     customer.StateOrProvince = item.StateOrProvince;
                     customer.CustomerType = item.Description;
