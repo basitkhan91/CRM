@@ -473,7 +473,7 @@
                                 <td>
                                     <p-autoComplete field="symbol" class="pautocomp-cstm"
                                     [(ngModel)]="partList.transactionalCurrencyId" name="transactionalCurrencyId" [suggestions]="functionalTransList" 
-                                    (completeMethod)="filterTransCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" 
+                                    (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" 
                                     >                                       
                                     </p-autoComplete> 
                                     <!-- <select class="form-control" [(ngModel)]="partList.transactionalCurrencyId" name="transactionalCurrencyId">
@@ -495,19 +495,19 @@
                                     </div> 
                                 </td>
                                 <td style="min-width: 90px;">
-                                    <select class="form-control" [(ngModel)]="partList.partBusinessUnitId" name="BU" (change)="onPartBusinessUnitChange(partList)">
+                                    <select class="form-control" [(ngModel)]="partList.partBusinessUnitId" name="BU{{row_index}}" (change)="onPartBusinessUnitChange(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let businessUnit of partList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
                                     </select>
                                 </td>
                                 <td style="min-width: 90px;">
-                                    <select class="form-control" [(ngModel)]="partList.partDivisionId" name="division" (change)="onPartDivisionChange(partList)">
+                                    <select class="form-control" [(ngModel)]="partList.partDivisionId" name="division{{row_index}}" (change)="onPartDivisionChange(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let division of partList.partDivisionList" value="{{division.managementStructureId}}">{{division.code}}</option>
                                     </select>
                                 </td>
                                 <td style="min-width: 90px;">
-                                    <select class="form-control" [(ngModel)]="partList.partDepartmentId" name="dept" (change)="onPartDepartmentChange(partList)">
+                                    <select class="form-control" [(ngModel)]="partList.partDepartmentId" name="dept{{row_index}}" (change)="onPartDepartmentChange(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let department of partList.partDepartmentList " value="{{department.managementStructureId}}">{{department.code}}</option>
                                     </select>
@@ -558,9 +558,7 @@
                                                             (onKeyUp)=customereventHandler($event)
                                                             [suggestions]="partChildList.customers"
                                                             (completeMethod)="getPartyNames(partChildList,$event)"
-                                                            [size]="30"
-                                                            [minLength]="1" errorMessage="Records not found" [forceSelection]="true"
-                                                            [dropdown]="true" #cCustomerName="ngModel" required>
+                                                            [size]="30" [minLength]="1" errorMessage="Records not found" [forceSelection]="true" [dropdown]="true" #cCustomerName="ngModel" required>
     
                                             </p-autoComplete>
                                             <div *ngIf="cCustomerName.invalid && (cCustomerName.dirty || cCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -601,7 +599,7 @@
                                         <i class="fa fa-search"></i>
                                          <input type="text" [(ngModel)]="partChildList.poPartSplitUserId" class="form-control names ui-autocomplete-input" name="companyName{{row_no}}" autocomplete="off" #cCompanyName="ngModel" required> <!-- poPartSplitId -->
                                         <div *ngIf="cCompanyName.invalid && (cCompanyName.dirty || cCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
-                                                <div *ngIf="cVendorName.errors.required">
+                                                <div *ngIf="cCompanyName.errors.required">
                                                     <small> Company Name is required </small>
                                                 </div>
                                         </div> 
@@ -628,7 +626,7 @@
                                 <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="needByDate"></p-calendar></td>
                                 <td>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="companyName"
+                                            name="companyName{{row_no}}"
                                             [(ngModel)]="partChildList.companyId"
                                             (change)="onPartCompanyChange(partChildList)">
                                         <option value="0">select</option>
@@ -637,7 +635,7 @@
                                 </td>
                                 <td>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="BU"
+                                            name="BU{{row_no}}"
                                             [(ngModel)]="partChildList.partBusinessUnitId"
                                             (change)="onPartBusinessUnitChange(partChildList)">
                                         <option value="0">select</option>
@@ -646,7 +644,7 @@
                                 </td>
                                 <td>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="division"
+                                            name="division{{row_no}}"
                                             [(ngModel)]="partChildList.partDivisionId"
                                             (change)="onPartDivisionChange(partChildList)">
                                         <option value="0">select</option>
@@ -658,7 +656,7 @@
                                 </td>
                                 <td>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="dept"
+                                            name="dept{{row_no}}"
                                             [(ngModel)]="partChildList.partDepartmentId"
                                             (change)="onPartDepartmentChange(partChildList)">
                                         <option value="0">select</option>
@@ -835,7 +833,7 @@
                     <div class="form-group" *ngIf="sourcePoApproval.shipToUserType==3">
                         <label>
                             Site Name <span class="clr-red">*</span>
-                            <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openedit(contentSiteEdit)"><i class="fa fa-plus"></i></a></span>
+                            <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openedit(contentSiteEdit)"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-shipto" (click)="openEditissued(contentmodel,selectedValue1)"></a></span>
                         </label>
                         <select class="form-control" (change)="siteValueChange(selectedValue1)" name="selectedValue1" [(ngModel)]="selectedValue1" #shipCompSiteName="ngModel" required>
