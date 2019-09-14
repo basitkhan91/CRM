@@ -13,11 +13,11 @@ GO
 ALTER TABLE [dbo].[CustomerAircraftMapping] DROP CONSTRAINT [FK_CustomerAircraftMapping_AircraftDashNumber]
 GO
 
-/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 8/28/2019 2:39:45 PM ******/
+/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 9/14/2019 6:20:25 PM ******/
 DROP TABLE [dbo].[CustomerAircraftMapping]
 GO
 
-/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 8/28/2019 2:39:45 PM ******/
+/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 9/14/2019 6:20:25 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -30,15 +30,15 @@ CREATE TABLE [dbo].[CustomerAircraftMapping](
 	[AircraftTypeId] [int] NOT NULL,
 	[AircraftModelId] [bigint] NOT NULL,
 	[DashNumberId] [bigint] NOT NULL,
-	[PartNumber] [varchar](50) NOT NULL,
 	[DashNumber] [varchar](250) NOT NULL,
 	[AircraftType] [varchar](250) NOT NULL,
 	[AircraftModel] [varchar](250) NOT NULL,
 	[Memo] [varchar](2000) NULL,
 	[MasterCompanyId] [int] NOT NULL,
+	[Inventory] [int] NULL,
 	[CreatedBy] [varchar](256) NOT NULL,
 	[UpdatedBy] [varchar](256) NOT NULL,
-	[CreatedDate] [datetime2](7) NOT NULL,
+	[CreatedDate] [datetime2](7) NULL,
 	[UpdatedDate] [datetime2](7) NULL,
 	[IsDeleted] [bit] NULL,
  CONSTRAINT [PK_CACMapping] PRIMARY KEY CLUSTERED 
