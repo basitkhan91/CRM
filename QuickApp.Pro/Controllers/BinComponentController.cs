@@ -221,6 +221,7 @@ namespace QuickApp.Pro.Controllers
                 binobject.UpdatedDate = DateTime.Now;
                 binobject.CreatedBy = binViewModel.CreatedBy;
                 binobject.UpdatedBy = binViewModel.UpdatedBy;
+                binobject.IsDelete = binViewModel.IsDelete;
                 _unitOfWork.Bins.Add(binobject);
                 _unitOfWork.SaveChanges();
                 return Ok(binobject);

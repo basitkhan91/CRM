@@ -385,7 +385,7 @@ export class ChargesComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.dataSource.data = getChargeList;
         this.totalRecords = getChargeList.length;
-        this.allChargeinfo = getChargeList;
+        this.allChargeinfo = getChargeList;      
         this.alertService.stopLoadingMessage();
     }
 

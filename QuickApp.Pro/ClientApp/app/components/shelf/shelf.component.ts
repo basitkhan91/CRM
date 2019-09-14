@@ -545,6 +545,7 @@ export class ShelfComponent {
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceShelf = row;
+		this.shelf_Name = row.name;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
