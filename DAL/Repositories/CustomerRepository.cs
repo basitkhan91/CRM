@@ -293,11 +293,12 @@ namespace DAL.Repositories
                         c.AircraftType,
                         c.AircraftModelId,
                         c.DashNumberId,
-                        c.PartNumber,
+                        c.CreatedBy,
                         c.DashNumber,
                         c.AircraftModel,
-                        c.Memo
-
+                        c.Memo,
+                        c.Inventory,
+                        c.MasterCompanyId
                     }).ToList();
                 return data;
             }

@@ -1498,22 +1498,39 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("CustomerAircraftPost")]
-        public IActionResult InsertCustomerAircraftInfo([FromBody] CustomerAircraftMapping[] customerAircraftMapping)
+        [Produces(typeof(CustomerAircraftMapping[]))]
+        public IActionResult InsertCustomerAircraftInfo([FromBody] CustomerAircraftMappingViewModel[] customerAircraftMappingVM)
         {
             if (ModelState.IsValid)
             {
-                foreach (var aircraftMapping in customerAircraftMapping)
+                for (int i = 0; i < customerAircraftMappingVM.Length; i++)
                 {
-                    _unitOfWork.Repository<CustomerAircraftMapping>().Add(aircraftMapping);
+                    CustomerAircraftMapping customerAircraftMapping = new CustomerAircraftMapping
+                    {
+                        AircraftType = customerAircraftMappingVM[i].AircraftType,
+                        AircraftModel = customerAircraftMappingVM[i].AircraftModel,
+                        DashNumber = customerAircraftMappingVM[i].DashNumber,
+                        AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
+                        DashNumberId = customerAircraftMappingVM[i].DashNumberId,
+                        Memo = customerAircraftMappingVM[i].Memo,
+                        MasterCompanyId = customerAircraftMappingVM[i].MasterCompanyId,
+                        CreatedBy = customerAircraftMappingVM[i].CreatedBy,
+                        UpdatedBy = customerAircraftMappingVM[i].UpdatedBy,
+                        CustomerId = customerAircraftMappingVM[i].CustomerId,
+                        CreatedDate =  System.DateTime.Now,
+                        UpdatedDate =  System.DateTime.Now,
+                        IsDeleted = customerAircraftMappingVM[i].IsDeleted,
+                        Inventory = customerAircraftMappingVM[i].Inventory,
+                        AircraftTypeId = customerAircraftMappingVM[i].AircraftTypeId
+                };
+                    _unitOfWork.Repository<CustomerAircraftMapping>().Add(customerAircraftMapping);
                     _unitOfWork.SaveChanges();
                 }
-                
             }
             else
             {
-                return BadRequest($"{nameof(customerAircraftMapping)} cannot be null");
+                return BadRequest($"{nameof(customerAircraftMappingVM)} cannot be null");
             }
-
             return Ok(ModelState);
         }
         

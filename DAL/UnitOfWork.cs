@@ -191,6 +191,8 @@ namespace DAL
 
         ICommonRepository _commonRepository;
 
+        ICustomerAircraftMapping _customerAircraftMapping;
+
         IAssetCapes _assetCapes;
         
         public UnitOfWork(ApplicationDbContext context)
@@ -485,7 +487,14 @@ namespace DAL
             }
         }
 
-
+        public ICustomerAircraftMapping CustomerAircraftMapping
+        {
+            get
+            {
+                return _customerAircraftMapping;
+            }
+           
+        }
 
         public int SaveChanges()
         {
@@ -1136,7 +1145,10 @@ namespace DAL
                     _aircraftModel = new AircraftModelRepository(_context);
                 return _aircraftModel;
             }
+
         }
+
+
 
         public ICustomerAircraftModel customerAircraftModel
         {

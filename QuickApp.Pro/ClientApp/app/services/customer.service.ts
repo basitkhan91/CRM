@@ -442,4 +442,11 @@ export class CustomerService {
         return Observable.forkJoin(this.customerEndpoint.postCustomerAircraft<any>(data));
     }
 
+    newItemMasterAircarftClass(action: any) {
+        return this.customerEndpoint.getNewitemAircraftEndpoint<any>(action);
+    }
+    newItemMasterATAClass(action: any) {
+        return this.customerEndpoint.getNewitemATAEndpoint<any>(action);
+    }
+
 }
