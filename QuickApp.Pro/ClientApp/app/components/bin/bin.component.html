@@ -83,7 +83,7 @@
 										<button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
 											<mat-icon color="warn">delete</mat-icon>
 										</button>
-										<button class="btn-history" mat-icon-button matTooltip="History">
+										<button class="btn-history" mat-icon-button matTooltip="History" (click)="showAuditPopup(auditContent,rowData.binId)" >
 											<mat-icon color="green">history</mat-icon>
 										</button>
 									</td>

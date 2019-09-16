@@ -345,13 +345,16 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         }
 
         this.modal.close();
-    }
+    }   
+
     handleChange(rowData, e) {
         if (e.checked == false) {
             this.sourceAction = rowData;
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceAction.isActive == false;
+            this.loadMasterCompanies();
+            this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -362,6 +365,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceAction.isActive == true;
+            this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

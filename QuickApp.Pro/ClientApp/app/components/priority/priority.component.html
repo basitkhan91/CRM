@@ -120,7 +120,7 @@
                                                 <label for="description" class="control-label">Priority Name<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p-autoComplete [(ngModel)]="priorityName" (onSelect)="priorityId($event)" (onKeyUp)="eventHandler($event)" name="id" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
+                                                <p-autoComplete [(ngModel)]="priorityName" (onSelect)="priorityId($event)" (copy)="$event.preventDefault()" (paste)="$event.preventDefault()" (onKeyUp)="eventHandler($event)" name="id" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                                     <ng-template let-priorityName pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{priorityName}}</div>

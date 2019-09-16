@@ -278,7 +278,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
             if (value == this.selectedActionName.toLowerCase()) {
-                //alert("Action Name already Exists");
+                
                 this.disableSave = true;
             }
             else {
@@ -293,6 +293,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                 //alert("Action Name already Exists");
                 this.disableSave = true;
                 this.selectedActionName = event;
+                
             }
         }
     }
