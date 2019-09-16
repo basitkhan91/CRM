@@ -1220,7 +1220,7 @@ export class ReceivngPoComponent implements OnInit {
                         errorMessages.push("Please select MFG in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                     }
                     if (item.itemMaster.isSerialized == true) {
-                        item.stocklineListObj[i].serialNumber = item.stocklineListObj[i].serialNumber.trim();
+                        item.stocklineListObj[i].serialNumber = item.stocklineListObj[i].serialNumber != undefined  ? item.stocklineListObj[i].serialNumber.trim() : '';
                         if (!item.stocklineListObj[i].serialNumberNotProvided && (item.stocklineListObj[i].serialNumber == undefined || item.stocklineListObj[i].serialNumber == '')) {
                             errorMessages.push("Please enter Serial Number in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                         }
