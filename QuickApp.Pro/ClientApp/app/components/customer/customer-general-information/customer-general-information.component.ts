@@ -687,7 +687,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
+            this.sourceAction.portalURL = this.integrationName;
             this.sourceAction.masterCompanyId = 1;
             this.integration.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -696,7 +696,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
+            this.sourceAction.portalURL = this.integrationName;
             this.integration.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

@@ -71,7 +71,7 @@ namespace QuickApp.Pro.Controllers
 
                 DAL.Models.IntegrationPortal integrationobj = new DAL.Models.IntegrationPortal();
                 integrationobj.Description = integrationViewModel.Description;
-                integrationobj.PortalURL = integrationViewModel.PortalURL;
+                integrationobj.PortalUrl = integrationViewModel.PortalUrl;
                 integrationobj.Memo = integrationViewModel.Memo;
                 integrationobj.IsActive = integrationViewModel.IsActive;
                 integrationobj.CreatedDate = DateTime.Now;
@@ -99,7 +99,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.UpdatedBy = integrationViewModel.UpdatedBy;
                 existingResult.Description = integrationViewModel.Description;
                 existingResult.Memo = integrationViewModel.Memo;
-                existingResult.PortalURL = integrationViewModel.PortalURL;
+                existingResult.PortalUrl = integrationViewModel.PortalUrl;
                 existingResult.IsActive = integrationViewModel.IsActive;
                _unitOfWork.Integration.Update(existingResult);
                 _unitOfWork.SaveChanges();
