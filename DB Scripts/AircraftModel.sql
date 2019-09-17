@@ -1,7 +1,7 @@
 USE [PAS_DEV]
 GO
 
-/****** Object:  Table [dbo].[AircraftModel]    Script Date: 8/29/2019 6:07:54 PM ******/
+/****** Object:  Table [dbo].[AircraftModel]    Script Date: 9/17/2019 4:06:37 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -13,14 +13,14 @@ CREATE TABLE [dbo].[AircraftModel](
 	[AircraftTypeId] [int] NOT NULL,
 	[ModelName] [varchar](50) NOT NULL,
 	[WingType] [varchar](30) NULL,
+	[Memo] [varchar](2000) NULL,
 	[MasterCompanyId] [int] NOT NULL,
-	[CreatedDate] [datetime2](7) NOT NULL,
-	[UpdatedDate] [datetime2](7) NOT NULL,
 	[CreatedBy] [varchar](256) NOT NULL,
 	[UpdatedBy] [varchar](256) NOT NULL,
-	[IsDeleted] [bit] NOT NULL,
+	[CreatedDate] [datetime2](7) NOT NULL,
+	[UpdatedDate] [datetime2](7) NOT NULL,
 	[IsActive] [bit] NOT NULL,
-	[Memo] [varchar](2000) NULL,
+	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_AircraftModel] PRIMARY KEY CLUSTERED 
 (
 	[AircraftModelId] ASC
@@ -34,10 +34,10 @@ GO
 ALTER TABLE [dbo].[AircraftModel] ADD  CONSTRAINT [DF__AircraftM__Creat__2177A4E9]  DEFAULT (getdate()) FOR [CreatedDate]
 GO
 
-ALTER TABLE [dbo].[AircraftModel] ADD  CONSTRAINT [DF__AircraftM__IsDel__226BC922]  DEFAULT ((0)) FOR [IsDeleted]
+ALTER TABLE [dbo].[AircraftModel] ADD  CONSTRAINT [DF__AircraftM__IsAct__235FED5B]  DEFAULT ((1)) FOR [IsActive]
 GO
 
-ALTER TABLE [dbo].[AircraftModel] ADD  CONSTRAINT [DF__AircraftM__IsAct__235FED5B]  DEFAULT ((1)) FOR [IsActive]
+ALTER TABLE [dbo].[AircraftModel] ADD  CONSTRAINT [DF__AircraftM__IsDel__226BC922]  DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 ALTER TABLE [dbo].[AircraftModel]  WITH CHECK ADD  CONSTRAINT [FK_AircraftModel_AircraftType] FOREIGN KEY([AircraftTypeId])

@@ -1,7 +1,7 @@
-USE [PAS_DESIGN]
+USE [PAS_DEV]
 GO
 
-/****** Object:  Table [dbo].[AssetAttributeType]    Script Date: 9/17/2019 12:19:03 PM ******/
+/****** Object:  Table [dbo].[AssetAttributeType]    Script Date: 9/17/2019 5:14:59 PM ******/
 SET ANSI_NULLS ON
 GO
 

@@ -1,7 +1,7 @@
 USE [PAS_DEV]
 GO
 
-/****** Object:  Table [dbo].[AircraftDashNumber]    Script Date: 8/29/2019 6:07:12 PM ******/
+/****** Object:  Table [dbo].[AircraftDashNumber]    Script Date: 9/17/2019 4:06:09 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -13,19 +13,31 @@ CREATE TABLE [dbo].[AircraftDashNumber](
 	[AircraftTypeId] [int] NOT NULL,
 	[AircraftModelId] [bigint] NOT NULL,
 	[DashNumber] [varchar](250) NOT NULL,
+	[Memo] [varchar](2000) NULL,
 	[MasterCompanyId] [int] NOT NULL,
 	[CreatedBy] [varchar](256) NOT NULL,
 	[UpdatedBy] [varchar](256) NOT NULL,
-	[CreatedDate] [datetime2](7) NULL,
-	[UpdatedDate] [datetime2](7) NULL,
+	[CreatedDate] [datetime2](7) NOT NULL,
+	[UpdatedDate] [datetime2](7) NOT NULL,
 	[IsActive] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
-	[Memo] [varchar](2000) NULL,
  CONSTRAINT [PK_AircraftDashNumber] PRIMARY KEY CLUSTERED 
 (
 	[DashNumberId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+ CONSTRAINT [UC_DashNumer] UNIQUE NONCLUSTERED 
+(
+	[AircraftTypeId] ASC,
+	[AircraftModelId] ASC,
+	[DashNumber] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[AircraftDashNumber] ADD  CONSTRAINT [DF_AircraftDashNumber_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+
+ALTER TABLE [dbo].[AircraftDashNumber] ADD  CONSTRAINT [DF_AircraftDashNumber_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 ALTER TABLE [dbo].[AircraftDashNumber]  WITH CHECK ADD  CONSTRAINT [FK_AircraftDashNumber_MasterCompany] FOREIGN KEY([MasterCompanyId])
