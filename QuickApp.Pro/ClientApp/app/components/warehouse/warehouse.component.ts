@@ -21,6 +21,7 @@ import { Warehouse } from '../../models/warehouse.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-warehouse',
@@ -36,7 +37,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 	addressId: any;
 	wareHouseID: any;
-
+    totalRecords: number;
 	wareHouseName: any;
 	siteName: any;
 	memo: any = "";
@@ -446,8 +447,10 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.dataSource.data = getWarehouseList; //cha
-		this.allWareHouses = getWarehouseList; //cha
+        this.dataSource.data = getWarehouseList; //cha
+        this.allWareHouses = getWarehouseList;
+        this.totalRecords = getWarehouseList.length;
+        //cha
 		//this.localWareHouseCollction = getWarehouseList;
 		
 		//console.log(this.allActions);
