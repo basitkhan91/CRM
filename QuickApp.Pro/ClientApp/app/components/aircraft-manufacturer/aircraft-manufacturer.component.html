@@ -11,19 +11,18 @@
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <p-table #dt [value]="aircraftManufacturerPagination" class="rpo-table-cstm rro-table-cstm" [lazy]="true" (onLazyLoad)="loadAircraftManufacturer($event)"
-                            [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [metaKeySelection]="true"
-                            [pageLinks]="3" [columns]="cols" selectionMode="multiple" [(selection)]="cols" [resizableColumns]="true"
-                            [reorderableColumns]="true">
+                        <p-table #dt [value]="allmanufacturerInfo" class="rpo-table-cstm rro-table-cstm" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]"
+                            [totalRecords]="totalRecords" [metaKeySelection]="true" [pageLinks]="3" [columns]="cols" selectionMode="multiple"
+                            [(selection)]="cols" [resizableColumns]="true" [reorderableColumns]="true">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
                                         [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                                    <!-- <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
                                             placeholder="Global Filter">
-                                    </div>
+                                    </div> -->
                                     <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only"
                                         (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -48,7 +47,7 @@
                                 </tr>
                                 <tr>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
                                     </th>
                                     <th style="width:150px"></th>
                                 </tr>
@@ -176,39 +175,41 @@
             <h4 class="modal-title">Edit Aircraft Manufacturer</h4>
         </div>
         <div class="modal-body">
-                <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateAircraftManufacturer()">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Manufacturer Name:
-                            <span class="clr-red">*</span>
-                        </label>
+            <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateAircraftManufacturer()">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label">Manufacturer Name:
+                                <span class="clr-red">*</span>
+                            </label>
 
-                    </div>
-                    <div class="col-sm-5">
-                            <p-autoComplete [(ngModel)]="aircraftManufacturerTypeToUpdate.description" (onSelect)="manufactureId($event)" (onKeyUp)=eventHandler($event) name="description"  [suggestions]="localCollection" (completeMethod)="filterManufacturer($event)" [size]="30"
-                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                        </div>
+                        <div class="col-sm-5">
+                            <p-autoComplete [(ngModel)]="aircraftManufacturerTypeToUpdate.description" (onSelect)="manufactureId($event)" (onKeyUp)=eventHandler($event)
+                                name="description" [suggestions]="localCollection" (completeMethod)="filterManufacturer($event)"
+                                [size]="30" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                 <ng-template let-manufacturer pTemplate="item">
                                     <div class="ui-helper-clearfix">{{manufacturer}}</div>
                                 </ng-template>
                             </p-autoComplete>
                             <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                             <div class="clear"></div>
-                    </div>                  
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Memo:</label>
+                        </div>
                     </div>
-                    <div class="col-sm-5">
-                        <textarea class="text-item" name="memo" [(ngModel)]="aircraftManufacturerTypeToUpdate.memo"></textarea>
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label">Memo:</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <textarea class="text-item" name="memo" [(ngModel)]="aircraftManufacturerTypeToUpdate.memo"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" (click)="updateAircraftManufacturer()" [disabled]="!userForm.valid || disableSave" class="btn btn-primary-cstm" data-dismiss="modal">Save</button>
+            <button type="button" (click)="updateAircraftManufacturer()" [disabled]="!userForm.valid || disableSave" class="btn btn-primary-cstm"
+                data-dismiss="modal">Save</button>
             <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()" data-dismiss="modal">Close</button>
         </div>
     </div>
@@ -336,38 +337,40 @@
         </div>
         <div class="modal-body">
             <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="addAircraftManufacturer()">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Manufacturer Name:
-                         <span class="clr-red">*</span>
-                        </label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label">Manufacturer Name:
+                                <span class="clr-red">*</span>
+                            </label>
+                        </div>
+                        <div class="col-sm-5">
+                            <p-autoComplete name="manufacturerId" [(ngModel)]="currentAircraftManufacturerType.description" (onSelect)="manufactureId($event)"
+                                (onKeyUp)=eventHandler($event) [suggestions]="localCollection" (completeMethod)="filterManufacturer($event)"
+                                [size]="30" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                <ng-template let-manufacturer pTemplate="item">
+                                    <div class="ui-helper-clearfix">{{manufacturer}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                            <div class="clear"></div>
+                        </div>
                     </div>
-                    <div class="col-sm-5">
-                        <p-autoComplete name="manufacturerId" [(ngModel)]="currentAircraftManufacturerType.description" (onSelect)="manufactureId($event)" (onKeyUp)=eventHandler($event)   [suggestions]="localCollection" (completeMethod)="filterManufacturer($event)" [size]="30"
-                            [dropdown]="true" class="p-autoComplete-ctsm" required>
-                            <ng-template let-manufacturer pTemplate="item">
-                                <div class="ui-helper-clearfix">{{manufacturer}}</div>
-                            </ng-template>
-                        </p-autoComplete>
-                        <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                        <div class="clear"></div>
+
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label">Memo</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <textarea class="text-item" name="memo" [(ngModel)]="currentAircraftManufacturerType.memo"></textarea>
+                        </div>
                     </div>
                 </div>
-              
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Memo</label>
-                    </div>
-                    <div class="col-sm-5">
-                        <textarea class="text-item" name="memo" [(ngModel)]="currentAircraftManufacturerType.memo"></textarea>
-                    </div>
-                </div>
-            </div>
-        </form>
+            </form>
         </div>
         <div class="modal-footer">
-            <button type="button" (click)="addAircraftManufacturer()" class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" data-dismiss="modal">Save</button>
+            <button type="button" (click)="addAircraftManufacturer()" class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave"
+                data-dismiss="modal">Save</button>
             <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()" data-dismiss="modal">Close</button>
         </div>
     </div>

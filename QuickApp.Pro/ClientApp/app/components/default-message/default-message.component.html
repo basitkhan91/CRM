@@ -13,8 +13,7 @@
                 <h4 class="page-heading clr-green">DefaultMessage</h4>
                 <span class="help-icon" (click)="openHelpText(helpText)"
                       data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
-                <p-table #dt [value]="defaultMessagePagination"
-                          [lazy]="true" (onLazyLoad)="loadDefaultMessage($event)" 
+                <p-table #dt [value]="allDefaultMessageInfo"                          
                       [paginator]="true" [rows]="5" [totalRecords]="totalRecords" [loading]="loading"
                           [metaKeySelection]="true"  [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
