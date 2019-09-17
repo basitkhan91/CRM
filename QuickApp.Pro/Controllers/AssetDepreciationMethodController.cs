@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -29,12 +30,12 @@ namespace QuickApp.Pro.Controllers
 
         #region Public Methods
 
-        [HttpGet("getAll")]
-        public IActionResult getAll()
-        {
-            var depreciationMethods = unitOfWork.Repository<AssetDepreciationMethod>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepreciationMethodId);
-            return Ok(depreciationMethods);
-        }
+        //[HttpGet("getAll")]
+        //public IActionResult getAll()
+        //{
+        //    var depreciationMethods = unitOfWork.Repository<AssetDepreciationMethod>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepreciationMethodId);
+        //    return Ok(depreciationMethods);
+        //}
 
         [HttpGet("getById/{id}")]
         public IActionResult getdepreciationMethodById(long id)
@@ -127,6 +128,41 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(AssetDepreciationMethodModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<AssetDepreciationMethodModel> dynamicGridData = new DynamicGridData<AssetDepreciationMethodModel>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<AssetDepreciationMethodModel> assetDepreciationMethods = new List<AssetDepreciationMethodModel>();
+            AssetDepreciationMethodModel assetDepreciationMethod = null;
+            var gLAccounts = unitOfWork.Repository<AssetDepreciationMethod>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepreciationMethodId);
+            foreach (var item in gLAccounts)
+            {
+                assetDepreciationMethod = new AssetDepreciationMethodModel();
+                assetDepreciationMethod.AssetDepreciationMethodId = item.AssetDepreciationMethodId;
+                assetDepreciationMethod.AssetDepreciationMethodName = item.AssetDepreciationMethodName;
+                //assetDepreciationMethod.AssetDepreciationMethodCode = item.AssetDepreciationMethodCode;
+                assetDepreciationMethod.AssetDepreciationMethodBasis = item.AssetDepreciationMethodBasis;
+                assetDepreciationMethod.CreatedDate = item.CreatedDate;
+                assetDepreciationMethod.CreatedBy = item.CreatedBy;
+                assetDepreciationMethod.UpdatedDate = item.UpdatedDate;
+                assetDepreciationMethod.UpdatedBy = item.UpdatedBy;
+                //currency.IsActive = item.IsActive;
+                assetDepreciationMethods.Add(assetDepreciationMethod);
+            }
+            dynamicGridData.ColumnData = assetDepreciationMethods;
+            return Ok(dynamicGridData);
+        }
         #endregion Public Methods
 
         #region Private Methods
