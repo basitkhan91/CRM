@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -235,6 +236,43 @@ namespace QuickApp.Pro.Controllers
         {
             public int TotalRecordsCount { get; set; }
             public List<ItemClassificationViewModel> ItemClassificationList { get; set; }
+        }
+
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(ItemClassficationModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<ItemClassficationModel> dynamicGridData = new DynamicGridData<ItemClassficationModel>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<ItemClassficationModel> itemClassificationList = new List<ItemClassficationModel>();
+            ItemClassficationModel itemClassification = null;
+            var itemClassifications = _unitOfWork.ItemClassification.getItemClassification();
+            foreach (var item in itemClassifications)
+            {
+                itemClassification = new ItemClassficationModel();
+                itemClassification.ItemClassificationId = item.ItemClassificationId;
+                itemClassification.ItemClassificationCode = item.ItemClassificationCode;
+                itemClassification.Description = item.Description;
+                itemClassification.ItemType = item.ItemType;
+                itemClassification.Memo = item.Memo;
+                itemClassification.CreatedDate = item.CreatedDate;
+                itemClassification.CreatedBy = item.CreatedBy;
+                itemClassification.UpdatedDate = item.UpdatedDate;
+                itemClassification.UpdatedBy = item.UpdatedBy;
+                //itemClassification.IsActive = item.IsActive;
+                itemClassificationList.Add(itemClassification);
+            }
+            dynamicGridData.ColumnData = itemClassificationList;
+            return Ok(dynamicGridData);
         }
     }
 }

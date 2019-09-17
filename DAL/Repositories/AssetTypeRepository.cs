@@ -14,7 +14,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.AssetType> GetAllAsset()
         {
-            var data = _appContext.AssetType.Include("AssetTypeSingleScreen").Where(c => c.IsDelete == false || c.IsDelete == null).
+            //AssetTypeSingleScreen
+            var data = _appContext.AssetType.Include("AssetAttributeType").Where(c => c.IsDelete == false || c.IsDelete == null).
                 OrderByDescending(c => c.AssetTypeId).ToList();
             return data;
         }

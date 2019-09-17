@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace DAL.Models
@@ -17,5 +18,9 @@ namespace DAL.Models
 
         public bool IsDelete { get; set; }
         public bool IsActive { get; set; }
+
+        [ForeignKey("AssetAttributeType")]
+        public long? AssetAttributeTypeId { get; set; }
+        public virtual AssetAttributeType AssetAttributeType { get; set; }
     }
 }
