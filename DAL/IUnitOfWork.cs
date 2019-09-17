@@ -251,6 +251,9 @@ namespace DAL
 
         IAssetCapes AssetCapes { get; }
 
+        IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }
+        IAssetDepreciationInterval AssetDepreciationInterval { get; }
+
         void SaveChanges(Employee employeeobject);
     }
 }

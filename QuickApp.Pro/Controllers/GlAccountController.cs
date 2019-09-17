@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using DAL;
 using DAL.Models;
@@ -131,6 +132,40 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(GLAccountModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<GLAccountModel> dynamicGridData = new DynamicGridData<GLAccountModel>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<GLAccountModel> gLAccountModels = new List<GLAccountModel>();
+            GLAccountModel gLAccount = null;
+            var gLAccounts = unitOfWork.Repository<GLAccount>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountId);
+            foreach (var item in gLAccounts)
+            {
+                gLAccount = new GLAccountModel();
+                gLAccount.GLAccountTypeId = item.GLAccountTypeId;
+                gLAccount.Name = item.AccountName; /// Need to get "Name"
+                gLAccount.CreatedDate = item.CreatedDate;
+                gLAccount.CreatedBy = item.CreatedBy;
+                gLAccount.UpdatedDate = item.UpdatedDate;
+                gLAccount.UpdatedBy = item.UpdatedBy;
+                //currency.IsActive = item.IsActive;
+                gLAccountModels.Add(gLAccount);
+            }
+            dynamicGridData.ColumnData = gLAccountModels;
+            return Ok(dynamicGridData);
         }
 
         #endregion Public Methods
